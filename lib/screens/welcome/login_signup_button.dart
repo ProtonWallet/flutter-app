@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/generated/bridge_definitions.dart';
+import 'package:wallet/helper/mnemonic.dart';
 import 'package:wallet/screens/home/home_screen.dart';
+
+var count = 1;
 
 class LoginAndSignupBtn extends StatelessWidget {
   const LoginAndSignupBtn({
@@ -30,7 +34,10 @@ class LoginAndSignupBtn extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            print("api.publishMessage(message: LoginAndSignupBtn clicked);");
+            var mnemonic = await Mnemonic.create(WordCount.Words12);
+            print(mnemonic.asString());
             Navigator.push(
               context,
               MaterialPageRoute(
