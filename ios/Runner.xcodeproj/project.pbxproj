@@ -11,6 +11,7 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C7A6292B0C7803004C0FB1 /* libproton-wallet-common_static.a */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -23,6 +24,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		75C7A6282B0C7803004C0FB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA00AF3FDA5D7E73159BB9CC;
+			remoteInfo = "proton-wallet-common-staticlib";
+		};
+		75C7A62A2B0C7803004C0FB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA0112EA1EC1E53E57EE9474;
+			remoteInfo = "proton-wallet-common-cdylib";
+		};
+		75C7A62E2B0C786F004C0FB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CA00AF3FDA5D9B3934E1CB07;
+			remoteInfo = "proton-wallet-common-staticlib";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -47,6 +69,7 @@
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "proton-wallet-common.xcodeproj"; path = "../../rust/proton-wallet-common.xcodeproj"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -62,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +98,22 @@
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 			);
 			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		75C7A6242B0C7803004C0FB1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				75C7A6292B0C7803004C0FB1 /* libproton-wallet-common_static.a */,
+				75C7A62B2B0C7803004C0FB1 /* proton-wallet-common.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		75C7A62C2B0C7843004C0FB1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -94,6 +134,7 @@
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
+				75C7A62C2B0C7843004C0FB1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +150,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -155,6 +197,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				75C7A62F2B0C786F004C0FB1 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -192,6 +235,12 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 75C7A6242B0C7803004C0FB1 /* Products */;
+					ProjectRef = 75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
@@ -199,6 +248,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		75C7A6292B0C7803004C0FB1 /* libproton-wallet-common_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libproton-wallet-common_static.a";
+			remoteRef = 75C7A6282B0C7803004C0FB1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		75C7A62B2B0C7803004C0FB1 /* proton-wallet-common.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = "proton-wallet-common.dylib";
+			remoteRef = 75C7A62A2B0C7803004C0FB1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		331C807F294A63A400263BE5 /* Resources */ = {
@@ -280,6 +346,11 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		75C7A62F2B0C786F004C0FB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "proton-wallet-common-staticlib";
+			targetProxy = 75C7A62E2B0C786F004C0FB1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
