@@ -7,8 +7,10 @@ edition = "2021"
 assert_matches = "1.5"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = { version = "= 1.82.1"  }
-
+flutter_rust_bridge_codegen = { version = "= 1.82.1", features = [
+  "chrono",
+  "uuid",
+]}
 [dependencies]
 rand = "0.8"
 bdk = { version = "0.28.0", features = ["all-keys", "use-esplora-ureq", "sqlite-bundled", "rpc"] }
