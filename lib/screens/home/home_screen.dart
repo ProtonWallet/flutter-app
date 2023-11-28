@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/generated/bridge_definitions.dart';
+import 'package:wallet/helper/mnemonic.dart';
 
 class WalletHomePage extends StatefulWidget {
   const WalletHomePage({super.key, required this.title});
@@ -21,6 +23,15 @@ class _WalletHomePageState extends State<WalletHomePage> {
     });
   }
 
+  String _mnemonicString = 'No Wallet';
+
+  Future<void> _updateStringValue() async {
+    var mnemonic = await Mnemonic.create(WordCount.Words12);
+    setState(() {
+      _mnemonicString = mnemonic.asString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,16 +39,39 @@ class _WalletHomePageState extends State<WalletHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomButton(
-                text: 'Create a new wallet',
-                width: 200,
-                height: 46,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: _updateStringValue,
+              style: ElevatedButton.styleFrom(primary: const Color(0xFF6D4AFF), elevation: 0),
+              child: Text(
+                "Create Wallet".toUpperCase(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
               ),
+            ),
+            SizedBox(height: 20),
+                Text(
+                _mnemonicString,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              // ElevatedButton(
+              //   onPressed: _updateStringValue,
+              //   child: Text('Update String'),
+              // ),
+                
+              // CustomButton(
+              //   text: 'Create a new wallet',
+              //   width: 200,
+              //   height: 46,
+
+              // ),
             ]),
       ),
       bottomNavigationBar: BottomNavigationBar(
