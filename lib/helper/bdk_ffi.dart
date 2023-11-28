@@ -22,7 +22,7 @@ final _dylib = io.Platform.isWindows ? '$_base.dll' : 'lib$_base.so';
 DynamicLibrary _open() {
   if (Platform.isIOS || Platform.isMacOS) {
     return DynamicLibrary.executable();
-  } else if (Platform.isAndroid) {
+  } else if (Platform.isAndroid || Platform.isLinux) {
     return DynamicLibrary.open(_dylib);
   } else {
     throw Exception("not support platform:${Platform.operatingSystem}");
