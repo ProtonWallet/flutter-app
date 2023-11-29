@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/mnemonic.dart';
+import 'package:wallet/channels/platformchannel.dart';
 import 'package:wallet/screens/home/home_screen.dart';
 
 var count = 1;
@@ -18,14 +19,15 @@ class LoginAndSignupBtn extends StatelessWidget {
           tag: "login_btn",
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const WalletHomePage(title: 'Flutter Wallet');
-                  },
-                ),
-              );
+              NativeViewSwitcher.switchToNativeView();
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return const WalletHomePage(title: 'Flutter Wallet');
+              //     },
+              //   ),
+              // );
             },
             child: Text(
               "Login".toUpperCase(),

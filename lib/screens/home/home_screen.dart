@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/channels/platformchannel.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/mnemonic.dart';
 
@@ -16,6 +17,24 @@ class _WalletHomePageState extends State<WalletHomePage> {
   int _selectedPage = 0;
 
   List<String> items = List<String>.generate(10000, (i) => 'Item $i');
+
+  @override
+  void initState() {
+    _selectedPage = 0;
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    print("_WalletHomePageState is deactivated");
+    super.deactivate();
+  }
+
+  @override
+  void activate() {
+    print("_WalletHomePageState is activated");
+    super.activate();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -41,37 +60,27 @@ class _WalletHomePageState extends State<WalletHomePage> {
       ),
       body: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: _updateStringValue,
-              style: ElevatedButton.styleFrom(primary: const Color(0xFF6D4AFF), elevation: 0),
-              child: Text(
-                "Create Wallet".toUpperCase(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: _updateStringValue,
+                style: ElevatedButton.styleFrom(
+                    primary: const Color(0xFF6D4AFF), elevation: 0),
+                child: Text(
+                  "Create Wallet".toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-                Text(
+              SizedBox(height: 20),
+              Text(
                 _mnemonicString,
                 style: Theme.of(context).textTheme.headline4,
               ),
-              // ElevatedButton(
-              //   onPressed: _updateStringValue,
-              //   child: Text('Update String'),
-              // ),
-                
-              // CustomButton(
-              //   text: 'Create a new wallet',
-              //   width: 200,
-              //   height: 46,
-
-              // ),
             ]),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -94,6 +103,9 @@ class _WalletHomePageState extends State<WalletHomePage> {
           backgroundColor: Theme.of(context).colorScheme.background,
           currentIndex: _selectedPage,
           onTap: (index) {
+            if (index == 2) {
+              NativeViewSwitcher.switchToNativeView();
+            }
             setState(() {
               _selectedPage = index;
             });
