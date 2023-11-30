@@ -12,6 +12,47 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7548D9F62B17ED57002588F4 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548D9F52B17ED57002588F4 /* SwiftUIView.swift */; };
+		7548DA8C2B180942002588F4 /* ProtonCoreNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA8B2B180942002588F4 /* ProtonCoreNetworking */; };
+		7548DA8F2B180994002588F4 /* GoLibsCryptoGo in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA8E2B180994002588F4 /* GoLibsCryptoGo */; };
+		7548DA912B180994002588F4 /* ProtonCoreAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA902B180994002588F4 /* ProtonCoreAPIClient */; };
+		7548DA932B180994002588F4 /* ProtonCoreAuthentication in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA922B180994002588F4 /* ProtonCoreAuthentication */; };
+		7548DA952B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA942B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration */; };
+		7548DA972B180994002588F4 /* ProtonCoreChallenge in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA962B180994002588F4 /* ProtonCoreChallenge */; };
+		7548DA992B180994002588F4 /* ProtonCoreCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA982B180994002588F4 /* ProtonCoreCommon */; };
+		7548DA9B2B180994002588F4 /* ProtonCoreCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA9A2B180994002588F4 /* ProtonCoreCrypto */; };
+		7548DA9D2B180994002588F4 /* ProtonCoreCryptoGoImplementation in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA9C2B180994002588F4 /* ProtonCoreCryptoGoImplementation */; };
+		7548DA9F2B180994002588F4 /* ProtonCoreCryptoGoInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA9E2B180994002588F4 /* ProtonCoreCryptoGoInterface */; };
+		7548DAA12B180994002588F4 /* ProtonCoreDataModel in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAA02B180994002588F4 /* ProtonCoreDataModel */; };
+		7548DAA32B180994002588F4 /* ProtonCoreDoh in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAA22B180994002588F4 /* ProtonCoreDoh */; };
+		7548DAA52B180994002588F4 /* ProtonCoreEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAA42B180994002588F4 /* ProtonCoreEnvironment */; };
+		7548DAA72B180994002588F4 /* ProtonCoreFeatureFlags in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAA62B180994002588F4 /* ProtonCoreFeatureFlags */; };
+		7548DAA92B180994002588F4 /* ProtonCoreFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAA82B180994002588F4 /* ProtonCoreFeatures */; };
+		7548DAAB2B180994002588F4 /* ProtonCoreFeatureSwitch in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAAA2B180994002588F4 /* ProtonCoreFeatureSwitch */; };
+		7548DAAD2B180994002588F4 /* ProtonCoreForceUpgrade in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAAC2B180994002588F4 /* ProtonCoreForceUpgrade */; };
+		7548DAAF2B180994002588F4 /* ProtonCoreFoundations in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAAE2B180994002588F4 /* ProtonCoreFoundations */; };
+		7548DAB12B180994002588F4 /* ProtonCoreHash in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAB02B180994002588F4 /* ProtonCoreHash */; };
+		7548DAB32B180994002588F4 /* ProtonCoreHumanVerification in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAB22B180994002588F4 /* ProtonCoreHumanVerification */; };
+		7548DAB52B180994002588F4 /* ProtonCoreKeymaker in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAB42B180994002588F4 /* ProtonCoreKeymaker */; };
+		7548DAB72B180994002588F4 /* ProtonCoreKeyManager in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAB62B180994002588F4 /* ProtonCoreKeyManager */; };
+		7548DAB92B180994002588F4 /* ProtonCoreLog in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAB82B180994002588F4 /* ProtonCoreLog */; };
+		7548DABB2B180994002588F4 /* ProtonCoreLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DABA2B180994002588F4 /* ProtonCoreLogin */; };
+		7548DABD2B180994002588F4 /* ProtonCoreLoginUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DABC2B180994002588F4 /* ProtonCoreLoginUI */; };
+		7548DABF2B180994002588F4 /* ProtonCoreMissingScopes in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DABE2B180994002588F4 /* ProtonCoreMissingScopes */; };
+		7548DAC12B180994002588F4 /* ProtonCoreObservability in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAC02B180994002588F4 /* ProtonCoreObservability */; };
+		7548DAC32B180994002588F4 /* ProtonCorePasswordRequest in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAC22B180994002588F4 /* ProtonCorePasswordRequest */; };
+		7548DAC52B180994002588F4 /* ProtonCorePayments in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAC42B180994002588F4 /* ProtonCorePayments */; };
+		7548DAC72B180994002588F4 /* ProtonCorePaymentsUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAC62B180994002588F4 /* ProtonCorePaymentsUI */; };
+		7548DAC92B180994002588F4 /* ProtonCorePushNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAC82B180994002588F4 /* ProtonCorePushNotifications */; };
+		7548DACB2B180994002588F4 /* ProtonCoreQuarkCommands in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DACA2B180994002588F4 /* ProtonCoreQuarkCommands */; };
+		7548DACD2B180994002588F4 /* ProtonCoreServices in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DACC2B180994002588F4 /* ProtonCoreServices */; };
+		7548DACF2B180994002588F4 /* ProtonCoreSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DACE2B180994002588F4 /* ProtonCoreSettings */; };
+		7548DAD12B180994002588F4 /* ProtonCoreSubscriptions in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAD02B180994002588F4 /* ProtonCoreSubscriptions */; };
+		7548DAD32B180994002588F4 /* ProtonCoreTroubleShooting in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAD22B180994002588F4 /* ProtonCoreTroubleShooting */; };
+		7548DAD52B180994002588F4 /* ProtonCoreUIFoundations in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAD42B180994002588F4 /* ProtonCoreUIFoundations */; };
+		7548DAD72B180994002588F4 /* ProtonCoreUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAD62B180994002588F4 /* ProtonCoreUtilities */; };
+		7548DAE92B182817002588F4 /* AnonymousServiceMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAE82B182817002588F4 /* AnonymousServiceMananger.swift */; };
+		7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */; };
+		7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DB312B184683002588F4 /* AppCoordinator.swift */; };
 		75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C7A6292B0C7803004C0FB1 /* libproton-wallet-common_static.a */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -71,6 +112,9 @@
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7548D9F52B17ED57002588F4 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		7548DAE82B182817002588F4 /* AnonymousServiceMananger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymousServiceMananger.swift; sourceTree = "<group>"; };
+		7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHeader.swift; sourceTree = "<group>"; };
+		7548DB312B184683002588F4 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "proton-wallet-common.xcodeproj"; path = "../../rust/proton-wallet-common.xcodeproj"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -87,7 +131,45 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7548DAC92B180994002588F4 /* ProtonCorePushNotifications in Frameworks */,
+				7548DACB2B180994002588F4 /* ProtonCoreQuarkCommands in Frameworks */,
+				7548DAB72B180994002588F4 /* ProtonCoreKeyManager in Frameworks */,
+				7548DA8F2B180994002588F4 /* GoLibsCryptoGo in Frameworks */,
+				7548DAA12B180994002588F4 /* ProtonCoreDataModel in Frameworks */,
+				7548DA952B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration in Frameworks */,
+				7548DA972B180994002588F4 /* ProtonCoreChallenge in Frameworks */,
 				75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */,
+				7548DAAF2B180994002588F4 /* ProtonCoreFoundations in Frameworks */,
+				7548DACD2B180994002588F4 /* ProtonCoreServices in Frameworks */,
+				7548DAA72B180994002588F4 /* ProtonCoreFeatureFlags in Frameworks */,
+				7548DABF2B180994002588F4 /* ProtonCoreMissingScopes in Frameworks */,
+				7548DAAD2B180994002588F4 /* ProtonCoreForceUpgrade in Frameworks */,
+				7548DACF2B180994002588F4 /* ProtonCoreSettings in Frameworks */,
+				7548DAD52B180994002588F4 /* ProtonCoreUIFoundations in Frameworks */,
+				7548DAB52B180994002588F4 /* ProtonCoreKeymaker in Frameworks */,
+				7548DAB92B180994002588F4 /* ProtonCoreLog in Frameworks */,
+				7548DAA52B180994002588F4 /* ProtonCoreEnvironment in Frameworks */,
+				7548DAC72B180994002588F4 /* ProtonCorePaymentsUI in Frameworks */,
+				7548DABB2B180994002588F4 /* ProtonCoreLogin in Frameworks */,
+				7548DA9F2B180994002588F4 /* ProtonCoreCryptoGoInterface in Frameworks */,
+				7548DA992B180994002588F4 /* ProtonCoreCommon in Frameworks */,
+				7548DA8C2B180942002588F4 /* ProtonCoreNetworking in Frameworks */,
+				7548DA9D2B180994002588F4 /* ProtonCoreCryptoGoImplementation in Frameworks */,
+				7548DAB32B180994002588F4 /* ProtonCoreHumanVerification in Frameworks */,
+				7548DA932B180994002588F4 /* ProtonCoreAuthentication in Frameworks */,
+				7548DABD2B180994002588F4 /* ProtonCoreLoginUI in Frameworks */,
+				7548DAD12B180994002588F4 /* ProtonCoreSubscriptions in Frameworks */,
+				7548DAC32B180994002588F4 /* ProtonCorePasswordRequest in Frameworks */,
+				7548DAC52B180994002588F4 /* ProtonCorePayments in Frameworks */,
+				7548DAC12B180994002588F4 /* ProtonCoreObservability in Frameworks */,
+				7548DAA92B180994002588F4 /* ProtonCoreFeatures in Frameworks */,
+				7548DA9B2B180994002588F4 /* ProtonCoreCrypto in Frameworks */,
+				7548DAD32B180994002588F4 /* ProtonCoreTroubleShooting in Frameworks */,
+				7548DAA32B180994002588F4 /* ProtonCoreDoh in Frameworks */,
+				7548DAB12B180994002588F4 /* ProtonCoreHash in Frameworks */,
+				7548DAD72B180994002588F4 /* ProtonCoreUtilities in Frameworks */,
+				7548DA912B180994002588F4 /* ProtonCoreAPIClient in Frameworks */,
+				7548DAAB2B180994002588F4 /* ProtonCoreFeatureSwitch in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +182,14 @@
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 			);
 			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		7548DB302B184644002588F4 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				7548DB312B184683002588F4 /* AppCoordinator.swift */,
+			);
+			path = Scenes;
 			sourceTree = "<group>";
 		};
 		75C7A6242B0C7803004C0FB1 /* Products */ = {
@@ -152,6 +242,8 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				7548DB302B184644002588F4 /* Scenes */,
+				7548DAE82B182817002588F4 /* AnonymousServiceMananger.swift */,
 				75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -162,6 +254,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				7548D9F52B17ED57002588F4 /* SwiftUIView.swift */,
+				7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -203,6 +296,46 @@
 				75C7A62F2B0C786F004C0FB1 /* PBXTargetDependency */,
 			);
 			name = Runner;
+			packageProductDependencies = (
+				7548DA8B2B180942002588F4 /* ProtonCoreNetworking */,
+				7548DA8E2B180994002588F4 /* GoLibsCryptoGo */,
+				7548DA902B180994002588F4 /* ProtonCoreAPIClient */,
+				7548DA922B180994002588F4 /* ProtonCoreAuthentication */,
+				7548DA942B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration */,
+				7548DA962B180994002588F4 /* ProtonCoreChallenge */,
+				7548DA982B180994002588F4 /* ProtonCoreCommon */,
+				7548DA9A2B180994002588F4 /* ProtonCoreCrypto */,
+				7548DA9C2B180994002588F4 /* ProtonCoreCryptoGoImplementation */,
+				7548DA9E2B180994002588F4 /* ProtonCoreCryptoGoInterface */,
+				7548DAA02B180994002588F4 /* ProtonCoreDataModel */,
+				7548DAA22B180994002588F4 /* ProtonCoreDoh */,
+				7548DAA42B180994002588F4 /* ProtonCoreEnvironment */,
+				7548DAA62B180994002588F4 /* ProtonCoreFeatureFlags */,
+				7548DAA82B180994002588F4 /* ProtonCoreFeatures */,
+				7548DAAA2B180994002588F4 /* ProtonCoreFeatureSwitch */,
+				7548DAAC2B180994002588F4 /* ProtonCoreForceUpgrade */,
+				7548DAAE2B180994002588F4 /* ProtonCoreFoundations */,
+				7548DAB02B180994002588F4 /* ProtonCoreHash */,
+				7548DAB22B180994002588F4 /* ProtonCoreHumanVerification */,
+				7548DAB42B180994002588F4 /* ProtonCoreKeymaker */,
+				7548DAB62B180994002588F4 /* ProtonCoreKeyManager */,
+				7548DAB82B180994002588F4 /* ProtonCoreLog */,
+				7548DABA2B180994002588F4 /* ProtonCoreLogin */,
+				7548DABC2B180994002588F4 /* ProtonCoreLoginUI */,
+				7548DABE2B180994002588F4 /* ProtonCoreMissingScopes */,
+				7548DAC02B180994002588F4 /* ProtonCoreObservability */,
+				7548DAC22B180994002588F4 /* ProtonCorePasswordRequest */,
+				7548DAC42B180994002588F4 /* ProtonCorePayments */,
+				7548DAC62B180994002588F4 /* ProtonCorePaymentsUI */,
+				7548DAC82B180994002588F4 /* ProtonCorePushNotifications */,
+				7548DACA2B180994002588F4 /* ProtonCoreQuarkCommands */,
+				7548DACC2B180994002588F4 /* ProtonCoreServices */,
+				7548DACE2B180994002588F4 /* ProtonCoreSettings */,
+				7548DAD02B180994002588F4 /* ProtonCoreSubscriptions */,
+				7548DAD22B180994002588F4 /* ProtonCoreTroubleShooting */,
+				7548DAD42B180994002588F4 /* ProtonCoreUIFoundations */,
+				7548DAD62B180994002588F4 /* ProtonCoreUtilities */,
+			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
@@ -236,6 +369,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -337,9 +473,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7548DAE92B182817002588F4 /* AnonymousServiceMananger.swift in Sources */,
+				7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7548D9F62B17ED57002588F4 /* SwiftUIView.swift in Sources */,
+				7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,7 +577,8 @@
 				DEVELOPMENT_TEAM = 2SB5Z68H26;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -615,7 +755,8 @@
 				DEVELOPMENT_TEAM = 2SB5Z68H26;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -639,7 +780,8 @@
 				DEVELOPMENT_TEAM = 2SB5Z68H26;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -686,6 +828,210 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://gitlab.protontech.ch/apple/shared/protoncore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7548DA8B2B180942002588F4 /* ProtonCoreNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreNetworking;
+		};
+		7548DA8E2B180994002588F4 /* GoLibsCryptoGo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = GoLibsCryptoGo;
+		};
+		7548DA902B180994002588F4 /* ProtonCoreAPIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreAPIClient;
+		};
+		7548DA922B180994002588F4 /* ProtonCoreAuthentication */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreAuthentication;
+		};
+		7548DA942B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreAuthenticationKeyGeneration;
+		};
+		7548DA962B180994002588F4 /* ProtonCoreChallenge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreChallenge;
+		};
+		7548DA982B180994002588F4 /* ProtonCoreCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreCommon;
+		};
+		7548DA9A2B180994002588F4 /* ProtonCoreCrypto */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreCrypto;
+		};
+		7548DA9C2B180994002588F4 /* ProtonCoreCryptoGoImplementation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreCryptoGoImplementation;
+		};
+		7548DA9E2B180994002588F4 /* ProtonCoreCryptoGoInterface */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreCryptoGoInterface;
+		};
+		7548DAA02B180994002588F4 /* ProtonCoreDataModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreDataModel;
+		};
+		7548DAA22B180994002588F4 /* ProtonCoreDoh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreDoh;
+		};
+		7548DAA42B180994002588F4 /* ProtonCoreEnvironment */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreEnvironment;
+		};
+		7548DAA62B180994002588F4 /* ProtonCoreFeatureFlags */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreFeatureFlags;
+		};
+		7548DAA82B180994002588F4 /* ProtonCoreFeatures */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreFeatures;
+		};
+		7548DAAA2B180994002588F4 /* ProtonCoreFeatureSwitch */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreFeatureSwitch;
+		};
+		7548DAAC2B180994002588F4 /* ProtonCoreForceUpgrade */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreForceUpgrade;
+		};
+		7548DAAE2B180994002588F4 /* ProtonCoreFoundations */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreFoundations;
+		};
+		7548DAB02B180994002588F4 /* ProtonCoreHash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreHash;
+		};
+		7548DAB22B180994002588F4 /* ProtonCoreHumanVerification */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreHumanVerification;
+		};
+		7548DAB42B180994002588F4 /* ProtonCoreKeymaker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreKeymaker;
+		};
+		7548DAB62B180994002588F4 /* ProtonCoreKeyManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreKeyManager;
+		};
+		7548DAB82B180994002588F4 /* ProtonCoreLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreLog;
+		};
+		7548DABA2B180994002588F4 /* ProtonCoreLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreLogin;
+		};
+		7548DABC2B180994002588F4 /* ProtonCoreLoginUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreLoginUI;
+		};
+		7548DABE2B180994002588F4 /* ProtonCoreMissingScopes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreMissingScopes;
+		};
+		7548DAC02B180994002588F4 /* ProtonCoreObservability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreObservability;
+		};
+		7548DAC22B180994002588F4 /* ProtonCorePasswordRequest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCorePasswordRequest;
+		};
+		7548DAC42B180994002588F4 /* ProtonCorePayments */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCorePayments;
+		};
+		7548DAC62B180994002588F4 /* ProtonCorePaymentsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCorePaymentsUI;
+		};
+		7548DAC82B180994002588F4 /* ProtonCorePushNotifications */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCorePushNotifications;
+		};
+		7548DACA2B180994002588F4 /* ProtonCoreQuarkCommands */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreQuarkCommands;
+		};
+		7548DACC2B180994002588F4 /* ProtonCoreServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreServices;
+		};
+		7548DACE2B180994002588F4 /* ProtonCoreSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreSettings;
+		};
+		7548DAD02B180994002588F4 /* ProtonCoreSubscriptions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreSubscriptions;
+		};
+		7548DAD22B180994002588F4 /* ProtonCoreTroubleShooting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreTroubleShooting;
+		};
+		7548DAD42B180994002588F4 /* ProtonCoreUIFoundations */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreUIFoundations;
+		};
+		7548DAD62B180994002588F4 /* ProtonCoreUtilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreUtilities;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
