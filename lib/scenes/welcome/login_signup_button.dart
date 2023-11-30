@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/mnemonic.dart';
 import 'package:wallet/channels/platformchannel.dart';
-import 'package:wallet/screens/home/home_screen.dart';
+import 'package:wallet/scenes/home/home.view.dart';
 
 var count = 1;
 
