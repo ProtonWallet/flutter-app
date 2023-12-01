@@ -21,6 +21,7 @@ import SwiftUI // If using SwiftUI
     /// native code and this need to be refactored later
     private var apiService: PMAPIService?
     private var login: LoginAndSignup?
+    private var navigationChannel: FlutterMethodChannel?
     private var humanVerificationDelegate: HumanVerifyDelegate?
     // private var missingScopesDelegate: MissingScopesDelegate?
     var authManager: AuthHelper?
@@ -37,14 +38,17 @@ import SwiftUI // If using SwiftUI
         // Set up the Flutter window
         self.flutterWindow = self.window
         let controller = self.flutterWindow?.rootViewController as! FlutterViewController
-        let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native_views", binaryMessenger: controller.binaryMessenger)
+        let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native.views", binaryMessenger: controller.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "switchToNativeView" {
+            if call.method == "native.navigation.login" {
                 self?.switchToNativeView()
             } else {
                 result(FlutterMethodNotImplemented)
             }
         }
+        
+        navigationChannel = FlutterMethodChannel(name: "com.example.wallet/app.view", binaryMessenger: controller.binaryMessenger)
+        
         self.initSignupLogin()
         dummy_method_to_enforce_bundling()
         GeneratedPluginRegistrant.register(with: self)
@@ -158,9 +162,18 @@ import SwiftUI // If using SwiftUI
     func onButtonTap() {
         switchToFlutterView()
     }
+    
+    private func sendDataToFlutter(data: String) {
+        navigationChannel?.invokeMethod("flutter.navigation.to.home", arguments: data)
+    }
 
+    // Example function to trigger sending data
+    func triggerSendingData() {
+        sendDataToFlutter(data: "Hello from Swift!")
+    }
+    
     func switchToFlutterView() {
-        flutterWindow?.makeKeyAndVisible()
+        self.triggerSendingData()
     }
 
     func switchToNativeView() {

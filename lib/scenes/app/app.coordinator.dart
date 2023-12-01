@@ -3,8 +3,8 @@ import 'package:wallet/scenes/app/app.view.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view_model.dart';
-import 'package:wallet/scenes/core/view_navigator.dart';
+import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 class AppCoordinator extends Coordinator {
@@ -15,9 +15,6 @@ class AppCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    //     View view = WeootCoordinator().start();
-    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
-    // return view;
     throw UnimplementedError();
   }
 

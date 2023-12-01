@@ -1,6 +1,8 @@
 // import 'package:wallet/scenes/app/app.model.dart';
+import 'dart:async';
+
 import 'package:wallet/scenes/core/coordinator.dart';
-import 'package:wallet/scenes/core/view_model.dart';
+import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class AppViewModel extends ViewModel {
   AppViewModel(Coordinator coordinator) : super(coordinator);
@@ -25,16 +27,17 @@ abstract class AppViewModel extends ViewModel {
 
 class AppViewModelImpl extends AppViewModel {
   AppViewModelImpl(Coordinator coordinator) : super(coordinator);
-  // final datasourceChangedStreamController = StreamController<LoginViewModel>.broadcast();
+  final datasourceChangedStreamController =
+      StreamController<AppViewModel>.broadcast();
   bool showUsernameValidationError = false;
 
-  // @override
-  // Stream<ViewModel> get datasourceChanged =>
-  // datasourceChangedStreamController.stream;
+  @override
+  Stream<ViewModel> get datasourceChanged =>
+      datasourceChangedStreamController.stream;
 
   @override
   void dispose() {
-    // datasourceChangedStreamController.close();
+    datasourceChangedStreamController.close();
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 
 class AppView extends ViewBase<AppViewModel> {
-  const AppView(AppViewModel viewModel, this.homeView)
+  AppView(AppViewModel viewModel, this.homeView)
       : super(viewModel, const Key("AppView"));
   final Widget homeView;
   // final _formKey = GlobalKey<FormState>();
@@ -17,7 +17,12 @@ class AppView extends ViewBase<AppViewModel> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: homeView,
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        '/': (BuildContext context) => homeView,
+      },
+      // home: homeView,
+      // routes: ["/", homeView],
     );
   }
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:wallet/responsive.dart';
-import 'package:wallet/scenes/core/view_model.dart';
+import 'package:wallet/scenes/core/viewmodel.dart';
 
 enum ViewSize { mobile, desktop, tablet }
 
 abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   final V viewModel;
-
+  late final ViewState<V> _state;
   @protected
   Widget buildWithViewModel(
     BuildContext context,
@@ -15,11 +15,14 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     ViewSize viewSize,
   );
 
-  const ViewBase(this.viewModel, Key key) : super(key: key);
+  ViewBase(this.viewModel, Key key) : super(key: key) {
+    _state = ViewState<V>();
+  }
 
   @override
   State<ViewBase> createState() {
-    return ViewState<V>();
+    // ignore: no_logic_in_create_state
+    return _state;
   }
 
   Future<void> handleRefresh() async {
@@ -27,6 +30,10 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   }
 
   void dispose() {}
+
+  BuildContext get context {
+    return _state.context;
+  }
 }
 
 class ViewState<V extends ViewModel> extends State<ViewBase> {
@@ -36,11 +43,11 @@ class ViewState<V extends ViewModel> extends State<ViewBase> {
   @override
   void initState() {
     viewModel = widget.viewModel as V;
-    // StreamSubscription<ViewModel> _streamDatasourceChanged;
-    // _streamDatasourceChanged = viewModel.datasourceChanged.listen((viewModel) {
-    //   setState(() {});
-    // });
-    // subscriptions.add(_streamDatasourceChanged);
+    StreamSubscription<ViewModel> streamDatasourceChanged;
+    streamDatasourceChanged = viewModel.datasourceChanged.listen((viewModel) {
+      setState(() {});
+    });
+    subscriptions.add(streamDatasourceChanged);
     viewModel.loadData();
     super.initState();
   }
