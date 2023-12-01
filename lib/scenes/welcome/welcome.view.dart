@@ -74,25 +74,25 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              WelcomeImage(),
+              const WelcomeImage(),
               Row(
                 children: [
-                  Spacer(),
-                  Expanded(
+                  const Spacer(),
+                  const Expanded(
                     flex: 8,
                     child: LoginAndSignupBtn(),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   ElevatedButton(
                     onPressed: () {
                       viewModel.coordinator
                           .move(NavigationAppIdentifiers.home, context);
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: const Color(0xFF6D4AFF), elevation: 0),
+                        backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
                     child: Text(
                       "Create Wallet".toUpperCase(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',

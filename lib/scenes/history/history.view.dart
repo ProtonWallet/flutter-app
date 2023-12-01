@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/home/home.viewmodel.dart';
+import 'package:wallet/scenes/history/history.viewmodel.dart';
 
-class HomeView extends ViewBase<HomeViewModel> {
-  HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
+class HistoryView extends ViewBase<HistoryViewModel> {
+  HistoryView(HistoryViewModel viewModel)
+      : super(viewModel, const Key("HistoryView"));
 
   @override
   Widget buildWithViewModel(
-      BuildContext context, HomeViewModel viewModel, ViewSize viewSize) {
+      BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Proton Wallet Home"),
+        title: const Text("Payment History"),
       ),
       body: Center(
         child: Column(
@@ -38,11 +39,6 @@ class HomeView extends ViewBase<HomeViewModel> {
               ),
             ]),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: viewModel.incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

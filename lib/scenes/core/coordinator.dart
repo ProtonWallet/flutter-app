@@ -7,4 +7,8 @@ abstract class Coordinator implements ViewNavigator {
   ViewBase start();
 
   void end();
+
+  List<ViewBase> starts() {
+    throw UnimplementedError();
+  }
 }
