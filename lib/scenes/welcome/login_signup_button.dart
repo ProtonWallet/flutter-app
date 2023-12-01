@@ -40,14 +40,14 @@ class LoginAndSignupBtn extends StatelessWidget {
             print("api.publishMessage(message: LoginAndSignupBtn clicked);");
             var mnemonic = await Mnemonic.create(WordCount.Words12);
             print(mnemonic.asString());
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const WalletHomePage(title: 'Flutter Wallet');
-                },
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) {
+            //       return const WalletHomePage(title: 'Flutter Wallet');
+            //     },
+            //   ),
+            // );
           },
           style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 0),
           child: Text(
