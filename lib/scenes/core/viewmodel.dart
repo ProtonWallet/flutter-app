@@ -6,4 +6,5 @@ abstract class ViewModel {
   Stream<ViewModel> get datasourceChanged;
   void dispose();
   Future<void> loadData();
+  bool get keepAlive => false;
 }

@@ -6,26 +6,26 @@ import 'package:wallet/helper/mnemonic.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-abstract class HomeViewModel extends ViewModel {
-  HomeViewModel(Coordinator coordinator) : super(coordinator);
+abstract class HistoryViewModel extends ViewModel {
+  HistoryViewModel(Coordinator coordinator) : super(coordinator);
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
 
   void updateSelected(int index);
   void updateMnemonic(String mnemonic);
-  void incrementCounter();
+
   Future<void> updateStringValue();
 
   @override
   bool get keepAlive => true;
 }
 
-class HomeViewModelImpl extends HomeViewModel {
-  HomeViewModelImpl(Coordinator coordinator) : super(coordinator);
+class HistoryViewModelImpl extends HistoryViewModel {
+  HistoryViewModelImpl(Coordinator coordinator) : super(coordinator);
 
   final datasourceChangedStreamController =
-      StreamController<HomeViewModel>.broadcast();
+      StreamController<HistoryViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
   @override
@@ -54,9 +54,6 @@ class HomeViewModelImpl extends HomeViewModel {
     mnemonicString = mnemonic;
     datasourceChangedStreamController.sink.add(this);
   }
-
-  @override
-  void incrementCounter() {}
 
   @override
   Future<void> updateStringValue() async {

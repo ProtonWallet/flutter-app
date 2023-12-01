@@ -36,7 +36,8 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   }
 }
 
-class ViewState<V extends ViewModel> extends State<ViewBase> {
+class ViewState<V extends ViewModel> extends State<ViewBase>
+    with AutomaticKeepAliveClientMixin<ViewBase> {
   late V viewModel;
   List<StreamSubscription> subscriptions = [];
 
@@ -64,6 +65,7 @@ class ViewState<V extends ViewModel> extends State<ViewBase> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     ViewSize size = ViewSize.desktop;
     if (Responsive.isMobile(context)) {
       size = ViewSize.mobile;
@@ -71,5 +73,10 @@ class ViewState<V extends ViewModel> extends State<ViewBase> {
       size = ViewSize.tablet;
     }
     return widget.buildWithViewModel(context, viewModel, size);
+  }
+
+  @override
+  bool get wantKeepAlive {
+    return viewModel.keepAlive;
   }
 }
