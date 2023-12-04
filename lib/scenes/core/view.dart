@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:wallet/responsive.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 enum ViewSize { mobile, desktop, tablet }
@@ -29,8 +30,12 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     return await viewModel.loadData();
   }
 
-  void dispose() {}
+  void dispose() {
+    logger.d("dispose is called");
+  }
 
+  // avoid to use this. just a workaround for platform channels
+  // to tigger switch views
   BuildContext get context {
     return _state.context;
   }

@@ -11,6 +11,7 @@ abstract class HistoryViewModel extends ViewModel {
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
+  List<String> history = [];
 
   void updateSelected(int index);
   void updateMnemonic(String mnemonic);
@@ -19,6 +20,11 @@ abstract class HistoryViewModel extends ViewModel {
 
   @override
   bool get keepAlive => true;
+
+  bool hasHistory();
+
+  ///debug functions
+  void buildHistory();
 }
 
 class HistoryViewModelImpl extends HistoryViewModel {
@@ -60,5 +66,23 @@ class HistoryViewModelImpl extends HistoryViewModel {
     var mnemonic = await Mnemonic.create(WordCount.Words12);
     logger.d(mnemonic.asString());
     updateMnemonic(mnemonic.asString());
+  }
+
+  @override
+  bool hasHistory() {
+    return history.isEmpty ? false : true;
+  }
+
+  @override
+  void buildHistory() {
+    if (hasHistory()) {
+      history.clear();
+    } else {
+      for (int i = 0; i < 100; i++) {
+        history.add("Item {i}");
+      }
+    }
+
+    datasourceChangedStreamController.sink.add(this);
   }
 }

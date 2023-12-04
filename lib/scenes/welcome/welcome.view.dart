@@ -4,9 +4,9 @@ import 'package:wallet/components/backgroud.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/welcome/login_signup_button.dart';
+import 'package:wallet/scenes/welcome/signup.button.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
-import 'package:wallet/scenes/welcome/welcome_image.dart';
+import 'package:wallet/scenes/welcome/welcome.image.dart';
 
 class WelcomeView extends ViewBase<WelcomeViewModel> {
   WelcomeView(WelcomeViewModel viewModel)
@@ -18,7 +18,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       case 'flutter.navigation.to.home':
         String data = call.arguments;
         logger.d("Data received from Swift: $data");
-        viewModel.coordinator.move(NavigationAppIdentifiers.home, context);
+        viewModel.coordinator.move(ViewIdentifiers.home, context);
         break;
       default:
         throw PlatformException(
@@ -85,8 +85,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator
-                          .move(NavigationAppIdentifiers.home, context);
+                      viewModel.coordinator.move(ViewIdentifiers.home, context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
