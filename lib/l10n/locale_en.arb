@@ -3,14 +3,15 @@
 
   "appName": "Deep Sky",   
   "login": "Login",
-  "tabHome": "Home",
-  "tabProject": "Project",
-  "settings": "Settings",
+  "settings_title": "Settings",
   "settingLanguage": "Language",
   "autoBySystem": "Auto",
   "themeMode": "Theme Mode",
   "darkMode": "Dark Mode",
   "lightMode":"Light Mode",
+  "tab_home": "Home",
+  "tab_history": "History",
+  "tab_settings": "Settings",
   
   "helloWorld": "Hello World!",
   "@helloWorld": {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
   HomeNavigationView(HomeNavigationViewModel viewModel)
@@ -16,14 +17,14 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
         children: viewModel.coordinator.starts(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance_wallet),
-              label: 'home',
+              icon: const Icon(Icons.account_balance_wallet),
+              label: S.of(context)!.tab_home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.change_history),
-              label: 'history',
+              icon: const Icon(Icons.change_history),
+              label: S.of(context)!.tab_history,
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.account_balance_wallet),
@@ -34,8 +35,8 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
             //   label: 'secruty',
             // ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'settings',
+              icon: const Icon(Icons.account_circle),
+              label: S.of(context)!.tab_settings,
             ),
           ],
           selectedItemColor: Theme.of(context).colorScheme.primary,
