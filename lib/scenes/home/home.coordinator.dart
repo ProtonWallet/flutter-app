@@ -16,6 +16,7 @@ class HomeCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
+    // setup
     if (to == ViewIdentifiers.setupOnboard) {
       var view = SetupOnbaordCoordinator().start();
       Navigator.of(context).push(MaterialPageRoute(
@@ -24,6 +25,27 @@ class HomeCoordinator extends Coordinator {
       ));
       return view;
     }
+
+    //to send
+    if (to == ViewIdentifiers.send) {
+      var view = HomeCoordinator().start();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => view,
+        fullscreenDialog: true,
+      ));
+      return view;
+    }
+
+    //to receive
+    if (to == ViewIdentifiers.receive) {
+      var view = HomeCoordinator().start();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => view,
+        fullscreenDialog: true,
+      ));
+      return view;
+    }
+
     throw UnimplementedError();
   }
 
