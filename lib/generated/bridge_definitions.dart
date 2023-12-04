@@ -349,7 +349,7 @@ abstract class ProtonWalletCommon {
 @freezed
 class AddressIndex with _$AddressIndex {
   ///Return a new address after incrementing the current descriptor index.
-  const factory AddressIndex() = AddressIndex_New;
+  const factory AddressIndex.new() = AddressIndex_New;
 
   ///Return the address for the current descriptor index if it has not been used in a received transaction. Otherwise return a new address as with AddressIndex.New.
   ///Use with caution, if the wallet has not yet detected an address has been used it could return an already used address. This function is primarily meant for situations where the caller is untrusted; for example when deriving donation addresses on-demand for a public web page.
