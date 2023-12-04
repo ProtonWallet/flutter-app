@@ -3,14 +3,16 @@
 
     "appName": "钱包",   
     "login": "登录",
-    "tabHome": "Home",
-    "tabProject": "Project",
-    "settings": "Settings",
-    "settingLanguage": "Language",
-    "autoBySystem": "Auto",
-    "themeMode": "Theme Mode",
-    "darkMode": "Dark Mode",
-    "lightMode":"Light Mode",
+    "settings_title": "设置",
+    "settingLanguage": "语言",
+    "autoBySystem": "自动",
+    "themeMode": "主题",
+    "darkMode": "深色",
+    "lightMode":"亮色",
+
+    "tab_home": "钱包",
+    "tab_history": "记录",
+    "tab_settings": "设置",
 
     "helloWorld": "Hello World!",
 

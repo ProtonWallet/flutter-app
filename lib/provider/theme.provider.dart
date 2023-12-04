@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/logger.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:deep_sky_app/generated/l10n.dart';
-
-// ：https://omadijaya.id/flutter-dynamic-dark-mode-with-provider-and-shared-preferences/
 
 class ThemeProvider extends ChangeNotifier {
   final String key = 'theme'; // preference key
@@ -14,7 +12,7 @@ class ThemeProvider extends ChangeNotifier {
     'system': ThemeMode.system // follow system
   };
 
-  // SharedPreferences _preferences;
+  SharedPreferences? _preferences;
   String _themeMode = "system";
 
   // return current mode
@@ -28,11 +26,11 @@ class ThemeProvider extends ChangeNotifier {
   static String getThemeModeName(String mode, context) {
     switch (mode) {
       case 'dark':
-        return "dark"; //S.of(context).darkMode;
+        return S.of(context)!.darkMode;
       case 'light':
-        return "light"; // S.of(context).lightMode;
+        return S.of(context)!.lightMode;
       default:
-        return "system"; // S.of(context).autoBySystem;
+        return S.of(context)!.autoBySystem;
     }
   }
 
@@ -47,20 +45,19 @@ class ThemeProvider extends ChangeNotifier {
 
   // init SharedPreferences
   _initialPreferences() async {
-    // if (_preferences == null)
-    // _preferences = await SharedPreferences.getInstance();
+    _preferences ??= await SharedPreferences.getInstance();
   }
 
   //  save
   _savePreferences() async {
     await _initialPreferences();
-    // _preferences.setString(key, _themeMode);
+    _preferences?.setString(key, _themeMode);
   }
 
   // read
   _loadFromPreferences() async {
     await _initialPreferences();
-    // _themeMode = _preferences.getString(key) ?? 'system';
+    _themeMode = _preferences?.getString(key) ?? 'system';
     notifyListeners(); // notify
   }
 

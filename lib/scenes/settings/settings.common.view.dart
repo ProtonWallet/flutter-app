@@ -17,7 +17,7 @@ class CommonSettings extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 10),
-            child: Text(S.of(context)!.settings),
+            child: Text(S.of(context)!.settings_title),
           ),
           const SizedBox(
             height: 10,

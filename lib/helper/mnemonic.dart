@@ -13,8 +13,8 @@ class Mnemonic {
   /// [Mnemonic] constructor
   static Future<Mnemonic> create(bridge.WordCount wordCount) async {
     try {
-      final res = await bdkApi.generateSeedFromWordCountStaticMethodApi(
-          wordCount: wordCount);
+      final res = await RustFFIProvider.bdkAPI
+          .generateSeedFromWordCountStaticMethodApi(wordCount: wordCount);
       return Mnemonic._(res);
     } on bridge.Error catch (e) {
       throw handleBdkException(e);

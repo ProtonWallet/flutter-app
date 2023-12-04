@@ -29,4 +29,12 @@ DynamicLibrary _open() {
   }
 }
 
-final ProtonWalletCommonImpl bdkApi = ProtonWalletCommonImpl(_open());
+// final ProtonWalletCommonImpl bdkApi = ProtonWalletCommonImpl(_open());
+
+class RustFFIProvider {
+  RustFFIProvider._private();
+  static final _instance = RustFFIProvider._private();
+  factory RustFFIProvider() => _instance;
+  final _auth = ProtonWalletCommonImpl(_open());
+  static ProtonWalletCommonImpl get bdkAPI => _instance._auth;
+}
