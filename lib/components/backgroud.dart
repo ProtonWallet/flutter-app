@@ -21,7 +21,7 @@ class Background extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
+            const Positioned(
               top: 0,
               left: 0,
               child: Text("test"),

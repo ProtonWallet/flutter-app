@@ -16,13 +16,13 @@ class WelcomeCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
     var view = HomeNavigationCoordinator().start();
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) {
-          return view;
-        },
-      ),
+          builder: (context) {
+            return view;
+          },
+          fullscreenDialog: false),
     );
     return view;
   }
