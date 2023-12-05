@@ -5,12 +5,6 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:wallet/generated/bridge_bindings.dart';
-
-// import 'package:wallet/generated/bridge_definitions.dart';
-// export 'package:wallet/generated/bridge_definitions.dart';
-
-// Re-export the bridge so it is only necessary to import this file.
-// export 'bridge_generated.dart';
 import 'dart:io' as io;
 
 const _base = 'proton_wallet_common';
@@ -22,7 +16,7 @@ final _dylib = io.Platform.isWindows ? '$_base.dll' : 'lib$_base.so';
 DynamicLibrary _open() {
   if (Platform.isIOS || Platform.isMacOS) {
     return DynamicLibrary.executable();
-  } else if (Platform.isAndroid || Platform.isLinux) {
+  } else if (Platform.isAndroid || Platform.isLinux || Platform.isWindows) {
     return DynamicLibrary.open(_dylib);
   } else {
     throw Exception("not support platform:${Platform.operatingSystem}");
@@ -30,11 +24,10 @@ DynamicLibrary _open() {
 }
 
 // final ProtonWalletCommonImpl bdkApi = ProtonWalletCommonImpl(_open());
-
 class RustFFIProvider {
   RustFFIProvider._private();
   static final _instance = RustFFIProvider._private();
   factory RustFFIProvider() => _instance;
-  final _auth = ProtonWalletCommonImpl(_open());
-  static ProtonWalletCommonImpl get bdkAPI => _instance._auth;
+  final _commonLib = ProtonWalletCommonImpl(_open());
+  static ProtonWalletCommonImpl get api => _instance._commonLib;
 }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/mnemonic.dart';
 import 'package:wallet/channels/platform.channel.dart';
 
 var count = 1;
 
 class LoginAndSignupBtn extends StatelessWidget {
   const LoginAndSignupBtn({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -18,7 +18,8 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             Colors.transparent, // Theme.of(context).colorScheme.inversePrimary,
         title: const Text(""),
       ),
-      body: buildNoHistory(context, viewModel, viewSize),
+      body: buildBackground2(context, viewModel, viewSize),
+      // buildNoHistory(context, viewModel, viewSize),
     );
   }
 
@@ -121,6 +122,623 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                     "aaaaalkfjslkfjasjflksdfkjsklfskfjlksdjflksdjfklsjfklsjdl")),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildBackground3(BuildContext context) {
+    return Column(
+      children: [
+        Column(
+          children: [
+            Column(
+              children: [
+                Column(
+                  children: [
+                    Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              width: 89.36470031738281,
+                              height: 22.870586395263672,
+                            ),
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 11.200716018676758,
+                                  height: 20.542312622070312,
+                                ),
+                                Container(
+                                  width: 15.281938552856445,
+                                  height: 15.730466842651367,
+                                ),
+                                Container(
+                                  width: 4.036738395690918,
+                                  height: 21.84964942932129,
+                                ),
+                                Container(
+                                  width: 4.036738395690918,
+                                  height: 21.84964942932129,
+                                ),
+                                Container(
+                                  width: 15.92269515991211,
+                                  height: 15.730466842651367,
+                                ),
+                                Container(
+                                  width: 31.204633712768555,
+                                  height: 21.84964942932129,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      width: 28,
+                                      height: 33.599998474121094,
+                                    ),
+                                    Container(
+                                      width: 23.33333396911621,
+                                      height: 25.013378143310547,
+                                    )
+                                  ],
+                                ),
+                                Stack(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          width: 28,
+                                          height: 33.599998474121094,
+                                        ),
+                                        Container(
+                                          width: 23.33333396911621,
+                                          height: 25.013378143310547,
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                        width: 28,
+                                        height: 28,
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                          begin: Alignment.bottomLeft,
+                                          end: Alignment.topRight,
+                                          colors: [
+                                            Color(0x87000000),
+                                            Color(0x00676767),
+                                            Color(0x00676767),
+                                            Color(0x003e3e3e)
+                                          ],
+                                        )))
+                                  ],
+                                ),
+                                Container(
+                                  width: 35.68627166748047,
+                                  height: 37.33333206176758,
+                                ),
+                                Container(
+                                  width: 26.7166748046875,
+                                  height: 28.672330856323242,
+                                )
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    Text("Welcome to",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ))
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                        "Financial freedom with rock-solid security and privacy",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        )),
+                    Text(
+                        "Get started and create a brand new wallet                  or import an existing one.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ))
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+        Row(
+          children: [],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                Row(
+                  children: [],
+                ),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        Text("Create a new wallet",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ))
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Row(
+                  children: [],
+                ),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        Text("Import an existing wallet",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ))
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      child: Text("1238719823789127"),
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                    )
+                  ],
+                )
+              ],
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildBackground2(BuildContext context, SetupOnboardViewModel viewModel,
+      ViewSize viewSize) {
+    return Container(
+      width: 500,
+      height: 392,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(color: Colors.black),
+          gradient: RadialGradient(
+              colors: [Colors.transparent, Colors.blue],
+              focal: Alignment.center,
+              radius: 2.0)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 252,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(color: Colors.white),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 252,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 500,
+                        height: 160,
+                        decoration: ShapeDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment(0.60, 0.35), // Adjusted from CSS
+                            radius:
+                                0.30, // This needs adjustment, CSS uses different system
+                            colors: [
+                              Color(0xFF6D4AFF), // Color at 0%
+                              Color(0xFF100635), // Color at 37.43%
+                              Color(0xFFD45A25), // Color at 100%
+                            ],
+                            stops: [0.0, 0.3743, 1.0],
+                          ),
+                          // RadialGradient(
+                          //   center: Alignment(0.0, 0.0),
+                          //   colors: [
+                          //     Color(0xFF6D4AFF),
+                          //     Color(0xFF0F0534),
+                          //     Color(0xFFD45925)
+                          //   ],
+                          //   radius: 0.30,
+                          // ),
+                          shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 1, color: Color(0xFFF5F5F4)),
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: 111,
+                              top: 63,
+                              child: Container(
+                                width: 248,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 56,
+                                      height: 56,
+                                      padding: const EdgeInsets.only(
+                                        top: 3.73,
+                                        left: 9.33,
+                                        right: 10.96,
+                                        bottom: 5.60,
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 35.71,
+                                            height: 46.67,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 28,
+                                                  height: 33.60,
+                                                  child: Stack(children: []),
+                                                ),
+                                                Container(
+                                                  width: 28,
+                                                  height: 33.60,
+                                                  child: Stack(
+                                                    children: [
+                                                      Positioned(
+                                                        left: 0,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 28,
+                                                          height: 33.60,
+                                                          child: Stack(
+                                                              children: []),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        left: -0,
+                                                        top: -0.75,
+                                                        child: Container(
+                                                          width: 28,
+                                                          height: 28,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            gradient:
+                                                                LinearGradient(
+                                                              begin: Alignment(
+                                                                  0.49, 0.87),
+                                                              end: Alignment(
+                                                                  -0.49, -0.87),
+                                                              colors: [
+                                                                Colors.black
+                                                                    .withOpacity(
+                                                                        0.5299999713897705),
+                                                                Color(
+                                                                    0x00676767),
+                                                                Color(
+                                                                    0x00676767),
+                                                                Color(
+                                                                    0x003E3E3E)
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 184,
+                                      height: 22.87,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            left: 94.40,
+                                            top: 0.57,
+                                            child: Container(
+                                              width: 89.60,
+                                              height: 22.20,
+                                              child: Stack(children: []),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 23,
+                              top: 41,
+                              child: SizedBox(
+                                width: 452,
+                                child: Text(
+                                  'Welcome to',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFFFEFCFC),
+                                    fontSize: 14,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    height: 0.10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Container(
+                        height: 68,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                'Financial freedom with rock-solid security and privacy',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF0C0C14),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
+                                  height: 0.10,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                'Get started and create a brand new wallet                              or import an existing one.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF0C0C14),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0.10,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            height: 124,
+            padding: const EdgeInsets.only(
+              top: 16,
+              left: 24,
+              right: 24,
+              bottom: 24,
+            ),
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF6D4AFF),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Create a new wallet',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.10,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  width: 1, color: Color(0xFFDEDBD9)),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Import an existing wallet',
+                                      style: TextStyle(
+                                        color: Color(0xFF0C0C14),
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.10,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

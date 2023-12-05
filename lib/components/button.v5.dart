@@ -33,7 +33,6 @@ class ButtonV5 extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: radius),
           fixedSize: Size(width, height),
           backgroundColor: backgroundColor,
-// shape: EdgeInsets.,
           elevation: 0),
       child: Text(
         text,
