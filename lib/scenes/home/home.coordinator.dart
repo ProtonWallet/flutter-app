@@ -4,6 +4,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
+import 'package:wallet/scenes/debug/wallet.view.dart';
 import 'package:wallet/scenes/home/home.view.dart';
 import 'package:wallet/scenes/home/home.viewmodel.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
@@ -45,6 +46,11 @@ class HomeCoordinator extends Coordinator {
       ));
       return view;
     }
+
+    // if (to == ViewIdentifiers.testwallet) {
+
+    //   return view;
+    // }
 
     throw UnimplementedError();
   }

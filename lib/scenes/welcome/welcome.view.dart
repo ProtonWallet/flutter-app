@@ -40,7 +40,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
   }
 
   Widget buildDesktop() {
-    return const Background(
+    return Background(
       child: SingleChildScrollView(
         child: SafeArea(
           child: Row(
@@ -50,12 +50,36 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                 child: WelcomeImage(),
               ),
               Expanded(
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: 450,
                       child: LoginAndSignupBtn(),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 450,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          viewModel.coordinator
+                              .move(ViewIdentifiers.home, context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6D4AFF),
+                            elevation: 0),
+                        child: Text(
+                          "Go Home".toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

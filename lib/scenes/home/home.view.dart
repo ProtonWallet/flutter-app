@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/debug/wallet.view.dart';
 import 'package:wallet/scenes/home/home.viewmodel.dart';
+import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 
 class HomeView extends ViewBase<HomeViewModel> {
   HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
@@ -91,6 +93,12 @@ class HomeView extends ViewBase<HomeViewModel> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  // showDialog(
+                  //     context: context,
+                  //     barrierDismissible: true,
+                  //     builder: (BuildContext cxt) {
+                  //       return AlertDialog(content: NestedDialog());
+                  //     });
                   viewModel.coordinator
                       .move(ViewIdentifiers.setupOnboard, context);
                 },
@@ -142,11 +150,46 @@ class HomeView extends ViewBase<HomeViewModel> {
               const ButtonV5(
                 height: 100,
                 width: 100,
-                text: "This",
+                text: "Custom Button",
               ),
               const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const SimpleWallet(),
+                    fullscreenDialog: false,
+                  ));
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
+                child: const Text(
+                  "Test Wallet",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
             ]),
       ),
     );
+  }
+}
+
+class NestedDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Navigator(
+            key: const Key(
+                "NestedDialogForSetup"), // add a unique key to refer to this navigator programmatically
+
+            initialRoute: '/',
+            onGenerateRoute: (RouteSettings settings) {
+              return MaterialPageRoute(
+                  builder: (_) => SetupOnbaordCoordinator().start());
+            }));
   }
 }
