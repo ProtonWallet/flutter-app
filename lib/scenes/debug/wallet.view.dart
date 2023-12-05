@@ -48,7 +48,7 @@ class _SimpleWalletState extends State<SimpleWallet> {
 
   sync() async {
     if (blockchain == null) {
-      await initBlockchain(true);
+      await initBlockchain(false);
     }
     await lib.sync(blockchain!, aliceWallet);
   }
