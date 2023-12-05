@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class HomeNavigationViewModel extends ViewModel {
-  HomeNavigationViewModel(Coordinator coordinator) : super(coordinator);
+  HomeNavigationViewModel(super.coordinator);
 
   int selectedPage = 0;
   void updateSelected(int index);
@@ -15,7 +14,7 @@ abstract class HomeNavigationViewModel extends ViewModel {
 }
 
 class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
-  HomeNavigationViewModelImpl(Coordinator coordinator) : super(coordinator);
+  HomeNavigationViewModelImpl(super.coordinator);
 
   final datasourceChangedStreamController =
       StreamController<HomeNavigationViewModel>.broadcast();

@@ -46,14 +46,14 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(
+              const Expanded(
                 child: WelcomeImage(),
               ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 450,
                       child: LoginAndSignupBtn(),
                     ),

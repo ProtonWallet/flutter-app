@@ -1,11 +1,10 @@
 // import 'package:wallet/scenes/app/app.model.dart';
 import 'dart:async';
 
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class AppViewModel extends ViewModel {
-  AppViewModel(Coordinator coordinator) : super(coordinator);
+  AppViewModel(super.coordinator);
   // final AppModel appModel;
 
   // void updateUsername(String updatedUsername);
@@ -26,7 +25,7 @@ abstract class AppViewModel extends ViewModel {
 }
 
 class AppViewModelImpl extends AppViewModel {
-  AppViewModelImpl(Coordinator coordinator) : super(coordinator);
+  AppViewModelImpl(super.coordinator);
   final datasourceChangedStreamController =
       StreamController<AppViewModel>.broadcast();
   bool showUsernameValidationError = false;
