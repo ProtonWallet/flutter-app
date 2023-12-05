@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class HistoryDetailViewModel extends ViewModel {
-  HistoryDetailViewModel(Coordinator coordinator) : super(coordinator);
+  HistoryDetailViewModel(super.coordinator);
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
@@ -25,7 +24,7 @@ abstract class HistoryDetailViewModel extends ViewModel {
 }
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
-  HistoryDetailViewModelImpl(Coordinator coordinator) : super(coordinator);
+  HistoryDetailViewModelImpl(super.coordinator);
 
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();

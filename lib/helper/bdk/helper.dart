@@ -1016,7 +1016,7 @@ class TxBuilder {
   ///
   /// This will use the default nSequence value of 0xFFFFFFFD.
   TxBuilder enableRbf() {
-    _rbfValue = bridge.RbfValue.rbfDefault();
+    _rbfValue = const bridge.RbfValue.rbfDefault();
     return this;
   }
 

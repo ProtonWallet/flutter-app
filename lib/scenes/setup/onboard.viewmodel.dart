@@ -1,16 +1,15 @@
 import 'dart:async';
 
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class SetupOnboardViewModel extends ViewModel {
-  SetupOnboardViewModel(Coordinator coordinator) : super(coordinator);
+  SetupOnboardViewModel(super.coordinator);
 
   void goHome();
 }
 
 class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
-  SetupOnboardViewModelImpl(Coordinator coordinator) : super(coordinator);
+  SetupOnboardViewModelImpl(super.coordinator);
   final datasourceChangedStreamController =
       StreamController<SetupOnboardViewModel>.broadcast();
   @override

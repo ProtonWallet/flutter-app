@@ -179,6 +179,8 @@ class HomeView extends ViewBase<HomeViewModel> {
 }
 
 class NestedDialog extends StatelessWidget {
+  const NestedDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

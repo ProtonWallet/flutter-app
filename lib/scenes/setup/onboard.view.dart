@@ -137,35 +137,35 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                   children: [
                     Column(
                       children: [
-                        Stack(
+                        const Stack(
                           children: [
-                            Container(
+                            SizedBox(
                               width: 89.36470031738281,
                               height: 22.870586395263672,
                             ),
                             Stack(
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 11.200716018676758,
                                   height: 20.542312622070312,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 15.281938552856445,
                                   height: 15.730466842651367,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 4.036738395690918,
                                   height: 21.84964942932129,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 4.036738395690918,
                                   height: 21.84964942932129,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 15.92269515991211,
                                   height: 15.730466842651367,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 31.204633712768555,
                                   height: 21.84964942932129,
                                 )
@@ -177,13 +177,13 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                           children: [
                             Column(
                               children: [
-                                Stack(
+                                const Stack(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: 28,
                                       height: 33.599998474121094,
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: 23.33333396911621,
                                       height: 25.013378143310547,
                                     )
@@ -191,13 +191,13 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                 ),
                                 Stack(
                                   children: [
-                                    Stack(
+                                    const Stack(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 28,
                                           height: 33.599998474121094,
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: 23.33333396911621,
                                           height: 25.013378143310547,
                                         )
@@ -206,7 +206,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                     Container(
                                         width: 28,
                                         height: 28,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                             gradient: LinearGradient(
                                           begin: Alignment.bottomLeft,
                                           end: Alignment.topRight,
@@ -219,11 +219,11 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                         )))
                                   ],
                                 ),
-                                Container(
+                                const SizedBox(
                                   width: 35.68627166748047,
                                   height: 37.33333206176758,
                                 ),
-                                Container(
+                                const SizedBox(
                                   width: 26.7166748046875,
                                   height: 28.672330856323242,
                                 )
@@ -233,14 +233,14 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                         )
                       ],
                     ),
-                    Text("Welcome to",
+                    const Text("Welcome to",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ))
                   ],
                 ),
-                Column(
+                const Column(
                   children: [
                     Text(
                         "Financial freedom with rock-solid security and privacy",
@@ -260,10 +260,10 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             )
           ],
         ),
-        Row(
+        const Row(
           children: [],
         ),
-        Column(
+        const Column(
           children: [
             Row(
               children: [
@@ -309,44 +309,44 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
               children: [
                 Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                       child: Text("1238719823789127"),
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     ),
-                    Container(
+                    SizedBox(
                       width: 8,
                       height: 8,
                     )
@@ -369,7 +369,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           border: Border.all(color: Colors.black),
-          gradient: RadialGradient(
+          gradient: const RadialGradient(
               colors: [Colors.transparent, Colors.blue],
               focal: Alignment.center,
               radius: 2.0)),
@@ -381,13 +381,13 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
           Container(
             height: 252,
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   height: 252,
                   child: Column(
@@ -398,7 +398,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                       Container(
                         width: 500,
                         height: 160,
-                        decoration: ShapeDecoration(
+                        decoration: const ShapeDecoration(
                           gradient: RadialGradient(
                             center: Alignment(0.60, 0.35), // Adjusted from CSS
                             radius:
@@ -429,7 +429,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                             Positioned(
                               left: 111,
                               top: 63,
-                              child: Container(
+                              child: SizedBox(
                                 width: 248,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -452,7 +452,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: 35.71,
                                             height: 46.67,
                                             child: Column(
@@ -462,20 +462,20 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Container(
+                                                const SizedBox(
                                                   width: 28,
                                                   height: 33.60,
                                                   child: Stack(children: []),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: 28,
                                                   height: 33.60,
                                                   child: Stack(
                                                     children: [
-                                                      Positioned(
+                                                      const Positioned(
                                                         left: 0,
                                                         top: 0,
-                                                        child: Container(
+                                                        child: SizedBox(
                                                           width: 28,
                                                           height: 33.60,
                                                           child: Stack(
@@ -492,19 +492,19 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                                               BoxDecoration(
                                                             gradient:
                                                                 LinearGradient(
-                                                              begin: Alignment(
+                                                              begin: const Alignment(
                                                                   0.49, 0.87),
-                                                              end: Alignment(
+                                                              end: const Alignment(
                                                                   -0.49, -0.87),
                                                               colors: [
                                                                 Colors.black
                                                                     .withOpacity(
                                                                         0.5299999713897705),
-                                                                Color(
+                                                                const Color(
                                                                     0x00676767),
-                                                                Color(
+                                                                const Color(
                                                                     0x00676767),
-                                                                Color(
+                                                                const Color(
                                                                     0x003E3E3E)
                                                               ],
                                                             ),
@@ -521,7 +521,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    Container(
+                                    const SizedBox(
                                       width: 184,
                                       height: 22.87,
                                       child: Stack(
@@ -529,7 +529,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                           Positioned(
                                             left: 94.40,
                                             top: 0.57,
-                                            child: Container(
+                                            child: SizedBox(
                                               width: 89.60,
                                               height: 22.20,
                                               child: Stack(children: []),
@@ -542,7 +542,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                 ),
                               ),
                             ),
-                            Positioned(
+                            const Positioned(
                               left: 23,
                               top: 41,
                               child: SizedBox(
@@ -564,7 +564,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      Container(
+                      const SizedBox(
                         height: 68,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -585,7 +585,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             SizedBox(
                               width: double.infinity,
                               child: Text(
@@ -619,7 +619,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
               right: 24,
               bottom: 24,
             ),
-            decoration: ShapeDecoration(
+            decoration: const ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -633,7 +633,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -647,7 +647,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                               horizontal: 16, vertical: 8),
                           clipBehavior: Clip.antiAlias,
                           decoration: ShapeDecoration(
-                            color: Color(0xFF6D4AFF),
+                            color: const Color(0xFF6D4AFF),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                           ),
@@ -657,7 +657,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                child: Row(
+                                child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -683,7 +683,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -699,7 +699,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                           decoration: ShapeDecoration(
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
+                              side: const BorderSide(
                                   width: 1, color: Color(0xFFDEDBD9)),
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -710,7 +710,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                child: Row(
+                                child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,

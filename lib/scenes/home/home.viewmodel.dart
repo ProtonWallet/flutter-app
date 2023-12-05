@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class HomeViewModel extends ViewModel {
-  HomeViewModel(Coordinator coordinator) : super(coordinator);
+  HomeViewModel(super.coordinator);
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
@@ -22,7 +21,7 @@ abstract class HomeViewModel extends ViewModel {
 }
 
 class HomeViewModelImpl extends HomeViewModel {
-  HomeViewModelImpl(Coordinator coordinator) : super(coordinator);
+  HomeViewModelImpl(super.coordinator);
 
   final datasourceChangedStreamController =
       StreamController<HomeViewModel>.broadcast();

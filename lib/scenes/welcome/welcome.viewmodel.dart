@@ -1,16 +1,15 @@
 import 'dart:async';
 
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class WelcomeViewModel extends ViewModel {
-  WelcomeViewModel(Coordinator coordinator) : super(coordinator);
+  WelcomeViewModel(super.coordinator);
 
   void goHome();
 }
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
-  WelcomeViewModelImpl(Coordinator coordinator) : super(coordinator);
+  WelcomeViewModelImpl(super.coordinator);
   final datasourceChangedStreamController =
       StreamController<WelcomeViewModel>.broadcast();
   @override
