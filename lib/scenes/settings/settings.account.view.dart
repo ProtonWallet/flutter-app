@@ -13,7 +13,7 @@ class AccountInfo extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         radius: 50,
         child: Text(
-          S.of(context)!.login,
+          S.of(context).login,
           style: const TextStyle(fontSize: 20),
         ),
       ),

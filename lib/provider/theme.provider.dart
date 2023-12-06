@@ -26,11 +26,11 @@ class ThemeProvider extends ChangeNotifier {
   static String getThemeModeName(String mode, context) {
     switch (mode) {
       case 'dark':
-        return S.of(context)!.darkMode;
+        return S.of(context).darkMode;
       case 'light':
-        return S.of(context)!.lightMode;
+        return S.of(context).lightMode;
       default:
-        return S.of(context)!.autoBySystem;
+        return S.of(context).autoBySystem;
     }
   }
 

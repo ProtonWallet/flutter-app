@@ -12,6 +12,14 @@
   "tab_home": "Home",
   "tab_history": "History",
   "tab_settings": "Settings",
+
+  "welcome_to": "Welcome to",
+  "@welcome_to": {
+    "description": "The welcome message"
+  },
+
+  "createNewWallet": "Create a new wallet",
+  "importWallet": "Import an existing wallet",
   
   "helloWorld": "Hello World!",
   "@helloWorld": {

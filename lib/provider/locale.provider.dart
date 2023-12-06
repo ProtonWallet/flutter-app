@@ -29,7 +29,7 @@ class LocaleProvider extends ChangeNotifier {
         return '简体中文';
       case '':
       default:
-        return S.of(context)!.autoBySystem;
+        return S.of(context).autoBySystem;
     }
   }
 

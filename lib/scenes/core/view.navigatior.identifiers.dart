@@ -8,5 +8,7 @@ abstract class ViewIdentifiers extends NavigationIdentifiers {
   static const NavigationIdentifier receive = 4;
   static const NavigationIdentifier historyDetails = 5;
   static const NavigationIdentifier setupOnboard = 6;
-  static const NavigationIdentifier testwallet = 7;
+  static const NavigationIdentifier setupCreate = 7;
+  static const NavigationIdentifier setupBackup = 8;
+  static const NavigationIdentifier testwallet = 99;
 }

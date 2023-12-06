@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
-import 'package:wallet/scenes/home/navigation.coordinator.dart';
+import 'package:wallet/scenes/setup/create.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.view.dart';
 import 'package:wallet/scenes/setup/onboard.viewmodel.dart';
 
@@ -15,16 +16,19 @@ class SetupOnbaordCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    var view = HomeNavigationCoordinator().start();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) {
-            return view;
-          },
-          fullscreenDialog: false),
-    );
-    return view;
+    if (to == ViewIdentifiers.setupCreate) {
+      var view = SetupCreateCoordinator().start();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) {
+              return view;
+            },
+            fullscreenDialog: false),
+      );
+      return view;
+    }
+    throw UnimplementedError();
   }
 
   @override
