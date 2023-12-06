@@ -4,3 +4,4 @@ output-class: S
 output-localization-file: locale.dart
 #S.of(context).yourMessage
 nullable-getter: false
+untranslated-messages-file: untranslated_strings.txt

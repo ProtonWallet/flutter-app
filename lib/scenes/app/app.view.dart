@@ -29,7 +29,7 @@ class AppView extends ViewBase<AppViewModel> {
 
           title: 'Proton Wallet',
           onGenerateTitle: (context) {
-            return S.of(context)!.appName;
+            return S.of(context).appName;
           },
 
           localizationsDelegates: const [

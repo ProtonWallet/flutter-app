@@ -20,11 +20,11 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: const Icon(Icons.account_balance_wallet),
-              label: S.of(context)!.tab_home,
+              label: S.of(context).tab_home,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.change_history),
-              label: S.of(context)!.tab_history,
+              label: S.of(context).tab_history,
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.account_balance_wallet),
@@ -36,7 +36,7 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
             // ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.account_circle),
-              label: S.of(context)!.tab_settings,
+              label: S.of(context).tab_settings,
             ),
           ],
           selectedItemColor: Theme.of(context).colorScheme.primary,

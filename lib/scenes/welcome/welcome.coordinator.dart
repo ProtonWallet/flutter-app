@@ -19,6 +19,7 @@ class WelcomeCoordinator extends Coordinator {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
+          settings: RouteSettings(name: view.key.toString()),
           builder: (context) {
             return view;
           },

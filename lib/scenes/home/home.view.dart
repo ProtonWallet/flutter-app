@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/debug/wallet.view.dart';
@@ -91,7 +94,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               const SizedBox(height: 20),
               const Text("----------------IF no wallet----------------"),
               const SizedBox(height: 20),
-              ElevatedButton(
+              ButtonV5(
                 onPressed: () {
                   // showDialog(
                   //     context: context,
@@ -102,55 +105,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                   viewModel.coordinator
                       .move(ViewIdentifiers.setupOnboard, context);
                 },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                child: const Text(
-                  "Create Wallet",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                height: 36,
+                width: 200,
+                text: S.of(context).createNewWallet,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: viewModel.updateStringValue,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                child: const Text(
-                  "Import Wallet",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // BottomSheet
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                child: const Text(
-                  "Backup Wallet",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const ButtonV5(
-                height: 100,
-                width: 100,
-                text: "Custom Button",
+              CupertinoButton(
+                onPressed: () {},
+                color: ProtonColors.interactionNorm,
+                child: const Text('Button'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(

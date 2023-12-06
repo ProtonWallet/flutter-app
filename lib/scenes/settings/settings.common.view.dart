@@ -17,7 +17,7 @@ class CommonSettings extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 10),
-            child: Text(S.of(context)!.settings_title),
+            child: Text(S.of(context).settings_title),
           ),
           const SizedBox(
             height: 10,
@@ -27,7 +27,7 @@ class CommonSettings extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(S.of(context)!.themeMode),
+                Text(S.of(context).themeMode),
                 Text(ThemeProvider.getThemeModeName(
                     Provider.of<ThemeProvider>(context).themeMode, context)),
               ],
@@ -47,7 +47,7 @@ class CommonSettings extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(S.of(context)!.settingLanguage),
+                Text(S.of(context).settingLanguage),
                 Text(LocaleProvider.localeName(
                     Provider.of<LocaleProvider>(context).language, context)),
               ],
