@@ -48,6 +48,8 @@ dependencies:
   animated_size_and_fade: ^3.0.1
   flutter_tags_x: ^1.1.0
   flutter_screen_lock: ^9.0.1
+  sqflite: ^2.3.0
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

@@ -59,7 +59,7 @@ impl Wallet {
         network: bitcoin::Network,
         database_config: DatabaseConfig,
     ) -> Result<String, BdkError> {
-        let database = AnyDatabase::from_config(&database_config.into()).unwrap();
+        let database: AnyDatabase = AnyDatabase::from_config(&database_config.into()).unwrap();
         let bdk_wallet =
             BdkWallet::new(&descriptor, change_descriptor.as_ref(), network, database).unwrap();
         let wallet_mutex = Mutex::new(bdk_wallet);

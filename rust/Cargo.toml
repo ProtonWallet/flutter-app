@@ -13,7 +13,7 @@ flutter_rust_bridge_codegen = { version = "= 1.82.1", features = [
 ]}
 [dependencies]
 rand = "0.8"
-bdk = { version = "0.28.0", features = ["all-keys", "use-esplora-ureq", "sqlite-bundled", "rpc"] }
+bdk = { version = "0.28.0", features = ["all-keys", "use-esplora-ureq", "sqlite-bundled", "sqlite", "rpc"] }
 tokio = { version = "0.3.7", features = ["full"] }
 flutter_rust_bridge = { version = "= 1.82.1"  }
 serde = "1.0.89"

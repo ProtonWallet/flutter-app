@@ -34,8 +34,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.bold,
                   )),
-              const Text("1000000000 Sat",
-                  style: TextStyle(
+              Text("${viewModel.sats} Sat",
+                  style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
