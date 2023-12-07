@@ -31,12 +31,11 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
     return Stack(
       children: <Widget>[
         SizedBox(
-          width: 500,
-          height: 160,
+          width: 500, //MediaQuery.of(context).size.width,
+          height: 200, //MediaQuery.of(context).size.height - 80,
           child: SvgPicture.asset(
             'assets/images/frame_create.svg',
-            width: 500,
-            height: 200,
+            fit: BoxFit.contain,
           ),
         ),
         Container(
@@ -48,7 +47,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 124),
+          padding: const EdgeInsets.only(top: 160),
           alignment: Alignment.topCenter,
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

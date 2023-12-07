@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Background extends StatelessWidget {
   final Widget child;
   const Background({
     super.key,
     required this.child,
-    // this.topImage = "assets/images/wallet.png",
+    this.topImage = "assets/images/frame_background.svg",
     // this.bottomImage = "assets/images/wallet.png",
   });
 
-  // final String topImage, bottomImage;
+  final String topImage; //, bottomImage;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +22,17 @@ class Background extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            const Positioned(
+            Positioned(
               top: 0,
               left: 0,
-              child: Text("test"),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 350, //MediaQuery.of(context).size.height - 80,
+                child: SvgPicture.asset(
+                  topImage,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
             ),
             SafeArea(child: child),
           ],

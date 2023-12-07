@@ -19,7 +19,7 @@ class LoginAndSignupBtn extends StatelessWidget {
           tag: "login_btn",
           child: ElevatedButton(
             onPressed: () {
-              NativeViewSwitcher.switchToNativeView();
+              NativeViewSwitcher.switchToNativeLogin();
             },
             child: Text(
               "Login".toUpperCase(),
