@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -111,7 +112,13 @@ class HomeView extends ViewBase<HomeViewModel> {
               ),
               const SizedBox(height: 20),
               CupertinoButton(
-                onPressed: () {},
+                onPressed: () {
+                  screenLock(
+                    context: context,
+                    correctString: '1234',
+                    canCancel: false,
+                  );
+                },
                 color: ProtonColors.interactionNorm,
                 child: const Text('Button'),
               ),

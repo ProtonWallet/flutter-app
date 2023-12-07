@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/components/backgroud.dart';
+import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -99,31 +103,25 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const WelcomeImage(),
-              Row(
-                children: [
-                  const Spacer(),
-                  const Expanded(
-                    flex: 8,
-                    child: LoginAndSignupBtn(),
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
+              SizedBox(
+                width: 300,
+                child: ButtonV5(
+                    text: "Create Account",
                     onPressed: () {
-                      viewModel.coordinator.move(ViewIdentifiers.home, context);
+                      NativeViewSwitcher.switchToNativeSignup();
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: Text(
-                      "Create Wallet".toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
+                    width: 300,
+                    height: 48),
+              ),
+              SizedBoxes.box12,
+              SizedBox(
+                width: 300,
+                child: CupertinoButton(
+                  onPressed: () {
+                    NativeViewSwitcher.switchToNativeLogin();
+                  },
+                  child: const Text('Sign in'),
+                ),
               ),
             ],
           ),

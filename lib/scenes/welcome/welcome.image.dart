@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 
 class WelcomeImage extends StatelessWidget {
@@ -8,21 +9,30 @@ class WelcomeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        Text(
-          "WELCOME TO Proton",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        SizedBox(
+          width: 250,
+          height: 56,
+          child: SvgPicture.asset(
+            'assets/images/frame_word_logo.svg',
+            fit: BoxFit.contain,
+          ),
         ),
-        SizedBox(height: defaultPadding * 2),
-        Row(
+        const SizedBox(height: defaultPadding * 2),
+        const Row(
           children: [
             Spacer(),
-            Expanded(flex: 8, child: Text("")),
+            Expanded(
+                flex: 8,
+                child: Text(
+                  "Privacy. Security. Convenience. Encrypted email that gives you full control of your personal data.",
+                  textAlign: TextAlign.center,
+                )),
             Spacer(),
           ],
         ),
-        SizedBox(height: defaultPadding * 2),
+        const SizedBox(height: defaultPadding * 2),
       ],
     );
   }

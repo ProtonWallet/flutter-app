@@ -41,7 +41,9 @@ import SwiftUI // If using SwiftUI
         let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native.views", binaryMessenger: controller.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "native.navigation.login" {
-                self?.switchToNativeView()
+                self?.switchToSignin()
+            } else if call.method == "native.navigation.signup" {
+                self?.switchToSignup()
             } else {
                 result(FlutterMethodNotImplemented)
             }
@@ -175,7 +177,7 @@ import SwiftUI // If using SwiftUI
         self.triggerSendingData()
     }
 
-    func switchToNativeView() {
+    func switchToSignin() {
         print("Showing login view")
         login?.presentLoginFlow(over: flutterWindow?.rootViewController as! UIViewController,
                                 customization: LoginCustomizationOptions(
@@ -197,6 +199,30 @@ import SwiftUI // If using SwiftUI
                                         self?.switchToFlutterView()
                                     }
                                 }
+    }
+
+    func switchToSignup() {
+        print("Showing login view")
+        login?.presentSignupFlow(over: flutterWindow?.rootViewController as! UIViewController,
+                                 customization: LoginCustomizationOptions(
+                                    performBeforeFlow: getAdditionalWork,
+                                    customErrorPresenter: getCustomErrorPresenter,
+                                    initialError: initialLoginError(),
+                                    helpDecorator: getHelpDecorator,
+                                    inAppTheme: getInAppTheme
+                                 )) { [weak self] result in
+                                     switch result {
+                                     case .loginStateChanged(.loginFinished):
+                                         print("dismissed")
+                                     case .signupStateChanged(.signupFinished):
+                                         print("dismissed")
+                                     case .loginStateChanged(.dataIsAvailable(let loginData)), .signupStateChanged(.dataIsAvailable(let loginData)):
+                                         print(loginData)
+                                     case .dismissed:
+                                         print("dismissed")
+                                         self?.switchToFlutterView()
+                                     }
+                                 }
     }
     
     private func processLoginResult(_ result: LoginAndSignupResult) {
