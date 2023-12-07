@@ -1,62 +1,45 @@
-// import 'package:flutter/material.dart';
-// // import 'components/login_form.dart';
-// // import 'components/login_screen_top_image.dart';
+import 'package:flutter/material.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/login/login.viewmodel.dart';
 
-// class LoginScreen extends StatelessWidget {
-//   const LoginScreen({Key? key}) : super(key: key);
+class LoginView extends ViewBase<LoginViewModel> {
+  LoginView(LoginViewModel viewModel)
+      : super(viewModel, const Key("LoginView"));
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Background(
-//       child: SingleChildScrollView(
-//         child: Responsive(
-//           mobile: const MobileLoginScreen(),
-//           desktop: Row(
-//             children: [
-//               const Expanded(
-//                 child: LoginScreenTopImage(),
-//               ),
-//               Expanded(
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: const [
-//                     SizedBox(
-//                       width: 450,
-//                       child: LoginForm(),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class MobileLoginScreen extends StatelessWidget {
-//   const MobileLoginScreen({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: <Widget>[
-//         const LoginScreenTopImage(),
-//         Row(
-//           children: const [
-//             Spacer(),
-//             Expanded(
-//               flex: 8,
-//               child: LoginForm(),
-//             ),
-//             Spacer(),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget buildWithViewModel(
+      BuildContext context, LoginViewModel viewModel, ViewSize viewSize) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text("LoginView"),
+      ),
+      body: Column(
+        children: [
+          const TextField(
+            decoration: InputDecoration(
+              labelText: "Username",
+            ),
+          ),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: "Password",
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Perform signup logic here
+            },
+            child: const Text("Signup"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Perform login logic here
+            },
+            child: const Text("Login"),
+          ),
+        ],
+      ),
+    );
+  }
+}

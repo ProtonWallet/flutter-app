@@ -20,14 +20,6 @@ class LoginAndSignupBtn extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               NativeViewSwitcher.switchToNativeView();
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return const WalletHomePage(title: 'Flutter Wallet');
-              //     },
-              //   ),
-              // );
             },
             child: Text(
               "Login".toUpperCase(),
@@ -40,14 +32,6 @@ class LoginAndSignupBtn extends StatelessWidget {
             logger.d("api.publishMessage(message: LoginAndSignupBtn clicked);");
             var mnemonic = await Mnemonic.create(WordCount.Words12);
             logger.d(mnemonic.asString());
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) {
-            //       return const WalletHomePage(title: 'Flutter Wallet');
-            //     },
-            //   ),
-            // );
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber, elevation: 0),
