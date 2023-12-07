@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/components/backgroud.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -122,6 +123,14 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                   },
                   child: const Text('Sign in'),
                 ),
+              ),
+              SizedBoxes.box8,
+              CupertinoButton(
+                onPressed: () {
+                  viewModel.coordinator.move(ViewIdentifiers.home, context);
+                },
+                color: ProtonColors.interactionNorm,
+                child: const Text('Go Home'),
               ),
             ],
           ),

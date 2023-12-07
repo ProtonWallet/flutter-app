@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:path/path.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
+
+import 'dart:async';
+
+import 'package:sqflite/sqflite.dart';
 
 class BdkLibrary {
   Future<Mnemonic> createMnemonic() async {
@@ -45,10 +50,14 @@ class BdkLibrary {
   }
 
   Future<Wallet> restoreWallet(Descriptor descriptor) async {
+    var path = await getDatabasesPath();
+    logger.d("=========DB path $path=====");
+    var config = DatabaseConfig.sqlite(
+        config: SqliteDbConfiguration(path: join(path, 'test_database.db')));
     final wallet = await Wallet.create(
         descriptor: descriptor,
         network: Network.Testnet,
-        databaseConfig: const DatabaseConfig.memory());
+        databaseConfig: config);
     return wallet;
   }
 

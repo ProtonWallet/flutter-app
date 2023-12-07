@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
@@ -16,6 +17,8 @@ abstract class HomeViewModel extends ViewModel {
   void incrementCounter();
   Future<void> updateStringValue();
 
+  String sats = '0';
+
   @override
   bool get keepAlive => true;
 }
@@ -27,15 +30,29 @@ class HomeViewModelImpl extends HomeViewModel {
       StreamController<HomeViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
+  final BdkLibrary _lib = BdkLibrary();
+  late Wallet _wallet;
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
     selectedSectionChangedController.close();
+    //clean up wallet ....
   }
 
   @override
   Future<void> loadData() async {
-    return;
+    //restore wallet
+    final aliceMnemonic = await Mnemonic.fromString(
+        'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
+    final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
+    _wallet = await _lib.restoreWallet(aliceDescriptor);
+
+    var ballance = await _wallet.getBalance();
+
+    sats = ballance.total.toString();
+
+    datasourceChangedStreamController.sink.add(this);
   }
 
   @override
