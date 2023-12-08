@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:wallet/generated/bridge_definitions.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class HistoryViewModel extends ViewModel {
   HistoryViewModel(super.coordinator);
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
-  List<String> history = [];
+  List<TransactionDetails> history = [];
 
   void updateSelected(int index);
   void updateMnemonic(String mnemonic);
@@ -33,6 +34,9 @@ class HistoryViewModelImpl extends HistoryViewModel {
       StreamController<HistoryViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
+  final BdkLibrary _lib = BdkLibrary();
+  late Wallet _wallet;
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
@@ -41,7 +45,14 @@ class HistoryViewModelImpl extends HistoryViewModel {
 
   @override
   Future<void> loadData() async {
-    return;
+    final aliceMnemonic = await Mnemonic.fromString(
+        'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
+    final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
+    _wallet = await _lib.restoreWallet(aliceDescriptor);
+
+    history = await _lib.getConfirmedTransactions(_wallet);
+
+    datasourceChangedStreamController.sink.add(this);
   }
 
   @override
@@ -78,7 +89,7 @@ class HistoryViewModelImpl extends HistoryViewModel {
       history.clear();
     } else {
       for (int i = 0; i < 100; i++) {
-        history.add("Item {i}");
+        // history.add("Item {i}");
       }
     }
 

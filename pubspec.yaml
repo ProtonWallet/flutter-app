@@ -50,6 +50,7 @@ dependencies:
   flutter_screen_lock: ^9.0.1
   sqflite: ^2.3.0
   path: ^1.8.3
+  flutter_spinkit: ^5.2.0
 
 dev_dependencies:
   flutter_test:

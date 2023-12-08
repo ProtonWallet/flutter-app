@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -10,14 +10,15 @@ abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
 
   int selectedPage = 0;
-  String mnemonicString = 'No Wallet';
 
   void updateSelected(int index);
-  void updateMnemonic(String mnemonic);
-  void incrementCounter();
-  Future<void> updateStringValue();
+  void updateSats(String sats);
+  Future<void> syncWallet();
 
   String sats = '0';
+
+  bool isSyncing = false;
+  void udpateSyncStatus(bool syncing);
 
   @override
   bool get keepAlive => true;
@@ -32,6 +33,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   final BdkLibrary _lib = BdkLibrary();
   late Wallet _wallet;
+  Blockchain? blockchain;
 
   @override
   void dispose() {
@@ -47,12 +49,12 @@ class HomeViewModelImpl extends HomeViewModel {
         'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
     final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
     _wallet = await _lib.restoreWallet(aliceDescriptor);
-
-    var ballance = await _wallet.getBalance();
-
-    sats = ballance.total.toString();
-
-    datasourceChangedStreamController.sink.add(this);
+    blockchain ??= await _lib.initializeBlockchain(false);
+    _wallet.getBalance().then((value) => {
+          logger.i('balance: ${value.total}'),
+          sats = value.total.toString(),
+          datasourceChangedStreamController.sink.add(this)
+        });
   }
 
   @override
@@ -66,18 +68,30 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateMnemonic(String mnemonic) {
-    mnemonicString = mnemonic;
+  void updateSats(String sats) {
+    sats = sats;
     datasourceChangedStreamController.sink.add(this);
   }
 
   @override
-  void incrementCounter() {}
+  Future<void> syncWallet() async {
+    udpateSyncStatus(true);
+
+    await _lib.sync(blockchain!, _wallet);
+    var balance = await _wallet.getBalance();
+    logger.i('balance: ${balance.total}');
+    udpateSyncStatus(false);
+  }
+
+  Future<void> updateBalance() async {
+    var balance = await _wallet.getBalance();
+    logger.i('balance: ${balance.total}');
+    udpateSyncStatus(false);
+  }
 
   @override
-  Future<void> updateStringValue() async {
-    var mnemonic = await Mnemonic.create(WordCount.Words12);
-    logger.d(mnemonic.asString());
-    updateMnemonic(mnemonic.asString());
+  void udpateSyncStatus(bool syncing) {
+    isSyncing = syncing;
+    datasourceChangedStreamController.sink.add(this);
   }
 }

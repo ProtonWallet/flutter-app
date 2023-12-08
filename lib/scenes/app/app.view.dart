@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
@@ -25,7 +26,9 @@ class AppView extends ViewBase<AppViewModel> {
       child: Consumer2<ThemeProvider, LocaleProvider>(builder: (context,
           ThemeProvider themeProvider, LocaleProvider localeProvider, child) {
         return MaterialApp(
-          debugShowCheckedModeBanner: false,
+          debugShowMaterialGrid: false,
+          showSemanticsDebugger: false,
+          debugShowCheckedModeBanner: kDebugMode,
 
           title: 'Proton Wallet',
           onGenerateTitle: (context) {

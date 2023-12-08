@@ -142,6 +142,16 @@ class HomeView extends ViewBase<HomeViewModel> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 80,
+                child: viewModel.isSyncing
+                    ? const Text("Syncing")
+                    : CupertinoButton(
+                        onPressed: viewModel.syncWallet,
+                        color: ProtonColors.interactionNorm,
+                        child: const Text('Button'),
+                      ),
+              ),
             ]),
       ),
     );
