@@ -28,7 +28,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This tr
+      ),
     );
   }
 
@@ -63,94 +63,29 @@ class HistoryView extends ViewBase<HistoryViewModel> {
 
   Widget buildHistory(
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
-    return SizedBox(
-      // use MediaQuery get screen size
-      width: MediaQuery.of(context).size.width,
-      child: ListView(
-        children: [
-          MenuItemButton(
-            onPressed: () {
+    return ListView.separated(
+        separatorBuilder: (context, index) => const Divider(
+              color: Colors.grey,
+            ),
+        itemCount: viewModel.history.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: FittedBox(
+              child: Text(
+                viewModel.history[index].txid,
+                style: const TextStyle(color: Colors.blue),
+                textAlign: TextAlign.left,
+                maxLines: 3,
+                softWrap: true,
+              ),
+            ),
+            subtitle: Text(
+                "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Fee: ${viewModel.history[index].fee.toString()} Time: ${viewModel.history[index].confirmationTime?.timestamp.toString()} "),
+            onTap: () {
+              viewModel.updateSelected(index);
               goDetails(context);
             },
-            child: const Text("aaaaa"),
-          ),
-          MenuItemButton(
-            child: const Text("bbbbb"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("ccccc"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("ddddd"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("eeeee"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("fffff"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("ggggg"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("hhhhh"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("iiiii"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-          MenuItemButton(
-            child: const Text("jjjjj"),
-            onPressed: () {
-              goDetails(context);
-            },
-          ),
-        ],
-      ),
-      // Column(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-      //   ElevatedButton(
-      //     onPressed: viewModel.updateStringValue,
-      //     style: ElevatedButton.styleFrom(
-      //         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-      //     child: Text(
-      //       "Historylist".toUpperCase(),
-      //       style: const TextStyle(
-      //         color: Colors.white,
-      //         fontSize: 14,
-      //         fontFamily: 'Inter',
-      //         fontWeight: FontWeight.w400,
-      //       ),
-      //     ),
-      //   ),
-      //   const SizedBox(height: 20),
-      //   Text(
-      //     viewModel.mnemonicString,
-      //     style: Theme.of(context).textTheme.headlineMedium,
-      //   ),
-      // ]),
-    );
+          );
+        });
   }
 }

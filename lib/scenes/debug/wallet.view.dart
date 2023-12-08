@@ -164,7 +164,9 @@ class _SimpleWalletState extends State<SimpleWallet> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: true,
+      showSemanticsDebugger: true,
+      debugShowCheckedModeBanner: kDebugMode,
       home: Scaffold(
         appBar: AppBar(
           elevation: 0,
