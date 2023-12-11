@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -44,7 +43,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    //restore wallet
+    //restore wallet  this will need to be in global initialisation
     final aliceMnemonic = await Mnemonic.fromString(
         'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
     final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
