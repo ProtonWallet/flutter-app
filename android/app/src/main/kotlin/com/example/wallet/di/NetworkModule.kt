@@ -18,7 +18,7 @@
 
 package com.example.wallet.di
 
-import com.example.wallet.api.CoreExampleApiClient
+import com.example.wallet.WalletApiClient
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -86,5 +86,5 @@ class NetworkCallbacksModule {
 abstract class NetworkBindsModule {
     @Binds
     @Singleton
-    abstract fun provideApiClient(coreExampleApiClient: CoreExampleApiClient): ApiClient
+    abstract fun provideApiClient(walletApiClient: WalletApiClient): ApiClient
 }

@@ -40,7 +40,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.example.wallet.appconfig.AppConfig
+import me.proton.core.configuration.EnvironmentConfiguration
 import me.proton.core.humanverification.presentation.HumanVerificationApiHost
 import me.proton.core.humanverification.presentation.utils.HumanVerificationVersion
 
@@ -53,6 +53,5 @@ object HumanVerificationModule {
 
     @Provides
     @HumanVerificationApiHost
-    fun provideHumanVerificationApiHost(appConfig: AppConfig): String =
-        "https://${appConfig.humanVerificationHost}/"
+    fun provideHumanVerificationApiHost(config: EnvironmentConfiguration): String = config.hv3Url
 }

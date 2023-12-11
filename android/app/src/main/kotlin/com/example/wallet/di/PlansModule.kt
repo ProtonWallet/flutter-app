@@ -55,7 +55,7 @@ object PlansModule {
 
     @Provides
     @SupportUpgradePaidPlans
-    fun provideSupportUpgradePaidPlans() = true
+    fun provideSupportUpgradePaidPlans() = false
 
     @Provides
     @ProductOnlyPaidPlans

@@ -7,31 +7,21 @@ import android.os.Environment
 import android.os.LocaleList
 import android.os.StatFs
 import androidx.startup.Initializer
+import com.example.wallet.BuildConfig
 import com.example.wallet.log.api.WalletLogger
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import me.proton.core.util.android.sentry.TimberLogger
 import me.proton.core.util.kotlin.CoreLogger
-import com.example.wallet.appconfig.AppConfig
-//import com.example.wallet.tracing.impl.SentryInitializer
 import timber.log.Timber
 import java.text.DecimalFormat
 
 class LoggerInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        val entryPoint = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            LoggerInitializerEntryPoint::class.java
-        )
-
-        if (entryPoint.appConfig().isDebug) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
         Timber.plant(FileLoggingTree(context))
-        deviceInfo(context, entryPoint.appConfig())
+        deviceInfo(context)
 
         // Forward Core Logs to Timber, using TimberLogger.
         CoreLogger.set(TimberLogger)
@@ -40,15 +30,9 @@ class LoggerInitializer : Initializer<Unit> {
     override fun dependencies(): List<Class<out Initializer<*>>> = listOf(
         //SentryInitializer::class.java
     )
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface LoggerInitializerEntryPoint {
-        fun appConfig(): AppConfig
-    }
 }
 
-private fun deviceInfo(context: Context, appConfig: AppConfig) {
+private fun deviceInfo(context: Context) {
     val memory = getMemory(context)
     val storage = getStorage()
     WalletLogger.i(TAG, "-----------------------------------------")
@@ -56,7 +40,7 @@ private fun deviceInfo(context: Context, appConfig: AppConfig) {
         TAG,
         "OS:          Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
     )
-    WalletLogger.i(TAG, "VERSION:     ${appConfig.versionName}")
+    WalletLogger.i(TAG, "VERSION:     ${BuildConfig.VERSION_NAME}")
     WalletLogger.i(TAG, "DEVICE:      ${Build.MANUFACTURER} ${Build.MODEL}")
     WalletLogger.i(TAG, "FINGERPRINT: ${Build.FINGERPRINT}")
     WalletLogger.i(TAG, "ABI:         ${Build.SUPPORTED_ABIS.joinToString(",")}")

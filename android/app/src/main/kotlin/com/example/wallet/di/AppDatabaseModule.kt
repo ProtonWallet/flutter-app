@@ -28,15 +28,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import me.proton.core.account.data.db.AccountDatabase
 import me.proton.core.challenge.data.db.ChallengeDatabase
-import me.proton.core.contact.data.local.db.ContactDatabase
 import me.proton.core.eventmanager.data.db.EventMetadataDatabase
 import me.proton.core.featureflag.data.db.FeatureFlagDatabase
 import me.proton.core.humanverification.data.db.HumanVerificationDatabase
 import me.proton.core.key.data.db.KeySaltDatabase
 import me.proton.core.key.data.db.PublicAddressDatabase
 import me.proton.core.keytransparency.data.local.KeyTransparencyDatabase
-import me.proton.core.label.data.local.LabelDatabase
-import me.proton.core.mailsettings.data.db.MailSettingsDatabase
 import me.proton.core.notification.data.local.db.NotificationDatabase
 import me.proton.core.observability.data.db.ObservabilityDatabase
 import me.proton.core.payment.data.local.db.PaymentDatabase
@@ -79,22 +76,13 @@ abstract class AppDatabaseBindsModule {
     abstract fun provideHumanVerificationDatabase(appDatabase: AppDatabase): HumanVerificationDatabase
 
     @Binds
-    abstract fun provideMailSettingsDatabase(appDatabase: AppDatabase): MailSettingsDatabase
-
-    @Binds
     abstract fun provideUserSettingsDatabase(appDatabase: AppDatabase): UserSettingsDatabase
 
     @Binds
     abstract fun provideOrganizationDatabase(appDatabase: AppDatabase): OrganizationDatabase
 
     @Binds
-    abstract fun provideContactDatabase(appDatabase: AppDatabase): ContactDatabase
-
-    @Binds
     abstract fun provideEventMetadataDatabase(appDatabase: AppDatabase): EventMetadataDatabase
-
-    @Binds
-    abstract fun provideLabelDatabase(appDatabase: AppDatabase): LabelDatabase
 
     @Binds
     abstract fun provideFeatureFlagDatabase(appDatabase: AppDatabase): FeatureFlagDatabase

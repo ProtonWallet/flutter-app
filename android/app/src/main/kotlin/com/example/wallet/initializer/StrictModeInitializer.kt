@@ -39,21 +39,12 @@ package com.example.wallet.initializer
 import android.content.Context
 import android.os.StrictMode
 import androidx.startup.Initializer
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
-import com.example.wallet.appconfig.AppConfig
+import com.example.wallet.BuildConfig
 
 class StrictModeInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        val entryPoint = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            StrictModeInitializerEntryPoint::class.java
-        )
-        val appConfig = entryPoint.appConfig()
-        if (appConfig.isDebug) {
+        if (BuildConfig.DEBUG) {
             enableStrictMode()
         }
     }
@@ -71,11 +62,5 @@ class StrictModeInitializer : Initializer<Unit> {
 
         StrictMode.setThreadPolicy(threadPolicyBuilder.build())
         StrictMode.setVmPolicy(vmPolicyBuilder.build())
-    }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface StrictModeInitializerEntryPoint {
-        fun appConfig(): AppConfig
     }
 }
