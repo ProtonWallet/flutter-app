@@ -36,6 +36,13 @@ android {
 
     dependencies {
         implementation "androidx.core:core-splashscreen:1.0.1"
+        implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
+        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.6'
+        implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.4.6'
+        implementation 'androidx.startup:startup-runtime:1.1.1'
+        implementation "androidx.hilt:hilt-compiler:1.0.0"
+        implementation "androidx.hilt:hilt-work:1.0.0"
+        implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
         implementation "com.google.dagger:hilt-android:2.46"
         kapt "com.google.dagger:hilt-compiler:2.46"
 
@@ -47,6 +54,22 @@ android {
         testImplementation 'com.google.dagger:hilt-android-testing:2.46'
         kaptTest 'com.google.dagger:hilt-compiler:2.46'
 
+        implementation "me.proton.core:network-dagger:18.2.0"
+        implementation "me.proton.core:auth-dagger:18.2.0"
+        implementation "me.proton.core:notification-dagger:18.2.0"
+        implementation "me.proton.core:account-manager-dagger:18.2.0"
+        implementation "me.proton.core:account-recovery-dagger:18.2.0"
+        implementation "me.proton.core:event-manager-dagger:18.2.0"
+        implementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
+        implementation "me.proton.core:user-dagger:18.2.0"
+        implementation "me.proton.core:util-android-sentry:18.2.0"
+        implementation "me.proton.core:util-kotlin:18.2.0"
+        implementation "me.proton.core:push-dagger:18.2.0"
+        implementation "me.proton.core:report-dagger:18.2.0"
+        implementation "me.proton.core:feature-flag-dagger:18.2.0"
+
+        implementation "me.proton.core:user-settings-dagger:18.2.0"
+
 
         implementation "me.proton.core:network:18.2.0"
         implementation "me.proton.core:auth:18.2.0"
@@ -54,6 +77,15 @@ android {
         implementation "me.proton.core:account-manager:18.2.0"
         implementation "me.proton.core:account-recovery:18.2.0"
         implementation "me.proton.core:event-manager:18.2.0"
+        implementation "me.proton.core:configuration:18.2.0"
+        implementation "me.proton.core:user:18.2.0"
+        implementation "me.proton.core:util-android-sentry:18.2.0"
+        implementation "me.proton.core:util-kotlin:18.2.0"
+        implementation "me.proton.core:push:18.2.0"
+        implementation "me.proton.core:report:18.2.0"
+        implementation "me.proton.core:feature-flag:18.2.0"
+
+        implementation "me.proton.core:user-settings:18.2.0"
     }
 
     kotlinOptions {
@@ -94,7 +126,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
+}
 
 [
     Debug: null,
