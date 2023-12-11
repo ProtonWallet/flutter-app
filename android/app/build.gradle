@@ -30,8 +30,8 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     dependencies {
@@ -72,15 +72,31 @@ android {
 
 
         implementation "me.proton.core:network:18.2.0"
+        implementation "me.proton.core:network-data:18.2.0"
+        implementation "me.proton.core:network-domain:18.2.0"
+        implementation "me.proton.core:human-verification:18.2.0"
+        implementation "me.proton.core:configuration-data:18.2.0"
+        implementation "me.proton.core:label:18.2.0"
+        implementation "me.proton.core:observability:18.2.0"
+        implementation "me.proton.core:key-transparency:18.2.0"
+        implementation "me.proton.core:payment:18.2.0"
+        implementation "me.proton.core:payment-iap:18.2.0"
+        implementation "me.proton.core:plan:18.2.0"
+        implementation "me.proton.core:challenge:18.2.0"
+        implementation "me.proton.core:country:18.2.0"
         implementation "me.proton.core:auth:18.2.0"
         implementation "me.proton.core:notification:18.2.0"
+        implementation "me.proton.core:key:18.2.0"
+        implementation "me.proton.core:key-domain:18.2.0"
         implementation "me.proton.core:account:18.2.0"
         implementation "me.proton.core:account-data:18.2.0"
         implementation "me.proton.core:account-manager-data-db:18.2.0"
         implementation "me.proton.core:account-manager:18.2.0"
         implementation "me.proton.core:account-recovery:18.2.0"
         implementation "me.proton.core:event-manager:18.2.0"
-        implementation "me.proton.core:configuration:18.2.0"
+        implementation "me.proton.core:configuration-data:18.2.0"
+        releaseImplementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
+        debugImplementation "me.proton.core:configuration-dagger-content-resolver:18.2.0"
         implementation "me.proton.core:user:18.2.0"
         implementation "me.proton.core:util-android-sentry:18.2.0"
         implementation "me.proton.core:util-kotlin:18.2.0"
@@ -93,7 +109,8 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
+
     }
 
     sourceSets {
