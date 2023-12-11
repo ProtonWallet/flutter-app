@@ -21,6 +21,7 @@ package com.example.wallet.db
 import android.content.Context
 import androidx.room.Database
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import me.proton.core.account.data.db.AccountConverters
 import me.proton.core.account.data.db.AccountDatabase
 import me.proton.core.account.data.entity.AccountEntity
@@ -30,12 +31,6 @@ import me.proton.core.account.data.entity.SessionEntity
 import me.proton.core.challenge.data.db.ChallengeConverters
 import me.proton.core.challenge.data.db.ChallengeDatabase
 import me.proton.core.challenge.data.entity.ChallengeFrameEntity
-import me.proton.core.contact.data.local.db.ContactConverters
-import me.proton.core.contact.data.local.db.ContactDatabase
-import me.proton.core.contact.data.local.db.entity.ContactCardEntity
-import me.proton.core.contact.data.local.db.entity.ContactEmailEntity
-import me.proton.core.contact.data.local.db.entity.ContactEmailLabelEntity
-import me.proton.core.contact.data.local.db.entity.ContactEntity
 import me.proton.core.crypto.android.keystore.CryptoConverters
 import me.proton.core.data.room.db.BaseDatabase
 import me.proton.core.data.room.db.CommonConverters
@@ -55,11 +50,6 @@ import me.proton.core.key.data.entity.PublicAddressKeyEntity
 import me.proton.core.keytransparency.data.local.KeyTransparencyDatabase
 import me.proton.core.keytransparency.data.local.entity.AddressChangeEntity
 import me.proton.core.keytransparency.data.local.entity.SelfAuditResultEntity
-import me.proton.core.label.data.local.LabelConverters
-import me.proton.core.label.data.local.LabelDatabase
-import me.proton.core.label.data.local.LabelEntity
-import me.proton.core.mailsettings.data.db.MailSettingsDatabase
-import me.proton.core.mailsettings.data.entity.MailSettingsEntity
 import me.proton.core.notification.data.local.db.NotificationConverters
 import me.proton.core.notification.data.local.db.NotificationDatabase
 import me.proton.core.notification.data.local.db.NotificationEntity
@@ -104,22 +94,13 @@ import me.proton.core.usersettings.data.entity.UserSettingsEntity
         PublicAddressKeyEntity::class,
         // human-verification
         HumanVerificationEntity::class,
-        // mail-settings
-        MailSettingsEntity::class,
         // user-settings
         UserSettingsEntity::class,
         // organization
         OrganizationEntity::class,
         OrganizationKeysEntity::class,
-        // contact
-        ContactEntity::class,
-        ContactCardEntity::class,
-        ContactEmailEntity::class,
-        ContactEmailLabelEntity::class,
         // event-manager
         EventMetadataEntity::class,
-        // label
-        LabelEntity::class,
         // feature-flags
         FeatureFlagEntity::class,
         // challenge
@@ -148,9 +129,7 @@ import me.proton.core.usersettings.data.entity.UserSettingsEntity
     CryptoConverters::class,
     HumanVerificationConverters::class,
     UserSettingsConverters::class,
-    ContactConverters::class,
     EventManagerConverters::class,
-    LabelConverters::class,
     ChallengeConverters::class,
     PushConverters::class,
     NotificationConverters::class,
@@ -163,12 +142,9 @@ abstract class AppDatabase :
     KeySaltDatabase,
     HumanVerificationDatabase,
     PublicAddressDatabase,
-    MailSettingsDatabase,
     UserSettingsDatabase,
     OrganizationDatabase,
-    ContactDatabase,
     EventMetadataDatabase,
-    LabelDatabase,
     FeatureFlagDatabase,
     ChallengeDatabase,
     PushDatabase,
@@ -180,47 +156,10 @@ abstract class AppDatabase :
 
     companion object {
         const val name = "db-account-manager"
-        const val version = 39
+        const val version = 1
 
-        val migrations = listOf(
-            AppDatabaseMigrations.MIGRATION_1_2,
-            AppDatabaseMigrations.MIGRATION_2_3,
-            AppDatabaseMigrations.MIGRATION_3_4,
-            AppDatabaseMigrations.MIGRATION_4_5,
-            AppDatabaseMigrations.MIGRATION_5_6,
-            AppDatabaseMigrations.MIGRATION_6_7,
-            AppDatabaseMigrations.MIGRATION_7_8,
-            AppDatabaseMigrations.MIGRATION_8_9,
-            AppDatabaseMigrations.MIGRATION_9_10,
-            AppDatabaseMigrations.MIGRATION_10_11,
-            AppDatabaseMigrations.MIGRATION_11_12,
-            AppDatabaseMigrations.MIGRATION_12_13,
-            AppDatabaseMigrations.MIGRATION_13_14,
-            AppDatabaseMigrations.MIGRATION_14_15,
-            AppDatabaseMigrations.MIGRATION_15_16,
-            AppDatabaseMigrations.MIGRATION_16_17,
-            AppDatabaseMigrations.MIGRATION_17_18,
-            AppDatabaseMigrations.MIGRATION_18_19,
-            AppDatabaseMigrations.MIGRATION_19_20,
-            AppDatabaseMigrations.MIGRATION_20_21,
-            AppDatabaseMigrations.MIGRATION_21_22,
-            AppDatabaseMigrations.MIGRATION_22_23,
-            AppDatabaseMigrations.MIGRATION_23_24,
-            AppDatabaseMigrations.MIGRATION_24_25,
-            AppDatabaseMigrations.MIGRATION_25_26,
-            AppDatabaseMigrations.MIGRATION_26_27,
-            AppDatabaseMigrations.MIGRATION_27_28,
-            AppDatabaseMigrations.MIGRATION_28_29,
-            AppDatabaseMigrations.MIGRATION_29_30,
-            AppDatabaseMigrations.MIGRATION_30_31,
-            AppDatabaseMigrations.MIGRATION_31_32,
-            AppDatabaseMigrations.MIGRATION_32_33,
-            AppDatabaseMigrations.MIGRATION_33_34,
-            AppDatabaseMigrations.MIGRATION_34_35,
-            AppDatabaseMigrations.MIGRATION_35_36,
-            AppDatabaseMigrations.MIGRATION_36_37,
-            AppDatabaseMigrations.MIGRATION_37_38,
-            AppDatabaseMigrations.MIGRATION_38_39,
+        val migrations = listOf<Migration>(
+            //AppDatabaseMigrations.MIGRATION_1_2,
         )
 
         fun buildDatabase(context: Context): AppDatabase =

@@ -29,16 +29,22 @@ android {
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
+    buildFeatures {
+        buildConfig true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 
     dependencies {
+        def core_version = "18.2.0"
+        def dagger_version = "2.46.1"
         def room_version = "2.4.3"
+
         implementation "androidx.room:room-ktx:$room_version"
         implementation "androidx.room:room-runtime:$room_version"
-        annotationProcessor "androidx.room:room-compiler:$room_version"
         kapt "androidx.room:room-compiler:$room_version"
         implementation "androidx.core:core-splashscreen:1.0.1"
         implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
@@ -48,69 +54,49 @@ android {
         implementation "androidx.hilt:hilt-compiler:1.0.0"
         implementation "androidx.hilt:hilt-work:1.0.0"
         implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-        implementation "com.google.dagger:hilt-android:2.46.1"
-        kapt "com.google.dagger:hilt-compiler:2.46.1"
+        implementation "com.google.dagger:hilt-android:$dagger_version"
+        kapt "com.google.dagger:hilt-compiler:$dagger_version"
 
-        // For instrumentation tests
-        androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46.1'
-        kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46.1'
+        // For instrumentation/unit tests
+        testImplementation  "com.google.dagger:hilt-android-testing:$dagger_version"
 
-        // For local unit tests
-        testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-        kaptTest 'com.google.dagger:hilt-compiler:2.46.1'
+        // For Configurator integration (debug/release).
+        debugImplementation "me.proton.core:configuration-dagger-content-resolver:$core_version"
+        releaseImplementation "me.proton.core:configuration-dagger-staticdefaults:$core_version"
 
-//        implementation "me.proton.core:network-dagger:18.2.0"
-//        implementation "me.proton.core:auth-dagger:18.2.0"
-//        implementation "me.proton.core:notification-dagger:18.2.0"
-//        implementation "me.proton.core:account-manager-dagger:18.2.0"
-//        implementation "me.proton.core:account-recovery-dagger:18.2.0"
-//        implementation "me.proton.core:event-manager-dagger:18.2.0"
-//        implementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
-//        implementation "me.proton.core:user-dagger:18.2.0"
-//        implementation "me.proton.core:util-android-sentry:18.2.0"
-//        implementation "me.proton.core:util-kotlin:18.2.0"
-//        implementation "me.proton.core:push-dagger:18.2.0"
-//        implementation "me.proton.core:report-dagger:18.2.0"
-//        implementation "me.proton.core:feature-flag-dagger:18.2.0"
-//
-//        implementation "me.proton.core:user-settings-dagger:18.2.0"
-
-
-        implementation "me.proton.core:network:18.2.0"
-        implementation "me.proton.core:network-data:18.2.0"
-        implementation "me.proton.core:network-domain:18.2.0"
-        implementation "me.proton.core:human-verification:18.2.0"
-        implementation "me.proton.core:configuration-data:18.2.0"
-        implementation "me.proton.core:label:18.2.0"
-        implementation "me.proton.core:observability:18.2.0"
-        implementation "me.proton.core:key-transparency:18.2.0"
-        implementation "me.proton.core:payment:18.2.0"
-        implementation "me.proton.core:payment-iap:18.2.0"
-        implementation "me.proton.core:plan:18.2.0"
-        implementation "me.proton.core:challenge:18.2.0"
-        implementation "me.proton.core:country:18.2.0"
-        implementation "me.proton.core:auth:18.2.0"
-        implementation "me.proton.core:notification:18.2.0"
-        implementation "me.proton.core:key:18.2.0"
-        implementation "me.proton.core:key-domain:18.2.0"
-        implementation "me.proton.core:account:18.2.0"
-        implementation "me.proton.core:account-data:18.2.0"
-        implementation "me.proton.core:account-manager-data-db:18.2.0"
-        implementation "me.proton.core:account-manager:18.2.0"
-        implementation "me.proton.core:account-recovery:18.2.0"
-        implementation "me.proton.core:event-manager:18.2.0"
-        implementation "me.proton.core:configuration-data:18.2.0"
-        releaseImplementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
-        debugImplementation "me.proton.core:configuration-dagger-content-resolver:18.2.0"
-        implementation "me.proton.core:user:18.2.0"
-        implementation "me.proton.core:util-android-sentry:18.2.0"
-        implementation "me.proton.core:util-kotlin:18.2.0"
-        implementation "me.proton.core:push:18.2.0"
-        implementation "me.proton.core:report:18.2.0"
-        implementation "me.proton.core:crypto:18.2.0"
-        implementation "me.proton.core:feature-flag:18.2.0"
-
-        implementation "me.proton.core:user-settings:18.2.0"
+        implementation "me.proton.core:account:$core_version"
+        implementation "me.proton.core:account-manager:$core_version"
+        implementation "me.proton.core:account-recovery:$core_version"
+        implementation "me.proton.core:auth:$core_version"
+        implementation "me.proton.core:challenge:$core_version"
+        implementation "me.proton.core:configuration-data:$core_version"
+        implementation "me.proton.core:crypto:$core_version"
+        implementation "me.proton.core:crypto-validator:$core_version"
+        implementation "me.proton.core:data:$core_version"
+        implementation "me.proton.core:domain:$core_version"
+        implementation "me.proton.core:event-manager:$core_version"
+        implementation "me.proton.core:feature-flag:$core_version"
+        implementation "me.proton.core:human-verification:$core_version"
+        implementation "me.proton.core:key:$core_version"
+        implementation "me.proton.core:key-transparency:$core_version"
+        implementation "me.proton.core:network:$core_version"
+        implementation "me.proton.core:notification:$core_version"
+        implementation "me.proton.core:observability:$core_version"
+        implementation "me.proton.core:payment:$core_version"
+        implementation "me.proton.core:payment-iap:$core_version"
+        implementation "me.proton.core:plan:$core_version"
+        implementation "me.proton.core:presentation:$core_version"
+        implementation "me.proton.core:presentation-compose:$core_version"
+        implementation "me.proton.core:proguard-rules:$core_version"
+        implementation "me.proton.core:push:$core_version"
+        implementation "me.proton.core:report:$core_version"
+        implementation "me.proton.core:telemetry:$core_version"
+        implementation "me.proton.core:user:$core_version"
+        implementation "me.proton.core:user-settings:$core_version"
+        implementation "me.proton.core:util-android-dagger:$core_version"
+        implementation "me.proton.core:util-android-device:$core_version"
+        implementation "me.proton.core:util-android-sentry:$core_version"
+        implementation "me.proton.core:util-kotlin:$core_version"
     }
 
     kotlinOptions {
@@ -132,9 +118,17 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         minSdkVersion 24
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+                arguments["room.incremental"] = "true"
+            }
+        }
     }
 
     buildTypes {
+        debug {}
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.

@@ -16,15 +16,14 @@
  * along with ProtonCore.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.example.wallet.api
+package com.example.wallet
 
 import android.os.Build
-import com.example.wallet.BuildConfig
 import me.proton.core.network.domain.ApiClient
 import java.util.Locale
 import javax.inject.Inject
 
-open class CoreExampleApiClient @Inject constructor() : ApiClient {
+open class WalletApiClient @Inject constructor() : ApiClient {
     protected open val appName = "android-mail"
     protected open val productName = "ProtonMail"
     protected open val versionName = "6.0.0" // imitating ProtonMail version
@@ -35,7 +34,7 @@ open class CoreExampleApiClient @Inject constructor() : ApiClient {
      * VPN connection is active). Will be checked before  each API call.
      */
     override val shouldUseDoh: Boolean
-        get() = BuildConfig.USE_DOH
+        get() = true
 
     /**
      * Client's value for 'x-pm-appversion' header.

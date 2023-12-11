@@ -28,11 +28,6 @@ import dagger.hilt.components.SingletonComponent
 import me.proton.core.account.domain.entity.AccountType
 import me.proton.core.domain.entity.AppStore
 import me.proton.core.domain.entity.Product
-import com.example.wallet.WalletAppConfig
-import com.example.wallet.R
-import com.example.wallet.appconfig.AppConfig
-import com.example.wallet.MainActivity
-import java.time.Clock
 import javax.inject.Singleton
 
 @Module
@@ -41,25 +36,19 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideProduct(): Product = Product.Pass
+    fun provideProduct(): Product = Product.Mail // TODO: Add Wallet -> Core is opensource!
 
     @Provides
     @Singleton
-    fun provideAppStore() =
-        AppStore.GooglePlay
+    fun provideAppStore() = AppStore.GooglePlay
 
     @Provides
     @Singleton
-    fun provideRequiredAccountType(): AccountType =
-        AccountType.External
+    fun provideRequiredAccountType(): AccountType = AccountType.Internal
 
     @Provides
     @Singleton
     fun provideWorkManager(
         @ApplicationContext context: Context
     ): WorkManager = WorkManager.getInstance(context)
-
-    @Provides
-    @Singleton
-    fun provideAppConfig(): AppConfig = WalletAppConfig()
 }
