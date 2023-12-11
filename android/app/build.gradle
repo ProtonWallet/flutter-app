@@ -2,6 +2,8 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 def localProperties = new Properties()
@@ -32,6 +34,28 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dependencies {
+        implementation "androidx.core:core-splashscreen:1.0.1"
+        implementation "com.google.dagger:hilt-android:2.46"
+        kapt "com.google.dagger:hilt-compiler:2.46"
+
+        // For instrumentation tests
+        androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46'
+        kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46'
+
+        // For local unit tests
+        testImplementation 'com.google.dagger:hilt-android-testing:2.46'
+        kaptTest 'com.google.dagger:hilt-compiler:2.46'
+
+
+        implementation "me.proton.core:network:18.2.0"
+        implementation "me.proton.core:auth:18.2.0"
+        implementation "me.proton.core:notification:18.2.0"
+        implementation "me.proton.core:account-manager:18.2.0"
+        implementation "me.proton.core:account-recovery:18.2.0"
+        implementation "me.proton.core:event-manager:18.2.0"
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -49,7 +73,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        minSdkVersion 21
+        minSdkVersion 24
     }
 
     buildTypes {
@@ -59,6 +83,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }
 
 flutter {
