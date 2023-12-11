@@ -35,6 +35,11 @@ android {
     }
 
     dependencies {
+        def room_version = "2.4.3"
+        implementation "androidx.room:room-ktx:$room_version"
+        implementation "androidx.room:room-runtime:$room_version"
+        annotationProcessor "androidx.room:room-compiler:$room_version"
+        kapt "androidx.room:room-compiler:$room_version"
         implementation "androidx.core:core-splashscreen:1.0.1"
         implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
         implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.6'
@@ -43,16 +48,16 @@ android {
         implementation "androidx.hilt:hilt-compiler:1.0.0"
         implementation "androidx.hilt:hilt-work:1.0.0"
         implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-        implementation "com.google.dagger:hilt-android:2.46"
-        kapt "com.google.dagger:hilt-compiler:2.46"
+        implementation "com.google.dagger:hilt-android:2.46.1"
+        kapt "com.google.dagger:hilt-compiler:2.46.1"
 
         // For instrumentation tests
-        androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46'
-        kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46'
+        androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46.1'
+        kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46.1'
 
         // For local unit tests
-        testImplementation 'com.google.dagger:hilt-android-testing:2.46'
-        kaptTest 'com.google.dagger:hilt-compiler:2.46'
+        testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
+        kaptTest 'com.google.dagger:hilt-compiler:2.46.1'
 
 //        implementation "me.proton.core:network-dagger:18.2.0"
 //        implementation "me.proton.core:auth-dagger:18.2.0"
