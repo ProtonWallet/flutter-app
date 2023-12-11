@@ -54,26 +54,29 @@ android {
         testImplementation 'com.google.dagger:hilt-android-testing:2.46'
         kaptTest 'com.google.dagger:hilt-compiler:2.46'
 
-        implementation "me.proton.core:network-dagger:18.2.0"
-        implementation "me.proton.core:auth-dagger:18.2.0"
-        implementation "me.proton.core:notification-dagger:18.2.0"
-        implementation "me.proton.core:account-manager-dagger:18.2.0"
-        implementation "me.proton.core:account-recovery-dagger:18.2.0"
-        implementation "me.proton.core:event-manager-dagger:18.2.0"
-        implementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
-        implementation "me.proton.core:user-dagger:18.2.0"
-        implementation "me.proton.core:util-android-sentry:18.2.0"
-        implementation "me.proton.core:util-kotlin:18.2.0"
-        implementation "me.proton.core:push-dagger:18.2.0"
-        implementation "me.proton.core:report-dagger:18.2.0"
-        implementation "me.proton.core:feature-flag-dagger:18.2.0"
-
-        implementation "me.proton.core:user-settings-dagger:18.2.0"
+//        implementation "me.proton.core:network-dagger:18.2.0"
+//        implementation "me.proton.core:auth-dagger:18.2.0"
+//        implementation "me.proton.core:notification-dagger:18.2.0"
+//        implementation "me.proton.core:account-manager-dagger:18.2.0"
+//        implementation "me.proton.core:account-recovery-dagger:18.2.0"
+//        implementation "me.proton.core:event-manager-dagger:18.2.0"
+//        implementation "me.proton.core:configuration-dagger-staticdefaults:18.2.0"
+//        implementation "me.proton.core:user-dagger:18.2.0"
+//        implementation "me.proton.core:util-android-sentry:18.2.0"
+//        implementation "me.proton.core:util-kotlin:18.2.0"
+//        implementation "me.proton.core:push-dagger:18.2.0"
+//        implementation "me.proton.core:report-dagger:18.2.0"
+//        implementation "me.proton.core:feature-flag-dagger:18.2.0"
+//
+//        implementation "me.proton.core:user-settings-dagger:18.2.0"
 
 
         implementation "me.proton.core:network:18.2.0"
         implementation "me.proton.core:auth:18.2.0"
         implementation "me.proton.core:notification:18.2.0"
+        implementation "me.proton.core:account:18.2.0"
+        implementation "me.proton.core:account-data:18.2.0"
+        implementation "me.proton.core:account-manager-data-db:18.2.0"
         implementation "me.proton.core:account-manager:18.2.0"
         implementation "me.proton.core:account-recovery:18.2.0"
         implementation "me.proton.core:event-manager:18.2.0"
@@ -83,6 +86,7 @@ android {
         implementation "me.proton.core:util-kotlin:18.2.0"
         implementation "me.proton.core:push:18.2.0"
         implementation "me.proton.core:report:18.2.0"
+        implementation "me.proton.core:crypto:18.2.0"
         implementation "me.proton.core:feature-flag:18.2.0"
 
         implementation "me.proton.core:user-settings:18.2.0"
