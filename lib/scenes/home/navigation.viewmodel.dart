@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
@@ -11,6 +12,9 @@ abstract class HomeNavigationViewModel extends ViewModel {
 
   late PageController pageController =
       PageController(initialPage: selectedPage);
+  SideMenuController sideMenu = SideMenuController();
+
+  List<SideMenuItem> items = [];
 }
 
 class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
@@ -27,7 +31,33 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
 
   @override
   Future<void> loadData() async {
-    return;
+    items = [
+      SideMenuItem(
+        title: 'Dashboard',
+        onTap: (index, _) {
+          sideMenu.changePage(index);
+        },
+        icon: const Icon(Icons.home),
+        badgeContent: const Text(
+          '3',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      SideMenuItem(
+        title: 'Settings',
+        onTap: (index, _) {
+          sideMenu.changePage(index);
+        },
+        icon: const Icon(Icons.settings),
+      ),
+      const SideMenuItem(
+        title: 'Exit',
+        icon: Icon(Icons.exit_to_app),
+      ),
+    ];
+    sideMenu.addListener((index) {
+      pageController.jumpToPage(index);
+    });
   }
 
   @override

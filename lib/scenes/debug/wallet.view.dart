@@ -158,14 +158,14 @@ class _SimpleWalletState extends State<SimpleWallet> {
 
   sendBit() async {
     await lib.sendBitcoin(
-        blockchain!, aliceWallet, "mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB");
+        blockchain!, aliceWallet, "mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB", 750);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowMaterialGrid: true,
-      showSemanticsDebugger: true,
+      debugShowMaterialGrid: false,
+      showSemanticsDebugger: false,
       debugShowCheckedModeBanner: kDebugMode,
       home: Scaffold(
         appBar: AppBar(

@@ -25,6 +25,8 @@ class HomeView extends ViewBase<HomeViewModel> {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Text("Confirmed Transactions: ${viewModel.confirmed}"),
+              Text("Unconfirmed Transactions: ${viewModel.unconfirmed}"),
               const SizedBox(
                 height: 50,
               ),

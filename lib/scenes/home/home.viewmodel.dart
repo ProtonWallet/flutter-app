@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -19,6 +18,8 @@ abstract class HomeViewModel extends ViewModel {
 
   bool isSyncing = false;
   void udpateSyncStatus(bool syncing);
+  int unconfirmed = 0;
+  int confirmed = 0;
 
   @override
   bool get keepAlive => true;
@@ -44,7 +45,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    //restore wallet
+    //restore wallet  this will need to be in global initialisation
     final aliceMnemonic = await Mnemonic.fromString(
         'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
     final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
@@ -80,12 +81,19 @@ class HomeViewModelImpl extends HomeViewModel {
     await _lib.sync(blockchain!, _wallet);
     var balance = await _wallet.getBalance();
     logger.i('balance: ${balance.total}');
+    await updateBalance();
     udpateSyncStatus(false);
   }
 
   Future<void> updateBalance() async {
     var balance = await _wallet.getBalance();
     logger.i('balance: ${balance.total}');
+
+    var unconfirmedList = await _lib.getUnConfirmedTransactions(_wallet);
+    unconfirmed = unconfirmedList.length;
+
+    var confirmedList = await _lib.getConfirmedTransactions(_wallet);
+    confirmed = confirmedList.length;
     udpateSyncStatus(false);
   }
 
