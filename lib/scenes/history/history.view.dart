@@ -23,13 +23,6 @@ class HistoryView extends ViewBase<HistoryViewModel> {
       body: viewModel.hasHistory()
           ? buildHistory(context, viewModel, viewSize)
           : buildNoHistory(context, viewModel, viewSize),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          viewModel.buildHistory();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 
@@ -94,11 +87,9 @@ class HistoryView extends ViewBase<HistoryViewModel> {
     var millis = timestemp;
     var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
 
-// 12 Hour format:
     var d12 =
         DateFormat('MM/dd/yyyy, hh:mm a').format(dt); // 12/31/2000, 10:00 PM
 
-// 24 Hour format:
     var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
     return d12.toString();
   }

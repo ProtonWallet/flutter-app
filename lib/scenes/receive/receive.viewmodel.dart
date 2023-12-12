@@ -14,7 +14,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   final BdkLibrary _lib = BdkLibrary();
   late Wallet _wallet;
-  // Blockchain? blockchain;
   final datasourceChangedStreamController =
       StreamController<ReceiveViewModel>.broadcast();
   @override
@@ -29,7 +28,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
     final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
     _wallet = await _lib.restoreWallet(aliceDescriptor);
-    // blockchain ??= await _lib.initializeBlockchain(false);
     getAddress();
   }
 

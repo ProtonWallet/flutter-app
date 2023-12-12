@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
