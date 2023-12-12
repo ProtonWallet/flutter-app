@@ -2,6 +2,8 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 def localProperties = new Properties()
@@ -22,18 +24,123 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+
+dependencies {
+    def core_version = "18.2.0"
+    def dagger_version = "2.46.1"
+    def room_version = "2.4.3"
+    def androidx_activity_version = "1.6.1"
+    def androidx_compose_version = "1.4.2"
+
+    implementation platform('androidx.compose:compose-bom:2023.01.00')
+
+    implementation files("libs/gopenpgp.aar")
+    implementation "androidx.activity:activity:$androidx_activity_version"
+    implementation "androidx.activity:activity-ktx:$androidx_activity_version"
+    implementation "androidx.activity:activity-compose:$androidx_activity_version"
+
+
+    implementation "androidx.compose.foundation:foundation:$androidx_compose_version"
+    implementation "androidx.compose.foundation:foundation-layout:$androidx_compose_version"
+    implementation "androidx.compose.material:material:$androidx_compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$androidx_compose_version"
+    implementation "androidx.compose.runtime:runtime:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$androidx_compose_version"
+    implementation "androidx.compose.ui:ui-test-manifest:$androidx_compose_version"
+
+    implementation "androidx.navigation:navigation-compose:2.6.0-rc02"
+
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
+
+    implementation 'androidx.lifecycle:lifecycle-process:2.4.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.4.6'
+    implementation 'androidx.startup:startup-runtime:1.1.1'
+    implementation "androidx.hilt:hilt-compiler:1.0.0"
+    implementation "androidx.hilt:hilt-work:1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "com.google.dagger:hilt-android:$dagger_version"
+    kapt "com.google.dagger:hilt-compiler:$dagger_version"
+
+    // For instrumentation/unit tests
+    testImplementation  "com.google.dagger:hilt-android-testing:$dagger_version"
+
+    // For Configurator integration (debug/release).
+    debugImplementation "me.proton.core:configuration-dagger-content-resolver:$core_version"
+    releaseImplementation "me.proton.core:configuration-dagger-staticdefaults:$core_version"
+
+    implementation "me.proton.core:account:$core_version"
+    implementation "me.proton.core:account-manager:$core_version"
+    implementation "me.proton.core:account-recovery:$core_version"
+    implementation "me.proton.core:auth:$core_version"
+    implementation "me.proton.core:challenge:$core_version"
+    implementation "me.proton.core:configuration-data:$core_version"
+    implementation "me.proton.core:crypto:$core_version"
+    implementation "me.proton.core:crypto-validator:$core_version"
+    implementation "me.proton.core:country:$core_version"
+    implementation "me.proton.core:data:$core_version"
+    implementation "me.proton.core:domain:$core_version"
+    implementation "me.proton.core:event-manager:$core_version"
+    implementation "me.proton.core:feature-flag:$core_version"
+    implementation "me.proton.core:human-verification:$core_version"
+    implementation "me.proton.core:key:$core_version"
+    implementation "me.proton.core:key-transparency:$core_version"
+    implementation "me.proton.core:network:$core_version"
+    implementation "me.proton.core:notification:$core_version"
+    implementation "me.proton.core:observability:$core_version"
+    implementation "me.proton.core:payment:$core_version"
+    implementation "me.proton.core:payment-iap:$core_version"
+    implementation "me.proton.core:plan:$core_version"
+    implementation "me.proton.core:presentation:$core_version"
+    implementation "me.proton.core:presentation-compose:$core_version"
+    implementation "me.proton.core:proguard-rules:$core_version"
+    implementation "me.proton.core:push:$core_version"
+    implementation "me.proton.core:report:$core_version"
+    implementation "me.proton.core:telemetry:$core_version"
+    implementation "me.proton.core:user:$core_version"
+    implementation "me.proton.core:user-settings:$core_version"
+    implementation "me.proton.core:util-android-dagger:$core_version"
+    implementation "me.proton.core:util-android-device:$core_version"
+    implementation "me.proton.core:util-android-sentry:$core_version"
+    implementation "me.proton.core:util-kotlin:$core_version"
+}
+
+
 android {
     namespace "com.example.wallet"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+        compose true
+        dataBinding true // required by Core presentation
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.2"
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
+
     }
 
     sourceSets {
@@ -46,26 +153,37 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        minSdkVersion 21
+        minSdkVersion 23
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+                arguments["room.incremental"] = "true"
+            }
+        }
     }
 
     buildTypes {
+        debug {}
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
+
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }
 
 flutter {
     source '../..'
 }
-
-dependencies {}
 
 [
     Debug: null,
@@ -74,7 +192,7 @@ dependencies {}
 ].each {
     def taskPostfix = it.key
     def profileMode = it.value
-    tasks.whenTaskAdded { task ->
+    tasks.configureEach { task ->
         if (task.name == "javaPreCompile$taskPostfix") {
             task.dependsOn "cargoBuild-arm64-v8a$taskPostfix", "cargoBuild-armeabi-v7a$taskPostfix", "cargoBuild-x86$taskPostfix"
         }
