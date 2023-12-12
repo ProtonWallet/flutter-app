@@ -204,6 +204,12 @@ class LauncherViewModel @Inject constructor(
         authOrchestrator.startLoginWorkflow(requiredAccountType, username = account?.username)
     }
 
+    fun signUp() = viewModelScope.launch {
+        authOrchestrator.startSignupWorkflow(
+            creatableAccountType = requiredAccountType
+        )
+    }
+
     fun signOut(userId: UserId? = null) = viewModelScope.launch {
         accountManager.disableAccount(requireNotNull(userId ?: getPrimaryUserIdOrNull()))
         clearPreferencesIfNeeded()
