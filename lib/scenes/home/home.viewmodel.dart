@@ -18,6 +18,8 @@ abstract class HomeViewModel extends ViewModel {
 
   bool isSyncing = false;
   void udpateSyncStatus(bool syncing);
+  int unconfirmed = 0;
+  int confirmed = 0;
 
   @override
   bool get keepAlive => true;
@@ -79,12 +81,19 @@ class HomeViewModelImpl extends HomeViewModel {
     await _lib.sync(blockchain!, _wallet);
     var balance = await _wallet.getBalance();
     logger.i('balance: ${balance.total}');
+    await updateBalance();
     udpateSyncStatus(false);
   }
 
   Future<void> updateBalance() async {
     var balance = await _wallet.getBalance();
     logger.i('balance: ${balance.total}');
+
+    var unconfirmedList = await _lib.getUnConfirmedTransactions(_wallet);
+    unconfirmed = unconfirmedList.length;
+
+    var confirmedList = await _lib.getConfirmedTransactions(_wallet);
+    confirmed = confirmedList.length;
     udpateSyncStatus(false);
   }
 

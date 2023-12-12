@@ -39,9 +39,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   void getAddress() async {
     var addressinfo = await _lib.getAddress(_wallet);
-
     address = addressinfo.address;
-
     datasourceChangedStreamController.add(this);
   }
 }

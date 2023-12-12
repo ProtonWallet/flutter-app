@@ -25,6 +25,8 @@ abstract class HistoryViewModel extends ViewModel {
 
   ///debug functions
   void buildHistory();
+
+  int getAmount(int index);
 }
 
 class HistoryViewModelImpl extends HistoryViewModel {
@@ -51,6 +53,11 @@ class HistoryViewModelImpl extends HistoryViewModel {
     _wallet = await _lib.restoreWallet(aliceDescriptor);
 
     history = await _lib.getConfirmedTransactions(_wallet);
+    history.sort((a, b) {
+      return a.confirmationTime!.timestamp > b.confirmationTime!.timestamp
+          ? -1
+          : 1;
+    });
 
     datasourceChangedStreamController.sink.add(this);
   }
@@ -94,5 +101,11 @@ class HistoryViewModelImpl extends HistoryViewModel {
     }
 
     datasourceChangedStreamController.sink.add(this);
+  }
+
+  @override
+  int getAmount(int index) {
+    var amount = history[index].received - history[index].sent;
+    return amount;
   }
 }

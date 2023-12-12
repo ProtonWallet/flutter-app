@@ -158,7 +158,7 @@ class _SimpleWalletState extends State<SimpleWallet> {
 
   sendBit() async {
     await lib.sendBitcoin(
-        blockchain!, aliceWallet, "mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB");
+        blockchain!, aliceWallet, "mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB", 750);
   }
 
   @override

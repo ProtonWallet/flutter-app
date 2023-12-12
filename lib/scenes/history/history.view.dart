@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
@@ -80,12 +81,25 @@ class HistoryView extends ViewBase<HistoryViewModel> {
               ),
             ),
             subtitle: Text(
-                "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Fee: ${viewModel.history[index].fee.toString()} Time: ${viewModel.history[index].confirmationTime?.timestamp.toString()} "),
+                "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Amount: ${viewModel.getAmount(index)}  - Fee: ${viewModel.history[index].fee.toString()} Time: ${parsetime(viewModel.history[index].confirmationTime!.timestamp)} "),
             onTap: () {
               viewModel.updateSelected(index);
               goDetails(context);
             },
           );
         });
+  }
+
+  String parsetime(int timestemp) {
+    var millis = timestemp;
+    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
+
+// 12 Hour format:
+    var d12 =
+        DateFormat('MM/dd/yyyy, hh:mm a').format(dt); // 12/31/2000, 10:00 PM
+
+// 24 Hour format:
+    var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
+    return d12.toString();
   }
 }
