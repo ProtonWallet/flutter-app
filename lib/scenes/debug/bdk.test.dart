@@ -141,8 +141,8 @@ class BdkLibrary {
     }
   }
 
-  sendBitcoin(
-      Blockchain blockchain, Wallet aliceWallet, String addressStr) async {
+  sendBitcoin(Blockchain blockchain, Wallet aliceWallet, String addressStr,
+      int amount) async {
     try {
       final txBuilder = TxBuilder();
       final address = await Address.create(address: addressStr);
@@ -150,7 +150,7 @@ class BdkLibrary {
       final script = await address.scriptPubKey();
       final feeRate = await estimateFeeRate(25, blockchain);
       final txBuilderResult = await txBuilder
-          .addRecipient(script, 750)
+          .addRecipient(script, amount)
           .feeRate(feeRate.asSatPerVb())
           .finish(aliceWallet);
       getInputOutPuts(txBuilderResult, blockchain);
