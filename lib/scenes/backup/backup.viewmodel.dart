@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class SetupBackupViewModel extends ViewModel {

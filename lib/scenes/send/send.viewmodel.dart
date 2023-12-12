@@ -60,25 +60,3 @@ class SendViewModelImpl extends SendViewModel {
     await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, 300);
   }
 }
-
-
-// sendBitcoin(
-//       Blockchain blockchain, Wallet aliceWallet, String addressStr) async {
-//     try {
-//       final txBuilder = TxBuilder();
-//       final address = await Address.create(address: addressStr);
-
-//       final script = await address.scriptPubKey();
-//       final feeRate = await estimateFeeRate(25, blockchain);
-//       final txBuilderResult = await txBuilder
-//           .addRecipient(script, 750)
-//           .feeRate(feeRate.asSatPerVb())
-//           .finish(aliceWallet);
-//       getInputOutPuts(txBuilderResult, blockchain);
-//       final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
-//       final tx = await aliceSbt.extractTx();
-//       Isolate.run(() async => {await blockchain.broadcast(tx)});
-//     } on Exception catch (_) {
-//       rethrow;
-//     }
-//   }

@@ -23,9 +23,6 @@ abstract class HistoryViewModel extends ViewModel {
 
   bool hasHistory();
 
-  ///debug functions
-  void buildHistory();
-
   int getAmount(int index);
 }
 
@@ -88,19 +85,6 @@ class HistoryViewModelImpl extends HistoryViewModel {
   @override
   bool hasHistory() {
     return history.isEmpty ? false : true;
-  }
-
-  @override
-  void buildHistory() {
-    if (hasHistory()) {
-      history.clear();
-    } else {
-      for (int i = 0; i < 100; i++) {
-        // history.add("Item {i}");
-      }
-    }
-
-    datasourceChangedStreamController.sink.add(this);
   }
 
   @override
