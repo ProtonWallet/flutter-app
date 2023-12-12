@@ -80,8 +80,8 @@ class MainActivity : FragmentActivity() {
 
         // Register activities for result.
         launcherViewModel.register(this)
-
-        launcherViewModel.addAccount()
+        launcherViewModel.signIn()
+        // launcherViewModel.signUp()
 
 //        setContent {
 //            val state by launcherViewModel.state.collectAsStateWithLifecycle()

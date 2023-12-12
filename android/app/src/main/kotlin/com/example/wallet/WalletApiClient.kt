@@ -24,9 +24,9 @@ import java.util.Locale
 import javax.inject.Inject
 
 open class WalletApiClient @Inject constructor() : ApiClient {
-    protected open val appName = "android-mail"
-    protected open val productName = "ProtonMail"
-    protected open val versionName = "6.0.0" // imitating ProtonMail version
+    protected open val appName = "android-wallet"
+    protected open val productName = "ProtonWallet"
+    protected open val versionName = "1.0.0"
     protected open val versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
 
     /**
