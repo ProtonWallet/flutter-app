@@ -18,121 +18,36 @@
 
 package com.example.wallet
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
-import me.proton.core.compose.component.ProtonCenteredProgress
-import me.proton.core.notification.presentation.deeplink.DeeplinkManager
-import me.proton.core.notification.presentation.deeplink.onActivityCreate
-//import com.example.wallet.autofill.di.UserPreferenceEntryPoint
-//import com.example.wallet.commonui.api.setSecureMode
-import com.example.wallet.log.api.WalletLogger
-//import com.example.wallet.preferences.AllowScreenshotsPreference
-import com.example.wallet.ui.launcher.LauncherViewModel
-import com.example.wallet.ui.launcher.LauncherViewModel.State.AccountNeeded
-import com.example.wallet.ui.launcher.LauncherViewModel.State.PrimaryExist
-import com.example.wallet.ui.launcher.LauncherViewModel.State.Processing
-import com.example.wallet.ui.launcher.LauncherViewModel.State.StepNeeded
-import javax.inject.Inject
+import android.content.Intent
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
 
-@AndroidEntryPoint
-class MainActivity : FragmentActivity() {
-
-    @Inject
-    lateinit var deeplinkManager: DeeplinkManager
-
-    private val launcherViewModel: LauncherViewModel by viewModels()
-
-//    private val updateResultLauncher: ActivityResultLauncher<IntentSenderRequest> =
-//        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
-//            when (result.resultCode) {
-//                RESULT_CANCELED -> launcherViewModel.declineUpdate()
-//                else -> {}
-//            }
-//        }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-//        setSecureMode()
-        val splashScreen = installSplashScreen()
-
-        super.onCreate(savedInstanceState)
-
-        deeplinkManager.onActivityCreate(this, savedInstanceState)
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Register activities for result.
-        launcherViewModel.register(this)
-        launcherViewModel.signIn()
-        // launcherViewModel.signUp()
-
-//        setContent {
-//            val state by launcherViewModel.state.collectAsStateWithLifecycle()
-//            runCatching {
-//                splashScreen.setKeepOnScreenCondition {
-//                    state == Processing || state == StepNeeded
-//                }
-//            }.onFailure {
-//                WalletLogger.w(TAG, it, "Error setting splash screen keep on screen condition")
-//            }
-//            LaunchedEffect(state) {
-//                launcherViewModel.onUserStateChanced(state)
-//            }
-//            when (state) {
-//                AccountNeeded -> {
-//                    launcherViewModel.addAccount()
-//                }
-//
-//                Processing -> ProtonCenteredProgress(Modifier.fillMaxSize())
-//                StepNeeded -> ProtonCenteredProgress(Modifier.fillMaxSize())
-//                PrimaryExist -> {
-////                    DisposableEffect(Unit) {
-////                        launcherViewModel.checkForUpdates(updateResultLauncher)
-////                        onDispose { launcherViewModel.cancelUpdateListener() }
-////                    }
-//                }
-//            }
-//        }
-    }
-
-    private fun restartApp() {
-        val intent = intent
-        finish()
-        startActivity(intent)
-    }
-
-//    private fun setSecureMode() {
-//        val factory = EntryPointAccessors.fromApplication(
-//            context = this,
-//            entryPoint = UserPreferenceEntryPoint::class.java
-//        )
-//        val repository = factory.getRepository()
-//        val setting = runBlocking {
-//            repository.getAllowScreenshotsPreference()
-//                .firstOrNull()
-//                ?: AllowScreenshotsPreference.Disabled
-//        }
-//        setSecureMode(setting)
-//    }
-
+class MainActivity : FlutterActivity() {
     companion object {
-        private const val TAG = "MainActivity"
+        var flutterEngineInstance: FlutterEngine? = null
     }
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        flutterEngineInstance = flutterEngine
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.wallet/native.views")
+            .setMethodCallHandler { call: MethodCall, result ->
+                when (call.method) {
+                    "native.navigation.login" -> {
+                        val intent = Intent(this, AuthActivity::class.java)
+                        intent.putExtra("method", "signin")
+                        startActivity(intent)
+                    }
+                    "native.navigation.signup" -> {
+                        val intent = Intent(this, AuthActivity::class.java)
+                        intent.putExtra("method", "signup")
+                        startActivity(intent)
+                    }
+                }
+            }
+    }
+
 }
