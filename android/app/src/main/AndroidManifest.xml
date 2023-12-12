@@ -80,7 +80,7 @@
                 tools:node="remove" />
         </provider>
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivityFlutter"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
