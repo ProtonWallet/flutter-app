@@ -192,7 +192,7 @@ flutter {
 ].each {
     def taskPostfix = it.key
     def profileMode = it.value
-    tasks.whenTaskAdded { task ->
+    tasks.configureEach { task ->
         if (task.name == "javaPreCompile$taskPostfix") {
             task.dependsOn "cargoBuild-arm64-v8a$taskPostfix", "cargoBuild-armeabi-v7a$taskPostfix", "cargoBuild-x86$taskPostfix"
         }
