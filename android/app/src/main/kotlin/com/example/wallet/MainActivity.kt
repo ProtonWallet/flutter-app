@@ -81,33 +81,35 @@ class MainActivity : FragmentActivity() {
         // Register activities for result.
         launcherViewModel.register(this)
 
-        setContent {
-            val state by launcherViewModel.state.collectAsStateWithLifecycle()
-            runCatching {
-                splashScreen.setKeepOnScreenCondition {
-                    state == Processing || state == StepNeeded
-                }
-            }.onFailure {
-                WalletLogger.w(TAG, it, "Error setting splash screen keep on screen condition")
-            }
-            LaunchedEffect(state) {
-                launcherViewModel.onUserStateChanced(state)
-            }
-            when (state) {
-                AccountNeeded -> {
-                    launcherViewModel.addAccount()
-                }
+        launcherViewModel.addAccount()
 
-                Processing -> ProtonCenteredProgress(Modifier.fillMaxSize())
-                StepNeeded -> ProtonCenteredProgress(Modifier.fillMaxSize())
-                PrimaryExist -> {
-//                    DisposableEffect(Unit) {
-//                        launcherViewModel.checkForUpdates(updateResultLauncher)
-//                        onDispose { launcherViewModel.cancelUpdateListener() }
-//                    }
-                }
-            }
-        }
+//        setContent {
+//            val state by launcherViewModel.state.collectAsStateWithLifecycle()
+//            runCatching {
+//                splashScreen.setKeepOnScreenCondition {
+//                    state == Processing || state == StepNeeded
+//                }
+//            }.onFailure {
+//                WalletLogger.w(TAG, it, "Error setting splash screen keep on screen condition")
+//            }
+//            LaunchedEffect(state) {
+//                launcherViewModel.onUserStateChanced(state)
+//            }
+//            when (state) {
+//                AccountNeeded -> {
+//                    launcherViewModel.addAccount()
+//                }
+//
+//                Processing -> ProtonCenteredProgress(Modifier.fillMaxSize())
+//                StepNeeded -> ProtonCenteredProgress(Modifier.fillMaxSize())
+//                PrimaryExist -> {
+////                    DisposableEffect(Unit) {
+////                        launcherViewModel.checkForUpdates(updateResultLauncher)
+////                        onDispose { launcherViewModel.cancelUpdateListener() }
+////                    }
+//                }
+//            }
+//        }
     }
 
     private fun restartApp() {
