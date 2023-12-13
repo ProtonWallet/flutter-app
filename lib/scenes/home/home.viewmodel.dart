@@ -83,11 +83,12 @@ class HomeViewModelImpl extends HomeViewModel {
     logger.i('balance: ${balance.total}');
     await updateBalance();
     udpateSyncStatus(false);
-    LocalNotification.show(
-        LocalNotification.SYNC_WALLET,
-        "Local Notification",
-        "Sync wallet success!\nbalance: ${balance.total}"
-    );
+    // Use it later
+    // LocalNotification.show(
+    //     LocalNotification.SYNC_WALLET,
+    //     "Local Notification",
+    //     "Sync wallet success!\nbalance: ${balance.total}"
+    // );
   }
 
   Future<void> updateBalance() async {
