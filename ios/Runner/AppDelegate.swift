@@ -12,6 +12,7 @@ import ProtonCoreFoundations
 import ProtonCoreNetworking
 import ProtonCorePayments
 import Flutter
+import flutter_local_notifications
 import SwiftUI // If using SwiftUI
 
 @UIApplicationMain
@@ -52,6 +53,15 @@ import SwiftUI // If using SwiftUI
         navigationChannel = FlutterMethodChannel(name: "com.example.wallet/app.view", binaryMessenger: controller.binaryMessenger)
         
         self.initSignupLogin()
+
+        FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+            GeneratedPluginRegistrant.register(with: registry)
+        }
+
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+        }
+
         GeneratedPluginRegistrant.register(with: self)
         print(dummy_method_to_enforce_bundling())
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)

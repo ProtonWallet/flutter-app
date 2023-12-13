@@ -38,8 +38,7 @@ package com.example.wallet.ui.launcher
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -199,15 +198,29 @@ class LauncherViewModel @Inject constructor(
         )
     }
 
-    fun signIn(userId: UserId? = null) = viewModelScope.launch {
+    fun signIn(callback: () -> (Unit), userId: UserId? = null) = viewModelScope.launch {
         val account = userId?.let { getAccountOrNull(it) }
         authOrchestrator.startLoginWorkflow(requiredAccountType, username = account?.username)
+        authOrchestrator.setOnLoginResult {
+            if (it != null) {
+                it.userId
+                it.nextStep
+            }
+            callback()
+        }
     }
 
-    fun signUp() = viewModelScope.launch {
+    fun signUp(callback: () -> (Unit)) = viewModelScope.launch {
         authOrchestrator.startSignupWorkflow(
             creatableAccountType = requiredAccountType
         )
+        authOrchestrator.setOnSignUpResult {
+            if (it != null) {
+                it.userId
+                it.username
+            }
+            callback()
+        }
     }
 
     fun signOut(userId: UserId? = null) = viewModelScope.launch {
@@ -215,13 +228,13 @@ class LauncherViewModel @Inject constructor(
         clearPreferencesIfNeeded()
     }
 
-    fun switch(userId: UserId) = viewModelScope.launch {
-        val account = getAccountOrNull(userId) ?: return@launch
-        when {
-            account.isDisabled() -> signIn(userId)
-            account.isReady() -> accountManager.setAsPrimary(userId)
-        }
-    }
+//    fun switch(userId: UserId) = viewModelScope.launch {
+//        val account = getAccountOrNull(userId) ?: return@launch
+//        when {
+//            account.isDisabled() -> signIn(userId)
+//            account.isReady() -> accountManager.setAsPrimary(userId)
+//        }
+//    }
 
     fun remove(userId: UserId? = null) = viewModelScope.launch {
         accountManager.removeAccount(requireNotNull(userId ?: getPrimaryUserIdOrNull()))
