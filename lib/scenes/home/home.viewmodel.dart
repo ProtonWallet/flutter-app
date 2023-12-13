@@ -3,6 +3,7 @@ import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/helper/local_notification.dart';
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
@@ -82,6 +83,11 @@ class HomeViewModelImpl extends HomeViewModel {
     logger.i('balance: ${balance.total}');
     await updateBalance();
     udpateSyncStatus(false);
+    LocalNotification.show(
+        LocalNotification.SYNC_WALLET,
+        "Local Notification",
+        "Sync wallet success!\nbalance: ${balance.total}"
+    );
   }
 
   Future<void> updateBalance() async {

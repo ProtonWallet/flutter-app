@@ -55,6 +55,7 @@ dependencies:
   qr_flutter: ^4.1.0
   share_plus: ^7.2.1
   syncfusion_flutter_charts: ^23.2.7
+  flutter_local_notifications: ^16.2.0
 
 dev_dependencies:
   flutter_test:
