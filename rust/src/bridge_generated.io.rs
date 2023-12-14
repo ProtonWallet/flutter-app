@@ -644,11 +644,6 @@ pub extern "C" fn new_box_autoadd_database_config_0() -> *mut wire_DatabaseConfi
 }
 
 #[no_mangle]
-pub extern "C" fn new_box_autoadd_electrum_config_0() -> *mut wire_ElectrumConfig {
-    support::new_leak_box_ptr(wire_ElectrumConfig::new_with_null_ptr())
-}
-
-#[no_mangle]
 pub extern "C" fn new_box_autoadd_esplora_config_0() -> *mut wire_EsploraConfig {
     support::new_leak_box_ptr(wire_EsploraConfig::new_with_null_ptr())
 }
@@ -671,16 +666,6 @@ pub extern "C" fn new_box_autoadd_psbt_sig_hash_type_0() -> *mut wire_PsbtSigHas
 #[no_mangle]
 pub extern "C" fn new_box_autoadd_rbf_value_0() -> *mut wire_RbfValue {
     support::new_leak_box_ptr(wire_RbfValue::new_with_null_ptr())
-}
-
-#[no_mangle]
-pub extern "C" fn new_box_autoadd_rpc_config_0() -> *mut wire_RpcConfig {
-    support::new_leak_box_ptr(wire_RpcConfig::new_with_null_ptr())
-}
-
-#[no_mangle]
-pub extern "C" fn new_box_autoadd_rpc_sync_params_0() -> *mut wire_RpcSyncParams {
-    support::new_leak_box_ptr(wire_RpcSyncParams::new_with_null_ptr())
 }
 
 #[no_mangle]
@@ -716,11 +701,6 @@ pub extern "C" fn new_box_autoadd_u64_0(value: u64) -> *mut u64 {
 #[no_mangle]
 pub extern "C" fn new_box_autoadd_u8_0(value: u8) -> *mut u8 {
     support::new_leak_box_ptr(value)
-}
-
-#[no_mangle]
-pub extern "C" fn new_box_autoadd_user_pass_0() -> *mut wire_UserPass {
-    support::new_leak_box_ptr(wire_UserPass::new_with_null_ptr())
 }
 
 #[no_mangle]
@@ -798,22 +778,8 @@ impl Wire2Api<BlockchainConfig> for wire_BlockchainConfig {
         match self.tag {
             0 => unsafe {
                 let ans = support::box_from_leak_ptr(self.kind);
-                let ans = support::box_from_leak_ptr(ans.Electrum);
-                BlockchainConfig::Electrum {
-                    config: ans.config.wire2api(),
-                }
-            },
-            1 => unsafe {
-                let ans = support::box_from_leak_ptr(self.kind);
                 let ans = support::box_from_leak_ptr(ans.Esplora);
                 BlockchainConfig::Esplora {
-                    config: ans.config.wire2api(),
-                }
-            },
-            2 => unsafe {
-                let ans = support::box_from_leak_ptr(self.kind);
-                let ans = support::box_from_leak_ptr(ans.Rpc);
-                BlockchainConfig::Rpc {
                     config: ans.config.wire2api(),
                 }
             },
@@ -846,12 +812,6 @@ impl Wire2Api<DatabaseConfig> for *mut wire_DatabaseConfig {
         Wire2Api::<DatabaseConfig>::wire2api(*wrap).into()
     }
 }
-impl Wire2Api<ElectrumConfig> for *mut wire_ElectrumConfig {
-    fn wire2api(self) -> ElectrumConfig {
-        let wrap = unsafe { support::box_from_leak_ptr(self) };
-        Wire2Api::<ElectrumConfig>::wire2api(*wrap).into()
-    }
-}
 impl Wire2Api<EsploraConfig> for *mut wire_EsploraConfig {
     fn wire2api(self) -> EsploraConfig {
         let wrap = unsafe { support::box_from_leak_ptr(self) };
@@ -879,18 +839,6 @@ impl Wire2Api<RbfValue> for *mut wire_RbfValue {
     fn wire2api(self) -> RbfValue {
         let wrap = unsafe { support::box_from_leak_ptr(self) };
         Wire2Api::<RbfValue>::wire2api(*wrap).into()
-    }
-}
-impl Wire2Api<RpcConfig> for *mut wire_RpcConfig {
-    fn wire2api(self) -> RpcConfig {
-        let wrap = unsafe { support::box_from_leak_ptr(self) };
-        Wire2Api::<RpcConfig>::wire2api(*wrap).into()
-    }
-}
-impl Wire2Api<RpcSyncParams> for *mut wire_RpcSyncParams {
-    fn wire2api(self) -> RpcSyncParams {
-        let wrap = unsafe { support::box_from_leak_ptr(self) };
-        Wire2Api::<RpcSyncParams>::wire2api(*wrap).into()
     }
 }
 impl Wire2Api<Script> for *mut wire_Script {
@@ -932,12 +880,6 @@ impl Wire2Api<u8> for *mut u8 {
         unsafe { *support::box_from_leak_ptr(self) }
     }
 }
-impl Wire2Api<UserPass> for *mut wire_UserPass {
-    fn wire2api(self) -> UserPass {
-        let wrap = unsafe { support::box_from_leak_ptr(self) };
-        Wire2Api::<UserPass>::wire2api(*wrap).into()
-    }
-}
 
 impl Wire2Api<DatabaseConfig> for wire_DatabaseConfig {
     fn wire2api(self) -> DatabaseConfig {
@@ -958,18 +900,6 @@ impl Wire2Api<DatabaseConfig> for wire_DatabaseConfig {
                 }
             },
             _ => unreachable!(),
-        }
-    }
-}
-impl Wire2Api<ElectrumConfig> for wire_ElectrumConfig {
-    fn wire2api(self) -> ElectrumConfig {
-        ElectrumConfig {
-            url: self.url.wire2api(),
-            socks5: self.socks5.wire2api(),
-            retry: self.retry.wire2api(),
-            timeout: self.timeout.wire2api(),
-            stop_gap: self.stop_gap.wire2api(),
-            validate_domain: self.validate_domain.wire2api(),
         }
     }
 }
@@ -1042,28 +972,6 @@ impl Wire2Api<RbfValue> for wire_RbfValue {
         }
     }
 }
-impl Wire2Api<RpcConfig> for wire_RpcConfig {
-    fn wire2api(self) -> RpcConfig {
-        RpcConfig {
-            url: self.url.wire2api(),
-            auth_cookie: self.auth_cookie.wire2api(),
-            auth_user_pass: self.auth_user_pass.wire2api(),
-            network: self.network.wire2api(),
-            wallet_name: self.wallet_name.wire2api(),
-            sync_params: self.sync_params.wire2api(),
-        }
-    }
-}
-impl Wire2Api<RpcSyncParams> for wire_RpcSyncParams {
-    fn wire2api(self) -> RpcSyncParams {
-        RpcSyncParams {
-            start_script_count: self.start_script_count.wire2api(),
-            start_time: self.start_time.wire2api(),
-            force_start_time: self.force_start_time.wire2api(),
-            poll_rate_sec: self.poll_rate_sec.wire2api(),
-        }
-    }
-}
 impl Wire2Api<Script> for wire_Script {
     fn wire2api(self) -> Script {
         Script {
@@ -1125,14 +1033,6 @@ impl Wire2Api<Vec<u8>> for *mut wire_uint_8_list {
         }
     }
 }
-impl Wire2Api<UserPass> for wire_UserPass {
-    fn wire2api(self) -> UserPass {
-        UserPass {
-            username: self.username.wire2api(),
-            password: self.password.wire2api(),
-        }
-    }
-}
 
 // Section: wire structs
 
@@ -1142,17 +1042,6 @@ pub struct wire___record__out_point_String_usize {
     field0: wire_OutPoint,
     field1: *mut wire_uint_8_list,
     field2: usize,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_ElectrumConfig {
-    url: *mut wire_uint_8_list,
-    socks5: *mut wire_uint_8_list,
-    retry: u8,
-    timeout: *mut u8,
-    stop_gap: u64,
-    validate_domain: bool,
 }
 
 #[repr(C)]
@@ -1199,26 +1088,6 @@ pub struct wire_OutPoint {
 #[derive(Clone)]
 pub struct wire_PsbtSigHashType {
     inner: u32,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_RpcConfig {
-    url: *mut wire_uint_8_list,
-    auth_cookie: *mut wire_uint_8_list,
-    auth_user_pass: *mut wire_UserPass,
-    network: i32,
-    wallet_name: *mut wire_uint_8_list,
-    sync_params: *mut wire_RpcSyncParams,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_RpcSyncParams {
-    start_script_count: u64,
-    start_time: u64,
-    force_start_time: bool,
-    poll_rate_sec: u64,
 }
 
 #[repr(C)]
@@ -1276,13 +1145,6 @@ pub struct wire_uint_8_list {
 
 #[repr(C)]
 #[derive(Clone)]
-pub struct wire_UserPass {
-    username: *mut wire_uint_8_list,
-    password: *mut wire_uint_8_list,
-}
-
-#[repr(C)]
-#[derive(Clone)]
 pub struct wire_AddressIndex {
     tag: i32,
     kind: *mut AddressIndexKind,
@@ -1324,27 +1186,13 @@ pub struct wire_BlockchainConfig {
 
 #[repr(C)]
 pub union BlockchainConfigKind {
-    Electrum: *mut wire_BlockchainConfig_Electrum,
     Esplora: *mut wire_BlockchainConfig_Esplora,
-    Rpc: *mut wire_BlockchainConfig_Rpc,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_BlockchainConfig_Electrum {
-    config: *mut wire_ElectrumConfig,
 }
 
 #[repr(C)]
 #[derive(Clone)]
 pub struct wire_BlockchainConfig_Esplora {
     config: *mut wire_EsploraConfig,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_BlockchainConfig_Rpc {
-    config: *mut wire_RpcConfig,
 }
 
 #[repr(C)]
@@ -1477,27 +1325,9 @@ impl NewWithNullPtr for wire_BlockchainConfig {
 }
 
 #[no_mangle]
-pub extern "C" fn inflate_BlockchainConfig_Electrum() -> *mut BlockchainConfigKind {
-    support::new_leak_box_ptr(BlockchainConfigKind {
-        Electrum: support::new_leak_box_ptr(wire_BlockchainConfig_Electrum {
-            config: core::ptr::null_mut(),
-        }),
-    })
-}
-
-#[no_mangle]
 pub extern "C" fn inflate_BlockchainConfig_Esplora() -> *mut BlockchainConfigKind {
     support::new_leak_box_ptr(BlockchainConfigKind {
         Esplora: support::new_leak_box_ptr(wire_BlockchainConfig_Esplora {
-            config: core::ptr::null_mut(),
-        }),
-    })
-}
-
-#[no_mangle]
-pub extern "C" fn inflate_BlockchainConfig_Rpc() -> *mut BlockchainConfigKind {
-    support::new_leak_box_ptr(BlockchainConfigKind {
-        Rpc: support::new_leak_box_ptr(wire_BlockchainConfig_Rpc {
             config: core::ptr::null_mut(),
         }),
     })
@@ -1534,25 +1364,6 @@ pub extern "C" fn inflate_DatabaseConfig_Sled() -> *mut DatabaseConfigKind {
             config: core::ptr::null_mut(),
         }),
     })
-}
-
-impl NewWithNullPtr for wire_ElectrumConfig {
-    fn new_with_null_ptr() -> Self {
-        Self {
-            url: core::ptr::null_mut(),
-            socks5: core::ptr::null_mut(),
-            retry: Default::default(),
-            timeout: core::ptr::null_mut(),
-            stop_gap: Default::default(),
-            validate_domain: Default::default(),
-        }
-    }
-}
-
-impl Default for wire_ElectrumConfig {
-    fn default() -> Self {
-        Self::new_with_null_ptr()
-    }
 }
 
 impl NewWithNullPtr for wire_EsploraConfig {
@@ -1641,42 +1452,6 @@ pub extern "C" fn inflate_RbfValue_Value() -> *mut RbfValueKind {
             field0: Default::default(),
         }),
     })
-}
-
-impl NewWithNullPtr for wire_RpcConfig {
-    fn new_with_null_ptr() -> Self {
-        Self {
-            url: core::ptr::null_mut(),
-            auth_cookie: core::ptr::null_mut(),
-            auth_user_pass: core::ptr::null_mut(),
-            network: Default::default(),
-            wallet_name: core::ptr::null_mut(),
-            sync_params: core::ptr::null_mut(),
-        }
-    }
-}
-
-impl Default for wire_RpcConfig {
-    fn default() -> Self {
-        Self::new_with_null_ptr()
-    }
-}
-
-impl NewWithNullPtr for wire_RpcSyncParams {
-    fn new_with_null_ptr() -> Self {
-        Self {
-            start_script_count: Default::default(),
-            start_time: Default::default(),
-            force_start_time: Default::default(),
-            poll_rate_sec: Default::default(),
-        }
-    }
-}
-
-impl Default for wire_RpcSyncParams {
-    fn default() -> Self {
-        Self::new_with_null_ptr()
-    }
 }
 
 impl NewWithNullPtr for wire_Script {
@@ -1768,21 +1543,6 @@ impl NewWithNullPtr for wire_TxOut {
 }
 
 impl Default for wire_TxOut {
-    fn default() -> Self {
-        Self::new_with_null_ptr()
-    }
-}
-
-impl NewWithNullPtr for wire_UserPass {
-    fn new_with_null_ptr() -> Self {
-        Self {
-            username: core::ptr::null_mut(),
-            password: core::ptr::null_mut(),
-        }
-    }
-}
-
-impl Default for wire_UserPass {
     fn default() -> Self {
         Self::new_with_null_ptr()
     }
