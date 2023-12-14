@@ -2102,14 +2102,6 @@ class ProtonWalletCommonPlatform
   }
 
   @protected
-  ffi.Pointer<wire_ElectrumConfig> api2wire_box_autoadd_electrum_config(
-      ElectrumConfig raw) {
-    final ptr = inner.new_box_autoadd_electrum_config_0();
-    _api_fill_to_wire_electrum_config(raw, ptr.ref);
-    return ptr;
-  }
-
-  @protected
   ffi.Pointer<wire_EsploraConfig> api2wire_box_autoadd_esplora_config(
       EsploraConfig raw) {
     final ptr = inner.new_box_autoadd_esplora_config_0();
@@ -2141,21 +2133,6 @@ class ProtonWalletCommonPlatform
   ffi.Pointer<wire_RbfValue> api2wire_box_autoadd_rbf_value(RbfValue raw) {
     final ptr = inner.new_box_autoadd_rbf_value_0();
     _api_fill_to_wire_rbf_value(raw, ptr.ref);
-    return ptr;
-  }
-
-  @protected
-  ffi.Pointer<wire_RpcConfig> api2wire_box_autoadd_rpc_config(RpcConfig raw) {
-    final ptr = inner.new_box_autoadd_rpc_config_0();
-    _api_fill_to_wire_rpc_config(raw, ptr.ref);
-    return ptr;
-  }
-
-  @protected
-  ffi.Pointer<wire_RpcSyncParams> api2wire_box_autoadd_rpc_sync_params(
-      RpcSyncParams raw) {
-    final ptr = inner.new_box_autoadd_rpc_sync_params_0();
-    _api_fill_to_wire_rpc_sync_params(raw, ptr.ref);
     return ptr;
   }
 
@@ -2203,13 +2180,6 @@ class ProtonWalletCommonPlatform
   @protected
   ffi.Pointer<ffi.Uint8> api2wire_box_autoadd_u8(int raw) {
     return inner.new_box_autoadd_u8_0(api2wire_u8(raw));
-  }
-
-  @protected
-  ffi.Pointer<wire_UserPass> api2wire_box_autoadd_user_pass(UserPass raw) {
-    final ptr = inner.new_box_autoadd_user_pass_0();
-    _api_fill_to_wire_user_pass(raw, ptr.ref);
-    return ptr;
   }
 
   @protected
@@ -2264,14 +2234,6 @@ class ProtonWalletCommonPlatform
   }
 
   @protected
-  ffi.Pointer<wire_RpcSyncParams> api2wire_opt_box_autoadd_rpc_sync_params(
-      RpcSyncParams? raw) {
-    return raw == null
-        ? ffi.nullptr
-        : api2wire_box_autoadd_rpc_sync_params(raw);
-  }
-
-  @protected
   ffi.Pointer<wire_Script> api2wire_opt_box_autoadd_script(Script? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_script(raw);
   }
@@ -2295,11 +2257,6 @@ class ProtonWalletCommonPlatform
   @protected
   ffi.Pointer<ffi.Uint8> api2wire_opt_box_autoadd_u8(int? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_u8(raw);
-  }
-
-  @protected
-  ffi.Pointer<wire_UserPass> api2wire_opt_box_autoadd_user_pass(UserPass? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_user_pass(raw);
   }
 
   @protected
@@ -2354,25 +2311,11 @@ class ProtonWalletCommonPlatform
 
   void _api_fill_to_wire_blockchain_config(
       BlockchainConfig apiObj, wire_BlockchainConfig wireObj) {
-    if (apiObj is BlockchainConfig_Electrum) {
-      var pre_config = api2wire_box_autoadd_electrum_config(apiObj.config);
-      wireObj.tag = 0;
-      wireObj.kind = inner.inflate_BlockchainConfig_Electrum();
-      wireObj.kind.ref.Electrum.ref.config = pre_config;
-      return;
-    }
     if (apiObj is BlockchainConfig_Esplora) {
       var pre_config = api2wire_box_autoadd_esplora_config(apiObj.config);
-      wireObj.tag = 1;
+      wireObj.tag = 0;
       wireObj.kind = inner.inflate_BlockchainConfig_Esplora();
       wireObj.kind.ref.Esplora.ref.config = pre_config;
-      return;
-    }
-    if (apiObj is BlockchainConfig_Rpc) {
-      var pre_config = api2wire_box_autoadd_rpc_config(apiObj.config);
-      wireObj.tag = 2;
-      wireObj.kind = inner.inflate_BlockchainConfig_Rpc();
-      wireObj.kind.ref.Rpc.ref.config = pre_config;
       return;
     }
   }
@@ -2398,11 +2341,6 @@ class ProtonWalletCommonPlatform
     _api_fill_to_wire_database_config(apiObj, wireObj.ref);
   }
 
-  void _api_fill_to_wire_box_autoadd_electrum_config(
-      ElectrumConfig apiObj, ffi.Pointer<wire_ElectrumConfig> wireObj) {
-    _api_fill_to_wire_electrum_config(apiObj, wireObj.ref);
-  }
-
   void _api_fill_to_wire_box_autoadd_esplora_config(
       EsploraConfig apiObj, ffi.Pointer<wire_EsploraConfig> wireObj) {
     _api_fill_to_wire_esplora_config(apiObj, wireObj.ref);
@@ -2421,16 +2359,6 @@ class ProtonWalletCommonPlatform
   void _api_fill_to_wire_box_autoadd_rbf_value(
       RbfValue apiObj, ffi.Pointer<wire_RbfValue> wireObj) {
     _api_fill_to_wire_rbf_value(apiObj, wireObj.ref);
-  }
-
-  void _api_fill_to_wire_box_autoadd_rpc_config(
-      RpcConfig apiObj, ffi.Pointer<wire_RpcConfig> wireObj) {
-    _api_fill_to_wire_rpc_config(apiObj, wireObj.ref);
-  }
-
-  void _api_fill_to_wire_box_autoadd_rpc_sync_params(
-      RpcSyncParams apiObj, ffi.Pointer<wire_RpcSyncParams> wireObj) {
-    _api_fill_to_wire_rpc_sync_params(apiObj, wireObj.ref);
   }
 
   void _api_fill_to_wire_box_autoadd_script(
@@ -2455,11 +2383,6 @@ class ProtonWalletCommonPlatform
     _api_fill_to_wire_sqlite_db_configuration(apiObj, wireObj.ref);
   }
 
-  void _api_fill_to_wire_box_autoadd_user_pass(
-      UserPass apiObj, ffi.Pointer<wire_UserPass> wireObj) {
-    _api_fill_to_wire_user_pass(apiObj, wireObj.ref);
-  }
-
   void _api_fill_to_wire_database_config(
       DatabaseConfig apiObj, wire_DatabaseConfig wireObj) {
     if (apiObj is DatabaseConfig_Memory) {
@@ -2482,16 +2405,6 @@ class ProtonWalletCommonPlatform
       wireObj.kind.ref.Sled.ref.config = pre_config;
       return;
     }
-  }
-
-  void _api_fill_to_wire_electrum_config(
-      ElectrumConfig apiObj, wire_ElectrumConfig wireObj) {
-    wireObj.url = api2wire_String(apiObj.url);
-    wireObj.socks5 = api2wire_opt_String(apiObj.socks5);
-    wireObj.retry = api2wire_u8(apiObj.retry);
-    wireObj.timeout = api2wire_opt_box_autoadd_u8(apiObj.timeout);
-    wireObj.stop_gap = api2wire_u64(apiObj.stopGap);
-    wireObj.validate_domain = api2wire_bool(apiObj.validateDomain);
   }
 
   void _api_fill_to_wire_esplora_config(
@@ -2534,25 +2447,6 @@ class ProtonWalletCommonPlatform
     }
   }
 
-  void _api_fill_to_wire_rpc_config(RpcConfig apiObj, wire_RpcConfig wireObj) {
-    wireObj.url = api2wire_String(apiObj.url);
-    wireObj.auth_cookie = api2wire_opt_String(apiObj.authCookie);
-    wireObj.auth_user_pass =
-        api2wire_opt_box_autoadd_user_pass(apiObj.authUserPass);
-    wireObj.network = api2wire_network(apiObj.network);
-    wireObj.wallet_name = api2wire_String(apiObj.walletName);
-    wireObj.sync_params =
-        api2wire_opt_box_autoadd_rpc_sync_params(apiObj.syncParams);
-  }
-
-  void _api_fill_to_wire_rpc_sync_params(
-      RpcSyncParams apiObj, wire_RpcSyncParams wireObj) {
-    wireObj.start_script_count = api2wire_u64(apiObj.startScriptCount);
-    wireObj.start_time = api2wire_u64(apiObj.startTime);
-    wireObj.force_start_time = api2wire_bool(apiObj.forceStartTime);
-    wireObj.poll_rate_sec = api2wire_u64(apiObj.pollRateSec);
-  }
-
   void _api_fill_to_wire_script(Script apiObj, wire_Script wireObj) {
     wireObj.internal = api2wire_uint_8_list(apiObj.internal);
   }
@@ -2590,11 +2484,6 @@ class ProtonWalletCommonPlatform
   void _api_fill_to_wire_tx_out(TxOut apiObj, wire_TxOut wireObj) {
     wireObj.value = api2wire_u64(apiObj.value);
     _api_fill_to_wire_script(apiObj.scriptPubkey, wireObj.script_pubkey);
-  }
-
-  void _api_fill_to_wire_user_pass(UserPass apiObj, wire_UserPass wireObj) {
-    wireObj.username = api2wire_String(apiObj.username);
-    wireObj.password = api2wire_String(apiObj.password);
   }
 }
 
@@ -4202,17 +4091,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
       _new_box_autoadd_database_config_0Ptr
           .asFunction<ffi.Pointer<wire_DatabaseConfig> Function()>();
 
-  ffi.Pointer<wire_ElectrumConfig> new_box_autoadd_electrum_config_0() {
-    return _new_box_autoadd_electrum_config_0();
-  }
-
-  late final _new_box_autoadd_electrum_config_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<wire_ElectrumConfig> Function()>>(
-          'new_box_autoadd_electrum_config_0');
-  late final _new_box_autoadd_electrum_config_0 =
-      _new_box_autoadd_electrum_config_0Ptr
-          .asFunction<ffi.Pointer<wire_ElectrumConfig> Function()>();
-
   ffi.Pointer<wire_EsploraConfig> new_box_autoadd_esplora_config_0() {
     return _new_box_autoadd_esplora_config_0();
   }
@@ -4268,27 +4146,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_rbf_value_0');
   late final _new_box_autoadd_rbf_value_0 = _new_box_autoadd_rbf_value_0Ptr
       .asFunction<ffi.Pointer<wire_RbfValue> Function()>();
-
-  ffi.Pointer<wire_RpcConfig> new_box_autoadd_rpc_config_0() {
-    return _new_box_autoadd_rpc_config_0();
-  }
-
-  late final _new_box_autoadd_rpc_config_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<wire_RpcConfig> Function()>>(
-          'new_box_autoadd_rpc_config_0');
-  late final _new_box_autoadd_rpc_config_0 = _new_box_autoadd_rpc_config_0Ptr
-      .asFunction<ffi.Pointer<wire_RpcConfig> Function()>();
-
-  ffi.Pointer<wire_RpcSyncParams> new_box_autoadd_rpc_sync_params_0() {
-    return _new_box_autoadd_rpc_sync_params_0();
-  }
-
-  late final _new_box_autoadd_rpc_sync_params_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<wire_RpcSyncParams> Function()>>(
-          'new_box_autoadd_rpc_sync_params_0');
-  late final _new_box_autoadd_rpc_sync_params_0 =
-      _new_box_autoadd_rpc_sync_params_0Ptr
-          .asFunction<ffi.Pointer<wire_RpcSyncParams> Function()>();
 
   ffi.Pointer<wire_Script> new_box_autoadd_script_0() {
     return _new_box_autoadd_script_0();
@@ -4378,16 +4235,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _new_box_autoadd_u8_0 = _new_box_autoadd_u8_0Ptr
       .asFunction<ffi.Pointer<ffi.Uint8> Function(int)>();
 
-  ffi.Pointer<wire_UserPass> new_box_autoadd_user_pass_0() {
-    return _new_box_autoadd_user_pass_0();
-  }
-
-  late final _new_box_autoadd_user_pass_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<wire_UserPass> Function()>>(
-          'new_box_autoadd_user_pass_0');
-  late final _new_box_autoadd_user_pass_0 = _new_box_autoadd_user_pass_0Ptr
-      .asFunction<ffi.Pointer<wire_UserPass> Function()>();
-
   ffi.Pointer<wire_list_out_point> new_list_out_point_0(
     int len,
   ) {
@@ -4453,17 +4300,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _inflate_AddressIndex_Reset = _inflate_AddressIndex_ResetPtr
       .asFunction<ffi.Pointer<AddressIndexKind> Function()>();
 
-  ffi.Pointer<BlockchainConfigKind> inflate_BlockchainConfig_Electrum() {
-    return _inflate_BlockchainConfig_Electrum();
-  }
-
-  late final _inflate_BlockchainConfig_ElectrumPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<BlockchainConfigKind> Function()>>(
-          'inflate_BlockchainConfig_Electrum');
-  late final _inflate_BlockchainConfig_Electrum =
-      _inflate_BlockchainConfig_ElectrumPtr
-          .asFunction<ffi.Pointer<BlockchainConfigKind> Function()>();
-
   ffi.Pointer<BlockchainConfigKind> inflate_BlockchainConfig_Esplora() {
     return _inflate_BlockchainConfig_Esplora();
   }
@@ -4474,16 +4310,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _inflate_BlockchainConfig_Esplora =
       _inflate_BlockchainConfig_EsploraPtr
           .asFunction<ffi.Pointer<BlockchainConfigKind> Function()>();
-
-  ffi.Pointer<BlockchainConfigKind> inflate_BlockchainConfig_Rpc() {
-    return _inflate_BlockchainConfig_Rpc();
-  }
-
-  late final _inflate_BlockchainConfig_RpcPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<BlockchainConfigKind> Function()>>(
-          'inflate_BlockchainConfig_Rpc');
-  late final _inflate_BlockchainConfig_Rpc = _inflate_BlockchainConfig_RpcPtr
-      .asFunction<ffi.Pointer<BlockchainConfigKind> Function()>();
 
   ffi.Pointer<DatabaseConfigKind> inflate_DatabaseConfig_Sqlite() {
     return _inflate_DatabaseConfig_Sqlite();
@@ -4539,27 +4365,6 @@ final class wire_uint_8_list extends ffi.Struct {
   external int len;
 }
 
-final class wire_ElectrumConfig extends ffi.Struct {
-  external ffi.Pointer<wire_uint_8_list> url;
-
-  external ffi.Pointer<wire_uint_8_list> socks5;
-
-  @ffi.Uint8()
-  external int retry;
-
-  external ffi.Pointer<ffi.Uint8> timeout;
-
-  @ffi.Uint64()
-  external int stop_gap;
-
-  @ffi.Bool()
-  external bool validate_domain;
-}
-
-final class wire_BlockchainConfig_Electrum extends ffi.Struct {
-  external ffi.Pointer<wire_ElectrumConfig> config;
-}
-
 final class wire_EsploraConfig extends ffi.Struct {
   external ffi.Pointer<wire_uint_8_list> base_url;
 
@@ -4577,51 +4382,8 @@ final class wire_BlockchainConfig_Esplora extends ffi.Struct {
   external ffi.Pointer<wire_EsploraConfig> config;
 }
 
-final class wire_UserPass extends ffi.Struct {
-  external ffi.Pointer<wire_uint_8_list> username;
-
-  external ffi.Pointer<wire_uint_8_list> password;
-}
-
-final class wire_RpcSyncParams extends ffi.Struct {
-  @ffi.Uint64()
-  external int start_script_count;
-
-  @ffi.Uint64()
-  external int start_time;
-
-  @ffi.Bool()
-  external bool force_start_time;
-
-  @ffi.Uint64()
-  external int poll_rate_sec;
-}
-
-final class wire_RpcConfig extends ffi.Struct {
-  external ffi.Pointer<wire_uint_8_list> url;
-
-  external ffi.Pointer<wire_uint_8_list> auth_cookie;
-
-  external ffi.Pointer<wire_UserPass> auth_user_pass;
-
-  @ffi.Int32()
-  external int network;
-
-  external ffi.Pointer<wire_uint_8_list> wallet_name;
-
-  external ffi.Pointer<wire_RpcSyncParams> sync_params;
-}
-
-final class wire_BlockchainConfig_Rpc extends ffi.Struct {
-  external ffi.Pointer<wire_RpcConfig> config;
-}
-
 final class BlockchainConfigKind extends ffi.Union {
-  external ffi.Pointer<wire_BlockchainConfig_Electrum> Electrum;
-
   external ffi.Pointer<wire_BlockchainConfig_Esplora> Esplora;
-
-  external ffi.Pointer<wire_BlockchainConfig_Rpc> Rpc;
 }
 
 final class wire_BlockchainConfig extends ffi.Struct {
