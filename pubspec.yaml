@@ -56,6 +56,8 @@ dependencies:
   share_plus: ^7.2.1
   syncfusion_flutter_charts: ^23.2.7
   flutter_local_notifications: ^16.2.0
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.9
 
 dev_dependencies:
   flutter_test:
