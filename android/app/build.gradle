@@ -4,6 +4,8 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services' // for FCM
+//    id "me.proton.core.gradle-plugins.environment-config"
 }
 
 def localProperties = new Properties()
@@ -38,6 +40,8 @@ dependencies {
     def androidx_activity_version = "1.6.1"
     def androidx_compose_version = "1.4.2"
 
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation 'com.google.firebase:firebase-messaging:23.2.1'
     implementation platform('androidx.compose:compose-bom:2023.01.00')
 
     implementation files("libs/gopenpgp.aar")
@@ -167,14 +171,23 @@ android {
     }
 
     buildTypes {
-        debug {}
+        debug {
+            debuggable true
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 // Allow references to generated code
 kapt {
