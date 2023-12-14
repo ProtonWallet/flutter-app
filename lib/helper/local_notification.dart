@@ -3,10 +3,21 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:wallet/helper/logger.dart';
 
 class LocalNotification {
+  static final int FCM_PUSH = 0;
   static final int SYNC_WALLET = 1;
   static final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static final StreamController<int?> selectNotificationStream = StreamController<int?>.broadcast();
   static bool inited = false;
+
+  static final androidNotificationDetail = AndroidNotificationDetails(
+      '0', // channel Id
+      'general' // channel Name
+  );
+  static final iosNotificatonDetail = DarwinNotificationDetails();
+  static final notificationDetails = NotificationDetails(
+    iOS: iosNotificatonDetail,
+    android: androidNotificationDetail,
+  );
 
   static Future<void> setup() async {
     if (!inited) {
@@ -42,15 +53,6 @@ class LocalNotification {
   }
 
   static void show(int id, String title, String body) {
-    const androidNotificationDetail = AndroidNotificationDetails(
-        '0', // channel Id
-        'general' // channel Name
-    );
-    const iosNotificatonDetail = DarwinNotificationDetails();
-    const notificationDetails = NotificationDetails(
-      iOS: iosNotificatonDetail,
-      android: androidNotificationDetail,
-    );
     _flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
   }
 
