@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:path/path.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
+
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'dart:async';
 
@@ -50,10 +54,26 @@ class BdkLibrary {
   }
 
   Future<Wallet> restoreWallet(Descriptor descriptor) async {
-    var path = await getDatabasesPath();
-    logger.d("=========DB path $path=====");
-    var config = DatabaseConfig.sqlite(
-        config: SqliteDbConfiguration(path: join(path, 'test_database.db')));
+    DatabaseConfig config;
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      var databaseFactory = databaseFactoryFfi;
+      final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+      String path = join(appDocumentsDir.path, "databases", "test_database.db");
+      //Create db, db need to be initialize to avoid error
+      var db = await databaseFactory.openDatabase(
+        path,
+      );
+      await db.close();
+      logger.d("=========DB path $path=====");
+      config = DatabaseConfig.sqlite(
+          config: SqliteDbConfiguration(path: path));
+    } else {
+      var path = await getDatabasesPath();
+      logger.d("=========DB path $path=====");
+      config = DatabaseConfig.sqlite(
+          config: SqliteDbConfiguration(path: join(path, 'test_database.db')));
+    }
     final wallet = await Wallet.create(
         descriptor: descriptor,
         network: Network.Testnet,
