@@ -2,11 +2,19 @@ use super::*;
 // Section: wire functions
 
 #[no_mangle]
-pub extern "C" fn wire_create_blockchain__static_method__Api(
+pub extern "C" fn wire_create_esplora_blockchain__static_method__Api(
     port_: i64,
-    config: *mut wire_BlockchainConfig,
+    config: *mut wire_EsploraConfig,
 ) {
-    wire_create_blockchain__static_method__Api_impl(port_, config)
+    wire_create_esplora_blockchain__static_method__Api_impl(port_, config)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_create_electrum_blockchain__static_method__Api(
+    port_: i64,
+    config: *mut wire_ElectrumConfig,
+) {
+    wire_create_electrum_blockchain__static_method__Api_impl(port_, config)
 }
 
 #[no_mangle]
@@ -634,13 +642,13 @@ pub extern "C" fn new_box_autoadd_address_index_0() -> *mut wire_AddressIndex {
 }
 
 #[no_mangle]
-pub extern "C" fn new_box_autoadd_blockchain_config_0() -> *mut wire_BlockchainConfig {
-    support::new_leak_box_ptr(wire_BlockchainConfig::new_with_null_ptr())
+pub extern "C" fn new_box_autoadd_database_config_0() -> *mut wire_DatabaseConfig {
+    support::new_leak_box_ptr(wire_DatabaseConfig::new_with_null_ptr())
 }
 
 #[no_mangle]
-pub extern "C" fn new_box_autoadd_database_config_0() -> *mut wire_DatabaseConfig {
-    support::new_leak_box_ptr(wire_DatabaseConfig::new_with_null_ptr())
+pub extern "C" fn new_box_autoadd_electrum_config_0() -> *mut wire_ElectrumConfig {
+    support::new_leak_box_ptr(wire_ElectrumConfig::new_with_null_ptr())
 }
 
 #[no_mangle]
@@ -773,20 +781,6 @@ impl Wire2Api<AddressIndex> for wire_AddressIndex {
         }
     }
 }
-impl Wire2Api<BlockchainConfig> for wire_BlockchainConfig {
-    fn wire2api(self) -> BlockchainConfig {
-        match self.tag {
-            0 => unsafe {
-                let ans = support::box_from_leak_ptr(self.kind);
-                let ans = support::box_from_leak_ptr(ans.Esplora);
-                BlockchainConfig::Esplora {
-                    config: ans.config.wire2api(),
-                }
-            },
-            _ => unreachable!(),
-        }
-    }
-}
 
 impl Wire2Api<(OutPoint, String, usize)> for *mut wire___record__out_point_String_usize {
     fn wire2api(self) -> (OutPoint, String, usize) {
@@ -800,16 +794,16 @@ impl Wire2Api<AddressIndex> for *mut wire_AddressIndex {
         Wire2Api::<AddressIndex>::wire2api(*wrap).into()
     }
 }
-impl Wire2Api<BlockchainConfig> for *mut wire_BlockchainConfig {
-    fn wire2api(self) -> BlockchainConfig {
-        let wrap = unsafe { support::box_from_leak_ptr(self) };
-        Wire2Api::<BlockchainConfig>::wire2api(*wrap).into()
-    }
-}
 impl Wire2Api<DatabaseConfig> for *mut wire_DatabaseConfig {
     fn wire2api(self) -> DatabaseConfig {
         let wrap = unsafe { support::box_from_leak_ptr(self) };
         Wire2Api::<DatabaseConfig>::wire2api(*wrap).into()
+    }
+}
+impl Wire2Api<ElectrumConfig> for *mut wire_ElectrumConfig {
+    fn wire2api(self) -> ElectrumConfig {
+        let wrap = unsafe { support::box_from_leak_ptr(self) };
+        Wire2Api::<ElectrumConfig>::wire2api(*wrap).into()
     }
 }
 impl Wire2Api<EsploraConfig> for *mut wire_EsploraConfig {
@@ -900,6 +894,18 @@ impl Wire2Api<DatabaseConfig> for wire_DatabaseConfig {
                 }
             },
             _ => unreachable!(),
+        }
+    }
+}
+impl Wire2Api<ElectrumConfig> for wire_ElectrumConfig {
+    fn wire2api(self) -> ElectrumConfig {
+        ElectrumConfig {
+            url: self.url.wire2api(),
+            socks5: self.socks5.wire2api(),
+            retry: self.retry.wire2api(),
+            timeout: self.timeout.wire2api(),
+            stop_gap: self.stop_gap.wire2api(),
+            validate_domain: self.validate_domain.wire2api(),
         }
     }
 }
@@ -1046,6 +1052,17 @@ pub struct wire___record__out_point_String_usize {
 
 #[repr(C)]
 #[derive(Clone)]
+pub struct wire_ElectrumConfig {
+    url: *mut wire_uint_8_list,
+    socks5: *mut wire_uint_8_list,
+    retry: u8,
+    timeout: *mut u8,
+    stop_gap: u64,
+    validate_domain: bool,
+}
+
+#[repr(C)]
+#[derive(Clone)]
 pub struct wire_EsploraConfig {
     base_url: *mut wire_uint_8_list,
     proxy: *mut wire_uint_8_list,
@@ -1177,23 +1194,6 @@ pub struct wire_AddressIndex_Peek {
 pub struct wire_AddressIndex_Reset {
     index: u32,
 }
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_BlockchainConfig {
-    tag: i32,
-    kind: *mut BlockchainConfigKind,
-}
-
-#[repr(C)]
-pub union BlockchainConfigKind {
-    Esplora: *mut wire_BlockchainConfig_Esplora,
-}
-
-#[repr(C)]
-#[derive(Clone)]
-pub struct wire_BlockchainConfig_Esplora {
-    config: *mut wire_EsploraConfig,
-}
 
 #[repr(C)]
 #[derive(Clone)]
@@ -1309,30 +1309,6 @@ pub extern "C" fn inflate_AddressIndex_Reset() -> *mut AddressIndexKind {
     })
 }
 
-impl Default for wire_BlockchainConfig {
-    fn default() -> Self {
-        Self::new_with_null_ptr()
-    }
-}
-
-impl NewWithNullPtr for wire_BlockchainConfig {
-    fn new_with_null_ptr() -> Self {
-        Self {
-            tag: -1,
-            kind: core::ptr::null_mut(),
-        }
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn inflate_BlockchainConfig_Esplora() -> *mut BlockchainConfigKind {
-    support::new_leak_box_ptr(BlockchainConfigKind {
-        Esplora: support::new_leak_box_ptr(wire_BlockchainConfig_Esplora {
-            config: core::ptr::null_mut(),
-        }),
-    })
-}
-
 impl Default for wire_DatabaseConfig {
     fn default() -> Self {
         Self::new_with_null_ptr()
@@ -1364,6 +1340,25 @@ pub extern "C" fn inflate_DatabaseConfig_Sled() -> *mut DatabaseConfigKind {
             config: core::ptr::null_mut(),
         }),
     })
+}
+
+impl NewWithNullPtr for wire_ElectrumConfig {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            url: core::ptr::null_mut(),
+            socks5: core::ptr::null_mut(),
+            retry: Default::default(),
+            timeout: core::ptr::null_mut(),
+            stop_gap: Default::default(),
+            validate_domain: Default::default(),
+        }
+    }
+}
+
+impl Default for wire_ElectrumConfig {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
+    }
 }
 
 impl NewWithNullPtr for wire_EsploraConfig {

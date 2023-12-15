@@ -22,18 +22,14 @@ typedef struct wire_EsploraConfig {
   uint64_t *timeout;
 } wire_EsploraConfig;
 
-typedef struct wire_BlockchainConfig_Esplora {
-  struct wire_EsploraConfig *config;
-} wire_BlockchainConfig_Esplora;
-
-typedef union BlockchainConfigKind {
-  struct wire_BlockchainConfig_Esplora *Esplora;
-} BlockchainConfigKind;
-
-typedef struct wire_BlockchainConfig {
-  int32_t tag;
-  union BlockchainConfigKind *kind;
-} wire_BlockchainConfig;
+typedef struct wire_ElectrumConfig {
+  struct wire_uint_8_list *url;
+  struct wire_uint_8_list *socks5;
+  uint8_t retry;
+  uint8_t *timeout;
+  uint64_t stop_gap;
+  bool validate_domain;
+} wire_ElectrumConfig;
 
 typedef struct wire_Script {
   struct wire_uint_8_list *internal;
@@ -182,8 +178,11 @@ uintptr_t new_dart_opaque(Dart_Handle handle);
 
 intptr_t init_frb_dart_api_dl(void *obj);
 
-void wire_create_blockchain__static_method__Api(int64_t port_,
-                                                struct wire_BlockchainConfig *config);
+void wire_create_esplora_blockchain__static_method__Api(int64_t port_,
+                                                        struct wire_EsploraConfig *config);
+
+void wire_create_electrum_blockchain__static_method__Api(int64_t port_,
+                                                         struct wire_ElectrumConfig *config);
 
 void wire_get_height__static_method__Api(int64_t port_, struct wire_uint_8_list *blockchain_id);
 
@@ -423,9 +422,9 @@ struct wire___record__out_point_String_usize *new_box_autoadd___record__out_poin
 
 struct wire_AddressIndex *new_box_autoadd_address_index_0(void);
 
-struct wire_BlockchainConfig *new_box_autoadd_blockchain_config_0(void);
-
 struct wire_DatabaseConfig *new_box_autoadd_database_config_0(void);
+
+struct wire_ElectrumConfig *new_box_autoadd_electrum_config_0(void);
 
 struct wire_EsploraConfig *new_box_autoadd_esplora_config_0(void);
 
@@ -461,8 +460,6 @@ union AddressIndexKind *inflate_AddressIndex_Peek(void);
 
 union AddressIndexKind *inflate_AddressIndex_Reset(void);
 
-union BlockchainConfigKind *inflate_BlockchainConfig_Esplora(void);
-
 union DatabaseConfigKind *inflate_DatabaseConfig_Sqlite(void);
 
 union DatabaseConfigKind *inflate_DatabaseConfig_Sled(void);
@@ -473,7 +470,8 @@ void free_WireSyncReturn(WireSyncReturn ptr);
 
 static int64_t dummy_method_to_enforce_bundling(void) {
     int64_t dummy_var = 0;
-    dummy_var ^= ((int64_t) (void*) wire_create_blockchain__static_method__Api);
+    dummy_var ^= ((int64_t) (void*) wire_create_esplora_blockchain__static_method__Api);
+    dummy_var ^= ((int64_t) (void*) wire_create_electrum_blockchain__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_get_height__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_get_blockchain_hash__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_estimate_fee__static_method__Api);
@@ -543,8 +541,8 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_generate_seed_from_entropy__static_method__Api);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd___record__out_point_String_usize_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_address_index_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_blockchain_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_database_config_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_electrum_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_esplora_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_f32_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_local_utxo_0);
@@ -562,7 +560,6 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) inflate_AddressIndex_Peek);
     dummy_var ^= ((int64_t) (void*) inflate_AddressIndex_Reset);
-    dummy_var ^= ((int64_t) (void*) inflate_BlockchainConfig_Esplora);
     dummy_var ^= ((int64_t) (void*) inflate_DatabaseConfig_Sqlite);
     dummy_var ^= ((int64_t) (void*) inflate_DatabaseConfig_Sled);
     dummy_var ^= ((int64_t) (void*) inflate_RbfValue_Value);

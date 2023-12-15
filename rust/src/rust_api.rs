@@ -1,4 +1,5 @@
-pub use crate::blockchain::{Blockchain, BlockchainConfig};
+use crate::blockchain::{EsploraConfig, ElectrumConfig};
+pub use crate::blockchain::Blockchain;
 pub use crate::descriptor::BdkDescriptor;
 use crate::error::Error;
 use crate::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
@@ -26,8 +27,15 @@ lazy_static! {
 pub struct Api {}
 impl Api {
     //========Blockchain==========
-    pub fn create_blockchain(config: BlockchainConfig) -> anyhow::Result<String, Error> {
+    pub fn create_esplora_blockchain(config: EsploraConfig) -> anyhow::Result<String, Error> {
         let blockchain = Blockchain::new(config);
+        return match blockchain {
+            Ok(e) => Ok(e),
+            Err(e) => Err(e.into()),
+        };
+    }
+    pub fn create_electrum_blockchain(config: ElectrumConfig) -> anyhow::Result<String, Error> {
+        let blockchain = Blockchain::build_electrum(config);
         return match blockchain {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),

@@ -1,7 +1,6 @@
 use crate::psbt::Transaction;
-use anyhow::Ok;
 use bdk::blockchain::esplora::EsploraBlockchain;
-use bdk::blockchain::Blockchain as BdkBlockchain;
+use bdk::blockchain::{Blockchain as BdkBlockchain, AnyBlockchainConfig, ElectrumBlockchainConfig, ConfigurableBlockchain};
 use bdk::blockchain::{
     AnyBlockchain,
     GetBlockHash,
@@ -25,35 +24,46 @@ pub struct Blockchain {
     pub blockchain_mutex: Mutex<AnyBlockchain>,
 }
 
-impl From<EsploraConfig> for EsploraBlockchain {
-    //ref: /bdk-0.28.2/src/blockchain/esplora/blocking.rs
-    fn from(config: EsploraConfig) -> EsploraBlockchain {
-        // here change to customized esplora client
-        let mut builder = Builder::new(config.base_url.as_str());
-
-        if let Some(timeout) = config.timeout {
-            builder = builder.timeout(timeout);
-        }
-
-        if let Some(proxy) = &config.proxy {
-            builder = builder.proxy(proxy);
-        }
-
-        let mut blockchain =
-            EsploraBlockchain::from_client(builder.build_blocking()?, config.stop_gap);
-
-        if let Some(concurrency) = config.concurrency {
-            blockchain = blockchain.with_concurrency(concurrency);
-        }
-        
-        Ok(blockchain);
-    }
-}
-
 impl Blockchain {
     pub fn new(esplora_config: EsploraConfig) -> Result<String, BdkError> {
         // let blockchain = AnyBlockchain::from_config(&any_blockchain_config)?;
-        let blockchain = AnyBlockchain::Esplora(Box::new(esplora_config?));
+        let mut builder = Builder::new(esplora_config.base_url.as_str());
+
+        if let Some(timeout) = esplora_config.timeout {
+            builder = builder.timeout(timeout);
+        }
+
+        if let Some(proxy) = &esplora_config.proxy {
+            builder = builder.proxy(proxy);
+        }
+
+        let mut esplora_blockchain =
+            EsploraBlockchain::from_client(builder.build_blocking()?, usize::try_from(esplora_config.stop_gap).unwrap());
+
+        if let Some(concurrency) = esplora_config.concurrency {
+            esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
+        }
+        
+        let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
+        let id = rand::random::<char>().to_string();
+        persist_blockchain(
+            id.clone(),
+            Blockchain {
+                blockchain_mutex: Mutex::new(blockchain),
+            },
+        );
+        Ok(id)
+    }
+
+    pub fn build_electrum(electrum_config: ElectrumConfig) -> Result<String, BdkError> {
+        let blockchain = AnyBlockchain::from_config(&AnyBlockchainConfig::Electrum(ElectrumBlockchainConfig {
+            retry: electrum_config.retry,
+            socks5: electrum_config.socks5,
+            timeout: electrum_config.timeout,
+            url: electrum_config.url,
+            stop_gap: usize::try_from(electrum_config.stop_gap).unwrap(),
+            validate_domain: electrum_config.validate_domain,
+        }))?;
         let id = rand::random::<char>().to_string();
         persist_blockchain(
             id.clone(),
@@ -94,6 +104,24 @@ impl Blockchain {
     }
 }
 
+
+/// Configuration for an ElectrumBlockchain
+pub struct ElectrumConfig {
+    ///URL of the Electrum server (such as ElectrumX, Esplora, BWT) may start with ssl:// or tcp:// and include a port
+    ///eg. ssl://electrum.blockstream.info:60002
+    pub url: String,
+    ///URL of the socks5 proxy server or a Tor service
+    pub socks5: Option<String>,
+    ///Request retry count
+    pub retry: u8,
+    ///Request timeout (seconds)
+    pub timeout: Option<u8>,
+    ///Stop searching addresses for transactions after finding an unused gap of this length
+    pub stop_gap: u64,
+    /// Validate the domain when using SSL
+    pub validate_domain: bool,
+}
+
 ///Configuration for an EsploraBlockchain
 pub struct EsploraConfig {
     ///Base URL of the esplora service
@@ -111,9 +139,4 @@ pub struct EsploraConfig {
     pub stop_gap: u64,
     ///Socket timeout.
     pub timeout: Option<u64>,
-}
-/// Type that can contain any of the blockchain configurations defined by the library.
-pub enum BlockchainConfig {
-    /// Esplora client
-    Esplora { config: EsploraConfig },
 }
