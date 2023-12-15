@@ -14,19 +14,6 @@ typedef struct wire_uint_8_list {
   int32_t len;
 } wire_uint_8_list;
 
-typedef struct wire_ElectrumConfig {
-  struct wire_uint_8_list *url;
-  struct wire_uint_8_list *socks5;
-  uint8_t retry;
-  uint8_t *timeout;
-  uint64_t stop_gap;
-  bool validate_domain;
-} wire_ElectrumConfig;
-
-typedef struct wire_BlockchainConfig_Electrum {
-  struct wire_ElectrumConfig *config;
-} wire_BlockchainConfig_Electrum;
-
 typedef struct wire_EsploraConfig {
   struct wire_uint_8_list *base_url;
   struct wire_uint_8_list *proxy;
@@ -35,45 +22,14 @@ typedef struct wire_EsploraConfig {
   uint64_t *timeout;
 } wire_EsploraConfig;
 
-typedef struct wire_BlockchainConfig_Esplora {
-  struct wire_EsploraConfig *config;
-} wire_BlockchainConfig_Esplora;
-
-typedef struct wire_UserPass {
-  struct wire_uint_8_list *username;
-  struct wire_uint_8_list *password;
-} wire_UserPass;
-
-typedef struct wire_RpcSyncParams {
-  uint64_t start_script_count;
-  uint64_t start_time;
-  bool force_start_time;
-  uint64_t poll_rate_sec;
-} wire_RpcSyncParams;
-
-typedef struct wire_RpcConfig {
+typedef struct wire_ElectrumConfig {
   struct wire_uint_8_list *url;
-  struct wire_uint_8_list *auth_cookie;
-  struct wire_UserPass *auth_user_pass;
-  int32_t network;
-  struct wire_uint_8_list *wallet_name;
-  struct wire_RpcSyncParams *sync_params;
-} wire_RpcConfig;
-
-typedef struct wire_BlockchainConfig_Rpc {
-  struct wire_RpcConfig *config;
-} wire_BlockchainConfig_Rpc;
-
-typedef union BlockchainConfigKind {
-  struct wire_BlockchainConfig_Electrum *Electrum;
-  struct wire_BlockchainConfig_Esplora *Esplora;
-  struct wire_BlockchainConfig_Rpc *Rpc;
-} BlockchainConfigKind;
-
-typedef struct wire_BlockchainConfig {
-  int32_t tag;
-  union BlockchainConfigKind *kind;
-} wire_BlockchainConfig;
+  struct wire_uint_8_list *socks5;
+  uint8_t retry;
+  uint8_t *timeout;
+  uint64_t stop_gap;
+  bool validate_domain;
+} wire_ElectrumConfig;
 
 typedef struct wire_Script {
   struct wire_uint_8_list *internal;
@@ -222,8 +178,11 @@ uintptr_t new_dart_opaque(Dart_Handle handle);
 
 intptr_t init_frb_dart_api_dl(void *obj);
 
-void wire_create_blockchain__static_method__Api(int64_t port_,
-                                                struct wire_BlockchainConfig *config);
+void wire_create_esplora_blockchain__static_method__Api(int64_t port_,
+                                                        struct wire_EsploraConfig *config);
+
+void wire_create_electrum_blockchain__static_method__Api(int64_t port_,
+                                                         struct wire_ElectrumConfig *config);
 
 void wire_get_height__static_method__Api(int64_t port_, struct wire_uint_8_list *blockchain_id);
 
@@ -463,8 +422,6 @@ struct wire___record__out_point_String_usize *new_box_autoadd___record__out_poin
 
 struct wire_AddressIndex *new_box_autoadd_address_index_0(void);
 
-struct wire_BlockchainConfig *new_box_autoadd_blockchain_config_0(void);
-
 struct wire_DatabaseConfig *new_box_autoadd_database_config_0(void);
 
 struct wire_ElectrumConfig *new_box_autoadd_electrum_config_0(void);
@@ -478,10 +435,6 @@ struct wire_LocalUtxo *new_box_autoadd_local_utxo_0(void);
 struct wire_PsbtSigHashType *new_box_autoadd_psbt_sig_hash_type_0(void);
 
 struct wire_RbfValue *new_box_autoadd_rbf_value_0(void);
-
-struct wire_RpcConfig *new_box_autoadd_rpc_config_0(void);
-
-struct wire_RpcSyncParams *new_box_autoadd_rpc_sync_params_0(void);
 
 struct wire_Script *new_box_autoadd_script_0(void);
 
@@ -497,8 +450,6 @@ uint64_t *new_box_autoadd_u64_0(uint64_t value);
 
 uint8_t *new_box_autoadd_u8_0(uint8_t value);
 
-struct wire_UserPass *new_box_autoadd_user_pass_0(void);
-
 struct wire_list_out_point *new_list_out_point_0(int32_t len);
 
 struct wire_list_script_amount *new_list_script_amount_0(int32_t len);
@@ -508,12 +459,6 @@ struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 union AddressIndexKind *inflate_AddressIndex_Peek(void);
 
 union AddressIndexKind *inflate_AddressIndex_Reset(void);
-
-union BlockchainConfigKind *inflate_BlockchainConfig_Electrum(void);
-
-union BlockchainConfigKind *inflate_BlockchainConfig_Esplora(void);
-
-union BlockchainConfigKind *inflate_BlockchainConfig_Rpc(void);
 
 union DatabaseConfigKind *inflate_DatabaseConfig_Sqlite(void);
 
@@ -525,7 +470,8 @@ void free_WireSyncReturn(WireSyncReturn ptr);
 
 static int64_t dummy_method_to_enforce_bundling(void) {
     int64_t dummy_var = 0;
-    dummy_var ^= ((int64_t) (void*) wire_create_blockchain__static_method__Api);
+    dummy_var ^= ((int64_t) (void*) wire_create_esplora_blockchain__static_method__Api);
+    dummy_var ^= ((int64_t) (void*) wire_create_electrum_blockchain__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_get_height__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_get_blockchain_hash__static_method__Api);
     dummy_var ^= ((int64_t) (void*) wire_estimate_fee__static_method__Api);
@@ -595,7 +541,6 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_generate_seed_from_entropy__static_method__Api);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd___record__out_point_String_usize_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_address_index_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_blockchain_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_database_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_electrum_config_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_esplora_config_0);
@@ -603,8 +548,6 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_local_utxo_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_psbt_sig_hash_type_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_rbf_value_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_rpc_config_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_rpc_sync_params_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_script_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_sign_options_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_sled_db_configuration_0);
@@ -612,15 +555,11 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u32_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u64_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u8_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_user_pass_0);
     dummy_var ^= ((int64_t) (void*) new_list_out_point_0);
     dummy_var ^= ((int64_t) (void*) new_list_script_amount_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) inflate_AddressIndex_Peek);
     dummy_var ^= ((int64_t) (void*) inflate_AddressIndex_Reset);
-    dummy_var ^= ((int64_t) (void*) inflate_BlockchainConfig_Electrum);
-    dummy_var ^= ((int64_t) (void*) inflate_BlockchainConfig_Esplora);
-    dummy_var ^= ((int64_t) (void*) inflate_BlockchainConfig_Rpc);
     dummy_var ^= ((int64_t) (void*) inflate_DatabaseConfig_Sqlite);
     dummy_var ^= ((int64_t) (void*) inflate_DatabaseConfig_Sled);
     dummy_var ^= ((int64_t) (void*) inflate_RbfValue_Value);

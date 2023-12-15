@@ -1,17 +1,15 @@
 use crate::psbt::Transaction;
-use crate::types::Network;
-use bdk::blockchain::esplora::EsploraBlockchainConfig;
-use bdk::blockchain::rpc::Auth as BdkAuth;
-use bdk::blockchain::rpc::RpcConfig as BdkRpcConfig;
-use bdk::blockchain::Blockchain as BdkBlockchain;
+use bdk::blockchain::esplora::EsploraBlockchain;
+use bdk::blockchain::{Blockchain as BdkBlockchain, AnyBlockchainConfig, ElectrumBlockchainConfig, ConfigurableBlockchain};
 use bdk::blockchain::{
-    AnyBlockchain, AnyBlockchainConfig, ConfigurableBlockchain, ElectrumBlockchainConfig,
-    GetBlockHash, GetHeight,
+    AnyBlockchain,
+    GetBlockHash,
+    GetHeight,
 };
+use bdk::esplora_client::Builder;
 use bdk::{Error as BdkError, FeeRate};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::sync::RwLock;
 use std::sync::{Arc, Mutex, MutexGuard};
 lazy_static! {
@@ -27,51 +25,26 @@ pub struct Blockchain {
 }
 
 impl Blockchain {
-    pub fn new(blockchain_config: BlockchainConfig) -> Result<String, BdkError> {
-        let any_blockchain_config = match blockchain_config {
-            BlockchainConfig::Electrum { config } => {
-                AnyBlockchainConfig::Electrum(ElectrumBlockchainConfig {
-                    retry: config.retry,
-                    socks5: config.socks5,
-                    timeout: config.timeout,
-                    url: config.url,
-                    stop_gap: usize::try_from(config.stop_gap).unwrap(),
-                    validate_domain: config.validate_domain,
-                })
-            }
-            BlockchainConfig::Esplora { config } => {
-                AnyBlockchainConfig::Esplora(EsploraBlockchainConfig {
-                    base_url: config.base_url,
-                    proxy: config.proxy,
-                    concurrency: config.concurrency,
-                    stop_gap: usize::try_from(config.stop_gap).unwrap(),
-                    timeout: config.timeout,
-                })
-            }
-            BlockchainConfig::Rpc { config } => {
-                let rpc_auth = if let Some(file) = config.auth_cookie {
-                    bdk::blockchain::rpc::Auth::Cookie {
-                        file: PathBuf::from(file),
-                    }
-                } else if let Some(user_pass) = config.auth_user_pass {
-                    bdk::blockchain::rpc::Auth::UserPass {
-                        username: user_pass.username,
-                        password: user_pass.password,
-                    }
-                } else {
-                    bdk::blockchain::rpc::Auth::None
-                };
-                AnyBlockchainConfig::Rpc(BdkRpcConfig {
-                    url: config.url,
-                    // auth: config.auth.into(),
-                    auth: rpc_auth,
-                    network: config.network.into(),
-                    wallet_name: config.wallet_name,
-                    sync_params: config.sync_params.map(|p| p.into()),
-                })
-            }
-        };
-        let blockchain = AnyBlockchain::from_config(&any_blockchain_config)?;
+    pub fn new(esplora_config: EsploraConfig) -> Result<String, BdkError> {
+        // let blockchain = AnyBlockchain::from_config(&any_blockchain_config)?;
+        let mut builder = Builder::new(esplora_config.base_url.as_str());
+
+        if let Some(timeout) = esplora_config.timeout {
+            builder = builder.timeout(timeout);
+        }
+
+        if let Some(proxy) = &esplora_config.proxy {
+            builder = builder.proxy(proxy);
+        }
+
+        let mut esplora_blockchain =
+            EsploraBlockchain::from_client(builder.build_blocking()?, usize::try_from(esplora_config.stop_gap).unwrap());
+
+        if let Some(concurrency) = esplora_config.concurrency {
+            esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
+        }
+        
+        let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
         let id = rand::random::<char>().to_string();
         persist_blockchain(
             id.clone(),
@@ -81,6 +54,26 @@ impl Blockchain {
         );
         Ok(id)
     }
+
+    pub fn build_electrum(electrum_config: ElectrumConfig) -> Result<String, BdkError> {
+        let blockchain = AnyBlockchain::from_config(&AnyBlockchainConfig::Electrum(ElectrumBlockchainConfig {
+            retry: electrum_config.retry,
+            socks5: electrum_config.socks5,
+            timeout: electrum_config.timeout,
+            url: electrum_config.url,
+            stop_gap: usize::try_from(electrum_config.stop_gap).unwrap(),
+            validate_domain: electrum_config.validate_domain,
+        }))?;
+        let id = rand::random::<char>().to_string();
+        persist_blockchain(
+            id.clone(),
+            Blockchain {
+                blockchain_mutex: Mutex::new(blockchain),
+            },
+        );
+        Ok(id)
+    }
+
     pub fn retrieve_blockchain(id: String) -> Arc<Blockchain> {
         let blockchain_lock = BLOCKCHAIN.read().unwrap();
         blockchain_lock.get(id.as_str()).unwrap().clone()
@@ -110,81 +103,8 @@ impl Blockchain {
             .map(|hash| hash.to_string())
     }
 }
-pub enum Auth {
-    None,
-    /// Authentication with username and password, usually [Auth::Cookie] should be preferred
-    UserPass {
-        /// Username
-        username: String,
-        /// Password
-        password: String,
-    },
-    /// Authentication with a cookie file
-    Cookie {
-        /// Cookie file
-        file: String,
-    },
-}
-impl From<Auth> for BdkAuth {
-    fn from(auth: Auth) -> Self {
-        match auth {
-            Auth::None => BdkAuth::None,
-            Auth::UserPass { username, password } => BdkAuth::UserPass { username, password },
-            Auth::Cookie { file } => BdkAuth::Cookie {
-                file: PathBuf::from(file),
-            },
-        }
-    }
-}
 
-/// Sync parameters for Bitcoin Core RPC.
-///
-/// In general, BDK tries to sync `scriptPubKey`s cached in `Database` with
-/// `scriptPubKey`s imported in the Bitcoin Core Wallet. These parameters are used for determining
-/// how the `importdescriptors` RPC calls are to be made.
-///
-#[derive(Clone, Default)]
-pub struct RpcSyncParams {
-    /// The minimum number of scripts to scan for on initial sync.
-    pub start_script_count: u64,
-    /// Time in unix seconds in which initial sync will start scanning from (0 to start from genesis).
-    pub start_time: u64,
-    /// Forces every sync to use `start_time` as import timestamp.
-    pub force_start_time: bool,
-    /// RPC poll rate (in seconds) to get state updates.
-    pub poll_rate_sec: u64,
-}
-impl From<RpcSyncParams> for bdk::blockchain::rpc::RpcSyncParams {
-    fn from(params: RpcSyncParams) -> Self {
-        bdk::blockchain::rpc::RpcSyncParams {
-            start_script_count: params.start_script_count as usize,
-            start_time: params.start_time,
-            force_start_time: params.force_start_time,
-            poll_rate_sec: params.poll_rate_sec,
-        }
-    }
-}
-/// RpcBlockchain configuration options
-///
-pub struct UserPass {
-    /// Username
-    pub username: String,
-    /// Password
-    pub password: String,
-}
-pub struct RpcConfig {
-    /// The bitcoin node url
-    pub url: String,
-    /// The bitcoin node authentication mechanism
-    pub auth_cookie: Option<String>,
-    pub auth_user_pass: Option<UserPass>,
-    /// The network we are using (it will be checked the bitcoin node network matches this)
-    pub network: Network,
-    /// The wallet name in the bitcoin node
-    pub wallet_name: String,
-    /// Sync parameters
-    pub sync_params: Option<RpcSyncParams>,
-}
+
 /// Configuration for an ElectrumBlockchain
 pub struct ElectrumConfig {
     ///URL of the Electrum server (such as ElectrumX, Esplora, BWT) may start with ssl:// or tcp:// and include a port
@@ -201,6 +121,7 @@ pub struct ElectrumConfig {
     /// Validate the domain when using SSL
     pub validate_domain: bool,
 }
+
 ///Configuration for an EsploraBlockchain
 pub struct EsploraConfig {
     ///Base URL of the esplora service
@@ -218,13 +139,4 @@ pub struct EsploraConfig {
     pub stop_gap: u64,
     ///Socket timeout.
     pub timeout: Option<u64>,
-}
-/// Type that can contain any of the blockchain configurations defined by the library.
-pub enum BlockchainConfig {
-    /// Electrum client
-    Electrum { config: ElectrumConfig },
-    /// Esplora client
-    Esplora { config: EsploraConfig },
-    /// Bitcoin Core RPC client
-    Rpc { config: RpcConfig },
 }
