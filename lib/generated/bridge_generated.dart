@@ -26,24 +26,45 @@ class ProtonWalletCommonImpl implements ProtonWalletCommon {
   factory ProtonWalletCommonImpl.wasm(FutureOr<WasmModule> module) =>
       ProtonWalletCommonImpl(module as ExternalLibrary);
   ProtonWalletCommonImpl.raw(this._platform);
-  Future<String> createBlockchainStaticMethodApi(
-      {required BlockchainConfig config, dynamic hint}) {
-    var arg0 = _platform.api2wire_box_autoadd_blockchain_config(config);
+  Future<String> createEsploraBlockchainStaticMethodApi(
+      {required EsploraConfig config, dynamic hint}) {
+    var arg0 = _platform.api2wire_box_autoadd_esplora_config(config);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
-          .wire_create_blockchain__static_method__Api(port_, arg0),
+          .wire_create_esplora_blockchain__static_method__Api(port_, arg0),
       parseSuccessData: _wire2api_String,
       parseErrorData: _wire2api_error,
-      constMeta: kCreateBlockchainStaticMethodApiConstMeta,
+      constMeta: kCreateEsploraBlockchainStaticMethodApiConstMeta,
       argValues: [config],
       hint: hint,
     ));
   }
 
   FlutterRustBridgeTaskConstMeta
-      get kCreateBlockchainStaticMethodApiConstMeta =>
+      get kCreateEsploraBlockchainStaticMethodApiConstMeta =>
           const FlutterRustBridgeTaskConstMeta(
-            debugName: "create_blockchain__static_method__Api",
+            debugName: "create_esplora_blockchain__static_method__Api",
+            argNames: ["config"],
+          );
+
+  Future<String> createElectrumBlockchainStaticMethodApi(
+      {required ElectrumConfig config, dynamic hint}) {
+    var arg0 = _platform.api2wire_box_autoadd_electrum_config(config);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_create_electrum_blockchain__static_method__Api(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      parseErrorData: _wire2api_error,
+      constMeta: kCreateElectrumBlockchainStaticMethodApiConstMeta,
+      argValues: [config],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta
+      get kCreateElectrumBlockchainStaticMethodApiConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "create_electrum_blockchain__static_method__Api",
             argNames: ["config"],
           );
 
@@ -2086,18 +2107,18 @@ class ProtonWalletCommonPlatform
   }
 
   @protected
-  ffi.Pointer<wire_BlockchainConfig> api2wire_box_autoadd_blockchain_config(
-      BlockchainConfig raw) {
-    final ptr = inner.new_box_autoadd_blockchain_config_0();
-    _api_fill_to_wire_blockchain_config(raw, ptr.ref);
-    return ptr;
-  }
-
-  @protected
   ffi.Pointer<wire_DatabaseConfig> api2wire_box_autoadd_database_config(
       DatabaseConfig raw) {
     final ptr = inner.new_box_autoadd_database_config_0();
     _api_fill_to_wire_database_config(raw, ptr.ref);
+    return ptr;
+  }
+
+  @protected
+  ffi.Pointer<wire_ElectrumConfig> api2wire_box_autoadd_electrum_config(
+      ElectrumConfig raw) {
+    final ptr = inner.new_box_autoadd_electrum_config_0();
+    _api_fill_to_wire_electrum_config(raw, ptr.ref);
     return ptr;
   }
 
@@ -2309,17 +2330,6 @@ class ProtonWalletCommonPlatform
     }
   }
 
-  void _api_fill_to_wire_blockchain_config(
-      BlockchainConfig apiObj, wire_BlockchainConfig wireObj) {
-    if (apiObj is BlockchainConfig_Esplora) {
-      var pre_config = api2wire_box_autoadd_esplora_config(apiObj.config);
-      wireObj.tag = 0;
-      wireObj.kind = inner.inflate_BlockchainConfig_Esplora();
-      wireObj.kind.ref.Esplora.ref.config = pre_config;
-      return;
-    }
-  }
-
   void _api_fill_to_wire_box_autoadd___record__out_point_String_usize(
       (OutPoint, String, int) apiObj,
       ffi.Pointer<wire___record__out_point_String_usize> wireObj) {
@@ -2331,14 +2341,14 @@ class ProtonWalletCommonPlatform
     _api_fill_to_wire_address_index(apiObj, wireObj.ref);
   }
 
-  void _api_fill_to_wire_box_autoadd_blockchain_config(
-      BlockchainConfig apiObj, ffi.Pointer<wire_BlockchainConfig> wireObj) {
-    _api_fill_to_wire_blockchain_config(apiObj, wireObj.ref);
-  }
-
   void _api_fill_to_wire_box_autoadd_database_config(
       DatabaseConfig apiObj, ffi.Pointer<wire_DatabaseConfig> wireObj) {
     _api_fill_to_wire_database_config(apiObj, wireObj.ref);
+  }
+
+  void _api_fill_to_wire_box_autoadd_electrum_config(
+      ElectrumConfig apiObj, ffi.Pointer<wire_ElectrumConfig> wireObj) {
+    _api_fill_to_wire_electrum_config(apiObj, wireObj.ref);
   }
 
   void _api_fill_to_wire_box_autoadd_esplora_config(
@@ -2405,6 +2415,16 @@ class ProtonWalletCommonPlatform
       wireObj.kind.ref.Sled.ref.config = pre_config;
       return;
     }
+  }
+
+  void _api_fill_to_wire_electrum_config(
+      ElectrumConfig apiObj, wire_ElectrumConfig wireObj) {
+    wireObj.url = api2wire_String(apiObj.url);
+    wireObj.socks5 = api2wire_opt_String(apiObj.socks5);
+    wireObj.retry = api2wire_u8(apiObj.retry);
+    wireObj.timeout = api2wire_opt_box_autoadd_u8(apiObj.timeout);
+    wireObj.stop_gap = api2wire_u64(apiObj.stopGap);
+    wireObj.validate_domain = api2wire_bool(apiObj.validateDomain);
   }
 
   void _api_fill_to_wire_esplora_config(
@@ -2583,24 +2603,41 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _init_frb_dart_api_dl = _init_frb_dart_api_dlPtr
       .asFunction<int Function(ffi.Pointer<ffi.Void>)>();
 
-  void wire_create_blockchain__static_method__Api(
+  void wire_create_esplora_blockchain__static_method__Api(
     int port_,
-    ffi.Pointer<wire_BlockchainConfig> config,
+    ffi.Pointer<wire_EsploraConfig> config,
   ) {
-    return _wire_create_blockchain__static_method__Api(
+    return _wire_create_esplora_blockchain__static_method__Api(
       port_,
       config,
     );
   }
 
-  late final _wire_create_blockchain__static_method__ApiPtr = _lookup<
+  late final _wire_create_esplora_blockchain__static_method__ApiPtr = _lookup<
           ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Int64, ffi.Pointer<wire_BlockchainConfig>)>>(
-      'wire_create_blockchain__static_method__Api');
-  late final _wire_create_blockchain__static_method__Api =
-      _wire_create_blockchain__static_method__ApiPtr
-          .asFunction<void Function(int, ffi.Pointer<wire_BlockchainConfig>)>();
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_EsploraConfig>)>>(
+      'wire_create_esplora_blockchain__static_method__Api');
+  late final _wire_create_esplora_blockchain__static_method__Api =
+      _wire_create_esplora_blockchain__static_method__ApiPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_EsploraConfig>)>();
+
+  void wire_create_electrum_blockchain__static_method__Api(
+    int port_,
+    ffi.Pointer<wire_ElectrumConfig> config,
+  ) {
+    return _wire_create_electrum_blockchain__static_method__Api(
+      port_,
+      config,
+    );
+  }
+
+  late final _wire_create_electrum_blockchain__static_method__ApiPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_ElectrumConfig>)>>(
+      'wire_create_electrum_blockchain__static_method__Api');
+  late final _wire_create_electrum_blockchain__static_method__Api =
+      _wire_create_electrum_blockchain__static_method__ApiPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_ElectrumConfig>)>();
 
   void wire_get_height__static_method__Api(
     int port_,
@@ -4069,17 +4106,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
       _new_box_autoadd_address_index_0Ptr
           .asFunction<ffi.Pointer<wire_AddressIndex> Function()>();
 
-  ffi.Pointer<wire_BlockchainConfig> new_box_autoadd_blockchain_config_0() {
-    return _new_box_autoadd_blockchain_config_0();
-  }
-
-  late final _new_box_autoadd_blockchain_config_0Ptr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<wire_BlockchainConfig> Function()>>(
-      'new_box_autoadd_blockchain_config_0');
-  late final _new_box_autoadd_blockchain_config_0 =
-      _new_box_autoadd_blockchain_config_0Ptr
-          .asFunction<ffi.Pointer<wire_BlockchainConfig> Function()>();
-
   ffi.Pointer<wire_DatabaseConfig> new_box_autoadd_database_config_0() {
     return _new_box_autoadd_database_config_0();
   }
@@ -4090,6 +4116,17 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _new_box_autoadd_database_config_0 =
       _new_box_autoadd_database_config_0Ptr
           .asFunction<ffi.Pointer<wire_DatabaseConfig> Function()>();
+
+  ffi.Pointer<wire_ElectrumConfig> new_box_autoadd_electrum_config_0() {
+    return _new_box_autoadd_electrum_config_0();
+  }
+
+  late final _new_box_autoadd_electrum_config_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<wire_ElectrumConfig> Function()>>(
+          'new_box_autoadd_electrum_config_0');
+  late final _new_box_autoadd_electrum_config_0 =
+      _new_box_autoadd_electrum_config_0Ptr
+          .asFunction<ffi.Pointer<wire_ElectrumConfig> Function()>();
 
   ffi.Pointer<wire_EsploraConfig> new_box_autoadd_esplora_config_0() {
     return _new_box_autoadd_esplora_config_0();
@@ -4300,17 +4337,6 @@ class ProtonWalletCommonWire implements FlutterRustBridgeWireBase {
   late final _inflate_AddressIndex_Reset = _inflate_AddressIndex_ResetPtr
       .asFunction<ffi.Pointer<AddressIndexKind> Function()>();
 
-  ffi.Pointer<BlockchainConfigKind> inflate_BlockchainConfig_Esplora() {
-    return _inflate_BlockchainConfig_Esplora();
-  }
-
-  late final _inflate_BlockchainConfig_EsploraPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<BlockchainConfigKind> Function()>>(
-          'inflate_BlockchainConfig_Esplora');
-  late final _inflate_BlockchainConfig_Esplora =
-      _inflate_BlockchainConfig_EsploraPtr
-          .asFunction<ffi.Pointer<BlockchainConfigKind> Function()>();
-
   ffi.Pointer<DatabaseConfigKind> inflate_DatabaseConfig_Sqlite() {
     return _inflate_DatabaseConfig_Sqlite();
   }
@@ -4378,19 +4404,21 @@ final class wire_EsploraConfig extends ffi.Struct {
   external ffi.Pointer<ffi.Uint64> timeout;
 }
 
-final class wire_BlockchainConfig_Esplora extends ffi.Struct {
-  external ffi.Pointer<wire_EsploraConfig> config;
-}
+final class wire_ElectrumConfig extends ffi.Struct {
+  external ffi.Pointer<wire_uint_8_list> url;
 
-final class BlockchainConfigKind extends ffi.Union {
-  external ffi.Pointer<wire_BlockchainConfig_Esplora> Esplora;
-}
+  external ffi.Pointer<wire_uint_8_list> socks5;
 
-final class wire_BlockchainConfig extends ffi.Struct {
-  @ffi.Int32()
-  external int tag;
+  @ffi.Uint8()
+  external int retry;
 
-  external ffi.Pointer<BlockchainConfigKind> kind;
+  external ffi.Pointer<ffi.Uint8> timeout;
+
+  @ffi.Uint64()
+  external int stop_gap;
+
+  @ffi.Bool()
+  external bool validate_domain;
 }
 
 final class wire_Script extends ffi.Struct {
