@@ -93,10 +93,10 @@ class Blockchain {
 
   ///  [Blockchain] constructor
   static Future<Blockchain> create(
-      {required bridge.BlockchainConfig config}) async {
+      {required bridge.EsploraConfig config}) async {
     try {
       final res = await RustFFIProvider.api
-          .createBlockchainStaticMethodApi(config: config);
+          .createEsploraBlockchainStaticMethodApi(config: config);
       return Blockchain._(res);
     } on bridge.Error catch (e) {
       throw handleBdkException(e);
