@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:wallet/helper/logger.dart';
 
@@ -7,7 +8,15 @@ class LocalNotification {
   static final int SYNC_WALLET = 1;
   static final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static final StreamController<int?> selectNotificationStream = StreamController<int?>.broadcast();
-  static bool inited = false;
+  static bool _initialized  = false;
+
+  static bool isPlatformSupported(){
+    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS || Platform.isLinux ) {
+      return true;
+    }
+    logger.i("${Platform.operatingSystem} is not supported platform for LocalNotification");
+    return false;
+  }
 
   static final androidNotificationDetail = AndroidNotificationDetails(
       '0', // channel Id
@@ -19,9 +28,12 @@ class LocalNotification {
     android: androidNotificationDetail,
   );
 
-  static Future<void> setup() async {
-    if (!inited) {
-      inited = true;
+  static Future<void> init() async {
+    if (!isPlatformSupported()) {
+      return;
+    }
+    if (!_initialized ) {
+      _initialized  = true;
       const androidInitializationSetting = AndroidInitializationSettings(
           '@mipmap/ic_launcher');
       const iosInitializationSetting = DarwinInitializationSettings(
@@ -53,6 +65,9 @@ class LocalNotification {
   }
 
   static void show(int id, String title, String body) {
+    if (!isPlatformSupported()) {
+      return;
+    }
     _flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
   }
 
