@@ -154,6 +154,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                         child: const Text('Button'),
                       ),
               ),
+              ButtonV5(
+                onPressed: () {
+                  viewModel.coordinator
+                      .move(ViewIdentifiers.testWebsocket, context);
+                },
+                height: 36,
+                width: 200,
+                text: "Test Websocket",
+              ),
             ]),
       ),
     );

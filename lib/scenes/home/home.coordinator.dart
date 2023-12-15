@@ -4,6 +4,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
+import 'package:wallet/scenes/debug/websocket.coordinator.dart';
 import 'package:wallet/scenes/home/home.view.dart';
 import 'package:wallet/scenes/home/home.viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -48,10 +49,14 @@ class HomeCoordinator extends Coordinator {
       return view;
     }
 
-    // if (to == ViewIdentifiers.testwallet) {
-
-    //   return view;
-    // }
+    if (to == ViewIdentifiers.testWebsocket) {
+      var view = WebSocketCoordinator().start();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => view,
+        fullscreenDialog: true,
+      ));
+      return view;
+    }
 
     throw UnimplementedError();
   }
