@@ -62,7 +62,7 @@ class HomeCoordinator extends Coordinator {
   }
 
   @override
-  ViewBase<ViewModel> start() {
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
     var viewModel = HomeViewModelImpl(
       this,
     );

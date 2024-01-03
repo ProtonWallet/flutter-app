@@ -32,11 +32,49 @@ class BdkLibrary {
     return descriptor;
   }
 
+  // get descriptor with given mnemonic and derivationPath
+  Future<Descriptor> createDerivedDescriptor(
+      Mnemonic mnemonic, DerivationPath derivationPath) async {
+    int purpose =
+        int.parse(derivationPath.toString().split('/')[1].split("'")[0]);
+
+    DescriptorSecretKey descriptorSecretKey = await DescriptorSecretKey.create(
+        network: Network.Testnet, mnemonic: mnemonic);
+
+    DescriptorSecretKey descriptorPrivateKey =
+        await descriptorSecretKey.derive(derivationPath);
+    if (purpose == 44) {
+      // BIP-0044
+      Descriptor descriptor = await Descriptor.create(
+        descriptor: "pkh(${descriptorPrivateKey.toString()})",
+        network: Network.Testnet,
+      );
+      return descriptor;
+    } else {
+      Descriptor descriptor = await Descriptor.create(
+        descriptor: "wpkh(${descriptorPrivateKey.toString()})",
+        network: Network.Testnet,
+      );
+      return descriptor;
+    }
+  }
+
   Future<Blockchain> initializeBlockchain(bool isElectrumBlockchain) async {
-    final blockchain = await Blockchain.create(
-        config: const EsploraConfig(
-            baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
-    return blockchain;
+    if (Platform.isAndroid) {
+      final blockchain = await Blockchain.createElectrum(
+          config: const ElectrumConfig(
+              stopGap: 10,
+              timeout: 5,
+              retry: 5,
+              url: "ssl://electrum.blockstream.info:60002",
+              validateDomain: true));
+      return blockchain;
+    } else {
+      final blockchain = await Blockchain.create(
+          config: const EsploraConfig(
+              baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
+      return blockchain;
+    }
     //   final blockchain = await Blockchain.create(
     //       config: const BlockchainConfig.electrum(
     //           config: ElectrumConfig(
@@ -47,26 +85,25 @@ class BdkLibrary {
     //               validateDomain: true)));
   }
 
-  Future<Wallet> restoreWallet(Descriptor descriptor) async {
+  Future<Wallet> restoreWallet(Descriptor descriptor,
+      {String databaseName = "test_database"}) async {
     DatabaseConfig config;
     if (Platform.isWindows) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
-      final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-      String path = join(appDocumentsDir.path, "databases", "test_database.db");
+      final Directory appDocumentsDir =
+          await getApplicationDocumentsDirectory();
+      String path = join(appDocumentsDir.path, "databases", "$databaseName.db");
       //Create db, db need to be initialize to avoid error
       var db = await databaseFactory.openDatabase(
         path,
       );
       await db.close();
-      logger.d("=========DB path $path=====");
-      config = DatabaseConfig.sqlite(
-          config: SqliteDbConfiguration(path: path));
+      config = DatabaseConfig.sqlite(config: SqliteDbConfiguration(path: path));
     } else {
       var path = await getDatabasesPath();
-      logger.d("=========DB path $path=====");
       config = DatabaseConfig.sqlite(
-          config: SqliteDbConfiguration(path: join(path, 'test_database.db')));
+          config: SqliteDbConfiguration(path: join(path, '$databaseName.db')));
     }
     final wallet = await Wallet.create(
         descriptor: descriptor,

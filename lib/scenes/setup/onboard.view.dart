@@ -8,6 +8,9 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/setup/onboard.viewmodel.dart';
 
+import '../../components/onboarding/content.dart';
+import '../../theme/theme.font.dart';
+
 class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
   SetupOnboardView(SetupOnboardViewModel viewModel)
       : super(viewModel, const Key("SetupOnboardView"));
@@ -16,82 +19,70 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
   Widget buildWithViewModel(BuildContext context,
       SetupOnboardViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor:
-            Colors.transparent, // Theme.of(context).colorScheme.inversePrimary,
-      ),
       body: buildNoHistory(context, viewModel, viewSize),
     );
   }
 
   Widget buildNoHistory(BuildContext context, SetupOnboardViewModel viewModel,
       ViewSize viewSize) {
-    return Stack(
+    return Column(
       children: <Widget>[
-        SizedBox(
-          width: 500,
-          height: 160,
-          child: SvgPicture.asset(
-            'assets/images/frame_9444342.svg',
-            width: 500,
-            height: 200,
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 41),
-          alignment: Alignment.topCenter,
-          child: Text(
-            S.of(context).welcome_to,
-            style: const TextStyle(color: Colors.white, fontSize: 20.0),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 124),
-          alignment: Alignment.topCenter,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBoxes.box58,
-                const Text(
-                    "Financial freedom with rock-solid security and privacy",
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600)),
-                SizedBoxes.box8,
-                const Text(
-                  "Get started and create a brand new wallet or import an existing one.",
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.normal),
-                  textAlign: TextAlign.center,
+        Stack(children: [
+          Container(
+              alignment: Alignment.topCenter,
+              child: Container(
+                color: Colors.red,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 2,
+                child: SvgPicture.asset(
+                  'assets/images/wallet_creation/bg.svg',
+                  fit: BoxFit.fill,
                 ),
-                SizedBoxes.box32,
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.setupCreate, context);
-                    },
-                    text: S.of(context).createNewWallet,
-                    width: MediaQuery.of(context).size.width - 80,
-                    height: 36),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {},
-                    text: S.of(context).importWallet,
-                    width: MediaQuery.of(context).size.width - 80,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.wMajor1,
-                    textStyle: const TextStyle(
-                      color: ProtonColors.textNorm,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                    ),
-                    height: 36),
-                SizedBoxes.box20,
-              ]),
+              )),
+          Container(
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Container(
+                width: 190.8,
+                height: 44.15,
+                child: SvgPicture.asset(
+                  'assets/images/wallet_creation/logo.svg',
+                  fit: BoxFit.fill,
+                ),
+              )),
+        ]),
+        OnboardingContent(
+          totalPages: 6,
+          currentPage: 1,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 2,
+          title: "Financial freedom with rock-solid security and privacy",
+          content:
+              "Get started and create a brand new wallet or import an existing one.",
+          children: [
+            ButtonV5(
+                onPressed: () {
+                  viewModel.coordinator
+                      .move(ViewIdentifiers.setupCreate, context);
+                },
+                text: S.of(context).createNewWallet,
+                width: MediaQuery.of(context).size.width,
+                textStyle: FontManager.body1Median(ProtonColors.white),
+                height: 48),
+            SizedBoxes.box12,
+            ButtonV5(
+                onPressed: () {
+                  viewModel.coordinator
+                      .move(ViewIdentifiers.importWallet, context);
+                },
+                text: S.of(context).importWallet,
+                width: MediaQuery.of(context).size.width,
+                backgroundColor: ProtonColors.white,
+                borderColor: ProtonColors.interactionNorm,
+                textStyle:
+                    FontManager.body1Median(ProtonColors.interactionNorm),
+                height: 48),
+          ],
         ),
       ],
     );

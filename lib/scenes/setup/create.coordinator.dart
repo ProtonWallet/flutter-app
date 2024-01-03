@@ -8,6 +8,8 @@ import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/setup/create.view.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
 
+import '../../components/page_route.dart';
+
 class SetupCreateCoordinator extends Coordinator {
   late ViewBase widget;
 
@@ -17,22 +19,19 @@ class SetupCreateCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
     if (to == ViewIdentifiers.setupBackup) {
-      var view = SetupBackupCoordinator().start();
+      Map<String, String> params = {
+        "Mnemonic": (widget as SetupCreateView).viewModel.strMnemonic
+      };
+      var view = SetupBackupCoordinator().start(params: params);
       Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) {
-              return view;
-            },
-            fullscreenDialog: false),
-      );
+          context, CustomPageRoute(page: view, fullscreenDialog: false));
       return view;
     }
     throw UnimplementedError();
   }
 
   @override
-  ViewBase<ViewModel> start() {
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
     var viewModel = SetupCreateViewModelImpl(this);
     widget = SetupCreateView(
       viewModel,

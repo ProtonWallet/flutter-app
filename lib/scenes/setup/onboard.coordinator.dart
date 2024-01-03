@@ -8,6 +8,9 @@ import 'package:wallet/scenes/setup/create.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.view.dart';
 import 'package:wallet/scenes/setup/onboard.viewmodel.dart';
 
+import '../../components/page_route.dart';
+import '../import/import.coordinator.dart';
+
 class SetupOnbaordCoordinator extends Coordinator {
   late ViewBase widget;
 
@@ -19,20 +22,19 @@ class SetupOnbaordCoordinator extends Coordinator {
     if (to == ViewIdentifiers.setupCreate) {
       var view = SetupCreateCoordinator().start();
       Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) {
-              return view;
-            },
-            fullscreenDialog: false),
-      );
+          context, CustomPageRoute(page: view, fullscreenDialog: false));
+      return view;
+    } else if (to == ViewIdentifiers.importWallet) {
+      var view = ImportCoordinator().start();
+      Navigator.push(
+          context, CustomPageRoute(page: view, fullscreenDialog: false));
       return view;
     }
     throw UnimplementedError();
   }
 
   @override
-  ViewBase<ViewModel> start() {
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
     var viewModel = SetupOnboardViewModelImpl(this);
     widget = SetupOnboardView(
       viewModel,

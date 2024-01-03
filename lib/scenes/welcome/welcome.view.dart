@@ -36,6 +36,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
   Widget buildWithViewModel(
       BuildContext context, WelcomeViewModel viewModel, ViewSize viewSize) {
     _appChannel.setMethodCallHandler(_handleMethodCall);
+    viewModel.localLogin(context);
     switch (viewSize) {
       case ViewSize.mobile:
         return buildMobile();

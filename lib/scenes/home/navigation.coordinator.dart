@@ -4,7 +4,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/history/history.coordinator.dart';
-import 'package:wallet/scenes/home/home.coordinator.dart';
+import 'package:wallet/scenes/home.v2/home.coordinator.dart';
 import 'package:wallet/scenes/home/navigation.view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
 import 'package:wallet/scenes/settings/settings.coordinator.dart';
@@ -21,7 +21,7 @@ class HomeNavigationCoordinator extends Coordinator {
   }
 
   @override
-  ViewBase<ViewModel> start() {
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
     var viewModel = HomeNavigationViewModelImpl(
       this,
     );
