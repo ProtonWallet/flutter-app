@@ -4,7 +4,7 @@ import 'package:wallet/scenes/core/view.navigator.dart';
 abstract class Coordinator implements ViewNavigator {
   Coordinator();
 
-  ViewBase start();
+  ViewBase start({Map<String, String> params = const {}});
 
   void end();
 

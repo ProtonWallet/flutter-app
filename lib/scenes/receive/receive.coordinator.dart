@@ -18,8 +18,10 @@ class ReceiveCoordinator extends Coordinator {
   }
 
   @override
-  ViewBase<ViewModel> start() {
-    var viewModel = ReceiveViewModelImpl(this);
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
+    int walletID = params.containsKey("WalletID") ? int.parse(params["WalletID"]!) : 0;
+    int accountID = params.containsKey("AccountID") ? int.parse(params["AccountID"]!) : 0;
+    var viewModel = ReceiveViewModelImpl(this, walletID, accountID);
     widget = ReceiveView(
       viewModel,
     );

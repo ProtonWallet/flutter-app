@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
@@ -12,7 +14,7 @@ class SendView extends ViewBase<SendViewModel> {
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text("Send"),
       ),
       body: Row(
@@ -22,12 +24,20 @@ class SendView extends ViewBase<SendViewModel> {
             child: Column(
               children: [
                 const Text("From:"),
-                TextField(
-                  controller: viewModel.textController,
-                  enabled: false,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Your address',
+                GestureDetector(
+                  onTap: () {
+                    if (viewModel.fromAddress != "") {
+                      Clipboard.setData(
+                          ClipboardData(text: viewModel.fromAddress)).then((value) => LocalToast.showToast(context, "Address copied!"));
+                    }
+                  },
+                  child: TextField(
+                    controller: viewModel.textController,
+                    enabled: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Your address',
+                    ),
                   ),
                 ),
                 const Text("To Recipient:"),

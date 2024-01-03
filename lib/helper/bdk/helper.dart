@@ -102,6 +102,16 @@ class Blockchain {
       throw handleBdkException(e);
     }
   }
+  static Future<Blockchain> createElectrum(
+      {required bridge.ElectrumConfig config}) async {
+    try {
+      final res = await RustFFIProvider.api
+          .createElectrumBlockchainStaticMethodApi(config: config);
+      return Blockchain._(res);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 
   /// The function for getting block hash by block height
   Future<String> getBlockHash(int height) async {

@@ -18,8 +18,10 @@ class SendCoordinator extends Coordinator {
   }
 
   @override
-  ViewBase<ViewModel> start() {
-    var viewModel = SendViewModelImpl(this);
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
+    int walletID = params.containsKey("WalletID") ? int.parse(params["WalletID"]!) : 0;
+    int accountID = params.containsKey("AccountID") ? int.parse(params["AccountID"]!) : 0;
+    var viewModel = SendViewModelImpl(this, walletID, accountID);
     widget = SendView(
       viewModel,
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
+
+import '../../helper/local_toast.dart';
 
 class HistoryView extends ViewBase<HistoryViewModel> {
   HistoryView(HistoryViewModel viewModel)
@@ -17,7 +20,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text("Payment History"),
       ),
       body: viewModel.hasHistory()
@@ -63,23 +66,30 @@ class HistoryView extends ViewBase<HistoryViewModel> {
             ),
         itemCount: viewModel.history.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: FittedBox(
-              child: Text(
-                viewModel.history[index].txid,
-                style: const TextStyle(color: Colors.blue),
-                textAlign: TextAlign.left,
-                maxLines: 3,
-                softWrap: true,
-              ),
-            ),
-            subtitle: Text(
-                "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Amount: ${viewModel.getAmount(index)}  - Fee: ${viewModel.history[index].fee.toString()} Time: ${parsetime(viewModel.history[index].confirmationTime!.timestamp)} "),
-            onTap: () {
-              viewModel.updateSelected(index);
-              goDetails(context);
-            },
-          );
+          return GestureDetector(
+              onLongPress: () {
+                Clipboard.setData(
+                        ClipboardData(text: viewModel.history[index].txid))
+                    .then((value) => LocalToast.showToast(
+                        context, "Transaction ID copied!"));
+              },
+              child: ListTile(
+                title: FittedBox(
+                  child: Text(
+                    viewModel.history[index].txid,
+                    style: const TextStyle(color: Colors.blue),
+                    textAlign: TextAlign.left,
+                    maxLines: 3,
+                    softWrap: true,
+                  ),
+                ),
+                subtitle: Text(
+                    "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Amount: ${viewModel.getAmount(index)}  - Fee: ${viewModel.history[index].fee.toString()} Time: ${parsetime(viewModel.history[index].confirmationTime!.timestamp)} "),
+                onTap: () {
+                  viewModel.updateSelected(index);
+                  goDetails(context);
+                },
+              ));
         });
   }
 
