@@ -6,14 +6,20 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
+import '../../helper/wallet_manager.dart';
+
 abstract class HistoryViewModel extends ViewModel {
-  HistoryViewModel(super.coordinator);
+  HistoryViewModel(super.coordinator, this.walletID, this.accountID);
+
+  int walletID;
+  int accountID;
 
   int selectedPage = 0;
   String mnemonicString = 'No Wallet';
   List<TransactionDetails> history = [];
 
   void updateSelected(int index);
+
   void updateMnemonic(String mnemonic);
 
   Future<void> updateStringValue();
@@ -27,7 +33,7 @@ abstract class HistoryViewModel extends ViewModel {
 }
 
 class HistoryViewModelImpl extends HistoryViewModel {
-  HistoryViewModelImpl(super.coordinator);
+  HistoryViewModelImpl(super.coordinator, super.walletID, super.accountID);
 
   final datasourceChangedStreamController =
       StreamController<HistoryViewModel>.broadcast();
@@ -44,11 +50,7 @@ class HistoryViewModelImpl extends HistoryViewModel {
 
   @override
   Future<void> loadData() async {
-    final aliceMnemonic = await Mnemonic.fromString(
-        'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
-    final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
-    _wallet = await _lib.restoreWallet(aliceDescriptor);
-
+    _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     history = await _lib.getConfirmedTransactions(_wallet);
     history.sort((a, b) {
       return a.confirmationTime!.timestamp > b.confirmationTime!.timestamp
@@ -57,6 +59,9 @@ class HistoryViewModelImpl extends HistoryViewModel {
     });
 
     datasourceChangedStreamController.sink.add(this);
+    Future.delayed(const Duration(milliseconds: 100), () {
+      loadData();
+    });
   }
 
   @override

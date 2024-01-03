@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
+import '../../helper/wallet_manager.dart';
+
 class SimpleWallet extends StatefulWidget {
   const SimpleWallet({super.key});
 
@@ -33,10 +35,7 @@ class _SimpleWalletState extends State<SimpleWallet> {
   }
 
   restoreWallet() async {
-    final aliceMnemonic = await Mnemonic.fromString(
-        'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
-    final aliceDescriptor = await lib.createDescriptor(aliceMnemonic);
-    aliceWallet = await lib.restoreWallet(aliceDescriptor);
+    aliceWallet = await WalletManager.loadWallet();
     setState(() {
       displayText = "Wallets restored";
     });
