@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
@@ -12,6 +14,7 @@ class AppView extends ViewBase<AppViewModel> {
   AppView(AppViewModel viewModel, this.homeView)
       : super(viewModel, const Key("AppView"));
   final Widget homeView;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget buildWithViewModel(
@@ -26,60 +29,56 @@ class AppView extends ViewBase<AppViewModel> {
       child: Consumer2<ThemeProvider, LocaleProvider>(builder: (context,
           ThemeProvider themeProvider, LocaleProvider localeProvider, child) {
         return MaterialApp(
-          debugShowMaterialGrid: false,
-          showSemanticsDebugger: false,
-          debugShowCheckedModeBanner: kDebugMode,
-
-          title: 'Proton Wallet',
-          onGenerateTitle: (context) {
-            return S.of(context).appName;
-          },
-
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-
-          supportedLocales: const [
-            Locale('en', ''),
-            ...S.supportedLocales,
-          ],
-
-          localeResolutionCallback: (locale, supportLocales) {
-            if (locale?.languageCode == 'zh') {
-              if (locale?.scriptCode == 'Hant') {
-                return const Locale('zh', 'HK'); //tranditional
-              } else {
-                return const Locale('zh', 'CN'); //simplified
+            debugShowMaterialGrid: false,
+            showSemanticsDebugger: false,
+            debugShowCheckedModeBanner: kDebugMode,
+            title: 'Proton Wallet',
+            onGenerateTitle: (context) {
+              return S.of(context).appName;
+            },
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              ...S.supportedLocales,
+            ],
+            localeResolutionCallback: (locale, supportLocales) {
+              if (locale?.languageCode == 'zh') {
+                if (locale?.scriptCode == 'Hant') {
+                  return const Locale('zh', 'HK'); //tranditional
+                } else {
+                  return const Locale('zh', 'CN'); //simplified
+                }
               }
-            }
-            return null;
-          },
-
-          locale: Provider.of<LocaleProvider>(context, listen: false).locale,
-
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-
-          themeMode: themeProvider.getThemeMode(
-              Provider.of<ThemeProvider>(context, listen: false).themeMode),
-
-          darkTheme: ThemeData(brightness: Brightness.dark),
-
-          initialRoute: '/',
-
-          routes: <String, WidgetBuilder>{
-            '/': (BuildContext context) => homeView,
-          },
-          // home: homeView,
-          // routes: ["/", homeView],
-        );
+              return null;
+            },
+            locale: Provider.of<LocaleProvider>(context, listen: false).locale,
+            theme: ThemeData(
+              colorScheme: ThemeData(brightness: Brightness.light)
+                  .colorScheme
+                  .copyWith(
+                      primary: ProtonColors.textNorm,
+                surface: ProtonColors.surfaceLight,
+              ),
+              useMaterial3: true,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            themeMode: themeProvider.getThemeMode(
+                Provider.of<ThemeProvider>(context, listen: false).themeMode),
+            darkTheme: ThemeData(brightness: Brightness.dark),
+            initialRoute: '/',
+            routes: <String, WidgetBuilder>{
+              '/': (BuildContext context) => homeView,
+            },
+            builder: FToastBuilder(),
+            navigatorKey: navigatorKey
+            // home: homeView,
+            // routes: ["/", homeView],
+            );
       }),
     );
   }

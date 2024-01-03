@@ -29,7 +29,7 @@ class WelcomeCoordinator extends Coordinator {
   }
 
   @override
-  ViewBase<ViewModel> start() {
+  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
     var viewModel = WelcomeViewModelImpl(this);
     widget = WelcomeView(
       viewModel,

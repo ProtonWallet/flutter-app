@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class SendViewModel extends ViewModel {
-  SendViewModel(super.coordinator);
+  SendViewModel(super.coordinator, this.walletID, this.accountID);
 
+  int walletID;
+  int accountID;
   String fromAddress = "";
   late TextEditingController textController;
 
@@ -16,7 +19,8 @@ abstract class SendViewModel extends ViewModel {
 }
 
 class SendViewModelImpl extends SendViewModel {
-  SendViewModelImpl(super.coordinator);
+  SendViewModelImpl(super.coordinator, super.walletID, super.accountID);
+
   final datasourceChangedStreamController =
       StreamController<SendViewModel>.broadcast();
   final BdkLibrary _lib = BdkLibrary();
@@ -33,10 +37,7 @@ class SendViewModelImpl extends SendViewModel {
     textController = TextEditingController();
     recipientTextController = TextEditingController();
     //restore wallet
-    final aliceMnemonic = await Mnemonic.fromString(
-        'certain sense kiss guide crumble hint transfer crime much stereo warm coral');
-    final aliceDescriptor = await _lib.createDescriptor(aliceMnemonic);
-    _wallet = await _lib.restoreWallet(aliceDescriptor);
+    _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     _blockchain = await _lib.initializeBlockchain(false);
     getAddress();
   }

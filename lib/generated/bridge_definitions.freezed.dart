@@ -108,7 +108,7 @@ class _$AddressIndex_NewImpl implements AddressIndex_New {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$AddressIndex_NewImpl);
   }
 
@@ -221,7 +221,7 @@ class _$AddressIndex_LastUnusedImpl implements AddressIndex_LastUnused {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$AddressIndex_LastUnusedImpl);
   }
 
@@ -349,7 +349,7 @@ class _$AddressIndex_PeekImpl implements AddressIndex_Peek {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AddressIndex_PeekImpl &&
@@ -491,7 +491,7 @@ class _$AddressIndex_ResetImpl implements AddressIndex_Reset {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AddressIndex_ResetImpl &&
@@ -681,7 +681,7 @@ class _$DatabaseConfig_MemoryImpl implements DatabaseConfig_Memory {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$DatabaseConfig_MemoryImpl);
   }
 
@@ -806,7 +806,7 @@ class _$DatabaseConfig_SqliteImpl implements DatabaseConfig_Sqlite {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DatabaseConfig_SqliteImpl &&
@@ -944,7 +944,7 @@ class _$DatabaseConfig_SledImpl implements DatabaseConfig_Sled {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DatabaseConfig_SledImpl &&
@@ -1366,7 +1366,7 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_InvalidU32BytesImpl &&
@@ -1723,7 +1723,7 @@ class _$Error_GenericImpl implements Error_Generic {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_GenericImpl &&
@@ -2065,7 +2065,7 @@ class _$Error_ScriptDoesntHaveAddressFormImpl implements Error_ScriptDoesntHaveA
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$Error_ScriptDoesntHaveAddressFormImpl);
   }
@@ -2393,7 +2393,7 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_NoRecipientsImpl);
   }
 
@@ -2721,7 +2721,7 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_NoUtxosSelectedImpl);
   }
 
@@ -3068,7 +3068,7 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_OutputBelowDustLimitImpl &&
@@ -3438,7 +3438,7 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_InsufficientFundsImpl &&
@@ -3787,7 +3787,7 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_BnBTotalTriesExceededImpl);
   }
 
@@ -4115,7 +4115,7 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_BnBNoExactMatchImpl);
   }
 
@@ -4441,7 +4441,7 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_UnknownUtxoImpl);
   }
 
@@ -4770,7 +4770,7 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_TransactionNotFoundImpl);
   }
 
@@ -5099,7 +5099,7 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_TransactionConfirmedImpl);
   }
 
@@ -5428,7 +5428,7 @@ class _$Error_IrreplaceableTransactionImpl implements Error_IrreplaceableTransac
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$Error_IrreplaceableTransactionImpl);
   }
@@ -5776,7 +5776,7 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_FeeRateTooLowImpl &&
@@ -6135,7 +6135,7 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_FeeTooLowImpl &&
@@ -6478,7 +6478,7 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_FeeRateUnavailableImpl);
   }
 
@@ -6824,7 +6824,7 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_MissingKeyOriginImpl &&
@@ -7181,7 +7181,7 @@ class _$Error_KeyImpl implements Error_Key {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_KeyImpl &&
@@ -7522,7 +7522,7 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$Error_ChecksumMismatchImpl);
   }
 
@@ -7869,7 +7869,7 @@ class _$Error_SpendingPolicyRequiredImpl implements Error_SpendingPolicyRequired
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_SpendingPolicyRequiredImpl &&
@@ -8230,7 +8230,7 @@ class _$Error_InvalidPolicyPathErrorImpl implements Error_InvalidPolicyPathError
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_InvalidPolicyPathErrorImpl &&
@@ -8588,7 +8588,7 @@ class _$Error_SignerImpl implements Error_Signer {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_SignerImpl &&
@@ -8957,7 +8957,7 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_InvalidNetworkImpl &&
@@ -9322,7 +9322,7 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_InvalidOutpointImpl &&
@@ -9679,7 +9679,7 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_DescriptorImpl &&
@@ -10036,7 +10036,7 @@ class _$Error_EncodeImpl implements Error_Encode {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_EncodeImpl &&
@@ -10393,7 +10393,7 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_MiniscriptImpl &&
@@ -10752,7 +10752,7 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_MiniscriptPsbtImpl &&
@@ -11109,7 +11109,7 @@ class _$Error_Bip32Impl implements Error_Bip32 {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_Bip32Impl &&
@@ -11466,7 +11466,7 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_Secp256k1Impl &&
@@ -11822,7 +11822,7 @@ class _$Error_JsonImpl implements Error_Json {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_JsonImpl &&
@@ -12178,7 +12178,7 @@ class _$Error_HexImpl implements Error_Hex {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_HexImpl &&
@@ -12534,7 +12534,7 @@ class _$Error_PsbtImpl implements Error_Psbt {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_PsbtImpl &&
@@ -12891,7 +12891,7 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_PsbtParseImpl &&
@@ -13258,7 +13258,7 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_MissingCachedScriptsImpl &&
@@ -13618,7 +13618,7 @@ class _$Error_ElectrumImpl implements Error_Electrum {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_ElectrumImpl &&
@@ -13975,7 +13975,7 @@ class _$Error_EsploraImpl implements Error_Esplora {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_EsploraImpl &&
@@ -14331,7 +14331,7 @@ class _$Error_SledImpl implements Error_Sled {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_SledImpl &&
@@ -14687,7 +14687,7 @@ class _$Error_RpcImpl implements Error_Rpc {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_RpcImpl &&
@@ -15044,7 +15044,7 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Error_RusqliteImpl &&
@@ -15465,7 +15465,7 @@ class _$Payload_PubkeyHashImpl implements Payload_PubkeyHash {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Payload_PubkeyHashImpl &&
@@ -15601,7 +15601,7 @@ class _$Payload_ScriptHashImpl implements Payload_ScriptHash {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Payload_ScriptHashImpl &&
@@ -15748,7 +15748,7 @@ class _$Payload_WitnessProgramImpl implements Payload_WitnessProgram {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$Payload_WitnessProgramImpl &&
@@ -15931,7 +15931,7 @@ class _$RbfValue_RbfDefaultImpl implements RbfValue_RbfDefault {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType && other is _$RbfValue_RbfDefaultImpl);
   }
 
@@ -16047,7 +16047,7 @@ class _$RbfValue_ValueImpl implements RbfValue_Value {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RbfValue_ValueImpl &&
