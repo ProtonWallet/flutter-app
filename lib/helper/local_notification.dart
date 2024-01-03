@@ -15,7 +15,8 @@ class LocalNotification {
   static bool isPlatformSupported() {
     if (Platform.isAndroid ||
         Platform.isIOS ||
-        Platform.isMacOS ||
+        //TODO:: enable later
+        // Platform.isMacOS ||
         Platform.isLinux) {
       return true;
     }
