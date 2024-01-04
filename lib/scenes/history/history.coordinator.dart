@@ -16,8 +16,13 @@ class HistoryCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
+    Map<String, String> params = {
+      "WalletID": (widget as HistoryView).viewModel.walletID.toString(),
+      "AccountID": (widget as HistoryView).viewModel.accountID.toString(),
+      "TXID": (widget as HistoryView).viewModel.selectedTXID.toString()
+    };
     if (to == ViewIdentifiers.historyDetails) {
-      var view = HistoryDetailCoordinator().start();
+      var view = HistoryDetailCoordinator().start(params: params);
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
       return view;
     }

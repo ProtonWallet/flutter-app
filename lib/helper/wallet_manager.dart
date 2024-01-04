@@ -65,12 +65,6 @@ class WalletManager {
     return "m/$purpose'/$coin'/$accountIndex'/0";
   }
 
-  static Future<int> getCurrentWalletID() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    int id = preferences.getInt(spCurrentWalletID) ?? 1;
-    return id;
-  }
-
   static Future<bool> hasAccount() async {
     Database db = await DBHelper.database;
     WalletDaoImpl walletDaoImpl = WalletDaoImpl(db);
@@ -87,6 +81,16 @@ class WalletManager {
     return accountModel.derivationPath;
   }
 
+  static Future<String> getAccountLabelWithID(int accountID) async {
+    if (accountID == 0) {
+      return "Default Account";
+    }
+    Database db = await DBHelper.database;
+    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
+    AccountModel accountModel = await accountDaoImpl.findById(accountID);
+    return accountModel.labelDecrypt;
+  }
+
   static Future<String> getLocalDBNameWithID(int walletID) async {
     WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
     String dbName = "";
@@ -99,16 +103,16 @@ class WalletManager {
     return dbName;
   }
 
-  static Future<String> getMnemonic() async {
+  static Future<String> getNameWithID(int walletID) async {
     WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
-    int currentWalletID = await getCurrentWalletID();
-    if (await hasAccount() == false) {
-      return 'certain sense kiss guide crumble hint transfer crime much stereo warm coral';
+    String name = "Default Name";
+    if (walletID == 0) {
+      name = "Default Name";
     } else {
-      WalletModel walletRecord = await walletDaoImpl.findById(currentWalletID);
-      String mnemonic = await decrypt(utf8.decode(walletRecord.mnemonic));
-      return mnemonic;
+      WalletModel walletRecord = await walletDaoImpl.findById(walletID);
+      name = walletRecord.name;
     }
+    return name;
   }
 
   static Future<double> getWalletBalance(int walletID) async {
