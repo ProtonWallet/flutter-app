@@ -85,6 +85,15 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     width: MediaQuery.of(context).size.width,
                     controller: viewModel.passphraseTextConfirmController),
               ])),
+      AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+          onPressed: () {
+            viewModel.updateState(false);
+          },
+        ),
+      ),
       Container(
           padding: const EdgeInsets.only(bottom: 50),
           width: MediaQuery.of(context).size.width,

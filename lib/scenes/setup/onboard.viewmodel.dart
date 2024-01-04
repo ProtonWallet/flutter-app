@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:wallet/scenes/core/viewmodel.dart';
 
+import '../../helper/wallet_manager.dart';
+
 abstract class SetupOnboardViewModel extends ViewModel {
   SetupOnboardViewModel(super.coordinator);
+  bool hasAccount = false;
 
   void goHome();
 }
@@ -19,6 +22,8 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
 
   @override
   Future<void> loadData() async {
+    hasAccount = await WalletManager.hasAccount();
+    datasourceChangedStreamController.sink.add(this);
     return;
   }
 

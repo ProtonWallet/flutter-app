@@ -6,6 +6,14 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 
+import '../../components/tag.text.dart';
+import '../../components/text.choices.dart';
+import '../../components/dropdown.button.v1.dart';
+import '../../components/textfield.text.dart';
+import '../../constants/proton.color.dart';
+import '../../constants/sizedbox.dart';
+import '../../theme/theme.font.dart';
+
 class SendView extends ViewBase<SendViewModel> {
   SendView(SendViewModel viewModel) : super(viewModel, const Key("SendView"));
 
@@ -14,68 +22,188 @@ class SendView extends ViewBase<SendViewModel> {
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Send"),
+        title: Text("Send Bitcoin",
+            style: FontManager.titleHeadline(
+                Theme.of(context).colorScheme.primary)),
+        scrolledUnderElevation:
+            0.0, // don't change background color when scroll down
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                const Text("From:"),
-                GestureDetector(
-                  onTap: () {
-                    if (viewModel.fromAddress != "") {
-                      Clipboard.setData(
-                          ClipboardData(text: viewModel.fromAddress)).then((value) => LocalToast.showToast(context, "Address copied!"));
-                    }
-                  },
-                  child: TextField(
-                    controller: viewModel.textController,
-                    enabled: false,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Your address',
-                    ),
-                  ),
-                ),
-                const Text("To Recipient:"),
-                TextField(
-                  controller: viewModel.recipientTextController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Recipient ...',
-                  ),
-                ),
-                const Text("Amount:  300 sats   xxx USD"),
-                const Text("Est Fees:  141 sats"),
-                const Text("Total: 441 sats "),
-                const Text("Notes: this is test net transaction"),
-                const SizedBox(
-                  height: 20,
-                ),
-                ButtonV5(
-                  text: "Send",
-                  width: 200,
-                  height: 36,
-                  onPressed: () async {
-                    await viewModel.sendCoin();
-                    viewModel.coordinator.end();
-                    Navigator.of(context).popUntil((route) {
-                      logger.d(route.settings.name);
-                      if (route.settings.name == null) {
-                        return false;
-                      }
-                      return route.settings.name == "[<'HomeNavigationView'>]";
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: buildContent(context, viewModel, viewSize),
     );
+  }
+
+  Widget buildContent(
+      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+    return ListView(scrollDirection: Axis.vertical, children: [
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 26),
+          child: Center(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Send from Wallet",
+                    style: FontManager.captionMedian(
+                        Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                if (viewModel.userWallets.isNotEmpty)
+                  DropdownButtonV1(
+                    width: MediaQuery.of(context).size.width,
+                    items: viewModel.userWallets,
+                    valueNotifier: viewModel.valueNotifier,
+                    itemsText:
+                        viewModel.userWallets.map((v) => v.name).toList(),
+                  ),
+                const SizedBox(height: 5),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Send from Account",
+                    style: FontManager.captionMedian(
+                        Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                if (viewModel.userAccounts.isNotEmpty)
+                  DropdownButtonV1(
+                    width: MediaQuery.of(context).size.width,
+                    items: viewModel.userAccounts,
+                    valueNotifier: viewModel.valueNotifierForAccount,
+                    itemsText: viewModel.userAccounts
+                        .map((v) => "${v.labelDecrypt} (${v.derivationPath})")
+                        .toList(),
+                  ),
+                const SizedBox(height: 5),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Current Balance: ${viewModel.balance} SAT",
+                    style: FontManager.captionMedian(ProtonColors.textHint),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Send to Recipient(s)",
+                    style: FontManager.captionMedian(
+                        Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                TextFieldText(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  color: ProtonColors.backgroundSecondary,
+                  suffixIcon: const Icon(Icons.close),
+                  showSuffixIcon: false,
+                  showEnabledBorder: false,
+                  controller: viewModel.recipientTextController,
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Add Address",
+                    style:
+                        FontManager.captionMedian(ProtonColors.interactionNorm),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Amount",
+                    style: FontManager.captionMedian(
+                        Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextFieldText(
+                          width: MediaQuery.of(context).size.width - 200,
+                          height: 50,
+                          color: ProtonColors.backgroundSecondary,
+                          suffixIcon: const Icon(Icons.close),
+                          showSuffixIcon: false,
+                          showEnabledBorder: false,
+                          controller: viewModel.amountTextController,
+                          digitOnly: true,
+                        ),
+                        TextChoices(
+                            choices: ["SAT", "BTC"],
+                            selectedValue: "SAT",
+                            controller: viewModel.coinController),
+                      ],
+                    )),
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Fees (Default)",
+                          style: FontManager.captionSemiBold(
+                              Theme.of(context).colorScheme.primary),
+                        ),
+                        TagText(
+                          text: "Moderate",
+                          radius: 10.0,
+                          background: const Color.fromARGB(255, 237, 252, 221),
+                          textColor: const Color.fromARGB(255, 40, 116, 4),
+                        ),
+                      ]),
+                ),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.centerLeft,
+                    child: const Text("4sats/vb\nConfirmation in 2hours")),
+                const SizedBox(height: 10),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Advanced options",
+                    style:
+                        FontManager.captionMedian(ProtonColors.interactionNorm),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                ButtonV5(
+                    onPressed: () {
+                      if (viewModel.coinController.text != "SAT") {
+                        LocalToast.showToast(
+                          context,
+                          "Only support SAT now!",
+                          isWarning: true,
+                          icon: const Icon(Icons.warning, color: Colors.white),
+                        );
+                      } else {
+                        viewModel.sendCoin();
+                        viewModel.coordinator.end();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    text: "Review Transaction",
+                    width: MediaQuery.of(context).size.width,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    height: 48),
+              ])))
+    ]);
   }
 }

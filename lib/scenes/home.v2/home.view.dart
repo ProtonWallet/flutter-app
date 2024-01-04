@@ -15,6 +15,7 @@ import 'package:wallet/theme/theme.font.dart';
 
 import '../../components/button.v5.dart';
 import '../../components/custom.newsbox.dart';
+import '../../components/tag.text.dart';
 
 class HomeView extends ViewBase<HomeViewModel> {
   HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
@@ -232,31 +233,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10,
-                                                  right: 10,
-                                                  top: 4,
-                                                  bottom: 4),
-                                              decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      255, 200, 248, 255),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  border: Border.all(
-                                                    color: const Color.fromARGB(
-                                                        255, 200, 248, 255),
-                                                    width: 1.0,
-                                                  )),
-                                              child: Text("OnChain",
-                                                  style: FontManager
-                                                      .captionRegular(
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              18,
-                                                              134,
-                                                              159)))),
+                                          TagText(
+                                            text: "OnChain",
+                                            radius: 10.0,
+                                            background: const Color.fromARGB(
+                                                255, 200, 248, 255),
+                                            textColor: const Color.fromARGB(
+                                                255, 18, 134, 159),
+                                          ),
                                           const SizedBox(
                                             height: 4,
                                           ),

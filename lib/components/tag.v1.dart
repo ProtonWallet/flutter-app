@@ -25,7 +25,7 @@ class TagV1 extends StatelessWidget {
           GestureDetector(
               onTap: onTap,
               child: Container(
-                  margin: const EdgeInsets.only(left: 0, right: 12, top: 8),
+                  margin: const EdgeInsets.only(left: 0, right: 10, top: 8),
                   padding: const EdgeInsets.only(
                       left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
                   decoration: BoxDecoration(

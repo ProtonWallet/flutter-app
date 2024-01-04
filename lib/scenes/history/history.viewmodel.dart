@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
@@ -14,15 +13,9 @@ abstract class HistoryViewModel extends ViewModel {
   int walletID;
   int accountID;
 
-  int selectedPage = 0;
-  String mnemonicString = 'No Wallet';
+  String selectedTXID = "";
+
   List<TransactionDetails> history = [];
-
-  void updateSelected(int index);
-
-  void updateMnemonic(String mnemonic);
-
-  Future<void> updateStringValue();
 
   @override
   bool get keepAlive => true;
@@ -37,7 +30,6 @@ class HistoryViewModelImpl extends HistoryViewModel {
 
   final datasourceChangedStreamController =
       StreamController<HistoryViewModel>.broadcast();
-  final selectedSectionChangedController = StreamController<int>.broadcast();
 
   final BdkLibrary _lib = BdkLibrary();
   late Wallet _wallet;
@@ -45,7 +37,6 @@ class HistoryViewModelImpl extends HistoryViewModel {
   @override
   void dispose() {
     datasourceChangedStreamController.close();
-    selectedSectionChangedController.close();
   }
 
   @override
@@ -57,35 +48,12 @@ class HistoryViewModelImpl extends HistoryViewModel {
           ? -1
           : 1;
     });
-
     datasourceChangedStreamController.sink.add(this);
-    Future.delayed(const Duration(milliseconds: 100), () {
-      loadData();
-    });
   }
 
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
-
-  @override
-  void updateSelected(int index) {
-    selectedPage = index;
-    datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
-  void updateMnemonic(String mnemonic) {
-    mnemonicString = mnemonic;
-    datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
-  Future<void> updateStringValue() async {
-    var mnemonic = await Mnemonic.create(WordCount.Words12);
-    logger.d(mnemonic.asString());
-    updateMnemonic(mnemonic.asString());
-  }
 
   @override
   bool hasHistory() {
