@@ -69,6 +69,7 @@ dependencies:
   cryptography_flutter: ^2.3.2
   fl_chart: ^0.66.0
   crypto: ^3.0.3
+  url_launcher: ^6.2.2
 
 
 
