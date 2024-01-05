@@ -50,6 +50,16 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                   fit: BoxFit.fill,
                 ),
               )),
+          if (viewModel.hasAccount)
+            AppBar(
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: ProtonColors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
         ]),
         OnboardingContent(
           totalPages: 6,

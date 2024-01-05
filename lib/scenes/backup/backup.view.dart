@@ -32,32 +32,45 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
-          color: ProtonColors.backgroundSecondary,
-          child: Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Wrap(
-                        spacing: 2.0,
-                        runSpacing: 6.0,
-                        alignment: WrapAlignment.center,
-                        children: List.generate(
-                            viewModel.itemListShuffled.length,
-                            (index) => TagV1(
-                                  text:
-                                      viewModel.itemListShuffled[index].title!,
-                                  enable: viewModel.itemListShuffled[index].active!,
-                                  index: viewModel.itemListShuffled[index].index!,
-                                  onTap: (){
-                                    viewModel.updateTag(index);
-                                  },
-                                ))),
-                  ])),
-        ),
+        Stack(children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 2,
+            color: ProtonColors.backgroundSecondary,
+            child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Wrap(
+                          spacing: 2.0,
+                          runSpacing: 6.0,
+                          alignment: WrapAlignment.center,
+                          children: List.generate(
+                              viewModel.itemListShuffled.length,
+                              (index) => TagV1(
+                                    text: viewModel
+                                        .itemListShuffled[index].title!,
+                                    enable: viewModel
+                                        .itemListShuffled[index].active!,
+                                    index: viewModel
+                                        .itemListShuffled[index].index!,
+                                    onTap: () {
+                                      viewModel.updateTag(index);
+                                    },
+                                  ))),
+                    ])),
+          ),
+          AppBar(
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              onPressed: () {
+                viewModel.updateState(false);
+              },
+            ),
+          ),
+        ]),
         OnboardingContent(
             totalPages: 6,
             currentPage: 4,
@@ -73,8 +86,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                       viewModel.coordinator
                           .move(ViewIdentifiers.passphrase, context);
                     } else {
-                      LocalToast.showToast(
-                          context, "Wrong mnemonic order",
+                      LocalToast.showToast(context, "Wrong mnemonic order",
                           isWarning: true,
                           icon: const Icon(Icons.warning, color: Colors.white),
                           duration: 2);
@@ -94,54 +106,45 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
-          color: ProtonColors.backgroundSecondary,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              // Tags(
-              //   itemCount: viewModel.itemList.length, // required
-              //   itemBuilder: (int index) {
-              //     final item = viewModel.itemList[index];
-              //     return ItemTags(
-              //       key: Key(index.toString()),
-              //       index: index,
-              //       // required
-              //       title: "${item.index}. ${item.title}",
-              //       customData: item.customData,
-              //       textStyle: const TextStyle(
-              //         fontSize: 14,
-              //       ),
-              //       pressEnabled: false,
-              //       combine: ItemTagsCombine.withTextBefore,
-              //       borderRadius: BorderRadius.circular(10),
-              //       textActiveColor: const Color(0xFF3A3AA8),
-              //       activeColor: const Color(0xFFE1E1FA),
-              //     );
-              //   },
-              // ),
-              Wrap(
-                  spacing: 2.0,
-                  runSpacing: 6.0,
-                  alignment: WrapAlignment.center,
-                  children: List.generate(
-                      viewModel.itemList.length,
-                      (index) => TagV1(
-                            text: viewModel.itemList[index].title!,
-                            index: index+1,
-                            enable: true,
-                          ))),
-              SizedBoxes.box24,
-              Text(
-                "Save these 12 words securely and never share them with anyone.",
-                style: FontManager.captionRegular(ProtonColors.textHint),
-              )
-            ]),
+        Stack(children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 2,
+            color: ProtonColors.backgroundSecondary,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                        spacing: 2.0,
+                        runSpacing: 6.0,
+                        alignment: WrapAlignment.center,
+                        children: List.generate(
+                            viewModel.itemList.length,
+                            (index) => TagV1(
+                                  text: viewModel.itemList[index].title!,
+                                  index: index + 1,
+                                  enable: true,
+                                ))),
+                    SizedBoxes.box24,
+                    Text(
+                      "Save these 12 words securely and never share them with anyone.",
+                      style: FontManager.captionRegular(ProtonColors.textHint),
+                    )
+                  ]),
+            ),
           ),
-        ),
+          AppBar(
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ]),
         OnboardingContent(
             totalPages: 6,
             currentPage: 3,

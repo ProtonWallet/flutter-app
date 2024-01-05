@@ -27,6 +27,8 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
         width: widget.width,
         child: Center(
           child: TextField(
+            style:
+                FontManager.body2Regular(Theme.of(context).colorScheme.primary),
             controller: widget.controller,
             obscureText: widget.isTextVisible,
             decoration: InputDecoration(
@@ -38,17 +40,17 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide:
-                    const BorderSide(color: ProtonColors.interactionNorm, width: 2),
+                borderSide: const BorderSide(
+                    color: ProtonColors.interactionNorm, width: 2),
               ),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      widget.isTextVisible = !widget.isTextVisible;
-                    });
-                  },
-                ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.visibility),
+                onPressed: () {
+                  setState(() {
+                    widget.isTextVisible = !widget.isTextVisible;
+                  });
+                },
+              ),
             ),
           ),
         ));

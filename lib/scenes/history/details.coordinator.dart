@@ -19,9 +19,12 @@ class HistoryDetailCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
-    var viewModel = HistoryDetailViewModelImpl(
-      this,
-    );
+    int walletID =
+        params.containsKey("WalletID") ? int.parse(params["WalletID"]!) : 0;
+    int accountID =
+        params.containsKey("AccountID") ? int.parse(params["AccountID"]!) : 0;
+    String txid = params.containsKey("TXID") ? params["TXID"]! : "";
+    var viewModel = HistoryDetailViewModelImpl(this, walletID, accountID, txid);
     widget = HistoryDetailView(
       viewModel,
     );

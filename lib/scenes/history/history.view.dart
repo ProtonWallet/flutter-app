@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:wallet/components/transaction/transaction.listtitle.dart';
+import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
-
-import '../../helper/local_toast.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class HistoryView extends ViewBase<HistoryViewModel> {
   HistoryView(HistoryViewModel viewModel)
@@ -20,8 +20,15 @@ class HistoryView extends ViewBase<HistoryViewModel> {
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Payment History"),
+        title: const Text("Transactions"),
+        scrolledUnderElevation:
+        0.0, // don't change background color when scroll down
       ),
       body: viewModel.hasHistory()
           ? buildHistory(context, viewModel, viewSize)
@@ -36,71 +43,36 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ElevatedButton(
-                onPressed: viewModel.updateStringValue,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                child: Text(
-                  "No history".toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
               Text(
-                viewModel.mnemonicString,
-                style: Theme.of(context).textTheme.headlineMedium,
+                "No data",
+                style: FontManager.titleHeadline(
+                    Theme.of(context).colorScheme.primary),
               ),
             ]));
   }
 
   Widget buildHistory(
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
-    return ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-              color: Colors.grey,
-            ),
+    return ListView.builder(
         itemCount: viewModel.history.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-              onLongPress: () {
-                Clipboard.setData(
-                        ClipboardData(text: viewModel.history[index].txid))
-                    .then((value) => LocalToast.showToast(
-                        context, "Transaction ID copied!"));
-              },
-              child: ListTile(
-                title: FittedBox(
-                  child: Text(
-                    viewModel.history[index].txid,
-                    style: const TextStyle(color: Colors.blue),
-                    textAlign: TextAlign.left,
-                    maxLines: 3,
-                    softWrap: true,
-                  ),
-                ),
-                subtitle: Text(
-                    "Send: ${viewModel.history[index].sent.toString()} - Receive: ${viewModel.history[index].received.toString()} - Amount: ${viewModel.getAmount(index)}  - Fee: ${viewModel.history[index].fee.toString()} Time: ${parsetime(viewModel.history[index].confirmationTime!.timestamp)} "),
-                onTap: () {
-                  viewModel.updateSelected(index);
-                  goDetails(context);
-                },
-              ));
+          return TransactionListTitle(
+            width: MediaQuery.of(context).size.width - 80,
+            address: viewModel.history[index].txid.substring(0, 10) +
+                "***" +
+                viewModel.history[index].txid.substring(64 - 6),
+            coin: "Sat",
+            amount: (viewModel.getAmount(index)).toDouble(),
+            notional: CurrencyHelper.sat2usdt(
+                (viewModel.getAmount(index)).abs().toDouble()),
+            isSend: viewModel.history[index].sent >
+                viewModel.history[index].received,
+            timestamp: viewModel.history[index].confirmationTime!.timestamp,
+            onTap: () {
+              viewModel.selectedTXID = viewModel.history[index].txid;
+              goDetails(context);
+            },
+          );
         });
-  }
-
-  String parsetime(int timestemp) {
-    var millis = timestemp;
-    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
-
-    var d12 =
-        DateFormat('MM/dd/yyyy, hh:mm a').format(dt); // 12/31/2000, 10:00 PM
-
-    var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
-    return d12.toString();
   }
 }
