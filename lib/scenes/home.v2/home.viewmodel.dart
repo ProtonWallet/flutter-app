@@ -34,6 +34,7 @@ abstract class HomeViewModel extends ViewModel {
 
   bool isSyncing = false;
   bool hasWallet = true;
+  bool hasMailIntegration = false;
 
   void udpateSyncStatus(bool syncing);
 
@@ -44,6 +45,8 @@ abstract class HomeViewModel extends ViewModel {
   void updateBalance();
 
   void updateWallets();
+
+  void updateHasMailIntegration(bool later);
 
   void setOnBoard(BuildContext context);
 
@@ -158,6 +161,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void udpateSyncStatus(bool syncing) {
     isSyncing = syncing;
+    datasourceChangedStreamController.sink.add(this);
+  }
+
+  @override
+  void updateHasMailIntegration(bool later){
+    hasMailIntegration = later;
     datasourceChangedStreamController.sink.add(this);
   }
 
