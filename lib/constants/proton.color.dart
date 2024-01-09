@@ -16,6 +16,9 @@ class ProtonColors {
   static const Color alertWaningBackground = Color.fromARGB(26, 255, 153, 0);
   static const Color signalSuccess = Color(0xFF1EA885);
   static const Color signalError = Color(0xFFE32B6D);
+  static const Color accentSlateblue = Color(0xFF415DF0);
+  static const Color mailIntegrationBox = Color(0xFFEDEAFB);
+
 
 
   static const Color surfaceLight = Color.fromARGB(255, 251, 251, 251);

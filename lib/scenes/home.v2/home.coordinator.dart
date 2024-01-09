@@ -11,6 +11,7 @@ import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 
+import '../settings/mail_integration/maillist.coordinator.dart';
 import '../wallet/wallet.coordinator.dart';
 
 class HomeCoordinator extends Coordinator {
@@ -68,6 +69,15 @@ class HomeCoordinator extends Coordinator {
 
     if (to == ViewIdentifiers.testWebsocket) {
       var view = WebSocketCoordinator().start();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => view,
+        fullscreenDialog: true,
+      ));
+      return view;
+    }
+
+    if (to == ViewIdentifiers.mailList) {
+      var view = MailListCoordinator().start();
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => view,
         fullscreenDialog: true,
