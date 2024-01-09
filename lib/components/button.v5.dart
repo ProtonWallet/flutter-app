@@ -43,7 +43,7 @@ class ButtonV5 extends StatelessWidget {
               side: BorderSide(width: 1, color: borderColor),
             ),
             elevation: 0.4),
-        onPressed: onPressed,
+        onPressed: enable ? onPressed : () {},
         child: Text(
           text,
           style: textStyle,

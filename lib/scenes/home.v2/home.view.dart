@@ -264,6 +264,74 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         ],
                                       ))))
                       ]))),
+          if (!viewModel.hasMailIntegration)
+            Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(24),
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                color: ProtonColors.accentSlateblue,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(
+                      left: 24, top: 12, right: 24, bottom: 12),
+                  decoration: BoxDecoration(
+                      color: ProtonColors.mailIntegrationBox,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/mail_integration.svg",
+                          width: 54),
+                      Text(
+                        "You can send and receive Bitcoin using your email address.",
+                        style:
+                            FontManager.captionRegular(ProtonColors.textNorm),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                // viewModel.mailIntegration();
+                                viewModel.coordinator
+                                    .move(ViewIdentifiers.mailList, context);
+                              },
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  minWidth: 100.0,
+                                ),
+                                child: Text(
+                                  "Set up address",
+                                  style: FontManager.captionSemiBold(
+                                      ProtonColors.textNorm),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )),
+                          GestureDetector(
+                              onTap: () {
+                                viewModel.updateHasMailIntegration(true);
+                              },
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  minWidth: 100.0,
+                                ),
+                                child: Text(
+                                  "Later",
+                                  style: FontManager.captionSemiBold(
+                                      ProtonColors.textNorm),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                    ],
+                  ),
+                )),
           if (viewModel.totalBalance > 0)
             Column(children: [
               Padding(
