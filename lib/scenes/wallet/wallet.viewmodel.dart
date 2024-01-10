@@ -80,10 +80,9 @@ class WalletViewModelImpl extends WalletViewModel {
   Future<void> updateAccount(AccountModel accountModel) async {
     if (accountModel.id != this.accountModel.id) {
       this.accountModel = accountModel;
-      wallet =
-          await WalletManager.loadWalletWithID(walletID, accountModel.id!);
-      var _balance = await wallet.getBalance();
-      balance = _balance.total;
+      wallet = await WalletManager.loadWalletWithID(walletID, accountModel.id!);
+      var walletBalance = await wallet.getBalance();
+      balance = walletBalance.total;
       var unconfirmedList = await _lib.getUnConfirmedTransactions(wallet);
       unconfirmed = unconfirmedList.length;
 
@@ -108,8 +107,8 @@ class WalletViewModelImpl extends WalletViewModel {
       isSyncing = true;
       datasourceChangedStreamController.sink.add(this);
       await _lib.sync(blockchain!, wallet);
-      var _balance = await wallet.getBalance();
-      balance = _balance.total;
+      var walletBalance = await wallet.getBalance();
+      balance = walletBalance.total;
       var unconfirmedList = await _lib.getUnConfirmedTransactions(wallet);
       unconfirmed = unconfirmedList.length;
 
@@ -122,12 +121,13 @@ class WalletViewModelImpl extends WalletViewModel {
   }
 
   @override
-  Future<void> updateWalletInfo() async{
+  Future<void> updateWalletInfo() async {
     totalBalance = 0;
-    for (AccountModel _accountModel in accounts){
-      Wallet _wallet = await WalletManager.loadWalletWithID(walletID, _accountModel.id!);
-      totalBalance += (await _wallet.getBalance()).total;
+    for (AccountModel accountModel in accounts) {
+      Wallet wallet =
+          await WalletManager.loadWalletWithID(walletID, accountModel.id!);
+      totalBalance += (await wallet.getBalance()).total;
       datasourceChangedStreamController.sink.add(this);
-    };
+    }
   }
 }

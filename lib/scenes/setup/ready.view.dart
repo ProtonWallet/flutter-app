@@ -1,12 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/setup/ready.viewmodel.dart';
 
 import '../../components/onboarding/content.dart';

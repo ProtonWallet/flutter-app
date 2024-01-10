@@ -6,6 +6,7 @@ import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
+
 import '../../constants/constants.dart';
 import '../welcome/newuser.coordinator.dart';
 import '../welcome/welcome.coordinator.dart';
@@ -40,10 +41,10 @@ class AppCoordinator extends Coordinator {
   }
 
   Future<ViewBase<ViewModel>> startWithNewUser() async {
-    SharedPreferences _preferences = await SharedPreferences.getInstance();
-    bool _hasShow = _preferences.getBool(spHasShowNewUserPage) ?? false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    bool hasShow = preferences.getBool(spHasShowNewUserPage) ?? false;
     ViewBase view;
-    if (_hasShow){
+    if (hasShow) {
       view = WelcomeCoordinator().start();
     } else {
       view = NewUserCoordinator().start();

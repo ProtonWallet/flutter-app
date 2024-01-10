@@ -31,7 +31,7 @@ class MailListView extends ViewBase<MailListViewModel> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
               height: 40,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

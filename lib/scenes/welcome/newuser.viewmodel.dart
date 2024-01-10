@@ -46,8 +46,8 @@ class NewUserViewModelImpl extends NewUserViewModel {
 
   @override
   Future<void> done() async {
-    SharedPreferences _preferences = await SharedPreferences.getInstance();
-    _preferences.setBool(spHasShowNewUserPage, true);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool(spHasShowNewUserPage, true);
   }
 
   @override

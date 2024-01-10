@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -14,9 +13,9 @@ class TransactionListTitle extends StatelessWidget {
   final bool isSend;
   final int timestamp;
   final VoidCallback? onTap;
-  String note = "";
+  final String note;
 
-  TransactionListTitle({
+  const TransactionListTitle({
     super.key,
     required this.width,
     required this.address,
@@ -85,17 +84,15 @@ class TransactionListTitle extends StatelessWidget {
                         isSend
                             ? "Send‧${parsetime(timestamp)}"
                             : "Receive‧${parsetime(timestamp)}",
-                        style: FontManager.captionRegular(
-                            ProtonColors.textHint))
+                        style:
+                            FontManager.captionRegular(ProtonColors.textHint))
                   ],
                 ),
                 isSend
                     ? Text("-\$${notional.toStringAsFixed(3)}",
-                        style: FontManager.body2Regular(
-                            ProtonColors.textHint))
+                        style: FontManager.body2Regular(ProtonColors.textHint))
                     : Text("+\$${notional.toStringAsFixed(3)}",
-                        style: FontManager.body2Regular(
-                            ProtonColors.textHint))
+                        style: FontManager.body2Regular(ProtonColors.textHint))
               ]),
               if (note != "")
                 Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -106,9 +103,8 @@ class TransactionListTitle extends StatelessWidget {
                       ),
                       margin: const EdgeInsets.only(right: 4, top: 2),
                       padding: const EdgeInsets.all(2.0),
-                      child: Icon(Icons.edit_outlined,
-                          size: 10,
-                          color: ProtonColors.textHint)),
+                      child: const Icon(Icons.edit_outlined,
+                          size: 10, color: ProtonColors.textHint)),
                 ]),
             ],
           ),

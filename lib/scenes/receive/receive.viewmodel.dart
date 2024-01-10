@@ -8,7 +8,6 @@ import '../../helper/dbhelper.dart';
 import '../../helper/wallet_manager.dart';
 import '../../models/account.dao.impl.dart';
 import '../../models/wallet.dao.impl.dart';
-import '../../models/wallet.model.dart';
 
 abstract class ReceiveViewModel extends ViewModel {
   ReceiveViewModel(super.coordinator, this.walletID, this.accountID);
@@ -19,7 +18,7 @@ abstract class ReceiveViewModel extends ViewModel {
   String address = "";
   List userWallets = [];
   List userAccounts = [];
-  var selectedWallet;
+  var selectedWallet = 1;
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
 
@@ -51,14 +50,14 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     if (walletID == 0) {
       walletID = userWallets.first.id;
     }
-    userWallets.forEach((element) {
+    for (var element in userWallets) {
       if (element.id == walletID) {
         valueNotifier = ValueNotifier(element);
         valueNotifier.addListener(() {
           updateAccountList();
         });
       }
-    });
+    }
     updateAccountList();
     datasourceChangedStreamController.add(this);
   }

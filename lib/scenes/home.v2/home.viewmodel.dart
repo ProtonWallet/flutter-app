@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -10,7 +8,6 @@ import 'package:wallet/models/wallet.dao.impl.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
-import '../../constants/constants.dart';
 import '../../helper/wallet_manager.dart';
 import '../../models/wallet.model.dart';
 import '../core/view.navigatior.identifiers.dart';
@@ -165,7 +162,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateHasMailIntegration(bool later){
+  void updateHasMailIntegration(bool later) {
     hasMailIntegration = later;
     datasourceChangedStreamController.sink.add(this);
   }
@@ -186,13 +183,13 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateWallets() async {
-    double _totalBalance = 0.0;
+    double totalBalance = 0.0;
     for (WalletModel walletModel in userWallets) {
       walletModel.balance =
           await WalletManager.getWalletBalance(walletModel.id!);
-      _totalBalance += walletModel.balance;
+      totalBalance += walletModel.balance;
     }
-    totalBalance = _totalBalance;
+    totalBalance = totalBalance;
     datasourceChangedStreamController.sink.add(this);
   }
 }

@@ -4,7 +4,7 @@ import 'package:wallet/constants/proton.color.dart';
 class CircleProgressDot extends StatelessWidget {
   final bool enable;
 
-  CircleProgressDot({this.enable = true});
+  const CircleProgressDot({super.key, this.enable = true});
 
   @override
   Widget build(BuildContext context) {
