@@ -1,12 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:wallet/helper/logger.dart';
 
 class LocalToast {
   static final LocalAuthentication auth = LocalAuthentication();
@@ -35,7 +29,7 @@ class LocalToast {
         mainAxisSize: MainAxisSize.min,
         children: [
           icon,
-          SizedBox(
+          const SizedBox(
             width: 12.0,
           ),
           Text(

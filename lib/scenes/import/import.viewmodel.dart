@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../constants/script_type.dart';
-import '../../helper/dbhelper.dart';
-import '../../helper/wallet_manager.dart';
-import '../../models/wallet.dao.impl.dart';
-import '../../models/wallet.model.dart';
+import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/wallet.dao.impl.dart';
+import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class ImportViewModel extends ViewModel {
   ImportViewModel(super.coordinator);

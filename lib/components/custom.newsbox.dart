@@ -5,9 +5,9 @@ class CustomNewsBox extends StatelessWidget {
   final String title;
   final String content;
   final String iconPath;
-  double width;
+  final double width;
 
-  CustomNewsBox({
+  const CustomNewsBox({
     super.key,
     required this.title,
     required this.content,
@@ -33,23 +33,19 @@ class CustomNewsBox extends StatelessWidget {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Row(children: [
-                    SvgPicture.asset(
-                        iconPath,
-                        fit: BoxFit.fill,
-                        width:32,
-                        height: 32
-                    ),
+                    SvgPicture.asset(iconPath,
+                        fit: BoxFit.fill, width: 32, height: 32),
                     const SizedBox(width: 10),
                     Text(title,
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ))
                   ])),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 5,
+              ),
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(content,

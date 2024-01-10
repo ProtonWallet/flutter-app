@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 
-import '../constants/constants.dart';
 import '../models/account.dao.impl.dart';
 import '../models/account.model.dart';
 import '../models/wallet.model.dart';
 import '../scenes/debug/bdk.test.dart';
+
 import 'bdk/helper.dart';
 
 class WalletManager {
@@ -30,8 +30,8 @@ class WalletManager {
     final aliceDescriptor =
         await _lib.createDerivedDescriptor(mnemonic, derivationPath);
     String dbName = await getLocalDBNameWithID(walletID);
-    dbName += "_" +
-        derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
+    dbName +=
+        "_${derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_')}";
     wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
     return wallet;
   }
@@ -135,10 +135,11 @@ class WalletManager {
     } else {
       WalletModel walletRecord = await walletDaoImpl.findById(walletID);
       String passphrase = "";
-      if (walletRecord.passphrase == 1){
+      if (walletRecord.passphrase == 1) {
         passphrase = "123456";
       }
-      String mnemonic = await decrypt(utf8.decode(walletRecord.mnemonic), passphrase_: passphrase);
+      String mnemonic = await decrypt(utf8.decode(walletRecord.mnemonic),
+          passphrase_: passphrase);
       return mnemonic;
     }
   }

@@ -67,7 +67,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     List<TransactionDetails> history =
         await _lib.getConfirmedTransactions(_wallet);
-    history.forEach((transaction) async {
+
+    for (var transaction in history) {
       if (transaction.txid == txid) {
         address = transaction.txid
             .substring(0, 32); // TODO:: use txid to get correct address
@@ -81,7 +82,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         isSend = amount < 0;
         datasourceChangedStreamController.sink.add(this);
       }
-    });
+    }
     initialized = true;
     return;
   }

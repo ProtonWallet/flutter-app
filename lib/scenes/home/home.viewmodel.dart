@@ -3,7 +3,6 @@ import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-import 'package:wallet/helper/local_notification.dart';
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);

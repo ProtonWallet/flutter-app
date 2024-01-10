@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
-import '../constants/proton.color.dart';
-import '../theme/theme.font.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class CustomMailBox extends StatelessWidget {
   final String mail;
   final String subTitle;
   final VoidCallback? onTap;
 
-  CustomMailBox(
+  const CustomMailBox(
       {super.key, required this.mail, required this.subTitle, this.onTap});
 
   @override

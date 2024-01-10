@@ -4,8 +4,8 @@ import '../constants/proton.color.dart';
 import '../theme/theme.font.dart';
 
 class TextChoices extends StatefulWidget {
-  List<String> choices;
-  TextEditingController? controller;
+  final List<String> choices;
+  final TextEditingController? controller;
   String selectedValue;
 
   TextChoices({
@@ -20,10 +20,10 @@ class TextChoices extends StatefulWidget {
   }
 
   @override
-  _TextFieldTextState createState() => _TextFieldTextState();
+  TextFieldTextState createState() => TextFieldTextState();
 }
 
-class _TextFieldTextState extends State<TextChoices> {
+class TextFieldTextState extends State<TextChoices> {
   @override
   Widget build(BuildContext context) {
     return Container(

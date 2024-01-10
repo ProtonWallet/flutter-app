@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/progress.dot.dart';
-import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-import '../../constants/sizedbox.dart';
-import '../button.v5.dart';
-
 class OnboardingContent extends StatelessWidget {
-  List<Widget> children = [];
-  String title = "";
-  String content = "";
-  double width;
-  double height;
-  int totalPages = 5;
-  int currentPage = 1;
+  final List<Widget> children;
+  final String title;
+  final String content;
+  final double width;
+  final double height;
+  final int totalPages;
+  final int currentPage;
 
-  OnboardingContent({
+  const OnboardingContent({
     super.key,
     required this.width,
     required this.height,
-    this.children = const [],
     this.title = "",
     this.content = "",
     this.totalPages = 5,
     this.currentPage = 1,
+    this.children = const [],
   });
 
   @override

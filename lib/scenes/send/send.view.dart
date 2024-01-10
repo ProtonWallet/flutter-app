@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 
@@ -11,7 +10,6 @@ import '../../components/text.choices.dart';
 import '../../components/dropdown.button.v1.dart';
 import '../../components/textfield.text.dart';
 import '../../constants/proton.color.dart';
-import '../../constants/sizedbox.dart';
 import '../../theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
@@ -48,7 +46,7 @@ class SendView extends ViewBase<SendViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Send from Wallet",
@@ -66,7 +64,7 @@ class SendView extends ViewBase<SendViewModel> {
                         viewModel.userWallets.map((v) => v.name).toList(),
                   ),
                 const SizedBox(height: 5),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Send from Account",
@@ -85,7 +83,7 @@ class SendView extends ViewBase<SendViewModel> {
                         .toList(),
                   ),
                 const SizedBox(height: 5),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Current Balance: ${viewModel.balance} SAT",
@@ -93,7 +91,7 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Send to Recipient(s)",
@@ -112,7 +110,7 @@ class SendView extends ViewBase<SendViewModel> {
                   controller: viewModel.recipientTextController,
                 ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Add Address",
@@ -121,7 +119,7 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Amount",
@@ -130,7 +128,7 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Container(
+                SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,13 +144,13 @@ class SendView extends ViewBase<SendViewModel> {
                           digitOnly: true,
                         ),
                         TextChoices(
-                            choices: ["SAT", "BTC"],
+                            choices: const ["SAT", "BTC"],
                             selectedValue: "SAT",
                             controller: viewModel.coinController),
                       ],
                     )),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +173,7 @@ class SendView extends ViewBase<SendViewModel> {
                     alignment: Alignment.centerLeft,
                     child: const Text("4sats/vb\nConfirmation in 2hours")),
                 const SizedBox(height: 10),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Advanced options",

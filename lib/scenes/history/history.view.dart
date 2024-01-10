@@ -28,7 +28,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text("Transactions"),
         scrolledUnderElevation:
-        0.0, // don't change background color when scroll down
+            0.0, // don't change background color when scroll down
       ),
       body: viewModel.hasHistory()
           ? buildHistory(context, viewModel, viewSize)
@@ -58,9 +58,8 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         itemBuilder: (context, index) {
           return TransactionListTitle(
             width: MediaQuery.of(context).size.width - 80,
-            address: viewModel.history[index].txid.substring(0, 10) +
-                "***" +
-                viewModel.history[index].txid.substring(64 - 6),
+            address:
+                "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
             coin: "Sat",
             amount: (viewModel.getAmount(index)).toDouble(),
             notional: CurrencyHelper.sat2usdt(

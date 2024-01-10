@@ -9,8 +9,6 @@ import '../../components/add_account_dialog.dart';
 import '../../components/custom.barchart.dart';
 import '../../constants/proton.color.dart';
 import '../../helper/local_toast.dart';
-import '../../helper/wallet_manager.dart';
-import '../../models/account.model.dart';
 import '../../theme/theme.font.dart';
 import '../core/view.navigatior.identifiers.dart';
 
@@ -25,7 +23,8 @@ class WalletView extends ViewBase<WalletViewModel> {
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+            statusBarIconBrightness:
+                Brightness.dark, // For Android (dark icons)
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -37,7 +36,7 @@ class WalletView extends ViewBase<WalletViewModel> {
             Center(
                 child: Stack(children: <Widget>[
               Center(
-                  child: Container(
+                  child: SizedBox(
                       width: MediaQuery.of(context).size.width - 52,
                       height: 212,
                       child: SvgPicture.asset(
@@ -46,7 +45,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                         fit: BoxFit.fill,
                       ))),
               Center(
-                child: Container(
+                child: SizedBox(
                     width: MediaQuery.of(context).size.width - 52,
                     height: 200,
                     child: Column(
@@ -91,7 +90,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                                         ? viewModel.walletModel.localDBName
                                             .substring(0, 20)
                                         : "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 14.0,
                                         color: ProtonColors.wMajor1),
                                   )),
@@ -249,7 +248,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                     ),
                   )),
             ]),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[

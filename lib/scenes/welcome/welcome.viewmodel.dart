@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 import '../../helper/local_auth.dart';

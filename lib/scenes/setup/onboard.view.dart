@@ -42,7 +42,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
           Container(
               alignment: Alignment.center,
               height: MediaQuery.of(context).size.height / 2,
-              child: Container(
+              child: SizedBox(
                 width: 190.8,
                 height: 44.15,
                 child: SvgPicture.asset(
