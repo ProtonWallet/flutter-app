@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/models/Transaction.model.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
+import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 import '../../helper/bdk/helper.dart';
