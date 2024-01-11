@@ -1,0 +1,4 @@
+pre-commit:
+  commands:
+    linter:
+      run: flutter analyze --no-fatal-infos --no-fatal-warnings
