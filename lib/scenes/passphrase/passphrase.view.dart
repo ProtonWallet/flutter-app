@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -59,7 +56,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         "Store your passphrase at a safe location. Without the passphrase, even Proton cannot recover your funds.",
                     width: MediaQuery.of(context).size.width),
                 SizedBoxes.box24,
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Passphrase",
@@ -72,7 +69,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     width: MediaQuery.of(context).size.width,
                     controller: viewModel.passphraseTextController),
                 SizedBoxes.box24,
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
                     "Confirm Passphrase",

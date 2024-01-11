@@ -206,8 +206,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 ButtonV5(
                     onPressed: () {
                       launchUrl(Uri.parse(
-                          "https://blockstream.info/testnet/search?q=" +
-                              viewModel.txid));
+                          "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
                     },
                     text: "View on Etherscan",
                     width: MediaQuery.of(context).size.width,

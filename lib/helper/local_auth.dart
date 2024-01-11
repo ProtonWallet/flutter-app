@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
 
@@ -28,7 +28,7 @@ class LocalAuth {
       try {
         _canCheckBiometrics = await auth.canCheckBiometrics;
       } on PlatformException catch (e) {
-        print(e);
+        logger.e(e);
       }
     }
   }
@@ -37,14 +37,14 @@ class LocalAuth {
     if (!isPlatformSupported()) {
       return false;
     }
-    if (_canCheckBiometrics == false){
+    if (_canCheckBiometrics == false) {
       return false;
     }
     bool authenticated = false;
     try {
       authenticated = await auth.authenticate(localizedReason: hint);
     } on PlatformException catch (e) {
-      print(e);
+      logger.e(e);
       return false;
     }
     return authenticated;

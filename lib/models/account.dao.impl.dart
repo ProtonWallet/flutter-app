@@ -1,4 +1,3 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:wallet/models/base.dao.dart';
 import 'account.model.dart';

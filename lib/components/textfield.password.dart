@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldPassword extends StatefulWidget {
   final double width;
-  bool isTextVisible = true;
-  TextEditingController? controller;
-  String? hintText = "";
+  final TextEditingController? controller;
+  final String? hintText;
 
-  TextFieldPassword({
+  const TextFieldPassword({
     super.key,
     required this.width,
     this.controller,
@@ -17,20 +15,22 @@ class TextFieldPassword extends StatefulWidget {
   });
 
   @override
-  _TextFieldPasswordState createState() => _TextFieldPasswordState();
+  TextFieldPasswordState createState() => TextFieldPasswordState();
 }
 
-class _TextFieldPasswordState extends State<TextFieldPassword> {
+class TextFieldPasswordState extends State<TextFieldPassword> {
+  bool isTextVisible = true;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: widget.width,
         child: Center(
           child: TextField(
             style:
                 FontManager.body2Regular(Theme.of(context).colorScheme.primary),
             controller: widget.controller,
-            obscureText: widget.isTextVisible,
+            obscureText: isTextVisible,
             decoration: InputDecoration(
               hintText: widget.hintText,
               enabledBorder: OutlineInputBorder(
@@ -47,7 +47,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
                 icon: const Icon(Icons.visibility),
                 onPressed: () {
                   setState(() {
-                    widget.isTextVisible = !widget.isTextVisible;
+                    isTextVisible = !isTextVisible;
                   });
                 },
               ),

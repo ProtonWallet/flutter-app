@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/custom.barchart.dart';
+
 import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
@@ -149,12 +148,12 @@ class HomeView extends ViewBase<HomeViewModel> {
             ),
             Container(
                 width: MediaQuery.of(context).size.width / 2 - 36,
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
-                      color: Color.fromARGB(255, 226, 226, 226),
+                      color: const Color.fromARGB(255, 226, 226, 226),
                       width: 1.0,
                     )),
                 child: Column(
@@ -201,7 +200,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   child: ListView(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       children: <Widget>[
                         for (WalletModel wallet in viewModel.userWallets)
                           GestureDetector(
@@ -289,7 +288,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             FontManager.captionRegular(ProtonColors.textNorm),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -328,7 +327,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                     ],
                   ),
                 )),
