@@ -54,9 +54,10 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   bool checkUserMnemonic() {
-    if (tappedIndices.length == verifiedIndex.length){
-      for (int i = 0; i< tappedIndices.length; i++){
-        if (itemListShuffled[tappedIndices[i]].title != itemList[verifiedIndex[i]].title){
+    if (tappedIndices.length == verifiedIndex.length) {
+      for (int i = 0; i < tappedIndices.length; i++) {
+        if (itemListShuffled[tappedIndices[i]].title !=
+            itemList[verifiedIndex[i]].title) {
           return false;
         }
       }
@@ -86,7 +87,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       int index = tappedIndices[i];
       itemListShuffled[index] = Item(
           title: itemListShuffled[index].title,
-          index: verifiedIndex[i]+1,
+          index: verifiedIndex[i] + 1,
           active: true);
     }
     datasourceChangedStreamController.add(this);

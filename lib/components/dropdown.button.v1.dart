@@ -4,11 +4,11 @@ import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV1 extends StatefulWidget {
   final double width;
-  List items = [];
-  List itemsText = [];
-  ValueNotifier valueNotifier;
+  final List items;
+  final List itemsText;
+  final ValueNotifier valueNotifier;
 
-  DropdownButtonV1(
+  const DropdownButtonV1(
       {super.key,
       required this.width,
       required this.items,
@@ -16,10 +16,10 @@ class DropdownButtonV1 extends StatefulWidget {
       required this.valueNotifier});
 
   @override
-  _DropdownButtonV1State createState() => _DropdownButtonV1State();
+  DropdownButtonV1State createState() => DropdownButtonV1State();
 }
 
-class _DropdownButtonV1State extends State<DropdownButtonV1> {
+class DropdownButtonV1State extends State<DropdownButtonV1> {
   @override
   void initState() {
     super.initState();

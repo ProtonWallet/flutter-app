@@ -70,7 +70,8 @@ class ImportView extends ViewBase<ImportViewModel> {
           Container(
               padding: const EdgeInsets.only(bottom: 50),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 56 -
+              height: MediaQuery.of(context).size.height -
+                  56 -
                   MediaQuery.of(context).padding.top,
               // AppBar default height is 56
               margin: const EdgeInsets.only(left: 40, right: 40),

@@ -12,8 +12,6 @@ import 'package:path_provider/path_provider.dart';
 
 import 'dart:async';
 
-import 'package:sqflite/sqflite.dart';
-
 class BdkLibrary {
   Future<Mnemonic> createMnemonic() async {
     final res = await Mnemonic.create(WordCount.Words12);

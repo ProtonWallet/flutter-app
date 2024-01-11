@@ -24,7 +24,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+            statusBarIconBrightness:
+                Brightness.dark, // For Android (dark icons)
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -40,7 +41,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 52,
                   child: Text(
                     "Receive to Wallet",
@@ -58,7 +59,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         viewModel.userWallets.map((v) => v.name).toList(),
                   ),
                 const SizedBox(height: 5),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 52,
                   child: Text(
                     "Account",
@@ -77,7 +78,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         .toList(),
                   ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 52,
                   child: Text(
                     "Add amount",

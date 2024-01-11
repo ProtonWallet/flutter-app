@@ -6,18 +6,18 @@ import 'package:wallet/theme/theme.font.dart';
 class TextFieldText extends StatefulWidget {
   final double width;
   final double? height;
-  TextEditingController? controller;
-  FocusNode? focusNode;
-  String? hintText = "";
-  bool multiLine = false;
-  bool showSuffixIcon = true;
-  bool showEnabledBorder = true;
-  bool digitOnly = false;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final String? hintText;
+  final bool multiLine;
+  final bool showSuffixIcon;
+  final bool showEnabledBorder;
+  final bool digitOnly;
   final VoidCallback? suffixIconOnPressed;
-  Icon suffixIcon;
-  Color color;
+  final Icon suffixIcon;
+  final Color color;
 
-  TextFieldText({
+  const TextFieldText({
     super.key,
     required this.width,
     this.height,
@@ -34,10 +34,10 @@ class TextFieldText extends StatefulWidget {
   });
 
   @override
-  _TextFieldTextState createState() => _TextFieldTextState();
+  TextFieldTextState createState() => TextFieldTextState();
 }
 
-class _TextFieldTextState extends State<TextFieldText> {
+class TextFieldTextState extends State<TextFieldText> {
   @override
   Widget build(BuildContext context) {
     return Container(

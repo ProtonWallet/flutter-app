@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:wallet/scenes/core/viewmodel.dart';
-
-import '../../generated/bridge_definitions.dart';
-import '../../helper/bdk/helper.dart';
 
 abstract class SetupReadyViewModel extends ViewModel {
   SetupReadyViewModel(super.coordinator);

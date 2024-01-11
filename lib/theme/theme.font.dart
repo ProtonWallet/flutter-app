@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class FontManager {
@@ -114,7 +112,6 @@ class FontManager {
         fontWeight: FontWeight.w400,
         color: color);
   }
-
 
   static TextStyle overlineSemiBold(Color color) {
     return TextStyle(

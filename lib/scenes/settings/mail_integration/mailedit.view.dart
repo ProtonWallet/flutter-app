@@ -67,14 +67,14 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                   ),
                   DropdownButtonV1(
                     width: MediaQuery.of(context).size.width,
-                    items: [
+                    items: const [
                       "Select wallet",
                       "Test Wallet 1",
                       "Test Wallet 2",
                       "Bob's Wallet"
                     ],
                     valueNotifier: viewModel.linkWalletNotifier,
-                    itemsText: [
+                    itemsText: const [
                       "Select wallet",
                       "Test Wallet 1",
                       "Test Wallet 2",
@@ -85,7 +85,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                   if (viewModel.linkWalletNotifier.value != "Select wallet")
                     Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
                             "Minimum amount",
@@ -94,7 +94,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Container(
+                        SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,13 +112,13 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                                   hintText: "0",
                                 ),
                                 TextChoices(
-                                    choices: ["SAT", "BTC"],
+                                    choices: const ["SAT", "BTC"],
                                     selectedValue: "SAT",
                                     controller: viewModel.minCoinController),
                               ],
                             )),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
                             "Maximum amount",
@@ -127,7 +127,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Container(
+                        SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +145,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                                   digitOnly: true,
                                 ),
                                 TextChoices(
-                                    choices: ["SAT", "BTC"],
+                                    choices: const ["SAT", "BTC"],
                                     selectedValue: "SAT",
                                     controller: viewModel.maxCoinController),
                               ],
@@ -173,7 +173,8 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                             width: MediaQuery.of(context).size.width,
                             textStyle:
                                 FontManager.body1Median(ProtonColors.white),
-                            enable: viewModel.linkWalletNotifier.value != "Select wallet",
+                            enable: viewModel.linkWalletNotifier.value !=
+                                "Select wallet",
                             height: 48),
                       ]))
             ])),

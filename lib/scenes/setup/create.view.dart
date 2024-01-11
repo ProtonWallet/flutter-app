@@ -67,7 +67,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
           Container(
               alignment: Alignment.center,
               height: MediaQuery.of(context).size.height / 2,
-              child: Container(
+              child: SizedBox(
                 height: 57,
                 child: SvgPicture.asset(
                   'assets/images/wallet_creation/title.svg',
@@ -170,7 +170,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
             title: "Your Bitcoin Wallet is created",
-            content: "Your new wallet is created.  Make sure you back it up!",
+            content: "Your new wallet is created. Make sure you back it up!",
             children: [
               ButtonV5(
                   onPressed: () {

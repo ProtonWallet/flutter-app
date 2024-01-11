@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -61,14 +60,14 @@ class SendViewModelImpl extends SendViewModel {
     if (walletID == 0) {
       walletID = userWallets.first.id;
     }
-    userWallets.forEach((element) {
+    for (var element in userWallets) {
       if (element.id == walletID) {
         valueNotifier = ValueNotifier(element);
         valueNotifier.addListener(() {
           updateAccountList();
         });
       }
-    });
+    }
     updateAccountList();
     updateWallet();
   }
@@ -92,8 +91,8 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> updateWallet() async {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
-    var _balance = await _wallet.getBalance();
-    balance = _balance.total;
+    var walletBalance = await _wallet.getBalance();
+    balance = walletBalance.total;
     datasourceChangedStreamController.add(this);
   }
 
@@ -106,7 +105,7 @@ class SendViewModelImpl extends SendViewModel {
     if (amountTextController.text != "") {
       var receipinetAddress = recipientTextController.text;
       int amount = int.parse(amountTextController.text);
-      logger.i("Target addr: ${receipinetAddress}\nAmount: $amount");
+      logger.i("Target addr: $receipinetAddress\nAmount: $amount");
       await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, amount);
     }
   }

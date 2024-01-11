@@ -1,19 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/script_type.dart';
-import '../helper/wallet_manager.dart';
+import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 
 class AddAccountAlertDialog extends StatefulWidget {
-  int walletID;
-  String label = '';
-  String derivationPath = '';
-  ScriptType scriptType = ScriptType.Legacy;
+  final int walletID;
 
-  AddAccountAlertDialog({required this.walletID});
+  const AddAccountAlertDialog({super.key, required this.walletID});
 
   @override
-  _AddAccountAlertDialogState createState() => _AddAccountAlertDialogState();
+  AddAccountAlertDialogState createState() => AddAccountAlertDialogState();
 
   static void show(BuildContext context, int walletID) {
     showDialog(
@@ -25,17 +21,21 @@ class AddAccountAlertDialog extends StatefulWidget {
   }
 }
 
-class _AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
+class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
+  ScriptType scriptType = ScriptType.Legacy;
+  String derivationPath = '';
+  String label = '';
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Import Account'),
       content: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         DropdownButton<ScriptType>(
-          value: widget.scriptType,
+          value: scriptType,
           onChanged: (ScriptType? newValue) {
             setState(() {
-              widget.scriptType = newValue!;
+              scriptType = newValue!;
             });
           },
           items: <ScriptType>[
@@ -53,7 +53,7 @@ class _AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         TextField(
           onChanged: (value) {
             setState(() {
-              widget.derivationPath = value;
+              derivationPath = value;
             });
           },
           decoration: const InputDecoration(
@@ -63,7 +63,7 @@ class _AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         TextField(
           onChanged: (value) {
             setState(() {
-              widget.label = value;
+              label = value;
             });
           },
           decoration: const InputDecoration(
@@ -79,7 +79,8 @@ class _AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         ),
         TextButton(
           onPressed: () {
-            WalletManager.importAccount(widget.walletID, widget.label, widget.scriptType.index, widget.derivationPath);
+            WalletManager.importAccount(
+                widget.walletID, label, scriptType.index, derivationPath);
             Navigator.of(context).pop();
           },
           child: const Text('OK'),

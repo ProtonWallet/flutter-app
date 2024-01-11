@@ -1,11 +1,9 @@
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 import '../core/view.dart';
 import '../core/view.navigatior.identifiers.dart';
@@ -93,8 +91,7 @@ class NewUserView extends ViewBase<NewUserViewModel> {
                 if (_introKey.currentState!.getCurrentPage() ==
                     _introKey.currentState!.getPagesLength() - 1) {
                   viewModel.done();
-                  viewModel.coordinator
-                      .move(ViewIdentifiers.welcome, context);
+                  viewModel.coordinator.move(ViewIdentifiers.welcome, context);
                 } else {
                   _introKey.currentState?.next();
                 }
@@ -184,7 +181,7 @@ class NewUserView extends ViewBase<NewUserViewModel> {
 
   void onPageChange(int page) {
     int totalPage = _introKey.currentState!.getPagesLength();
-    bool _isLastPage = (page == totalPage - 1);
-    viewModel.updateLastPageStatus(_isLastPage);
+    bool isLastPage = (page == totalPage - 1);
+    viewModel.updateLastPageStatus(isLastPage);
   }
 }

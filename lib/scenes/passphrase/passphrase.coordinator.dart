@@ -29,7 +29,8 @@ class SetupPassPhraseCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
-    String? strMnemonic = params.containsKey("Mnemonic") ? params["Mnemonic"] : "";
+    String? strMnemonic =
+        params.containsKey("Mnemonic") ? params["Mnemonic"] : "";
     var viewModel = SetupPassPhraseViewModelImpl(this, strMnemonic!);
     widget = SetupPassPhraseView(
       viewModel,

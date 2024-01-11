@@ -6,16 +6,12 @@ import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/wallet_manager.dart';
-import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 import '../../constants/script_type.dart';
 import '../../helper/dbhelper.dart';
-import '../../models/account.model.dart';
 import '../../models/wallet.model.dart';
 
 abstract class SetupPassPhraseViewModel extends ViewModel {

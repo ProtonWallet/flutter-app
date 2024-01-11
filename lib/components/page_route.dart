@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 class CustomPageRoute extends PageRouteBuilder {
   final Widget page;
-  final bool fullscreenDialog;
-  int animationMilliseconds;
+  final int animationMilliseconds;
 
   CustomPageRoute(
       {required this.page,
-      this.fullscreenDialog = false,
+      required super.fullscreenDialog,
       this.animationMilliseconds = 0})
       : super(
           pageBuilder: (
@@ -16,7 +15,6 @@ class CustomPageRoute extends PageRouteBuilder {
             Animation<double> secondaryAnimation,
           ) =>
               page,
-          fullscreenDialog: fullscreenDialog,
           transitionDuration: Duration(milliseconds: animationMilliseconds),
           transitionsBuilder: (
             BuildContext context,

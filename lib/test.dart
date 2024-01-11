@@ -7,24 +7,28 @@ import 'helper/bdk/helper.dart';
 import 'helper/local_toast.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   TextEditingController inputControllerA = TextEditingController();
   TextEditingController inputControllerB = TextEditingController();
 
@@ -39,22 +43,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Page'),
+        title: const Text('Flutter Page'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: inputControllerA,
-              decoration: InputDecoration(labelText: 'Mnemonic'),
+              decoration: const InputDecoration(labelText: 'Mnemonic'),
             ),
             TextField(
               controller: inputControllerB,
-              decoration: InputDecoration(labelText: 'Derivation Path'),
+              decoration: const InputDecoration(labelText: 'Derivation Path'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: resultA)).then(
@@ -92,12 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           duration: 1));
                 },
                 child: Text('Address: \n$resultE\n\n')),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 calculateResults();
               },
-              child: Text('Calculate'),
+              child: const Text('Calculate'),
             ),
           ],
         ),
@@ -109,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Get input values from the controllers
     String mnemonic = inputControllerA.text;
     String path = inputControllerB.text;
-    String pathInt = inputControllerB.text + "/1";
+    String pathInt = "${inputControllerB.text}/1";
     final DerivationPath derivationPath =
         await DerivationPath.create(path: path);
 
@@ -121,18 +125,18 @@ class _MyHomePageState extends State<MyHomePage> {
     DescriptorSecretKey descriptorPrivateKey =
         await descriptorSecretKey.derive(derivationPath);
 
-    final Descriptor descriptorPrivate = await Descriptor.create(
-      descriptor: "wpkh(${descriptorPrivateKey.toString()})",
-      network: Network.Testnet,
-    );
+    // final Descriptor descriptorPrivate = await Descriptor.create(
+    //   descriptor: "wpkh(${descriptorPrivateKey.toString()})",
+    //   network: Network.Testnet,
+    // );
 
     final derivationPathInt = await DerivationPath.create(path: pathInt);
     final descriptorPrivateKeyInt =
         await descriptorSecretKey.derive(derivationPathInt);
-    final Descriptor descriptorPrivateInt = await Descriptor.create(
-      descriptor: "pkh(${descriptorPrivateKeyInt.toString()})",
-      network: Network.Testnet,
-    );
+    // final Descriptor descriptorPrivateInt = await Descriptor.create(
+    //   descriptor: "pkh(${descriptorPrivateKeyInt.toString()})",
+    //   network: Network.Testnet,
+    // );
 
     final Descriptor descriptor =
         await _lib.createDerivedDescriptor(aliceMnemonic, derivationPath);
