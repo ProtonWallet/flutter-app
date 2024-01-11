@@ -38,7 +38,6 @@ package com.example.wallet.ui.launcher
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -74,6 +73,7 @@ import me.proton.core.plan.presentation.onUpgradeResult
 import me.proton.core.report.presentation.ReportOrchestrator
 import me.proton.core.user.domain.UserManager
 import me.proton.core.usersettings.presentation.UserSettingsOrchestrator
+
 //import com.example.wallet.common.api.flatMap
 //import com.example.wallet.commonrust.api.CommonLibraryVersionChecker
 //import com.example.wallet.data.api.repositories.ItemSyncStatus
@@ -86,7 +86,15 @@ import me.proton.core.usersettings.presentation.UserSettingsOrchestrator
 //import com.example.wallet.preferences.InternalSettingsRepository
 //import com.example.wallet.preferences.UserPreferencesRepository
 import com.example.wallet.log.api.WalletLogger
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.take
+import me.proton.core.accountmanager.domain.getPrimaryAccount
+import me.proton.core.user.domain.entity.User
+import okhttp3.internal.wait
 import javax.inject.Inject
+import kotlin.reflect.KFunction1
 
 @HiltViewModel
 @Suppress("LongParameterList")
@@ -123,29 +131,26 @@ class LauncherViewModel @Inject constructor(
         }
     }
 
-    val state: StateFlow<State> = accountManager.getAccounts()
-        .map { accounts ->
-            when {
-                accounts.isEmpty() || accounts.all { it.isDisabled() } -> {
-                    clearPassUserData(accounts)
-                    State.AccountNeeded
-                }
-
-                accounts.any { it.isReady() } -> {
-                    accounts.firstOrNull { it.isReady() }?.let {
-                        WalletLogger.i(TAG, "SessionID=${it.sessionId?.id}")
-                    }
-                    State.PrimaryExist
-                }
-                accounts.any { it.isStepNeeded() } -> State.StepNeeded
-                else -> State.Processing
+    val state: StateFlow<State> = accountManager.getAccounts().map { accounts ->
+        when {
+            accounts.isEmpty() || accounts.all { it.isDisabled() } -> {
+                clearPassUserData(accounts)
+                State.AccountNeeded
             }
+
+            accounts.any { it.isReady() } -> {
+                accounts.firstOrNull { it.isReady() }?.let {
+                    WalletLogger.i(TAG, "SessionID=${it.sessionId?.id}")
+                }
+                State.PrimaryExist
+            }
+
+            accounts.any { it.isStepNeeded() } -> State.StepNeeded
+            else -> State.Processing
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = State.Processing
-        )
+    }.stateIn(
+        scope = viewModelScope, started = SharingStarted.Lazily, initialValue = State.Processing
+    )
 
     fun register(context: ComponentActivity) {
         authOrchestrator.register(context as ActivityResultCaller)
@@ -181,8 +186,7 @@ class LauncherViewModel @Inject constructor(
         when (state) {
 //            State.AccountNeeded -> userPlanWorkerLauncher.cancel()
 //            State.PrimaryExist -> userPlanWorkerLauncher.start()
-            State.Processing,
-            State.StepNeeded -> {
+            State.Processing, State.StepNeeded -> {
                 // no-op
             }
 
@@ -198,30 +202,79 @@ class LauncherViewModel @Inject constructor(
         )
     }
 
-    fun signIn(callback: () -> (Unit), userId: UserId? = null) = viewModelScope.launch {
+    suspend fun getUserInfo(): MutableMap<String, String> {
+        val result: MutableMap<String, String> = mutableMapOf()
+        accountManager.getPrimaryAccount().first()?.let {
+            val user: User = userManager.observeUser(it.userId).first()!!
+            accountManager.getSessions().first().let { sessions ->
+                for (session in sessions) {
+                    result["userId"] = user.userId.id
+                    result["userMail"] = user.email ?: ""
+                    result["userName"] = user.name ?: ""
+                    result["userDisplayName"] = user.displayName ?: ""
+                    // result["userKeys"] = user?.keys
+                    result["sessionId"] = session.sessionId.id
+                    result["accessToken"] = session.accessToken
+                    result["refreshToken"] = session.refreshToken
+                }
+            }
+        }
+        return result
+    }
+
+    fun signIn(
+        context: ComponentActivity,
+        callback: KFunction1<MutableMap<String, String>, Unit>,
+        userId: UserId? = null
+    ) = viewModelScope.launch {
         val account = userId?.let { getAccountOrNull(it) }
         authOrchestrator.startLoginWorkflow(requiredAccountType, username = account?.username)
         authOrchestrator.setOnLoginResult {
             if (it != null) {
-                it.userId
-                it.nextStep
+                if (it.nextStep.name == "None") {
+                    viewModelScope.launch {
+                        callback(getUserInfo())
+                    }
+                }
             }
-            callback()
+        }
+
+        authOrchestrator.setOnTwoPassModeResult {
+            if (it != null) {
+                viewModelScope.launch {
+                    callback(getUserInfo())
+                }
+            } else {
+                context.finish()
+            }
+        }
+        authOrchestrator.setOnSecondFactorResult { result ->
+            if (result != null) {
+                viewModelScope.launch {
+                    callback(getUserInfo())
+                }
+            } else {
+                context.finish()
+            }
         }
     }
 
-    fun signUp(callback: () -> (Unit)) = viewModelScope.launch {
-        authOrchestrator.startSignupWorkflow(
-            creatableAccountType = requiredAccountType
-        )
-        authOrchestrator.setOnSignUpResult {
-            if (it != null) {
-                it.userId
-                it.username
+
+    fun signUp(context: ComponentActivity, callback: KFunction1<MutableMap<String, String>, Unit>) =
+        viewModelScope.launch {
+            authOrchestrator.startSignupWorkflow(
+                creatableAccountType = requiredAccountType
+            )
+            authOrchestrator.setOnSignUpResult {
+                if (it != null) {
+                    viewModelScope.launch {
+                        callback(getUserInfo())
+                    }
+                } else {
+                    context.finish()
+                }
             }
-            callback()
         }
-    }
 
     fun signOut(userId: UserId? = null) = viewModelScope.launch {
         accountManager.disableAccount(requireNotNull(userId ?: getPrimaryUserIdOrNull()))
@@ -261,20 +314,17 @@ class LauncherViewModel @Inject constructor(
 
     fun upgrade() = viewModelScope.launch {
         getPrimaryUserIdOrNull()?.let {
-            plansOrchestrator
-                .onUpgradeResult { result ->
-                    if (result != null) {
-                        viewModelScope.launch {
-                            runCatching {
+            plansOrchestrator.onUpgradeResult { result ->
+                if (result != null) {
+                    viewModelScope.launch {
+                        runCatching {
 //                                refreshPlan()
-                            }
-                                .onFailure { e ->
-                                    WalletLogger.w(TAG, e, "Failed refreshing plan")
-                                }
+                        }.onFailure { e ->
+                            WalletLogger.w(TAG, e, "Failed refreshing plan")
                         }
                     }
                 }
-                .startUpgradeWorkflow(it)
+            }.startUpgradeWorkflow(it)
         }
     }
 
@@ -294,8 +344,7 @@ class LauncherViewModel @Inject constructor(
             WalletLogger.i(TAG, "Clearing user data")
             runCatching {
 //                clearUserData(account.userId)
-            }
-                .onSuccess { WalletLogger.i(TAG, "Cleared user data") }
+            }.onSuccess { WalletLogger.i(TAG, "Cleared user data") }
                 .onFailure { WalletLogger.i(TAG, it, "Error clearing user data") }
         }
 

@@ -64,22 +64,6 @@ class AccountDaoImpl extends AccountDao {
   }
 
   @override
-  Future<void> initTable() async {
-    await db.execute('''
-        CREATE TABLE IF NOT EXISTS $tableName (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          walletID INTEGER,
-          derivationPath TEXT,
-          label BLOB,
-          scriptType INTEGER,
-          createTime INTEGER,
-          modifyTime INTEGER,
-          UNIQUE (walletID, derivationPath)
-        )
-    ''');
-  }
-
-  @override
   Future<int> getAccountCount(int walletID) async {
     List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'walletID = ?', whereArgs: [walletID]);

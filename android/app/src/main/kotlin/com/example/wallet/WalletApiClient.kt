@@ -24,10 +24,14 @@ import java.util.Locale
 import javax.inject.Inject
 
 open class WalletApiClient @Inject constructor() : ApiClient {
-    protected open val appName = "android-wallet"
-    protected open val productName = "ProtonWallet"
-    protected open val versionName = "1.0.0"
-    protected open val versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
+    //    protected open val appName = "android-wallet"
+//    protected open val productName = "ProtonWallet"
+//    protected open val versionName = "1.0.0"
+//    protected open val versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
+    protected open val appName = "web-wallet"
+    protected open val productName = "WebWallet"
+    protected open val versionName = "0.0.0" // imitating ProtonMail version
+    protected open val versionSuffix = if (BuildConfig.DEBUG) "-dev" else "-dev"
 
     /**
      * Tells the lib if DoH should be used in a given moment (based e.g. on user setting or whether

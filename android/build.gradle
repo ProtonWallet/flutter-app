@@ -4,12 +4,16 @@ buildscript {
         google()
         mavenCentral()
     }
-
+//    configurations {
+//        cleanedAnnotations
+//        compile.exclude group: 'org.jetbrains' , module:'annotations'
+//    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.46.1'
         classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
     }
 }
 
@@ -18,6 +22,22 @@ allprojects {
         google()
         mavenCentral()
     }
+    // https://stackoverflow.com/questions/76108428/how-do-i-fix-namespace-not-specified-error-in-android-studio
+    // fixed Namespace not specified issue after gradle upgrade to 8.1.3
+    // This code is where all the magic happens and fixes the error.
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android')) {
+                project.android {
+                    if (namespace == null) {
+                        namespace project.group
+                    }
+                }
+            }
+        }
+    }
+    // This code is where all the magic happens and fixes the error.
+
 }
 
 rootProject.buildDir = '../build'
