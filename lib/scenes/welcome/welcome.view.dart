@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/components/backgroud.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -13,17 +17,38 @@ import 'package:wallet/scenes/welcome/signup.button.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 import 'package:wallet/scenes/welcome/welcome.image.dart';
 
+import '../../helper/user.session.dart';
+
 class WelcomeView extends ViewBase<WelcomeViewModel> {
   WelcomeView(WelcomeViewModel viewModel)
       : super(viewModel, const Key("WelcomeView"));
 
   static const _appChannel = MethodChannel('com.example.wallet/app.view');
+
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'flutter.navigation.to.home':
         String data = call.arguments;
         logger.d("Data received from Swift: $data");
-        viewModel.coordinator.move(ViewIdentifiers.home, context);
+        Map<String, dynamic> userInfo = json.decode(data);
+        UserSessionProvider userSessionProvider =
+            Provider.of<UserSessionProvider>(context, listen: false);
+        if (userInfo.containsKey("sessionId") && userInfo["sessionId"] != "") {
+          userSessionProvider.login(
+              userInfo["userId"] ?? "",
+              userInfo["userMail"] ?? "",
+              userInfo["userName"] ?? "",
+              userInfo["userDisplayName"] ?? "",
+              userInfo["sessionId"] ?? "",
+              userInfo["accessToken"] ?? "",
+              userInfo["refreshToken"] ?? "");
+          viewModel.coordinator.move(ViewIdentifiers.home, context);
+        } else {
+          LocalToast.showToast(context, "Login failed!",
+              isWarning: true,
+              icon: const Icon(Icons.warning, color: Colors.white),
+              duration: 2);
+        }
         break;
       default:
         throw PlatformException(

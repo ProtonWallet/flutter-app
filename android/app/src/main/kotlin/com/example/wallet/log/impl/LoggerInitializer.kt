@@ -7,12 +7,12 @@ import android.os.Environment
 import android.os.LocaleList
 import android.os.StatFs
 import androidx.startup.Initializer
-import com.example.wallet.BuildConfig
 import com.example.wallet.log.api.WalletLogger
 import me.proton.core.util.android.sentry.TimberLogger
 import me.proton.core.util.kotlin.CoreLogger
 import timber.log.Timber
 import java.text.DecimalFormat
+import com.example.wallet.BuildConfig
 
 class LoggerInitializer : Initializer<Unit> {
 

@@ -10,6 +10,8 @@ import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../helper/user.session.dart';
+
 class AppView extends ViewBase<AppViewModel> {
   AppView(AppViewModel viewModel, this.homeView)
       : super(viewModel, const Key("AppView"));
@@ -21,6 +23,9 @@ class AppView extends ViewBase<AppViewModel> {
       BuildContext context, AppViewModel viewModel, ViewSize viewSize) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<UserSessionProvider>(
+          create: (context) => UserSessionProvider(),
+        ),
         ChangeNotifierProvider<ThemeProvider>(
             create: (context) => ThemeProvider()),
         ChangeNotifierProvider<LocaleProvider>(
