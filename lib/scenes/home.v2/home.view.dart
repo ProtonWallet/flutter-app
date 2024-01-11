@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:provider/provider.dart';
 import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
@@ -15,6 +15,7 @@ import 'package:wallet/theme/theme.font.dart';
 import '../../components/button.v5.dart';
 import '../../components/custom.newsbox.dart';
 import '../../components/tag.text.dart';
+import '../../helper/user.session.dart';
 
 class HomeView extends ViewBase<HomeViewModel> {
   HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
@@ -68,7 +69,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                        Text("Welcome Proton 👋",
+                        Text(
+                            "Welcome ${Provider.of<UserSessionProvider>(context).userSession.userDisplayName} 👋",
                             style: FontManager.body1Bold(ProtonColors.white)),
                         const SizedBox(height: 10),
                         Padding(
