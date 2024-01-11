@@ -48,27 +48,6 @@ class WalletDaoImpl extends WalletDao {
   }
 
   @override
-  Future<void> initTable() async {
-    await db.execute('''
-        CREATE TABLE IF NOT EXISTS $tableName (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          userID INTEGER,
-          name TEXT,
-          mnemonic BLOB,
-          passphrase INTEGER,
-          publicKey BLOB,
-          imported INTEGER,
-          priority INTEGER,
-          status INTEGER,
-          type INTEGER,
-          createTime INTEGER,
-          modifyTime INTEGER,
-          localDBName TEXT
-        )
-    ''');
-  }
-
-  @override
   Future<int> counts() async {
     List<Map<String, dynamic>> maps = await db.query(tableName);
     return maps.length;

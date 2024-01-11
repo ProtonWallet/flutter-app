@@ -29,6 +29,8 @@ import androidx.fragment.app.FragmentActivity
 import com.example.wallet.ui.launcher.LauncherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import me.proton.core.notification.presentation.deeplink.DeeplinkManager
 import me.proton.core.notification.presentation.deeplink.onActivityCreate
 import javax.inject.Inject
@@ -60,9 +62,9 @@ class AuthActivity : FragmentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        fun callback(){
+        fun callback(result: MutableMap<String, String>){
             MethodChannel(MainActivity.flutterEngineInstance?.dartExecutor!!.binaryMessenger, "com.example.wallet/app.view")
-                .invokeMethod("flutter.navigation.to.home", "Hello From Android")
+                .invokeMethod("flutter.navigation.to.home", Json.encodeToString(result))
             this.finish()
         }
 
@@ -70,9 +72,9 @@ class AuthActivity : FragmentActivity() {
         val method = intent.getStringExtra("method")
         launcherViewModel.register(this)
         if ( method.equals("signin") ){
-            launcherViewModel.signIn(::callback)
+            launcherViewModel.signIn(this, ::callback)
         } else {
-            launcherViewModel.signUp(::callback)
+            launcherViewModel.signUp(this, ::callback)
         }
 
         // launcherViewModel.signUp()
@@ -125,6 +127,11 @@ class AuthActivity : FragmentActivity() {
 //        }
 //        setSecureMode(setting)
 //    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        this.finish()
+    }
 
     companion object {
         private const val TAG = "MainActivity"

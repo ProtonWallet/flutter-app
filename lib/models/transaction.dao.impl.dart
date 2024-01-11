@@ -66,20 +66,6 @@ class TransactionDaoImpl extends TransactionDao {
   }
 
   @override
-  Future<void> initTable() async {
-    await db.execute('''
-        CREATE TABLE IF NOT EXISTS $tableName (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          walletID INTEGER,
-          label BLOB,
-          externalTransactionID BLOB,
-          createTime INTEGER,
-          modifyTime INTEGER
-        )
-    ''');
-  }
-
-  @override
   Future<void> insertOrUpdate(
       int walletID, Uint8List externalTransactionID, String label) async {
     TransactionModel? transactionModel =
