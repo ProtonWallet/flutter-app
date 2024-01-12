@@ -234,12 +234,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          TagText(
+                                          const TagText(
                                             text: "OnChain",
                                             radius: 10.0,
-                                            background: const Color.fromARGB(
+                                            background: Color.fromARGB(
                                                 255, 200, 248, 255),
-                                            textColor: const Color.fromARGB(
+                                            textColor: Color.fromARGB(
                                                 255, 18, 134, 159),
                                           ),
                                           const SizedBox(

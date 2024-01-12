@@ -70,7 +70,7 @@ dependencies:
   crypto: ^3.0.3
   url_launcher: ^6.2.2
   #Simple, fast generation of RFC4122 UUIDs.
-  uuid: ^4.3.2
+  uuid: ^4.2.2
   #Contains utility functions and classes in the style of dart:collection to make working with collections easier.
   collection: ^1.18.0
 
