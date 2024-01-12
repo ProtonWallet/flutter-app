@@ -1,6 +1,7 @@
 import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
@@ -58,28 +59,80 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
       bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: const Icon(Icons.account_balance_wallet),
+              icon: SvgPicture.asset(
+                'assets/images/icon/ic-wallet.svg',
+                width: 24,
+                height: 24,
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/images/icon/ic-wallet.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFF6D4AFF),
+                  BlendMode.srcIn,
+                ),
+              ),
               label: S.of(context).tab_home,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.change_history),
+              icon: SvgPicture.asset(
+                'assets/images/icon/ic-list-bullets.svg',
+                width: 24,
+                height: 24,
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/images/icon/ic-list-bullets.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFF6D4AFF),
+                  BlendMode.srcIn,
+                ),
+              ),
               label: S.of(context).tab_history,
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.account_balance_wallet),
-            //   label: 'send',
-            // ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.account_balance),
-            //   label: 'secruty',
-            // ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/images/icon/ic-money-bills.svg',
+                width: 24,
+                height: 24,
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/images/icon/ic-money-bills.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFF6D4AFF),
+                  BlendMode.srcIn,
+                ),
+              ),
+              label: 'Buy Bitcoin',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/images/icon/ic-arrow-right-arrow-left.svg',
+                width: 24,
+                height: 24,
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/images/icon/ic-arrow-right-arrow-left.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFF6D4AFF),
+                  BlendMode.srcIn,
+                ),
+              ),
+              label: 'Transfer',
+            ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.account_circle),
               label: S.of(context).tab_settings,
             ),
           ],
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+          selectedItemColor: const Color(0xFF6D4AFF),
+          unselectedItemColor: const Color(0xFF0C0C14),
           backgroundColor: Theme.of(context).colorScheme.background,
           currentIndex: viewModel.selectedPage,
           onTap: (index) {

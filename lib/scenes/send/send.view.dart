@@ -160,11 +160,11 @@ class SendView extends ViewBase<SendViewModel> {
                           style: FontManager.captionSemiBold(
                               Theme.of(context).colorScheme.primary),
                         ),
-                        TagText(
+                        const TagText(
                           text: "Moderate",
                           radius: 10.0,
-                          background: const Color.fromARGB(255, 237, 252, 221),
-                          textColor: const Color.fromARGB(255, 40, 116, 4),
+                          background: Color.fromARGB(255, 237, 252, 221),
+                          textColor: Color.fromARGB(255, 40, 116, 4),
                         ),
                       ]),
                 ),
