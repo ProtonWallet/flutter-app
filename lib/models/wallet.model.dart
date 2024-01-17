@@ -1,14 +1,14 @@
 import 'dart:typed_data';
 
 class WalletModel {
-  //TODO:: The constant name 'TYPE_ON_CHAIN' isn't a lowerCamelCase identifier. fix this either change to lowercase or find other ways to save static const
-  static const int TYPE_ON_CHAIN = 1;
-  static const int TYPE_LIGHTNING = 2;
-  static const int STATUS_ACTIVE = 1;
-  static const int STATUS_DISABLED = 2;
-  static const int CREATE_BY_PROTON = 0;
-  static const int IMPORTED_BY_USER = 1;
-  static const int PRIMARY = 1;
+  //TODO:: The constant name 'typeOnChain' isn't a lowerCamelCase identifier. fix this either change to lowercase or find other ways to save static const
+  static const int typeOnChain = 1;
+  static const int typeLightning = 2;
+  static const int statusActive = 1;
+  static const int statusDisabled = 2;
+  static const int createByProton = 0;
+  static const int importByUser = 1;
+  static const int primary = 1;
 
   int? id;
   int userID;

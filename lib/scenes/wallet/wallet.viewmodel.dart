@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
-import 'package:wallet/models/wallet.dao.impl.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import '../../helper/dbhelper.dart';
-import '../../models/account.dao.impl.dart';
 import '../../models/account.model.dart';
 import '../../models/wallet.model.dart';
 import '../debug/bdk.test.dart';
@@ -56,11 +53,8 @@ class WalletViewModelImpl extends WalletViewModel {
   @override
   Future<void> loadData() async {
     blockchain ??= await _lib.initializeBlockchain(false);
-    Database db = await DBHelper.database;
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(db);
-    walletModel = await walletDaoImpl.findById(walletID);
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-    accounts = await accountDaoImpl.findAllByWalletID(walletID);
+    walletModel = await DBHelper.walletDao!.findById(walletID);
+    accounts = await DBHelper.accountDao!.findAllByWalletID(walletID);
     accountModel = accounts.first;
     wallet = await WalletManager.loadWalletWithID(walletID, accountModel.id!);
     valueNotifier = ValueNotifier(accountModel);

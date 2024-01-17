@@ -51,7 +51,7 @@ class TextFieldTextState extends State<TextChoices> {
                 alignment: WrapAlignment.center,
                 children: List.generate(
                   widget.choices.length,
-                  (index) => GestureDetector(
+                      (index) => GestureDetector(
                       onTap: () {
                         setState(() {
                           _selectedValue = widget.choices[index];
@@ -62,27 +62,27 @@ class TextFieldTextState extends State<TextChoices> {
                       },
                       child: _selectedValue == widget.choices[index]
                           ? Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: ProtonColors.iconWeak,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.white))))
+                          width: 60,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: ProtonColors.iconWeak,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                              child: Text(widget.choices[index],
+                                  style: FontManager.body1Regular(
+                                      ProtonColors.white))))
                           : Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.textHint))))),
+                          width: 60,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                              child: Text(widget.choices[index],
+                                  style: FontManager.body1Regular(
+                                      ProtonColors.textHint))))),
                 )),
           ],
         ));

@@ -4,10 +4,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-
 import '../../helper/dbhelper.dart';
-import '../../models/account.dao.impl.dart';
-import '../../models/wallet.dao.impl.dart';
 import '../../helper/logger.dart';
 
 abstract class SendViewModel extends ViewModel {
@@ -51,8 +48,7 @@ class SendViewModelImpl extends SendViewModel {
     recipientTextController.text = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
     datasourceChangedStreamController.add(this);
     _blockchain = await _lib.initializeBlockchain(false);
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
-    await walletDaoImpl.findAll().then((results) async {
+    await DBHelper.walletDao!.findAll().then((results) async {
       if (results.length != userWallets.length) {
         userWallets = results.take(5).toList();
       }
@@ -73,9 +69,8 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> updateAccountList() async {
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(await DBHelper.database);
     userAccounts =
-        await accountDaoImpl.findAllByWalletID(valueNotifier.value.id);
+        await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
     accountID = userAccounts.first.id;
     valueNotifierForAccount = ValueNotifier(userAccounts.first);
     valueNotifierForAccount.addListener(() {

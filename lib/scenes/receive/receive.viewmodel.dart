@@ -3,11 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-
 import '../../helper/dbhelper.dart';
 import '../../helper/wallet_manager.dart';
-import '../../models/account.dao.impl.dart';
-import '../../models/wallet.dao.impl.dart';
 
 abstract class ReceiveViewModel extends ViewModel {
   ReceiveViewModel(super.coordinator, this.walletID, this.accountID);
@@ -41,8 +38,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> loadData() async {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
-    await walletDaoImpl.findAll().then((results) async {
+    await DBHelper.walletDao!.findAll().then((results) async {
       if (results.length != userWallets.length) {
         userWallets = results.take(5).toList();
       }
@@ -63,9 +59,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   Future<void> updateAccountList() async {
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(await DBHelper.database);
     userAccounts =
-        await accountDaoImpl.findAllByWalletID(valueNotifier.value.id);
+        await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
     valueNotifierForAccount = ValueNotifier(userAccounts.first);
     valueNotifierForAccount.addListener(() {
       getAddress();

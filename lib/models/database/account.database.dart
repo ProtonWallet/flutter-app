@@ -3,9 +3,9 @@ import 'package:wallet/models/database/base.database.dart';
 import 'package:wallet/models/database/database.migration.dart';
 
 abstract class AccountDatabase extends BaseDatabase {
-  static DatabaseMigration MIGRATION_0 = DatabaseMigration((Database db) async {
+  static DatabaseMigration migration_0 = DatabaseMigration((Database db) async {
     await db.execute('''
-        CREATE TABLE IF NOT EXISTS account (
+        CREATE TABLE IF NOT EXISTS `account` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           walletID INTEGER,
           derivationPath TEXT,
@@ -17,4 +17,10 @@ abstract class AccountDatabase extends BaseDatabase {
         )
     ''');
   });
+
+  static void Function(Database db) dropTables = (Database db) {
+    db.execute('''
+      DROP TABLE IF EXISTS `account`
+    ''');
+  };
 }
