@@ -11,6 +11,8 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/welcome/signup.button.dart';
@@ -24,6 +26,54 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       : super(viewModel, const Key("WelcomeView"));
 
   static const _appChannel = MethodChannel('com.example.wallet/app.view');
+
+  Future<void> loginResume() async {
+    // TODO:: test this logic
+    if (await SecureStorageHelper.get("sessionId") != "") {
+      if (context.mounted) {
+        UserSessionProvider userSessionProvider =
+            Provider.of<UserSessionProvider>(context, listen: false);
+        userSessionProvider.login(
+            await SecureStorageHelper.get("userId"),
+            await SecureStorageHelper.get("userMail"),
+            await SecureStorageHelper.get("userName"),
+            await SecureStorageHelper.get("userDisplayName"),
+            await SecureStorageHelper.get("sessionId"),
+            await SecureStorageHelper.get("accessToken"),
+            await SecureStorageHelper.get("refreshToken"),
+            await SecureStorageHelper.get("userKeyID"));
+        APIHelper.init(
+            userSessionProvider.userSession.accessToken,
+            userSessionProvider.userSession.sessionId,
+            userSessionProvider.userSession.userKeyID);
+        if (context.mounted) {
+          viewModel.coordinator.move(ViewIdentifiers.home, context);
+        }
+      }
+    }
+  }
+
+  void mockUserSession() {
+    // TODO:: remove test use code
+    UserSessionProvider userSessionProvider =
+        Provider.of<UserSessionProvider>(context, listen: false);
+    Map userInfo = {};
+    userSessionProvider.login(
+        userInfo["userId"] ??
+            "H4WhXT8Ga9kYdz4XNY36UiTzvmuLJbkSD4N0s3vuiIm8PoqIPLYNk8MxdCm18PSyEz8YCL6GUDVc4-potp8DKQ==",
+        userInfo["userMail"] ?? "willwallet1@proton.black",
+        userInfo["userName"] ?? "willwallet1",
+        userInfo["userDisplayName"] ?? "willwallet1",
+        userInfo["sessionId"] ?? "ekg56qctbmjmrjbf4i5kuomwdrju4x6n",
+        userInfo["accessToken"] ?? "4ghy7gxgjy623nu3ya5akljhgck3wejb",
+        userInfo["refreshToken"] ?? "gpaz4wdteci7butrhfw5i3nnn73kcwv5",
+        userInfo["userKeyID"] ??
+            "igZ0nMBnUFMrgrWLGZbJql93OcOR0X9VfB01ODV6smpI4zTayqtVKJMLtBNytm074SLG8PH7wu3jfQkJf4IIig==");
+    APIHelper.init(
+        userSessionProvider.userSession.accessToken,
+        userSessionProvider.userSession.sessionId,
+        userSessionProvider.userSession.userKeyID);
+  }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
@@ -41,7 +91,12 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
               userInfo["userDisplayName"] ?? "",
               userInfo["sessionId"] ?? "",
               userInfo["accessToken"] ?? "",
-              userInfo["refreshToken"] ?? "");
+              userInfo["refreshToken"] ?? "",
+              userInfo["userKeyID"] ?? "");
+          APIHelper.init(
+              userSessionProvider.userSession.accessToken,
+              userSessionProvider.userSession.sessionId,
+              userSessionProvider.userSession.userKeyID);
           viewModel.coordinator.move(ViewIdentifiers.home, context);
         } else {
           LocalToast.showToast(context, "Login failed!",
@@ -95,6 +150,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                       width: 450,
                       child: ElevatedButton(
                         onPressed: () {
+                          mockUserSession();
                           viewModel.coordinator
                               .move(ViewIdentifiers.home, context);
                         },
@@ -153,6 +209,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
               SizedBoxes.box8,
               CupertinoButton(
                 onPressed: () {
+                  mockUserSession();
                   viewModel.coordinator.move(ViewIdentifiers.home, context);
                 },
                 color: ProtonColors.interactionNorm,

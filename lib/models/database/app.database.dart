@@ -6,55 +6,95 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/models/database/transaction.database.dart';
 import 'package:wallet/models/database/wallet.database.dart';
 import 'package:wallet/models/database/account.database.dart';
+import 'package:wallet/models/transaction.dao.impl.dart';
 
 import '../../helper/logger.dart';
+import '../account.dao.impl.dart';
+import '../wallet.dao.impl.dart';
 import 'migration.dart';
 import 'migration.container.dart';
 
 class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
-  String DB_FOLDER = "databases";
-  String DB_NAME = "proton_wallet_db";
-  int VERSION = 3;
+  String dbFolder = "databases";
+  String dbName = "proton_wallet_db";
+  int version = 3;
   late Database db;
   late MigrationContainer migrationContainer;
 
-  AppDatabase() {
-    migrationContainer = MigrationContainer();
-  }
+  late AccountDao accountDao;
+  late WalletDao walletDao;
+  late TransactionDao transactionDao;
 
   List<Migration> migrations = [
     Migration(1, 2, (Database db) async {
-      WalletDatabase.MIGRATION_0.migrate(db);
-      AccountDatabase.MIGRATION_0.migrate(db);
+      WalletDatabase.migration_0.migrate(db);
+      AccountDatabase.migration_0.migrate(db);
     }),
     Migration(2, 3, (Database db) async {
-      TransactionDatabase.MIGRATION_0.migrate(db);
+      TransactionDatabase.migration_0.migrate(db);
     }),
   ];
 
-  Future<void> buildDatabase({int oldVersion = 1}) async {
+  AppDatabase() {
+    migrationContainer = MigrationContainer();
+    migrationContainer.addMigrations(migrations);
+  }
+
+  void reset() {
+    dropAllTables();
+    buildDatabase();
+  }
+
+  void dropAllTables() {
+    WalletDatabase.dropTables(db);
+    AccountDatabase.dropTables(db);
+    TransactionDatabase.dropTables(db);
+  }
+
+  void initDAO() {
+    accountDao = AccountDaoImpl(db);
+    walletDao = WalletDaoImpl(db);
+    transactionDao = TransactionDaoImpl(db);
+  }
+
+  Future<void> init() async {
+    await initDB();
+    initDAO();
+  }
+
+  Future<void> initDB() async {
+    try {
+      if (db.isOpen) {
+        return;
+      }
+    } catch (e) {
+      // db is not initialed;
+    }
     late String dbPath;
     if (Platform.isWindows) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
       final Directory appDocumentsDir =
           await getApplicationDocumentsDirectory();
-      dbPath = join(appDocumentsDir.path, DB_FOLDER, DB_NAME);
+      dbPath = join(appDocumentsDir.path, dbFolder, dbName);
       db = await databaseFactory.openDatabase(
         dbPath,
       );
     } else {
       var path = await getDatabasesPath();
-      dbPath = join(path, DB_FOLDER, DB_NAME);
+      dbPath = join(path, dbFolder, dbName);
       db = await openDatabase(
         dbPath,
       );
     }
-    migrationContainer.addMigrations(migrations);
+  }
+
+  Future<void> buildDatabase({int oldVersion = 1}) async {
+    await init();
     List<Migration>? upgradeMigrations =
-        migrationContainer.findMigrationPath(oldVersion, VERSION);
-    logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$VERSION");
+        migrationContainer.findMigrationPath(oldVersion, version);
+    logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");
     if (upgradeMigrations != null) {
       for (Migration migration in upgradeMigrations) {
         migration.migrate(db);

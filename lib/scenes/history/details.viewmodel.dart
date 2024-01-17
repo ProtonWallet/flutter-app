@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
@@ -43,7 +42,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   late Wallet _wallet;
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();
-  late TransactionDaoImpl transactionDaoImpl;
 
   @override
   void dispose() {
@@ -57,9 +55,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode.addListener(() {
       userFinishMemo();
     });
-    transactionDaoImpl = TransactionDaoImpl(await DBHelper.database);
     TransactionModel? transactionModel =
-        await transactionDaoImpl.findByExternalTransactionID(utf8.encode(txid));
+        await DBHelper.transactionDao!.findByExternalTransactionID(utf8.encode(txid));
     userLabel =
         transactionModel != null ? utf8.decode(transactionModel.label) : "";
     memoController.text = userLabel;
@@ -96,7 +93,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       if (userLabel != memoController.text) {
         userLabel = memoController.text;
         // user finish editing memo, save to local table for data persist
-        transactionDaoImpl.insertOrUpdate(
+        DBHelper.transactionDao!.insertOrUpdate(
             walletID, utf8.encode(txid), userLabel);
       }
     }

@@ -84,7 +84,7 @@ class HomeViewModelImpl extends HomeViewModel {
     udpateSyncStatus(false);
     // Use it later
     // LocalNotification.show(
-    //     LocalNotification.SYNC_WALLET,
+    //     LocalNotification.syncWallet,
     //     "Local Notification",
     //     "Sync wallet success!\nbalance: ${balance.total}"
     // );
