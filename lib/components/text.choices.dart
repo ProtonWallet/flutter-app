@@ -6,7 +6,7 @@ import '../theme/theme.font.dart';
 class TextChoices extends StatefulWidget {
   final List<String> choices;
   final TextEditingController? controller;
-  String selectedValue;
+  final String selectedValue;
 
   TextChoices({
     super.key,
@@ -24,6 +24,14 @@ class TextChoices extends StatefulWidget {
 }
 
 class TextFieldTextState extends State<TextChoices> {
+  String _selectedValue = "";
+
+  @override
+  void initState() {
+    _selectedValue = widget.selectedValue;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,38 +51,38 @@ class TextFieldTextState extends State<TextChoices> {
                 alignment: WrapAlignment.center,
                 children: List.generate(
                   widget.choices.length,
-                  (index) => GestureDetector(
+                      (index) => GestureDetector(
                       onTap: () {
                         setState(() {
-                          widget.selectedValue = widget.choices[index];
+                          _selectedValue = widget.choices[index];
                           if (widget.controller != null) {
-                            widget.controller!.text = widget.selectedValue;
+                            widget.controller!.text = _selectedValue;
                           }
                         });
                       },
-                      child: widget.selectedValue == widget.choices[index]
+                      child: _selectedValue == widget.choices[index]
                           ? Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: ProtonColors.iconWeak,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.white))))
+                          width: 60,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: ProtonColors.iconWeak,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                              child: Text(widget.choices[index],
+                                  style: FontManager.body1Regular(
+                                      ProtonColors.white))))
                           : Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.textHint))))),
+                          width: 60,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                              child: Text(widget.choices[index],
+                                  style: FontManager.body1Regular(
+                                      ProtonColors.textHint))))),
                 )),
           ],
         ));

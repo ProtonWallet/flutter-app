@@ -4,8 +4,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:wallet/helper/logger.dart';
 
 class LocalNotification {
-  static const int FCM_PUSH = 0;
-  static const int SYNC_WALLET = 1;
+  static const int fcmPush = 0;
+  static const int syncWallet = 1;
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   static final StreamController<int?> selectNotificationStream =

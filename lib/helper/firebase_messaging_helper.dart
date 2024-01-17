@@ -57,7 +57,7 @@ class FirebaseMessagingHelper {
           // receive message when app is open, use localNotification to inform user
           // can use local notification if needed
           LocalNotification.show(
-              LocalNotification.FCM_PUSH,
+              LocalNotification.fcmPush,
               message.notification?.title ?? "",
               message.notification?.body ?? "");
         });

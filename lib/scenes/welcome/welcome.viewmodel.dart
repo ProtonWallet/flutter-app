@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
+import 'package:wallet/scenes/welcome/welcome.view.dart';
 
 import '../../helper/local_auth.dart';
+import '../../helper/secure_storage_helper.dart';
 import '../core/view.navigatior.identifiers.dart';
 
 abstract class WelcomeViewModel extends ViewModel {
@@ -17,6 +20,7 @@ abstract class WelcomeViewModel extends ViewModel {
 class WelcomeViewModelImpl extends WelcomeViewModel {
   WelcomeViewModelImpl(super.coordinator);
 
+  bool hadLocallogin = false;
   final datasourceChangedStreamController =
       StreamController<WelcomeViewModel>.broadcast();
 
@@ -26,10 +30,19 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   @override
-  void localLogin(BuildContext context) {
-    LocalAuth.authenticate("Please authenticate to login").then((auth) => {
-          if (auth) {coordinator.move(ViewIdentifiers.home, context)}
+  Future<void> localLogin(BuildContext context) async {
+    if (!hadLocallogin) {
+      hadLocallogin = true;
+      if (await SecureStorageHelper.get("sessionId") != "") {
+        LocalAuth.authenticate("Authenticate to login").then((auth) {
+          if (auth) {
+            ((coordinator as WelcomeCoordinator).widget as WelcomeView)
+                .loginResume();
+            coordinator.move(ViewIdentifiers.home, context);
+          }
         });
+      }
+    }
   }
 
   @override

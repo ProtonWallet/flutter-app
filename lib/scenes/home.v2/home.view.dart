@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -24,7 +27,7 @@ class HomeView extends ViewBase<HomeViewModel> {
   Widget buildWithViewModel(
       BuildContext context, HomeViewModel viewModel, ViewSize viewSize) {
     if (viewModel.hasWallet == false) {
-      viewModel.setOnBoard(context);
+      // viewModel.setOnBoard(context);
     }
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +73,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                         Text(
-                            "Welcome ${Provider.of<UserSessionProvider>(context).userSession.userDisplayName} 👋",
+                            "Welcome ${Provider.of<UserSessionProvider>(context).userSession.userName} 👋",
                             style: FontManager.body1Bold(ProtonColors.white)),
                         const SizedBox(height: 10),
                         Padding(
@@ -234,12 +237,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          TagText(
+                                          const TagText(
                                             text: "OnChain",
                                             radius: 10.0,
-                                            background: const Color.fromARGB(
+                                            background: Color.fromARGB(
                                                 255, 200, 248, 255),
-                                            textColor: const Color.fromARGB(
+                                            textColor: Color.fromARGB(
                                                 255, 18, 134, 159),
                                           ),
                                           const SizedBox(
@@ -399,6 +402,76 @@ class HomeView extends ViewBase<HomeViewModel> {
                   Theme.of(context).colorScheme.primary),
               height: 48),
           const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () {
+                DBHelper.reset();
+              },
+              text: "Reset DB",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () async {
+                viewModel.fetchWallets();
+              },
+              text: "API Sync",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () async {
+                List<String> contents = [];
+                contents.add("userId = ${await SecureStorageHelper.get("userId")}\n");
+                contents.add("userMail = ${await SecureStorageHelper.get("userMail")}\n");
+                contents.add("userName = ${await SecureStorageHelper.get("userName")}\n");
+                contents.add("userDisplayName = ${await SecureStorageHelper.get("userDisplayName")}\n");
+                contents.add("sessionId = ${await SecureStorageHelper.get("sessionId")}\n");
+                contents.add("accessToken = ${await SecureStorageHelper.get("accessToken")}\n");
+                contents.add("refreshToken = ${await SecureStorageHelper.get("refreshToken")}\n");
+                contents.add("userKeyID = ${await SecureStorageHelper.get("userKeyID")}\n");
+                if (context.mounted){
+                  showMyAlertDialog(context, contents.join("\n"));
+                }
+              },
+              text: "Secure Storage",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () async {
+                await SecureStorageHelper.deleteAll();
+                if (context.mounted){
+                  LocalToast.showToast(context, "Deleted!");
+                }
+              },
+              text: "Clear Secure Storage",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -435,6 +508,26 @@ class HomeView extends ViewBase<HomeViewModel> {
       ),
     );
   }
+}
+
+void showMyAlertDialog(BuildContext context, String content) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Secure Storage Info"),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Ok"),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class NestedDialog extends StatelessWidget {

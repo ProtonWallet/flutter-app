@@ -3,11 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/models/wallet.dao.impl.dart';
-
-import '../models/account.dao.impl.dart';
 import '../models/account.model.dart';
 import '../models/wallet.model.dart';
 import '../scenes/debug/bdk.test.dart';
@@ -39,7 +35,6 @@ class WalletManager {
   static Future<void> importAccount(
       int walletID, String label, int scriptType, String derivationPath) async {
     if (walletID != -1) {
-      Database db = await DBHelper.database;
       DateTime now = DateTime.now();
       AccountModel account = AccountModel(
           id: null,
@@ -49,15 +44,12 @@ class WalletManager {
           scriptType: scriptType,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000);
-      AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-      accountDaoImpl.insert(account);
+      DBHelper.accountDao!.insert(account);
     }
   }
 
   static Future<int> getAccountCount(int walletID) async {
-    Database db = await DBHelper.database;
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-    return accountDaoImpl.getAccountCount(walletID);
+    return DBHelper.accountDao!.getAccountCount(walletID);
   }
 
   static String getDerivationPath(
@@ -66,18 +58,14 @@ class WalletManager {
   }
 
   static Future<bool> hasAccount() async {
-    Database db = await DBHelper.database;
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(db);
-    return await walletDaoImpl.counts() > 0;
+    return await DBHelper.walletDao!.counts() > 0;
   }
 
   static Future<String> getDerivationPathWithID(int accountID) async {
     if (accountID == 0) {
       return "m/84'/1'/0'/0";
     }
-    Database db = await DBHelper.database;
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-    AccountModel accountModel = await accountDaoImpl.findById(accountID);
+    AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
     return accountModel.derivationPath;
   }
 
@@ -85,31 +73,28 @@ class WalletManager {
     if (accountID == 0) {
       return "Default Account";
     }
-    Database db = await DBHelper.database;
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-    AccountModel accountModel = await accountDaoImpl.findById(accountID);
+    AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
     return accountModel.labelDecrypt;
   }
 
   static Future<String> getLocalDBNameWithID(int walletID) async {
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
     String dbName = "";
     if (walletID == 0) {
       dbName = "test_database";
     } else {
-      WalletModel walletRecord = await walletDaoImpl.findById(walletID);
+      WalletModel walletRecord =
+          await await DBHelper.walletDao!.findById(walletID);
       dbName = walletRecord.localDBName;
     }
     return dbName;
   }
 
   static Future<String> getNameWithID(int walletID) async {
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
     String name = "Default Name";
     if (walletID == 0) {
       name = "Default Name";
     } else {
-      WalletModel walletRecord = await walletDaoImpl.findById(walletID);
+      WalletModel walletRecord = await DBHelper.walletDao!.findById(walletID);
       name = walletRecord.name;
     }
     return name;
@@ -117,9 +102,7 @@ class WalletManager {
 
   static Future<double> getWalletBalance(int walletID) async {
     double balance = 0.0;
-    Database db = await DBHelper.database;
-    AccountDaoImpl accountDaoImpl = AccountDaoImpl(db);
-    List accounts = await accountDaoImpl.findAllByWalletID(walletID);
+    List accounts = await DBHelper.accountDao!.findAllByWalletID(walletID);
     for (AccountModel accountModel in accounts) {
       Wallet wallet =
           await WalletManager.loadWalletWithID(walletID, accountModel.id!);
@@ -128,16 +111,26 @@ class WalletManager {
     return balance;
   }
 
-  static Future<String> getMnemonicWithID(int walletID) async {
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
+  static Future<bool> mnemonicExists(String mnemonic) async {
+    bool exists = false;
+    await DBHelper.walletDao!.findAll().then((results) async {
+      for (WalletModel walletModel in results) {
+        if (mnemonic == await getMnemonicWithID(walletModel.id!)) {
+          exists = true;
+          break;
+        }
+      }
+    });
+    return exists;
+  }
+
+  static Future<String> getMnemonicWithID(int walletID,
+      {String passphrase = ""}) async {
+    // TODO:: add passphrase
     if (walletID == 0) {
       return 'certain sense kiss guide crumble hint transfer crime much stereo warm coral';
     } else {
-      WalletModel walletRecord = await walletDaoImpl.findById(walletID);
-      String passphrase = "";
-      if (walletRecord.passphrase == 1) {
-        passphrase = "123456";
-      }
+      WalletModel walletRecord = await DBHelper.walletDao!.findById(walletID);
       String mnemonic = await decrypt(utf8.decode(walletRecord.mnemonic),
           passphrase_: passphrase);
       return mnemonic;
