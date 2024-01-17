@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/models/account.dao.impl.dart';
-import 'package:wallet/models/wallet.dao.impl.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
+import '../../constants/script_type.dart';
 import '../../helper/wallet_manager.dart';
 import '../../models/wallet.model.dart';
+import '../../network/api.helper.dart';
 import '../core/view.navigatior.identifiers.dart';
 
 abstract class HomeViewModel extends ViewModel {
@@ -46,6 +49,8 @@ abstract class HomeViewModel extends ViewModel {
   void updateHasMailIntegration(bool later);
 
   void setOnBoard(BuildContext context);
+
+  void fetchWallets();
 
   int unconfirmed = 0;
   int confirmed = 0;
@@ -85,16 +90,15 @@ class HomeViewModelImpl extends HomeViewModel {
     hasWallet = await WalletManager.hasAccount();
     datasourceChangedStreamController.sink.add(this);
     checkNewWallet();
+    fetchWallets();
   }
 
   @override
   Future<void> checkNewWallet() async {
-    WalletDaoImpl walletDaoImpl = WalletDaoImpl(await DBHelper.database);
-    await walletDaoImpl.findAll().then((results) async {
-      AccountDaoImpl accountDaoImpl = AccountDaoImpl(await DBHelper.database);
+    await DBHelper.walletDao!.findAll().then((results) async {
       for (WalletModel walletModel in results) {
         walletModel.accountCount =
-            await accountDaoImpl.getAccountCount(walletModel.id!);
+            await DBHelper.accountDao!.getAccountCount(walletModel.id!);
       }
       if (results.length != userWallets.length) {
         userWallets = results;
@@ -134,7 +138,7 @@ class HomeViewModelImpl extends HomeViewModel {
     udpateSyncStatus(false);
     // Use it later
     // LocalNotification.show(
-    //     LocalNotification.SYNC_WALLET,
+    //     LocalNotification.syncWallet,
     //     "Local Notification",
     //     "Sync wallet success!\nbalance: ${balance.total}"
     // );
@@ -191,5 +195,56 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     totalBalance = totalBalance;
     datasourceChangedStreamController.sink.add(this);
+  }
+
+  @override
+  Future<void> fetchWallets() async {
+    String result = await APIHelper.getWallets();
+    Map<String, dynamic> jsonData = json.decode(result);
+    if (jsonData["Code"] == 1000) {
+      for (Map<String, dynamic> walletContainer in jsonData["Wallets"]) {
+        Map<String, dynamic> walletData = walletContainer["Wallet"];
+        // Map<String, dynamic> walletKeyData = walletContainer["WalletKey"];
+        // Map<String, dynamic> walletSettingsData =
+            walletContainer["WalletSettings"];
+        DateTime now = DateTime.now();
+        // TODO:: user mnemonic from API after bugfix by Kevin
+        // String strMnemonic =
+        //     "certain sense kiss guide crumble hint transfer crime much stereo warm coral";
+        // if (walletData["Name"].toLowerCase().contains("third")) {
+        //   strMnemonic =
+        //       "elbow guide topple state museum project goat split afraid rebuild hour destroy";
+        // } else if (walletData["Name"].toLowerCase().contains("second")) {
+        //   strMnemonic =
+        //       "blame curious virtual unhappy matter knife satisfy any young error weekend fragile";
+        // }
+        String strMnemonic = await WalletManager.decrypt(utf8.decode(base64Decode(walletData["Mnemonic"])));
+        bool mnemonicExist = await WalletManager.mnemonicExists(strMnemonic);
+        if (!mnemonicExist) {
+          WalletModel wallet = WalletModel(
+              id: null,
+              userID: 0,
+              name: walletData["Name"],
+              mnemonic: base64Decode(walletData["Mnemonic"]),
+              // mnemonic: utf8.encode(await WalletManager.encrypt(strMnemonic)),
+              // TO-DO: need encrypt
+              passphrase: walletData["HasPassphrase"],
+              publicKey: Uint8List(0),
+              imported: walletData["HasPassphrase"],
+              priority: WalletModel.primary,
+              status: WalletModel.statusActive,
+              type: walletData["Type"],
+              createTime: now.millisecondsSinceEpoch ~/ 1000,
+              modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+              localDBName: const Uuid().v4().replaceAll('-', ''));
+          int walletID = await DBHelper.walletDao!.insert(wallet);
+          WalletManager.importAccount(walletID, "Default Account",
+              ScriptType.nativeSegWit.index, "m/84'/1'/0'/0");
+        }
+      }
+    }
+    Future.delayed(const Duration(seconds: 30), () {
+      fetchWallets();
+    });
   }
 }

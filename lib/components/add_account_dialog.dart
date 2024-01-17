@@ -22,7 +22,7 @@ class AddAccountAlertDialog extends StatefulWidget {
 }
 
 class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
-  ScriptType scriptType = ScriptType.Legacy;
+  ScriptType scriptType = ScriptType.legacy;
   String derivationPath = '';
   String label = '';
 
@@ -39,10 +39,10 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
             });
           },
           items: <ScriptType>[
-            ScriptType.Legacy,
-            ScriptType.NestedSegWit,
-            ScriptType.NativeSegWit,
-            ScriptType.Taproot
+            ScriptType.legacy,
+            ScriptType.nestedSegWit,
+            ScriptType.nativeSegWit,
+            ScriptType.taproot
           ].map((ScriptType scriptType) {
             return DropdownMenuItem<ScriptType>(
               value: scriptType,

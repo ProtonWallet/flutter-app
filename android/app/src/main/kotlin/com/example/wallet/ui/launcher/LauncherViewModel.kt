@@ -212,7 +212,7 @@ class LauncherViewModel @Inject constructor(
                     result["userMail"] = user.email ?: ""
                     result["userName"] = user.name ?: ""
                     result["userDisplayName"] = user.displayName ?: ""
-                    // result["userKeys"] = user?.keys
+                    result["userKeyID"] = user.keys[0].keyId.id
                     result["sessionId"] = session.sessionId.id
                     result["accessToken"] = session.accessToken
                     result["refreshToken"] = session.refreshToken

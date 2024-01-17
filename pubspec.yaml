@@ -73,6 +73,8 @@ dependencies:
   uuid: ^4.2.2
   #Contains utility functions and classes in the style of dart:collection to make working with collections easier.
   collection: ^1.18.0
+  http: ^1.1.2
+  flutter_secure_storage: ^9.0.0
 
 
 
