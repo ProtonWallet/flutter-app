@@ -16,8 +16,8 @@ import 'migration.container.dart';
 
 class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
-  String dbFolder = "databases";
-  String dbName = "proton_wallet_db";
+  static String dbFolder = "databases";
+  static String dbName = "proton_wallet_db";
   int version = 3;
   late Database db;
   late MigrationContainer migrationContainer;
@@ -58,12 +58,51 @@ class AppDatabase
     transactionDao = TransactionDaoImpl(db);
   }
 
-  Future<void> init() async {
-    await initDB();
+  Future<void> init(Database database) async {
+    await initDatabase(database);
     initDAO();
   }
 
-  Future<void> initDB() async {
+  static Future<Database> getDatabase() async{
+    Database database;
+    String dbPath = "";
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      var databaseFactory = databaseFactoryFfi;
+
+        final Directory appDocumentsDir =
+        await getApplicationDocumentsDirectory();
+        dbPath = join(appDocumentsDir.path, dbFolder, dbName);
+      database = await databaseFactory.openDatabase(
+          dbPath,
+        );
+    } else {
+      var path = await getDatabasesPath();
+      dbPath = join(path, dbFolder, dbName);
+      database = await openDatabase(
+          dbPath,
+        );
+    }
+    return database;
+  }
+
+  static Future<Database> getInMemoryDatabase() async{
+    Database database;
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      var databaseFactory = databaseFactoryFfi;
+      database = await databaseFactory.openDatabase(
+        inMemoryDatabasePath,
+      );
+    } else {
+      database = await openDatabase(
+        ":memory:",
+      );
+    }
+    return database;
+  }
+
+  Future<void> initDatabase(Database database) async {
     try {
       if (db.isOpen) {
         return;
@@ -71,27 +110,10 @@ class AppDatabase
     } catch (e) {
       // db is not initialed;
     }
-    late String dbPath;
-    if (Platform.isWindows) {
-      sqfliteFfiInit();
-      var databaseFactory = databaseFactoryFfi;
-      final Directory appDocumentsDir =
-          await getApplicationDocumentsDirectory();
-      dbPath = join(appDocumentsDir.path, dbFolder, dbName);
-      db = await databaseFactory.openDatabase(
-        dbPath,
-      );
-    } else {
-      var path = await getDatabasesPath();
-      dbPath = join(path, dbFolder, dbName);
-      db = await openDatabase(
-        dbPath,
-      );
-    }
+    db = database;
   }
 
-  Future<void> buildDatabase({int oldVersion = 1}) async {
-    await init();
+  Future<void> buildDatabase({bool isTesting = false, int oldVersion = 1}) async {
     List<Migration>? upgradeMigrations =
         migrationContainer.findMigrationPath(oldVersion, version);
     logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");
