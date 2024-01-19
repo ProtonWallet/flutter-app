@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:wallet/helper/bdk/mnemonic.dart';
+import 'package:wallet/rust/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-import '../../generated/bridge_definitions.dart';
-import '../../helper/bdk/helper.dart';
+// import '../../generated/bridge_definitions.dart';
+// import '../../helper/bdk/helper.dart';
 
 class AnimatedSquare {
   double squareSize;
@@ -42,7 +44,7 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
   @override
   Future<void> loadData() async {
     initSquares();
-    Mnemonic mnemonic = await Mnemonic.create(WordCount.Words12);
+    Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
     strMnemonic = mnemonic.asString();
     Future.delayed(const Duration(microseconds: 100), () {
       startAnimate(true);

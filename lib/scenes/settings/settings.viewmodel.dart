@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:wallet/generated/bridge_definitions.dart';
+// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class SettingsViewModel extends ViewModel {
@@ -56,7 +57,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
 
   @override
   Future<void> updateStringValue() async {
-    var mnemonic = await Mnemonic.create(WordCount.Words12);
+    var mnemonic = await Mnemonic.create(WordCount.words12);
     logger.d(mnemonic.asString());
     updateMnemonic(mnemonic.asString());
   }
