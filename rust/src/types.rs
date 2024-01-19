@@ -76,7 +76,7 @@ impl From<BdkOutPoint> for OutPoint {
     fn from(x: BdkOutPoint) -> OutPoint {
         OutPoint {
             txid: x.txid.to_string(),
-            vout: x.clone().vout,
+            vout: x.vout,
         }
     }
 }
@@ -198,11 +198,7 @@ impl From<&bdk::TransactionDetails> for TransactionDetails {
 }
 
 fn set_block_time(time: Option<bdk::BlockTime>) -> Option<BlockTime> {
-    if let Some(time) = time {
-        Some(time.into())
-    } else {
-        None
-    }
+    time.map(|time| time.into())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
@@ -260,10 +256,11 @@ impl From<KeychainKind> for bdk::KeychainKind {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 ///The cryptocurrency to act on
 pub enum Network {
     ///Bitcoin’s testnet
+    #[default]
     Testnet,
     ///Bitcoin’s regtest
     Regtest,
@@ -272,11 +269,7 @@ pub enum Network {
     ///Bitcoin’s signet
     Signet,
 }
-impl Default for Network {
-    fn default() -> Self {
-        Network::Testnet
-    }
-}
+
 impl From<Network> for bdk::bitcoin::Network {
     fn from(network: Network) -> Self {
         match network {

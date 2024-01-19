@@ -158,7 +158,7 @@ impl DescriptorSecretKey {
     }
 
     pub fn from_string(key_str: String) -> Result<Self, BdkError> {
-        let key = BdkDescriptorSecretKey::from_str(&*key_str).unwrap();
+        let key = BdkDescriptorSecretKey::from_str(&key_str).unwrap();
         Ok(Self {
             descriptor_secret_key_mutex: Mutex::new(key),
         })
@@ -175,7 +175,7 @@ pub struct DescriptorPublicKey {
 
 impl DescriptorPublicKey {
     pub fn from_string(key: String) -> Result<Self, BdkError> {
-        let key = BdkDescriptorPublicKey::from_str(&*key).unwrap();
+        let key = BdkDescriptorPublicKey::from_str(&key).unwrap();
         Ok(Self {
             descriptor_public_key_mutex: Mutex::new(key),
         })
