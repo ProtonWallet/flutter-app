@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/bdk/mnemonic.dart';
+import 'package:wallet/rust/types.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 final BdkLibrary lib = BdkLibrary();
@@ -34,9 +35,9 @@ Future<void> main() async {
         "debris tool angle nation wage stand jealous lamp reflect lecture luggage ecology",
         "m/84'/1'/168'/0");
 
-    mnemonic12 = await Mnemonic.create(WordCount.Words12);
-    mnemonic18 = await Mnemonic.create(WordCount.Words18);
-    mnemonic24 = await Mnemonic.create(WordCount.Words24);
+    mnemonic12 = await Mnemonic.create(WordCount.words12);
+    mnemonic18 = await Mnemonic.create(WordCount.words18);
+    mnemonic24 = await Mnemonic.create(WordCount.words24);
   });
 
   group('Bdk functions', () {

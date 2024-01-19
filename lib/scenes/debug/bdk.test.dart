@@ -118,7 +118,7 @@ class BdkLibrary {
   Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
     final wallet = await Wallet.create(
         descriptor: descriptor,
-        network: Network.Testnet,
+        network: Network.testnet,
         databaseConfig: const DatabaseConfig.memory());
     return wallet;
   }
