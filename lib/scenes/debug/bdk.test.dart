@@ -110,6 +110,14 @@ class BdkLibrary {
     return wallet;
   }
 
+  Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
+    final wallet = await Wallet.create(
+        descriptor: descriptor,
+        network: Network.Testnet,
+        databaseConfig: const DatabaseConfig.memory());
+    return wallet;
+  }
+
   Future<void> sync(Blockchain blockchain, Wallet aliceWallet) async {
     try {
       await Isolate.run(() async => {await aliceWallet.sync(blockchain)});
@@ -118,10 +126,16 @@ class BdkLibrary {
     }
   }
 
-  Future<AddressInfo> getAddress(Wallet aliceWallet) async {
-    final address =
-        await aliceWallet.getAddress(addressIndex: const AddressIndex());
-    return address;
+  Future<AddressInfo> getAddress(Wallet aliceWallet, {int? addressIndex}) async {
+    AddressInfo addressInfo;
+    if (addressIndex != null){
+      addressInfo =
+      await aliceWallet.getAddress(addressIndex: AddressIndex.peek(index: addressIndex));
+    } else {
+      addressInfo =
+      await aliceWallet.getAddress(addressIndex: const AddressIndex());
+    }
+    return addressInfo;
   }
 
   Future<Input> getPsbtInput(
