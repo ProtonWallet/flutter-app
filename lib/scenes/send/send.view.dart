@@ -171,7 +171,7 @@ class SendView extends ViewBase<SendViewModel> {
                 Container(
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.centerLeft,
-                    child: const Text("4sats/vb\nConfirmation in 2hours")),
+                    child: Text("${viewModel.feeRate.toStringAsFixed(1)} sats/vb\nConfirmation in 2hours")),
                 const SizedBox(height: 10),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,

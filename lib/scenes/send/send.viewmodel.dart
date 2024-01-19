@@ -22,8 +22,10 @@ abstract class SendViewModel extends ViewModel {
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
   int balance = 0;
+  double feeRate = 99.9;
 
   Future<void> sendCoin();
+  Future<void> updateFeeRate();
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -53,6 +55,7 @@ class SendViewModelImpl extends SendViewModel {
         userWallets = results.take(5).toList();
       }
     });
+    updateFeeRate();
     if (walletID == 0) {
       walletID = userWallets.first.id;
     }
@@ -103,5 +106,15 @@ class SendViewModelImpl extends SendViewModel {
       logger.i("Target addr: $receipinetAddress\nAmount: $amount");
       await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, amount);
     }
+  }
+
+  @override
+  Future<void> updateFeeRate() async{
+    FeeRate feeRate_ = await _lib.estimateFeeRate(25, _blockchain!);
+    feeRate = feeRate_.asSatPerVb();
+    datasourceChangedStreamController.add(this);
+    Future.delayed(const Duration(seconds: 5), () {
+      updateFeeRate();
+    });
   }
 }

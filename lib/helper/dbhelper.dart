@@ -38,10 +38,13 @@ class DBHelper {
   }
 
   static Future<void> init() async {
-    _appDatabase = AppDatabase();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int appDatabaseVersion = preferences.getInt("appDatabaseVersion") ?? 1;
+
+    _appDatabase = AppDatabase();
+    await _appDatabase!.init(await AppDatabase.getDatabase());
     await _appDatabase!.buildDatabase(oldVersion: appDatabaseVersion);
+
     preferences.setInt("appDatabaseVersion", _appDatabase!.version);
   }
 

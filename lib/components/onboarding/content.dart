@@ -45,6 +45,7 @@ class OnboardingContent extends StatelessWidget {
             content,
             style:
                 FontManager.body1Median(Theme.of(context).colorScheme.primary),
+            textAlign: TextAlign.center,
           ),
           SizedBoxes.box32,
           Flexible(
