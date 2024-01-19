@@ -8,7 +8,6 @@ import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
 import '../../components/add_account_dialog.dart';
 import '../../components/custom.barchart.dart';
 import '../../constants/proton.color.dart';
-import '../../helper/local_toast.dart';
 import '../../theme/theme.font.dart';
 import '../core/view.navigatior.identifiers.dart';
 
@@ -233,12 +232,12 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      LocalToast.showToast(context, "TO-DO", isWarning: true);
+                      viewModel.copyMnemonic(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
                     child: const Text(
-                      "Buy",
+                      "Mnemonic",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -302,12 +301,12 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.copyMnemonic(context);
+                      viewModel.coordinator.move(ViewIdentifiers.walletDeletion, context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
                     child: const Text(
-                      "Mnemonic",
+                      "Delete",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,

@@ -4,6 +4,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
+import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
 import 'package:wallet/scenes/history/history.coordinator.dart';
 import 'package:wallet/scenes/wallet/wallet.view.dart';
 import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
@@ -43,6 +44,14 @@ class WalletCoordinator extends Coordinator {
       return view;
     } else if (to == ViewIdentifiers.history){
       var view = HistoryCoordinator().start(params: map);
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => view,
+          fullscreenDialog: true,
+          settings: RouteSettings(arguments: map)
+      ));
+      return view;
+    } else if (to == ViewIdentifiers.walletDeletion){
+      var view = WalletDeletionCoordinator().start(params: map);
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => view,
           fullscreenDialog: true,
