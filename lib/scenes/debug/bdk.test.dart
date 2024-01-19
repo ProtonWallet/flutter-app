@@ -5,13 +5,12 @@ import 'dart:isolate';
 import 'package:path/path.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
-// import 'package:wallet/generated/bridge_definitions.dart';
-// import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/logger.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wallet/rust/blockchain.dart';
+import 'package:wallet/rust/frb_generated.dart';
 
 import 'dart:async';
 
@@ -126,7 +125,8 @@ class BdkLibrary {
 
   Future<void> sync(Blockchain blockchain, Wallet aliceWallet) async {
     try {
-      await Isolate.run(() async => {await aliceWallet.sync(blockchain)});
+      await Isolate.run(() async =>
+          {await RustLib.init(), await aliceWallet.sync(blockchain)});
     } on FormatException catch (e) {
       logger.d(e.message);
     }
