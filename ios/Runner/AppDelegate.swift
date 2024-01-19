@@ -63,7 +63,7 @@ import SwiftUI // If using SwiftUI
         }
 
         GeneratedPluginRegistrant.register(with: self)
-        print(dummy_method_to_enforce_bundling())
+        // print(dummy_method_to_enforce_bundling())
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

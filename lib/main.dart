@@ -9,12 +9,12 @@ import 'package:wallet/helper/local_notification.dart';
 import 'helper/dbhelper.dart';
 
 void main() async {
-  await RustLib.init();
   WidgetsFlutterBinding.ensureInitialized();
   await LocalNotification.init();
   await FirebaseMessagingHelper.init();
   await LocalAuth.init();
   await DBHelper.init();
   SecureStorageHelper.init();
+  await RustLib.init();
   runApp(await AppCoordinator().startWithNewUser());
 }

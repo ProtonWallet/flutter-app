@@ -11,3 +11,9 @@ Future<int> addOne({required int left, required int right, dynamic hint}) =>
 
 Future<int> addThree({required int left, required int right, dynamic hint}) =>
     RustLib.instance.api.addThree(left: left, right: right, hint: hint);
+
+String greet({required String name, dynamic hint}) =>
+    RustLib.instance.api.greet(name: name, hint: hint);
+
+String helloworld({dynamic hint}) =>
+    RustLib.instance.api.helloworld(hint: hint);
