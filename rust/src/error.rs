@@ -57,6 +57,7 @@ pub enum Error {
     /// Spending policy is not compatible with this [`KeychainKind`]
     SpendingPolicyRequired(crate::types::KeychainKind),
     /// Error while extracting and manipulating policies
+    #[allow(clippy::enum_variant_names)]
     InvalidPolicyPathError(String),
     /// Signing error
     Signer(String),

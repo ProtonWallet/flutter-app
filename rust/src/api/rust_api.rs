@@ -28,48 +28,48 @@ pub struct Api {}
 impl Api {
     //========Blockchain==========
     pub fn create_esplora_blockchain(config: EsploraConfig) -> anyhow::Result<String, Error> {
-        let blockchain = Blockchain::new(config);
-        return match blockchain {
+        let blockchain = Blockchain::new_blockchain(config);
+        match blockchain {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn create_electrum_blockchain(config: ElectrumConfig) -> anyhow::Result<String, Error> {
         let blockchain = Blockchain::build_electrum(config);
-        return match blockchain {
+        match blockchain {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn get_height(blockchain_id: String) -> anyhow::Result<u32, Error> {
-        return match Blockchain::retrieve_blockchain(blockchain_id).get_height() {
+        match Blockchain::retrieve_blockchain(blockchain_id).get_height() {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn get_blockchain_hash(
         blockchain_height: u32,
         blockchain_id: String,
     ) -> anyhow::Result<String, Error> {
-        return match Blockchain::retrieve_blockchain(blockchain_id)
+        match Blockchain::retrieve_blockchain(blockchain_id)
             .get_block_hash(blockchain_height)
         {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn estimate_fee(target: u64, blockchain_id: String) -> anyhow::Result<f32, Error> {
-        return match Blockchain::retrieve_blockchain(blockchain_id).estimate_fee(target) {
+        match Blockchain::retrieve_blockchain(blockchain_id).estimate_fee(target) {
             Ok(e) => Ok(e.as_sat_per_vb()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn broadcast(tx: String, blockchain_id: String) -> anyhow::Result<String, Error> {
         let transaction: Transaction = tx.into();
-        return match Blockchain::retrieve_blockchain(blockchain_id).broadcast(transaction) {
+        match Blockchain::retrieve_blockchain(blockchain_id).broadcast(transaction) {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
-        };
+        }
     }
 
     //=========Transaction===========
@@ -87,15 +87,15 @@ impl Api {
     }
     pub fn weight(tx: String) -> u64 {
         let tx_: Transaction = tx.into();
-        tx_.weight() as u64
+        tx_.weight()
     }
     pub fn size(tx: String) -> u64 {
         let tx_: Transaction = tx.into();
-        tx_.size() as u64
+        tx_.size()
     }
     pub fn vsize(tx: String) -> u64 {
         let tx_: Transaction = tx.into();
-        tx_.vsize() as u64
+        tx_.vsize()
     }
     pub fn serialize_tx(tx: String) -> Vec<u8> {
         let tx_: Transaction = tx.into();
@@ -133,31 +133,32 @@ impl Api {
     //========PartiallySignedTransaction==========
     pub fn serialize_psbt(psbt_str: String) -> anyhow::Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
-        return match psbt {
+        match psbt {
             Ok(e) => Ok(e.serialize()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn psbt_txid(psbt_str: String) -> anyhow::Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
-        return match psbt {
+        match psbt {
             Ok(e) => Ok(e.txid()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn extract_tx(psbt_str: String) -> anyhow::Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
-        return match psbt {
+        match psbt {
             Ok(e) => Ok(e.extract_tx().into()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn psbt_fee_rate(psbt_str: String) -> Option<f32> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
-        match psbt.unwrap().fee_rate() {
-            None => None,
-            Some(e) => Some(e.as_sat_per_vb()),
-        }
+        // match psbt.unwrap().fee_rate() {
+        //     None => None,
+        //     Some(e) => Some(e.as_sat_per_vb()),
+        // }
+        psbt.unwrap().fee_rate().map(|e| e.as_sat_per_vb())
     }
     pub fn psbt_fee_amount(psbt_str: String) -> Option<u64> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
@@ -166,10 +167,10 @@ impl Api {
     pub fn combine_psbt(psbt_str: String, other: String) -> anyhow::Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str).unwrap();
         let other = PartiallySignedTransaction::new(other).unwrap();
-        return match psbt.combine(Arc::new(other)) {
+        match psbt.combine(Arc::new(other)) {
             Ok(e) => Ok(e.serialize()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn json_serialize(psbt_str: String) -> anyhow::Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str).unwrap();
@@ -177,6 +178,7 @@ impl Api {
     }
 
     //========TxBuilder==========
+    #[allow(clippy::too_many_arguments)]
     pub fn tx_builder_finish(
         wallet_id: String,
         recipients: Vec<ScriptAmount>,
@@ -247,7 +249,7 @@ impl Api {
             tx_builder.add_data(data.as_slice());
         }
 
-        return match tx_builder.finish() {
+        match tx_builder.finish() {
             Ok(e) => Ok((
                 PartiallySignedTransaction {
                     internal: Mutex::new(e.0),
@@ -256,7 +258,7 @@ impl Api {
                 TransactionDetails::from(&e.1),
             )),
             Err(e) => Err(e.into()),
-        };
+        }
     }
 
     //========BumpFeeTxBuilder==========
@@ -287,7 +289,7 @@ impl Api {
         if enable_rbf {
             tx_builder.enable_rbf();
         }
-        return match tx_builder.finish() {
+        match tx_builder.finish() {
             Ok(e) => Ok((
                 PartiallySignedTransaction {
                     internal: Mutex::new(e.0),
@@ -296,7 +298,7 @@ impl Api {
                 TransactionDetails::from(&e.1),
             )),
             Err(e) => Err(e.into()),
-        };
+        }
     }
 
     //================Descriptor=========
@@ -305,10 +307,10 @@ impl Api {
         descriptor: String,
         network: Network,
     ) -> anyhow::Result<String, Error> {
-        return match BdkDescriptor::new(descriptor, network.into()) {
+        match BdkDescriptor::new(descriptor, network.into()) {
             Ok(e) => Ok(e.as_string_private()),
             Err(e) => Err(e.into()),
-        };
+        }
     }
     pub fn new_bip44_descriptor(
         key_chain_kind: KeychainKind,
@@ -454,7 +456,7 @@ impl Api {
         }
         let derivation_path =
             Arc::new(DerivationPath::new(path.unwrap().to_string()).expect("Invalid path"));
-        return if derive {
+        if derive {
             match descriptor_secret.derive(derivation_path) {
                 Ok(e) => e,
                 Err(e) => panic!("{:?}", e),
@@ -464,7 +466,7 @@ impl Api {
                 Ok(e) => e,
                 Err(e) => panic!("{:?}", e),
             }
-        };
+        }
     }
 
     //==============Derivation Path ==========
@@ -483,11 +485,11 @@ impl Api {
     ) -> anyhow::Result<String, Error> {
         let derivation_path = Arc::new(DerivationPath::new(path.to_string()).unwrap());
         let descriptor_public = DescriptorPublicKey::from_string(xpub.unwrap()).unwrap();
-        return if derive {
+        if derive {
             Ok(descriptor_public.derive(derivation_path)?.as_string())
         } else {
             Ok(descriptor_public.extend(derivation_path)?.as_string())
-        };
+        }
     }
 
     //============ Script Class===========
@@ -500,7 +502,7 @@ impl Api {
         Ok(Address::new(address)?.address.to_string())
     }
     pub fn address_from_script(script: Script, network: Network) -> anyhow::Result<String, Error> {
-        Ok(Address::from_script(script, network.into())?
+        Ok(Address::from_script(script, network)?
             .address
             .to_string())
     }
@@ -521,7 +523,7 @@ impl Api {
         network: Network,
         database_config: DatabaseConfig,
     ) -> anyhow::Result<String, Error> {
-        Ok(Wallet::new(
+        Ok(Wallet::new_wallet(
             descriptor,
             change_descriptor,
             network.into(),
@@ -612,7 +614,7 @@ impl Api {
     ) -> anyhow::Result<(String, Network), Error> {
         let wallet = Wallet::retrieve_wallet(wallet_id);
         let network: Network = wallet.get_wallet().network().into();
-        match wallet.get_descriptor_for_keychain(keychain.into()) {
+        match wallet.get_descriptor_for_keychain(keychain) {
             Ok(e) => Ok((e.as_string_private(), network)),
             Err(e) => Err(e.into()),
         }

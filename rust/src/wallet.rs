@@ -28,8 +28,8 @@ lazy_static! {
 fn persist_wallet(id: String, wallet: Wallet) {
     let mut wallet_lock = WALLET.write().unwrap();
     wallet_lock.insert(id, Arc::new(wallet));
-    return;
 }
+
 pub fn default_hasher<T>(obj: T) -> u64
 where
     T: Hash,
@@ -53,7 +53,7 @@ impl Wallet {
         wallet_lock.get(id.as_str()).unwrap().clone()
     }
 
-    pub fn new(
+    pub fn new_wallet(
         descriptor: String,
         change_descriptor: Option<String>,
         network: bitcoin::Network,
@@ -352,7 +352,7 @@ mod test {
         )
         .unwrap();
 
-        let wallet_id = Wallet::new(
+        let wallet_id = Wallet::new_wallet(
             descriptor.as_string_private(),
             Some(change_descriptor.as_string_private()),
             Network::Regtest,
@@ -428,7 +428,7 @@ mod test {
         )
         .unwrap();
 
-        let wallet_id = Wallet::new(
+        let wallet_id = Wallet::new_wallet(
             descriptor.as_string_private(),
             Some(change_descriptor.as_string_private()),
             Network::Regtest,

@@ -18,14 +18,14 @@ lazy_static! {
 fn persist_blockchain(id: String, blockchain: Blockchain) {
     let mut blockchain_lock = BLOCKCHAIN.write().unwrap();
     blockchain_lock.insert(id, Arc::new(blockchain));
-    return;
 }
+
 pub struct Blockchain {
     pub blockchain_mutex: Mutex<AnyBlockchain>,
 }
 
 impl Blockchain {
-    pub fn new(esplora_config: EsploraConfig) -> Result<String, BdkError> {
+    pub fn new_blockchain(esplora_config: EsploraConfig) -> Result<String, BdkError> {
         // let blockchain = AnyBlockchain::from_config(&any_blockchain_config)?;
         let mut builder = Builder::new(esplora_config.base_url.as_str());
 
@@ -86,7 +86,7 @@ impl Blockchain {
         self.get_blockchain()
             .broadcast(&tx.internal.clone())
             .expect("Broadcast Error");
-        return Ok(tx.internal.txid().to_string());
+        Ok(tx.internal.txid().to_string())
     }
 
     pub fn get_height(&self) -> Result<u32, BdkError> {
