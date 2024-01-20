@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
-import 'package:wallet/helper/bdk/helper.dart';
+// import 'package:wallet/generated/bridge_definitions.dart';
+// import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/channels/platform.channel.dart';
+import 'package:wallet/rust/types.dart';
 
 var count = 1;
 
@@ -30,7 +32,7 @@ class LoginAndSignupBtn extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             logger.d("api.publishMessage(message: LoginAndSignupBtn clicked);");
-            var mnemonic = await Mnemonic.create(WordCount.Words12);
+            var mnemonic = await Mnemonic.create(WordCount.words12);
             logger.d(mnemonic.asString());
           },
           style: ElevatedButton.styleFrom(

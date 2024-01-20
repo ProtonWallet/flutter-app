@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:wallet/generated/bridge_definitions.dart';
+// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/rust/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 

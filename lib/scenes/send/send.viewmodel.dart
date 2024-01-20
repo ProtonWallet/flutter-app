@@ -110,8 +110,8 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> updateFeeRate() async{
-    FeeRate feeRate_ = await _lib.estimateFeeRate(25, _blockchain!);
-    feeRate = feeRate_.asSatPerVb();
+    // FeeRate feeRate_ = await _lib.estimateFeeRate(25, _blockchain!);
+    // feeRate = feeRate_.asSatPerVb();
     datasourceChangedStreamController.add(this);
     Future.delayed(const Duration(seconds: 5), () {
       updateFeeRate();

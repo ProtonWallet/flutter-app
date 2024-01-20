@@ -19,3 +19,5 @@ samples, guidance on mobile development, and a full API reference.
 
 lefthook: [installation](https://github.com/evilmartians/lefthook/blob/master/docs/install.md)
 run once after install: `lefthook install`
+
+## Localizations

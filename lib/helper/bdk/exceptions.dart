@@ -1,4 +1,4 @@
-import 'package:wallet/generated/bridge_definitions.dart' as bindings;
+import 'package:wallet/rust/error.dart' as bridge;
 
 abstract class BdkFfiException implements Exception {
   String? message;
@@ -256,7 +256,7 @@ class HexException extends BdkFfiException {
   HexException({super.message});
 }
 
-Exception handleBdkException(bindings.Error error) {
+Exception handleBdkException(bridge.Error error) {
   return error.when(
     noUtxosSelected: () => NoUtxosSelectedException(
         message:

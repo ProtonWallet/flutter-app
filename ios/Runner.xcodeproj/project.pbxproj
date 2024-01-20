@@ -54,7 +54,6 @@
 		7548DAE92B182817002588F4 /* AnonymousServiceMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAE82B182817002588F4 /* AnonymousServiceMananger.swift */; };
 		7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */; };
 		7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DB312B184683002588F4 /* AppCoordinator.swift */; };
-		75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C7A6292B0C7803004C0FB1 /* libproton-wallet-common_static.a */; };
 		7881ED66DFC77AA9943FFC12 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B177F81A4556CAEF7B3768B9 /* Pods_RunnerTests.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -82,13 +81,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = CA0112EA1EC1E53E57EE9474;
 			remoteInfo = "proton-wallet-common-cdylib";
-		};
-		75C7A62E2B0C786F004C0FB1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75C7A6232B0C7803004C0FB1 /* proton-wallet-common.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CA609821023EA620AA86F99E;
-			remoteInfo = "proton-wallet-common-staticlib";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -156,7 +148,6 @@
 				7548DAA12B180994002588F4 /* ProtonCoreDataModel in Frameworks */,
 				7548DA952B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration in Frameworks */,
 				7548DA972B180994002588F4 /* ProtonCoreChallenge in Frameworks */,
-				75C7A62D2B0C7843004C0FB1 /* libproton-wallet-common_static.a in Frameworks */,
 				7548DAAF2B180994002588F4 /* ProtonCoreFoundations in Frameworks */,
 				7548DACD2B180994002588F4 /* ProtonCoreServices in Frameworks */,
 				7548DAA72B180994002588F4 /* ProtonCoreFeatureFlags in Frameworks */,
@@ -332,7 +323,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				75C7A62F2B0C786F004C0FB1 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -497,7 +487,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
 		};
 		652C782EB35E5D7EEF105759 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -534,7 +524,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 		C9388007159A76A1921A36D4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -589,11 +579,6 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
-		};
-		75C7A62F2B0C786F004C0FB1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "proton-wallet-common-staticlib";
-			targetProxy = 75C7A62E2B0C786F004C0FB1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

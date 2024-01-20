@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
+// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/transaction.model.dart';
+import 'package:wallet/rust/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 import '../../helper/bdk/helper.dart';
@@ -55,8 +56,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode.addListener(() {
       userFinishMemo();
     });
-    TransactionModel? transactionModel =
-        await DBHelper.transactionDao!.findByExternalTransactionID(utf8.encode(txid));
+    TransactionModel? transactionModel = await DBHelper.transactionDao!
+        .findByExternalTransactionID(utf8.encode(txid));
     userLabel =
         transactionModel != null ? utf8.decode(transactionModel.label) : "";
     memoController.text = userLabel;
@@ -93,8 +94,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       if (userLabel != memoController.text) {
         userLabel = memoController.text;
         // user finish editing memo, save to local table for data persist
-        DBHelper.transactionDao!.insertOrUpdate(
-            walletID, utf8.encode(txid), userLabel);
+        DBHelper.transactionDao!
+            .insertOrUpdate(walletID, utf8.encode(txid), userLabel);
       }
     }
   }
