@@ -27,8 +27,12 @@ class FirebaseMessagingHelper {
       await Firebase.initializeApp();
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      logger.i("FCMToken $fcmToken");
+      try {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        logger.i("FCMToken $fcmToken");
+      } catch (e) {
+        logger.e("FirebaseMessaging.instance.getToken $e");
+      }
 
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       //for iOS permission settings

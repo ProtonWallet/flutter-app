@@ -26,7 +26,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       : super(viewModel, const Key("WelcomeView"));
 
   static const _appChannel = MethodChannel('com.example.wallet/app.view');
-
+  // TODO:: move the logics to Viewmodel
   Future<void> loginResume() async {
     // TODO:: test this logic
     if (await SecureStorageHelper.get("sessionId") != "") {

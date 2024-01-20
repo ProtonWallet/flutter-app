@@ -25,5 +25,7 @@
 
     "pronoun": "{gender, select, male{he} female{she} other{they}}",
 
-    "numberOfDataPoints": "Number of data points: {value}"
+    "numberOfDataPoints": "Number of data points: {value}",
+
+    "welcome_to": "欢迎使用"
 }

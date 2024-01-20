@@ -3,29 +3,34 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:path/path.dart';
-import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wallet/rust/blockchain.dart';
+import 'package:wallet/rust/frb_generated.dart';
 
 import 'dart:async';
 
+import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/wallet.dart';
+
 class BdkLibrary {
   Future<Mnemonic> createMnemonic() async {
-    final res = await Mnemonic.create(WordCount.Words12);
+    final res = await Mnemonic.create(WordCount.words12);
     return res;
   }
 
   Future<Descriptor> createDescriptor(Mnemonic mnemonic) async {
     final descriptorSecretKey = await DescriptorSecretKey.create(
-      network: Network.Testnet,
+      network: Network.testnet,
       mnemonic: mnemonic,
     );
     final descriptor = await Descriptor.newBip84(
         secretKey: descriptorSecretKey,
-        network: Network.Testnet,
+        network: Network.testnet,
         keychain: KeychainKind.External);
     return descriptor;
   }
@@ -37,7 +42,7 @@ class BdkLibrary {
         int.parse(derivationPath.toString().split('/')[1].split("'")[0]);
 
     DescriptorSecretKey descriptorSecretKey = await DescriptorSecretKey.create(
-        network: Network.Testnet, mnemonic: mnemonic);
+        network: Network.testnet, mnemonic: mnemonic);
 
     DescriptorSecretKey descriptorPrivateKey =
         await descriptorSecretKey.derive(derivationPath);
@@ -45,13 +50,13 @@ class BdkLibrary {
       // BIP-0044
       Descriptor descriptor = await Descriptor.create(
         descriptor: "pkh(${descriptorPrivateKey.toString()})",
-        network: Network.Testnet,
+        network: Network.testnet,
       );
       return descriptor;
     } else {
       Descriptor descriptor = await Descriptor.create(
         descriptor: "wpkh(${descriptorPrivateKey.toString()})",
-        network: Network.Testnet,
+        network: Network.testnet,
       );
       return descriptor;
     }
@@ -105,7 +110,7 @@ class BdkLibrary {
     }
     final wallet = await Wallet.create(
         descriptor: descriptor,
-        network: Network.Testnet,
+        network: Network.testnet,
         databaseConfig: config);
     return wallet;
   }
@@ -113,14 +118,15 @@ class BdkLibrary {
   Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
     final wallet = await Wallet.create(
         descriptor: descriptor,
-        network: Network.Testnet,
+        network: Network.testnet,
         databaseConfig: const DatabaseConfig.memory());
     return wallet;
   }
 
   Future<void> sync(Blockchain blockchain, Wallet aliceWallet) async {
     try {
-      await Isolate.run(() async => {await aliceWallet.sync(blockchain)});
+      await Isolate.run(() async =>
+          {await RustLib.init(), await aliceWallet.sync(blockchain)});
     } on FormatException catch (e) {
       logger.d(e.message);
     }
@@ -176,13 +182,13 @@ class BdkLibrary {
     return res;
   }
 
-  Future<FeeRate> estimateFeeRate(
-    int blocks,
-    Blockchain blockchain,
-  ) async {
-    final feeRate = await blockchain.estimateFee(blocks);
-    return feeRate;
-  }
+  // Future<FeeRate> estimateFeeRate(
+  //   int blocks,
+  //   Blockchain blockchain,
+  // ) async {
+  //   final feeRate = await blockchain.estimateFee(blocks);
+  //   return feeRate;
+  // }
 
   getInputOutPuts(
     TxBuilderResult txBuilderResult,
@@ -206,22 +212,22 @@ class BdkLibrary {
 
   sendBitcoin(Blockchain blockchain, Wallet aliceWallet, String addressStr,
       int amount) async {
-    try {
-      final txBuilder = TxBuilder();
-      final address = await Address.create(address: addressStr);
+    // try {
+    //   final txBuilder = TxBuilder();
+    //   final address = await Address.create(address: addressStr);
 
-      final script = await address.scriptPubKey();
-      final feeRate = await estimateFeeRate(25, blockchain);
-      final txBuilderResult = await txBuilder
-          .addRecipient(script, amount)
-          .feeRate(feeRate.asSatPerVb())
-          .finish(aliceWallet);
-      getInputOutPuts(txBuilderResult, blockchain);
-      final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
-      final tx = await aliceSbt.extractTx();
-      Isolate.run(() async => {await blockchain.broadcast(tx)});
-    } on Exception catch (_) {
-      rethrow;
-    }
+    //   final script = await address.scriptPubKey();
+    //   final feeRate = await estimateFeeRate(25, blockchain);
+    //   final txBuilderResult = await txBuilder
+    //       .addRecipient(script, amount)
+    //       .feeRate(feeRate.asSatPerVb())
+    //       .finish(aliceWallet);
+    //   getInputOutPuts(txBuilderResult, blockchain);
+    //   final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
+    //   final tx = await aliceSbt.extractTx();
+    //   Isolate.run(() async => {await blockchain.broadcast(tx)});
+    // } on Exception catch (_) {
+    //   rethrow;
+    // }
   }
 }

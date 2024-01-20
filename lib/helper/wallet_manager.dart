@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import '../models/account.model.dart';
 import '../models/wallet.model.dart';
@@ -104,9 +105,11 @@ class WalletManager {
     double balance = 0.0;
     List accounts = await DBHelper.accountDao!.findAllByWalletID(walletID);
     for (AccountModel accountModel in accounts) {
-      Wallet wallet =
+      Wallet _ =
           await WalletManager.loadWalletWithID(walletID, accountModel.id!);
-      balance += (await wallet.getBalance()).total;
+      //TODO::fix me
+      // balance += (await wallet.getBalance()).total;
+      balance += 0;
     }
     return balance;
   }
