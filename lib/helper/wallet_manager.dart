@@ -105,11 +105,9 @@ class WalletManager {
     double balance = 0.0;
     List accounts = await DBHelper.accountDao!.findAllByWalletID(walletID);
     for (AccountModel accountModel in accounts) {
-      Wallet _ =
+      Wallet wallet =
           await WalletManager.loadWalletWithID(walletID, accountModel.id!);
-      //TODO::fix me
-      // balance += (await wallet.getBalance()).total;
-      balance += 0;
+      balance += (await wallet.getBalance()).total;
     }
     return balance;
   }
