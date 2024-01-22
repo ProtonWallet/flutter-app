@@ -49,6 +49,7 @@ class TextFieldTextState extends State<TextFieldText> {
         ),
         child: Center(
           child: TextField(
+            textAlignVertical: TextAlignVertical.center,
             style:
                 FontManager.body2Regular(Theme.of(context).colorScheme.primary),
             maxLines: widget.multiLine ? null : 1,

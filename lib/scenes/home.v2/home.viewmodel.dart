@@ -193,7 +193,7 @@ class HomeViewModelImpl extends HomeViewModel {
           await WalletManager.getWalletBalance(walletModel.id!);
       totalBalance += walletModel.balance;
     }
-    totalBalance = totalBalance;
+    this.totalBalance = totalBalance;
     datasourceChangedStreamController.sink.add(this);
   }
 

@@ -38,150 +38,166 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildContent(
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
-    return ListView(scrollDirection: Axis.vertical, children: [
-      Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: Center(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Send from Wallet",
-                    style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
-                  ),
-                ),
-                const SizedBox(height: 5),
-                if (viewModel.userWallets.isNotEmpty)
-                  DropdownButtonV1(
+    return Stack(children: [
+      ListView(scrollDirection: Axis.vertical, children: [
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 26),
+            child: Center(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                  const SizedBox(height: 20),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    items: viewModel.userWallets,
-                    valueNotifier: viewModel.valueNotifier,
-                    itemsText:
-                        viewModel.userWallets.map((v) => v.name).toList(),
+                    child: Text(
+                      "Send from Wallet",
+                      style: FontManager.captionMedian(
+                          Theme.of(context).colorScheme.primary),
+                    ),
                   ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Send from Account",
-                    style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
-                  ),
-                ),
-                const SizedBox(height: 5),
-                if (viewModel.userAccounts.isNotEmpty)
-                  DropdownButtonV1(
+                  const SizedBox(height: 5),
+                  if (viewModel.userWallets.isNotEmpty)
+                    DropdownButtonV1(
+                      width: MediaQuery.of(context).size.width,
+                      items: viewModel.userWallets,
+                      valueNotifier: viewModel.valueNotifier,
+                      itemsText:
+                          viewModel.userWallets.map((v) => v.name).toList(),
+                    ),
+                  const SizedBox(height: 5),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    items: viewModel.userAccounts,
-                    valueNotifier: viewModel.valueNotifierForAccount,
-                    itemsText: viewModel.userAccounts
-                        .map((v) => "${v.labelDecrypt} (${v.derivationPath})")
-                        .toList(),
+                    child: Text(
+                      "Send from Account",
+                      style: FontManager.captionMedian(
+                          Theme.of(context).colorScheme.primary),
+                    ),
                   ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Current Balance: ${viewModel.balance} SAT",
-                    style: FontManager.captionMedian(ProtonColors.textHint),
+                  const SizedBox(height: 5),
+                  if (viewModel.userAccounts.isNotEmpty)
+                    DropdownButtonV1(
+                      width: MediaQuery.of(context).size.width,
+                      items: viewModel.userAccounts,
+                      valueNotifier: viewModel.valueNotifierForAccount,
+                      itemsText: viewModel.userAccounts
+                          .map((v) => "${v.labelDecrypt} (${v.derivationPath})")
+                          .toList(),
+                    ),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Current Balance: ${viewModel.balance} SAT",
+                      style: FontManager.captionMedian(ProtonColors.textHint),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Send to Recipient(s)",
-                    style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Send to Recipient(s)",
+                      style: FontManager.captionMedian(
+                          Theme.of(context).colorScheme.primary),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                TextFieldText(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  color: ProtonColors.backgroundSecondary,
-                  suffixIcon: const Icon(Icons.close),
-                  showSuffixIcon: false,
-                  showEnabledBorder: false,
-                  controller: viewModel.recipientTextController,
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Add Address",
-                    style:
-                        FontManager.captionMedian(ProtonColors.interactionNorm),
+                  const SizedBox(height: 5),
+                  TextFieldText(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    color: ProtonColors.backgroundSecondary,
+                    suffixIcon: const Icon(Icons.close),
+                    showSuffixIcon: false,
+                    showEnabledBorder: false,
+                    controller: viewModel.recipientTextController,
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Amount",
-                    style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Add Address",
+                      style: FontManager.captionMedian(
+                          ProtonColors.interactionNorm),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Amount",
+                      style: FontManager.captionMedian(
+                          Theme.of(context).colorScheme.primary),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextFieldText(
+                            width: MediaQuery.of(context).size.width - 200,
+                            height: 50,
+                            color: ProtonColors.backgroundSecondary,
+                            suffixIcon: const Icon(Icons.close),
+                            showSuffixIcon: false,
+                            showEnabledBorder: false,
+                            controller: viewModel.amountTextController,
+                            digitOnly: true,
+                          ),
+                          TextChoices(
+                              choices: const ["SAT", "BTC"],
+                              selectedValue: "SAT",
+                              controller: viewModel.coinController),
+                        ],
+                      )),
+                  const SizedBox(height: 20),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextFieldText(
-                          width: MediaQuery.of(context).size.width - 200,
-                          height: 50,
-                          color: ProtonColors.backgroundSecondary,
-                          suffixIcon: const Icon(Icons.close),
-                          showSuffixIcon: false,
-                          showEnabledBorder: false,
-                          controller: viewModel.amountTextController,
-                          digitOnly: true,
-                        ),
-                        TextChoices(
-                            choices: const ["SAT", "BTC"],
-                            selectedValue: "SAT",
-                            controller: viewModel.coinController),
-                      ],
-                    )),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Fees (Default)",
-                          style: FontManager.captionSemiBold(
-                              Theme.of(context).colorScheme.primary),
-                        ),
-                        const TagText(
-                          text: "Moderate",
-                          radius: 10.0,
-                          background: Color.fromARGB(255, 237, 252, 221),
-                          textColor: Color.fromARGB(255, 40, 116, 4),
-                        ),
-                      ]),
-                ),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.centerLeft,
-                    child: Text("${viewModel.feeRate.toStringAsFixed(1)} sats/vb\nConfirmation in 2hours")),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "Advanced options",
-                    style:
-                        FontManager.captionMedian(ProtonColors.interactionNorm),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Fees (Default)",
+                            style: FontManager.captionSemiBold(
+                                Theme.of(context).colorScheme.primary),
+                          ),
+                          const TagText(
+                            text: "Moderate",
+                            radius: 10.0,
+                            background: Color.fromARGB(255, 237, 252, 221),
+                            textColor: Color.fromARGB(255, 40, 116, 4),
+                          ),
+                        ]),
                   ),
-                ),
-                const SizedBox(height: 50),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          "${viewModel.feeRate.toStringAsFixed(1)} sats/vb\nConfirmation in 2hours")),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Advanced options",
+                      style: FontManager.captionMedian(
+                          ProtonColors.interactionNorm),
+                    ),
+                  ),
+                  const SizedBox(height: 50)
+                ])))
+      ]),
+      Container(
+          padding: const EdgeInsets.only(bottom: 50),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height -
+              56 -
+              MediaQuery.of(context).padding.top,
+          // AppBar default height is 56
+          margin: const EdgeInsets.only(left: 40, right: 40),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 ButtonV5(
                     onPressed: () {
                       if (viewModel.coinController.text != "SAT") {
@@ -201,7 +217,7 @@ class SendView extends ViewBase<SendViewModel> {
                     width: MediaQuery.of(context).size.width,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
-              ])))
+              ]))
     ]);
   }
 }

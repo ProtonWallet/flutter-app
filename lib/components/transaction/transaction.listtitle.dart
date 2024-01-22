@@ -105,6 +105,7 @@ class TransactionListTitle extends StatelessWidget {
                       padding: const EdgeInsets.all(2.0),
                       child: const Icon(Icons.edit_outlined,
                           size: 10, color: ProtonColors.textHint)),
+                  Text("Note: $note",  style: FontManager.captionRegular(ProtonColors.textHint))
                 ]),
             ],
           ),
