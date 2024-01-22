@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
-// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 import '../../helper/wallet_manager.dart';
+import '../../rust/types.dart';
 
 abstract class HistoryViewModel extends ViewModel {
   HistoryViewModel(super.coordinator, this.walletID, this.accountID);
@@ -17,6 +19,7 @@ abstract class HistoryViewModel extends ViewModel {
   String selectedTXID = "";
 
   List<TransactionDetails> history = [];
+  List<String> userLabels = [];
 
   @override
   bool get keepAlive => true;
@@ -49,6 +52,13 @@ class HistoryViewModelImpl extends HistoryViewModel {
           ? -1
           : 1;
     });
+    for (TransactionDetails transactionDetail in history) {
+      TransactionModel? transactionModel = await DBHelper.transactionDao!
+          .findByExternalTransactionID(utf8.encode(transactionDetail.txid));
+      String userLabel =
+          transactionModel != null ? utf8.decode(transactionModel.label) : "";
+      userLabels.add(userLabel);
+    }
     datasourceChangedStreamController.sink.add(this);
   }
 
