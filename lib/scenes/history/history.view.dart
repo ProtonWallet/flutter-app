@@ -66,6 +66,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
                 (viewModel.getAmount(index)).abs().toDouble()),
             isSend: viewModel.history[index].sent >
                 viewModel.history[index].received,
+            note: viewModel.userLabels[index],
             timestamp: viewModel.history[index].confirmationTime!.timestamp,
             onTap: () {
               viewModel.selectedTXID = viewModel.history[index].txid;

@@ -35,7 +35,7 @@ class TextFieldTextState extends State<TextChoices> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
+        height: 52,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: ProtonColors.backgroundSecondary,
