@@ -21,3 +21,8 @@ lefthook: [installation](https://github.com/evilmartians/lefthook/blob/master/do
 run once after install: `lefthook install`
 
 ## Localizations
+
+## Cargo index
+Add this lines to ~/.cargo/config.toml
+[registries]
+protonvpn = { index = "sparse+<https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/>" }
