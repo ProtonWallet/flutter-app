@@ -11,6 +11,9 @@ pluginManagement {
     includeBuild("${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle")
 
     repositories {
+        //maven { url 'https://pkgcache.protontech.ch/maven-central' }
+        //maven { url 'https://pkgcache.protontech.ch/google-android' }
+        //maven { url 'https://pkgcache.protontech.ch/gradle-plugins' }
         google {
             mavenContent {
                 includeGroupByRegex(".*google.*")
