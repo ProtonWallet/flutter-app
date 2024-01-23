@@ -1,5 +1,6 @@
 use crate::types::{Network, OutPoint};
 use bdk::miniscript::descriptor::DescriptorKeyParseError;
+// use http::Error as HttpError;
 
 /// Errors that can be thrown by the [`Wallet`](crate::wallet::Wallet)
 #[derive(Debug)]
@@ -107,7 +108,15 @@ pub enum Error {
     Rpc(String),
     /// Rusqlite client error
     Rusqlite(String),
+
+    // HttpError(String),
 }
+
+// impl  From<HttpError> for Error {
+//     fn from(value: HttpError) -> Self {
+//         Error::HttpError(value.to_string())
+//     }
+// }
 
 impl From<bdk::Error> for Error {
     fn from(value: bdk::Error) -> Self {

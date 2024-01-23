@@ -176,13 +176,13 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
-  rust_builder: 6e2479675c808f7f82872dbdb3fb8695935bca00
+  rust_builder: fe99dacddf57fc7b3a8e5e54484d24c310151628
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   Toast: ec33c32b8688982cecc6348adeae667c1b9938da
   url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
 
-PODFILE CHECKSUM: 4bb0d5af7b0a7a18570b26cd09a55bf9a905f81f
+PODFILE CHECKSUM: 7bb08e8bd89bec0588bdb44b8f8bbb6ec0b86ee0
 
 COCOAPODS: 1.14.3

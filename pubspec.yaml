@@ -39,7 +39,7 @@ dependencies:
   #rust
   rust_builder:
     path: rust_builder
-  flutter_rust_bridge: 2.0.0-dev.20
+  flutter_rust_bridge: 2.0.0-dev.21
 
   freezed_annotation: ^2.4.1
   logger: ^2.0.2+1

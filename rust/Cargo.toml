@@ -7,17 +7,20 @@ edition = "2021"
 assert_matches = "1.5"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = { version = "2.0.0-dev.20" }
+flutter_rust_bridge_codegen = { version = "2.0.0-dev.21" }
 
 [dependencies]
 rand = "0.8"
 bdk = { version = "0.28.2", features = ["all-keys", "use-esplora-ureq", "sqlite-bundled", "sqlite", "rpc"] }
 tokio = { version = "1.28.0", features = ["full"] }
-flutter_rust_bridge = { version = "2.0.0-dev.20"  }
+flutter_rust_bridge = { version = "2.0.0-dev.21"  }
 serde = "1.0.89"
 serde_json = "1.0.96"
 anyhow = "1.0.68"
 lazy_static = "1.4.0"
+muon = { path = "./vendor/muon" }
+http = "1.0.0"
+openssl = { version = "*", features = ["vendored"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2.12", features = ["js"] }
@@ -40,3 +43,6 @@ panic = "abort"
 [package.metadata.ios]
 # Required
 build_targets = ["aarch64-apple-ios"]
+
+[registries.protonvpn]  # registries other than crates.io
+index = "sparse+https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/"
