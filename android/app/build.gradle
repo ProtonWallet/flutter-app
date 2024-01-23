@@ -321,6 +321,53 @@ flutter {
     source '../..'
 }
 
+[
+        Debug  : null,
+        Profile: '--release',
+        Release: '--release'
+].each {
+    def taskPostfix = it.key
+    def profileMode = it.value
+    tasks.configureEach { task ->
+        if (task.name == "javaPreCompile$taskPostfix") {
+            task.dependsOn "cargoBuild-arm64-v8a$taskPostfix"
+//            task.dependsOn "cargoBuild-arm64-v8a$taskPostfix", "cargoBuild-armeabi-v7a$taskPostfix", "cargoBuild-x86$taskPostfix"
+        }
+    }
+    tasks.register("cargoBuild-arm64-v8a$taskPostfix", Exec) {
+        workingDir "../../rust"  // <-- ATTENTION: CHECK THE CORRECT FOLDER!!!
+        environment ANDROID_NDK_HOME: localProperties.getProperty('ndk.dir')
+        commandLine 'cargo', 'ndk',
+                '-t', 'arm64-v8a',
+                '-o', '../android/app/src/main/jniLibs', 'build'
+        if (profileMode != null) {
+            args profileMode
+        }
+    }
+//
+//    tasks.register("cargoBuild-armeabi-v7a$taskPostfix", Exec) {
+//        workingDir "../../rust"  // <-- ATTENTION: CHECK THE CORRECT FOLDER!!!
+//        environment ANDROID_NDK_HOME: localProperties.getProperty('ndk.dir')
+//        commandLine 'cargo', 'ndk',
+//                '-t', 'armeabi-v7a',
+//               '-o', '../android/app/src/main/jniLibs', 'build'
+//        if (profileMode != null) {
+//            args profileMode
+//        }
+//    }
+//
+//    tasks.register("cargoBuild-x86$taskPostfix", Exec) {
+//        workingDir "../../rust"  // <-- ATTENTION: CHECK THE CORRECT FOLDER!!!
+//        environment ANDROID_NDK_HOME: localProperties.getProperty('ndk.dir')
+//        commandLine 'cargo', 'ndk',
+//                '-t', 'x86',
+//               '-o', '../android/app/src/main/jniLibs', 'build'
+//        if (profileMode != null) {
+//            args profileMode
+//        }
+//    }
+}
+
 task DependenciesReport {
 
 }
