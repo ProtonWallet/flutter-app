@@ -43,6 +43,3 @@ panic = "abort"
 [package.metadata.ios]
 # Required
 build_targets = ["aarch64-apple-ios"]
-
-[registries.protonvpn]  # registries other than crates.io
-index = "sparse+https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/"

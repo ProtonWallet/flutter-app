@@ -1,6 +1,6 @@
-use crate::types::{Network, OutPoint};
+use super::types::{Network, OutPoint};
 use bdk::miniscript::descriptor::DescriptorKeyParseError;
-// use http::Error as HttpError;
+use muon::session::Error as SessionError;
 
 /// Errors that can be thrown by the [`Wallet`](crate::wallet::Wallet)
 #[derive(Debug)]
@@ -56,7 +56,7 @@ pub enum Error {
     /// Descriptor checksum mismatch
     ChecksumMismatch,
     /// Spending policy is not compatible with this [`KeychainKind`]
-    SpendingPolicyRequired(crate::types::KeychainKind),
+    SpendingPolicyRequired(crate::bdk::types::KeychainKind),
     /// Error while extracting and manipulating policies
     #[allow(clippy::enum_variant_names)]
     InvalidPolicyPathError(String),
@@ -108,15 +108,22 @@ pub enum Error {
     Rpc(String),
     /// Rusqlite client error
     Rusqlite(String),
-
-    // HttpError(String),
+    /// Muon session error
+    #[allow(clippy::enum_variant_names)]
+    SessionError(String),
 }
 
-// impl  From<HttpError> for Error {
-//     fn from(value: HttpError) -> Self {
-//         Error::HttpError(value.to_string())
-//     }
-// }
+impl From<SessionError> for Error {
+    fn from(value: SessionError) -> Self {
+        Error::SessionError(value.to_string())
+    }
+}
+
+impl From<String> for Error {
+    fn from(value: String) -> Self {
+        Error::Generic(value)
+    }
+}
 
 impl From<bdk::Error> for Error {
     fn from(value: bdk::Error) -> Self {

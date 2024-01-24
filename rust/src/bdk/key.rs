@@ -234,7 +234,7 @@ impl DescriptorPublicKey {
 }
 #[cfg(test)]
 mod test {
-    use crate::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
+    use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
     use bdk::bitcoin::hashes::hex::ToHex;
     use bdk::bitcoin::Network;
     use bdk::Error as BdkError;

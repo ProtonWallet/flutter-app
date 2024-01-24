@@ -7,15 +7,16 @@ import 'api/api2.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
-import 'blockchain.dart';
+import 'bdk/blockchain.dart';
+import 'bdk/error.dart';
+import 'bdk/types.dart';
+import 'bdk/wallet.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
-import 'error.dart';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
-import 'types.dart';
-import 'wallet.dart';
+import 'proton_api/types.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -36,6 +37,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AddressInfo dco_decode_address_info(dynamic raw);
+
+  @protected
+  AuthInfo dco_decode_auth_info(dynamic raw);
 
   @protected
   Balance dco_decode_balance(dynamic raw);
@@ -271,6 +275,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AddressInfo sse_decode_address_info(SseDeserializer deserializer);
+
+  @protected
+  AuthInfo sse_decode_auth_info(SseDeserializer deserializer);
 
   @protected
   Balance sse_decode_balance(SseDeserializer deserializer);
@@ -525,6 +532,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_address_info(AddressInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_auth_info(AuthInfo self, SseSerializer serializer);
 
   @protected
   void sse_encode_balance(Balance self, SseSerializer serializer);

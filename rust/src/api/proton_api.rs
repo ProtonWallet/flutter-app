@@ -5,64 +5,31 @@ use muon::types::auth::{AuthInfoReq, AuthInfoRes};
 use muon::AppSpec;
 use http;
 
+use crate::bdk::error::Error;
+use crate::proton_api::types::AuthInfo;
 
-pub fn add_four(left: usize, right: usize) -> usize {
+pub async fn fetch_auth_info(user_name: String) -> Result<AuthInfo, Error> {
     let app = AppSpec::default();
     let auth = SimpleAuthStore::new("atlas");
-    let session = Session::new(auth, app);
+    let session = Session::new(auth, app)?;
 
     let req = AuthInfoReq {
-        Username: "yanfeng.zhang@proton.ch".into(),
+        Username: user_name,
     };
-    left + right
+
+    let res: Result<AuthInfoRes, Error> = JsonRequest::new(http::Method::POST, "/auth/v4/info")
+        .body(req)
+        .map_err(|err| Error::Generic(err.to_string()))?
+        .bind(session)
+        .map_err(|err| Error::Generic(err.to_string()))?
+        .send()
+        .await
+        .map_err(|err| Error::Generic(err.to_string()))?
+        .body()
+        .map_err(|err| Error::Generic(err.to_string()));
+
+    Ok(res?.into())
 }
-
-// use crate::error::Error;
-
-// #[flutter_rust_bridge::frb(async)]
-// async fn fetch_auth_info() -> Result<AuthInfoRes, Error> {
-
-//     let app = AppSpec::default();
-//     let auth = SimpleAuthStore::new("atlas");
-//     let session = Session::new(auth, app)?;
-
-//     let req = AuthInfoReq {
-//         Username: "yanfeng.zhang@proton.ch".into(),
-//     };
-
-//     let res: AuthInfoRes = JsonRequest::new(http::Method::POST, "/auth/v4/info")
-//         .body(req)?
-//         .bind(session)?
-//         .send()
-//         .await?
-//         .body()?;
-    
-//     Ok(res)
-// }
-
-// #[tokio::main]
-// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//     env_logger::init();
-
-//     let app = AppSpec::default();
-//     let auth = SimpleAuthStore::new("atlas");
-//     let session = Session::new(auth, app)?;
-
-//     let req = AuthInfoReq {
-//         Username: "username".into(),
-//     };
-
-//     let res: AuthInfoRes = JsonRequest::new(http::Method::POST, "/auth/v4/info")
-//         .body(req)?
-//         .bind(session)?
-//         .send()
-//         .await?
-//         .body()?;
-
-//     assert!(!res.Modulus.is_empty());
-
-//     Ok(())
-// }
 
 
 // #[tokio::main]
