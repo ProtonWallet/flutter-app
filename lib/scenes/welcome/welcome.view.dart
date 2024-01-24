@@ -60,15 +60,15 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
     Map userInfo = {};
     userSessionProvider.login(
         userInfo["userId"] ??
-            "H4WhXT8Ga9kYdz4XNY36UiTzvmuLJbkSD4N0s3vuiIm8PoqIPLYNk8MxdCm18PSyEz8YCL6GUDVc4-potp8DKQ==",
-        userInfo["userMail"] ?? "willwallet1@proton.black",
-        userInfo["userName"] ?? "willwallet1",
-        userInfo["userDisplayName"] ?? "willwallet1",
-        userInfo["sessionId"] ?? "ekg56qctbmjmrjbf4i5kuomwdrju4x6n",
-        userInfo["accessToken"] ?? "4ghy7gxgjy623nu3ya5akljhgck3wejb",
-        userInfo["refreshToken"] ?? "gpaz4wdteci7butrhfw5i3nnn73kcwv5",
+            "ffdya2Juf_4GYwZXDpM4A7Dz9BIRTj2JzUxtli9qvIgm3cA0eOCRk9sCEGti3ReMhJ8rSgmXN7xZRa8f7V04ZQ==",
+        userInfo["userMail"] ?? "ProtonWallet@proton.black",
+        userInfo["userName"] ?? "ProtonWallet",
+        userInfo["userDisplayName"] ?? "ProtonWallet",
+        userInfo["sessionId"] ?? "aphyr7mnsg7r6c3savhv376hs5n2dbqo",
+        userInfo["accessToken"] ?? "ro6jhkalhaxxevgejbjqzljxzn47sedd",
+        userInfo["refreshToken"] ?? "ctidzrblu3jsku3n7g5lmjrot4azdoiu",
         userInfo["userKeyID"] ??
-            "igZ0nMBnUFMrgrWLGZbJql93OcOR0X9VfB01ODV6smpI4zTayqtVKJMLtBNytm074SLG8PH7wu3jfQkJf4IIig==");
+            "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,

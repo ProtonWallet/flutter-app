@@ -435,15 +435,23 @@ class HomeView extends ViewBase<HomeViewModel> {
           ButtonV5(
               onPressed: () async {
                 List<String> contents = [];
-                contents.add("userId = ${await SecureStorageHelper.get("userId")}\n");
-                contents.add("userMail = ${await SecureStorageHelper.get("userMail")}\n");
-                contents.add("userName = ${await SecureStorageHelper.get("userName")}\n");
-                contents.add("userDisplayName = ${await SecureStorageHelper.get("userDisplayName")}\n");
-                contents.add("sessionId = ${await SecureStorageHelper.get("sessionId")}\n");
-                contents.add("accessToken = ${await SecureStorageHelper.get("accessToken")}\n");
-                contents.add("refreshToken = ${await SecureStorageHelper.get("refreshToken")}\n");
-                contents.add("userKeyID = ${await SecureStorageHelper.get("userKeyID")}\n");
-                if (context.mounted){
+                contents.add(
+                    "userId = ${await SecureStorageHelper.get("userId")}\n");
+                contents.add(
+                    "userMail = ${await SecureStorageHelper.get("userMail")}\n");
+                contents.add(
+                    "userName = ${await SecureStorageHelper.get("userName")}\n");
+                contents.add(
+                    "userDisplayName = ${await SecureStorageHelper.get("userDisplayName")}\n");
+                contents.add(
+                    "sessionId = ${await SecureStorageHelper.get("sessionId")}\n");
+                contents.add(
+                    "accessToken = ${await SecureStorageHelper.get("accessToken")}\n");
+                contents.add(
+                    "refreshToken = ${await SecureStorageHelper.get("refreshToken")}\n");
+                contents.add(
+                    "userKeyID = ${await SecureStorageHelper.get("userKeyID")}\n");
+                if (context.mounted) {
                   showMyAlertDialog(context, contents.join("\n"));
                 }
               },
@@ -460,7 +468,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ButtonV5(
               onPressed: () async {
                 await SecureStorageHelper.deleteAll();
-                if (context.mounted){
+                if (context.mounted) {
                   LocalToast.showToast(context, "Deleted!");
                 }
               },
@@ -518,6 +526,13 @@ void showMyAlertDialog(BuildContext context, String content) {
         title: const Text("Secure Storage Info"),
         content: Text(content),
         actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: content))
+                  .then((v) => {LocalToast.showToast(context, "Copied")});
+            },
+            child: const Text("Copy"),
+          ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

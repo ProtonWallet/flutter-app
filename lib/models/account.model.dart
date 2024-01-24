@@ -13,15 +13,18 @@ class AccountModel {
   int modifyTime;
 
   String labelDecrypt = "Default Account";
+  String serverAccountID;
 
-  AccountModel(
-      {required this.id,
-      required this.walletID,
-      required this.derivationPath,
-      required this.label,
-      required this.scriptType,
-      required this.createTime,
-      required this.modifyTime});
+  AccountModel({
+    required this.id,
+    required this.walletID,
+    required this.derivationPath,
+    required this.label,
+    required this.scriptType,
+    required this.createTime,
+    required this.modifyTime,
+    required this.serverAccountID,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,6 +35,7 @@ class AccountModel {
       'scriptType': scriptType,
       'createTime': createTime,
       'modifyTime': modifyTime,
+      'serverAccountID': serverAccountID,
     };
   }
 
@@ -51,6 +55,7 @@ class AccountModel {
       scriptType: map['scriptType'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
+      serverAccountID: map['serverAccountID'],
     );
     accountModel.decrypt();
     return accountModel;

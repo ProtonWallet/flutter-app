@@ -23,7 +23,8 @@ Future<void> main() async {
           label: Uint8List(0),
           scriptType: ScriptType.legacy.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000));
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          serverAccountID: ""));
       expect(id, 1);
       id = await appDatabase.accountDao.insert(AccountModel(
           id: null,
@@ -32,7 +33,8 @@ Future<void> main() async {
           label: Uint8List(0),
           scriptType: ScriptType.nativeSegWit.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000));
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          serverAccountID: ""));
       expect(id, 2);
 
       id = await appDatabase.accountDao.insert(AccountModel(
@@ -42,7 +44,8 @@ Future<void> main() async {
           label: Uint8List(0),
           scriptType: ScriptType.nestedSegWit.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000));
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          serverAccountID: ""));
       expect(id, 3);
     });
 
@@ -134,7 +137,8 @@ Future<void> main() async {
           label: Uint8List(0),
           scriptType: ScriptType.taproot.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000 + 1234567,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000 + 55688));
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000 + 55688,
+          serverAccountID: ""));
       AccountModel accountModel = await appDatabase.accountDao.findById(3);
       expect(accountModel.id, 3);
       expect(accountModel.walletID, 112);
