@@ -9,7 +9,11 @@ abstract class AccountDao extends BaseDao {
 
   Future findAllByWalletID(int walletID);
 
+  Future findByServerAccountID(String serverAccountID);
+
   Future<int> getAccountCount(int walletID);
+
+  Future deleteAccountsNotInServers(int walletID, List<String> serverAccountIDs);
 }
 
 class AccountDaoImpl extends AccountDao {
@@ -39,9 +43,20 @@ class AccountDaoImpl extends AccountDao {
   }
 
   @override
+  Future findByServerAccountID(String serverAccountID) async {
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
+    if (maps.isNotEmpty) {
+      return AccountModel.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future findByDerivationPath(int walletID, String derivationPath) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? AND derivationPath = "?"',
+        where: 'walletID = ? AND derivationPath = ?',
         whereArgs: [walletID, derivationPath]);
     if (maps.isNotEmpty) {
       return AccountModel.fromMap(maps.first);
@@ -76,5 +91,12 @@ class AccountDaoImpl extends AccountDao {
         await db.query(tableName, where: 'walletID = ?', whereArgs: [walletID]);
     return List.generate(
         maps.length, (index) => AccountModel.fromMap(maps[index]));
+  }
+
+  @override
+  Future deleteAccountsNotInServers(int walletID, List<String> serverAccountIDs) async {
+    String notIn = serverAccountIDs.join('","');
+    String sql = 'DELETE FROM $tableName WHERE walletID = $walletID AND serverAccountID NOT IN ("$notIn")';
+    await db.rawDelete(sql);
   }
 }

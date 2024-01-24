@@ -147,23 +147,38 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         type: WalletModel.typeOnChain,
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        localDBName: const Uuid().v4().replaceAll('-', ''));
-    int walletID = await DBHelper.walletDao!.insert(wallet);
-    WalletManager.importAccount(walletID, "Default Account",
-        ScriptType.nativeSegWit.index, "m/84'/1'/0'/0");
-    // TODO:: send correct wallet key instead of mock one
-    APIHelper.createWallet({
+        localDBName: const Uuid().v4().replaceAll('-', ''),
+        serverWalletID: "");
+
+    String serverWalletID = await APIHelper.createWallet({
       "Name": wallet.name,
       "IsImported": wallet.imported,
       "Type": wallet.type,
       "HasPassphrase": wallet.passphrase,
       "UserKeyId": APIHelper.userKeyID,
-      "WalletKey": base64Encode(utf8.encode(await WalletManager.encrypt(strMnemonic,
+      "WalletKey": base64Encode(utf8.encode(await WalletManager.encrypt(
+          strMnemonic,
           passphrase_: passphraseTextController.text))),
-      "Mnemonic": base64Encode(utf8.encode(await WalletManager.encrypt(strMnemonic,
+      "Mnemonic": base64Encode(utf8.encode(await WalletManager.encrypt(
+          strMnemonic,
           passphrase_: passphraseTextController.text))),
       // "PublicKey": Uint8List(0),
     });
+    // TODO:: send correct wallet key instead of mock one
+    if (serverWalletID != "") {
+      wallet.serverWalletID = serverWalletID;
+      String serverAccountID = await APIHelper.createAccount(serverWalletID, {
+        "DerivationPath": "m/84'/1'/0'",
+        "Label": base64Encode(
+            utf8.encode(await WalletManager.encrypt("Default Account"))),
+        "ScriptType": ScriptType.nativeSegWit.index,
+      });
+      if (serverAccountID != "") {
+        int walletID = await DBHelper.walletDao!.insert(wallet);
+        WalletManager.importAccount(walletID, "Default Account",
+            ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", serverAccountID);
+      }
+    }
   }
 
   @override
