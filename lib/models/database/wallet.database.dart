@@ -18,7 +18,8 @@ abstract class WalletDatabase extends BaseDatabase {
           type INTEGER,
           createTime INTEGER,
           modifyTime INTEGER,
-          localDBName TEXT
+          localDBName TEXT,
+          serverWalletID TEXT
         )
     ''');
   });

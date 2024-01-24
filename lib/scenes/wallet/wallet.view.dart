@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
 
@@ -110,7 +111,12 @@ class WalletView extends ViewBase<WalletViewModel> {
                       onTap: () {
                         if (viewModel.initialed) {
                           AddAccountAlertDialog.show(
-                              context, viewModel.walletID);
+                              context,
+                              viewModel.walletID,
+                              viewModel.walletModel.serverWalletID,
+                              callback: () {
+                            viewModel.loadData();
+                          });
                         }
                       },
                       child: Padding(
@@ -301,7 +307,8 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator.move(ViewIdentifiers.walletDeletion, context);
+                      viewModel.coordinator
+                          .move(ViewIdentifiers.walletDeletion, context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
@@ -315,8 +322,92 @@ class WalletView extends ViewBase<WalletViewModel> {
                       ),
                     ),
                   )),
+            ]),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              SizedBox(
+                  width: 120,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await viewModel.deleteAccount();
+                      if (context.mounted) {
+                        LocalToast.showToast(context, "Account deleted!");
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
+                    child: const Text(
+                      "Delete Account",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                  width: 120,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return showUpdateLabelDialog(
+                                context, viewModel, viewSize);
+                          });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
+                    child: const Text(
+                      "Update Account",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )),
             ])
           ]),
         ]));
+  }
+
+  Widget showUpdateLabelDialog(
+      BuildContext context, WalletViewModel viewModel, ViewSize viewSize) {
+    TextEditingController textEditingController = TextEditingController();
+    textEditingController.text = viewModel.accountModel.labelDecrypt;
+    return AlertDialog(
+      title: const Text('Update Label'),
+      content: TextField(
+        decoration: const InputDecoration(
+          hintText: 'Your new label here',
+        ),
+        controller: textEditingController,
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+            await viewModel.updateAccountLabel(textEditingController.text);
+          },
+          child: const Text('Submit'),
+        ),
+      ],
+    );
   }
 }

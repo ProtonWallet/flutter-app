@@ -31,7 +31,8 @@ Future<void> main() async {
           type: WalletModel.typeOnChain,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          localDBName: const Uuid().v4().replaceAll('-', '')));
+          localDBName: const Uuid().v4().replaceAll('-', ''),
+          serverWalletID: ""));
       expect(id, 1);
       id = await appDatabase.walletDao.insert(WalletModel(
           id: null,
@@ -46,7 +47,8 @@ Future<void> main() async {
           type: WalletModel.typeOnChain,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          localDBName: const Uuid().v4().replaceAll('-', '')));
+          localDBName: const Uuid().v4().replaceAll('-', ''),
+          serverWalletID: ""));
       expect(id, 2);
     });
 
@@ -126,7 +128,8 @@ Future<void> main() async {
           type: WalletModel.typeOnChain,
           createTime: now.millisecondsSinceEpoch ~/ 1000 + 9487949,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000 - 87653,
-          localDBName: const Uuid().v4().replaceAll('-', '')));
+          localDBName: const Uuid().v4().replaceAll('-', ''),
+          serverWalletID: ""));
       WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);
       expect(walletModel.userID, 33);
@@ -136,8 +139,10 @@ Future<void> main() async {
       expect(walletModel.priority, WalletModel.primary);
       expect(walletModel.status, WalletModel.statusDisabled);
       expect(walletModel.type, WalletModel.typeOnChain);
-      expect(walletModel.createTime, now.millisecondsSinceEpoch ~/ 1000 + 9487949);
-      expect(walletModel.modifyTime, now.millisecondsSinceEpoch ~/ 1000 - 87653);
+      expect(
+          walletModel.createTime, now.millisecondsSinceEpoch ~/ 1000 + 9487949);
+      expect(
+          walletModel.modifyTime, now.millisecondsSinceEpoch ~/ 1000 - 87653);
     });
   });
 }
