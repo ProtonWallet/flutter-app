@@ -13,6 +13,7 @@ abstract class AccountDatabase extends BaseDatabase {
           scriptType INTEGER,
           createTime INTEGER,
           modifyTime INTEGER,
+          serverAccountID TEXT,
           UNIQUE (walletID, derivationPath)
         )
     ''');

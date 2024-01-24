@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import '../../helper/dbhelper.dart';
 import '../../models/account.model.dart';
@@ -26,6 +28,10 @@ abstract class WalletViewModel extends ViewModel {
   void updateWalletInfo();
 
   void syncWallet();
+
+  Future<void> deleteAccount();
+
+  Future<void> updateAccountLabel(String newLabel);
 
   WalletViewModel(super.coordinator, this.walletID);
 
@@ -93,6 +99,23 @@ class WalletViewModelImpl extends WalletViewModel {
         .then((_) {
       LocalToast.showToast(context, "Copied Mnemonic!");
     });
+  }
+
+  @override
+  Future<void> updateAccountLabel(String newLabel) async {
+    await APIHelper.updateAccountLabel(walletModel.serverWalletID, accountModel.serverAccountID,
+        base64Encode(utf8.encode(await WalletManager.encrypt(newLabel))));
+    accountModel.label = utf8.encode(await WalletManager.encrypt(newLabel));
+    accountModel.labelDecrypt = newLabel;
+    await DBHelper.accountDao!.update(accountModel);
+    await loadData();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    await APIHelper.deleteAccount(walletModel.serverWalletID, accountModel.serverAccountID);
+    await DBHelper.accountDao!.delete(accountModel.id!);
+    await loadData();
   }
 
   @override

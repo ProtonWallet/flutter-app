@@ -8,8 +8,6 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-
-import '../../constants/script_type.dart';
 import '../../helper/wallet_manager.dart';
 import '../../models/wallet.model.dart';
 import '../../network/api.helper.dart';
@@ -53,6 +51,7 @@ abstract class HomeViewModel extends ViewModel {
   void fetchWallets();
 
   int unconfirmed = 0;
+  int totalAccount = 0;
   int confirmed = 0;
 
   @override
@@ -95,13 +94,17 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> checkNewWallet() async {
+    int totalAccount_ = 0;
     await DBHelper.walletDao!.findAll().then((results) async {
       for (WalletModel walletModel in results) {
         walletModel.accountCount =
             await DBHelper.accountDao!.getAccountCount(walletModel.id!);
+        totalAccount_ += walletModel.accountCount;
       }
-      if (results.length != userWallets.length) {
+      if (results.length != userWallets.length ||
+          totalAccount != totalAccount_) {
         userWallets = results;
+        totalAccount = totalAccount_;
       }
     });
     datasourceChangedStreamController.sink.add(this);
@@ -206,7 +209,7 @@ class HomeViewModelImpl extends HomeViewModel {
         Map<String, dynamic> walletData = walletContainer["Wallet"];
         // Map<String, dynamic> walletKeyData = walletContainer["WalletKey"];
         // Map<String, dynamic> walletSettingsData =
-            walletContainer["WalletSettings"];
+        walletContainer["WalletSettings"];
         DateTime now = DateTime.now();
         // TODO:: user mnemonic from API after bugfix by Kevin
         // String strMnemonic =
@@ -218,9 +221,9 @@ class HomeViewModelImpl extends HomeViewModel {
         //   strMnemonic =
         //       "blame curious virtual unhappy matter knife satisfy any young error weekend fragile";
         // }
-        String strMnemonic = await WalletManager.decrypt(utf8.decode(base64Decode(walletData["Mnemonic"])));
-        bool mnemonicExist = await WalletManager.mnemonicExists(strMnemonic);
-        if (!mnemonicExist) {
+        WalletModel? walletModel =
+            await DBHelper.walletDao!.findByServerWalletId(walletData["ID"]);
+        if (walletModel == null) {
           WalletModel wallet = WalletModel(
               id: null,
               userID: 0,
@@ -236,15 +239,53 @@ class HomeViewModelImpl extends HomeViewModel {
               type: walletData["Type"],
               createTime: now.millisecondsSinceEpoch ~/ 1000,
               modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-              localDBName: const Uuid().v4().replaceAll('-', ''));
+              localDBName: const Uuid().v4().replaceAll('-', ''),
+              serverWalletID: walletData["ID"]);
           int walletID = await DBHelper.walletDao!.insert(wallet);
-          WalletManager.importAccount(walletID, "Default Account",
-              ScriptType.nativeSegWit.index, "m/84'/1'/0'/0");
+          List<dynamic> accountInfos =
+              await APIHelper.getAccounts(walletData["ID"]);
+          if (accountInfos.isNotEmpty) {
+            for (Map<String, dynamic> accountInfo in accountInfos) {
+              WalletManager.importAccount(
+                  walletID,
+                  await WalletManager.decrypt(
+                      utf8.decode(base64Decode(accountInfo["Label"]))),
+                  accountInfo["ScriptType"],
+                  accountInfo["DerivationPath"] + "/0",
+                  accountInfo["ID"]);
+            }
+          }
+        } else {
+          List<dynamic> accountInfos =
+              await APIHelper.getAccounts(walletData["ID"]);
+          walletModel.accountCount =
+          await DBHelper.accountDao!.getAccountCount(walletModel.id!);
+          List<String> existingAccountIDs = [];
+          if (accountInfos.isNotEmpty) {
+            for (Map<String, dynamic> accountInfo in accountInfos) {
+              existingAccountIDs.add(accountInfo["ID"]);
+              WalletManager.importAccount(
+                  walletModel.id!,
+                  await WalletManager.decrypt(
+                      utf8.decode(base64Decode(accountInfo["Label"]))),
+                  accountInfo["ScriptType"],
+                  accountInfo["DerivationPath"] + "/0",
+                  accountInfo["ID"]);
+            }
+          }
+          try {
+            if (walletModel.accountCount != accountInfos.length) {
+              DBHelper.accountDao!.deleteAccountsNotInServers(
+                  walletModel.id!, existingAccountIDs);
+            }
+          } catch (e){
+            e.toString();
+          }
         }
       }
+      Future.delayed(const Duration(seconds: 30), () {
+        fetchWallets();
+      });
     }
-    Future.delayed(const Duration(seconds: 30), () {
-      fetchWallets();
-    });
   }
 }

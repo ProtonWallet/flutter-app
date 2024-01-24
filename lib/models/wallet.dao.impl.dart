@@ -6,6 +6,7 @@ abstract class WalletDao extends BaseDao {
   WalletDao(super.db, super.tableName);
 
   Future<int> counts();
+  Future<WalletModel?> findByServerWalletId(String serverWalletID);
 }
 
 class WalletDaoImpl extends WalletDao {
@@ -26,7 +27,19 @@ class WalletDaoImpl extends WalletDao {
   @override
   Future findById(int id) async {
     List<Map<String, dynamic>> maps =
-        await db.query(tableName, where: 'id = ?', whereArgs: [id]);
+    await db.query(tableName, where: 'id = ?', whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return WalletModel.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+
+  @override
+  Future<WalletModel?> findByServerWalletId(String serverWalletID) async {
+    List<Map<String, dynamic>> maps =
+    await db.query(tableName, where: 'serverWalletID = ?', whereArgs: [serverWalletID]);
     if (maps.isNotEmpty) {
       return WalletModel.fromMap(maps.first);
     } else {

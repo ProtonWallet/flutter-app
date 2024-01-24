@@ -33,19 +33,30 @@ class WalletManager {
     return wallet;
   }
 
-  static Future<void> importAccount(
-      int walletID, String label, int scriptType, String derivationPath) async {
+  static Future<void> importAccount(int walletID, String label, int scriptType,
+      String derivationPath, String serverAccountID) async {
     if (walletID != -1) {
       DateTime now = DateTime.now();
-      AccountModel account = AccountModel(
-          id: null,
-          walletID: walletID,
-          derivationPath: derivationPath,
-          label: utf8.encode(await encrypt(label)),
-          scriptType: scriptType,
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000);
-      DBHelper.accountDao!.insert(account);
+      AccountModel? account =
+      await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+      if (account != null) {
+        account.label = utf8.encode(await encrypt(label));
+        account.labelDecrypt = label;
+        account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
+        account.scriptType = scriptType;
+        DBHelper.accountDao!.update(account);
+      } else {
+        account = AccountModel(
+            id: null,
+            walletID: walletID,
+            derivationPath: derivationPath,
+            label: utf8.encode(await encrypt(label)),
+            scriptType: scriptType,
+            createTime: now.millisecondsSinceEpoch ~/ 1000,
+            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+            serverAccountID: serverAccountID);
+        DBHelper.accountDao!.insert(account);
+      }
     }
   }
 
@@ -110,19 +121,6 @@ class WalletManager {
       balance += (await wallet.getBalance()).total;
     }
     return balance;
-  }
-
-  static Future<bool> mnemonicExists(String mnemonic) async {
-    bool exists = false;
-    await DBHelper.walletDao!.findAll().then((results) async {
-      for (WalletModel walletModel in results) {
-        if (mnemonic == await getMnemonicWithID(walletModel.id!)) {
-          exists = true;
-          break;
-        }
-      }
-    });
-    return exists;
   }
 
   static Future<String> getMnemonicWithID(int walletID,

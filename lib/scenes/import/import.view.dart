@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 
@@ -81,32 +80,18 @@ class ImportView extends ViewBase<ImportViewModel> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ButtonV5(
-                        onPressed: () async {
-                          bool mnemonicExist =
-                              await WalletManager.mnemonicExists(
-                                  viewModel.mnemonicTextController.text);
-                          if (context.mounted) {
-                            if (mnemonicExist) {
-                              LocalToast.showToast(context,
-                                  "Mnemonic already exists in current wallets!",
-                                  isWarning: true,
-                                  icon: const Icon(Icons.warning,
-                                      color: Colors.white),
-                                  duration: 2);
-                              return;
+                        onPressed: () {
+                          viewModel.importWallet();
+                          LocalToast.showToast(context, "Wallet imported",
+                              duration: 2);
+                          viewModel.coordinator.end();
+                          Navigator.of(context).popUntil((route) {
+                            if (route.settings.name == null) {
+                              return false;
                             }
-                            viewModel.importWallet();
-                            LocalToast.showToast(context, "Wallet imported",
-                                duration: 2);
-                            viewModel.coordinator.end();
-                            Navigator.of(context).popUntil((route) {
-                              if (route.settings.name == null) {
-                                return false;
-                              }
-                              return route.settings.name ==
-                                  "[<'HomeNavigationView'>]";
-                            });
-                          }
+                            return route.settings.name ==
+                                "[<'HomeNavigationView'>]";
+                          });
                         },
                         text: "Import",
                         width: MediaQuery.of(context).size.width,
