@@ -1,4 +1,4 @@
-import 'package:wallet/rust/error.dart' as bridge;
+import 'package:wallet/rust/bdk/error.dart' as bridge;
 
 abstract class BdkFfiException implements Exception {
   String? message;
@@ -256,6 +256,11 @@ class HexException extends BdkFfiException {
   HexException({super.message});
 }
 
+class SessionErrorException extends BdkFfiException {
+  /// Constructs the [SessionErrorException]
+  SessionErrorException({super.message});
+}
+
 Exception handleBdkException(bridge.Error error) {
   return error.when(
     noUtxosSelected: () => NoUtxosSelectedException(
@@ -327,5 +332,6 @@ Exception handleBdkException(bridge.Error error) {
     sled: (e) => SledException(message: e.toString()),
     rpc: (e) => RpcException(message: e.toString()),
     rusqlite: (e) => RusqliteException(message: e.toString()),
+    sessionError: (e) => SessionErrorException(message: e.toString()),
   );
 }

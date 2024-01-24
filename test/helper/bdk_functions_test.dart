@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 final BdkLibrary lib = BdkLibrary();

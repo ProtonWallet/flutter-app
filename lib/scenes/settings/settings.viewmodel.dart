@@ -3,7 +3,7 @@ import 'dart:async';
 // import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class SettingsViewModel extends ViewModel {

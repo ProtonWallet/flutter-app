@@ -3,11 +3,11 @@ import 'dart:typed_data' as typed_data;
 import 'package:flutter/foundation.dart';
 import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/rust/blockchain.dart';
-import 'package:wallet/rust/error.dart' as bridge;
+import 'package:wallet/rust/bdk/blockchain.dart';
+import 'package:wallet/rust/bdk/error.dart' as bridge;
 import 'package:wallet/rust/frb_generated.dart';
-import 'package:wallet/rust/types.dart' as type;
-import 'package:wallet/rust/wallet.dart';
+import 'package:wallet/rust/bdk/types.dart' as type;
+import 'package:wallet/rust/bdk/wallet.dart';
 
 // import 'utils/utils.dart';
 

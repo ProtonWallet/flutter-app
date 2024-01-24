@@ -1,9 +1,9 @@
 import 'dart:typed_data' as typed_data;
 // import 'package:wallet/generated/bridge_definitions.dart' as bridge;
 import 'package:wallet/helper/bdk/exceptions.dart';
-import 'package:wallet/rust/error.dart';
+import 'package:wallet/rust/bdk/error.dart';
 import 'package:wallet/rust/frb_generated.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/bdk/types.dart';
 
 /// Mnemonic phrases are a human-readable version of the private keys.
 /// Supported number of words are 12, 18, and 24.

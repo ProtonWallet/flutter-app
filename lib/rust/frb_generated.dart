@@ -7,14 +7,15 @@ import 'api/api2.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
-import 'blockchain.dart';
+import 'bdk/blockchain.dart';
+import 'bdk/error.dart';
+import 'bdk/types.dart';
+import 'bdk/wallet.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'error.dart';
 import 'frb_generated.io.dart' if (dart.library.html) 'frb_generated.web.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'types.dart';
-import 'wallet.dart';
+import 'proton_api/types.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -83,7 +84,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<int> addTwo({required int left, required int right, dynamic hint});
 
-  Future<int> addFour({required int left, required int right, dynamic hint});
+  Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint});
 
   Future<String> apiAddressFromScript(
       {required Script script, required Network network, dynamic hint});
@@ -485,29 +486,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<int> addFour({required int left, required int right, dynamic hint}) {
+  Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_usize(left, serializer);
-        sse_encode_usize(right, serializer);
+        sse_encode_String(userName, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 7, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_usize,
-        decodeErrorData: null,
+        decodeSuccessData: sse_decode_auth_info,
+        decodeErrorData: sse_decode_error,
       ),
-      constMeta: kAddFourConstMeta,
-      argValues: [left, right],
+      constMeta: kFetchAuthInfoConstMeta,
+      argValues: [userName],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kAddFourConstMeta => const TaskConstMeta(
-        debugName: "add_four",
-        argNames: ["left", "right"],
+  TaskConstMeta get kFetchAuthInfoConstMeta => const TaskConstMeta(
+        debugName: "fetch_auth_info",
+        argNames: ["userName"],
       );
 
   @override
@@ -2507,6 +2507,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AuthInfo dco_decode_auth_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return AuthInfo(
+      code: dco_decode_i_32(arr[0]),
+      modulus: dco_decode_String(arr[1]),
+      srpSession: dco_decode_String(arr[2]),
+      salt: dco_decode_String(arr[3]),
+      serverEphemeral: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
   Balance dco_decode_balance(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -2835,6 +2850,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 39:
         return Error_Rusqlite(
+          dco_decode_String(raw[1]),
+        );
+      case 40:
+        return Error_SessionError(
           dco_decode_String(raw[1]),
         );
       default:
@@ -3312,6 +3331,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AuthInfo sse_decode_auth_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_code = sse_decode_i_32(deserializer);
+    var var_modulus = sse_decode_String(deserializer);
+    var var_srpSession = sse_decode_String(deserializer);
+    var var_salt = sse_decode_String(deserializer);
+    var var_serverEphemeral = sse_decode_String(deserializer);
+    return AuthInfo(
+        code: var_code,
+        modulus: var_modulus,
+        srpSession: var_srpSession,
+        salt: var_salt,
+        serverEphemeral: var_serverEphemeral);
+  }
+
+  @protected
   Balance sse_decode_balance(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_immature = sse_decode_u_64(deserializer);
@@ -3626,6 +3661,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 39:
         var var_field0 = sse_decode_String(deserializer);
         return Error_Rusqlite(var_field0);
+      case 40:
+        var var_field0 = sse_decode_String(deserializer);
+        return Error_SessionError(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -4173,6 +4211,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_auth_info(AuthInfo self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.code, serializer);
+    sse_encode_String(self.modulus, serializer);
+    sse_encode_String(self.srpSession, serializer);
+    sse_encode_String(self.salt, serializer);
+    sse_encode_String(self.serverEphemeral, serializer);
+  }
+
+  @protected
   void sse_encode_balance(Balance self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_64(self.immature, serializer);
@@ -4473,6 +4521,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(field0, serializer);
       case Error_Rusqlite(field0: final field0):
         sse_encode_i_32(39, serializer);
+        sse_encode_String(field0, serializer);
+      case Error_SessionError(field0: final field0):
+        sse_encode_i_32(40, serializer);
         sse_encode_String(field0, serializer);
     }
   }

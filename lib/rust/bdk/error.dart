@@ -3,7 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import 'frb_generated.dart';
+import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 import 'types.dart';
@@ -202,4 +202,9 @@ sealed class Error with _$Error implements FrbException {
   const factory Error.rusqlite(
     String field0,
   ) = Error_Rusqlite;
+
+  /// Muon session error
+  const factory Error.sessionError(
+    String field0,
+  ) = Error_SessionError;
 }
