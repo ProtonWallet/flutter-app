@@ -4,3 +4,4 @@ pub mod api;
 mod bdk;
 mod proton_api;
 mod ldk;
+mod utilities;

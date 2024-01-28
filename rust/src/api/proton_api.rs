@@ -31,22 +31,9 @@ pub async fn fetch_auth_info(user_name: String) -> Result<AuthInfo, Error> {
     Ok(res?.into())
 }
 
-
-// #[tokio::main]
-// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//     env_logger::init();
-
-//     let app = AppSpec::default();
-//     let auth = SimpleAuthStore::new("atlas");
-//     let session = Session::new(auth, app)?;
-
-//     let res = JsonRequest::new(http::Method::GET, "/tests/ping")
-//         .bind(&session)?
-//         .send()
-//         .await?;
-
-//     assert!(res.status().is_success());
-
-//     Ok(())
-// }
+// create a global proton api service
+// build functions
+pub fn init_api_service() {
+    // create a global proton api service
+}
 

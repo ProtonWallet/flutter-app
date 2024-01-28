@@ -127,6 +127,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_32(dynamic raw);
 
   @protected
+  int dco_decode_i_64(dynamic raw);
+
+  @protected
   KeychainKind dco_decode_keychain_kind(dynamic raw);
 
   @protected
@@ -370,6 +373,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_i_64(SseDeserializer deserializer);
 
   @protected
   KeychainKind sse_decode_keychain_kind(SseDeserializer deserializer);
@@ -634,6 +640,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_i_64(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_keychain_kind(KeychainKind self, SseSerializer serializer);
