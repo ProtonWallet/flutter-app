@@ -11,3 +11,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint}) =>
     RustLib.instance.api.fetchAuthInfo(userName: userName, hint: hint);
+
+Future<void> initApiService({dynamic hint}) =>
+    RustLib.instance.api.initApiService(hint: hint);
