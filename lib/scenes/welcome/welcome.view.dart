@@ -26,6 +26,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       : super(viewModel, const Key("WelcomeView"));
 
   static const _appChannel = MethodChannel('com.example.wallet/app.view');
+
   // TODO:: move the logics to Viewmodel
   Future<void> loginResume() async {
     // TODO:: test this logic
@@ -41,7 +42,9 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
             await SecureStorageHelper.get("sessionId"),
             await SecureStorageHelper.get("accessToken"),
             await SecureStorageHelper.get("refreshToken"),
-            await SecureStorageHelper.get("userKeyID"));
+            await SecureStorageHelper.get("userKeyID"),
+            await SecureStorageHelper.get("userPrivateKey"),
+            await SecureStorageHelper.get("userPassphrase"));
         APIHelper.init(
             userSessionProvider.userSession.accessToken,
             userSessionProvider.userSession.sessionId,
@@ -68,7 +71,9 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         userInfo["accessToken"] ?? "ro6jhkalhaxxevgejbjqzljxzn47sedd",
         userInfo["refreshToken"] ?? "ctidzrblu3jsku3n7g5lmjrot4azdoiu",
         userInfo["userKeyID"] ??
-            "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==");
+            "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==",
+        userInfo["userPrivateKey"] ?? "",
+        userInfo["userPassphrase"] ?? "");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
@@ -92,7 +97,9 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
               userInfo["sessionId"] ?? "",
               userInfo["accessToken"] ?? "",
               userInfo["refreshToken"] ?? "",
-              userInfo["userKeyID"] ?? "");
+              userInfo["userKeyID"] ?? "",
+              userInfo["userPrivateKey"] ?? "",
+              userInfo["userPassphrase"] ?? "");
           APIHelper.init(
               userSessionProvider.userSession.accessToken,
               userSessionProvider.userSession.sessionId,

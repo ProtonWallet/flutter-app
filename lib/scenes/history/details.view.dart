@@ -208,7 +208,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       launchUrl(Uri.parse(
                           "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
                     },
-                    text: "View on Etherscan",
+                    text: "View on Blockstream",
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.surfaceLight,
                     borderColor: const Color.fromARGB(255, 226, 226, 226),
@@ -249,7 +249,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   Text("To",
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
-                  TagText(text: viewModel.address)
+                  TagText(text: viewModel.address.startsWith("a1bb1fdd95") ? "eric@proton.me": viewModel.address)
                 ])),
       ],
     );

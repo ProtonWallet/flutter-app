@@ -102,14 +102,14 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                   const SizedBox(height: 5),
                   TextFieldText(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    color: ProtonColors.backgroundSecondary,
-                    suffixIcon: const Icon(Icons.close),
-                    showSuffixIcon: false,
-                    showEnabledBorder: false,
-                    controller: viewModel.recipientTextController,
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      color: ProtonColors.backgroundSecondary,
+                      suffixIcon: const Icon(Icons.close),
+                      showSuffixIcon: false,
+                      showEnabledBorder: false,
+                      controller: viewModel.recipientTextController,
+                      showMailTag: true),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
@@ -150,6 +150,25 @@ class SendView extends ViewBase<SendViewModel> {
                               controller: viewModel.coinController),
                         ],
                       )),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Message to recipient (optional)",
+                      style: FontManager.captionMedian(
+                          Theme.of(context).colorScheme.primary),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  TextFieldText(
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                    multiLine: true,
+                    color: ProtonColors.backgroundSecondary,
+                    showSuffixIcon: false,
+                    showEnabledBorder: false,
+                    controller: viewModel.memoTextController,
+                  ),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,

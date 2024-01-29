@@ -10,6 +10,8 @@ class UserSession {
   String accessToken = "";
   String refreshToken = "";
   String userKeyID = "";
+  String userPrivateKey = "";
+  String userPassphrase = "";
 }
 
 class UserSessionProvider with ChangeNotifier {
@@ -25,7 +27,9 @@ class UserSessionProvider with ChangeNotifier {
       String sessionId,
       String accessToken,
       String refreshToken,
-      String userKeyID) {
+      String userKeyID,
+      String userPrivateKey,
+      String userPassphrase) {
     _userSession.userId = userId;
     _userSession.userMail = userMail;
     _userSession.userName = userName;
@@ -34,6 +38,8 @@ class UserSessionProvider with ChangeNotifier {
     _userSession.accessToken = accessToken;
     _userSession.refreshToken = refreshToken;
     _userSession.userKeyID = userKeyID;
+    _userSession.userPrivateKey = userPrivateKey;
+    _userSession.userPassphrase = userPassphrase;
     SecureStorageHelper.set("userId", userId);
     SecureStorageHelper.set("userMail", userMail);
     SecureStorageHelper.set("userName", userName);
@@ -42,6 +48,8 @@ class UserSessionProvider with ChangeNotifier {
     SecureStorageHelper.set("accessToken", accessToken);
     SecureStorageHelper.set("refreshToken", refreshToken);
     SecureStorageHelper.set("userKeyID", userKeyID);
+    SecureStorageHelper.set("userPrivateKey", userPrivateKey);
+    SecureStorageHelper.set("userPassphrase", userPassphrase);
     notifyListeners();
   }
 
@@ -54,6 +62,8 @@ class UserSessionProvider with ChangeNotifier {
     _userSession.accessToken = "";
     _userSession.refreshToken = "";
     _userSession.userKeyID = "";
+    _userSession.userPrivateKey = "";
+    _userSession.userPassphrase = "";
     SecureStorageHelper.deleteAll();
     notifyListeners();
   }
