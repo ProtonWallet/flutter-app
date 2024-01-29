@@ -58,7 +58,6 @@ mixin _$Error {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -103,7 +102,6 @@ mixin _$Error {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -148,7 +146,6 @@ mixin _$Error {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -204,7 +201,6 @@ mixin _$Error {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -253,7 +249,6 @@ mixin _$Error {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -302,7 +297,6 @@ mixin _$Error {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -432,7 +426,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return invalidU32Bytes(field0);
   }
@@ -480,7 +473,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return invalidU32Bytes?.call(field0);
   }
@@ -528,7 +520,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidU32Bytes != null) {
@@ -590,7 +581,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return invalidU32Bytes(this);
   }
@@ -642,7 +632,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return invalidU32Bytes?.call(this);
   }
@@ -694,7 +683,6 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidU32Bytes != null) {
@@ -818,7 +806,6 @@ class _$Error_GenericImpl implements Error_Generic {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return generic(field0);
   }
@@ -866,7 +853,6 @@ class _$Error_GenericImpl implements Error_Generic {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return generic?.call(field0);
   }
@@ -914,7 +900,6 @@ class _$Error_GenericImpl implements Error_Generic {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -976,7 +961,6 @@ class _$Error_GenericImpl implements Error_Generic {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return generic(this);
   }
@@ -1028,7 +1012,6 @@ class _$Error_GenericImpl implements Error_Generic {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return generic?.call(this);
   }
@@ -1080,7 +1063,6 @@ class _$Error_GenericImpl implements Error_Generic {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -1181,7 +1163,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return scriptDoesntHaveAddressForm();
   }
@@ -1229,7 +1210,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return scriptDoesntHaveAddressForm?.call();
   }
@@ -1277,7 +1257,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (scriptDoesntHaveAddressForm != null) {
@@ -1339,7 +1318,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return scriptDoesntHaveAddressForm(this);
   }
@@ -1391,7 +1369,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return scriptDoesntHaveAddressForm?.call(this);
   }
@@ -1443,7 +1420,6 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (scriptDoesntHaveAddressForm != null) {
@@ -1536,7 +1512,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return noRecipients();
   }
@@ -1584,7 +1559,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return noRecipients?.call();
   }
@@ -1632,7 +1606,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (noRecipients != null) {
@@ -1694,7 +1667,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return noRecipients(this);
   }
@@ -1746,7 +1718,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return noRecipients?.call(this);
   }
@@ -1798,7 +1769,6 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (noRecipients != null) {
@@ -1892,7 +1862,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return noUtxosSelected();
   }
@@ -1940,7 +1909,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return noUtxosSelected?.call();
   }
@@ -1988,7 +1956,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (noUtxosSelected != null) {
@@ -2050,7 +2017,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return noUtxosSelected(this);
   }
@@ -2102,7 +2068,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return noUtxosSelected?.call(this);
   }
@@ -2154,7 +2119,6 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (noUtxosSelected != null) {
@@ -2275,7 +2239,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return outputBelowDustLimit(field0);
   }
@@ -2323,7 +2286,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return outputBelowDustLimit?.call(field0);
   }
@@ -2371,7 +2333,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (outputBelowDustLimit != null) {
@@ -2433,7 +2394,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return outputBelowDustLimit(this);
   }
@@ -2485,7 +2445,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return outputBelowDustLimit?.call(this);
   }
@@ -2537,7 +2496,6 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (outputBelowDustLimit != null) {
@@ -2677,7 +2635,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return insufficientFunds(needed, available);
   }
@@ -2725,7 +2682,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return insufficientFunds?.call(needed, available);
   }
@@ -2773,7 +2729,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (insufficientFunds != null) {
@@ -2835,7 +2790,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return insufficientFunds(this);
   }
@@ -2887,7 +2841,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return insufficientFunds?.call(this);
   }
@@ -2939,7 +2892,6 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (insufficientFunds != null) {
@@ -3045,7 +2997,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return bnBTotalTriesExceeded();
   }
@@ -3093,7 +3044,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return bnBTotalTriesExceeded?.call();
   }
@@ -3141,7 +3091,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (bnBTotalTriesExceeded != null) {
@@ -3203,7 +3152,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return bnBTotalTriesExceeded(this);
   }
@@ -3255,7 +3203,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return bnBTotalTriesExceeded?.call(this);
   }
@@ -3307,7 +3254,6 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (bnBTotalTriesExceeded != null) {
@@ -3402,7 +3348,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return bnBNoExactMatch();
   }
@@ -3450,7 +3395,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return bnBNoExactMatch?.call();
   }
@@ -3498,7 +3442,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (bnBNoExactMatch != null) {
@@ -3560,7 +3503,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return bnBNoExactMatch(this);
   }
@@ -3612,7 +3554,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return bnBNoExactMatch?.call(this);
   }
@@ -3664,7 +3605,6 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (bnBNoExactMatch != null) {
@@ -3756,7 +3696,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return unknownUtxo();
   }
@@ -3804,7 +3743,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return unknownUtxo?.call();
   }
@@ -3852,7 +3790,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (unknownUtxo != null) {
@@ -3914,7 +3851,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return unknownUtxo(this);
   }
@@ -3966,7 +3902,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return unknownUtxo?.call(this);
   }
@@ -4018,7 +3953,6 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (unknownUtxo != null) {
@@ -4113,7 +4047,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return transactionNotFound();
   }
@@ -4161,7 +4094,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return transactionNotFound?.call();
   }
@@ -4209,7 +4141,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (transactionNotFound != null) {
@@ -4271,7 +4202,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return transactionNotFound(this);
   }
@@ -4323,7 +4253,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return transactionNotFound?.call(this);
   }
@@ -4375,7 +4304,6 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (transactionNotFound != null) {
@@ -4470,7 +4398,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return transactionConfirmed();
   }
@@ -4518,7 +4445,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return transactionConfirmed?.call();
   }
@@ -4566,7 +4492,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (transactionConfirmed != null) {
@@ -4628,7 +4553,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return transactionConfirmed(this);
   }
@@ -4680,7 +4604,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return transactionConfirmed?.call(this);
   }
@@ -4732,7 +4655,6 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (transactionConfirmed != null) {
@@ -4828,7 +4750,6 @@ class _$Error_IrreplaceableTransactionImpl
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return irreplaceableTransaction();
   }
@@ -4876,7 +4797,6 @@ class _$Error_IrreplaceableTransactionImpl
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return irreplaceableTransaction?.call();
   }
@@ -4924,7 +4844,6 @@ class _$Error_IrreplaceableTransactionImpl
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (irreplaceableTransaction != null) {
@@ -4986,7 +4905,6 @@ class _$Error_IrreplaceableTransactionImpl
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return irreplaceableTransaction(this);
   }
@@ -5038,7 +4956,6 @@ class _$Error_IrreplaceableTransactionImpl
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return irreplaceableTransaction?.call(this);
   }
@@ -5090,7 +5007,6 @@ class _$Error_IrreplaceableTransactionImpl
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (irreplaceableTransaction != null) {
@@ -5212,7 +5128,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return feeRateTooLow(required);
   }
@@ -5260,7 +5175,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return feeRateTooLow?.call(required);
   }
@@ -5308,7 +5222,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (feeRateTooLow != null) {
@@ -5370,7 +5283,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return feeRateTooLow(this);
   }
@@ -5422,7 +5334,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return feeRateTooLow?.call(this);
   }
@@ -5474,7 +5385,6 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (feeRateTooLow != null) {
@@ -5602,7 +5512,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return feeTooLow(required);
   }
@@ -5650,7 +5559,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return feeTooLow?.call(required);
   }
@@ -5698,7 +5606,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (feeTooLow != null) {
@@ -5760,7 +5667,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return feeTooLow(this);
   }
@@ -5812,7 +5718,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return feeTooLow?.call(this);
   }
@@ -5864,7 +5769,6 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (feeTooLow != null) {
@@ -5966,7 +5870,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return feeRateUnavailable();
   }
@@ -6014,7 +5917,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return feeRateUnavailable?.call();
   }
@@ -6062,7 +5964,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (feeRateUnavailable != null) {
@@ -6124,7 +6025,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return feeRateUnavailable(this);
   }
@@ -6176,7 +6076,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return feeRateUnavailable?.call(this);
   }
@@ -6228,7 +6127,6 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (feeRateUnavailable != null) {
@@ -6349,7 +6247,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return missingKeyOrigin(field0);
   }
@@ -6397,7 +6294,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return missingKeyOrigin?.call(field0);
   }
@@ -6445,7 +6341,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (missingKeyOrigin != null) {
@@ -6507,7 +6402,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return missingKeyOrigin(this);
   }
@@ -6559,7 +6453,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return missingKeyOrigin?.call(this);
   }
@@ -6611,7 +6504,6 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (missingKeyOrigin != null) {
@@ -6735,7 +6627,6 @@ class _$Error_KeyImpl implements Error_Key {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return key(field0);
   }
@@ -6783,7 +6674,6 @@ class _$Error_KeyImpl implements Error_Key {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return key?.call(field0);
   }
@@ -6831,7 +6721,6 @@ class _$Error_KeyImpl implements Error_Key {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (key != null) {
@@ -6893,7 +6782,6 @@ class _$Error_KeyImpl implements Error_Key {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return key(this);
   }
@@ -6945,7 +6833,6 @@ class _$Error_KeyImpl implements Error_Key {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return key?.call(this);
   }
@@ -6997,7 +6884,6 @@ class _$Error_KeyImpl implements Error_Key {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (key != null) {
@@ -7097,7 +6983,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return checksumMismatch();
   }
@@ -7145,7 +7030,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return checksumMismatch?.call();
   }
@@ -7193,7 +7077,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (checksumMismatch != null) {
@@ -7255,7 +7138,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return checksumMismatch(this);
   }
@@ -7307,7 +7189,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return checksumMismatch?.call(this);
   }
@@ -7359,7 +7240,6 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (checksumMismatch != null) {
@@ -7482,7 +7362,6 @@ class _$Error_SpendingPolicyRequiredImpl
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return spendingPolicyRequired(field0);
   }
@@ -7530,7 +7409,6 @@ class _$Error_SpendingPolicyRequiredImpl
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return spendingPolicyRequired?.call(field0);
   }
@@ -7578,7 +7456,6 @@ class _$Error_SpendingPolicyRequiredImpl
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (spendingPolicyRequired != null) {
@@ -7640,7 +7517,6 @@ class _$Error_SpendingPolicyRequiredImpl
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return spendingPolicyRequired(this);
   }
@@ -7692,7 +7568,6 @@ class _$Error_SpendingPolicyRequiredImpl
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return spendingPolicyRequired?.call(this);
   }
@@ -7744,7 +7619,6 @@ class _$Error_SpendingPolicyRequiredImpl
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (spendingPolicyRequired != null) {
@@ -7874,7 +7748,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return invalidPolicyPathError(field0);
   }
@@ -7922,7 +7795,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return invalidPolicyPathError?.call(field0);
   }
@@ -7970,7 +7842,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidPolicyPathError != null) {
@@ -8032,7 +7903,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return invalidPolicyPathError(this);
   }
@@ -8084,7 +7954,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return invalidPolicyPathError?.call(this);
   }
@@ -8136,7 +8005,6 @@ class _$Error_InvalidPolicyPathErrorImpl
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidPolicyPathError != null) {
@@ -8261,7 +8129,6 @@ class _$Error_SignerImpl implements Error_Signer {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return signer(field0);
   }
@@ -8309,7 +8176,6 @@ class _$Error_SignerImpl implements Error_Signer {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return signer?.call(field0);
   }
@@ -8357,7 +8223,6 @@ class _$Error_SignerImpl implements Error_Signer {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (signer != null) {
@@ -8419,7 +8284,6 @@ class _$Error_SignerImpl implements Error_Signer {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return signer(this);
   }
@@ -8471,7 +8335,6 @@ class _$Error_SignerImpl implements Error_Signer {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return signer?.call(this);
   }
@@ -8523,7 +8386,6 @@ class _$Error_SignerImpl implements Error_Signer {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (signer != null) {
@@ -8661,7 +8523,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return invalidNetwork(requested, found);
   }
@@ -8709,7 +8570,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return invalidNetwork?.call(requested, found);
   }
@@ -8757,7 +8617,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidNetwork != null) {
@@ -8819,7 +8678,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return invalidNetwork(this);
   }
@@ -8871,7 +8729,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return invalidNetwork?.call(this);
   }
@@ -8923,7 +8780,6 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidNetwork != null) {
@@ -9054,7 +8910,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return invalidOutpoint(field0);
   }
@@ -9102,7 +8957,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return invalidOutpoint?.call(field0);
   }
@@ -9150,7 +9004,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidOutpoint != null) {
@@ -9212,7 +9065,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return invalidOutpoint(this);
   }
@@ -9264,7 +9116,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return invalidOutpoint?.call(this);
   }
@@ -9316,7 +9167,6 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (invalidOutpoint != null) {
@@ -9441,7 +9291,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return descriptor(field0);
   }
@@ -9489,7 +9338,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return descriptor?.call(field0);
   }
@@ -9537,7 +9385,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (descriptor != null) {
@@ -9599,7 +9446,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return descriptor(this);
   }
@@ -9651,7 +9497,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return descriptor?.call(this);
   }
@@ -9703,7 +9548,6 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (descriptor != null) {
@@ -9826,7 +9670,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return encode(field0);
   }
@@ -9874,7 +9717,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return encode?.call(field0);
   }
@@ -9922,7 +9764,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (encode != null) {
@@ -9984,7 +9825,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return encode(this);
   }
@@ -10036,7 +9876,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return encode?.call(this);
   }
@@ -10088,7 +9927,6 @@ class _$Error_EncodeImpl implements Error_Encode {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (encode != null) {
@@ -10212,7 +10050,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return miniscript(field0);
   }
@@ -10260,7 +10097,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return miniscript?.call(field0);
   }
@@ -10308,7 +10144,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (miniscript != null) {
@@ -10370,7 +10205,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return miniscript(this);
   }
@@ -10422,7 +10256,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return miniscript?.call(this);
   }
@@ -10474,7 +10307,6 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (miniscript != null) {
@@ -10599,7 +10431,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return miniscriptPsbt(field0);
   }
@@ -10647,7 +10478,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return miniscriptPsbt?.call(field0);
   }
@@ -10695,7 +10525,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (miniscriptPsbt != null) {
@@ -10757,7 +10586,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return miniscriptPsbt(this);
   }
@@ -10809,7 +10637,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return miniscriptPsbt?.call(this);
   }
@@ -10861,7 +10688,6 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (miniscriptPsbt != null) {
@@ -10985,7 +10811,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return bip32(field0);
   }
@@ -11033,7 +10858,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return bip32?.call(field0);
   }
@@ -11081,7 +10905,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (bip32 != null) {
@@ -11143,7 +10966,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return bip32(this);
   }
@@ -11195,7 +11017,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return bip32?.call(this);
   }
@@ -11247,7 +11068,6 @@ class _$Error_Bip32Impl implements Error_Bip32 {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (bip32 != null) {
@@ -11371,7 +11191,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return secp256K1(field0);
   }
@@ -11419,7 +11238,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return secp256K1?.call(field0);
   }
@@ -11467,7 +11285,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (secp256K1 != null) {
@@ -11529,7 +11346,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return secp256K1(this);
   }
@@ -11581,7 +11397,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return secp256K1?.call(this);
   }
@@ -11633,7 +11448,6 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (secp256K1 != null) {
@@ -11756,7 +11570,6 @@ class _$Error_JsonImpl implements Error_Json {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return json(field0);
   }
@@ -11804,7 +11617,6 @@ class _$Error_JsonImpl implements Error_Json {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return json?.call(field0);
   }
@@ -11852,7 +11664,6 @@ class _$Error_JsonImpl implements Error_Json {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (json != null) {
@@ -11914,7 +11725,6 @@ class _$Error_JsonImpl implements Error_Json {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return json(this);
   }
@@ -11966,7 +11776,6 @@ class _$Error_JsonImpl implements Error_Json {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return json?.call(this);
   }
@@ -12018,7 +11827,6 @@ class _$Error_JsonImpl implements Error_Json {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (json != null) {
@@ -12141,7 +11949,6 @@ class _$Error_HexImpl implements Error_Hex {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return hex(field0);
   }
@@ -12189,7 +11996,6 @@ class _$Error_HexImpl implements Error_Hex {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return hex?.call(field0);
   }
@@ -12237,7 +12043,6 @@ class _$Error_HexImpl implements Error_Hex {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (hex != null) {
@@ -12299,7 +12104,6 @@ class _$Error_HexImpl implements Error_Hex {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return hex(this);
   }
@@ -12351,7 +12155,6 @@ class _$Error_HexImpl implements Error_Hex {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return hex?.call(this);
   }
@@ -12403,7 +12206,6 @@ class _$Error_HexImpl implements Error_Hex {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (hex != null) {
@@ -12526,7 +12328,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return psbt(field0);
   }
@@ -12574,7 +12375,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return psbt?.call(field0);
   }
@@ -12622,7 +12422,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (psbt != null) {
@@ -12684,7 +12483,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return psbt(this);
   }
@@ -12736,7 +12534,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return psbt?.call(this);
   }
@@ -12788,7 +12585,6 @@ class _$Error_PsbtImpl implements Error_Psbt {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (psbt != null) {
@@ -12912,7 +12708,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return psbtParse(field0);
   }
@@ -12960,7 +12755,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return psbtParse?.call(field0);
   }
@@ -13008,7 +12802,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (psbtParse != null) {
@@ -13070,7 +12863,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return psbtParse(this);
   }
@@ -13122,7 +12914,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return psbtParse?.call(this);
   }
@@ -13174,7 +12965,6 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (psbtParse != null) {
@@ -13308,7 +13098,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return missingCachedScripts(field0, field1);
   }
@@ -13356,7 +13145,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return missingCachedScripts?.call(field0, field1);
   }
@@ -13404,7 +13192,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (missingCachedScripts != null) {
@@ -13466,7 +13253,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return missingCachedScripts(this);
   }
@@ -13518,7 +13304,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return missingCachedScripts?.call(this);
   }
@@ -13570,7 +13355,6 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (missingCachedScripts != null) {
@@ -13696,7 +13480,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return electrum(field0);
   }
@@ -13744,7 +13527,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return electrum?.call(field0);
   }
@@ -13792,7 +13574,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (electrum != null) {
@@ -13854,7 +13635,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return electrum(this);
   }
@@ -13906,7 +13686,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return electrum?.call(this);
   }
@@ -13958,7 +13737,6 @@ class _$Error_ElectrumImpl implements Error_Electrum {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (electrum != null) {
@@ -14081,7 +13859,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return esplora(field0);
   }
@@ -14129,7 +13906,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return esplora?.call(field0);
   }
@@ -14177,7 +13953,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (esplora != null) {
@@ -14239,7 +14014,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return esplora(this);
   }
@@ -14291,7 +14065,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return esplora?.call(this);
   }
@@ -14343,7 +14116,6 @@ class _$Error_EsploraImpl implements Error_Esplora {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (esplora != null) {
@@ -14466,7 +14238,6 @@ class _$Error_SledImpl implements Error_Sled {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return sled(field0);
   }
@@ -14514,7 +14285,6 @@ class _$Error_SledImpl implements Error_Sled {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return sled?.call(field0);
   }
@@ -14562,7 +14332,6 @@ class _$Error_SledImpl implements Error_Sled {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (sled != null) {
@@ -14624,7 +14393,6 @@ class _$Error_SledImpl implements Error_Sled {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return sled(this);
   }
@@ -14676,7 +14444,6 @@ class _$Error_SledImpl implements Error_Sled {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return sled?.call(this);
   }
@@ -14728,7 +14495,6 @@ class _$Error_SledImpl implements Error_Sled {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (sled != null) {
@@ -14851,7 +14617,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return rpc(field0);
   }
@@ -14899,7 +14664,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return rpc?.call(field0);
   }
@@ -14947,7 +14711,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (rpc != null) {
@@ -15009,7 +14772,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return rpc(this);
   }
@@ -15061,7 +14823,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return rpc?.call(this);
   }
@@ -15113,7 +14874,6 @@ class _$Error_RpcImpl implements Error_Rpc {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (rpc != null) {
@@ -15237,7 +14997,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     required TResult Function(String field0) sled,
     required TResult Function(String field0) rpc,
     required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
   }) {
     return rusqlite(field0);
   }
@@ -15285,7 +15044,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     TResult? Function(String field0)? sled,
     TResult? Function(String field0)? rpc,
     TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
   }) {
     return rusqlite?.call(field0);
   }
@@ -15333,7 +15091,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     TResult Function(String field0)? sled,
     TResult Function(String field0)? rpc,
     TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
     required TResult orElse(),
   }) {
     if (rusqlite != null) {
@@ -15395,7 +15152,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     required TResult Function(Error_Sled value) sled,
     required TResult Function(Error_Rpc value) rpc,
     required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
   }) {
     return rusqlite(this);
   }
@@ -15447,7 +15203,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     TResult? Function(Error_Sled value)? sled,
     TResult? Function(Error_Rpc value)? rpc,
     TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
   }) {
     return rusqlite?.call(this);
   }
@@ -15499,7 +15254,6 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
     TResult Function(Error_Sled value)? sled,
     TResult Function(Error_Rpc value)? rpc,
     TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
     required TResult orElse(),
   }) {
     if (rusqlite != null) {
@@ -15515,392 +15269,5 @@ abstract class Error_Rusqlite implements Error {
   String get field0;
   @JsonKey(ignore: true)
   _$$Error_RusqliteImplCopyWith<_$Error_RusqliteImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$Error_SessionErrorImplCopyWith<$Res> {
-  factory _$$Error_SessionErrorImplCopyWith(_$Error_SessionErrorImpl value,
-          $Res Function(_$Error_SessionErrorImpl) then) =
-      __$$Error_SessionErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String field0});
-}
-
-/// @nodoc
-class __$$Error_SessionErrorImplCopyWithImpl<$Res>
-    extends _$ErrorCopyWithImpl<$Res, _$Error_SessionErrorImpl>
-    implements _$$Error_SessionErrorImplCopyWith<$Res> {
-  __$$Error_SessionErrorImplCopyWithImpl(_$Error_SessionErrorImpl _value,
-      $Res Function(_$Error_SessionErrorImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$Error_SessionErrorImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$Error_SessionErrorImpl implements Error_SessionError {
-  const _$Error_SessionErrorImpl(this.field0);
-
-  @override
-  final String field0;
-
-  @override
-  String toString() {
-    return 'Error.sessionError(field0: $field0)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$Error_SessionErrorImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, field0);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$Error_SessionErrorImplCopyWith<_$Error_SessionErrorImpl> get copyWith =>
-      __$$Error_SessionErrorImplCopyWithImpl<_$Error_SessionErrorImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(Uint8List field0) invalidU32Bytes,
-    required TResult Function(String field0) generic,
-    required TResult Function() scriptDoesntHaveAddressForm,
-    required TResult Function() noRecipients,
-    required TResult Function() noUtxosSelected,
-    required TResult Function(int field0) outputBelowDustLimit,
-    required TResult Function(int needed, int available) insufficientFunds,
-    required TResult Function() bnBTotalTriesExceeded,
-    required TResult Function() bnBNoExactMatch,
-    required TResult Function() unknownUtxo,
-    required TResult Function() transactionNotFound,
-    required TResult Function() transactionConfirmed,
-    required TResult Function() irreplaceableTransaction,
-    required TResult Function(double required) feeRateTooLow,
-    required TResult Function(int required) feeTooLow,
-    required TResult Function() feeRateUnavailable,
-    required TResult Function(String field0) missingKeyOrigin,
-    required TResult Function(String field0) key,
-    required TResult Function() checksumMismatch,
-    required TResult Function(KeychainKind field0) spendingPolicyRequired,
-    required TResult Function(String field0) invalidPolicyPathError,
-    required TResult Function(String field0) signer,
-    required TResult Function(Network requested, Network found) invalidNetwork,
-    required TResult Function(OutPoint field0) invalidOutpoint,
-    required TResult Function(String field0) descriptor,
-    required TResult Function(String field0) encode,
-    required TResult Function(String field0) miniscript,
-    required TResult Function(String field0) miniscriptPsbt,
-    required TResult Function(String field0) bip32,
-    required TResult Function(String field0) secp256K1,
-    required TResult Function(String field0) json,
-    required TResult Function(String field0) hex,
-    required TResult Function(String field0) psbt,
-    required TResult Function(String field0) psbtParse,
-    required TResult Function(int field0, int field1) missingCachedScripts,
-    required TResult Function(String field0) electrum,
-    required TResult Function(String field0) esplora,
-    required TResult Function(String field0) sled,
-    required TResult Function(String field0) rpc,
-    required TResult Function(String field0) rusqlite,
-    required TResult Function(String field0) sessionError,
-  }) {
-    return sessionError(field0);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Uint8List field0)? invalidU32Bytes,
-    TResult? Function(String field0)? generic,
-    TResult? Function()? scriptDoesntHaveAddressForm,
-    TResult? Function()? noRecipients,
-    TResult? Function()? noUtxosSelected,
-    TResult? Function(int field0)? outputBelowDustLimit,
-    TResult? Function(int needed, int available)? insufficientFunds,
-    TResult? Function()? bnBTotalTriesExceeded,
-    TResult? Function()? bnBNoExactMatch,
-    TResult? Function()? unknownUtxo,
-    TResult? Function()? transactionNotFound,
-    TResult? Function()? transactionConfirmed,
-    TResult? Function()? irreplaceableTransaction,
-    TResult? Function(double required)? feeRateTooLow,
-    TResult? Function(int required)? feeTooLow,
-    TResult? Function()? feeRateUnavailable,
-    TResult? Function(String field0)? missingKeyOrigin,
-    TResult? Function(String field0)? key,
-    TResult? Function()? checksumMismatch,
-    TResult? Function(KeychainKind field0)? spendingPolicyRequired,
-    TResult? Function(String field0)? invalidPolicyPathError,
-    TResult? Function(String field0)? signer,
-    TResult? Function(Network requested, Network found)? invalidNetwork,
-    TResult? Function(OutPoint field0)? invalidOutpoint,
-    TResult? Function(String field0)? descriptor,
-    TResult? Function(String field0)? encode,
-    TResult? Function(String field0)? miniscript,
-    TResult? Function(String field0)? miniscriptPsbt,
-    TResult? Function(String field0)? bip32,
-    TResult? Function(String field0)? secp256K1,
-    TResult? Function(String field0)? json,
-    TResult? Function(String field0)? hex,
-    TResult? Function(String field0)? psbt,
-    TResult? Function(String field0)? psbtParse,
-    TResult? Function(int field0, int field1)? missingCachedScripts,
-    TResult? Function(String field0)? electrum,
-    TResult? Function(String field0)? esplora,
-    TResult? Function(String field0)? sled,
-    TResult? Function(String field0)? rpc,
-    TResult? Function(String field0)? rusqlite,
-    TResult? Function(String field0)? sessionError,
-  }) {
-    return sessionError?.call(field0);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Uint8List field0)? invalidU32Bytes,
-    TResult Function(String field0)? generic,
-    TResult Function()? scriptDoesntHaveAddressForm,
-    TResult Function()? noRecipients,
-    TResult Function()? noUtxosSelected,
-    TResult Function(int field0)? outputBelowDustLimit,
-    TResult Function(int needed, int available)? insufficientFunds,
-    TResult Function()? bnBTotalTriesExceeded,
-    TResult Function()? bnBNoExactMatch,
-    TResult Function()? unknownUtxo,
-    TResult Function()? transactionNotFound,
-    TResult Function()? transactionConfirmed,
-    TResult Function()? irreplaceableTransaction,
-    TResult Function(double required)? feeRateTooLow,
-    TResult Function(int required)? feeTooLow,
-    TResult Function()? feeRateUnavailable,
-    TResult Function(String field0)? missingKeyOrigin,
-    TResult Function(String field0)? key,
-    TResult Function()? checksumMismatch,
-    TResult Function(KeychainKind field0)? spendingPolicyRequired,
-    TResult Function(String field0)? invalidPolicyPathError,
-    TResult Function(String field0)? signer,
-    TResult Function(Network requested, Network found)? invalidNetwork,
-    TResult Function(OutPoint field0)? invalidOutpoint,
-    TResult Function(String field0)? descriptor,
-    TResult Function(String field0)? encode,
-    TResult Function(String field0)? miniscript,
-    TResult Function(String field0)? miniscriptPsbt,
-    TResult Function(String field0)? bip32,
-    TResult Function(String field0)? secp256K1,
-    TResult Function(String field0)? json,
-    TResult Function(String field0)? hex,
-    TResult Function(String field0)? psbt,
-    TResult Function(String field0)? psbtParse,
-    TResult Function(int field0, int field1)? missingCachedScripts,
-    TResult Function(String field0)? electrum,
-    TResult Function(String field0)? esplora,
-    TResult Function(String field0)? sled,
-    TResult Function(String field0)? rpc,
-    TResult Function(String field0)? rusqlite,
-    TResult Function(String field0)? sessionError,
-    required TResult orElse(),
-  }) {
-    if (sessionError != null) {
-      return sessionError(field0);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(Error_InvalidU32Bytes value) invalidU32Bytes,
-    required TResult Function(Error_Generic value) generic,
-    required TResult Function(Error_ScriptDoesntHaveAddressForm value)
-        scriptDoesntHaveAddressForm,
-    required TResult Function(Error_NoRecipients value) noRecipients,
-    required TResult Function(Error_NoUtxosSelected value) noUtxosSelected,
-    required TResult Function(Error_OutputBelowDustLimit value)
-        outputBelowDustLimit,
-    required TResult Function(Error_InsufficientFunds value) insufficientFunds,
-    required TResult Function(Error_BnBTotalTriesExceeded value)
-        bnBTotalTriesExceeded,
-    required TResult Function(Error_BnBNoExactMatch value) bnBNoExactMatch,
-    required TResult Function(Error_UnknownUtxo value) unknownUtxo,
-    required TResult Function(Error_TransactionNotFound value)
-        transactionNotFound,
-    required TResult Function(Error_TransactionConfirmed value)
-        transactionConfirmed,
-    required TResult Function(Error_IrreplaceableTransaction value)
-        irreplaceableTransaction,
-    required TResult Function(Error_FeeRateTooLow value) feeRateTooLow,
-    required TResult Function(Error_FeeTooLow value) feeTooLow,
-    required TResult Function(Error_FeeRateUnavailable value)
-        feeRateUnavailable,
-    required TResult Function(Error_MissingKeyOrigin value) missingKeyOrigin,
-    required TResult Function(Error_Key value) key,
-    required TResult Function(Error_ChecksumMismatch value) checksumMismatch,
-    required TResult Function(Error_SpendingPolicyRequired value)
-        spendingPolicyRequired,
-    required TResult Function(Error_InvalidPolicyPathError value)
-        invalidPolicyPathError,
-    required TResult Function(Error_Signer value) signer,
-    required TResult Function(Error_InvalidNetwork value) invalidNetwork,
-    required TResult Function(Error_InvalidOutpoint value) invalidOutpoint,
-    required TResult Function(Error_Descriptor value) descriptor,
-    required TResult Function(Error_Encode value) encode,
-    required TResult Function(Error_Miniscript value) miniscript,
-    required TResult Function(Error_MiniscriptPsbt value) miniscriptPsbt,
-    required TResult Function(Error_Bip32 value) bip32,
-    required TResult Function(Error_Secp256k1 value) secp256K1,
-    required TResult Function(Error_Json value) json,
-    required TResult Function(Error_Hex value) hex,
-    required TResult Function(Error_Psbt value) psbt,
-    required TResult Function(Error_PsbtParse value) psbtParse,
-    required TResult Function(Error_MissingCachedScripts value)
-        missingCachedScripts,
-    required TResult Function(Error_Electrum value) electrum,
-    required TResult Function(Error_Esplora value) esplora,
-    required TResult Function(Error_Sled value) sled,
-    required TResult Function(Error_Rpc value) rpc,
-    required TResult Function(Error_Rusqlite value) rusqlite,
-    required TResult Function(Error_SessionError value) sessionError,
-  }) {
-    return sessionError(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(Error_InvalidU32Bytes value)? invalidU32Bytes,
-    TResult? Function(Error_Generic value)? generic,
-    TResult? Function(Error_ScriptDoesntHaveAddressForm value)?
-        scriptDoesntHaveAddressForm,
-    TResult? Function(Error_NoRecipients value)? noRecipients,
-    TResult? Function(Error_NoUtxosSelected value)? noUtxosSelected,
-    TResult? Function(Error_OutputBelowDustLimit value)? outputBelowDustLimit,
-    TResult? Function(Error_InsufficientFunds value)? insufficientFunds,
-    TResult? Function(Error_BnBTotalTriesExceeded value)? bnBTotalTriesExceeded,
-    TResult? Function(Error_BnBNoExactMatch value)? bnBNoExactMatch,
-    TResult? Function(Error_UnknownUtxo value)? unknownUtxo,
-    TResult? Function(Error_TransactionNotFound value)? transactionNotFound,
-    TResult? Function(Error_TransactionConfirmed value)? transactionConfirmed,
-    TResult? Function(Error_IrreplaceableTransaction value)?
-        irreplaceableTransaction,
-    TResult? Function(Error_FeeRateTooLow value)? feeRateTooLow,
-    TResult? Function(Error_FeeTooLow value)? feeTooLow,
-    TResult? Function(Error_FeeRateUnavailable value)? feeRateUnavailable,
-    TResult? Function(Error_MissingKeyOrigin value)? missingKeyOrigin,
-    TResult? Function(Error_Key value)? key,
-    TResult? Function(Error_ChecksumMismatch value)? checksumMismatch,
-    TResult? Function(Error_SpendingPolicyRequired value)?
-        spendingPolicyRequired,
-    TResult? Function(Error_InvalidPolicyPathError value)?
-        invalidPolicyPathError,
-    TResult? Function(Error_Signer value)? signer,
-    TResult? Function(Error_InvalidNetwork value)? invalidNetwork,
-    TResult? Function(Error_InvalidOutpoint value)? invalidOutpoint,
-    TResult? Function(Error_Descriptor value)? descriptor,
-    TResult? Function(Error_Encode value)? encode,
-    TResult? Function(Error_Miniscript value)? miniscript,
-    TResult? Function(Error_MiniscriptPsbt value)? miniscriptPsbt,
-    TResult? Function(Error_Bip32 value)? bip32,
-    TResult? Function(Error_Secp256k1 value)? secp256K1,
-    TResult? Function(Error_Json value)? json,
-    TResult? Function(Error_Hex value)? hex,
-    TResult? Function(Error_Psbt value)? psbt,
-    TResult? Function(Error_PsbtParse value)? psbtParse,
-    TResult? Function(Error_MissingCachedScripts value)? missingCachedScripts,
-    TResult? Function(Error_Electrum value)? electrum,
-    TResult? Function(Error_Esplora value)? esplora,
-    TResult? Function(Error_Sled value)? sled,
-    TResult? Function(Error_Rpc value)? rpc,
-    TResult? Function(Error_Rusqlite value)? rusqlite,
-    TResult? Function(Error_SessionError value)? sessionError,
-  }) {
-    return sessionError?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(Error_InvalidU32Bytes value)? invalidU32Bytes,
-    TResult Function(Error_Generic value)? generic,
-    TResult Function(Error_ScriptDoesntHaveAddressForm value)?
-        scriptDoesntHaveAddressForm,
-    TResult Function(Error_NoRecipients value)? noRecipients,
-    TResult Function(Error_NoUtxosSelected value)? noUtxosSelected,
-    TResult Function(Error_OutputBelowDustLimit value)? outputBelowDustLimit,
-    TResult Function(Error_InsufficientFunds value)? insufficientFunds,
-    TResult Function(Error_BnBTotalTriesExceeded value)? bnBTotalTriesExceeded,
-    TResult Function(Error_BnBNoExactMatch value)? bnBNoExactMatch,
-    TResult Function(Error_UnknownUtxo value)? unknownUtxo,
-    TResult Function(Error_TransactionNotFound value)? transactionNotFound,
-    TResult Function(Error_TransactionConfirmed value)? transactionConfirmed,
-    TResult Function(Error_IrreplaceableTransaction value)?
-        irreplaceableTransaction,
-    TResult Function(Error_FeeRateTooLow value)? feeRateTooLow,
-    TResult Function(Error_FeeTooLow value)? feeTooLow,
-    TResult Function(Error_FeeRateUnavailable value)? feeRateUnavailable,
-    TResult Function(Error_MissingKeyOrigin value)? missingKeyOrigin,
-    TResult Function(Error_Key value)? key,
-    TResult Function(Error_ChecksumMismatch value)? checksumMismatch,
-    TResult Function(Error_SpendingPolicyRequired value)?
-        spendingPolicyRequired,
-    TResult Function(Error_InvalidPolicyPathError value)?
-        invalidPolicyPathError,
-    TResult Function(Error_Signer value)? signer,
-    TResult Function(Error_InvalidNetwork value)? invalidNetwork,
-    TResult Function(Error_InvalidOutpoint value)? invalidOutpoint,
-    TResult Function(Error_Descriptor value)? descriptor,
-    TResult Function(Error_Encode value)? encode,
-    TResult Function(Error_Miniscript value)? miniscript,
-    TResult Function(Error_MiniscriptPsbt value)? miniscriptPsbt,
-    TResult Function(Error_Bip32 value)? bip32,
-    TResult Function(Error_Secp256k1 value)? secp256K1,
-    TResult Function(Error_Json value)? json,
-    TResult Function(Error_Hex value)? hex,
-    TResult Function(Error_Psbt value)? psbt,
-    TResult Function(Error_PsbtParse value)? psbtParse,
-    TResult Function(Error_MissingCachedScripts value)? missingCachedScripts,
-    TResult Function(Error_Electrum value)? electrum,
-    TResult Function(Error_Esplora value)? esplora,
-    TResult Function(Error_Sled value)? sled,
-    TResult Function(Error_Rpc value)? rpc,
-    TResult Function(Error_Rusqlite value)? rusqlite,
-    TResult Function(Error_SessionError value)? sessionError,
-    required TResult orElse(),
-  }) {
-    if (sessionError != null) {
-      return sessionError(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class Error_SessionError implements Error {
-  const factory Error_SessionError(final String field0) =
-      _$Error_SessionErrorImpl;
-
-  String get field0;
-  @JsonKey(ignore: true)
-  _$$Error_SessionErrorImplCopyWith<_$Error_SessionErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

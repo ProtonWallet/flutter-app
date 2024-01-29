@@ -15,6 +15,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
+import 'proton_api/errors.dart';
 import 'proton_api/types.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
@@ -36,6 +37,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AddressInfo dco_decode_address_info(dynamic raw);
+
+  @protected
+  ApiError dco_decode_api_error(dynamic raw);
 
   @protected
   AuthInfo dco_decode_auth_info(dynamic raw);
@@ -277,6 +281,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AddressInfo sse_decode_address_info(SseDeserializer deserializer);
+
+  @protected
+  ApiError sse_decode_api_error(SseDeserializer deserializer);
 
   @protected
   AuthInfo sse_decode_auth_info(SseDeserializer deserializer);
@@ -537,6 +544,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_address_info(AddressInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_error(ApiError self, SseSerializer serializer);
 
   @protected
   void sse_encode_auth_info(AuthInfo self, SseSerializer serializer);

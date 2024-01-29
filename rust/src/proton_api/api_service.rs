@@ -1,7 +1,10 @@
-use muon::{session::{Error, Session}, AppSpec};
-use super::wallet_auth_store::WalletAuthStore;
+// use super::wallet_auth_store::WalletAuthStore;
+use muon::{
+    session::{Error, Session}, AppSpec, SimpleAuthStore
+};
 
-pub(crate) struct ProtonAPIService { //session renew need to connect to cache
+pub(crate) struct ProtonAPIService {
+    //session renew need to connect to cache
     // app_spec: AppSpec,
     // auth_store: WalletAuthStore,
     session: Session,
@@ -11,8 +14,8 @@ impl Default for ProtonAPIService {
     fn default() -> Self {
         // TODO:: change this to real wallet Product and device agent.
         let app_spec = AppSpec::default();
-        let auth_store = WalletAuthStore::new("atlas");
-        let session = Session::new(auth_store.clone(), app_spec.clone()).unwrap();
+        let auth_store = SimpleAuthStore::new("atlas"); // replace with WalletAuthStore that handling the cache
+        let session = Session::new(auth_store, app_spec).unwrap();
         Self {
             // app_spec,
             // auth_store,
@@ -33,4 +36,11 @@ impl ProtonAPIService {
     pub fn session_ref(&self) -> &Session {
         &self.session
     }
+}
+
+// TODO:: add generarc error parser
+
+#[cfg(test)]
+mod test {
+   
 }
