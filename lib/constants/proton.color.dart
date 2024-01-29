@@ -12,6 +12,7 @@ class ProtonColors {
   static const Color wMajor1 = Color(0xFFDEDBD9);
   static const Color nMajor1 = Color(0xFF6243E6);
   static const Color backgroundSecondary = Color(0xFFF5F4F2);
+  static const Color backgroundProton = Color(0xFFECE8FF);
   static const Color alertWaning = Color(0xFFF78400);
   static const Color alertWaningBackground = Color.fromARGB(26, 255, 153, 0);
   static const Color signalSuccess = Color(0xFF1EA885);
