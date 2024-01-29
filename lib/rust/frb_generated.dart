@@ -85,9 +85,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<int> addTwo({required int left, required int right, dynamic hint});
 
-  Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint});
+  Future<String> protonApiCreateProtonApi({dynamic hint});
 
-  Future<void> initApiService({dynamic hint});
+  Future<AuthInfo> protonApiFetchAuthInfo(
+      {required String apiId, required String userName, dynamic hint});
 
   Future<String> apiAddressFromScript(
       {required Script script, required Network network, dynamic hint});
@@ -489,52 +490,54 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint}) {
+  Future<String> protonApiCreateProtonApi({dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(userName, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 7, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_auth_info,
+        decodeSuccessData: sse_decode_String,
         decodeErrorData: sse_decode_api_error,
       ),
-      constMeta: kFetchAuthInfoConstMeta,
-      argValues: [userName],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kFetchAuthInfoConstMeta => const TaskConstMeta(
-        debugName: "fetch_auth_info",
-        argNames: ["userName"],
-      );
-
-  @override
-  Future<void> initApiService({dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kInitApiServiceConstMeta,
+      constMeta: kProtonApiCreateProtonApiConstMeta,
       argValues: [],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kInitApiServiceConstMeta => const TaskConstMeta(
-        debugName: "init_api_service",
+  TaskConstMeta get kProtonApiCreateProtonApiConstMeta => const TaskConstMeta(
+        debugName: "ProtonApi_create_proton_api",
         argNames: [],
+      );
+
+  @override
+  Future<AuthInfo> protonApiFetchAuthInfo(
+      {required String apiId, required String userName, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(apiId, serializer);
+        sse_encode_String(userName, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 8, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_auth_info,
+        decodeErrorData: sse_decode_api_error,
+      ),
+      constMeta: kProtonApiFetchAuthInfoConstMeta,
+      argValues: [apiId, userName],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kProtonApiFetchAuthInfoConstMeta => const TaskConstMeta(
+        debugName: "ProtonApi_fetch_auth_info",
+        argNames: ["apiId", "userName"],
       );
 
   @override

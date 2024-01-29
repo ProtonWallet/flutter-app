@@ -14,6 +14,7 @@ analyzer:
     - lib/generated/**
     - lib/rust/**
     - lib/helper/bdk/**  # temporary
+    - lib/helper/proton_api/**  # temporary
     - rust_builder/** 
 
 linter:

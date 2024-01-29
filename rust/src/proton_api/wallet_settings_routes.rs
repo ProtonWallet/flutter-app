@@ -6,7 +6,6 @@ use muon::{
 use super::{api_service::ProtonAPIService, route::RoutePath};
 use serde::{Deserialize, Serialize};
 
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum HideAccount {
     on = 1,
@@ -16,7 +15,7 @@ pub enum HideAccount {
 #[derive(Debug, Clone, Deserialize)]
 pub struct WalletSettings {
     #[serde(rename(deserialize = "HideAccounts"))]
-    hide_accounts: HideAccount,
+    hide_accounts: i8,
     #[serde(rename(deserialize = "InvoiceDefaultDescription"))]
     invoice_default_desc: Option<String>,
     #[serde(rename(deserialize = "InvoiceExpirationTime"))]
@@ -50,7 +49,7 @@ pub struct InvoiceExpirationTimeReq {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct MaxChannelOpeningFeeReq {
-    // Max fee for automatic channel opening with Proton Lightning node, expressed in SATS, 
+    // Max fee for automatic channel opening with Proton Lightning node, expressed in SATS,
     //   only used for lightning wallet
     #[serde(rename(serialize = "MaxChannelOpeningFee"))]
     max_channel_opening_fee: u64,
@@ -98,9 +97,10 @@ impl WalletSettingsRoute for ProtonAPIService {
         wallet_id: String,
         hide: HideAccount,
     ) -> Result<WalletSettingsResponse, Box<dyn std::error::Error>> {
-        let req = HideAccountsReq {
-            hide_accounts: hide,
-        };
+        let req =
+            HideAccountsReq {
+                hide_accounts: hide,
+            };
 
         let path = format!(
             "{}/wallets/{}/settings/accounts/hide",
@@ -186,7 +186,8 @@ impl WalletSettingsRoute for ProtonAPIService {
 #[cfg(test)]
 mod test {
     use crate::proton_api::{
-        api_service::ProtonAPIService, wallet_settings_routes::{HideAccount, WalletSettingsRoute},
+        api_service::ProtonAPIService,
+        wallet_settings_routes::{HideAccount, WalletSettingsRoute},
     };
 
     #[tokio::test]
@@ -202,7 +203,7 @@ mod test {
         assert!(result.is_ok());
         let settings_response = result.unwrap();
         assert_eq!(settings_response.code, 1000);
-        assert_eq!(settings_response.settings.hide_accounts, HideAccount::off);
+        assert_eq!(settings_response.settings.hide_accounts, 0);
         assert_eq!(
             settings_response.settings.invoice_default_desc.unwrap(),
             "Lightning payment from John Doe."
@@ -217,17 +218,18 @@ mod test {
         let mut api_service = ProtonAPIService::default();
         api_service.login("feng100", "12345678").await.unwrap();
 
-        let result = api_service
-            .update_invoice_default_desc(
-                "walletID".into(),
-                "Lightning payment from John Doe.".into(),
-            )
-            .await;
+        let result =
+            api_service
+                .update_invoice_default_desc(
+                    "walletID".into(),
+                    "Lightning payment from John Doe.".into(),
+                )
+                .await;
         print!("{:?}", result);
         assert!(result.is_ok());
         let settings_response = result.unwrap();
         assert_eq!(settings_response.code, 1000);
-        assert_eq!(settings_response.settings.hide_accounts, HideAccount::off);
+        assert_eq!(settings_response.settings.hide_accounts, 0);
         assert_eq!(
             settings_response.settings.invoice_default_desc.unwrap(),
             "Lightning payment from John Doe."
@@ -249,7 +251,7 @@ mod test {
         assert!(result.is_ok());
         let settings_response = result.unwrap();
         assert_eq!(settings_response.code, 1000);
-        assert_eq!(settings_response.settings.hide_accounts, HideAccount::off);
+        assert_eq!(settings_response.settings.hide_accounts, 0);
         assert_eq!(
             settings_response.settings.invoice_default_desc.unwrap(),
             "Lightning payment from John Doe."
@@ -271,13 +273,12 @@ mod test {
         assert!(result.is_ok());
         let settings_response = result.unwrap();
         assert_eq!(settings_response.code, 1000);
-        assert_eq!(settings_response.settings.hide_accounts, HideAccount::off);
+        assert_eq!(settings_response.settings.hide_accounts, 0);
         assert_eq!(
             settings_response.settings.invoice_default_desc.unwrap(),
             "Lightning payment from John Doe."
         );
         assert_eq!(settings_response.settings.invoice_exp_time, 1);
         assert_eq!(settings_response.settings.max_channel_opening_fee, 1);
-        
     }
 }

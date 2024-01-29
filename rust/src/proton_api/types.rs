@@ -28,12 +28,9 @@ pub struct ResponseCode {
     pub code: i32,
 }
 
-
 #[cfg(test)]
 mod test {
-    use crate::proton_api::{
-        api_service::ProtonAPIService, transactions_routes::TransactionRoute
-    };
+    use crate::proton_api::{api_service::ProtonAPIService, transactions_routes::TransactionRoute};
 
     // #[tokio::test]
     // async fn test_test_three() {

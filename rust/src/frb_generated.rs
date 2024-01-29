@@ -220,7 +220,7 @@ fn wire_add_two_impl(
         },
     )
 }
-fn wire_fetch_auth_info_impl(
+fn wire_ProtonApi_create_proton_api_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -228,7 +228,7 @@ fn wire_fetch_auth_info_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "fetch_auth_info",
+            debug_name: "ProtonApi_create_proton_api",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -242,12 +242,11 @@ fn wire_fetch_auth_info_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_user_name = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse(
                     (move || async move {
-                        crate::api::proton_api::fetch_auth_info(api_user_name).await
+                        crate::api::proton_api::ProtonApi::create_proton_api().await
                     })()
                     .await,
                 )
@@ -255,15 +254,15 @@ fn wire_fetch_auth_info_impl(
         },
     )
 }
-fn wire_init_api_service_impl(
+fn wire_ProtonApi_fetch_auth_info_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "init_api_service",
+            debug_name: "ProtonApi_fetch_auth_info",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -277,10 +276,19 @@ fn wire_init_api_service_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_api_id = <String>::sse_decode(&mut deserializer);
+            let api_user_name = <String>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| {
+            move |context| async move {
                 transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::proton_api::init_api_service()))()
+                    (move || async move {
+                        crate::api::proton_api::ProtonApi::fetch_auth_info(
+                            api_api_id,
+                            api_user_name,
+                        )
+                        .await
+                    })()
+                    .await,
                 )
             }
         },
@@ -3597,8 +3605,8 @@ fn pde_ffi_dispatcher_primary_impl(
         2 => wire_add_three_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire_fetch_auth_info_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire_init_api_service_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire_ProtonApi_create_proton_api_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire_ProtonApi_fetch_auth_info_impl(port, ptr, rust_vec_len, data_len),
         58 => wire_Api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
         61 => wire_Api_address_network_impl(port, ptr, rust_vec_len, data_len),
         59 => wire_Api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),

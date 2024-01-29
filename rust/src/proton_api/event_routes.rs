@@ -1,10 +1,16 @@
 use super::{api_service::ProtonAPIService, types::ResponseCode};
 
-pub(crate) trait QuarkCommandRoute {
+
+// either web-wallet or android-wallet, both are whitelisted
+pub(crate) trait EventRoute {
+    fn get_latest() -> Result<ResponseCode, Box<dyn std::error::Error>>;
 }
 
 
-impl QuarkCommandRoute for ProtonAPIService {
+impl EventRoute for ProtonAPIService {
+    fn get_latest() -> Result<ResponseCode, Box<dyn std::error::Error>> {
+        todo!()
+    }
 }
 
 
