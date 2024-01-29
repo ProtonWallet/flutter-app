@@ -14,3 +14,4 @@ pub mod wallet_settings_routes;
 pub mod wallet_transaction_routes;
 pub mod route;
 pub mod errors;
+pub mod event_routes;

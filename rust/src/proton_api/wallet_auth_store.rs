@@ -13,7 +13,8 @@ pub struct WalletAuthStore {
     auth: Auth,
 }
 
-impl WalletAuthStore { // need link to cache
+impl WalletAuthStore {
+    // need link to cache
     #[must_use]
     pub fn new(env: impl Into<String>) -> Self {
         Self {

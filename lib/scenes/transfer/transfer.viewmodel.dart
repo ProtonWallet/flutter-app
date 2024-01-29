@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/api/proton_api.dart';
+import 'package:wallet/helper/proton_api/proton_api_service.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class TransferViewModel extends ViewModel {
@@ -20,7 +20,8 @@ class TransferViewModelImpl extends TransferViewModel {
 
   @override
   Future<void> loadData() async {
-    var authInfo = await fetchAuthInfo(userName: "feng100");
+    var api = await ProtonApiServiceHelper.create();
+    var authInfo = await api.getAuthInfo("feng100");
     logger.i("authInfo: ${authInfo.code}, ${authInfo.srpSession}");
     testCode = authInfo.code;
 
