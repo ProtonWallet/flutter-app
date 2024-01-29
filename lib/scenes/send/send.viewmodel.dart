@@ -17,12 +17,13 @@ abstract class SendViewModel extends ViewModel {
   List userAccounts = [];
   late TextEditingController coinController;
   late TextEditingController recipientTextController;
+  late TextEditingController memoTextController;
   late TextEditingController amountTextController;
 
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
   int balance = 0;
-  double feeRate = 99.9;
+  double feeRate = 1.0;
 
   Future<void> sendCoin();
   Future<void> updateFeeRate();
@@ -46,6 +47,7 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> loadData() async {
     coinController = TextEditingController();
     recipientTextController = TextEditingController();
+    memoTextController = TextEditingController();
     amountTextController = TextEditingController();
     recipientTextController.text = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
     datasourceChangedStreamController.add(this);
@@ -112,7 +114,7 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> updateFeeRate() async{
     // FeeRate feeRate_ = await _lib.estimateFeeRate(25, _blockchain!);
     // feeRate = feeRate_.asSatPerVb();
-    datasourceChangedStreamController.add(this);
+    // datasourceChangedStreamController.add(this);
     Future.delayed(const Duration(seconds: 5), () {
       updateFeeRate();
     });
