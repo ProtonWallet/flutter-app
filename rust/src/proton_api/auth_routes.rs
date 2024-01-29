@@ -37,8 +37,8 @@ impl AuthRoute for ProtonAPIService {
 
 #[cfg(test)]
 mod test {
-    use serde_json::Number;
     use crate::proton_api::{api_service::ProtonAPIService, auth_routes::AuthRoute};
+    use serde_json::Number;
 
     #[tokio::test]
     async fn test_auth_info_ok() {

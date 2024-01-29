@@ -15,6 +15,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.io.dart' if (dart.library.html) 'frb_generated.web.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'proton_api/errors.dart';
 import 'proton_api/types.dart';
 
 /// Main entrypoint of the Rust API
@@ -498,7 +499,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_auth_info,
-        decodeErrorData: sse_decode_error,
+        decodeErrorData: sse_decode_api_error,
       ),
       constMeta: kFetchAuthInfoConstMeta,
       argValues: [userName],
@@ -2533,6 +2534,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ApiError dco_decode_api_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return ApiError_Generic(
+          dco_decode_String(raw[1]),
+        );
+      case 1:
+        return ApiError_SessionError(
+          dco_decode_String(raw[1]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
   AuthInfo dco_decode_auth_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -2876,10 +2894,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 39:
         return Error_Rusqlite(
-          dco_decode_String(raw[1]),
-        );
-      case 40:
-        return Error_SessionError(
           dco_decode_String(raw[1]),
         );
       default:
@@ -3363,6 +3377,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ApiError sse_decode_api_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_String(deserializer);
+        return ApiError_Generic(var_field0);
+      case 1:
+        var var_field0 = sse_decode_String(deserializer);
+        return ApiError_SessionError(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
   AuthInfo sse_decode_auth_info(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_code = sse_decode_i_64(deserializer);
@@ -3693,9 +3724,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 39:
         var var_field0 = sse_decode_String(deserializer);
         return Error_Rusqlite(var_field0);
-      case 40:
-        var var_field0 = sse_decode_String(deserializer);
-        return Error_SessionError(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -4249,6 +4277,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_api_error(ApiError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case ApiError_Generic(field0: final field0):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(field0, serializer);
+      case ApiError_SessionError(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(field0, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_auth_info(AuthInfo self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_64(self.code, serializer);
@@ -4559,9 +4600,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(field0, serializer);
       case Error_Rusqlite(field0: final field0):
         sse_encode_i_32(39, serializer);
-        sse_encode_String(field0, serializer);
-      case Error_SessionError(field0: final field0):
-        sse_encode_i_32(40, serializer);
         sse_encode_String(field0, serializer);
     }
   }

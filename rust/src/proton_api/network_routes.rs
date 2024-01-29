@@ -1,9 +1,10 @@
-use super::{api_service::ProtonAPIService, route::RoutePath, types::ResponseCode};
 use muon::{
     request::{JsonRequest, Response},
     session::RequestExt,
 };
 use serde::Deserialize;
+
+use crate::proton_api::{api_service::ProtonAPIService, route::RoutePath, types::ResponseCode};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct NetworkResponse {
@@ -17,10 +18,12 @@ pub struct NetworkResponseError {
     pub(crate) Error: String,
 }
 
-pub(crate) trait NetworkRoute {
-    //Get network type [GET] /wallet/{_version}/network
+pub trait NetworkRoute {
+    // Get network type [GET] /wallet/{_version}/network
     async fn get_network_type(&self) -> Result<NetworkResponse, Box<dyn std::error::Error>>;
+    // Get server ping
     async fn ping_object(&self) -> Result<ResponseCode, Box<dyn std::error::Error>>;
+    // Get server ping
     async fn ping(&self) -> Result<i32, Box<dyn std::error::Error>>;
 }
 

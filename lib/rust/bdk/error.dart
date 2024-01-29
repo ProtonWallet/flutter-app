@@ -202,9 +202,4 @@ sealed class Error with _$Error implements FrbException {
   const factory Error.rusqlite(
     String field0,
   ) = Error_Rusqlite;
-
-  /// Muon session error
-  const factory Error.sessionError(
-    String field0,
-  ) = Error_SessionError;
 }

@@ -2690,6 +2690,26 @@ impl SseDecode for crate::bdk::types::AddressInfo {
     }
 }
 
+impl SseDecode for crate::proton_api::errors::ApiError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::proton_api::errors::ApiError::Generic(var_field0);
+            }
+            1 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::proton_api::errors::ApiError::SessionError(var_field0);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
 impl SseDecode for crate::proton_api::types::AuthInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2971,10 +2991,6 @@ impl SseDecode for crate::bdk::error::Error {
             39 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::bdk::error::Error::Rusqlite(var_field0);
-            }
-            40 => {
-                let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::bdk::error::Error::SessionError(var_field0);
             }
             _ => {
                 unimplemented!("");
@@ -3720,6 +3736,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::AddressInfo>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::errors::ApiError {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::proton_api::errors::ApiError::Generic(field0) => {
+                [0.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::proton_api::errors::ApiError::SessionError(field0) => {
+                [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::errors::ApiError
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::errors::ApiError>
+    for crate::proton_api::errors::ApiError
+{
+    fn into_into_dart(self) -> crate::proton_api::errors::ApiError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::proton_api::types::AuthInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -3968,9 +4008,6 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::error::Error {
             }
             crate::bdk::error::Error::Rusqlite(field0) => {
                 [39.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::bdk::error::Error::SessionError(field0) => {
-                [40.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
         }
     }
@@ -4398,6 +4435,22 @@ impl SseEncode for crate::bdk::types::AddressInfo {
     }
 }
 
+impl SseEncode for crate::proton_api::errors::ApiError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::proton_api::errors::ApiError::Generic(field0) => {
+                <i32>::sse_encode(0, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::proton_api::errors::ApiError::SessionError(field0) => {
+                <i32>::sse_encode(1, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+        }
+    }
+}
+
 impl SseEncode for crate::proton_api::types::AuthInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4638,10 +4691,6 @@ impl SseEncode for crate::bdk::error::Error {
             }
             crate::bdk::error::Error::Rusqlite(field0) => {
                 <i32>::sse_encode(39, serializer);
-                <String>::sse_encode(field0, serializer);
-            }
-            crate::bdk::error::Error::SessionError(field0) => {
-                <i32>::sse_encode(40, serializer);
                 <String>::sse_encode(field0, serializer);
             }
         }
