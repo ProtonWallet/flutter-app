@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use http::response;
 use muon::auth::SimpleAuthStore;
@@ -7,93 +7,107 @@ use muon::session::{RequestExt, Session};
 use muon::types::auth::{AuthInfoReq, AuthInfoRes};
 use muon::AppSpec;
 // use http;
-
 use crate::proton_api::api_service::ProtonAPIService;
 use crate::proton_api::auth_routes::AuthRoute;
 use crate::proton_api::errors::ApiError;
-use crate::proton_api::network_routes::NetworkRoute;
-use crate::proton_api::types::AuthInfo;
-use crate::proton_api::wallet_routes::{CreateWalletReq, WalletRoute, WalletsResponse};
+use crate::proton_api::types::{AuthInfo, ResponseCode};
+use crate::proton_api::wallet_account_routes::{
+    CreateWalletAccountReq, WalletAccountResponse, WalletAccountRoute, WalletAccountsResponse,
+};
+use crate::proton_api::wallet_routes::{
+    CreateWalletReq, CreateWalletResponse, WalletRoute, WalletsResponse,
+};
 
-pub struct ProtonApi {}
-impl ProtonApi {
-    pub async fn create_proton_api() -> Result<String, ApiError> {
-        ProtonAPIService::new_proton_api().map_err(|err| ApiError::Generic(err.to_string()))
-    }
+use lazy_static::lazy_static;
 
-    pub async fn fetch_auth_info(api_id: String, user_name: String) -> Result<AuthInfo, ApiError> {
-        let api = ProtonAPIService::retrieve_proton_api(api_id);
-        let res = api
-            .fetch_auth_info(user_name)
-            .await
-            .map_err(|err| ApiError::Generic(err.to_string()));
-        Ok(res?.into())
-        // ProtonAPIService::retrieve_proton_api(id).map_err(|err| ApiError::Generic(err.to_string())
-    }
-    // pub async fn login(api_id: String, user_name: String, password: String) -> Result<(), ApiError> {
-    //     let api = ProtonAPIService::retrieve_proton_api(api_id);
-    //     api.get_network_type().await.map_err(|err| ApiError::Generic(err.to_string()))?;
-    //     api.login(&user_name, &password).await.map_err(|err| ApiError::Generic(err.to_string()))
-    // }
-
-    // wallets
-    // pub async fn get_wallets(&mut self) -> Result<WalletsResponse, ApiError> {
-    //     // let result = self.api.get_wallets().await;
-
-    //     let result = self.api.get_wallets().await;
-
-    //     match result {
-    //         Ok(response) => Ok(response),
-    //         Err(err) => Err(ApiError::Generic(err.to_string())),
-    //     }
-
-    //     // let res = match result {
-    //     //     Ok(response) => response,
-    //     //     Err(err) => ApiError::Generic(err.to_string()),
-    //     // };
-
-    //     // Ok(res)
-
-    //     // .map_err(|err| ApiError::Generic(err.to_string()));
-    //     // // print!("{:?}", result);
-    //     // // assert!(result.is_ok());
-    //     // // let wallet_settings_response = result.unwrap();
-    //     // Ok(result)
-    // }
-
-    // pub async fn create_wallet(&mut self, wallet_req: CreateWalletReq) -> Result<(), ApiError> {
-    //     let result = self.api.create_wallet(wallet_req).await;
-    //     print!("{:?}", result);
-    //     assert!(result.is_ok());
-    //     let wallet_settings_response = result.unwrap();
-    // }
+lazy_static! {
+    static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);
 }
 
-// pub async fn fetch_auth_info(user_name: String) -> Result<AuthInfo, ApiError> {
-//     let app = AppSpec::default();
-//     let auth = SimpleAuthStore::new("atlas");
-//     let session = Session::new(auth, app)?;
-
-//     let req = AuthInfoReq {
-//         Username: user_name,
-//     };
-
-//     let res: Result<AuthInfoRes, ApiError> = JsonRequest::new(http::Method::POST, "/auth/v4/info")
-//         .body(req)
-//         .map_err(|err| ApiError::Generic(err.to_string()))?
-//         .bind(session)
-//         .map_err(|err| ApiError::Generic(err.to_string()))?
-//         .send()
-//         .await
-//         .map_err(|err| ApiError::Generic(err.to_string()))?
-//         .body()
-//         .map_err(|err| ApiError::Generic(err.to_string()));
-
-//     Ok(res?.into())
-// }
-
-// create a global proton api service
 // build functions
-// pub fn init_api_service() {
-//     // create a global proton api service
-// }
+pub async fn init_api_service(user_name: String, password: String) {
+    // create a global proton api service
+    let mut api = ProtonAPIService::default();
+    api.login(&user_name, &password).await.unwrap();
+    let mut api_ref = PROTON_API.write().unwrap();
+    *api_ref = Some(Arc::new(api));
+}
+
+pub async fn fetch_auth_info(user_name: String) -> Result<AuthInfo, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let res = proton_api
+        .fetch_auth_info(user_name)
+        .await
+        .map_err(|err| ApiError::Generic(err.to_string()));
+    Ok(res?.into())
+}
+
+// wallets
+pub async fn get_wallets() -> Result<WalletsResponse, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.get_wallets().await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}
+
+pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<CreateWalletResponse, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.create_wallet(wallet_req).await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}
+
+// wallet accounts
+pub async fn get_wallet_accounts(wallet_id: String) -> Result<WalletAccountsResponse, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.get_wallet_accounts(wallet_id).await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}
+
+pub async fn create_wallet_account(
+    wallet_id: String,
+    req: CreateWalletAccountReq,
+) -> Result<WalletAccountResponse, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.create_wallet_account(wallet_id, req).await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}
+
+pub async fn update_wallet_account_label(
+    wallet_id: String,
+    wallet_account_id: String,
+    new_label: String,
+) -> Result<WalletAccountResponse, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}
+
+pub async fn delete_wallet_account(
+    wallet_id: String,
+    wallet_account_id: String,
+) -> Result<ResponseCode, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .delete_wallet_account(wallet_id, wallet_account_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(ApiError::Generic(err.to_string())),
+    }
+}

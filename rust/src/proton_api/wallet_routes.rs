@@ -9,70 +9,70 @@ use crate::proton_api::route::RoutePath;
 use super::{api_service::ProtonAPIService, wallet_settings_routes::WalletSettings};
 
 #[derive(Debug, Deserialize)]
-struct ProtonWallet {
-    ID: String,
-    HasPassphrase: i32,
-    IsImported: i32,
-    Mnemonic: Option<String>,
-    Name: String,
-    Priority: i32,
-    PublicKey: Option<String>,
-    Status: i32,
-    Type: i32,
+pub struct ProtonWallet {
+    pub ID: String,
+    pub HasPassphrase: i32,
+    pub IsImported: i32,
+    pub Mnemonic: Option<String>,
+    pub Name: String,
+    pub Priority: i32,
+    pub PublicKey: Option<String>,
+    pub Status: i32,
+    pub Type: i32,
 }
 
 #[derive(Debug, Deserialize)]
-struct ProtonWalletKey {
-    UserKeyID: String,
-    WalletKey: String,
+pub struct ProtonWalletKey {
+    pub UserKeyID: String,
+    pub WalletKey: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WalletData {
-    Wallet: ProtonWallet,
-    WalletKey: ProtonWalletKey,
-    WalletSettings: Option<WalletSettings>,
+    pub Wallet: ProtonWallet,
+    pub WalletKey: ProtonWalletKey,
+    pub WalletSettings: Option<WalletSettings>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WalletsResponse {
-    Code: i32,
-    Wallets: Vec<WalletData>,
+    pub Code: i32,
+    pub Wallets: Vec<WalletData>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct CreateWalletResponse {
-    Code: i32,
-    Wallet: ProtonWallet,
-    WalletKey: ProtonWalletKey,
-    WalletSettings: WalletSettings,
+    pub Code: i32,
+    pub Wallet: ProtonWallet,
+    pub WalletKey: ProtonWalletKey,
+    pub WalletSettings: WalletSettings,
     // Error: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
 pub struct CreateWalletReq {
     // Name of the wallet
-    Name: String,
+    pub Name: String,
     // 0 if the wallet is created with Proton Wallet
-    IsImported: i32,
+    pub IsImported: i32,
     // Enum: 1 2
-    Type: i32,
+    pub Type: i32,
     // 1 if the wallet has a passphrase
-    HasPassphrase: i32,
+    pub HasPassphrase: i32,
     //An encrypted ID
-    UserKeyId: String,
+    pub UserKeyId: String,
     // Base64 encoded binary data
-    WalletKey: String,
+    pub WalletKey: String,
     // "<base64_encoded_mnemonic>",
     // Encrypted wallet mnemonic with the WalletKey, in base64 format
-    Mnemonic: Option<String>,
+    pub Mnemonic: Option<String>,
     // "<base64_encoded_publickey>"
     // Encrypted wallet public key with the WalletKey, in base64 format
-    PublicKey: Option<String>,
+    pub PublicKey: Option<String>,
 }
 
 pub trait WalletRoute {
-    async fn get_wallets(self) -> Result<WalletsResponse, Box<dyn std::error::Error>>;
+    async fn get_wallets(&self) -> Result<WalletsResponse, Box<dyn std::error::Error>>;
     async fn create_wallet(
         &self,
         wallet_req: CreateWalletReq,
@@ -80,7 +80,7 @@ pub trait WalletRoute {
 }
 
 impl WalletRoute for ProtonAPIService {
-    async fn get_wallets(self) -> Result<WalletsResponse, Box<dyn std::error::Error>> {
+    async fn get_wallets(&self) -> Result<WalletsResponse, Box<dyn std::error::Error>> {
         let path = format!("{}{}", self.get_wallet_path(), "/wallets");
         print!("path: {} \r\n", path);
         let res = JsonRequest::new(http::Method::GET, path)

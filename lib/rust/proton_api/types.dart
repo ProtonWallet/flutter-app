@@ -40,3 +40,21 @@ class AuthInfo {
           salt == other.salt &&
           serverEphemeral == other.serverEphemeral;
 }
+
+class ResponseCode {
+  final int code;
+
+  const ResponseCode({
+    required this.code,
+  });
+
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResponseCode &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
+}
