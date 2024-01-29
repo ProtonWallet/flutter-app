@@ -15,13 +15,13 @@ pub enum HideAccount {
 #[derive(Debug, Clone, Deserialize)]
 pub struct WalletSettings {
     #[serde(rename(deserialize = "HideAccounts"))]
-    hide_accounts: i8,
+    pub hide_accounts: i8,
     #[serde(rename(deserialize = "InvoiceDefaultDescription"))]
-    invoice_default_desc: Option<String>,
+    pub invoice_default_desc: Option<String>,
     #[serde(rename(deserialize = "InvoiceExpirationTime"))]
-    invoice_exp_time: u64,
+    pub invoice_exp_time: u64,
     #[serde(rename(deserialize = "MaxChannelOpeningFee"))]
-    max_channel_opening_fee: u64,
+    pub max_channel_opening_fee: u64,
 }
 
 // #Request
@@ -30,21 +30,21 @@ pub struct WalletSettings {
 pub struct HideAccountsReq {
     // Hide accounts, only used for on-chain wallet
     #[serde(rename(serialize = "HideAccounts"))]
-    hide_accounts: HideAccount,
+    pub hide_accounts: HideAccount,
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct InvoiceDescriptionReq {
     // Invoice default description, only used for lightning wallet
     #[serde(rename(serialize = "InvoiceDefaultDescription"))]
-    invoice_default_desc: String,
+    pub invoice_default_desc: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct InvoiceExpirationTimeReq {
     // Invoice expiration time, only used for lightning wallet
     #[serde(rename(serialize = "InvoiceExpirationTime"))]
-    invoice_expiration_time: u64,
+    pub invoice_expiration_time: u64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -52,16 +52,16 @@ pub struct MaxChannelOpeningFeeReq {
     // Max fee for automatic channel opening with Proton Lightning node, expressed in SATS,
     //   only used for lightning wallet
     #[serde(rename(serialize = "MaxChannelOpeningFee"))]
-    max_channel_opening_fee: u64,
+    pub max_channel_opening_fee: u64,
 }
 // #Response
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct WalletSettingsResponse {
     #[serde(rename(deserialize = "Code"))]
-    code: i64,
+    pub code: i64,
     #[serde(rename(deserialize = "WalletSettings"))]
-    settings: WalletSettings,
+    pub settings: WalletSettings,
 }
 
 pub(crate) trait WalletSettingsRoute {

@@ -11,38 +11,38 @@ use super::{api_service::ProtonAPIService, types::ResponseCode};
 #[derive(Debug, Serialize)]
 pub struct CreateWalletAccountReq {
     // Label of the account
-    Label: String,
+    pub Label: String,
     // Derivation path of the account
-    DerivationPath: String,
+    pub DerivationPath: String,
     // Enum: 1 2 3 4
-    ScriptType: i32,
+    pub ScriptType: i32,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WalletAccount {
-    ID: String,
-    DerivationPath: String,
-    Label: String,
-    ScriptType: i32,
+    pub ID: String,
+    pub DerivationPath: String,
+    pub Label: String,
+    pub ScriptType: i32,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WalletAccountsResponse {
-    Code: i32,
-    Accounts: Vec<WalletAccount>,
+    pub Code: i32,
+    pub Accounts: Vec<WalletAccount>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WalletAccountResponse {
-    Code: i32,
-    Account: WalletAccount,
+    pub Code: i32,
+    pub Account: WalletAccount,
     // Error: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
 pub struct UpdateWalletAccountLabelReq {
     // Label of the account
-    Label: String,
+    pub Label: String,
 }
 
 pub(crate) trait WalletAccountRoute {

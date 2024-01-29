@@ -20,7 +20,8 @@ class TransferView extends ViewBase<TransferViewModel> {
         children: [
           Text("Test Greet Fn: `${greet(name: "World!!!")}`"),
           Text("Test helloworld Fn: `${helloworld()}`"),
-          Text("AuthInfo-Code: `${viewModel.testCode}`")
+          Text("AuthInfo-Code: `${viewModel.testCode}`"),
+          Text("WalletsResponse-Code: `${viewModel.testCodeTwo}`")
         ],
       ),
     );
