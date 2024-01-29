@@ -47,14 +47,14 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                     ),
                   ),
                   TextFieldText(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    color: ProtonColors.backgroundSecondary,
-                    suffixIcon: const Icon(Icons.close),
-                    showSuffixIcon: false,
-                    showEnabledBorder: false,
-                    controller: viewModel.mailController,
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      color: ProtonColors.backgroundSecondary,
+                      suffixIcon: const Icon(Icons.close),
+                      showSuffixIcon: false,
+                      showEnabledBorder: false,
+                      controller: viewModel.mailController,
+                      showMailTag: true),
                   const SizedBox(height: 10),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -169,7 +169,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                               // TODO:: Add logic to save settings, sync setting with backend
                               LocalToast.showToast(context, "TODO");
                             },
-                            text: "Import",
+                            text: "Save",
                             width: MediaQuery.of(context).size.width,
                             textStyle:
                                 FontManager.body1Median(ProtonColors.white),

@@ -419,6 +419,20 @@ class HomeView extends ViewBase<HomeViewModel> {
             height: 10,
           ),
           ButtonV5(
+              onPressed: () {
+                LocalToast.showToast(context, viewModel.gopenpgpTest());
+              },
+              text: "gopenpgp test",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
               onPressed: () async {
                 viewModel.fetchWallets();
               },
@@ -451,6 +465,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                     "refreshToken = ${await SecureStorageHelper.get("refreshToken")}\n");
                 contents.add(
                     "userKeyID = ${await SecureStorageHelper.get("userKeyID")}\n");
+                contents.add(
+                    "userPrivateKey = ${await SecureStorageHelper.get("userPrivateKey")}\n");
+                contents.add(
+                    "userPassphrase = ${await SecureStorageHelper.get("userPassphrase")}\n");
                 if (context.mounted) {
                   showMyAlertDialog(context, contents.join("\n"));
                 }

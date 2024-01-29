@@ -16,6 +16,7 @@ class TextFieldText extends StatefulWidget {
   final VoidCallback? suffixIconOnPressed;
   final Icon suffixIcon;
   final Color color;
+  final bool showMailTag;
 
   const TextFieldText({
     super.key,
@@ -31,6 +32,7 @@ class TextFieldText extends StatefulWidget {
     this.color = Colors.transparent,
     this.showEnabledBorder = true,
     this.digitOnly = false,
+    this.showMailTag = false
   });
 
   @override
@@ -48,42 +50,68 @@ class TextFieldTextState extends State<TextFieldText> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
-          child: TextField(
-            textAlignVertical: TextAlignVertical.center,
-            style:
-                FontManager.body2Regular(Theme.of(context).colorScheme.primary),
-            maxLines: widget.multiLine ? null : 1,
-            minLines: widget.multiLine ? 5 : 1,
-            controller: widget.controller,
-            focusNode: widget.focusNode,
-            keyboardType:
-                widget.digitOnly ? TextInputType.number : TextInputType.text,
-            inputFormatters: widget.digitOnly
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : [],
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                    color: widget.showEnabledBorder
-                        ? Theme.of(context).colorScheme.primary
-                        : widget.color,
-                    width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: const BorderSide(
-                    color: ProtonColors.interactionNorm, width: 2),
-              ),
-              suffixIcon: widget.showSuffixIcon
-                  ? IconButton(
-                      icon: widget.suffixIcon,
-                      onPressed: widget.suffixIconOnPressed ?? () {},
-                    )
-                  : null,
-            ),
+          child: (widget.controller!.text.endsWith("@proton.me") && widget.showMailTag)
+              ? Container(
+                  alignment: Alignment.centerLeft,
+                  child: buildTagWidget(widget.controller!.text))
+              : TextField(
+                  textAlignVertical: TextAlignVertical.center,
+                  style: FontManager.body2Regular(
+                      Theme.of(context).colorScheme.primary),
+                  maxLines: widget.multiLine ? null : 1,
+                  minLines: widget.multiLine ? 5 : 1,
+                  controller: widget.controller,
+                  focusNode: widget.focusNode,
+                  keyboardType: widget.digitOnly
+                      ? TextInputType.number
+                      : widget.multiLine
+                          ? TextInputType.multiline
+                          : TextInputType.text,
+                  inputFormatters: widget.digitOnly
+                      ? [FilteringTextInputFormatter.digitsOnly]
+                      : [],
+                  decoration: InputDecoration(
+                    hintText: widget.hintText,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: widget.showEnabledBorder
+                              ? Theme.of(context).colorScheme.primary
+                              : widget.color,
+                          width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: const BorderSide(
+                          color: ProtonColors.interactionNorm, width: 2),
+                    ),
+                    suffixIcon: widget.showSuffixIcon
+                        ? IconButton(
+                            icon: widget.suffixIcon,
+                            onPressed: widget.suffixIconOnPressed ?? () {},
+                          )
+                        : null,
+                  ),
+                ),
+        ));
+  }
+
+  Widget buildTagWidget(String tag) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Chip(
+          backgroundColor: ProtonColors.backgroundProton,
+          label: Text(tag,
+              style: FontManager.body2Median(ProtonColors.interactionNorm)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: ProtonColors.backgroundProton),
           ),
+          onDeleted: () {
+            setState(() {
+              widget.controller!.text = "";
+            });
+          },
         ));
   }
 }
