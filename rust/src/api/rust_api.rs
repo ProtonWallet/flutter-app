@@ -1,16 +1,16 @@
-use crate::blockchain::{EsploraConfig, ElectrumConfig};
-pub use crate::blockchain::Blockchain;
-pub use crate::descriptor::BdkDescriptor;
-use crate::error::Error;
-use crate::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
-use crate::psbt::PartiallySignedTransaction;
-pub use crate::psbt::Transaction;
-use crate::types::{
+use crate::bdk::blockchain::{EsploraConfig, ElectrumConfig};
+pub use crate::bdk::blockchain::Blockchain;
+pub use crate::bdk::descriptor::BdkDescriptor;
+use crate::bdk::error::Error;
+use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
+use crate::bdk::psbt::PartiallySignedTransaction;
+pub use crate::bdk::psbt::Transaction;
+use crate::bdk::types::{
     to_input, Address, AddressIndex, AddressInfo, Balance, ChangeSpendPolicy, KeychainKind,
     Network, OutPoint, Payload, PsbtSigHashType, RbfValue, Script, ScriptAmount,
     TransactionDetails, TxIn, TxOut, WordCount,
 };
-pub use crate::wallet::{DatabaseConfig, Wallet};
+pub use crate::bdk::wallet::{DatabaseConfig, Wallet};
 use bdk::bitcoin::{Address as BdkAddress, OutPoint as BdkOutPoint, Sequence, Txid};
 use bdk::keys::DescriptorSecretKey as BdkDescriptorSecretKey;
 use lazy_static::lazy_static;
@@ -19,7 +19,7 @@ use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex, RwLock};
 
-use crate::wallet::{LocalUtxo, SignOptions};
+use crate::bdk::wallet::{LocalUtxo, SignOptions};
 
 lazy_static! {
     static ref RUNTIME: RwLock<Option<tokio::runtime::Runtime>> = RwLock::new(None);

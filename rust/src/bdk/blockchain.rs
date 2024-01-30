@@ -1,4 +1,4 @@
-use crate::psbt::Transaction;
+use super::psbt::Transaction;
 use bdk::blockchain::esplora::EsploraBlockchain;
 use bdk::blockchain::{Blockchain as BdkBlockchain, AnyBlockchainConfig, ElectrumBlockchainConfig, ConfigurableBlockchain};
 use bdk::blockchain::{

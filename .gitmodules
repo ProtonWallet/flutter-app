@@ -1,0 +1,3 @@
+[submodule "rust/vendor/muon"]
+	path = rust/vendor/muon
+	url = git@gitlab.protontech.ch:ProtonVPN/rust/muon.git

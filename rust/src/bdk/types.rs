@@ -1,4 +1,4 @@
-use crate::psbt::Transaction;
+use crate::bdk::psbt::Transaction;
 use bdk::bitcoin::blockdata::transaction::TxIn as BdkTxIn;
 use bdk::bitcoin::blockdata::transaction::TxOut as BdkTxOut;
 use bdk::bitcoin::hashes::hex::ToHex;

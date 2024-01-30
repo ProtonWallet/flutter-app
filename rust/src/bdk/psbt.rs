@@ -10,8 +10,7 @@ use std::io::Cursor;
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
-
-use crate::types::{TxIn, TxOut};
+use crate::bdk::types::{TxIn, TxOut};
 
 #[derive(Debug)]
 pub struct PartiallySignedTransaction {

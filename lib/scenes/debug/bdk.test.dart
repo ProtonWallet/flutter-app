@@ -9,13 +9,13 @@ import 'package:wallet/helper/logger.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:wallet/rust/blockchain.dart';
+import 'package:wallet/rust/bdk/blockchain.dart';
 import 'package:wallet/rust/frb_generated.dart';
 
 import 'dart:async';
 
-import 'package:wallet/rust/types.dart';
-import 'package:wallet/rust/wallet.dart';
+import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/bdk/wallet.dart';
 
 class BdkLibrary {
   Future<Mnemonic> createMnemonic() async {
@@ -132,14 +132,15 @@ class BdkLibrary {
     }
   }
 
-  Future<AddressInfo> getAddress(Wallet aliceWallet, {int? addressIndex}) async {
+  Future<AddressInfo> getAddress(Wallet aliceWallet,
+      {int? addressIndex}) async {
     AddressInfo addressInfo;
-    if (addressIndex != null){
-      addressInfo =
-      await aliceWallet.getAddress(addressIndex: AddressIndex.peek(index: addressIndex));
+    if (addressIndex != null) {
+      addressInfo = await aliceWallet.getAddress(
+          addressIndex: AddressIndex.peek(index: addressIndex));
     } else {
       addressInfo =
-      await aliceWallet.getAddress(addressIndex: const AddressIndex());
+          await aliceWallet.getAddress(addressIndex: const AddressIndex());
     }
     return addressInfo;
   }

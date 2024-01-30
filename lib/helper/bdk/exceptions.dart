@@ -1,4 +1,4 @@
-import 'package:wallet/rust/error.dart' as bridge;
+import 'package:wallet/rust/bdk/error.dart' as bridge;
 
 abstract class BdkFfiException implements Exception {
   String? message;
