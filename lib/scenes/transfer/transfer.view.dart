@@ -16,7 +16,14 @@ class TransferView extends ViewBase<TransferViewModel> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("TransferView"),
       ),
-      body: Text("Test Greet Fn: `${greet(name: "World!!!")}`"),
+      body: Column(
+        children: [
+          Text("Test Greet Fn: `${greet(name: "World!!!")}`"),
+          Text("Test helloworld Fn: `${helloworld()}`"),
+          Text("AuthInfo-Code: `${viewModel.testCode}`"),
+          Text("WalletsResponse-Code: `${viewModel.testCodeTwo}`")
+        ],
+      ),
     );
   }
 }

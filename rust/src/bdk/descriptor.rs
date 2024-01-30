@@ -1,4 +1,4 @@
-use crate::key::{DescriptorPublicKey, DescriptorSecretKey};
+use super::key::{DescriptorPublicKey, DescriptorSecretKey};
 use bdk::bitcoin::secp256k1::Secp256k1;
 use bdk::bitcoin::util::bip32::Fingerprint;
 use bdk::bitcoin::Network;
@@ -200,8 +200,8 @@ impl BdkDescriptor {
 }
 #[cfg(test)]
 mod test {
-    use crate::descriptor::BdkDescriptor;
-    use crate::key::{DerivationPath, DescriptorSecretKey, Mnemonic};
+    use crate::bdk::descriptor::BdkDescriptor;
+    use crate::bdk::key::{DerivationPath, DescriptorSecretKey, Mnemonic};
     use assert_matches::assert_matches;
     use bdk::bitcoin::Network;
     use bdk::descriptor::DescriptorError::Key;

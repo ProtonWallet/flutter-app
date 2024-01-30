@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/transaction.model.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 import '../../helper/bdk/helper.dart';

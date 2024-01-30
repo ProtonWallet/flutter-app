@@ -1,7 +1,6 @@
-use crate::blockchain::Blockchain;
-use crate::descriptor::BdkDescriptor;
-use crate::psbt::PartiallySignedTransaction;
-use crate::types::{
+use super::descriptor::BdkDescriptor;
+use super::psbt::PartiallySignedTransaction;
+use super::types::{
     AddressIndex, AddressInfo, Balance, KeychainKind, OutPoint, Progress, ProgressHolder,
     PsbtSigHashType, TransactionDetails, TxOut,
 };
@@ -21,6 +20,9 @@ use std::hash::Hasher;
 use std::ops::Deref;
 use std::sync::RwLock;
 use std::sync::{Arc, Mutex, MutexGuard};
+
+use super::blockchain::Blockchain;
+
 lazy_static! {
     static ref WALLET: RwLock<HashMap<String, Arc<Wallet>>> = RwLock::new(HashMap::new());
 }
@@ -338,8 +340,8 @@ impl From<DatabaseConfig> for AnyDatabaseConfig {
 #[cfg(test)]
 mod test {
 
-    use crate::descriptor::BdkDescriptor;
-    use crate::wallet::{AddressIndex, DatabaseConfig, Wallet};
+    use crate::bdk::descriptor::BdkDescriptor;
+    use crate::bdk::wallet::{AddressIndex, DatabaseConfig, Wallet};
     use bdk::bitcoin::Network;
 
     #[test]

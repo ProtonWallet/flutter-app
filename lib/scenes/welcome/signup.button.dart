@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/channels/platform.channel.dart';
-import 'package:wallet/rust/types.dart';
+import 'package:wallet/rust/bdk/types.dart';
 
 var count = 1;
 
