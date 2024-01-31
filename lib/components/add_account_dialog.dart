@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
-
-import '../network/api.helper.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 
 class AddAccountAlertDialog extends StatefulWidget {
   final int walletID;
@@ -94,16 +92,23 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         ),
         TextButton(
           onPressed: () async {
-            String serverAccountID =
-                await APIHelper.createAccount(widget.serverWalletID, {
-              "DerivationPath": derivationPath,
-              "Label":
-                  base64Encode(utf8.encode(await WalletManager.encrypt(label))),
-              "ScriptType": scriptType.index,
-            });
-            if (serverAccountID != "") {
-              WalletManager.importAccount(widget.walletID, label,
-                  scriptType.index, "$derivationPath/0", serverAccountID);
+            CreateWalletAccountReq req = CreateWalletAccountReq(
+                label: base64Encode(utf8
+                    .encode(await WalletManager.encrypt(label))),
+                derivationPath: derivationPath,
+                scriptType: ScriptType.nativeSegWit.index);
+            WalletAccountResponse walletAccountResponse =
+                await proton_api.createWalletAccount(
+              walletId: widget.serverWalletID,
+              req: req,
+            );
+            if (walletAccountResponse.code == 1000) {
+              WalletManager.importAccount(
+                  widget.walletID,
+                  label,
+                  scriptType.index,
+                  "$derivationPath/0",
+                  walletAccountResponse.account.id);
               if (context.mounted) {
                 LocalToast.showToast(context, "Account created!");
               }
