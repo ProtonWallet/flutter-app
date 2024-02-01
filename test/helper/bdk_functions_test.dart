@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/frb_generated.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 final BdkLibrary lib = BdkLibrary();
@@ -27,6 +28,7 @@ Future<void> main() async {
   Wallet? wallet2;
   AddressInfo addressinfo;
   setUpAll(() async {
+    await RustLib.init();
     wallet1 = await prepareWallet(
         "ability hair dune bubble science thumb aware cruel cube decide enlist evidence",
         "m/84'/1'/0'/0");
@@ -75,9 +77,9 @@ Future<void> main() async {
     });
 
     test('createMnemonic case 1', () {
-      List<String> words12 = mnemonic12.toString().split(" ");
-      List<String> words18 = mnemonic18.toString().split(" ");
-      List<String> words24 = mnemonic24.toString().split(" ");
+      List<String> words12 = mnemonic12!.asString().split(" ");
+      List<String> words18 = mnemonic18!.asString().split(" ");
+      List<String> words24 = mnemonic24!.asString().split(" ");
       expect(words12.length, equals(12));
       expect(words18.length, equals(18));
       expect(words24.length, equals(24));
