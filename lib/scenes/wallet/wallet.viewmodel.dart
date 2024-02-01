@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
-import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/proton_api/types.dart';
+import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import '../../helper/dbhelper.dart';
 import '../../models/account.model.dart';
@@ -103,19 +105,29 @@ class WalletViewModelImpl extends WalletViewModel {
 
   @override
   Future<void> updateAccountLabel(String newLabel) async {
-    await APIHelper.updateAccountLabel(walletModel.serverWalletID, accountModel.serverAccountID,
-        base64Encode(utf8.encode(await WalletManager.encrypt(newLabel))));
-    accountModel.label = utf8.encode(await WalletManager.encrypt(newLabel));
-    accountModel.labelDecrypt = newLabel;
-    await DBHelper.accountDao!.update(accountModel);
-    await loadData();
+    WalletAccountResponse walletAccountResponse =
+        await proton_api.updateWalletAccountLabel(
+            walletId: walletModel.serverWalletID,
+            walletAccountId: accountModel.serverAccountID,
+            newLabel: base64Encode(
+                utf8.encode(await WalletManager.encrypt(newLabel))));
+    if (walletAccountResponse.code == 1000) {
+      accountModel.label = utf8.encode(await WalletManager.encrypt(newLabel));
+      accountModel.labelDecrypt = newLabel;
+      await DBHelper.accountDao!.update(accountModel);
+      await loadData();
+    }
   }
 
   @override
   Future<void> deleteAccount() async {
-    await APIHelper.deleteAccount(walletModel.serverWalletID, accountModel.serverAccountID);
-    await DBHelper.accountDao!.delete(accountModel.id!);
-    await loadData();
+    ResponseCode responseCode = await proton_api.deleteWalletAccount(
+        walletId: walletModel.serverWalletID,
+        walletAccountId: accountModel.serverAccountID);
+    if (responseCode.code == 1000) {
+      await DBHelper.accountDao!.delete(accountModel.id!);
+      await loadData();
+    }
   }
 
   @override
