@@ -66,7 +66,7 @@ class AppDatabase
   static Future<Database> getDatabase() async{
     Database database;
     String dbPath = "";
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
 
@@ -88,7 +88,7 @@ class AppDatabase
 
   static Future<Database> getInMemoryDatabase() async{
     Database database;
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
       database = await databaseFactory.openDatabase(
