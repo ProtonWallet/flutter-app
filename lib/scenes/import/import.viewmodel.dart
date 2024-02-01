@@ -8,6 +8,9 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
+import 'package:wallet/rust/proton_api/wallet_routes.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class ImportViewModel extends ViewModel {
@@ -71,31 +74,39 @@ class ImportViewModelImpl extends ImportViewModel {
         serverWalletID: "");
 
     // TODO:: send correct wallet key instead of mock one
-    String serverWalletID = await APIHelper.createWallet({
-      "Name": wallet.name,
-      "IsImported": wallet.imported,
-      "Type": wallet.type,
-      "HasPassphrase": wallet.passphrase,
-      "UserKeyId": APIHelper.userKeyID,
-      "WalletKey": base64Encode(utf8
-          .encode(await WalletManager.encrypt(mnemonicTextController.text))),
-      "Mnemonic": base64Encode(utf8
-          .encode(await WalletManager.encrypt(mnemonicTextController.text))),
-      // "PublicKey": Uint8List(0),
-    });
+    CreateWalletReq walletReq = CreateWalletReq(
+        name: wallet.name,
+        isImported: wallet.imported,
+        type: wallet.type,
+        hasPassphrase: wallet.passphrase,
+        userKeyId: APIHelper.userKeyID,
+        walletKey: base64Encode(utf8
+            .encode(await WalletManager.encrypt(mnemonicTextController.text))),
+        mnemonic: base64Encode(utf8
+            .encode(await WalletManager.encrypt(mnemonicTextController.text))));
+    CreateWalletResponse createWalletResponse =
+        await proton_api.createWallet(walletReq: walletReq);
+
     // TODO:: send correct wallet key instead of mock one
-    if (serverWalletID != "") {
-      wallet.serverWalletID = serverWalletID;
-      String serverAccountID = await APIHelper.createAccount(serverWalletID, {
-        "DerivationPath": "m/84'/1'/0'",
-        "Label": base64Encode(
-            utf8.encode(await WalletManager.encrypt("Default Account"))),
-        "ScriptType": ScriptType.nativeSegWit.index,
-      });
-      if (serverAccountID != "") {
+    if (createWalletResponse.code == 1000) {
+      wallet.serverWalletID = createWalletResponse.wallet.id;
+      CreateWalletAccountReq req = CreateWalletAccountReq(
+          label: base64Encode(
+              utf8.encode(await WalletManager.encrypt("Default Account"))),
+          derivationPath: "m/84'/1'/0'",
+          scriptType: ScriptType.nativeSegWit.index);
+      WalletAccountResponse walletAccountResponse = await proton_api.createWalletAccount(
+        walletId: wallet.serverWalletID,
+        req: req,
+      );
+      if (walletAccountResponse.code == 1000) {
         int walletID = await DBHelper.walletDao!.insert(wallet);
-        WalletManager.importAccount(walletID, "Default Account",
-            ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", serverAccountID);
+        WalletManager.importAccount(
+            walletID,
+            "Default Account",
+            ScriptType.nativeSegWit.index,
+            "m/84'/1'/0'/0",
+            walletAccountResponse.account.id);
       }
     }
   }
