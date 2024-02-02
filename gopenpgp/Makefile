@@ -9,7 +9,12 @@ build_windows:
 
 build_android:
 	CC="${NDK_PATH}23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android30-clang" CGO_ENABLED=1 GOOS=android GOARCH=arm64 go build -o ../android/app/libs/proton_crypto.so -buildmode=c-shared proton_crypto.go
-	rm -f ../android/app/libs/proton_crypto.h
+	# rm -f ../android/app/libs/proton_crypto.h
+
+build_ios:
+	go build -o ../lib/dynamic_libs/proton_crypto.so -buildmode=c-shared proton_crypto.go
+
+# build_macos:
 
 build_linux:
 	go build -o ../lib/dynamic_libs/proton_crypto.so -buildmode=c-shared proton_crypto.go
