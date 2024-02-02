@@ -13,6 +13,7 @@ analyzer:
   exclude:
     - lib/generated/**
     - lib/rust/**
+    - lib/ffi_golang/**
     - lib/helper/bdk/**  # temporary
     - lib/helper/proton_api/**  # temporary
     - rust_builder/** 

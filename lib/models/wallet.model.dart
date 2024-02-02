@@ -82,7 +82,7 @@ class WalletModel {
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
       localDBName: map['localDBName'],
-      serverWalletID: map['serverWalletID'],
+      serverWalletID: map['serverWalletID'] ?? "",
     );
   }
 }

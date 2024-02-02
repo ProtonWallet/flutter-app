@@ -20,6 +20,9 @@ String decrypt(Pointer<Utf8> userPrivateKey, Pointer<Utf8> passphrase,
         .toDartString();
 
 final DynamicLibrary _dylib = () {
+  if (Platform.isIOS || Platform.isMacOS) {
+    // return DynamicLibrary.open('proton_crypto.dylib');
+  }
   if (Platform.isAndroid || Platform.isLinux) {
     return DynamicLibrary.open('proton_crypto.so');
   }

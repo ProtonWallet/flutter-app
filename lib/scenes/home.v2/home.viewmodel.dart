@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:proton_crypto/proton_crypto.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/proton.crypto.test.dart';
+// import 'package:wallet/helper/proton.crypto.test.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 import 'package:wallet/rust/proton_api/wallet_routes.dart';
@@ -16,6 +17,8 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import '../../helper/wallet_manager.dart';
 import '../../models/wallet.model.dart';
 import '../core/view.navigatior.identifiers.dart';
+
+// import 'package:native_add/native_add.dart' as native_add;
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
@@ -84,7 +87,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    await proton_api.initApiService(userName: 'ProtonWallet', password: '11111111');
+    await proton_api.initApiService(
+        userName: 'ProtonWallet', password: '11111111');
     //restore wallet  this will need to be in global initialisation
     _wallet = await WalletManager.loadWalletWithID(0, 0);
     blockchain ??= await _lib.initializeBlockchain(false);
@@ -209,6 +213,10 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   String gopenpgpTest() {
+    // var sum = native_add.sum(1, 2);
+
+    // logger.i('sum: $sum');
+
     String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 
 xYYEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKS
@@ -245,10 +253,10 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
     // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
     WalletsResponse walletResponse = await proton_api.getWallets();
 
-    if (walletResponse.code == 1000){
-      for (WalletData walletData in walletResponse.wallets){
-        WalletModel? walletModel =
-        await DBHelper.walletDao!.findByServerWalletId(walletData.wallet.id);
+    if (walletResponse.code == 1000) {
+      for (WalletData walletData in walletResponse.wallets) {
+        WalletModel? walletModel = await DBHelper.walletDao!
+            .findByServerWalletId(walletData.wallet.id);
         if (walletModel == null) {
           DateTime now = DateTime.now();
           WalletModel wallet = WalletModel(
@@ -269,9 +277,12 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
               localDBName: const Uuid().v4().replaceAll('-', ''),
               serverWalletID: walletData.wallet.id);
           int walletID = await DBHelper.walletDao!.insert(wallet);
-          WalletAccountsResponse walletAccountsResponse = await proton_api.getWalletAccounts(walletId: walletData.wallet.id);
-          if (walletAccountsResponse.code == 1000 && walletAccountsResponse.accounts.isNotEmpty) {
-            for (WalletAccount walletAccount in walletAccountsResponse.accounts){
+          WalletAccountsResponse walletAccountsResponse = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccountsResponse.code == 1000 &&
+              walletAccountsResponse.accounts.isNotEmpty) {
+            for (WalletAccount walletAccount
+                in walletAccountsResponse.accounts) {
               WalletManager.importAccount(
                   walletID,
                   await WalletManager.decrypt(
@@ -283,9 +294,12 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
           }
         } else {
           List<String> existingAccountIDs = [];
-          WalletAccountsResponse walletAccountsResponse = await proton_api.getWalletAccounts(walletId: walletData.wallet.id);
-          if (walletAccountsResponse.code == 1000 && walletAccountsResponse.accounts.isNotEmpty) {
-            for (WalletAccount walletAccount in walletAccountsResponse.accounts){
+          WalletAccountsResponse walletAccountsResponse = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccountsResponse.code == 1000 &&
+              walletAccountsResponse.accounts.isNotEmpty) {
+            for (WalletAccount walletAccount
+                in walletAccountsResponse.accounts) {
               existingAccountIDs.add(walletAccount.id);
               WalletManager.importAccount(
                   walletModel.id!,
@@ -297,7 +311,8 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
             }
           }
           try {
-            if (walletModel.accountCount != walletAccountsResponse.accounts.length) {
+            if (walletModel.accountCount !=
+                walletAccountsResponse.accounts.length) {
               DBHelper.accountDao!.deleteAccountsNotInServers(
                   walletModel.id!, existingAccountIDs);
             }
