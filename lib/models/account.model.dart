@@ -55,7 +55,7 @@ class AccountModel {
       scriptType: map['scriptType'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
-      serverAccountID: map['serverAccountID'],
+      serverAccountID: map['serverAccountID'] ?? "",
     );
     accountModel.decrypt();
     return accountModel;
