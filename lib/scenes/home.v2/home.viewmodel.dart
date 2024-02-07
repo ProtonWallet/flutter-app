@@ -22,6 +22,8 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 
 // import 'package:native_add/native_add.dart' as native_add;
 
+// import 'package:native_add/native_add.dart' as native_add;
+
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
 
