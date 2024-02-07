@@ -6,6 +6,13 @@ class LocalToast {
   static final LocalAuthentication auth = LocalAuthentication();
   static final FToast fToast = FToast();
 
+  static showErrorToast(BuildContext context, String message) {
+    showToast(context, message,
+        isWarning: true,
+        icon: const Icon(Icons.warning, color: Colors.white),
+        duration: 2);
+  }
+
   static showToast(BuildContext context, String message,
       {int duration = 1,
       Icon icon = const Icon(Icons.check),

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:ffi/ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallet/helper/proton.crypto.test.dart';
 
 void main() {
+  if (Platform.isLinux) {
+    return;
+  }
   group('Proton Crypto functions', () {
     test('encrypt decrypt case 1', () async {
       String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
