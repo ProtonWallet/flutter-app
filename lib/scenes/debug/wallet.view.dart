@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
-import '../../helper/wallet_manager.dart';
-
 class SimpleWallet extends StatefulWidget {
   const SimpleWallet({super.key});
 
@@ -35,10 +33,6 @@ class _SimpleWalletState extends State<SimpleWallet> {
   }
 
   restoreWallet() async {
-    aliceWallet = await WalletManager.loadWallet();
-    setState(() {
-      displayText = "Wallets restored";
-    });
   }
 
   initBlockchain(bool isElectrumBlockchain) async {

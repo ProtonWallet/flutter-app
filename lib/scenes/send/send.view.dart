@@ -220,12 +220,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ButtonV5(
                     onPressed: () {
                       if (viewModel.coinController.text != "SAT") {
-                        LocalToast.showToast(
-                          context,
-                          "Only support SAT now!",
-                          isWarning: true,
-                          icon: const Icon(Icons.warning, color: Colors.white),
-                        );
+                        LocalToast.showErrorToast(context, "Only support SAT now!");
                       } else {
                         viewModel.sendCoin();
                         viewModel.coordinator.end();

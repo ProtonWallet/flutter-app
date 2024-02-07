@@ -82,10 +82,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                       viewModel.coordinator
                           .move(ViewIdentifiers.passphrase, context);
                     } else {
-                      LocalToast.showToast(context, "Wrong mnemonic order",
-                          isWarning: true,
-                          icon: const Icon(Icons.warning, color: Colors.white),
-                          duration: 2);
+                      LocalToast.showErrorToast(context, "Wrong mnemonic order");
                     }
                   },
                   text: "Continue",

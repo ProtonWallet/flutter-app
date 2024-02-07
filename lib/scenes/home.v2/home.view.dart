@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
@@ -15,10 +16,10 @@ import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-import '../../components/button.v5.dart';
-import '../../components/custom.newsbox.dart';
-import '../../components/tag.text.dart';
-import '../../helper/user.session.dart';
+import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/custom.newsbox.dart';
+import 'package:wallet/components/tag.text.dart';
+import 'package:wallet/helper/user.session.dart';
 
 class HomeView extends ViewBase<HomeViewModel> {
   HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
@@ -210,9 +211,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                         for (WalletModel wallet in viewModel.userWallets)
                           GestureDetector(
                               onTap: () {
-                                viewModel.updateWallet(wallet.id ?? 0);
-                                viewModel.coordinator
-                                    .move(ViewIdentifiers.wallet, context);
+                                if (wallet.status ==
+                                    WalletModel.statusDisabled) {
+                                  LocalToast.showErrorToast(context,
+                                      "Decryption error: your key had reset.");
+                                } else {
+                                  viewModel.setSelectedWallet(wallet.id ?? 0);
+                                  viewModel.coordinator
+                                      .move(ViewIdentifiers.wallet, context);
+                                }
                               },
                               child: Container(
                                   width: 200.0,
@@ -230,21 +237,49 @@ class HomeView extends ViewBase<HomeViewModel> {
                                       )),
                                   child: Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 5, right: 5),
+                                          left: 5, right: 0),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const TagText(
-                                            text: "OnChain",
-                                            radius: 10.0,
-                                            background: Color.fromARGB(
-                                                255, 200, 248, 255),
-                                            textColor: Color.fromARGB(
-                                                255, 18, 134, 159),
-                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const TagText(
+                                                      text: "OnChain",
+                                                      radius: 10.0,
+                                                      background:
+                                                          Color.fromARGB(255,
+                                                              200, 248, 255),
+                                                      textColor: Color.fromARGB(
+                                                          255, 18, 134, 159),
+                                                    ),
+                                                    const SizedBox(width: 2),
+                                                    if (wallet.status ==
+                                                        WalletModel
+                                                            .statusDisabled)
+                                                      const Icon(Icons.error,
+                                                          color: Colors.red),
+                                                  ],
+                                                ),
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      showWalletMoreDialog(
+                                                          context,
+                                                          expired: wallet
+                                                                  .status ==
+                                                              WalletModel
+                                                                  .statusDisabled);
+                                                    },
+                                                    child: const Icon(
+                                                        Icons.more_vert_sharp))
+                                              ]),
                                           const SizedBox(
                                             height: 4,
                                           ),
@@ -534,6 +569,92 @@ class HomeView extends ViewBase<HomeViewModel> {
       ),
     );
   }
+}
+
+void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
+  showModalBottomSheet(
+    context: context,
+    constraints: BoxConstraints(
+      minWidth: MediaQuery.of(context).size.width,
+    ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+    ),
+    builder: (BuildContext context) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            expired
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5,),
+                      Align(
+                          alignment: Alignment.center,
+                          child: AlertWarning(
+                              content:
+                                  "Decryption error\nDecryption of this wallet's encrypted content failed.",
+                              width: MediaQuery.of(context).size.width - 30)),
+                      const SizedBox(height: 5,),
+                      ListTile(
+                        leading: const Icon(Icons.lock_open, size: 18),
+                        title: Text("Decrypt with your old password",
+                            style: FontManager.body2Regular(
+                                Theme.of(context).colorScheme.primary)),
+                        onTap: () {},
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.import_export, size: 18),
+                        title: Text("Recover with your mnemonic",
+                            style: FontManager.body2Regular(
+                                Theme.of(context).colorScheme.primary)),
+                        onTap: () {},
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.delete, size: 18),
+                        title: Text("Delete Wallet",
+                            style: FontManager.body2Regular(
+                                Theme.of(context).colorScheme.primary)),
+                        onTap: () {},
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        ListTile(
+                          leading: const Icon(Icons.edit, size: 18),
+                          title: Text("Rename Wallet",
+                              style: FontManager.body2Regular(
+                                  Theme.of(context).colorScheme.primary)),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading:
+                              const Icon(Icons.download_for_offline, size: 18),
+                          title: Text("Backup Wallet",
+                              style: FontManager.body2Regular(
+                                  Theme.of(context).colorScheme.primary)),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.delete, size: 18),
+                          title: Text("Delete Wallet",
+                              style: FontManager.body2Regular(
+                                  Theme.of(context).colorScheme.primary)),
+                          onTap: () {},
+                        )
+                      ])
+          ],
+        ),
+      );
+    },
+  );
 }
 
 void showMyAlertDialog(BuildContext context, String content) {

@@ -72,6 +72,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.3.1)
+  - proton_crypto (1.0.0):
+    - FlutterMacOS
   - rust_builder (0.0.1):
     - FlutterMacOS
   - share_plus (0.0.1):
@@ -93,6 +95,7 @@ DEPENDENCIES:
   - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+  - proton_crypto (from `Flutter/ephemeral/.symlinks/plugins/proton_crypto/macos`)
   - rust_builder (from `Flutter/ephemeral/.symlinks/plugins/rust_builder/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -127,6 +130,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+  proton_crypto:
+    :path: Flutter/ephemeral/.symlinks/plugins/proton_crypto/macos
   rust_builder:
     :path: Flutter/ephemeral/.symlinks/plugins/rust_builder/macos
   share_plus:
@@ -156,6 +161,7 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  proton_crypto: 72fe2550eb860a7ffe332382e2799149a6887c7e
   rust_builder: 7dd442e9a156815a181aade06f11dd32ca4a7d20
   share_plus: 76dd39142738f7a68dd57b05093b5e8193f220f7
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
@@ -164,4 +170,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 33e7d953684568137a4aec8c767f16881c7b1a89
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.0
