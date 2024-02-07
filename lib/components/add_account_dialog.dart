@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 
@@ -92,9 +94,16 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         ),
         TextButton(
           onPressed: () async {
+            SecretKey? secretKey = await WalletManager.getWalletKey(widget.walletID);
+            if (secretKey == null){
+              if (context.mounted){
+                LocalToast.showErrorToast(context, "secretKey is null!");
+              }
+              return;
+            }
             CreateWalletAccountReq req = CreateWalletAccountReq(
                 label: base64Encode(utf8
-                    .encode(await WalletManager.encrypt(label))),
+                    .encode(await WalletKeyHelper.encrypt(secretKey, label))),
                 derivationPath: derivationPath,
                 scriptType: ScriptType.nativeSegWit.index);
             WalletAccountResponse walletAccountResponse =

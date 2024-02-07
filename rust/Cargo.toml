@@ -6,6 +6,8 @@ edition = "2021"
 [dev-dependencies]
 assert_matches = "1.5"
 env_logger = "0.11.0"
+mockall = "0.12.1"
+hyper = "1.1.0"
 
 [build-dependencies]
 flutter_rust_bridge_codegen = { version = "2.0.0-dev.21" }
@@ -21,10 +23,14 @@ anyhow = "1.0.68"
 lazy_static = "1.4.0"
 muon = { path = "./vendor/muon" }
 http = "1.0.0"
+
+[target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2.12", features = ["js"] }
+openssl = { version = "*", features = ["vendored"] }
+
 # Platform-specific dependencies
 # bdk_esplora = { version = "0.4.0", default-features = false, features = ["async-https"] }
 # miniscript = { version = "10.0.0", default-features = false }

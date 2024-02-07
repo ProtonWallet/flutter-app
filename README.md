@@ -23,22 +23,25 @@ run once after install: `lefthook install`
 ## Localizations
 
 ## Submodules
+
 - rust/vendor/muon
 
-
 ## Cargo index
+
 Add this lines to ~/.cargo/config.toml
 [registries]
 protonvpn = { index = "sparse+<https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/>" }
 
 ### Trouble-shooting
-##### Windows
+
+#### Windows
+
 - If you faced issue when cargo build in windows:
     `
     error: failed to run custom build command for `openssl-sys x.x.x`
     `
-    - Install Strawberry Perl
-    - Rerun cargo build
+  - Install Strawberry Perl
+  - Rerun cargo build
     Reference from: [this thread](https://github.com/sfackler/rust-openssl/issues/1086#issuecomment-846160769)
 
 - cargo build stuck when building openssl

@@ -6,11 +6,11 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
 
-import '../../components/add_account_dialog.dart';
-import '../../components/custom.barchart.dart';
-import '../../constants/proton.color.dart';
-import '../../theme/theme.font.dart';
-import '../core/view.navigatior.identifiers.dart';
+import 'package:wallet/components/add_account_dialog.dart';
+import 'package:wallet/components/custom.barchart.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 
 class WalletView extends ViewBase<WalletViewModel> {
   WalletView(WalletViewModel viewModel)

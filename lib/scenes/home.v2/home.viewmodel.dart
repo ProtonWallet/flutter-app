@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cryptography/cryptography.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
@@ -8,43 +9,35 @@ import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/proton.crypto.test.dart';
+import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 import 'package:wallet/rust/proton_api/wallet_routes.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-import '../../helper/wallet_manager.dart';
-import '../../models/wallet.model.dart';
-import '../core/view.navigatior.identifiers.dart';
+import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+
+// import 'package:native_add/native_add.dart' as native_add;
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
 
   int selectedPage = 0;
-  int selectedWalletID = 1;
+  int selectedWalletID = 0;
   double totalBalance = 0.0;
   String selectedAccountDerivationPath = WalletManager.getDerivationPath();
 
   void updateSelected(int index);
 
-  void updateSats(String sats);
-
-  Future<void> syncWallet();
-
-  String sats = '0';
   List userWallets = [];
-
-  bool isSyncing = false;
   bool hasWallet = true;
   bool hasMailIntegration = false;
-
-  void udpateSyncStatus(bool syncing);
-
-  void updateWallet(int id);
+  bool isFetching = false;
 
   void checkNewWallet();
-
-  void updateBalance();
 
   void updateWallets();
 
@@ -53,6 +46,8 @@ abstract class HomeViewModel extends ViewModel {
   void setOnBoard(BuildContext context);
 
   void fetchWallets();
+
+  void setSelectedWallet(int walletID);
 
   String gopenpgpTest();
 
@@ -72,7 +67,6 @@ class HomeViewModelImpl extends HomeViewModel {
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
   final BdkLibrary _lib = BdkLibrary();
-  late Wallet _wallet;
   Blockchain? blockchain;
 
   @override
@@ -84,15 +78,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    await proton_api.initApiService(userName: 'ProtonWallet', password: '11111111');
-    //restore wallet  this will need to be in global initialisation
-    _wallet = await WalletManager.loadWalletWithID(0, 0);
+    await proton_api.initApiService(
+        userName: 'ProtonWallet', password: '11111111');
     blockchain ??= await _lib.initializeBlockchain(false);
-    _wallet.getBalance().then((value) => {
-          logger.i('balance: ${value.total}'),
-          sats = value.total.toString(),
-          datasourceChangedStreamController.sink.add(this)
-        });
     hasWallet = await WalletManager.hasAccount();
     datasourceChangedStreamController.sink.add(this);
     checkNewWallet();
@@ -132,58 +120,9 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateSats(String sats) {
-    this.sats = sats;
-    datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
-  Future<void> syncWallet() async {
-    udpateSyncStatus(true);
-    _wallet = await WalletManager.loadWalletWithID(0, 0);
-    await _lib.sync(blockchain!, _wallet);
-    var balance = await _wallet.getBalance();
-    logger.i('balance: ${balance.total}');
-    await updateBalance();
-    udpateSyncStatus(false);
-    // Use it later
-    // LocalNotification.show(
-    //     LocalNotification.syncWallet,
-    //     "Local Notification",
-    //     "Sync wallet success!\nbalance: ${balance.total}"
-    // );
-  }
-
-  @override
-  Future<void> updateBalance() async {
-    var balance = await _wallet.getBalance();
-    logger.i('balance: ${balance.total}');
-
-    updateSats(balance.total.toString());
-    var unconfirmedList = await _lib.getUnConfirmedTransactions(_wallet);
-    unconfirmed = unconfirmedList.length;
-
-    var confirmedList = await _lib.getConfirmedTransactions(_wallet);
-    confirmed = confirmedList.length;
-    udpateSyncStatus(false);
-    datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
-  void udpateSyncStatus(bool syncing) {
-    isSyncing = syncing;
-    datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
   void updateHasMailIntegration(bool later) {
     hasMailIntegration = later;
     datasourceChangedStreamController.sink.add(this);
-  }
-
-  @override
-  Future<void> updateWallet(int id) async {
-    selectedWalletID = id;
   }
 
   @override
@@ -197,6 +136,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateWallets() async {
+    if (isFetching) {
+      return;
+    }
     double totalBalance = 0.0;
     for (WalletModel walletModel in userWallets) {
       walletModel.balance =
@@ -209,6 +151,10 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   String gopenpgpTest() {
+    // var sum = native_add.sum(1, 2);
+
+    // logger.i('sum: $sum');
+
     String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 
 xYYEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKS
@@ -242,13 +188,31 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
 
   @override
   Future<void> fetchWallets() async {
+    isFetching = true;
     // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
     WalletsResponse walletResponse = await proton_api.getWallets();
-
-    if (walletResponse.code == 1000){
-      for (WalletData walletData in walletResponse.wallets){
-        WalletModel? walletModel =
-        await DBHelper.walletDao!.findByServerWalletId(walletData.wallet.id);
+    if (walletResponse.code == 1000) {
+      for (WalletData walletData in walletResponse.wallets.reversed) {
+        WalletModel? walletModel = await DBHelper.walletDao!
+            .findByServerWalletId(walletData.wallet.id);
+        String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+        String userKeyID = await SecureStorageHelper.get("userKeyID");
+        String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+        if (userKeyID != walletData.walletKey.userKeyId) {
+          logger.i(
+              "Wallet Key mismatch: \nuserKeyID from login response:$userKeyID\nuserKeyID from API response:${walletData.walletKey.userKeyId}");
+        }
+        String encryptWalletKey = "";
+        String decryptWalletKey = "";
+        try {
+          encryptWalletKey =
+              utf8.decode(base64Decode(walletData.walletKey.walletKey));
+          decryptWalletKey = decrypt(userPrivateKey.toNativeUtf8(),
+              userPassphrase.toNativeUtf8(), encryptWalletKey.toNativeUtf8());
+        } catch (e) {
+          logger.i(e.toString());
+        }
+        SecretKey secretKey = SecretKey(utf8.encode(decryptWalletKey));
         if (walletModel == null) {
           DateTime now = DateTime.now();
           WalletModel wallet = WalletModel(
@@ -256,60 +220,81 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
               userID: 0,
               name: walletData.wallet.name,
               mnemonic: base64Decode(walletData.wallet.mnemonic!),
-              // mnemonic: utf8.encode(await WalletManager.encrypt(strMnemonic)),
-              // TO-DO: need encrypt
               passphrase: walletData.wallet.hasPassphrase,
               publicKey: Uint8List(0),
               imported: walletData.wallet.isImported,
-              priority: WalletModel.primary,
-              status: WalletModel.statusActive,
+              priority: walletData.wallet.priority,
+              status: decryptWalletKey.isNotEmpty
+                  ? walletData.wallet.status
+                  : WalletModel.statusDisabled,
               type: walletData.wallet.type,
               createTime: now.millisecondsSinceEpoch ~/ 1000,
               modifyTime: now.millisecondsSinceEpoch ~/ 1000,
               localDBName: const Uuid().v4().replaceAll('-', ''),
               serverWalletID: walletData.wallet.id);
           int walletID = await DBHelper.walletDao!.insert(wallet);
-          WalletAccountsResponse walletAccountsResponse = await proton_api.getWalletAccounts(walletId: walletData.wallet.id);
-          if (walletAccountsResponse.code == 1000 && walletAccountsResponse.accounts.isNotEmpty) {
-            for (WalletAccount walletAccount in walletAccountsResponse.accounts){
-              WalletManager.importAccount(
-                  walletID,
-                  await WalletManager.decrypt(
-                      utf8.decode(base64Decode(walletAccount.label))),
-                  walletAccount.scriptType,
-                  "${walletAccount.derivationPath}/0",
-                  walletAccount.id);
+          if (decryptWalletKey.isNotEmpty) {
+            await WalletManager.setWalletKey(walletID,
+                secretKey); // need to set key first, so that we can decrypt for walletAccount
+            WalletAccountsResponse walletAccountsResponse = await proton_api
+                .getWalletAccounts(walletId: walletData.wallet.id);
+            if (walletAccountsResponse.code == 1000 &&
+                walletAccountsResponse.accounts.isNotEmpty) {
+              for (WalletAccount walletAccount
+                  in walletAccountsResponse.accounts) {
+                WalletManager.importAccount(
+                    walletID,
+                    await WalletKeyHelper.decrypt(secretKey,
+                        utf8.decode(base64Decode(walletAccount.label))),
+                    walletAccount.scriptType,
+                    "${walletAccount.derivationPath}/0",
+                    walletAccount.id);
+              }
             }
           }
         } else {
-          List<String> existingAccountIDs = [];
-          WalletAccountsResponse walletAccountsResponse = await proton_api.getWalletAccounts(walletId: walletData.wallet.id);
-          if (walletAccountsResponse.code == 1000 && walletAccountsResponse.accounts.isNotEmpty) {
-            for (WalletAccount walletAccount in walletAccountsResponse.accounts){
-              existingAccountIDs.add(walletAccount.id);
-              WalletManager.importAccount(
-                  walletModel.id!,
-                  await WalletManager.decrypt(
-                      utf8.decode(base64Decode(walletAccount.label))),
-                  walletAccount.scriptType,
-                  "${walletAccount.derivationPath}/0",
-                  walletAccount.id);
+          if (decryptWalletKey.isNotEmpty) {
+            List<String> existingAccountIDs = [];
+            WalletAccountsResponse walletAccountsResponse = await proton_api
+                .getWalletAccounts(walletId: walletData.wallet.id);
+            if (walletAccountsResponse.code == 1000 &&
+                walletAccountsResponse.accounts.isNotEmpty) {
+              for (WalletAccount walletAccount
+                  in walletAccountsResponse.accounts) {
+                existingAccountIDs.add(walletAccount.id);
+                WalletManager.importAccount(
+                    walletModel.id!,
+                    await WalletKeyHelper.decrypt(secretKey,
+                        utf8.decode(base64Decode(walletAccount.label))),
+                    walletAccount.scriptType,
+                    "${walletAccount.derivationPath}/0",
+                    walletAccount.id);
+              }
             }
-          }
-          try {
-            if (walletModel.accountCount != walletAccountsResponse.accounts.length) {
-              DBHelper.accountDao!.deleteAccountsNotInServers(
-                  walletModel.id!, existingAccountIDs);
+            try {
+              if (walletModel.accountCount !=
+                  walletAccountsResponse.accounts.length) {
+                DBHelper.accountDao!.deleteAccountsNotInServers(
+                    walletModel.id!, existingAccountIDs);
+              }
+            } catch (e) {
+              e.toString();
             }
-          } catch (e) {
-            e.toString();
+          } else {
+            walletModel.status = WalletModel.statusDisabled;
+            DBHelper.walletDao!.update(walletModel);
           }
         }
       }
     }
-
+    isFetching = false;
     Future.delayed(const Duration(seconds: 30), () {
       fetchWallets();
     });
+  }
+
+  @override
+  void setSelectedWallet(int walletID) {
+    selectedWalletID = walletID;
   }
 }

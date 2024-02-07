@@ -44,7 +44,7 @@ class DBHelper {
     _appDatabase = AppDatabase();
     await _appDatabase!.init(await AppDatabase.getDatabase());
     await _appDatabase!.buildDatabase(oldVersion: appDatabaseVersion);
-
+    // await reset();
     preferences.setInt("appDatabaseVersion", _appDatabase!.version);
   }
 

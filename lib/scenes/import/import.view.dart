@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
-
-import '../../components/button.v5.dart';
-import '../../components/textfield.password.dart';
-import '../../components/textfield.text.dart';
-import '../../constants/proton.color.dart';
-import '../../helper/local_toast.dart';
-import '../../theme/theme.font.dart';
+import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/textfield.password.dart';
+import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
   ImportView(ImportViewModel viewModel)
@@ -43,28 +43,53 @@ class ImportView extends ViewBase<ImportViewModel> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "Wallet Name",
+                        style: FontManager.captionMedian(
+                            Theme.of(context).colorScheme.primary),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: 80,
                       child: TextFieldText(
                         width: MediaQuery.of(context).size.width,
                         controller: viewModel.nameTextController,
-                        hintText: "Wallet Name",
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBoxes.box24,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "Your Mnemonic",
+                        style: FontManager.captionMedian(
+                            Theme.of(context).colorScheme.primary),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                     SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: 80,
                         child: TextFieldPassword(
                           width: MediaQuery.of(context).size.width,
                           controller: viewModel.mnemonicTextController,
-                          hintText: "Your Mnemonic",
+                        )),
+                    SizedBoxes.box24,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "Your Passphrase (optional)",
+                        style: FontManager.captionMedian(
+                            Theme.of(context).colorScheme.primary),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: TextFieldPassword(
+                          width: MediaQuery.of(context).size.width,
+                          controller: viewModel.passphraseTextController
                         )),
                   ])),
           Container(

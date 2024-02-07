@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../helper/wallet_manager.dart';
+import 'package:cryptography/cryptography.dart';
+
+import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 
 class AccountModel {
   int? id;
@@ -40,9 +43,14 @@ class AccountModel {
   }
 
   Future<void> decrypt() async {
-    String value = utf8.decode(label);
-    if (value != "") {
-      labelDecrypt = await WalletManager.decrypt(value);
+    try {
+      SecretKey? secretKey = await WalletManager.getWalletKey(walletID);
+      String value = utf8.decode(label);
+      if (value != "" && secretKey != null) {
+        labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
+      }
+    } catch (e){
+      labelDecrypt = e.toString();
     }
   }
 
@@ -55,7 +63,7 @@ class AccountModel {
       scriptType: map['scriptType'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
-      serverAccountID: map['serverAccountID'],
+      serverAccountID: map['serverAccountID'] ?? "",
     );
     accountModel.decrypt();
     return accountModel;
