@@ -22,20 +22,20 @@ import 'package:wallet/rust/bdk/wallet.dart';
 ///A Bitcoin address.
 class Address {
   final String? _address;
+
   Address._(this._address);
 
   /// Creates an instance of [Address] from address given.
   ///
   /// Throws a [GenericException] if the address is not valid
-  // static Future<Address> create({required String address}) async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .createAddressStaticMethodApi(address: address);
-  //     return Address._(res);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+  static Future<Address> create({required String address}) async {
+    try {
+      final res = await RustLib.instance.api.apiCreateAddress(address: address);
+      return Address._(res);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 
   // /// Creates an instance of [Address] from address given [Script].
   // ///
@@ -72,16 +72,16 @@ class Address {
   //   }
   // }
 
-  // /// Returns the script pub key of the [Address] object
-  // Future<type.Script> scriptPubKey() async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .addressToScriptPubkeyStaticMethodApi(address: _address.toString());
-  //     return res;
-  //   } on bridge.Error {
-  //     rethrow;
-  //   }
-  // }
+  /// Returns the script pub key of the [Address] object
+  Future<type.Script> scriptPubKey() async {
+    try {
+      final res = await RustLib.instance.api
+          .apiAddressToScriptPubkey(address: _address.toString());
+      return res;
+    } on bridge.Error {
+      rethrow;
+    }
+  }
 
   @override
   String toString() {
@@ -93,6 +93,7 @@ class Address {
 class Blockchain {
   // final BlockchainInstance? _blockchain;
   final String _blockchain;
+
   Blockchain._(this._blockchain);
 
   ///  [Blockchain] constructor
@@ -139,29 +140,29 @@ class Blockchain {
     }
   }
 
-  // /// Estimate the fee rate required to confirm a transaction in a given target of blocks
-  // Future<FeeRate> estimateFee(int target) async {
-  //   try {
-  //     var res = await RustFFIProvider.api.estimateFeeStaticMethodApi(
-  //         blockchainId: _blockchain, target: target);
-  //     return FeeRate._(res);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+  /// Estimate the fee rate required to confirm a transaction in a given target of blocks
+  Future<FeeRate> estimateFee(int target) async {
+    try {
+      var res = await RustLib.instance.api
+          .apiEstimateFee(blockchainId: _blockchain, target: target);
+      return FeeRate._(res);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 
-  // /// The function for broadcasting a transaction
-  // Future<void> broadcast(Transaction tx) async {
-  //   try {
-  //     final txid = await RustFFIProvider.api
-  //         .broadcastStaticMethodApi(blockchainId: _blockchain, tx: tx._tx!);
-  //     if (kDebugMode) {
-  //       print(txid);
-  //     }
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+  /// The function for broadcasting a transaction
+  Future<void> broadcast(Transaction tx) async {
+    try {
+      final txid = await RustLib.instance.api
+          .apiBroadcast(blockchainId: _blockchain, tx: tx._tx!);
+      if (kDebugMode) {
+        print(txid);
+      }
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 }
 
 /// The BumpFeeTxBuilder is used to bump the fee on a transaction that has been broadcast and has its RBF flag set to true.
@@ -204,28 +205,29 @@ class BumpFeeTxBuilder {
   }
 
   /// Finish building the transaction. Returns the  [TxBuilderResult].
-  // Future<TxBuilderResult> finish(Wallet wallet) async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .bumpFeeTxBuilderFinishStaticMethodApi(
-  //             txid: txid.toString(),
-  //             enableRbf: _enableRbf,
-  //             feeRate: feeRate,
-  //             walletId: wallet._wallet,
-  //             nSequence: _nSequence,
-  //             allowShrinking: _allowShrinking);
-  //     return TxBuilderResult(
-  //         psbt: PartiallySignedTransaction(psbtBase64: res.$1),
-  //         txDetails: res.$2);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// Future<TxBuilderResult> finish(Wallet wallet) async {
+//   try {
+//     final res = await RustFFIProvider.api
+//         .bumpFeeTxBuilderFinishStaticMethodApi(
+//             txid: txid.toString(),
+//             enableRbf: _enableRbf,
+//             feeRate: feeRate,
+//             walletId: wallet._wallet,
+//             nSequence: _nSequence,
+//             allowShrinking: _allowShrinking);
+//     return TxBuilderResult(
+//         psbt: PartiallySignedTransaction(psbtBase64: res.$1),
+//         txDetails: res.$2);
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 }
 
 ///A `BIP-32` derivation path
 class DerivationPath {
   final String? _path;
+
   DerivationPath._(this._path);
 
   ///  [DerivationPath] constructor
@@ -249,6 +251,7 @@ class DerivationPath {
 class Descriptor {
   final String _descriptorInstance;
   final type.Network _network;
+
   Descriptor._(this._descriptorInstance, this._network);
 
   ///  [Descriptor] constructor
@@ -371,50 +374,50 @@ class Descriptor {
     }
   }
 
-  // ///BIP84 public template. Expands to wpkh(key/{0,1}/*)
-  // ///
-  // /// This assumes that the key used has already been derived with m/84'/0'/0'.
-  // ///
-  // /// This template requires the parent fingerprint to populate correctly the metadata of PSBTs.
-  // static Future<Descriptor> newBip84Public(
-  //     {required DescriptorPublicKey publicKey,
-  //     required String fingerPrint,
-  //     required type.Network network,
-  //     required type.KeychainKind keychain}) async {
-  //   try {
-  //     final res = await RustFFIProvider.api.newBip84PublicStaticMethodApi(
-  //         keyChainKind: keychain,
-  //         publicKey: publicKey.asString(),
-  //         network: network,
-  //         fingerprint: fingerPrint);
-  //     return Descriptor._(res, network);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// ///BIP84 public template. Expands to wpkh(key/{0,1}/*)
+// ///
+// /// This assumes that the key used has already been derived with m/84'/0'/0'.
+// ///
+// /// This template requires the parent fingerprint to populate correctly the metadata of PSBTs.
+// static Future<Descriptor> newBip84Public(
+//     {required DescriptorPublicKey publicKey,
+//     required String fingerPrint,
+//     required type.Network network,
+//     required type.KeychainKind keychain}) async {
+//   try {
+//     final res = await RustFFIProvider.api.newBip84PublicStaticMethodApi(
+//         keyChainKind: keychain,
+//         publicKey: publicKey.asString(),
+//         network: network,
+//         fingerprint: fingerPrint);
+//     return Descriptor._(res, network);
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 
-  // ///Return the private version of the output descriptor if available, otherwise return the public version.
-  // Future<String> asStringPrivate() async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .descriptorAsStringPrivateStaticMethodApi(
-  //             descriptor: _descriptorInstance, network: _network);
-  //     return res;
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// ///Return the private version of the output descriptor if available, otherwise return the public version.
+// Future<String> asStringPrivate() async {
+//   try {
+//     final res = await RustFFIProvider.api
+//         .descriptorAsStringPrivateStaticMethodApi(
+//             descriptor: _descriptorInstance, network: _network);
+//     return res;
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 
-  // ///Return the public version of the output descriptor.
-  // Future<String> asString() async {
-  //   try {
-  //     final res = await RustFFIProvider.api.descriptorAsStringStaticMethodApi(
-  //         descriptor: _descriptorInstance, network: _network);
-  //     return res;
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// ///Return the public version of the output descriptor.
+// Future<String> asString() async {
+//   try {
+//     final res = await RustFFIProvider.api.descriptorAsStringStaticMethodApi(
+//         descriptor: _descriptorInstance, network: _network);
+//     return res;
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 }
 
 ///An extended public key.
@@ -475,6 +478,7 @@ class DescriptorPublicKey {
 
 class DescriptorSecretKey {
   final String _descriptorSecretKey;
+
   DescriptorSecretKey._(this._descriptorSecretKey);
 
   ///Returns the public version of this key.
@@ -565,6 +569,7 @@ class DescriptorSecretKey {
 
 class FeeRate {
   final double _feeRate;
+
   FeeRate._(this._feeRate);
 
   double asSatPerVb() {
@@ -576,7 +581,9 @@ class FeeRate {
 /// transaction.
 class Input {
   final String _input;
+
   Input._(this._input);
+
   @override
   String toString() {
     return _input.toString();
@@ -607,16 +614,15 @@ class PartiallySignedTransaction {
   //   }
   // }
 
-  // /// Return the transaction as bytes.
-  // Future<Transaction> extractTx() async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .extractTxStaticMethodApi(psbtStr: psbtBase64);
-  //     return Transaction._(res);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+  /// Return the transaction as bytes.
+  Future<Transaction> extractTx() async {
+    try {
+      final res = await RustLib.instance.api.apiExtractTx(psbtStr: psbtBase64);
+      return Transaction._(res);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 
   // /// Return feeAmount
   // Future<int?> feeAmount() async {
@@ -668,15 +674,15 @@ class PartiallySignedTransaction {
   }
 
   /// Returns the [PartiallySignedTransaction] transaction id
-  // Future<String> txId() async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .psbtTxidStaticMethodApi(psbtStr: psbtBase64);
-  //     return res;
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// Future<String> txId() async {
+//   try {
+//     final res = await RustFFIProvider.api
+//         .psbtTxidStaticMethodApi(psbtStr: psbtBase64);
+//     return res;
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 }
 
 ///Bitcoin script.
@@ -707,6 +713,7 @@ class Script extends type.Script {
 ///A bitcoin transaction.
 class Transaction {
   final String? _tx;
+
   Transaction._(this._tx);
 
   ///  [Transaction] constructor
@@ -1020,33 +1027,33 @@ class TxBuilder {
   ///
   /// Returns a [TxBuilderResult].
 
-  // Future<TxBuilderResult> finish(Wallet wallet) async {
-  //   if (_recipients.isEmpty && _drainTo == null) {
-  //     throw NoRecipientsException();
-  //   }
-  //   try {
-  //     final res = await RustFFIProvider.api.txBuilderFinishStaticMethodApi(
-  //         walletId: wallet._wallet,
-  //         recipients: _recipients,
-  //         utxos: _utxos,
-  //         foreignUtxo: _foreignUtxo,
-  //         unspendable: _unSpendable,
-  //         manuallySelectedOnly: _manuallySelectedOnly,
-  //         drainWallet: _drainWallet,
-  //         rbf: _rbfValue,
-  //         drainTo: _drainTo,
-  //         feeAbsolute: _feeAbsolute,
-  //         feeRate: _feeRate,
-  //         data: _data,
-  //         changePolicy: _changeSpendPolicy);
+  Future<TxBuilderResult> finish(Wallet wallet) async {
+    if (_recipients.isEmpty && _drainTo == null) {
+      throw NoRecipientsException();
+    }
+    try {
+      final res = await RustLib.instance.api.apiTxBuilderFinish(
+          walletId: wallet._wallet,
+          recipients: _recipients,
+          utxos: _utxos,
+          foreignUtxo: _foreignUtxo,
+          unspendable: _unSpendable,
+          manuallySelectedOnly: _manuallySelectedOnly,
+          drainWallet: _drainWallet,
+          rbf: _rbfValue,
+          drainTo: _drainTo,
+          feeAbsolute: _feeAbsolute,
+          feeRate: _feeRate,
+          data: _data,
+          changePolicy: _changeSpendPolicy);
 
-  //     return TxBuilderResult(
-  //         psbt: PartiallySignedTransaction(psbtBase64: res.$1),
-  //         txDetails: res.$2);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+      return TxBuilderResult(
+          psbt: PartiallySignedTransaction(psbtBase64: res.$1),
+          txDetails: res.$2);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 }
 
 ///The value returned from calling the .finish() method on the [TxBuilder] or [BumpFeeTxBuilder].
@@ -1072,6 +1079,7 @@ class TxBuilderResult {
 ///
 class Wallet {
   final String _wallet;
+
   Wallet._(this._wallet);
 
   ///  [Wallet] constructor
@@ -1195,25 +1203,25 @@ class Wallet {
     }
   }
 
-  // ///Sign a transaction with all the wallet’s signers, in the order specified by every signer’s SignerOrdering
-  // ///
-  // /// Note that it can’t be guaranteed that every signers will follow the options, but the “software signers” (WIF keys and xprv) defined in this library will.
-  // Future<PartiallySignedTransaction> sign(
-  //     {required PartiallySignedTransaction psbt,
-  //     SignOptions? signOptions}) async {
-  //   try {
-  //     final sbt = await RustFFIProvider.api.signStaticMethodApi(
-  //         signOptions: signOptions,
-  //         psbtStr: psbt.psbtBase64,
-  //         walletId: _wallet);
-  //     if (sbt == null) {
-  //       throw SignerException(message: "Unable to sign transaction");
-  //     }
-  //     return PartiallySignedTransaction(psbtBase64: sbt);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+  ///Sign a transaction with all the wallet’s signers, in the order specified by every signer’s SignerOrdering
+  ///
+  /// Note that it can’t be guaranteed that every signers will follow the options, but the “software signers” (WIF keys and xprv) defined in this library will.
+  Future<PartiallySignedTransaction> sign(
+      {required PartiallySignedTransaction psbt,
+      SignOptions? signOptions}) async {
+    try {
+      final sbt = await RustLib.instance.api.apiSign(
+          signOptions: signOptions,
+          psbtStr: psbt.psbtBase64,
+          walletId: _wallet);
+      if (sbt == null) {
+        throw SignerException(message: "Unable to sign transaction");
+      }
+      return PartiallySignedTransaction(psbtBase64: sbt);
+    } on bridge.Error catch (e) {
+      throw handleBdkException(e);
+    }
+  }
 
   Future<Input> getPsbtInput({
     required LocalUtxo utxo,
@@ -1232,18 +1240,18 @@ class Wallet {
     }
   }
 
-  // /// Returns the descriptor used to create addresses for a particular `keychain`.
-  // Future<Descriptor> getDescriptorForKeyChain(
-  //     type.KeychainKind keychainKind) async {
-  //   try {
-  //     final res = await RustFFIProvider.api
-  //         .getDescriptorForKeychainStaticMethodApi(
-  //             walletId: _wallet, keychain: keychainKind);
-  //     return Descriptor._(res.$1, res.$2);
-  //   } on bridge.Error catch (e) {
-  //     throw handleBdkException(e);
-  //   }
-  // }
+// /// Returns the descriptor used to create addresses for a particular `keychain`.
+// Future<Descriptor> getDescriptorForKeyChain(
+//     type.KeychainKind keychainKind) async {
+//   try {
+//     final res = await RustFFIProvider.api
+//         .getDescriptorForKeychainStaticMethodApi(
+//             walletId: _wallet, keychain: keychainKind);
+//     return Descriptor._(res.$1, res.$2);
+//   } on bridge.Error catch (e) {
+//     throw handleBdkException(e);
+//   }
+// }
 }
 
 extension Tx on type.TransactionDetails {

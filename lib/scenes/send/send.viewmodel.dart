@@ -70,7 +70,6 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     updateAccountList();
-    updateWallet();
   }
 
   Future<void> updateAccountList() async {

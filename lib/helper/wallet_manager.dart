@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import '../models/account.model.dart';
 import '../models/wallet.model.dart';
 import '../scenes/debug/bdk.test.dart';
@@ -14,18 +13,18 @@ import 'bdk/helper.dart';
 class WalletManager {
   static final BdkLibrary _lib = BdkLibrary();
 
-  static Future<Wallet> loadWallet() async {
-    return loadWalletWithID(0, 0);
-  }
-
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
+    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+    String passphrase =
+        await SecureStorageHelper.get(walletModel.serverWalletID);
     Mnemonic mnemonic = await Mnemonic.fromString(
         await WalletManager.getMnemonicWithID(walletID));
     final DerivationPath derivationPath = await DerivationPath.create(
         path: await getDerivationPathWithID(accountID));
-    final aliceDescriptor =
-        await _lib.createDerivedDescriptor(mnemonic, derivationPath);
+    final aliceDescriptor = await _lib.createDerivedDescriptor(
+        mnemonic, derivationPath,
+        passphrase: passphrase);
     String dbName = await getLocalDBNameWithID(walletID);
     dbName +=
         "_${derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_')}";
@@ -35,12 +34,14 @@ class WalletManager {
 
   static Future<void> importAccount(int walletID, String label, int scriptType,
       String derivationPath, String serverAccountID) async {
-    if (walletID != -1) {
+    SecretKey? secretKey = await getWalletKey(walletID);
+    if (walletID != -1 && secretKey != null) {
       DateTime now = DateTime.now();
       AccountModel? account =
-      await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
       if (account != null) {
-        account.label = utf8.encode(await encrypt(label));
+        account.label =
+            utf8.encode(await WalletKeyHelper.encrypt(secretKey, label));
         account.labelDecrypt = label;
         account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
         account.scriptType = scriptType;
@@ -50,7 +51,7 @@ class WalletManager {
             id: null,
             walletID: walletID,
             derivationPath: derivationPath,
-            label: utf8.encode(await encrypt(label)),
+            label: utf8.encode(await WalletKeyHelper.encrypt(secretKey, label)),
             scriptType: scriptType,
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,
@@ -74,30 +75,21 @@ class WalletManager {
   }
 
   static Future<String> getDerivationPathWithID(int accountID) async {
-    if (accountID == 0) {
-      return "m/84'/1'/0'/0";
-    }
     AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
     return accountModel.derivationPath;
   }
 
   static Future<String> getAccountLabelWithID(int accountID) async {
-    if (accountID == 0) {
-      return "Default Account";
-    }
     AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
     return accountModel.labelDecrypt;
   }
 
   static Future<String> getLocalDBNameWithID(int walletID) async {
     String dbName = "";
-    if (walletID == 0) {
-      dbName = "test_database";
-    } else {
-      WalletModel walletRecord =
-          await await DBHelper.walletDao!.findById(walletID);
-      dbName = walletRecord.localDBName;
-    }
+
+    WalletModel walletRecord =
+        await await DBHelper.walletDao!.findById(walletID);
+    dbName = walletRecord.localDBName;
     return dbName;
   }
 
@@ -123,50 +115,34 @@ class WalletManager {
     return balance;
   }
 
-  static Future<String> getMnemonicWithID(int walletID,
-      {String passphrase = ""}) async {
-    // TODO:: add passphrase
-    if (walletID == 0) {
-      return 'certain sense kiss guide crumble hint transfer crime much stereo warm coral';
-    } else {
-      WalletModel walletRecord = await DBHelper.walletDao!.findById(walletID);
-      String mnemonic = await decrypt(utf8.decode(walletRecord.mnemonic),
-          passphrase_: passphrase);
-      return mnemonic;
+  static Future<SecretKey?> getWalletKey(int walletID) async {
+    String keyPath = "${SecureStorageHelper.walletKey}_$walletID";
+    SecretKey secretKey;
+    String secretKeyStr = await SecureStorageHelper.get(keyPath);
+    if (secretKeyStr.isEmpty) {
+      return null;
+    }
+    secretKey = WalletKeyHelper.restoreSecretKeyFromString(secretKeyStr);
+    return secretKey;
+  }
+
+  static Future<void> setWalletKey(int walletID, SecretKey secretKey) async {
+    String keyPath = "${SecureStorageHelper.walletKey}_$walletID";
+    String secretKeyStr = await SecureStorageHelper.get(keyPath);
+    if (secretKeyStr.isEmpty) {
+      secretKeyStr = await WalletKeyHelper.secretKeyAsString(secretKey);
+      SecureStorageHelper.set(keyPath, secretKeyStr);
     }
   }
 
-  static Future<String> encrypt(String plaintext,
-      {String passphrase_ = ""}) async {
-    Uint8List plaintext0 = utf8.encode(plaintext);
-    List<int> iv = AesGcm.with256bits().newNonce();
-    Uint8List passphrase =
-        utf8.encode(md5.convert(utf8.encode(passphrase_)).toString());
-    SecretKey secretKey = SecretKey(passphrase);
-
-    SecretBox secretBox = await AesGcm.with256bits()
-        .encrypt(plaintext0, nonce: iv, secretKey: secretKey);
-    String encryptText = base64.encode(
-        secretBox.concatenation()); // Base64 encoding of: IV | ciphertext | MAC
-    return encryptText;
-  }
-
-  static Future<String> decrypt(String encryptText,
-      {String passphrase_ = ""}) async {
-    Uint8List encryptText0 = base64.decode(encryptText);
-    Uint8List iv = encryptText0.sublist(0, 12);
-    Uint8List ciphertext = encryptText0.sublist(12, encryptText0.length - 16);
-    Uint8List mac = encryptText0.sublist(encryptText0.length - 16);
-
-    Uint8List passphrase =
-        utf8.encode(md5.convert(utf8.encode(passphrase_)).toString());
-    SecretKey secretKey = SecretKey(passphrase);
-
-    SecretBox secretBox = SecretBox(ciphertext, nonce: iv, mac: Mac(mac));
-
-    List<int> decrypted =
-        await AesGcm.with256bits().decrypt(secretBox, secretKey: secretKey);
-    String plaintext = utf8.decode(decrypted);
-    return plaintext;
+  static Future<String> getMnemonicWithID(int walletID) async {
+    WalletModel walletRecord = await DBHelper.walletDao!.findById(walletID);
+    SecretKey? secretKey = await getWalletKey(walletID);
+    if (secretKey != null) {
+      String mnemonic = await WalletKeyHelper.decrypt(
+          secretKey, utf8.decode(walletRecord.mnemonic));
+      return mnemonic;
+    }
+    return "";
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wallet/helper/logger.dart';
 
 class SecureStorageHelper {
+  static const String walletKey = "WALLET_KEY";
   static FlutterSecureStorage? storage;
   static bool _initialized = false;
 
@@ -42,7 +43,15 @@ class SecureStorageHelper {
   }
 
   static Future<void> set(String key_, String value_) async {
-    await storage!.write(key: key_, value: value_);
+    // TODO:: figure out why windows can not write to storage, this is current workaround
+    await storage!.delete(key: key_);
+    for (int i = 0; i< 1000; i++) {
+      await storage!.write(key: key_, value: value_);
+      bool saved = await storage!.containsKey(key: key_);
+      if (saved == true){
+        break;
+      }
+    }
   }
 
   static Future<String> get(String key_) async {

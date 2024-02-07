@@ -37,12 +37,18 @@ class BdkLibrary {
 
   // get descriptor with given mnemonic and derivationPath
   Future<Descriptor> createDerivedDescriptor(
-      Mnemonic mnemonic, DerivationPath derivationPath) async {
+      Mnemonic mnemonic, DerivationPath derivationPath,
+      {String? passphrase}) async {
     int purpose =
         int.parse(derivationPath.toString().split('/')[1].split("'")[0]);
-
-    DescriptorSecretKey descriptorSecretKey = await DescriptorSecretKey.create(
-        network: Network.testnet, mnemonic: mnemonic);
+    DescriptorSecretKey descriptorSecretKey;
+    if (passphrase != null && passphrase != "") {
+      descriptorSecretKey = await DescriptorSecretKey.create(
+          network: Network.testnet, mnemonic: mnemonic, password: passphrase);
+    } else {
+      descriptorSecretKey = await DescriptorSecretKey.create(
+          network: Network.testnet, mnemonic: mnemonic);
+    }
 
     DescriptorSecretKey descriptorPrivateKey =
         await descriptorSecretKey.derive(derivationPath);
@@ -213,22 +219,26 @@ class BdkLibrary {
 
   sendBitcoin(Blockchain blockchain, Wallet aliceWallet, String addressStr,
       int amount) async {
-    // try {
-    //   final txBuilder = TxBuilder();
-    //   final address = await Address.create(address: addressStr);
+    try {
+      final txBuilder = TxBuilder();
+      final address = await Address.create(address: addressStr);
 
-    //   final script = await address.scriptPubKey();
-    //   final feeRate = await estimateFeeRate(25, blockchain);
-    //   final txBuilderResult = await txBuilder
-    //       .addRecipient(script, amount)
-    //       .feeRate(feeRate.asSatPerVb())
-    //       .finish(aliceWallet);
-    //   getInputOutPuts(txBuilderResult, blockchain);
-    //   final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
-    //   final tx = await aliceSbt.extractTx();
-    //   Isolate.run(() async => {await blockchain.broadcast(tx)});
-    // } on Exception catch (_) {
-    //   rethrow;
-    // }
+      final script = await address.scriptPubKey();
+      //   final feeRate = await estimateFeeRate(25, blockchain);
+      final txBuilderResult = await txBuilder
+          .addRecipient(script, amount)
+          .feeRate(1.0)
+          .finish(aliceWallet);
+      getInputOutPuts(txBuilderResult, blockchain);
+      final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
+      final tx = await aliceSbt.extractTx();
+      Isolate.run(() async {
+        await RustLib.init(); // Need to init RustLib in Isolate
+        await blockchain.broadcast(tx);
+      });
+    } on Exception catch (e) {
+      e.toString();
+      rethrow;
+    }
   }
 }

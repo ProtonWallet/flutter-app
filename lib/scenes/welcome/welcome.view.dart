@@ -67,13 +67,31 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         userInfo["userMail"] ?? "ProtonWallet@proton.black",
         userInfo["userName"] ?? "ProtonWallet",
         userInfo["userDisplayName"] ?? "ProtonWallet",
-        userInfo["sessionId"] ?? "aphyr7mnsg7r6c3savhv376hs5n2dbqo",
-        userInfo["accessToken"] ?? "ro6jhkalhaxxevgejbjqzljxzn47sedd",
-        userInfo["refreshToken"] ?? "ctidzrblu3jsku3n7g5lmjrot4azdoiu",
+        userInfo["sessionId"] ?? "zq575ffcf32xmlqcl3h657ntlltsu2cm",
+        userInfo["accessToken"] ?? "osxl4zajfnxvr5s5ljxjwq5v3itqbk3x",
+        userInfo["refreshToken"] ?? "c23vayrxwnhiyne6tmsz2jhztw6a7ffg",
         userInfo["userKeyID"] ??
             "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==",
-        userInfo["userPrivateKey"] ?? "",
-        userInfo["userPassphrase"] ?? "");
+        userInfo["userPrivateKey"] ?? '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+Version: ProtonMail
+
+xYYEZa424xYJKwYBBAHaRw8BAQdAzOjoPpNo11uWEwg8f1zVeJeFOTaZ64l0
+YlntRsRf9Zj+CQMIUj1rfyZGy4tgfz3+t29XTnQIc/7/wTkJzTRFfz5k/3TP
+875/yVCn/LYg9Vy3FLMMcixhrH0KAQWuA41UX1Ffiqlu88Bwv33rbj6b/xVS
+Gc01UHJvdG9uV2FsbGV0QHByb3Rvbi5ibGFjayA8UHJvdG9uV2FsbGV0QHBy
+b3Rvbi5ibGFjaz7CjwQTFggAQQUCZa424wkQznO5oB54VSAWIQTbuvQeXaY/
+zBo9rZzOc7mgHnhVIAIbAwIeAQIZAQMLCQcCFQgDFgACBScJAgcCAAB9pwEA
+5cDC5r/QrnIlkr8xJUAOse2JqvEOhsFef2g46Lmo3dMBAPWIhyLzPy1CkP/V
+uWPF0iIDwGaKa3u7uIF331kBWMoLx4sEZa424xIKKwYBBAGXVQEFAQEHQLTJ
+k0mE6UM7J2gVR4XoAk0fud9dX5DQn2N/0cT4sCYrAwEKCf4JAwi6M/RSTQed
+V2BSqFH+IKUV9IvwXWE3LSB8tx7e11kW+E9o5QRq5MdHTs1qF1pnUiTPTMeo
+EnTer97/Jnjp1CCiEFZP85HQOO9NVKk9QDoIwngEGBYIACoFAmWuNuMJEM5z
+uaAeeFUgFiEE27r0Hl2mP8waPa2cznO5oB54VSACGwwAAJlZAP0QYjT9glxj
+ROPOOJcfggwp5HI1PjMNGreNKPo6BmTwNAD/XlgtiutzElIMp0uTokeTae7N
+M3bzanKu/hKuhAM3kgw=
+=I2GF
+-----END PGP PRIVATE KEY BLOCK-----''',
+        userInfo["userPassphrase"] ?? "A4gFne6iUsqRFKnUGI75gVRVE/sqnay");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
@@ -106,10 +124,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
               userSessionProvider.userSession.userKeyID);
           viewModel.coordinator.move(ViewIdentifiers.home, context);
         } else {
-          LocalToast.showToast(context, "Login failed!",
-              isWarning: true,
-              icon: const Icon(Icons.warning, color: Colors.white),
-              duration: 2);
+          LocalToast.showErrorToast(context, "Login failed!");
         }
         break;
       default:
