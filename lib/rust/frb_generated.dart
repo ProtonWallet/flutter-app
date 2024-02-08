@@ -7,6 +7,7 @@ import 'api/api2.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
+import 'api/rust_objects.dart';
 import 'bdk/blockchain.dart';
 import 'bdk/error.dart';
 import 'bdk/types.dart';
@@ -357,6 +358,11 @@ abstract class RustLibApi extends BaseApi {
   Future<Network> apiWalletNetwork({required String walletId, dynamic hint});
 
   Future<int> apiWeight({required String tx, dynamic hint});
+
+  Future<MyTestObject> myTestObjectNew({dynamic hint});
+
+  Future<String> myTestObjectReadText(
+      {required MyTestObject that, dynamic hint});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -2684,6 +2690,56 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         argNames: ["tx"],
       );
 
+  @override
+  Future<MyTestObject> myTestObjectNew({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 84, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_my_test_object,
+        decodeErrorData: null,
+      ),
+      constMeta: kMyTestObjectNewConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kMyTestObjectNewConstMeta => const TaskConstMeta(
+        debugName: "MyTestObject_new",
+        argNames: [],
+      );
+
+  @override
+  Future<String> myTestObjectReadText(
+      {required MyTestObject that, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_my_test_object(that, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 85, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kMyTestObjectReadTextConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kMyTestObjectReadTextConstMeta => const TaskConstMeta(
+        debugName: "MyTestObject_read_text",
+        argNames: ["that"],
+      );
+
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -2848,6 +2904,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   LocalUtxo dco_decode_box_autoadd_local_utxo(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_local_utxo(raw);
+  }
+
+  @protected
+  MyTestObject dco_decode_box_autoadd_my_test_object(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_my_test_object(raw);
   }
 
   @protected
@@ -3284,6 +3346,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       isSpent: dco_decode_bool(arr[2]),
       keychain: dco_decode_keychain_kind(arr[3]),
     );
+  }
+
+  @protected
+  MyTestObject dco_decode_my_test_object(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 0)
+      throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
+    return MyTestObject();
   }
 
   @protected
@@ -3905,6 +3976,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MyTestObject sse_decode_box_autoadd_my_test_object(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_my_test_object(deserializer));
+  }
+
+  @protected
   OutPoint sse_decode_box_autoadd_out_point(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_out_point(deserializer));
@@ -4387,6 +4465,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         txout: var_txout,
         isSpent: var_isSpent,
         keychain: var_keychain);
+  }
+
+  @protected
+  MyTestObject sse_decode_my_test_object(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MyTestObject();
   }
 
   @protected
@@ -5008,6 +5092,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_my_test_object(
+      MyTestObject self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_my_test_object(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_out_point(
       OutPoint self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -5431,6 +5522,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_tx_out(self.txout, serializer);
     sse_encode_bool(self.isSpent, serializer);
     sse_encode_keychain_kind(self.keychain, serializer);
+  }
+
+  @protected
+  void sse_encode_my_test_object(MyTestObject self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 
   @protected

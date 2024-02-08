@@ -2862,6 +2862,52 @@ fn wire_Api_weight_impl(
         },
     )
 }
+fn wire_MyTestObject_new_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "MyTestObject_new",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse(
+                    (move || Result::<_, ()>::Ok(crate::api::rust_objects::MyTestObject::new()))()
+                )
+            }
+        },
+    )
+}
+fn wire_MyTestObject_read_text_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "MyTestObject_read_text", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <crate::api::rust_objects::MyTestObject>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse((move ||  {
+                         Result::<_,()>::Ok(crate::api::rust_objects::MyTestObject::read_text(&api_that))
+                    })())
+                } })
+}
 
 // Section: dart2rust
 
@@ -3477,6 +3523,13 @@ impl SseDecode for crate::bdk::wallet::LocalUtxo {
             is_spent: var_isSpent,
             keychain: var_keychain,
         };
+    }
+}
+
+impl SseDecode for crate::api::rust_objects::MyTestObject {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        return crate::api::rust_objects::MyTestObject {};
     }
 }
 
@@ -4144,6 +4197,8 @@ fn pde_ffi_dispatcher_primary_impl(
         25 => wire_Api_vsize_impl(port, ptr, rust_vec_len, data_len),
         77 => wire_Api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
         23 => wire_Api_weight_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire_MyTestObject_new_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire_MyTestObject_read_text_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4631,6 +4686,23 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::wallet::LocalUtxo>
     for crate::bdk::wallet::LocalUtxo
 {
     fn into_into_dart(self) -> crate::bdk::wallet::LocalUtxo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::rust_objects::MyTestObject {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        Vec::<u8>::new().into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::rust_objects::MyTestObject
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::rust_objects::MyTestObject>
+    for crate::api::rust_objects::MyTestObject
+{
+    fn into_into_dart(self) -> crate::api::rust_objects::MyTestObject {
         self
     }
 }
@@ -5653,6 +5725,11 @@ impl SseEncode for crate::bdk::wallet::LocalUtxo {
         <bool>::sse_encode(self.is_spent, serializer);
         <crate::bdk::types::KeychainKind>::sse_encode(self.keychain, serializer);
     }
+}
+
+impl SseEncode for crate::api::rust_objects::MyTestObject {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
 }
 
 impl SseEncode for crate::bdk::types::Network {
