@@ -78,6 +78,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.3.1)
+  - proton_crypto (0.0.1):
+    - Flutter
   - rust_builder (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -103,6 +105,7 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - local_auth_ios (from `.symlinks/plugins/local_auth_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - proton_crypto (from `.symlinks/plugins/proton_crypto/ios`)
   - rust_builder (from `.symlinks/plugins/rust_builder/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -144,6 +147,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/local_auth_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  proton_crypto:
+    :path: ".symlinks/plugins/proton_crypto/ios"
   rust_builder:
     :path: ".symlinks/plugins/rust_builder/ios"
   share_plus:
@@ -176,6 +181,7 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  proton_crypto: 69238ad48734e5d5dca3ac19b965cf682c5e5bcf
   rust_builder: fe99dacddf57fc7b3a8e5e54484d24c310151628
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
