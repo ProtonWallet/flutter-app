@@ -7,6 +7,7 @@ import 'api/api2.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
+import 'api/rust_objects.dart';
 import 'bdk/blockchain.dart';
 import 'bdk/error.dart';
 import 'bdk/types.dart';
@@ -84,6 +85,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LocalUtxo dco_decode_box_autoadd_local_utxo(dynamic raw);
+
+  @protected
+  MyTestObject dco_decode_box_autoadd_my_test_object(dynamic raw);
 
   @protected
   OutPoint dco_decode_box_autoadd_out_point(dynamic raw);
@@ -197,6 +201,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LocalUtxo dco_decode_local_utxo(dynamic raw);
+
+  @protected
+  MyTestObject dco_decode_my_test_object(dynamic raw);
 
   @protected
   Network dco_decode_network(dynamic raw);
@@ -393,6 +400,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   LocalUtxo sse_decode_box_autoadd_local_utxo(SseDeserializer deserializer);
 
   @protected
+  MyTestObject sse_decode_box_autoadd_my_test_object(
+      SseDeserializer deserializer);
+
+  @protected
   OutPoint sse_decode_box_autoadd_out_point(SseDeserializer deserializer);
 
   @protected
@@ -513,6 +524,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer);
+
+  @protected
+  MyTestObject sse_decode_my_test_object(SseDeserializer deserializer);
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
@@ -724,6 +738,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       LocalUtxo self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_my_test_object(
+      MyTestObject self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_out_point(
       OutPoint self, SseSerializer serializer);
 
@@ -853,6 +871,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_my_test_object(MyTestObject self, SseSerializer serializer);
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
