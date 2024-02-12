@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/tag.text.dart';
+import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
-
-import '../../components/button.v5.dart';
-import '../../components/tag.text.dart';
-import '../../components/textfield.text.dart';
-import '../../constants/proton.color.dart';
-import '../../theme/theme.font.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   HistoryDetailView(HistoryDetailViewModel viewModel)
@@ -27,7 +27,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Transaction Detail"),
+        title: Text(S.of(context).trans_details),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
@@ -86,7 +86,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Submitted",
+                        Text(S.of(context).trans_submitted,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary)),
                         Text(parsetime(viewModel.submitTimestamp),
@@ -100,7 +100,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Completed",
+                        Text(S.of(context).trans_completed,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary)),
                         Text(parsetime(viewModel.completeTimestamp),
@@ -114,7 +114,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Amount",
+                        Text(S.of(context).trans_amount,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary)),
                         Row(children: [
@@ -127,8 +127,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           const SizedBox(width: 8),
                           Text(
                               viewModel.isSend
-                                  ? "${viewModel.amount.abs() - viewModel.fee} SAT"
-                                  : "${viewModel.amount.abs()} SAT",
+                                  ? S.of(context).trans_sat(
+                                      viewModel.amount.abs() - viewModel.fee)
+                                  : S
+                                      .of(context)
+                                      .trans_sat(viewModel.amount.abs()),
                               style: FontManager.captionMedian(
                                   Theme.of(context).colorScheme.primary)),
                         ])
@@ -140,7 +143,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Network fee",
+                        Text(S.of(context).trans_metworkFee,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary)),
                         Row(children: [
@@ -149,7 +152,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               style: FontManager.captionMedian(
                                   ProtonColors.textHint)),
                           const SizedBox(width: 8),
-                          Text("${viewModel.fee} SAT",
+                          Text(S.of(context).trans_sat(viewModel.fee),
                               style: FontManager.captionMedian(
                                   Theme.of(context).colorScheme.primary)),
                         ])
@@ -161,7 +164,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Total",
+                        Text(S.of(context).trans_total,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary)),
                         Row(children: [
@@ -187,7 +190,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("User Label",
+                          Text(S.of(context).trans_userLable,
                               style: FontManager.captionMedian(
                                   Theme.of(context).colorScheme.primary))
                         ])),
@@ -231,7 +234,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("From",
+                  Text(S.of(context).trans_from,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
                   Row(children: [
@@ -246,10 +249,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("To",
+                  Text(S.of(context).trans_to,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
-                  TagText(text: viewModel.address.startsWith("a1bb1fdd95") ? "eric@proton.me": viewModel.address)
+                  TagText(
+                      text: viewModel.address.startsWith("a1bb1fdd95")
+                          ? "eric@proton.me"
+                          : viewModel.address)
                 ])),
       ],
     );
@@ -267,7 +273,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("From",
+                  Text(S.of(context).trans_from,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
                   TagText(text: viewModel.address)
@@ -278,7 +284,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("To",
+                  Text(S.of(context).trans_to,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
                   Row(children: [

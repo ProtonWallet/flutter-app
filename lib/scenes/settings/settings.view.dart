@@ -5,6 +5,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/settings/settings.account.view.dart';
 import 'package:wallet/scenes/settings/settings.common.view.dart';
 import 'package:wallet/scenes/settings/settings.viewmodel.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class SettingsView extends ViewBase<SettingsViewModel> {
   SettingsView(SettingsViewModel viewModel)
@@ -26,8 +27,8 @@ class SettingsView extends ViewBase<SettingsViewModel> {
           // Theme.of(context).colorScheme.inversePrimary,
           backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
           forceMaterialTransparency: true,
-          title: const Text("Settings",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(S.of(context).settings_title,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         body: SingleChildScrollView(
           child: SizedBox(

@@ -5,13 +5,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/theme/theme.font.dart';
-
-import '../../constants/sizedbox.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class ReceiveView extends ViewBase<ReceiveViewModel> {
   ReceiveView(ReceiveViewModel viewModel)
@@ -29,7 +29,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
           backgroundColor: Theme.of(context).colorScheme.background,
-          title: Text("Receive Bitcoin",
+          title: Text(S.of(context).receive_bitcoin,
               style: FontManager.titleHeadline(
                   Theme.of(context).colorScheme.primary)),
           scrolledUnderElevation:
@@ -98,7 +98,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                       ),
                       child: Column(children: [
                         const SizedBox(height: 14),
-                        Text("Your Personal Wallet Address",
+                        Text(S.of(context).your_personal_addr,
                             style: FontManager.body1Median(
                                 Theme.of(context).colorScheme.primary)),
                         const SizedBox(height: 14),

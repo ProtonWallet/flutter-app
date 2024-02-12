@@ -9,6 +9,7 @@ import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
   ImportView(ImportViewModel viewModel)
@@ -79,7 +80,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Text(
-                        "Your Passphrase (optional)",
+                        S.of(context).your_passphrase_optional,
                         style: FontManager.captionMedian(
                             Theme.of(context).colorScheme.primary),
                         textAlign: TextAlign.left,
@@ -88,9 +89,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                     SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: TextFieldPassword(
-                          width: MediaQuery.of(context).size.width,
-                          controller: viewModel.passphraseTextController
-                        )),
+                            width: MediaQuery.of(context).size.width,
+                            controller: viewModel.passphraseTextController)),
                   ])),
           Container(
               padding: const EdgeInsets.only(bottom: 50),

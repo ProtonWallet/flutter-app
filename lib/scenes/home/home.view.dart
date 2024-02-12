@@ -19,24 +19,24 @@ class HomeView extends ViewBase<HomeViewModel> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Home"),
+        title: Text(S.of(context).tab_home),
       ),
       body: Center(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text("Confirmed Transactions: ${viewModel.confirmed}"),
-              Text("Unconfirmed Transactions: ${viewModel.unconfirmed}"),
+              Text(S.of(context).confirmed_trans(viewModel.confirmed)),
+              Text(S.of(context).unconfirmed_trans(viewModel.unconfirmed)),
               const SizedBox(
                 height: 50,
               ),
-              const Text("Balance",
-                  style: TextStyle(
+              Text(S.of(context).balance,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.bold,
                   )),
-              Text("${viewModel.sats} Sat",
+              Text(S.of(context).trans_sat(viewModel.sats),
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Inter',
@@ -147,7 +147,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               SizedBox(
                 height: 80,
                 child: viewModel.isSyncing
-                    ? const Text("Syncing")
+                    ? Text(S.of(context).syncing)
                     : CupertinoButton(
                         onPressed: viewModel.syncWallet,
                         color: ProtonColors.interactionNorm,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/login/login.viewmodel.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class LoginView extends ViewBase<LoginViewModel> {
   LoginView(LoginViewModel viewModel)
@@ -30,13 +31,13 @@ class LoginView extends ViewBase<LoginViewModel> {
             onPressed: () {
               // Perform signup logic here
             },
-            child: const Text("Signup"),
+            child: Text(S.of(context).signup),
           ),
           ElevatedButton(
             onPressed: () {
               // Perform login logic here
             },
-            child: const Text("Login"),
+            child: Text(S.of(context).login),
           ),
         ],
       ),

@@ -95,7 +95,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
             ButtonV5(
                 onPressed: () {},
                 enable: false,
-                text: S.of(context).importWallet,
+                text: S.of(context).import_wallet,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.white,
                 borderColor: ProtonColors.interactionNorm,
