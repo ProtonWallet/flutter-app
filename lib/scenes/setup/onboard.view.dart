@@ -85,7 +85,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                   viewModel.coordinator
                       .move(ViewIdentifiers.importWallet, context);
                 },
-                text: S.of(context).importWallet,
+                text: S.of(context).import_wallet,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.white,
                 borderColor: ProtonColors.interactionNorm,

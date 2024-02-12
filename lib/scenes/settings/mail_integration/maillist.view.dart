@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/components/custom.mailbox.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/settings/mail_integration/maillist.viewmodel.dart';
-
-import '../../../components/custom.mailbox.dart';
-import '../../../constants/proton.color.dart';
-import '../../../theme/theme.font.dart';
-import '../../core/view.navigatior.identifiers.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class MailListView extends ViewBase<MailListViewModel> {
   MailListView(MailListViewModel viewModel)
@@ -23,7 +23,7 @@ class MailListView extends ViewBase<MailListViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Settings"),
+        title: Text(S.of(context).settings_title),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
@@ -38,7 +38,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                   children: <Widget>[
                     Padding(
                         padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-                        child: Text("Email Integration",
+                        child: Text(S.of(context).email_integration,
                             style: FontManager.body2Median(
                                 Theme.of(context).colorScheme.primary))),
                     GestureDetector(
@@ -51,7 +51,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                         child: Padding(
                             padding:
                                 const EdgeInsets.only(left: 26.0, right: 26.0),
-                            child: Text("Add Email",
+                            child: Text(S.of(context).add_email,
                                 style: FontManager.body2Median(
                                     ProtonColors.interactionNorm)))),
                   ])),

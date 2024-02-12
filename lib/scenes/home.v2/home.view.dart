@@ -15,7 +15,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/theme/theme.font.dart';
-
+import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.newsbox.dart';
 import 'package:wallet/components/tag.text.dart';
@@ -592,14 +592,18 @@ void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 5,),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       Align(
                           alignment: Alignment.center,
                           child: AlertWarning(
                               content:
                                   "Decryption error\nDecryption of this wallet's encrypted content failed.",
                               width: MediaQuery.of(context).size.width - 30)),
-                      const SizedBox(height: 5,),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       ListTile(
                         leading: const Icon(Icons.lock_open, size: 18),
                         title: Text("Decrypt with your old password",
@@ -670,13 +674,13 @@ void showMyAlertDialog(BuildContext context, String content) {
               Clipboard.setData(ClipboardData(text: content))
                   .then((v) => {LocalToast.showToast(context, "Copied")});
             },
-            child: const Text("Copy"),
+            child: Text(S.of(context).copy),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Ok"),
+            child: Text(S.of(context).ok),
           ),
         ],
       );

@@ -6,6 +6,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class HistoryView extends ViewBase<HistoryViewModel> {
   HistoryView(HistoryViewModel viewModel)
@@ -26,7 +27,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Transactions"),
+        title: Text(S.of(context).transactions),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
@@ -44,7 +45,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                "No data",
+                S.of(context).no_data,
                 style: FontManager.titleHeadline(
                     Theme.of(context).colorScheme.primary),
               ),

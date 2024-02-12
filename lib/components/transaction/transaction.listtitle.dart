@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/constants/proton.color.dart';
-
-import '../../theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class TransactionListTitle extends StatelessWidget {
   final double width;
@@ -105,7 +105,8 @@ class TransactionListTitle extends StatelessWidget {
                       padding: const EdgeInsets.all(2.0),
                       child: const Icon(Icons.edit_outlined,
                           size: 10, color: ProtonColors.textHint)),
-                  Text("Note: $note",  style: FontManager.captionRegular(ProtonColors.textHint))
+                  Text(S.of(context).trans_note(note),
+                      style: FontManager.captionRegular(ProtonColors.textHint))
                 ]),
             ],
           ),

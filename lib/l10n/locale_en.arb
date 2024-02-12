@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "@@last_modified": "2024-02-12T00:10:57.227125",
+
 
   "appName": "Deep Sky",   
   "login": "Login",
@@ -19,7 +21,7 @@
   },
 
   "createNewWallet": "Create a new wallet",
-  "importWallet": "Import an existing wallet",
+  "importExistingWallet": "Import an existing wallet",
   
   "helloWorld": "Hello World!",
   "@helloWorld": {
@@ -66,5 +68,65 @@
         }
       }
     }
-  }
+  },
+  "no_data": "No data",
+  "trans_note": "Note: {note}",
+  "@trans_note": {
+    "description": "notes user set on a transaction",
+    "placeholders": {
+      "note": {
+        "type": "String",
+        "example": "pay for something, memo etc"
+      }
+    }
+  },
+  "transactions": "Transactions",
+  "trans_details": "Transaction Detail",
+  "trans_total": "Total",
+  "trans_to": "To",
+  "trans_from": "From",
+  "trans_userLable": "User Lable",
+  "trans_amount": "Amount",
+  "trans_submitted": "Submitted",
+  "trans_completed": "Completed",
+  "trans_metworkFee": "Network fee",
+  "trans_fee": "Fee",
+  "sat": "Sat",
+  "trans_sat": "{count, plural, =1{1 Sat} other{{count} Sats}}",
+  "@trans_sat": {
+    "description": "A plural message",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "confirmed_trans": "Confirmed Transactions: {count}",
+  "unconfirmed_trans": "Unconfirmed Transactions: {count}",
+  "syncing": "Syncing",
+  "balance": "Balance",
+
+  "done": "Done",
+  "next": "Next",
+  "trans_past_seven": "Transactions in past 7 days",
+  "add_account": "Add Account",
+  "your_account": "Your Accounts",
+  "add_email": "Add Email",
+  "email_integration": "Email Integration",
+  "send_bitcoin": "Send Bitcoin",
+  "your_personal_addr": "Your Personal Wallet Address",
+  "receive_bitcoin": "Receive Bitcoin",
+  "your_passphrase_optional": "Your passphrase (optional)",
+  "import_wallet": "Import your wallet",
+  "signup": "Signup",
+  "ok": "Ok",
+  "copy": "Copy",
+  "quick_action": "Quick Actions",
+  "explore_wallet": "Explore Proton Wallet",
+  "decript_old_wallet": "Decrypt with your old password",
+  "recover_with_mnemonic": "Recover with your mnemonic",
+  "delete_wallet": "Delete Wallet",
+  "rename_wallet": "Rename Wallet",
+  "backup_wallet": "Backup Wallet"
 }
