@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/onboarding/content.dart';
+import 'package:wallet/components/textfield.password.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-
-import '../../components/alert.warning.dart';
-import '../../components/onboarding/content.dart';
-import '../../components/textfield.password.dart';
-import '../core/view.navigatior.identifiers.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   SetupPassPhraseView(SetupPassPhraseViewModel viewModel)
@@ -39,7 +39,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBoxes.box20,
-                Text("Your passphrase (optional)",
+                Text(S.of(context).your_passphrase_optional,
                     style: FontManager.titleHeadline(
                         Theme.of(context).colorScheme.primary),
                     textAlign: TextAlign.center),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class DropdownButtonV1 extends StatefulWidget {
   final double width;
@@ -29,7 +30,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
   Widget build(BuildContext context) {
     return widget.items.isNotEmpty
         ? buildWithList(context)
-        : const Text("No data");
+        : Text(S.of(context).no_data);
   }
 
   Widget buildWithList(BuildContext buildContext) {

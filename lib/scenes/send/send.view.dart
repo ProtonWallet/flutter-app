@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/components/tag.text.dart';
+import 'package:wallet/components/text.choices.dart';
+import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
-
-import '../../components/tag.text.dart';
-import '../../components/text.choices.dart';
-import '../../components/dropdown.button.v1.dart';
-import '../../components/textfield.text.dart';
-import '../../constants/proton.color.dart';
-import '../../theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
   SendView(SendViewModel viewModel) : super(viewModel, const Key("SendView"));
@@ -26,7 +26,7 @@ class SendView extends ViewBase<SendViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text("Send Bitcoin",
+        title: Text(S.of(context).send_bitcoin,
             style: FontManager.titleHeadline(
                 Theme.of(context).colorScheme.primary)),
         scrolledUnderElevation:
@@ -220,7 +220,8 @@ class SendView extends ViewBase<SendViewModel> {
                 ButtonV5(
                     onPressed: () {
                       if (viewModel.coinController.text != "SAT") {
-                        LocalToast.showErrorToast(context, "Only support SAT now!");
+                        LocalToast.showErrorToast(
+                            context, "Only support SAT now!");
                       } else {
                         viewModel.sendCoin();
                         viewModel.coordinator.end();
