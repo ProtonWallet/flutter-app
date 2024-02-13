@@ -4,9 +4,9 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-
-import '../core/view.dart';
-import '../core/view.navigatior.identifiers.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'newuser.viewmodel.dart';
 
 class NewUserView extends ViewBase<NewUserViewModel> {
@@ -97,8 +97,8 @@ class NewUserView extends ViewBase<NewUserViewModel> {
                 }
               },
               child: viewModel.isLastPage
-                  ? const Text("Done")
-                  : const Text("Next"),
+                  ? Text(S.of(context).done)
+                  : Text(S.of(context).next),
             ),
           ),
         ),

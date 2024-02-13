@@ -11,10 +11,10 @@ abstract class HomeViewModel extends ViewModel {
   int selectedPage = 0;
 
   void updateSelected(int index);
-  void updateSats(String sats);
+  void updateSats(int sats);
   Future<void> syncWallet();
 
-  String sats = '0';
+  int sats = 0;
 
   bool isSyncing = false;
   void udpateSyncStatus(bool syncing);
@@ -53,7 +53,7 @@ class HomeViewModelImpl extends HomeViewModel {
     blockchain ??= await _lib.initializeBlockchain(false);
     _wallet.getBalance().then((value) => {
           logger.i('balance: ${value.total}'),
-          sats = value.total.toString(),
+          sats = value.total,
           datasourceChangedStreamController.sink.add(this)
         });
   }
@@ -69,7 +69,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateSats(String sats) {
+  void updateSats(int sats) {
     sats = sats;
     datasourceChangedStreamController.sink.add(this);
   }

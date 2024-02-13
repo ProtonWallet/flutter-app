@@ -5,7 +5,7 @@ import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
-
+import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:wallet/components/add_account_dialog.dart';
 import 'package:wallet/components/custom.barchart.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -104,7 +104,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                 children: <Widget>[
                   Padding(
                       padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-                      child: Text("Your Accounts",
+                      child: Text(S.of(context).your_account,
                           style: FontManager.body1Median(
                               Theme.of(context).colorScheme.primary))),
                   GestureDetector(
@@ -122,7 +122,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                       child: Padding(
                           padding:
                               const EdgeInsets.only(left: 40.0, right: 40.0),
-                          child: Text("Add Account",
+                          child: Text(S.of(context).add_account,
                               style: FontManager.body1Median(
                                   ProtonColors.interactionNorm)))),
                 ]),
@@ -158,14 +158,19 @@ class WalletView extends ViewBase<WalletViewModel> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("${viewModel.balance} Sat",
+                          Text(S.of(context).trans_sat(viewModel.balance),
                               style: FontManager.titleHeadline(
                                   Theme.of(context).colorScheme.primary)),
-                          Text("Confirmed Transactions: ${viewModel.confirmed}",
+                          Text(
+                              S
+                                  .of(context)
+                                  .confirmed_trans(viewModel.confirmed),
                               style: FontManager.captionRegular(
                                   Theme.of(context).colorScheme.secondary)),
                           Text(
-                              "Unconfirmed Transactions: ${viewModel.unconfirmed}",
+                              S
+                                  .of(context)
+                                  .unconfirmed_trans(viewModel.unconfirmed),
                               style: FontManager.captionRegular(
                                   Theme.of(context).colorScheme.secondary)),
                           Text(viewModel.isSyncing ? "Syncing.." : "",
@@ -181,7 +186,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                 height: 180,
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 child: const BarChartSample3()),
-            Text("Transactions in past 7 days",
+            Text(S.of(context).trans_past_seven,
                 style: FontManager.body1Median(
                     Theme.of(context).colorScheme.primary)),
             const SizedBox(

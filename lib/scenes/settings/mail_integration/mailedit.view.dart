@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/components/text.choices.dart';
+import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/settings/mail_integration/mailedit.viewmodel.dart';
-
-import '../../../components/button.v5.dart';
-import '../../../components/dropdown.button.v1.dart';
-import '../../../components/text.choices.dart';
-import '../../../components/textfield.text.dart';
-import '../../../constants/proton.color.dart';
-import '../../../theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class MailEditView extends ViewBase<MailEditViewModel> {
   MailEditView(MailEditViewModel viewModel)
@@ -26,7 +26,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("Email Integration"),
+        title: Text(S.of(context).email_integration),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
