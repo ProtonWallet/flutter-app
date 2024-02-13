@@ -487,10 +487,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "4a0a13aa56e491985ea06bdf8b0fbfefc87606470259892a453c32ccda965508"
+      sha256: "7bdcbe0dc20a85f743bfc1a8ee940656d57beeccb0da44b0e2c8271535b61ae5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-dev.21"
+    version: "2.0.0-dev.24"
   flutter_screen_lock:
     dependency: "direct main"
     description:
