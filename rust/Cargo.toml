@@ -21,8 +21,10 @@ serde = "1.0.89"
 serde_json = "1.0.96"
 anyhow = "1.0.68"
 lazy_static = "1.4.0"
-muon = { path = "./vendor/muon" }
 http = "1.0.0"
+### proton dependencies
+muon = { path = "./vendor/muon" }
+andromeda-api = { path = "../vendor/andromeda/crates/api" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
@@ -50,3 +52,6 @@ panic = "abort"
 [package.metadata.ios]
 # Required
 build_targets = ["aarch64-apple-ios"]
+
+[patch.crates-io]
+muon = { path = "./vendor/muon" }

@@ -2,7 +2,7 @@ use std::{collections::HashMap, sync::{Arc, RwLock}};
 use lazy_static::lazy_static;
 
 use muon::{
-    session::{Error, Session}, AppSpec, SimpleAuthStore
+    session::{Error, Session}, store::SimpleAuthStore, AppSpec
 };
 
 lazy_static! {
