@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/helper/proton.crypto.test.dart';
+import 'package:proton_crypto/proton_crypto.dart';
 
 void main() {
   if (Platform.isLinux) {

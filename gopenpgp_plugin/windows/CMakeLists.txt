@@ -6,18 +6,42 @@ cmake_minimum_required(VERSION 3.14)
 
 # Project-level configuration.
 set(PROJECT_NAME "proton_crypto")
-project(${PROJECT_NAME} LANGUAGES CXX)
+project(${PROJECT_NAME} C CXX)
 
-# Invoke the build for native code shared with the other target platforms.
-# This can be changed to accommodate different builds.
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../src" "${CMAKE_CURRENT_BINARY_DIR}/shared")
+# Add the source file
+set(SOURCE_FILE ../src/proton_crypto.go)
 
-# List of absolute paths to libraries that should be bundled with the plugin.
-# This list could contain prebuilt libraries, or libraries created by an
-# external build triggered from this build file.
-set(proton_crypto_bundled_libraries
-  # Defined in ../src/CMakeLists.txt.
-  # This can be changed to accommodate different builds.
-  $<TARGET_FILE:proton_crypto>
-  PARENT_SCOPE
+find_program(GO_EXECUTABLE go)
+if(NOT GO_EXECUTABLE)
+    message(FATAL_ERROR "Go compiler not found!")
+endif()
+
+# execute go build to generate .dll file
+execute_process(
+        COMMAND ${GO_EXECUTABLE} build -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dll -buildmode=c-shared ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../src"
+        RESULT_VARIABLE EXEC_RESULT
+        OUTPUT_VARIABLE EXEC_OUTPUT
+        ERROR_VARIABLE EXEC_ERROR
 )
+
+# check build result
+if(EXEC_RESULT EQUAL 0)
+    message(STATUS "Command executed successfully")
+else()
+    message(FATAL_ERROR "Command failed with error code ${EXEC_RESULT}")
+endif()
+
+message(STATUS "Output: ${EXEC_OUTPUT}")
+# message(STATUS "Error: ${EXEC_ERROR}")
+
+set(proton_crypto_bundled_libraries
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dll"
+    PARENT_SCOPE
+)
+
+message("Copy DLL file from: ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dll")
+message("To: ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../gopenpgp_plugin/windows/shared/")
+
+# copy file to root folder for flutter test to load
+file(COPY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.dll" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../gopenpgp_plugin/windows/shared/")
