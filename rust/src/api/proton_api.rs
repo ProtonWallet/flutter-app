@@ -1,146 +1,99 @@
-// use std::sync::{Arc, RwLock};
+use std::sync::{Arc, RwLock};
 
-// use http::response;
-// use muon::auth::SimpleAuthStore;
-// use muon::request::{JsonRequest, Request, Response};
-// use muon::session::{RequestExt, Session};
-// use muon::types::auth::{AuthInfoReq, AuthInfoRes};
-// use muon::AppSpec;
-// use crate::proton_api::api_service::ProtonAPIService;
-// use crate::proton_api::auth_routes::AuthRoute;
-// use crate::proton_api::types::{AuthInfo, ResponseCode};
-// use crate::proton_api::wallet_account_routes::{
-//     CreateWalletAccountReq, WalletAccountResponse, WalletAccountRoute, WalletAccountsResponse,
-// };
-// use crate::proton_api::wallet_routes::{
-//     CreateWalletReq, CreateWalletResponse, WalletRoute, WalletsResponse,
-// };
+use andromeda_api::ProtonWalletApiClient;
 
 use lazy_static::lazy_static;
 
+use crate::proton_api::{
+    errors::ApiError,
+    wallet::{CreateWalletReq, WalletData},
+    wallet_account::{CreateWalletAccountReq, WalletAccount},
+};
+
 lazy_static! {
-    static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);
+    static ref PROTON_API: RwLock<Option<Arc<ProtonWalletApiClient>>> = RwLock::new(None);
 }
 
-// // build functions
-// pub async fn init_api_service(user_name: String, password: String) {
-//     // create a global proton api service
-//     let mut api = ProtonAPIService::default();
-//     api.login(&user_name, &password).await.unwrap();
-//     let mut api_ref = PROTON_API.write().unwrap();
-//     *api_ref = Some(Arc::new(api));
-// }
-
-// pub async fn fetch_auth_info(user_name: String) -> Result<AuthInfo, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let res = proton_api
-//         .fetch_auth_info(user_name)
-//         .await
-//         .map_err(|err| ApiError::Generic(err.to_string()));
-//     Ok(res?.into())
-// }
-
-// // wallets
-// pub async fn get_wallets() -> Result<WalletsResponse, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api.get_wallets().await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-// pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<CreateWalletResponse, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api.create_wallet(wallet_req).await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-// // wallet accounts
-// pub async fn get_wallet_accounts(wallet_id: String) -> Result<WalletAccountsResponse, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api.get_wallet_accounts(wallet_id).await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-// pub async fn create_wallet_account(
-//     wallet_id: String,
-//     req: CreateWalletAccountReq,
-// ) -> Result<WalletAccountResponse, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api.create_wallet_account(wallet_id, req).await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-// pub async fn update_wallet_account_label(
-//     wallet_id: String,
-//     wallet_account_id: String,
-//     new_label: String,
-// ) -> Result<WalletAccountResponse, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api
-//         .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
-//         .await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-// pub async fn delete_wallet_account(
-//     wallet_id: String,
-//     wallet_account_id: String,
-// ) -> Result<ResponseCode, ApiError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-//     let result = proton_api
-//         .delete_wallet_account(wallet_id, wallet_account_id)
-//         .await;
-//     match result {
-//         Ok(response) => Ok(response),
-//         Err(err) => Err(ApiError::Generic(err.to_string())),
-//     }
-// }
-
-use crate::proton_api::errors::ApiError;
-use andromeda_api::ProtonWalletApiClient;
-
-pub struct ProtonAPIService {
-    pub api: andromeda_api::ProtonWalletApiClient,
+// build functions
+pub async fn init_api_service(user_name: String, password: String) {
+    // create a global proton api service
+    let mut api = ProtonWalletApiClient::default();
+    api.login(&user_name, &password).await.unwrap();
+    let mut api_ref = PROTON_API.write().unwrap();
+    *api_ref = Some(Arc::new(api));
 }
 
-impl ProtonAPIService {
-    pub fn new() -> ProtonAPIService {
-        ProtonAPIService {
-            api: ProtonWalletApiClient::default(),
-        }
+// wallets
+pub async fn get_wallets() -> Result<Vec<WalletData>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.wallet.get_wallets().await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|w| w.into()).collect()),
+        Err(err) => Err(err.into()),
     }
+}
 
-    // build functions
-    pub async fn init_api_service(user_name: String, password: String) {
-        // create a global proton api service
-        let mut api = ProtonWalletApiClient::default();
-        api.login(&user_name, &password).await.unwrap();
+pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.wallet.create_wallet(wallet_req.into()).await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
     }
+}
 
-    pub fn read_text(&self) -> String {
-        // self.dir.test()
-        "Hello World".to_string()
+// wallet accounts
+pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<WalletAccount>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.wallet.get_wallet_accounts(wallet_id).await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|a| a.into()).collect()),
+        Err(err) => Err(err.into()),
     }
+}
 
-    pub async fn get_wallets(&self) -> Result<Vec<andromeda_api::wallet::WalletData>, ApiError> {
-        let result = self.api.wallet.get_wallets().await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(ApiError::Generic(err.to_string())),
-        }
+pub async fn create_wallet_account(
+    wallet_id: String,
+    req: CreateWalletAccountReq,
+) -> Result<WalletAccount, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .create_wallet_account(wallet_id, req.into())
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn update_wallet_account_label(
+    wallet_id: String,
+    wallet_account_id: String,
+    new_label: String,
+) -> Result<WalletAccount, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn delete_wallet_account(
+    wallet_id: String,
+    wallet_account_id: String,
+) -> Result<(), ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .delete_wallet_account(wallet_id, wallet_account_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
     }
 }

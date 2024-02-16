@@ -4,3 +4,4 @@ mod bdk;
 mod proton_api;
 mod ldk;
 mod utilities;
+pub use andromeda_api::wallet::CreateWalletAccountRequestBody;

@@ -6,7 +6,7 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
 
 class AddAccountAlertDialog extends StatefulWidget {
   final int walletID;
@@ -102,31 +102,31 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
               }
               return;
             }
+            //TODO:: logics need move to viewmodel
             CreateWalletAccountReq req = CreateWalletAccountReq(
                 label: base64Encode(utf8
                     .encode(await WalletKeyHelper.encrypt(secretKey, label))),
                 derivationPath: derivationPath,
                 scriptType: ScriptType.nativeSegWit.index);
-            WalletAccountResponse walletAccountResponse =
-                await proton_api.createWalletAccount(
-              walletId: widget.serverWalletID,
-              req: req,
-            );
-            if (walletAccountResponse.code == 1000) {
-              WalletManager.importAccount(
-                  widget.walletID,
-                  label,
-                  scriptType.index,
-                  "$derivationPath/0",
-                  walletAccountResponse.account.id);
+
+            try {
+              WalletAccount walletAccount =
+                  await proton_api.createWalletAccount(
+                walletId: widget.serverWalletID,
+                req: req,
+              );
+
+              WalletManager.importAccount(widget.walletID, label,
+                  scriptType.index, "$derivationPath/0", walletAccount.id);
               if (context.mounted) {
                 LocalToast.showToast(context, "Account created!");
               }
-            } else {
+            } catch (e) {
               if (context.mounted) {
-                LocalToast.showToast(context, "Account created failed!");
+                LocalToast.showToast(context, "Account created failed! $e");
               }
             }
+
             if (context.mounted) {
               if (widget.callback != null) {
                 widget.callback!();
