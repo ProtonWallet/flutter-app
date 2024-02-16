@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:proton_crypto/proton_crypto.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -16,8 +17,6 @@ import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
 import 'package:wallet/rust/proton_api/wallet_routes.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-
-import 'package:wallet/helper/proton.crypto.test.dart';
 
 abstract class ImportViewModel extends ViewModel {
   ImportViewModel(super.coordinator);
