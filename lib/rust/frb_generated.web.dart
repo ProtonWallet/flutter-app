@@ -6,6 +6,7 @@
 import 'api/api2.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
+import 'api/proton_api_service.dart';
 import 'api/rust_api.dart';
 import 'api/rust_objects.dart';
 import 'bdk/blockchain.dart';
@@ -17,6 +18,9 @@ import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 import 'proton_api/errors.dart';
+import 'proton_api/wallet.dart';
+import 'proton_api/wallet_account.dart';
+import 'proton_api/wallet_settings.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -30,10 +34,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       get rust_arc_decrement_strong_count_AndromedaApiProtonWalletApiClientPtr =>
           wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient;
 
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_AndromedaApiWalletWalletDataPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData;
-
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw);
 
@@ -43,18 +43,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  AndromedaApiWalletWalletData
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          dynamic raw);
-
-  @protected
   AndromedaApiProtonWalletApiClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient(
-          dynamic raw);
-
-  @protected
-  AndromedaApiWalletWalletData
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
           dynamic raw);
 
   @protected
@@ -83,6 +73,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BlockTime dco_decode_box_autoadd_block_time(dynamic raw);
+
+  @protected
+  CreateWalletAccountReq dco_decode_box_autoadd_create_wallet_account_req(
+      dynamic raw);
+
+  @protected
+  CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw);
 
   @protected
   DatabaseConfig dco_decode_box_autoadd_database_config(dynamic raw);
@@ -144,6 +141,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
 
   @protected
+  CreateWalletAccountReq dco_decode_create_wallet_account_req(dynamic raw);
+
+  @protected
+  CreateWalletReq dco_decode_create_wallet_req(dynamic raw);
+
+  @protected
   DatabaseConfig dco_decode_database_config(dynamic raw);
 
   @protected
@@ -163,11 +166,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   KeychainKind dco_decode_keychain_kind(dynamic raw);
-
-  @protected
-  List<AndromedaApiWalletWalletData>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          dynamic raw);
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
@@ -195,6 +193,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<TxOut> dco_decode_list_tx_out(dynamic raw);
+
+  @protected
+  List<WalletAccount> dco_decode_list_wallet_account(dynamic raw);
+
+  @protected
+  List<WalletData> dco_decode_list_wallet_data(dynamic raw);
 
   @protected
   LocalUtxo dco_decode_local_utxo(dynamic raw);
@@ -247,6 +251,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService dco_decode_proton_api_service(dynamic raw);
+
+  @protected
+  ProtonWallet dco_decode_proton_wallet(dynamic raw);
+
+  @protected
+  ProtonWalletKey dco_decode_proton_wallet_key(dynamic raw);
 
   @protected
   PsbtSigHashType dco_decode_psbt_sig_hash_type(dynamic raw);
@@ -304,6 +314,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_usize(dynamic raw);
 
   @protected
+  WalletAccount dco_decode_wallet_account(dynamic raw);
+
+  @protected
+  WalletData dco_decode_wallet_data(dynamic raw);
+
+  @protected
+  WalletSettings dco_decode_wallet_settings(dynamic raw);
+
+  @protected
   WitnessVersion dco_decode_witness_version(dynamic raw);
 
   @protected
@@ -318,18 +337,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  AndromedaApiWalletWalletData
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          SseDeserializer deserializer);
-
-  @protected
   AndromedaApiProtonWalletApiClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient(
-          SseDeserializer deserializer);
-
-  @protected
-  AndromedaApiWalletWalletData
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
           SseDeserializer deserializer);
 
   @protected
@@ -359,6 +368,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BlockTime sse_decode_box_autoadd_block_time(SseDeserializer deserializer);
+
+  @protected
+  CreateWalletAccountReq sse_decode_box_autoadd_create_wallet_account_req(
+      SseDeserializer deserializer);
+
+  @protected
+  CreateWalletReq sse_decode_box_autoadd_create_wallet_req(
+      SseDeserializer deserializer);
 
   @protected
   DatabaseConfig sse_decode_box_autoadd_database_config(
@@ -428,6 +445,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  CreateWalletAccountReq sse_decode_create_wallet_account_req(
+      SseDeserializer deserializer);
+
+  @protected
+  CreateWalletReq sse_decode_create_wallet_req(SseDeserializer deserializer);
+
+  @protected
   DatabaseConfig sse_decode_database_config(SseDeserializer deserializer);
 
   @protected
@@ -447,11 +471,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   KeychainKind sse_decode_keychain_kind(SseDeserializer deserializer);
-
-  @protected
-  List<AndromedaApiWalletWalletData>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          SseDeserializer deserializer);
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
@@ -481,6 +500,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<TxOut> sse_decode_list_tx_out(SseDeserializer deserializer);
+
+  @protected
+  List<WalletAccount> sse_decode_list_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletData> sse_decode_list_wallet_data(SseDeserializer deserializer);
 
   @protected
   LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer);
@@ -537,6 +563,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService sse_decode_proton_api_service(SseDeserializer deserializer);
+
+  @protected
+  ProtonWallet sse_decode_proton_wallet(SseDeserializer deserializer);
+
+  @protected
+  ProtonWalletKey sse_decode_proton_wallet_key(SseDeserializer deserializer);
 
   @protected
   PsbtSigHashType sse_decode_psbt_sig_hash_type(SseDeserializer deserializer);
@@ -599,6 +631,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_usize(SseDeserializer deserializer);
 
   @protected
+  WalletAccount sse_decode_wallet_account(SseDeserializer deserializer);
+
+  @protected
+  WalletData sse_decode_wallet_data(SseDeserializer deserializer);
+
+  @protected
+  WalletSettings sse_decode_wallet_settings(SseDeserializer deserializer);
+
+  @protected
   WitnessVersion sse_decode_witness_version(SseDeserializer deserializer);
 
   @protected
@@ -615,18 +656,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          AndromedaApiWalletWalletData self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient(
           AndromedaApiProtonWalletApiClient self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          AndromedaApiWalletWalletData self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -656,6 +687,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_block_time(
       BlockTime self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_create_wallet_account_req(
+      CreateWalletAccountReq self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_create_wallet_req(
+      CreateWalletReq self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_database_config(
@@ -729,6 +768,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ChangeSpendPolicy self, SseSerializer serializer);
 
   @protected
+  void sse_encode_create_wallet_account_req(
+      CreateWalletAccountReq self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_create_wallet_req(
+      CreateWalletReq self, SseSerializer serializer);
+
+  @protected
   void sse_encode_database_config(
       DatabaseConfig self, SseSerializer serializer);
 
@@ -750,11 +797,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_keychain_kind(KeychainKind self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          List<AndromedaApiWalletWalletData> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
@@ -786,6 +828,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_tx_out(List<TxOut> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_account(
+      List<WalletAccount> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_data(
+      List<WalletData> self, SseSerializer serializer);
 
   @protected
   void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer);
@@ -844,6 +894,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_proton_api_service(
       ProtonAPIService self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_wallet(ProtonWallet self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_wallet_key(
+      ProtonWalletKey self, SseSerializer serializer);
 
   @protected
   void sse_encode_psbt_sig_hash_type(
@@ -907,6 +964,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_usize(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_wallet_account(WalletAccount self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_data(WalletData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_settings(
+      WalletSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_witness_version(
       WitnessVersion self, SseSerializer serializer);
 
@@ -930,18 +997,6 @@ class RustLibWire implements BaseWire {
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient(
               ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-              ptr);
 }
 
 @JS('wasm_bindgen')
@@ -962,13 +1017,5 @@ class RustLibWasmModule implements WasmModule {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiProtonWalletApiClient(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
           dynamic ptr);
 }

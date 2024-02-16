@@ -4,7 +4,7 @@
 // Section: imports
 
 use super::*;
-use crate::api::proton_api::*;
+use crate::api::proton_api_service::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::transform_result_dco;
 use flutter_rust_bridge::for_generated::wasm_bindgen;
@@ -34,23 +34,5 @@ pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generat
         flutter_rust_bridge::for_generated::rust_async::RwLock<
             andromeda_api::ProtonWalletApiClient,
         >,
-    >::decrement_strong_count(ptr as _);
-}
-
-#[wasm_bindgen]
-pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<
-        flutter_rust_bridge::for_generated::rust_async::RwLock<andromeda_api::wallet::WalletData>,
-    >::increment_strong_count(ptr as _);
-}
-
-#[wasm_bindgen]
-pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockandromeda_apiwalletWalletData(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<
-        flutter_rust_bridge::for_generated::rust_async::RwLock<andromeda_api::wallet::WalletData>,
     >::decrement_strong_count(ptr as _);
 }

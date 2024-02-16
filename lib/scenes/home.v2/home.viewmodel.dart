@@ -12,8 +12,8 @@ import 'package:proton_crypto/proton_crypto.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
-import 'package:wallet/rust/proton_api/wallet_routes.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -192,100 +192,93 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
   Future<void> fetchWallets() async {
     isFetching = true;
     // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
-    WalletsResponse walletResponse = await proton_api.getWallets();
-    if (walletResponse.code == 1000) {
-      for (WalletData walletData in walletResponse.wallets.reversed) {
-        WalletModel? walletModel = await DBHelper.walletDao!
-            .findByServerWalletId(walletData.wallet.id);
-        String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-        String userKeyID = await SecureStorageHelper.get("userKeyID");
-        String userPassphrase = await SecureStorageHelper.get("userPassphrase");
-        if (userKeyID != walletData.walletKey.userKeyId) {
-          logger.i(
-              "Wallet Key mismatch: \nuserKeyID from login response:$userKeyID\nuserKeyID from API response:${walletData.walletKey.userKeyId}");
-        }
-        String encryptWalletKey = "";
-        String decryptWalletKey = "";
-        try {
-          encryptWalletKey =
-              utf8.decode(base64Decode(walletData.walletKey.walletKey));
-          decryptWalletKey = decrypt(userPrivateKey.toNativeUtf8(),
-              userPassphrase.toNativeUtf8(), encryptWalletKey.toNativeUtf8());
-        } catch (e) {
-          logger.i(e.toString());
-        }
-        SecretKey secretKey = SecretKey(utf8.encode(decryptWalletKey));
-        if (walletModel == null) {
-          DateTime now = DateTime.now();
-          WalletModel wallet = WalletModel(
-              id: null,
-              userID: 0,
-              name: walletData.wallet.name,
-              mnemonic: base64Decode(walletData.wallet.mnemonic!),
-              passphrase: walletData.wallet.hasPassphrase,
-              publicKey: Uint8List(0),
-              imported: walletData.wallet.isImported,
-              priority: walletData.wallet.priority,
-              status: decryptWalletKey.isNotEmpty
-                  ? walletData.wallet.status
-                  : WalletModel.statusDisabled,
-              type: walletData.wallet.type,
-              createTime: now.millisecondsSinceEpoch ~/ 1000,
-              modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-              localDBName: const Uuid().v4().replaceAll('-', ''),
-              serverWalletID: walletData.wallet.id);
-          int walletID = await DBHelper.walletDao!.insert(wallet);
-          if (decryptWalletKey.isNotEmpty) {
-            await WalletManager.setWalletKey(walletID,
-                secretKey); // need to set key first, so that we can decrypt for walletAccount
-            WalletAccountsResponse walletAccountsResponse = await proton_api
-                .getWalletAccounts(walletId: walletData.wallet.id);
-            if (walletAccountsResponse.code == 1000 &&
-                walletAccountsResponse.accounts.isNotEmpty) {
-              for (WalletAccount walletAccount
-                  in walletAccountsResponse.accounts) {
-                WalletManager.importAccount(
-                    walletID,
-                    await WalletKeyHelper.decrypt(secretKey,
-                        utf8.decode(base64Decode(walletAccount.label))),
-                    walletAccount.scriptType,
-                    "${walletAccount.derivationPath}/0",
-                    walletAccount.id);
-              }
+    List<WalletData> wallets = await proton_api.getWallets();
+    for (WalletData walletData in wallets.reversed) {
+      WalletModel? walletModel =
+          await DBHelper.walletDao!.findByServerWalletId(walletData.wallet.id);
+      String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+      String userKeyID = await SecureStorageHelper.get("userKeyID");
+      String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+      if (userKeyID != walletData.walletKey.userKeyId) {
+        logger.i(
+            "Wallet Key mismatch: \nuserKeyID from login response:$userKeyID\nuserKeyID from API response:${walletData.walletKey.userKeyId}");
+      }
+      String encryptWalletKey = "";
+      String decryptWalletKey = "";
+      try {
+        encryptWalletKey =
+            utf8.decode(base64Decode(walletData.walletKey.walletKey));
+        decryptWalletKey = decrypt(userPrivateKey.toNativeUtf8(),
+            userPassphrase.toNativeUtf8(), encryptWalletKey.toNativeUtf8());
+      } catch (e) {
+        logger.i(e.toString());
+      }
+      SecretKey secretKey = SecretKey(utf8.encode(decryptWalletKey));
+      if (walletModel == null) {
+        DateTime now = DateTime.now();
+        WalletModel wallet = WalletModel(
+            id: null,
+            userID: 0,
+            name: walletData.wallet.name,
+            mnemonic: base64Decode(walletData.wallet.mnemonic!),
+            passphrase: walletData.wallet.hasPassphrase,
+            publicKey: Uint8List(0),
+            imported: walletData.wallet.isImported,
+            priority: walletData.wallet.priority,
+            status: decryptWalletKey.isNotEmpty
+                ? walletData.wallet.status
+                : WalletModel.statusDisabled,
+            type: walletData.wallet.type,
+            createTime: now.millisecondsSinceEpoch ~/ 1000,
+            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+            localDBName: const Uuid().v4().replaceAll('-', ''),
+            serverWalletID: walletData.wallet.id);
+        int walletID = await DBHelper.walletDao!.insert(wallet);
+        if (decryptWalletKey.isNotEmpty) {
+          await WalletManager.setWalletKey(walletID,
+              secretKey); // need to set key first, so that we can decrypt for walletAccount
+          List<WalletAccount> walletAccounts = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccounts.isNotEmpty) {
+            for (WalletAccount walletAccount in walletAccounts) {
+              WalletManager.importAccount(
+                  walletID,
+                  await WalletKeyHelper.decrypt(secretKey,
+                      utf8.decode(base64Decode(walletAccount.label))),
+                  walletAccount.scriptType,
+                  "${walletAccount.derivationPath}/0",
+                  walletAccount.id);
             }
+          }
+        }
+      } else {
+        if (decryptWalletKey.isNotEmpty) {
+          List<String> existingAccountIDs = [];
+          List<WalletAccount> walletAccounts = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccounts.isNotEmpty) {
+            for (WalletAccount walletAccount in walletAccounts) {
+              existingAccountIDs.add(walletAccount.id);
+              WalletManager.importAccount(
+                  walletModel.id!,
+                  await WalletKeyHelper.decrypt(secretKey,
+                      utf8.decode(base64Decode(walletAccount.label))),
+                  walletAccount.scriptType,
+                  "${walletAccount.derivationPath}/0",
+                  walletAccount.id);
+            }
+          }
+          try {
+            if (walletModel.accountCount != walletAccounts.length) {
+              DBHelper.accountDao!.deleteAccountsNotInServers(
+                  walletModel.id!, existingAccountIDs);
+            }
+          } catch (e) {
+            e.toString();
           }
         } else {
-          if (decryptWalletKey.isNotEmpty) {
-            List<String> existingAccountIDs = [];
-            WalletAccountsResponse walletAccountsResponse = await proton_api
-                .getWalletAccounts(walletId: walletData.wallet.id);
-            if (walletAccountsResponse.code == 1000 &&
-                walletAccountsResponse.accounts.isNotEmpty) {
-              for (WalletAccount walletAccount
-                  in walletAccountsResponse.accounts) {
-                existingAccountIDs.add(walletAccount.id);
-                WalletManager.importAccount(
-                    walletModel.id!,
-                    await WalletKeyHelper.decrypt(secretKey,
-                        utf8.decode(base64Decode(walletAccount.label))),
-                    walletAccount.scriptType,
-                    "${walletAccount.derivationPath}/0",
-                    walletAccount.id);
-              }
-            }
-            try {
-              if (walletModel.accountCount !=
-                  walletAccountsResponse.accounts.length) {
-                DBHelper.accountDao!.deleteAccountsNotInServers(
-                    walletModel.id!, existingAccountIDs);
-              }
-            } catch (e) {
-              e.toString();
-            }
-          } else {
-            walletModel.status = WalletModel.statusDisabled;
-            DBHelper.walletDao!.update(walletModel);
-          }
+          walletModel.status = WalletModel.statusDisabled;
+          DBHelper.walletDao!.update(walletModel);
         }
       }
     }
