@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/proton.crypto.test.dart';
+import 'package:proton_crypto/proton_crypto.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
