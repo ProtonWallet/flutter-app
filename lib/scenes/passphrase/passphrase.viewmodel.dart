@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
-import 'package:wallet/helper/proton.crypto.test.dart';
+import 'package:proton_crypto/proton_crypto.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';

@@ -28,6 +28,9 @@ final DynamicLibrary _dylib = () {
     return DynamicLibrary.open('libproton_crypto.so');
   }
   if (Platform.isWindows) {
+    if (Platform.environment.containsKey('FLUTTER_TEST')){
+        return DynamicLibrary.open('windows/shared/$_libName.dll');
+    }
     return DynamicLibrary.open('$_libName.dll');
   }
   throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
