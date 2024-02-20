@@ -9,10 +9,9 @@ import 'package:wallet/scenes/home.v2/home.view.dart';
 import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
+import 'package:wallet/scenes/settings/mail_integration/maillist.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
-
-import '../settings/mail_integration/maillist.coordinator.dart';
-import '../wallet/wallet.coordinator.dart';
+import 'package:wallet/scenes/wallet/wallet.coordinator.dart';
 
 class HomeCoordinator extends Coordinator {
   late ViewBase widget;
@@ -30,10 +29,9 @@ class HomeCoordinator extends Coordinator {
       var view = WalletCoordinator().start(params: map);
 
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: false,
-        settings: RouteSettings(arguments: map)
-      ));
+          builder: (context) => view,
+          fullscreenDialog: false,
+          settings: RouteSettings(arguments: map)));
       return view;
     }
 

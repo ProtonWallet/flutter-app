@@ -41,7 +41,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      "Email Address",
+                      S.of(context).email_address,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -60,7 +60,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      "Link to wallet",
+                      S.of(context).link_to_wallet,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -88,7 +88,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
-                            "Minimum amount",
+                            S.of(context).minimum_amount,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary),
                           ),
@@ -121,7 +121,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Text(
-                            "Maximum amount",
+                            S.of(context).maximum_amount,
                             style: FontManager.captionMedian(
                                 Theme.of(context).colorScheme.primary),
                           ),
@@ -141,7 +141,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                                   showSuffixIcon: false,
                                   showEnabledBorder: false,
                                   controller: viewModel.maxAmountController,
-                                  hintText: "Unlimited",
+                                  hintText: S.of(context).unlimited,
                                   digitOnly: true,
                                 ),
                                 TextChoices(

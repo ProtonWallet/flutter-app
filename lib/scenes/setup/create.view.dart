@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/onboarding/content.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
-
-import '../../components/onboarding/content.dart';
-import '../../constants/proton.color.dart';
-import '../../theme/theme.font.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class SetupCreateView extends ViewBase<SetupCreateViewModel> {
   SetupCreateView(SetupCreateViewModel viewModel)
@@ -80,14 +79,13 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
           currentPage: 2,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height / 2,
-          title: "Financial freedom with rock-solid security and privacy",
-          content:
-              "Get started and create a brand new wallet or import an existing one.",
+          title: S.of(context).financial_freedom_,
+          content: S.of(context).get_started_and_,
           children: [
             ButtonV5(
                 onPressed: () {},
                 enable: false,
-                text: S.of(context).createNewWallet,
+                text: S.of(context).create_new_wallet,
                 width: MediaQuery.of(context).size.width,
                 textStyle: FontManager.body1Median(ProtonColors.white),
                 height: 48),
@@ -95,7 +93,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
             ButtonV5(
                 onPressed: () {},
                 enable: false,
-                text: S.of(context).import_wallet,
+                text: S.of(context).import_your_wallet,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.white,
                 borderColor: ProtonColors.interactionNorm,
@@ -147,7 +145,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        "Bitcoin Wallet",
+                        S.of(context).bitcoin_wallet,
                         style: FontManager.body1Bold(ProtonColors.white),
                         textAlign: TextAlign.right,
                       ),
@@ -169,15 +167,15 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
             currentPage: 2,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
-            title: "Your Bitcoin Wallet is created",
-            content: "Your new wallet is created. Make sure you back it up!",
+            title: S.of(context).your_bitcoin_wallet_created,
+            content: S.of(context).your_new_wallet_is_created_,
             children: [
               ButtonV5(
                   onPressed: () {
                     viewModel.coordinator
                         .move(ViewIdentifiers.setupBackup, context);
                   },
-                  text: "Back up your wallet",
+                  text: S.of(context).backup_your_wallet,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   height: 48)

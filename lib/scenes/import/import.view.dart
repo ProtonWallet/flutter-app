@@ -26,7 +26,7 @@ class ImportView extends ViewBase<ImportViewModel> {
             // For Android (dark icons)
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
-          title: const Text("Import your wallet"),
+          title: Text(S.of(context).import_your_wallet),
           // automaticallyImplyLeading: false,
           backgroundColor: Colors
               .transparent, // Theme.of(context).colorScheme.inversePrimary,
@@ -64,7 +64,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Text(
-                        "Your Mnemonic",
+                        S.of(context).your_mnemonic,
                         style: FontManager.captionMedian(
                             Theme.of(context).colorScheme.primary),
                         textAlign: TextAlign.left,
@@ -107,7 +107,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                     ButtonV5(
                         onPressed: () {
                           viewModel.importWallet();
-                          LocalToast.showToast(context, "Wallet imported",
+                          LocalToast.showToast(
+                              context, S.of(context).wallet_imported,
                               duration: 2);
                           viewModel.coordinator.end();
                           Navigator.of(context).popUntil((route) {
@@ -118,7 +119,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                                 "[<'HomeNavigationView'>]";
                           });
                         },
-                        text: "Import",
+                        text: S.of(context).import_button,
                         width: MediaQuery.of(context).size.width,
                         textStyle: FontManager.body1Median(ProtonColors.white),
                         height: 48),

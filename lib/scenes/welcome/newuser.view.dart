@@ -37,7 +37,7 @@ class NewUserView extends ViewBase<NewUserViewModel> {
         key: _introKey,
         pages: [
           PageViewModel(
-            title: 'Financial freedom with rock-solid security and privacy',
+            title: S.of(context).financial_freedom_,
             bodyWidget: ConfettiWidget(
                 gravity: 0.1,
                 minBlastForce: 1,
@@ -61,15 +61,14 @@ class NewUserView extends ViewBase<NewUserViewModel> {
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title:
-                'Get started and create a brand new wallet or import an existing one',
+            title: S.of(context).get_started_and_,
             body: '',
             image: buildSvgImage("assets/images/frame_9444342.svg"),
             //getPageDecoration, a method to customise the page style
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title: 'Create your own digital wallet!',
+            title: S.of(context).create_your_own_wallet,
             body: '',
             image: buildSvgImage("assets/images/frame_create.svg"),
             //getPageDecoration, a method to customise the page style

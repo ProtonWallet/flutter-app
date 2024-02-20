@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/components/page_route.dart';
 import 'package:wallet/scenes/backup/backup.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -7,8 +8,6 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/setup/create.view.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
-
-import '../../components/page_route.dart';
 
 class SetupCreateCoordinator extends Coordinator {
   late ViewBase widget;

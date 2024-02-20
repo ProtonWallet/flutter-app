@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-// import 'package:wallet/generated/bridge_definitions.dart';
-// import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 var count = 1;
 
@@ -24,7 +23,7 @@ class LoginAndSignupBtn extends StatelessWidget {
               NativeViewSwitcher.switchToNativeLogin();
             },
             child: Text(
-              "Login".toUpperCase(),
+              S.of(context).login.toUpperCase(),
             ),
           ),
         ),
@@ -38,7 +37,7 @@ class LoginAndSignupBtn extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber, elevation: 0),
           child: Text(
-            "Sign Up".toUpperCase(),
+            S.of(context).signup.toUpperCase(),
             style: const TextStyle(color: Colors.lightBlue),
           ),
         ),

@@ -27,7 +27,7 @@ class CommonSettings extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(S.of(context).themeMode),
+                Text(S.of(context).theme_mode),
                 Text(ThemeProvider.getThemeModeName(
                     Provider.of<ThemeProvider>(context).themeMode, context)),
               ],
@@ -47,7 +47,7 @@ class CommonSettings extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(S.of(context).settingLanguage),
+                Text(S.of(context).setting_language),
                 Text(LocaleProvider.localeName(
                     Provider.of<LocaleProvider>(context).language, context)),
               ],
