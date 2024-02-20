@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/scenes/app/app.view.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
-
-import '../../constants/constants.dart';
-import '../welcome/newuser.coordinator.dart';
-import '../welcome/welcome.coordinator.dart';
+import 'package:wallet/scenes/welcome/newuser.coordinator.dart';
+import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 class AppCoordinator extends Coordinator {
   late ViewBase widget;

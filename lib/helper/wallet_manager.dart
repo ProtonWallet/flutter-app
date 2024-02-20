@@ -4,9 +4,9 @@ import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import '../models/account.model.dart';
-import '../models/wallet.model.dart';
-import '../scenes/debug/bdk.test.dart';
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/debug/bdk.test.dart';
 
 import 'bdk/helper.dart';
 

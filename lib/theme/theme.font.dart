@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FontManager {
-  static const String primaryFontFamily = 'Inter'; // 自定义主字体名称
+  static const String primaryFontFamily = 'Inter'; // font name
 
   static TextStyle titleHero(Color color) {
     return TextStyle(

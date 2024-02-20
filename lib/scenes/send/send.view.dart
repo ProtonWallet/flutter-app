@@ -50,7 +50,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Send from Wallet",
+                      S.of(context).send_from_wallet,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -68,7 +68,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Send from Account",
+                      S.of(context).send_from_account,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -87,7 +87,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Current Balance: ${viewModel.balance} SAT",
+                      S.of(context).current_balance_sat(viewModel.balance),
                       style: FontManager.captionMedian(ProtonColors.textHint),
                     ),
                   ),
@@ -95,7 +95,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Send to Recipient(s)",
+                      S.of(context).send_to_recipient_s,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -114,7 +114,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Add Address",
+                      S.of(context).add_address,
                       style: FontManager.captionMedian(
                           ProtonColors.interactionNorm),
                     ),
@@ -123,7 +123,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Amount",
+                      S.of(context).amount,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -154,7 +154,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Message to recipient (optional)",
+                      S.of(context).message_to_recipient_optional,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -176,15 +176,16 @@ class SendView extends ViewBase<SendViewModel> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Fees (Default)",
+                            S.of(context).fees_default,
                             style: FontManager.captionSemiBold(
                                 Theme.of(context).colorScheme.primary),
                           ),
-                          const TagText(
-                            text: "Moderate",
+                          TagText(
+                            text: S.of(context).moderate,
                             radius: 10.0,
-                            background: Color.fromARGB(255, 237, 252, 221),
-                            textColor: Color.fromARGB(255, 40, 116, 4),
+                            background:
+                                const Color.fromARGB(255, 237, 252, 221),
+                            textColor: const Color.fromARGB(255, 40, 116, 4),
                           ),
                         ]),
                   ),
@@ -197,7 +198,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      "Advanced options",
+                      S.of(context).advanced_options,
                       style: FontManager.captionMedian(
                           ProtonColors.interactionNorm),
                     ),
@@ -221,14 +222,14 @@ class SendView extends ViewBase<SendViewModel> {
                     onPressed: () {
                       if (viewModel.coinController.text != "SAT") {
                         LocalToast.showErrorToast(
-                            context, "Only support SAT now!");
+                            context, S.of(context).only_support_sat_now);
                       } else {
                         viewModel.sendCoin();
                         viewModel.coordinator.end();
                         Navigator.of(context).pop();
                       }
                     },
-                    text: "Review Transaction",
+                    text: S.of(context).review_transaction,
                     width: MediaQuery.of(context).size.width,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),

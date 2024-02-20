@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/database/transaction.database.dart';
 import 'package:wallet/models/database/wallet.database.dart';
 import 'package:wallet/models/database/account.database.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
+import 'package:wallet/models/wallet.dao.impl.dart';
 
-import '../../helper/logger.dart';
-import '../account.dao.impl.dart';
-import '../wallet.dao.impl.dart';
 import 'migration.dart';
 import 'migration.container.dart';
 
@@ -63,30 +63,30 @@ class AppDatabase
     initDAO();
   }
 
-  static Future<Database> getDatabase() async{
+  static Future<Database> getDatabase() async {
     Database database;
     String dbPath = "";
     if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
 
-        final Directory appDocumentsDir =
-        await getApplicationDocumentsDirectory();
-        dbPath = join(appDocumentsDir.path, dbFolder, dbName);
+      final Directory appDocumentsDir =
+          await getApplicationDocumentsDirectory();
+      dbPath = join(appDocumentsDir.path, dbFolder, dbName);
       database = await databaseFactory.openDatabase(
-          dbPath,
-        );
+        dbPath,
+      );
     } else {
       var path = await getDatabasesPath();
       dbPath = join(path, dbFolder, dbName);
       database = await openDatabase(
-          dbPath,
-        );
+        dbPath,
+      );
     }
     return database;
   }
 
-  static Future<Database> getInMemoryDatabase() async{
+  static Future<Database> getInMemoryDatabase() async {
     Database database;
     if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
@@ -113,7 +113,8 @@ class AppDatabase
     db = database;
   }
 
-  Future<void> buildDatabase({bool isTesting = false, int oldVersion = 1}) async {
+  Future<void> buildDatabase(
+      {bool isTesting = false, int oldVersion = 1}) async {
     List<Migration>? upgradeMigrations =
         migrationContainer.findMigrationPath(oldVersion, version);
     logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");

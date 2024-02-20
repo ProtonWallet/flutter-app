@@ -20,10 +20,6 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 
-// import 'package:native_add/native_add.dart' as native_add;
-
-// import 'package:native_add/native_add.dart' as native_add;
-
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
 
