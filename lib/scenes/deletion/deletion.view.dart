@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/deletion/deletion.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import '../../components/onboarding/content.dart';
-import '../../helper/local_toast.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
   WalletDeletionView(WalletDeletionViewModel viewModel)
@@ -65,15 +66,14 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
               currentPage: 0,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
-              title: "Confirm to delete",
-              content:
-                  "Please backup your mnemonic before you delete your wallet. This mnemonic can help you to restore your wallet next time.",
+              title: S.of(context).confirm_to_delete,
+              content: S.of(context).please_backup_mnemonic_before_delete_,
               children: [
                 ButtonV5(
                     onPressed: () {
                       viewModel.copyMnemonic(context);
                     },
-                    text: "Save Mnemonic",
+                    text: S.of(context).save_mnemonic,
                     width: MediaQuery.of(context).size.width,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
@@ -82,7 +82,8 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                   onPressed: () async {
                     await viewModel.deleteWallet();
                     if (context.mounted) {
-                      LocalToast.showToast(context, "Wallet deleted!");
+                      LocalToast.showToast(
+                          context, S.of(context).wallet_deleted);
                       viewModel.coordinator.end();
                       Navigator.of(context).popUntil((route) {
                         if (route.settings.name == null) {
@@ -93,7 +94,7 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                       });
                     }
                   },
-                  text: "Delete this wallet",
+                  text: S.of(context).delete_this_wallet,
                   width: MediaQuery.of(context).size.width,
                   backgroundColor: ProtonColors.white,
                   borderColor: ProtonColors.interactionNorm,

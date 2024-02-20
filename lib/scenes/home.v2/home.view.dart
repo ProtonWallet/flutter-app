@@ -39,7 +39,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
-          "Proton Wallet",
+          S.of(context).proton_wallet,
           style:
               FontManager.titleHeadline(Theme.of(context).colorScheme.primary),
         ),
@@ -80,7 +80,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                         Padding(
                           padding: const EdgeInsets.only(left: 50, right: 50),
                           child: Text(
-                            "Start using your Proton Wallet by either buying or transferring Bitcoin.",
+                            S.of(context).start_using_your_proton_wallet_by_,
                             style:
                                 FontManager.captionRegular(ProtonColors.white),
                             textAlign: TextAlign.center,
@@ -92,7 +92,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           children: [
                             ButtonV5(
                                 onPressed: () {},
-                                text: "Buy Bitcoin",
+                                text: S.of(context).buy_bitcoin,
                                 width: 140,
                                 radius: 28,
                                 backgroundColor:
@@ -105,7 +105,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             const SizedBox(width: 10),
                             ButtonV5(
                                 onPressed: () {},
-                                text: "Transfer Bitcoin",
+                                text: S.of(context).transfer_bitcoin,
                                 width: 140,
                                 radius: 28,
                                 backgroundColor:
@@ -137,7 +137,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("My Assets",
+                    Text(S.of(context).my_assets,
                         style: FontManager.captionRegular(
                             Theme.of(context).colorScheme.secondary)),
                     Text("${viewModel.totalBalance} Sat",
@@ -165,7 +165,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Last 7 days",
+                    Text(S.of(context).last_7_days,
                         style: FontManager.captionRegular(
                             Theme.of(context).colorScheme.secondary)),
                     Text("+${viewModel.totalBalance} Sat",
@@ -184,7 +184,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               children: <Widget>[
                 Padding(
                     padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-                    child: Text("Your Wallets",
+                    child: Text(S.of(context).your_wallets,
                         style: FontManager.body1Median(
                             Theme.of(context).colorScheme.primary))),
                 GestureDetector(
@@ -194,7 +194,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                     },
                     child: Padding(
                         padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-                        child: Text("Add Wallet",
+                        child: Text(S.of(context).add_wallet,
                             style: FontManager.body1Median(
                                 ProtonColors.interactionNorm)))),
               ]),
@@ -251,14 +251,23 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               children: [
                                                 Row(
                                                   children: [
-                                                    const TagText(
-                                                      text: "OnChain",
+                                                    TagText(
+                                                      text: S
+                                                          .of(context)
+                                                          .on_chain,
                                                       radius: 10.0,
                                                       background:
-                                                          Color.fromARGB(255,
-                                                              200, 248, 255),
-                                                      textColor: Color.fromARGB(
-                                                          255, 18, 134, 159),
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              200,
+                                                              248,
+                                                              255),
+                                                      textColor:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              18,
+                                                              134,
+                                                              159),
                                                     ),
                                                     const SizedBox(width: 2),
                                                     if (wallet.status ==
@@ -323,7 +332,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                       SvgPicture.asset("assets/images/mail_integration.svg",
                           width: 54),
                       Text(
-                        "You can send and receive Bitcoin using your email address.",
+                        S.of(context).you_can_send_and_receive_bitcoin_w_emial_,
                         style:
                             FontManager.captionRegular(ProtonColors.textNorm),
                         textAlign: TextAlign.center,
@@ -344,7 +353,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   minWidth: 100.0,
                                 ),
                                 child: Text(
-                                  "Set up address",
+                                  S.of(context).set_up_address,
                                   style: FontManager.captionSemiBold(
                                       ProtonColors.textNorm),
                                   textAlign: TextAlign.center,
@@ -359,7 +368,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   minWidth: 100.0,
                                 ),
                                 child: Text(
-                                  "Later",
+                                  S.of(context).later,
                                   style: FontManager.captionSemiBold(
                                       ProtonColors.textNorm),
                                   textAlign: TextAlign.center,
@@ -375,7 +384,7 @@ class HomeView extends ViewBase<HomeViewModel> {
             Column(children: [
               Padding(
                   padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-                  child: Text("Statistic",
+                  child: Text(S.of(context).statistic,
                       style: FontManager.body1Median(
                           Theme.of(context).colorScheme.primary))),
               CustomPieChart(
@@ -393,7 +402,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-              child: Text("Quick Actions",
+              child: Text(S.of(context).quick_actions,
                   style: FontManager.body1Median(
                       Theme.of(context).colorScheme.primary))),
           const SizedBox(
@@ -403,7 +412,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               onPressed: () {
                 viewModel.coordinator.move(ViewIdentifiers.send, context);
               },
-              text: "Send",
+              text: S.of(context).send_button,
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: Theme.of(context).colorScheme.surface,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
@@ -417,7 +426,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               onPressed: () {
                 viewModel.coordinator.move(ViewIdentifiers.receive, context);
               },
-              text: "Receive",
+              text: S.of(context).receive_button,
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: Theme.of(context).colorScheme.surface,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
@@ -429,7 +438,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () {},
-              text: "Swap",
+              text: S.of(context).swap_button,
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: Theme.of(context).colorScheme.surface,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
@@ -537,31 +546,32 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-              child: Text("Explore Proton Wallet",
+              child: Text(S.of(context).explore_wallet,
                   style: FontManager.body1Median(
                       Theme.of(context).colorScheme.primary))),
           const SizedBox(height: 10),
           CustomNewsBox(
-              title: "Security & Proton Wallet",
-              content: "How to stay safe and protect your assets.",
+              title: S.of(context).security_n_proton_wallet,
+              content: S.of(context).how_to_stay_safe_and_protect_your_assets,
               iconPath: "assets/images/icon/protect.svg",
               width: MediaQuery.of(context).size.width - 52),
           const SizedBox(height: 10),
           CustomNewsBox(
-              title: "Wallets & Accounts",
-              content: "Whats the different and how to use them.",
+              title: S.of(context).wallets_n_accounts,
+              content: S.of(context).whats_the_different_and_how_to_use_them,
               iconPath: "assets/images/icon/wallet.svg",
               width: MediaQuery.of(context).size.width - 52),
           const SizedBox(height: 10),
           CustomNewsBox(
-              title: "Transfer Bitcoin",
-              content: "How to send and receive Bitcoin with Proton.",
+              title: S.of(context).transfer_bitcoin,
+              content:
+                  S.of(context).how_to_send_and_receive_bitcoin_with_proton,
               iconPath: "assets/images/icon/transfer.svg",
               width: MediaQuery.of(context).size.width - 52),
           const SizedBox(height: 10),
           CustomNewsBox(
-              title: "Mobile Apps",
-              content: "Start using Proton Wallet on your phone.",
+              title: S.of(context).mobile_apps,
+              content: S.of(context).start_using_proton_wallet_on_your_phone,
               iconPath: "assets/images/icon/mobile.svg",
               width: MediaQuery.of(context).size.width - 52),
           const SizedBox(height: 20),
@@ -620,7 +630,7 @@ void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
                       ),
                       ListTile(
                         leading: const Icon(Icons.delete, size: 18),
-                        title: Text("Delete Wallet",
+                        title: Text(S.of(context).delete_wallet,
                             style: FontManager.body2Regular(
                                 Theme.of(context).colorScheme.primary)),
                         onTap: () {},
@@ -633,7 +643,7 @@ void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
                     children: [
                         ListTile(
                           leading: const Icon(Icons.edit, size: 18),
-                          title: Text("Rename Wallet",
+                          title: Text(S.of(context).rename_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
                           onTap: () {},
@@ -641,14 +651,14 @@ void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
                         ListTile(
                           leading:
                               const Icon(Icons.download_for_offline, size: 18),
-                          title: Text("Backup Wallet",
+                          title: Text(S.of(context).backup_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
                           onTap: () {},
                         ),
                         ListTile(
                           leading: const Icon(Icons.delete, size: 18),
-                          title: Text("Delete Wallet",
+                          title: Text(S.of(context).delete_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
                           onTap: () {},
@@ -671,10 +681,10 @@ void showMyAlertDialog(BuildContext context, String content) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: content))
-                  .then((v) => {LocalToast.showToast(context, "Copied")});
+              Clipboard.setData(ClipboardData(text: content)).then(
+                  (v) => {LocalToast.showToast(context, S.of(context).copied)});
             },
-            child: Text(S.of(context).copy),
+            child: Text(S.of(context).copy_button),
           ),
           TextButton(
             onPressed: () {

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
@@ -9,8 +10,6 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-
-import '../../helper/user.session.dart';
 
 class AppView extends ViewBase<AppViewModel> {
   AppView(AppViewModel viewModel, this.homeView)
@@ -37,9 +36,9 @@ class AppView extends ViewBase<AppViewModel> {
             debugShowMaterialGrid: false,
             showSemanticsDebugger: false,
             debugShowCheckedModeBanner: kDebugMode,
-            title: 'Proton Wallet',
+            title: S.of(context).proton_wallet,
             onGenerateTitle: (context) {
-              return S.of(context).appName;
+              return S.of(context).app_name;
             },
             localizationsDelegates: const [
               S.delegate,
@@ -63,12 +62,11 @@ class AppView extends ViewBase<AppViewModel> {
             },
             locale: Provider.of<LocaleProvider>(context, listen: false).locale,
             theme: ThemeData(
-              colorScheme: ThemeData(brightness: Brightness.light)
-                  .colorScheme
-                  .copyWith(
-                      primary: ProtonColors.textNorm,
-                surface: ProtonColors.surfaceLight,
-              ),
+              colorScheme:
+                  ThemeData(brightness: Brightness.light).colorScheme.copyWith(
+                        primary: ProtonColors.textNorm,
+                        surface: ProtonColors.surfaceLight,
+                      ),
               useMaterial3: true,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),

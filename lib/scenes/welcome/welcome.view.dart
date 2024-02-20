@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_gen/gen_l10n/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,14 +13,13 @@ import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/welcome/signup.button.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 import 'package:wallet/scenes/welcome/welcome.image.dart';
-
-import '../../helper/user.session.dart';
 
 class WelcomeView extends ViewBase<WelcomeViewModel> {
   WelcomeView(WelcomeViewModel viewModel)
@@ -72,7 +72,8 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         userInfo["refreshToken"] ?? "c23vayrxwnhiyne6tmsz2jhztw6a7ffg",
         userInfo["userKeyID"] ??
             "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==",
-        userInfo["userPrivateKey"] ?? '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+        userInfo["userPrivateKey"] ??
+            '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: ProtonMail
 
 xYYEZa424xYJKwYBBAHaRw8BAQdAzOjoPpNo11uWEwg8f1zVeJeFOTaZ64l0
@@ -124,7 +125,7 @@ M3bzanKu/hKuhAM3kgw=
               userSessionProvider.userSession.userKeyID);
           viewModel.coordinator.move(ViewIdentifiers.home, context);
         } else {
-          LocalToast.showErrorToast(context, "Login failed!");
+          LocalToast.showErrorToast(context, S.of(context).login_failed);
         }
         break;
       default:
@@ -141,13 +142,13 @@ M3bzanKu/hKuhAM3kgw=
     viewModel.localLogin(context);
     switch (viewSize) {
       case ViewSize.mobile:
-        return buildMobile();
+        return buildMobile(context);
       default:
-        return buildDesktop();
+        return buildDesktop(context);
     }
   }
 
-  Widget buildDesktop() {
+  Widget buildDesktop(BuildContext context) {
     return Background(
       child: SingleChildScrollView(
         child: SafeArea(
@@ -180,7 +181,7 @@ M3bzanKu/hKuhAM3kgw=
                             backgroundColor: const Color(0xFF6D4AFF),
                             elevation: 0),
                         child: Text(
-                          "Go Home".toUpperCase(),
+                          S.of(context).go_home.toUpperCase(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -200,7 +201,7 @@ M3bzanKu/hKuhAM3kgw=
     );
   }
 
-  Widget buildMobile() {
+  Widget buildMobile(BuildContext context) {
     return Background(
       child: SingleChildScrollView(
         child: SafeArea(
@@ -211,7 +212,7 @@ M3bzanKu/hKuhAM3kgw=
               SizedBox(
                 width: 300,
                 child: ButtonV5(
-                    text: "Create Account",
+                    text: S.of(context).create_account,
                     onPressed: () {
                       NativeViewSwitcher.switchToNativeSignup();
                     },
@@ -225,7 +226,7 @@ M3bzanKu/hKuhAM3kgw=
                   onPressed: () {
                     NativeViewSwitcher.switchToNativeLogin();
                   },
-                  child: const Text('Sign in'),
+                  child: Text(S.of(context).sign_in),
                 ),
               ),
               SizedBoxes.box8,
@@ -235,7 +236,7 @@ M3bzanKu/hKuhAM3kgw=
                   viewModel.coordinator.move(ViewIdentifiers.home, context);
                 },
                 color: ProtonColors.interactionNorm,
-                child: const Text('Go Home'),
+                child: Text(S.of(context).go_home),
               ),
             ],
           ),

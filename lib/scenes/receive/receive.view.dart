@@ -45,7 +45,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 52,
                     child: Text(
-                      "Receive to Wallet",
+                      S.of(context).receive_to_wallet,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -63,7 +63,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 52,
                     child: Text(
-                      "Account",
+                      S.of(context).account_label,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary),
                     ),
@@ -82,7 +82,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 52,
                     child: Text(
-                      "Add amount",
+                      S.of(context).add_amount,
                       style: FontManager.captionMedian(
                           ProtonColors.interactionNorm),
                     ),
@@ -137,12 +137,12 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         onPressed: () {
                           Clipboard.setData(
                               ClipboardData(text: viewModel.address));
-                          const snackBar = SnackBar(
-                            content: Text('Copied to Clipboard!'),
+                          var snackBar = SnackBar(
+                            content: Text(S.of(context).copied),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         },
-                        text: "Copy",
+                        text: S.of(context).copy_button,
                         width: MediaQuery.of(context).size.width,
                         textStyle: FontManager.body1Median(ProtonColors.white),
                         height: 48),
@@ -150,9 +150,9 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     ButtonV5(
                         onPressed: () {
                           Share.share(viewModel.address,
-                              subject: "Receive Address");
+                              subject: S.of(context).receive_address);
                         },
-                        text: "Share",
+                        text: S.of(context).share_button,
                         width: MediaQuery.of(context).size.width,
                         backgroundColor: ProtonColors.white,
                         borderColor: ProtonColors.interactionNorm,

@@ -66,7 +66,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                 ])
                   CustomMailBox(
                     mail: mail,
-                    subTitle: "Not connected",
+                    subTitle: S.of(context).not_connected,
                     onTap: () {
                       // TODO:: add perisist table to store mail setting
                       viewModel.mailSettingID = 1;

@@ -15,6 +15,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 abstract class WalletViewModel extends ViewModel {
   List accounts = [];
@@ -111,7 +112,7 @@ class WalletViewModelImpl extends WalletViewModel {
     Clipboard.setData(ClipboardData(
             text: await WalletManager.getMnemonicWithID(walletID)))
         .then((_) {
-      LocalToast.showToast(context, "Copied Mnemonic!");
+      LocalToast.showToast(context, S.of(context).copied_mnemonic);
     });
   }
 

@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-
-import '../../helper/wallet_manager.dart';
 
 abstract class SetupOnboardViewModel extends ViewModel {
   SetupOnboardViewModel(super.coordinator);

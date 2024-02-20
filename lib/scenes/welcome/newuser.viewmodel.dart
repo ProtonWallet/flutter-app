@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/constants/constants.dart';
 
 import 'package:wallet/scenes/core/viewmodel.dart';
-
-import '../../constants/constants.dart';
 
 abstract class NewUserViewModel extends ViewModel {
   NewUserViewModel(super.coordinator);
