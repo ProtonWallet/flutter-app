@@ -5,7 +5,7 @@
 
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'wallet_settings_routes.dart';
+import 'wallet_settings.dart';
 
 class CreateWalletReq {
   final String name;
@@ -52,37 +52,6 @@ class CreateWalletReq {
           walletKey == other.walletKey &&
           mnemonic == other.mnemonic &&
           publicKey == other.publicKey;
-}
-
-class CreateWalletResponse {
-  final int code;
-  final ProtonWallet wallet;
-  final ProtonWalletKey walletKey;
-  final WalletSettings walletSettings;
-
-  const CreateWalletResponse({
-    required this.code,
-    required this.wallet,
-    required this.walletKey,
-    required this.walletSettings,
-  });
-
-  @override
-  int get hashCode =>
-      code.hashCode ^
-      wallet.hashCode ^
-      walletKey.hashCode ^
-      walletSettings.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CreateWalletResponse &&
-          runtimeType == other.runtimeType &&
-          code == other.code &&
-          wallet == other.wallet &&
-          walletKey == other.walletKey &&
-          walletSettings == other.walletSettings;
 }
 
 class ProtonWallet {
@@ -160,12 +129,12 @@ class ProtonWalletKey {
 class WalletData {
   final ProtonWallet wallet;
   final ProtonWalletKey walletKey;
-  final WalletSettings? walletSettings;
+  final WalletSettings walletSettings;
 
   const WalletData({
     required this.wallet,
     required this.walletKey,
-    this.walletSettings,
+    required this.walletSettings,
   });
 
   @override
@@ -180,25 +149,4 @@ class WalletData {
           wallet == other.wallet &&
           walletKey == other.walletKey &&
           walletSettings == other.walletSettings;
-}
-
-class WalletsResponse {
-  final int code;
-  final List<WalletData> wallets;
-
-  const WalletsResponse({
-    required this.code,
-    required this.wallets,
-  });
-
-  @override
-  int get hashCode => code.hashCode ^ wallets.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WalletsResponse &&
-          runtimeType == other.runtimeType &&
-          code == other.code &&
-          wallets == other.wallets;
 }

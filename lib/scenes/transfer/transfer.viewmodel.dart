@@ -26,14 +26,9 @@ class TransferViewModelImpl extends TransferViewModel {
     var out = await testObject.readText();
     logger.i("out: $out");
     await initApiService(userName: 'pro', password: 'pro');
-    var authInfo = await fetchAuthInfo(userName: 'feng100');
-    logger.i("authInfo: ${authInfo.code}, ${authInfo.srpSession}");
-    testCode = authInfo.code;
 
     var walletResponse = await getWallets();
-    logger.i(
-        "walletResponse: ${walletResponse.code}, ${walletResponse.wallets.length}");
-    testCodeTwo = walletResponse.code;
+    logger.i("walletResponse:${walletResponse.length}");
     datasourceChangedStreamController.sink.add(this);
   }
 

@@ -4,11 +4,11 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/types.dart';
-import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -117,29 +117,32 @@ class WalletViewModelImpl extends WalletViewModel {
 
   @override
   Future<void> updateAccountLabel(String newLabel) async {
-    WalletAccountResponse walletAccountResponse =
-        await proton_api.updateWalletAccountLabel(
-            walletId: walletModel.serverWalletID,
-            walletAccountId: accountModel.serverAccountID,
-            newLabel: base64Encode(utf8
-                .encode(await WalletKeyHelper.encrypt(secretKey!, newLabel))));
-    if (walletAccountResponse.code == 1000) {
+    try {
+      WalletAccount _ = await proton_api.updateWalletAccountLabel(
+          walletId: walletModel.serverWalletID,
+          walletAccountId: accountModel.serverAccountID,
+          newLabel: base64Encode(utf8
+              .encode(await WalletKeyHelper.encrypt(secretKey!, newLabel))));
       accountModel.label =
           utf8.encode(await WalletKeyHelper.encrypt(secretKey!, newLabel));
       accountModel.labelDecrypt = newLabel;
       await DBHelper.accountDao!.update(accountModel);
       await loadData();
+    } catch (e) {
+      logger.e(e);
     }
   }
 
   @override
   Future<void> deleteAccount() async {
-    ResponseCode responseCode = await proton_api.deleteWalletAccount(
-        walletId: walletModel.serverWalletID,
-        walletAccountId: accountModel.serverAccountID);
-    if (responseCode.code == 1000) {
+    try {
+      await proton_api.deleteWalletAccount(
+          walletId: walletModel.serverWalletID,
+          walletAccountId: accountModel.serverAccountID);
       await DBHelper.accountDao!.delete(accountModel.id!);
       await loadData();
+    } catch (e) {
+      logger.e(e);
     }
   }
 
