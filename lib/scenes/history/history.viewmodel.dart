@@ -3,12 +3,11 @@ import 'dart:convert';
 
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-
-import '../../helper/wallet_manager.dart';
 
 abstract class HistoryViewModel extends ViewModel {
   HistoryViewModel(super.coordinator, this.walletID, this.accountID);

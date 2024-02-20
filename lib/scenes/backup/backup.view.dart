@@ -9,6 +9,7 @@ import 'package:wallet/scenes/backup/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   SetupBackupView(SetupBackupViewModel viewModel)
@@ -72,9 +73,8 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
             currentPage: 4,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
-            title: "Did you save it?",
-            content:
-                "Verify that you saved your secret recovery phrase by tapping the first (1st) then the last (12th) word.",
+            title: S.of(context).did_you_save_it,
+            content: S.of(context).verify_you_saved_secret_phrase_,
             children: [
               ButtonV5(
                   onPressed: () {
@@ -82,10 +82,11 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                       viewModel.coordinator
                           .move(ViewIdentifiers.passphrase, context);
                     } else {
-                      LocalToast.showErrorToast(context, "Wrong mnemonic order");
+                      LocalToast.showErrorToast(
+                          context, S.of(context).wrong_mnemonic_order);
                     }
                   },
-                  text: "Continue",
+                  text: S.of(context).continue_buttion,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   height: 48),
@@ -122,7 +123,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                                 ))),
                     SizedBoxes.box24,
                     Text(
-                      "Save these 12 words securely and never share them with anyone.",
+                      S.of(context).save_12_words_securely,
                       style: FontManager.captionRegular(ProtonColors.textHint),
                     )
                   ]),
@@ -143,15 +144,14 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
             currentPage: 3,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
-            title: "Your mnemonic",
-            content:
-                "This is your secret recovery phrase. If you lose access to your account, this phrase will help you recover your wallet.",
+            title: S.of(context).your_mnemonic,
+            content: S.of(context).this_is_your_secret_recovery_phrase,
             children: [
               ButtonV5(
                   onPressed: () {
                     viewModel.updateState(true);
                   },
-                  text: "Continue",
+                  text: S.of(context).continue_buttion,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   height: 48),

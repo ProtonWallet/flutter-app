@@ -63,9 +63,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                         Container(
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 72.0),
-                            child: const Text(
-                              "Bitcoin Wallet",
-                              style: TextStyle(
+                            child: Text(
+                              S.of(context).bitcoin_wallet,
+                              style: const TextStyle(
                                   fontSize: 14.0, color: ProtonColors.wMajor1),
                             )),
                         Row(
@@ -173,7 +173,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                                   .unconfirmed_trans(viewModel.unconfirmed),
                               style: FontManager.captionRegular(
                                   Theme.of(context).colorScheme.secondary)),
-                          Text(viewModel.isSyncing ? "Syncing.." : "",
+                          Text(viewModel.isSyncing ? S.of(context).syncing : "",
                               style: FontManager.captionRegular(
                                   Theme.of(context).colorScheme.secondary)),
                         ],
@@ -202,9 +202,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Send",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).send,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -225,9 +225,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Receive",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).receive,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -247,9 +247,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Mnemonic",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).mnemonic,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -271,9 +271,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Sync",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).sync,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -294,9 +294,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "History",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).history,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -317,9 +317,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Delete",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).delete,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -339,14 +339,15 @@ class WalletView extends ViewBase<WalletViewModel> {
                     onPressed: () async {
                       await viewModel.deleteAccount();
                       if (context.mounted) {
-                        LocalToast.showToast(context, "Account deleted!");
+                        LocalToast.showToast(
+                            context, S.of(context).account_deleted);
                       }
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Delete Account",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).delete_account,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -371,9 +372,9 @@ class WalletView extends ViewBase<WalletViewModel> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
-                    child: const Text(
-                      "Update Account",
-                      style: TextStyle(
+                    child: Text(
+                      S.of(context).update_account,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontFamily: 'Inter',
@@ -391,10 +392,10 @@ class WalletView extends ViewBase<WalletViewModel> {
     TextEditingController textEditingController = TextEditingController();
     textEditingController.text = viewModel.accountModel.labelDecrypt;
     return AlertDialog(
-      title: const Text('Update Label'),
+      title: Text(S.of(context).update_label),
       content: TextField(
-        decoration: const InputDecoration(
-          hintText: 'Your new label here',
+        decoration: InputDecoration(
+          hintText: S.of(context).your_new_label_here,
         ),
         controller: textEditingController,
       ),
@@ -403,14 +404,14 @@ class WalletView extends ViewBase<WalletViewModel> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(S.of(context).cancel),
         ),
         TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
             await viewModel.updateAccountLabel(textEditingController.text);
           },
-          child: const Text('Submit'),
+          child: Text(S.of(context).submit),
         ),
       ],
     );

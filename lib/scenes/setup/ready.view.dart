@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/onboarding/content.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/setup/ready.viewmodel.dart';
-
-import '../../components/onboarding/content.dart';
-import '../../constants/proton.color.dart';
-import '../../theme/theme.font.dart';
+import 'package:wallet/theme/theme.font.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class SetupReadyView extends ViewBase<SetupReadyViewModel> {
   SetupReadyView(SetupReadyViewModel viewModel)
@@ -57,7 +57,7 @@ class SetupReadyView extends ViewBase<SetupReadyViewModel> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        "Bitcoin Wallet",
+                        S.of(context).bitcoin_wallet,
                         style: FontManager.body1Bold(ProtonColors.white),
                         textAlign: TextAlign.right,
                       ),
@@ -79,7 +79,7 @@ class SetupReadyView extends ViewBase<SetupReadyViewModel> {
             currentPage: 6,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 2,
-            title: "Your Bitcoin Wallet is ready!",
+            title: S.of(context).your_bitcoin_wallet_ready,
             content: "",
             children: [
               ButtonV5(
@@ -91,7 +91,7 @@ class SetupReadyView extends ViewBase<SetupReadyViewModel> {
                       return route.settings.name == "[<'HomeNavigationView'>]";
                     });
                   },
-                  text: "Open your wallet",
+                  text: S.of(context).open_your_wallet,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   height: 48)

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-
-import '../../helper/local_toast.dart';
-import '../../helper/wallet_manager.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 abstract class WalletDeletionViewModel extends ViewModel {
   WalletDeletionViewModel(super.coordinator, this.walletID);
@@ -41,7 +41,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
         .then((_) {
       hasSaveMnemonic = true;
       datasourceChangedStreamController.add(this);
-      LocalToast.showToast(context, "Copied Mnemonic!");
+      LocalToast.showToast(context, S.of(context).copied_mnemonic);
     });
   }
 

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/components/page_route.dart';
 import 'package:wallet/scenes/backup/backup.view.dart';
 import 'package:wallet/scenes/backup/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
-
-import '../../components/page_route.dart';
-import '../core/view.navigatior.identifiers.dart';
 
 class SetupBackupCoordinator extends Coordinator {
   late ViewBase widget;

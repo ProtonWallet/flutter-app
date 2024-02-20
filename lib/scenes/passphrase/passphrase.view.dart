@@ -45,7 +45,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     textAlign: TextAlign.center),
                 SizedBoxes.box8,
                 Text(
-                  "For additional security you can use a passphrase. Note that you will need this passphrase to access your wallet.",
+                  S.of(context).for_additional_security_you_can_use_passphrase_,
                   style: FontManager.body1Median(
                       Theme.of(context).colorScheme.primary),
                   textAlign: TextAlign.center,
@@ -53,13 +53,13 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 SizedBoxes.box24,
                 AlertWarning(
                     content:
-                        "Store your passphrase at a safe location. Without the passphrase, even Proton cannot recover your funds.",
+                        S.of(context).store_your_passphrase_at_safe_location_,
                     width: MediaQuery.of(context).size.width),
                 SizedBoxes.box24,
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "Passphrase",
+                    S.of(context).passphrase_label,
                     style: FontManager.captionMedian(
                         Theme.of(context).colorScheme.primary),
                     textAlign: TextAlign.left,
@@ -72,7 +72,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "Confirm Passphrase",
+                    S.of(context).confirm_passphrase_label,
                     style: FontManager.captionMedian(
                         Theme.of(context).colorScheme.primary),
                     textAlign: TextAlign.left,
@@ -108,13 +108,13 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         viewModel.coordinator
                             .move(ViewIdentifiers.setupReady, context);
                       } else {
-                        const snackBar = SnackBar(
-                          content: Text('Passphrase are not equal!'),
+                        var snackBar = SnackBar(
+                          content: Text(S.of(context).passphrase_are_not_match),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
-                    text: "Save Passphrase",
+                    text: S.of(context).save_passphrase_button,
                     width: MediaQuery.of(context).size.width,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
@@ -153,9 +153,9 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               currentPage: 5,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
-              title: "Your passphrase (optional)",
+              title: S.of(context).your_passphrase_optional,
               content:
-                  "For additional security you can use a passphrase. Note that you will need this passphrase to access your wallet.",
+                  S.of(context).for_additional_security_you_can_use_passphrase_,
               children: [
                 ButtonV5(
                     onPressed: () {
@@ -163,7 +163,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                       viewModel.coordinator
                           .move(ViewIdentifiers.setupReady, context);
                     },
-                    text: "Continue without Passphrase",
+                    text: S.of(context).continue_without_passphrase_button,
                     width: MediaQuery.of(context).size.width,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
@@ -172,7 +172,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     onPressed: () {
                       viewModel.updateState(true);
                     },
-                    text: "Yes, use a Passphrase",
+                    text: S.of(context).yes_use_a_passphrase_button,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.white,
                     borderColor: ProtonColors.interactionNorm,

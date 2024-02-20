@@ -1,6 +1,5 @@
 import 'dart:async';
 
-// import 'package:wallet/generated/bridge_definitions.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/bdk/types.dart';

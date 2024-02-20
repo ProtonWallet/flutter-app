@@ -61,7 +61,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 : Icons.arrow_downward,
                             size: 12,
                             color: ProtonColors.textHint)),
-                    Text(viewModel.isSend ? "Send" : "Receive",
+                    Text(
+                        viewModel.isSend
+                            ? S.of(context).send
+                            : S.of(context).receive,
                         style: FontManager.body2Regular(ProtonColors.textHint))
                   ],
                 ),
@@ -211,7 +214,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       launchUrl(Uri.parse(
                           "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
                     },
-                    text: "View on Blockstream",
+                    text: S.of(context).view_on_blockstream,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.surfaceLight,
                     borderColor: const Color.fromARGB(255, 226, 226, 226),

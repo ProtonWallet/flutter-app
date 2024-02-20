@@ -2,15 +2,14 @@
   "@@locale": "en",
   "@@last_modified": "2024-02-12T00:10:57.227125",
 
-
-  "appName": "Deep Sky",   
+  "app_name": "Proton Wallet",   
   "login": "Login",
   "settings_title": "Settings",
-  "settingLanguage": "Language",
-  "autoBySystem": "Auto",
-  "themeMode": "Theme Mode",
-  "darkMode": "Dark Mode",
-  "lightMode":"Light Mode",
+  "setting_language": "Language",
+  "auto_by_system": "Auto",
+  "theme_mode": "Theme Mode",
+  "dark_mode": "Dark Mode",
+  "light_mode":"Light Mode",
   "tab_home": "Home",
   "tab_history": "History",
   "tab_settings": "Settings",
@@ -20,55 +19,9 @@
     "description": "The welcome message"
   },
 
-  "createNewWallet": "Create a new wallet",
-  "importExistingWallet": "Import an existing wallet",
+  "create_new_wallet": "Create a new wallet",
+  "import_existing_wallet": "Import an existing wallet",
   
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "hello": "Hello {userName}",
-  "@hello": {
-    "description": "A message with a single parameter",
-    "placeholders": {
-      "userName": {
-        "type": "String",
-        "example": "Bob"
-      }
-    }
-  },
-  "nWombats": "{count, plural, =0{no wombats} =1{1 wombat} other{{count} wombats}}",
-  "@nWombats": {
-    "description": "A plural message",
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "pronoun": "{gender, select, male{he} female{she} other{they}}",
-  "@pronoun": {
-    "description": "A gendered message",
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
-  "numberOfDataPoints": "Number of data points: {value}",
-  "@numberOfDataPoints": {
-    "description": "A message with a formatted int parameter",
-    "placeholders": {
-      "value": {
-        "type": "int",
-        "format": "compactCurrency",
-        "optionalParameters": {
-          "decimalDigits": 2
-        }
-      }
-    }
-  },
   "no_data": "No data",
   "trans_note": "Note: {note}",
   "@trans_note": {
@@ -92,16 +45,8 @@
   "trans_metworkFee": "Network fee",
   "trans_fee": "Fee",
   "sat": "Sat",
-  "trans_sat": "{count, plural, =1{1 Sat} other{{count} Sats}}",
-  "@trans_sat": {
-    "description": "A plural message",
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
+  "trans_sat": "{count} Sat",
+  "trans_sats": "{count} Sats",
   "confirmed_trans": "Confirmed Transactions: {count}",
   "unconfirmed_trans": "Unconfirmed Transactions: {count}",
   "syncing": "Syncing",
@@ -118,15 +63,143 @@
   "your_personal_addr": "Your Personal Wallet Address",
   "receive_bitcoin": "Receive Bitcoin",
   "your_passphrase_optional": "Your passphrase (optional)",
-  "import_wallet": "Import your wallet",
+  "import_your_wallet": "Import your wallet",
+  "wallet_imported": "Wallet imported",
+  "import_button":  "Import",
   "signup": "Signup",
   "ok": "Ok",
-  "copy": "Copy",
+  "copy_button": "Copy",
   "quick_action": "Quick Actions",
   "explore_wallet": "Explore Proton Wallet",
+  "security_n_proton_wallet": "Security & Proton Wallet",
+  "how_to_stay_safe_and_protect_your_assets": "How to stay safe and protect your assets.",
+  "wallets_n_accounts": "Wallets & Accounts",
+  "whats_the_different_and_how_to_use_them": "What's the different and how to use them.",
   "decript_old_wallet": "Decrypt with your old password",
   "recover_with_mnemonic": "Recover with your mnemonic",
   "delete_wallet": "Delete Wallet",
   "rename_wallet": "Rename Wallet",
-  "backup_wallet": "Backup Wallet"
+  "backup_wallet": "Backup Wallet",
+
+  "login_failed": "Login failed!",
+  "go_home": "Go Home",
+  "create_account": "Create Account",
+  "sign_in": "Sign in",
+  "welcome_privacy_notes": "Privacy. Security. Convenience. Encrypted email that gives you full control of your personal data.",
+  "create_your_own_wallet": "Create your own digital wallet!",
+  "get_started_and_": "Get started and create a brand new wallet or import an existing one",
+  "financial_freedom_": "Financial freedom with rock-solid security and privacy",
+  "bitcoin_wallet": "Bitcoin Wallet",
+  "your_bitcoin_wallet_created": "Your Bitcoin Wallet is created",
+  "your_new_wallet_is_created_": "Your new wallet is created. Make sure you back it up!",
+  "backup_your_wallet": "Backup your wallet",
+  "proton_wallet": "Proton Wallet",
+  "copied_mnemonic": "Copied Mnemonic!",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "your_new_label_here": "Your new label here",
+  "update_label": "Update Label",
+  "update_account": "Update Account",
+  "delete_account": "Delete Account",
+  "account_deleted": "Account deleted!",
+  "delete": "Delete",
+  "history": "History",
+  "sync": "Sync",
+  "mnemonic": "Mnemonic",
+  "receive": "Receive",
+  "receive_button": "Receive",
+  "send": "Send",
+  "send_button": "Send",
+  "swap_button": "Swap",
+  "open_your_wallet": "Open your wallet",
+  "your_bitcoin_wallet_ready": "Your Bitcoin Wallet is ready!",
+  "not_connected": "Not connected",
+  "email_address": "Email Address",
+  "link_to_wallet": "Link to wallet",
+  "minimum_amount": "Minimum amount",
+  "maximum_amount": "Maximum amount",
+  "unlimited": "Unlimited",
+  "save": "Save",
+  "no_wallet": "No Wallet",
+  "logout": "Logout",
+  "create_wallet": "Create Wallet",
+  "review_transaction": "Review Transaction",
+  "only_support_sat_now" : "Only support SAT now!",
+  "advanced_options": "Advanced options",
+  "send_from_wallet": "Send from Wallet",
+  "send_from_account": "Send from Account",
+  "current_balance_sats": "Current Balance: {balance} SATs",
+  "current_balance_sat": "Current Balance: {balance} SAT",
+  "current_balance_usd": "{balance} USD",
+  "send_to_recipient_s": "Send to Recipient(s)",
+  "add_address": "Add Address",
+  "amount": "Amount",
+  "message_to_recipient_optional": "Message to recipient (optional)",
+  "fees_default": "Fees (Default)",
+  "moderate": "Moderate",
+  "fee_rate_sats_confirmation_in_hours": "{fee_rate} sats/vb\nConfirmation in 2hours",
+  "dashboard": "Dashboard",
+  "exit": "Exit",
+  "confirm_to_delete": "Confirm to delete",
+  "please_backup_mnemonic_before_delete_" : "Please backup your mnemonic before you delete your wallet. This mnemonic can help you to restore your wallet next time.",
+  "save_mnemonic": "Save Mnemonic",
+  "wallet_deleted": "Wallet deleted!",
+  "delete_this_wallet": "Delete this wallet",
+  "new_wallet": "New Wallet",
+  "import_account": "Import Account",
+  "derivation_path": "Derivation Path",
+  "label": "Label",
+  "label_for_this_account": "Label for this account",
+  "account_created": "Account created!",
+  "account_created_failed_err": "Account created failed! {error}",
+  "mon_short": "Mn",
+  "tue_short": "Te",
+  "wen_short": "Wd",
+  "thu_short": "Tu",
+  "fri_short": "Fr",
+  "sat_short": "St",
+  "sun_short": "Sn",
+
+  "did_you_save_it": "Did you save it?",
+  "verify_you_saved_secret_phrase_": "Verify that you saved your secret recovery phrase by tapping the first (1st) then the last (12th) word.",
+  "wrong_mnemonic_order": "Wrong mnemonic order",
+  "continue_buttion": "Continue",
+  "save_12_words_securely": "Save these 12 words securely and never share them with anyone.",
+  "your_mnemonic": "Your mnemonic",
+  "this_is_your_secret_recovery_phrase": "This is your secret recovery phrase. If you lose access to your account, this phrase will help you recover your wallet.",
+  "view_on_blockstream": "View on Blockstream",
+  "start_using_your_proton_wallet_by_": "Start using your Proton Wallet by either buying or transferring Bitcoin.",
+  "buy_bitcoin": "Buy Bitcoin",
+  "transfer_bitcoin": "Transfer Bitcoin",
+  "how_to_send_and_receive_bitcoin_with_proton": "How to send and receive Bitcoin with Proton.",
+  "my_assets": "My Assets",
+  "last_7_days": "Last 7 days",
+  "your_wallets": "Your Wallets",
+  "add_wallet": "Add Wallet",
+  "on_chain": "OnChain",
+  "your_accoutns_num": "{count} accounts",
+  "you_can_send_and_receive_bitcoin_w_emial_": "You can send and receive Bitcoin using your email address.",
+  "set_up_address": "Set up address",
+  "later": "Later",
+  "statistic": "Statistic",
+  "quick_actions": "Quick Actions",
+  "mobile_apps": "Mobile Apps",
+  "start_using_proton_wallet_on_your_phone" : "Start using Proton Wallet on your phone.",
+  "copied": "Copied",
+  "default_account": "Default Account",
+  "for_additional_security_you_can_use_passphrase_": "For additional security you can use a passphrase. Note that you will need this passphrase to access your wallet.",
+  "store_your_passphrase_at_safe_location_": "Store your passphrase at a safe location. Without the passphrase, even Proton cannot recover your funds.",
+  "passphrase_label": "Passphrase",
+  "confirm_passphrase_label": "Confirm Passphrase",
+  "save_passphrase_button": "Save Passphrase",
+  "passphrase_are_not_match": "Passphrase are not match!",
+  "continue_without_passphrase_button": "Continue without Passphrase",
+  "yes_use_a_passphrase_button": "Yes, use a Passphrase",
+  "receive_to_wallet": "Receive to Wallet",
+  "account_label": "Account",
+  "add_amount": "Add amount",
+  "receive_address": "Receive Address",
+  "share_button": "Share",
+
+  "end_line_ingore_translation": ""
 }

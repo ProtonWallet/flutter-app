@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class WelcomeImage extends StatelessWidget {
   const WelcomeImage({
@@ -20,16 +21,16 @@ class WelcomeImage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: defaultPadding * 2),
-        const Row(
+        Row(
           children: [
-            Spacer(),
+            const Spacer(),
             Expanded(
                 flex: 8,
                 child: Text(
-                  "Privacy. Security. Convenience. Encrypted email that gives you full control of your personal data.",
+                  S.of(context).welcome_privacy_notes,
                   textAlign: TextAlign.center,
                 )),
-            Spacer(),
+            const Spacer(),
           ],
         ),
         const SizedBox(height: defaultPadding * 2),

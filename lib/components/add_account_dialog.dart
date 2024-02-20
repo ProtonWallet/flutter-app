@@ -7,6 +7,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class AddAccountAlertDialog extends StatefulWidget {
   final int walletID;
@@ -44,7 +45,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Import Account'),
+      title: Text(S.of(context).import_account),
       content: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         DropdownButton<ScriptType>(
           value: scriptType,
@@ -71,8 +72,8 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
               derivationPath = value;
             });
           },
-          decoration: const InputDecoration(
-              labelText: 'Derivation Path',
+          decoration: InputDecoration(
+              labelText: S.of(context).derivation_path,
               hintText: "m/purpose'/coin'/account'/0"),
         ),
         TextField(
@@ -81,8 +82,9 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
               label = value;
             });
           },
-          decoration: const InputDecoration(
-              labelText: 'Label', hintText: "label for this account"),
+          decoration: InputDecoration(
+              labelText: S.of(context).label,
+              hintText: S.of(context).label_for_this_account),
         ),
       ]),
       actions: <Widget>[
@@ -90,7 +92,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(S.of(context).cancel),
         ),
         TextButton(
           onPressed: () async {
@@ -119,11 +121,12 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
               WalletManager.importAccount(widget.walletID, label,
                   scriptType.index, "$derivationPath/0", walletAccount.id);
               if (context.mounted) {
-                LocalToast.showToast(context, "Account created!");
+                LocalToast.showToast(context, S.of(context).account_created);
               }
             } catch (e) {
               if (context.mounted) {
-                LocalToast.showToast(context, "Account created failed! $e");
+                LocalToast.showToast(
+                    context, S.of(context).account_created_failed_err(e));
               }
             }
 
@@ -134,7 +137,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
               Navigator.of(context).pop();
             }
           },
-          child: const Text('OK'),
+          child: Text(S.of(context).ok),
         ),
       ],
     );

@@ -49,7 +49,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
                     child: Text(
-                      "Create Wallet".toUpperCase(),
+                      S.of(context).create_wallet.toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -71,7 +71,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
                     child: Text(
-                      "Logout".toUpperCase(),
+                      S.of(context).logout.toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
