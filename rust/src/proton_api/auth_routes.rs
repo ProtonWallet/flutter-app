@@ -1,7 +1,5 @@
 use muon::{
-    request::{JsonRequest, Request, Response},
-    session::RequestExt,
-    types::auth::{AuthInfoReq, AuthInfoRes},
+    request::ProtonRequest, types::auth::{AuthInfoReq, AuthInfoRes}
 };
 
 use super::{api_service::ProtonAPIService, route::RoutePath};
@@ -24,8 +22,8 @@ impl AuthRoute for ProtonAPIService {
             };
 
         let path = format!("{}{}", self.get_auth_path(), "/info");
-        let res: AuthInfoRes = JsonRequest::new(http::Method::POST, path)
-            .body(req)?
+        let res: AuthInfoRes = ProtonRequest::new(http::Method::POST, path)
+            .json_body(req)?
             .bind(self.session_ref())?
             .send()
             .await?

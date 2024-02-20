@@ -14,8 +14,8 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/wallet_account_routes.dart';
-import 'package:wallet/rust/proton_api/wallet_routes.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class ImportViewModel extends ViewModel {
@@ -94,37 +94,28 @@ class ImportViewModelImpl extends ImportViewModel {
             utf8.decode(await secretKey.extractBytes()).toNativeUtf8()))),
         mnemonic: base64Encode(utf8.encode(await WalletKeyHelper.encrypt(
             secretKey, mnemonicTextController.text))));
-    CreateWalletResponse createWalletResponse =
-        await proton_api.createWallet(walletReq: walletReq);
+    WalletData walletData = await proton_api.createWallet(walletReq: walletReq);
 
     // TODO:: send correct wallet key instead of mock one
-    if (createWalletResponse.code == 1000) {
-      wallet.serverWalletID = createWalletResponse.wallet.id;
-      if (passphraseTextController.text != "") {
-        await SecureStorageHelper.set(
-            wallet.serverWalletID, passphraseTextController.text);
-      }
-      CreateWalletAccountReq req = CreateWalletAccountReq(
-          label: base64Encode(utf8.encode(
-              await WalletKeyHelper.encrypt(secretKey, "Default Account"))),
-          derivationPath: "m/84'/1'/0'",
-          scriptType: ScriptType.nativeSegWit.index);
-      WalletAccountResponse walletAccountResponse =
-          await proton_api.createWalletAccount(
-        walletId: wallet.serverWalletID,
-        req: req,
-      );
-      if (walletAccountResponse.code == 1000) {
-        int walletID = await DBHelper.walletDao!.insert(wallet);
-        await WalletManager.setWalletKey(walletID,
-            secretKey); // need to set key first, so that we can decrypt for walletAccount
-        WalletManager.importAccount(
-            walletID,
-            "Default Account",
-            ScriptType.nativeSegWit.index,
-            "m/84'/1'/0'/0",
-            walletAccountResponse.account.id);
-      }
+    wallet.serverWalletID = walletData.wallet.id;
+    if (passphraseTextController.text != "") {
+      await SecureStorageHelper.set(
+          wallet.serverWalletID, passphraseTextController.text);
     }
+    CreateWalletAccountReq req = CreateWalletAccountReq(
+        label: base64Encode(utf8.encode(
+            await WalletKeyHelper.encrypt(secretKey, "Default Account"))),
+        derivationPath: "m/84'/1'/0'",
+        scriptType: ScriptType.nativeSegWit.index);
+    WalletAccount walletAccount = await proton_api.createWalletAccount(
+      walletId: wallet.serverWalletID,
+      req: req,
+    );
+
+    int walletID = await DBHelper.walletDao!.insert(wallet);
+    await WalletManager.setWalletKey(walletID,
+        secretKey); // need to set key first, so that we can decrypt for walletAccount
+    WalletManager.importAccount(walletID, "Default Account",
+        ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
   }
 }

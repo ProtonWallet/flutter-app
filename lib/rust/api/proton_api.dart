@@ -5,10 +5,9 @@
 
 import '../frb_generated.dart';
 import '../proton_api/errors.dart';
-import '../proton_api/types.dart';
-import '../proton_api/wallet_account_routes.dart';
-import '../proton_api/wallet_routes.dart';
-import '../proton_api/wallet_settings_routes.dart';
+import '../proton_api/wallet.dart';
+import '../proton_api/wallet_account.dart';
+import '../proton_api/wallet_settings.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<void> initApiService(
@@ -16,28 +15,25 @@ Future<void> initApiService(
     RustLib.instance.api
         .initApiService(userName: userName, password: password, hint: hint);
 
-Future<AuthInfo> fetchAuthInfo({required String userName, dynamic hint}) =>
-    RustLib.instance.api.fetchAuthInfo(userName: userName, hint: hint);
-
-Future<WalletsResponse> getWallets({dynamic hint}) =>
+Future<List<WalletData>> getWallets({dynamic hint}) =>
     RustLib.instance.api.getWallets(hint: hint);
 
-Future<CreateWalletResponse> createWallet(
+Future<WalletData> createWallet(
         {required CreateWalletReq walletReq, dynamic hint}) =>
     RustLib.instance.api.createWallet(walletReq: walletReq, hint: hint);
 
-Future<WalletAccountsResponse> getWalletAccounts(
+Future<List<WalletAccount>> getWalletAccounts(
         {required String walletId, dynamic hint}) =>
     RustLib.instance.api.getWalletAccounts(walletId: walletId, hint: hint);
 
-Future<WalletAccountResponse> createWalletAccount(
+Future<WalletAccount> createWalletAccount(
         {required String walletId,
         required CreateWalletAccountReq req,
         dynamic hint}) =>
     RustLib.instance.api
         .createWalletAccount(walletId: walletId, req: req, hint: hint);
 
-Future<WalletAccountResponse> updateWalletAccountLabel(
+Future<WalletAccount> updateWalletAccountLabel(
         {required String walletId,
         required String walletAccountId,
         required String newLabel,
@@ -48,7 +44,7 @@ Future<WalletAccountResponse> updateWalletAccountLabel(
         newLabel: newLabel,
         hint: hint);
 
-Future<ResponseCode> deleteWalletAccount(
+Future<void> deleteWalletAccount(
         {required String walletId,
         required String walletAccountId,
         dynamic hint}) =>
