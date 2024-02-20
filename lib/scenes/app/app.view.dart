@@ -36,7 +36,7 @@ class AppView extends ViewBase<AppViewModel> {
             debugShowMaterialGrid: false,
             showSemanticsDebugger: false,
             debugShowCheckedModeBanner: kDebugMode,
-            title: S.of(context).proton_wallet,
+            title: "Proton Wallet",
             onGenerateTitle: (context) {
               return S.of(context).app_name;
             },
