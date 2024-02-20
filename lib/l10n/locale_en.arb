@@ -1,27 +1,23 @@
 {
   "@@locale": "en",
   "@@last_modified": "2024-02-12T00:10:57.227125",
-
-  "app_name": "Proton Wallet",   
+  "app_name": "Proton Wallet",
   "login": "Login",
   "settings_title": "Settings",
   "setting_language": "Language",
   "auto_by_system": "Auto",
   "theme_mode": "Theme Mode",
   "dark_mode": "Dark Mode",
-  "light_mode":"Light Mode",
+  "light_mode": "Light Mode",
   "tab_home": "Home",
   "tab_history": "History",
   "tab_settings": "Settings",
-
   "welcome_to": "Welcome to",
   "@welcome_to": {
     "description": "The welcome message"
   },
-
   "create_new_wallet": "Create a new wallet",
   "import_existing_wallet": "Import an existing wallet",
-  
   "no_data": "No data",
   "trans_note": "Note: {note}",
   "@trans_note": {
@@ -45,13 +41,20 @@
   "trans_metworkFee": "Network fee",
   "trans_fee": "Fee",
   "sat": "Sat",
-  "trans_sat": "{count} Sat",
-  "trans_sats": "{count} Sats",
+  "transaction_sats": "{count, plural, =1{1 Sat} other{{count} Sats}}",
+  "@transaction_sats": {
+    "description": "A plural message for transaction sats in transaction detail",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
   "confirmed_trans": "Confirmed Transactions: {count}",
   "unconfirmed_trans": "Unconfirmed Transactions: {count}",
   "syncing": "Syncing",
   "balance": "Balance",
-
   "done": "Done",
   "next": "Next",
   "trans_past_seven": "Transactions in past 7 days",
@@ -65,7 +68,7 @@
   "your_passphrase_optional": "Your passphrase (optional)",
   "import_your_wallet": "Import your wallet",
   "wallet_imported": "Wallet imported",
-  "import_button":  "Import",
+  "import_button": "Import",
   "signup": "Signup",
   "ok": "Ok",
   "copy_button": "Copy",
@@ -80,7 +83,6 @@
   "delete_wallet": "Delete Wallet",
   "rename_wallet": "Rename Wallet",
   "backup_wallet": "Backup Wallet",
-
   "login_failed": "Login failed!",
   "go_home": "Go Home",
   "create_account": "Create Account",
@@ -124,7 +126,7 @@
   "logout": "Logout",
   "create_wallet": "Create Wallet",
   "review_transaction": "Review Transaction",
-  "only_support_sat_now" : "Only support SAT now!",
+  "only_support_sat_now": "Only support SAT now!",
   "advanced_options": "Advanced options",
   "send_from_wallet": "Send from Wallet",
   "send_from_account": "Send from Account",
@@ -141,7 +143,7 @@
   "dashboard": "Dashboard",
   "exit": "Exit",
   "confirm_to_delete": "Confirm to delete",
-  "please_backup_mnemonic_before_delete_" : "Please backup your mnemonic before you delete your wallet. This mnemonic can help you to restore your wallet next time.",
+  "please_backup_mnemonic_before_delete_": "Please backup your mnemonic before you delete your wallet. This mnemonic can help you to restore your wallet next time.",
   "save_mnemonic": "Save Mnemonic",
   "wallet_deleted": "Wallet deleted!",
   "delete_this_wallet": "Delete this wallet",
@@ -159,7 +161,6 @@
   "fri_short": "Fr",
   "sat_short": "St",
   "sun_short": "Sn",
-
   "did_you_save_it": "Did you save it?",
   "verify_you_saved_secret_phrase_": "Verify that you saved your secret recovery phrase by tapping the first (1st) then the last (12th) word.",
   "wrong_mnemonic_order": "Wrong mnemonic order",
@@ -177,14 +178,23 @@
   "your_wallets": "Your Wallets",
   "add_wallet": "Add Wallet",
   "on_chain": "OnChain",
-  "your_accoutns_num": "{count} accounts",
+  "your_accoutns_num": "{count, plural, =1{1 account} other{{count} accounts}}",
+  "@your_accoutns_num": {
+    "description": "how many accounts the user have",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
   "you_can_send_and_receive_bitcoin_w_emial_": "You can send and receive Bitcoin using your email address.",
   "set_up_address": "Set up address",
   "later": "Later",
   "statistic": "Statistic",
   "quick_actions": "Quick Actions",
   "mobile_apps": "Mobile Apps",
-  "start_using_proton_wallet_on_your_phone" : "Start using Proton Wallet on your phone.",
+  "start_using_proton_wallet_on_your_phone": "Start using Proton Wallet on your phone.",
   "copied": "Copied",
   "default_account": "Default Account",
   "for_additional_security_you_can_use_passphrase_": "For additional security you can use a passphrase. Note that you will need this passphrase to access your wallet.",
@@ -201,5 +211,10 @@
   "receive_address": "Receive Address",
   "share_button": "Share",
 
-  "end_line_ingore_translation": ""
+
+
+  "end_line_ingore_translation": "",
+  "@end_line_ingore_translation" : {
+    "description": "l10n_nightly: this is the end line mark" 
+  }
 }

@@ -158,7 +158,8 @@ class WalletView extends ViewBase<WalletViewModel> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(S.of(context).trans_sat(viewModel.balance),
+                          Text(
+                              S.of(context).transaction_sats(viewModel.balance),
                               style: FontManager.titleHeadline(
                                   Theme.of(context).colorScheme.primary)),
                           Text(

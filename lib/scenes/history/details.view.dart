@@ -130,11 +130,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           const SizedBox(width: 8),
                           Text(
                               viewModel.isSend
-                                  ? S.of(context).trans_sat(
+                                  ? S.of(context).transaction_sats(
                                       viewModel.amount.abs() - viewModel.fee)
                                   : S
                                       .of(context)
-                                      .trans_sat(viewModel.amount.abs()),
+                                      .transaction_sats(viewModel.amount.abs()),
                               style: FontManager.captionMedian(
                                   Theme.of(context).colorScheme.primary)),
                         ])
@@ -155,7 +155,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               style: FontManager.captionMedian(
                                   ProtonColors.textHint)),
                           const SizedBox(width: 8),
-                          Text(S.of(context).trans_sat(viewModel.fee),
+                          Text(S.of(context).transaction_sats(viewModel.fee),
                               style: FontManager.captionMedian(
                                   Theme.of(context).colorScheme.primary)),
                         ])
