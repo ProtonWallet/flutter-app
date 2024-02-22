@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:uuid/uuid.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
