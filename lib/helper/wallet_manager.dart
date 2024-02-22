@@ -41,7 +41,7 @@ class WalletManager {
           await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
       if (account != null) {
         account.label =
-            utf8.encode(await WalletKeyHelper.encrypt(secretKey, label));
+            base64Decode(await WalletKeyHelper.encrypt(secretKey, label));
         account.labelDecrypt = label;
         account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
         account.scriptType = scriptType;
@@ -51,7 +51,7 @@ class WalletManager {
             id: null,
             walletID: walletID,
             derivationPath: derivationPath,
-            label: utf8.encode(await WalletKeyHelper.encrypt(secretKey, label)),
+            label: base64Decode(await WalletKeyHelper.encrypt(secretKey, label)),
             scriptType: scriptType,
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,

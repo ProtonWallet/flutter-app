@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -106,8 +105,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
             }
             //TODO:: logics need move to viewmodel
             CreateWalletAccountReq req = CreateWalletAccountReq(
-                label: base64Encode(utf8
-                    .encode(await WalletKeyHelper.encrypt(secretKey, label))),
+                label: await WalletKeyHelper.encrypt(secretKey, label),
                 derivationPath: derivationPath,
                 scriptType: ScriptType.nativeSegWit.index);
 
