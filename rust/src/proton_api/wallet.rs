@@ -95,6 +95,7 @@ pub struct CreateWalletReq {
     // "<base64_encoded_publickey>"
     // Encrypted wallet public key with the WalletKey, in base64 format
     pub public_key: Option<String>,
+    pub fingerprint: Option<String>,
 }
 
 impl From<CreateWalletRequestBody> for CreateWalletReq {
@@ -108,6 +109,7 @@ impl From<CreateWalletRequestBody> for CreateWalletReq {
             wallet_key: req.WalletKey,
             mnemonic: req.Mnemonic,
             public_key: req.PublicKey,
+            fingerprint: req.Fingerprint,
         }
     }
 }
@@ -123,6 +125,7 @@ impl From<CreateWalletReq> for CreateWalletRequestBody {
             WalletKey: req.wallet_key,
             Mnemonic: req.mnemonic,
             PublicKey: req.public_key,
+            Fingerprint: req.fingerprint,
         }
     }
 }
