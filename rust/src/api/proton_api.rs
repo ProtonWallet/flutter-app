@@ -42,6 +42,15 @@ pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, Ap
     }
 }
 
+pub async fn delete_wallet(wallet_id: String) -> Result<(), ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.wallet.delete_wallet(wallet_id).await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
 // wallet accounts
 pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<WalletAccount>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();

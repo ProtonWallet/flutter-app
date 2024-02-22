@@ -22,6 +22,9 @@ Future<WalletData> createWallet(
         {required CreateWalletReq walletReq, dynamic hint}) =>
     RustLib.instance.api.createWallet(walletReq: walletReq, hint: hint);
 
+Future<void> deleteWallet({required String walletId, dynamic hint}) =>
+    RustLib.instance.api.deleteWallet(walletId: walletId, hint: hint);
+
 Future<List<WalletAccount>> getWalletAccounts(
         {required String walletId, dynamic hint}) =>
     RustLib.instance.api.getWalletAccounts(walletId: walletId, hint: hint);

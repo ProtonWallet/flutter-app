@@ -202,11 +202,13 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
       Uint8List entropy = Uint8List(0);
       try {
         encodedEncryptedEntropy = walletData.walletKey.walletKey;
-        entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase, base64Decode(encodedEncryptedEntropy));
+        entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase,
+            base64Decode(encodedEncryptedEntropy));
       } catch (e) {
         logger.i(e.toString());
       }
-      SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
+      SecretKey secretKey =
+          WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
       if (walletModel == null) {
         DateTime now = DateTime.now();
         WalletModel wallet = WalletModel(
@@ -236,8 +238,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
             for (WalletAccount walletAccount in walletAccounts) {
               WalletManager.importAccount(
                   walletID,
-                  await WalletKeyHelper.decrypt(secretKey,
-                      utf8.decode(base64Decode(walletAccount.label))),
+                  await WalletKeyHelper.decrypt(secretKey, walletAccount.label),
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
                   walletAccount.id);
@@ -254,8 +255,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
               existingAccountIDs.add(walletAccount.id);
               WalletManager.importAccount(
                   walletModel.id!,
-                  await WalletKeyHelper.decrypt(secretKey,
-                      utf8.decode(base64Decode(walletAccount.label))),
+                  await WalletKeyHelper.decrypt(secretKey, walletAccount.label),
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
                   walletAccount.id);

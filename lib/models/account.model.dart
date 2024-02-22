@@ -45,7 +45,7 @@ class AccountModel {
   Future<void> decrypt() async {
     try {
       SecretKey? secretKey = await WalletManager.getWalletKey(walletID);
-      String value = utf8.decode(label);
+      String value = base64Encode(label);
       if (value != "" && secretKey != null) {
         labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
       }
