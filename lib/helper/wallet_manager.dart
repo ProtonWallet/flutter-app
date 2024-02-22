@@ -122,16 +122,16 @@ class WalletManager {
     if (secretKeyStr.isEmpty) {
       return null;
     }
-    secretKey = WalletKeyHelper.restoreSecretKeyFromString(secretKeyStr);
+    secretKey = WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(secretKeyStr);
     return secretKey;
   }
 
   static Future<void> setWalletKey(int walletID, SecretKey secretKey) async {
     String keyPath = "${SecureStorageHelper.walletKey}_$walletID";
-    String secretKeyStr = await SecureStorageHelper.get(keyPath);
-    if (secretKeyStr.isEmpty) {
-      secretKeyStr = await WalletKeyHelper.secretKeyAsString(secretKey);
-      SecureStorageHelper.set(keyPath, secretKeyStr);
+    String encodedEntropy = await SecureStorageHelper.get(keyPath);
+    if (encodedEntropy.isEmpty) {
+      encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
+      SecureStorageHelper.set(keyPath, encodedEntropy);
     }
   }
 
