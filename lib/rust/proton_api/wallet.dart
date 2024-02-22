@@ -16,6 +16,7 @@ class CreateWalletReq {
   final String walletKey;
   final String? mnemonic;
   final String? publicKey;
+  final String? fingerprint;
 
   const CreateWalletReq({
     required this.name,
@@ -26,6 +27,7 @@ class CreateWalletReq {
     required this.walletKey,
     this.mnemonic,
     this.publicKey,
+    this.fingerprint,
   });
 
   @override
@@ -37,7 +39,8 @@ class CreateWalletReq {
       userKeyId.hashCode ^
       walletKey.hashCode ^
       mnemonic.hashCode ^
-      publicKey.hashCode;
+      publicKey.hashCode ^
+      fingerprint.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -51,7 +54,8 @@ class CreateWalletReq {
           userKeyId == other.userKeyId &&
           walletKey == other.walletKey &&
           mnemonic == other.mnemonic &&
-          publicKey == other.publicKey;
+          publicKey == other.publicKey &&
+          fingerprint == other.fingerprint;
 }
 
 class ProtonWallet {

@@ -3116,8 +3116,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CreateWalletReq dco_decode_create_wallet_req(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return CreateWalletReq(
       name: dco_decode_String(arr[0]),
       isImported: dco_decode_u_8(arr[1]),
@@ -3127,6 +3127,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       walletKey: dco_decode_String(arr[5]),
       mnemonic: dco_decode_opt_String(arr[6]),
       publicKey: dco_decode_opt_String(arr[7]),
+      fingerprint: dco_decode_opt_String(arr[8]),
     );
   }
 
@@ -4134,6 +4135,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_walletKey = sse_decode_String(deserializer);
     var var_mnemonic = sse_decode_opt_String(deserializer);
     var var_publicKey = sse_decode_opt_String(deserializer);
+    var var_fingerprint = sse_decode_opt_String(deserializer);
     return CreateWalletReq(
         name: var_name,
         isImported: var_isImported,
@@ -4142,7 +4144,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         userKeyId: var_userKeyId,
         walletKey: var_walletKey,
         mnemonic: var_mnemonic,
-        publicKey: var_publicKey);
+        publicKey: var_publicKey,
+        fingerprint: var_fingerprint);
   }
 
   @protected
@@ -5190,6 +5193,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.walletKey, serializer);
     sse_encode_opt_String(self.mnemonic, serializer);
     sse_encode_opt_String(self.publicKey, serializer);
+    sse_encode_opt_String(self.fingerprint, serializer);
   }
 
   @protected

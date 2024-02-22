@@ -126,6 +126,7 @@ dependencies = [
 name = "andromeda-common"
 version = "0.1.0"
 dependencies = [
+ "bdk 0.29.0",
  "serde",
 ]
 
@@ -509,12 +510,31 @@ dependencies = [
  "getrandom",
  "js-sys",
  "log",
- "miniscript",
+ "miniscript 9.0.2",
  "rand",
  "rusqlite",
  "serde",
  "serde_json",
  "sled",
+ "tokio",
+]
+
+[[package]]
+name = "bdk"
+version = "0.29.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2fc1fc1a92e0943bfbcd6eb7d32c1b2a79f2f1357eb1e2eee9d7f36d6d7ca44a"
+dependencies = [
+ "async-trait",
+ "bdk-macros",
+ "bitcoin 0.30.2",
+ "getrandom",
+ "js-sys",
+ "log",
+ "miniscript 10.0.0",
+ "rand",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
@@ -565,6 +585,7 @@ version = "0.30.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1945a5048598e4189e239d3f809b19bdad4845c4b2ba400d304d2dcf26d2c462"
 dependencies = [
+ "base64 0.13.1",
  "bech32",
  "bitcoin-private",
  "bitcoin_hashes 0.12.0",
@@ -2511,6 +2532,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "miniscript"
+version = "10.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1eb102b66b2127a872dbcc73095b7b47aeb9d92f7b03c2b2298253ffc82c7594"
+dependencies = [
+ "bitcoin 0.30.2",
+ "bitcoin-private",
+ "serde",
+]
+
+[[package]]
 name = "miniz_oxide"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3146,7 +3178,7 @@ dependencies = [
  "andromeda-api",
  "anyhow",
  "assert_matches",
- "bdk",
+ "bdk 0.28.2",
  "env_logger 0.11.1",
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
@@ -3154,8 +3186,8 @@ dependencies = [
  "http 1.0.0",
  "hyper 1.1.0",
  "lazy_static",
+ "miniscript 10.0.0",
  "mockall",
- "muon",
  "openssl",
  "rand",
  "serde",
