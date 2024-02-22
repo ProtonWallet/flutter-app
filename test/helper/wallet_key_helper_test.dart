@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -33,6 +34,31 @@ void main() {
       String decryptText =
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plainText));
+    });
+
+    test('restore walletKey and encrypt', () async {
+      String plaintext = "benefit indoor helmet wine exist height grain spot rely half beef nothing";
+      String encryptText =
+          "iqhZVY2PePoksxUDO5H8HT8FroYZ31DauI6SgfXtHao1s4OU5N45LWO29odlCt21Rvr7I30jsW3zweZcernm9Fsb0xH4KcP3YFarPTDm7C57WRJRRoT+28HKmtcWs5jTPPzMsUk=";
+      SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(Uint8List.fromList([
+        239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160, 29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218
+      ]));
+
+      String encryptText2 = await WalletKeyHelper.encrypt(secretKey, plaintext, initIV: WalletKeyHelper.mockIV());
+      expect(encryptText2, equals(encryptText));
+    });
+
+    test('restore walletKey and decrypt', () async {
+      String plaintext = "benefit indoor helmet wine exist height grain spot rely half beef nothing";
+      String encryptText =
+          "iqhZVY2PePoksxUDO5H8HT8FroYZ31DauI6SgfXtHao1s4OU5N45LWO29odlCt21Rvr7I30jsW3zweZcernm9Fsb0xH4KcP3YFarPTDm7C57WRJRRoT+28HKmtcWs5jTPPzMsUk=";
+      SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(Uint8List.fromList([
+        239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160, 29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218
+      ]));
+
+      String decryptText =
+      await WalletKeyHelper.decrypt(secretKey, encryptText);
+      expect(decryptText, equals(plaintext));
     });
   });
 }

@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
-import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
-import 'package:proton_crypto/proton_crypto.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -148,7 +147,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         userID: 0,
         name: 'New Wallet',
         mnemonic:
-            utf8.encode(await WalletKeyHelper.encrypt(secretKey, strMnemonic)),
+            base64Decode(await WalletKeyHelper.encrypt(secretKey, strMnemonic)),
         // TO-DO: need encrypt
         passphrase: passphraseTextController.text != "" ? 1 : 0,
         publicKey: Uint8List(0),
@@ -161,18 +160,16 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         localDBName: const Uuid().v4().replaceAll('-', ''),
         serverWalletID: "");
-
+    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     CreateWalletReq walletReq = CreateWalletReq(
         name: wallet.name,
         isImported: wallet.imported,
         type: wallet.type,
         hasPassphrase: wallet.passphrase,
         userKeyId: APIHelper.userKeyID,
-        walletKey: base64Encode(utf8.encode(encrypt(
-            userPrivateKey.toNativeUtf8(),
-            utf8.decode(await secretKey.extractBytes()).toNativeUtf8()))),
-        mnemonic: base64Encode(utf8
-            .encode(await WalletKeyHelper.encrypt(secretKey, strMnemonic))));
+        walletKey: base64Encode(
+            proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
+        mnemonic: await WalletKeyHelper.encrypt(secretKey, strMnemonic));
 
     try {
       WalletData walletData =
@@ -185,8 +182,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
             wallet.serverWalletID, passphraseTextController.text);
       }
       CreateWalletAccountReq req = CreateWalletAccountReq(
-          label: base64Encode(utf8.encode(
-              await WalletKeyHelper.encrypt(secretKey, "Default Account"))),
+          label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
           derivationPath: "m/84'/1'/0'",
           scriptType: ScriptType.nativeSegWit.index);
       WalletAccount walletAccount = await proton_api.createWalletAccount(

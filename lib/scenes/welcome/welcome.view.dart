@@ -67,32 +67,32 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         userInfo["userMail"] ?? "ProtonWallet@proton.black",
         userInfo["userName"] ?? "ProtonWallet",
         userInfo["userDisplayName"] ?? "ProtonWallet",
-        userInfo["sessionId"] ?? "zq575ffcf32xmlqcl3h657ntlltsu2cm",
-        userInfo["accessToken"] ?? "osxl4zajfnxvr5s5ljxjwq5v3itqbk3x",
-        userInfo["refreshToken"] ?? "c23vayrxwnhiyne6tmsz2jhztw6a7ffg",
+        userInfo["sessionId"] ?? "6vqdjv7wo4eth7znqomh3mm33ndkyibu",
+        userInfo["accessToken"] ?? "4t65yuux7h4pq7zbbfqst5ss52hap7ed",
+        userInfo["refreshToken"] ?? "36anap6ij6rnwwmfdw5jvjsjb4trwbl4",
         userInfo["userKeyID"] ??
-            "j_rkbyAESrnaOvhBHmCD5X-J0YzvaGW6x2pM3BSR8v34q_wrvFYFi6rod6JxmQ0VlZS4-qVKBRGLnqOSJV4MaA==",
+            "tFiIeutJ52NsS8DN3lIExFV1mbg8_prfetgeerv-wsxoAJMqibBO373Pft0ZQQ1XF9qKPo-EaWjYijYNUoU9pQ==",
         userInfo["userPrivateKey"] ??
             '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: ProtonMail
 
-xYYEZa424xYJKwYBBAHaRw8BAQdAzOjoPpNo11uWEwg8f1zVeJeFOTaZ64l0
-YlntRsRf9Zj+CQMIUj1rfyZGy4tgfz3+t29XTnQIc/7/wTkJzTRFfz5k/3TP
-875/yVCn/LYg9Vy3FLMMcixhrH0KAQWuA41UX1Ffiqlu88Bwv33rbj6b/xVS
-Gc01UHJvdG9uV2FsbGV0QHByb3Rvbi5ibGFjayA8UHJvdG9uV2FsbGV0QHBy
-b3Rvbi5ibGFjaz7CjwQTFggAQQUCZa424wkQznO5oB54VSAWIQTbuvQeXaY/
-zBo9rZzOc7mgHnhVIAIbAwIeAQIZAQMLCQcCFQgDFgACBScJAgcCAAB9pwEA
-5cDC5r/QrnIlkr8xJUAOse2JqvEOhsFef2g46Lmo3dMBAPWIhyLzPy1CkP/V
-uWPF0iIDwGaKa3u7uIF331kBWMoLx4sEZa424xIKKwYBBAGXVQEFAQEHQLTJ
-k0mE6UM7J2gVR4XoAk0fud9dX5DQn2N/0cT4sCYrAwEKCf4JAwi6M/RSTQed
-V2BSqFH+IKUV9IvwXWE3LSB8tx7e11kW+E9o5QRq5MdHTs1qF1pnUiTPTMeo
-EnTer97/Jnjp1CCiEFZP85HQOO9NVKk9QDoIwngEGBYIACoFAmWuNuMJEM5z
-uaAeeFUgFiEE27r0Hl2mP8waPa2cznO5oB54VSACGwwAAJlZAP0QYjT9glxj
-ROPOOJcfggwp5HI1PjMNGreNKPo6BmTwNAD/XlgtiutzElIMp0uTokeTae7N
-M3bzanKu/hKuhAM3kgw=
-=I2GF
+xYYEZcHI+hYJKwYBBAHaRw8BAQdAP95X+OxFf4BIZ6pVof0uGieuTrnlpxOn
+07kbnarFd9n+CQMIbH/7cYVS4IJg2yUdFVTAyfaM0gVEeMzGCM8+ZUPe6/qF
+AsMkTKFXYSvwwsjw/NwmCGxUGRlbOQilIHhrxRcgNnVZWM9vs+xlt1CUGRJL
+NM07bm90X2Zvcl9lbWFpbF91c2VAZG9tYWluLnRsZCA8bm90X2Zvcl9lbWFp
+bF91c2VAZG9tYWluLnRsZD7CjAQQFgoAPgWCZcHI+gQLCQcICZC3N9EM+mvd
+VwMVCAoEFgACAQIZAQKbAwIeARYhBOkPJufu+pzcnwymRLc30Qz6a91XAAAL
+6wD9EMH2oS2Eud7JNoslh8xWac9bT15sUUmGBgwMSWxfyW8A/jb7ubVOBoQv
+l0FQpevuWScbCwsNXI97l7j623a+f54Px4sEZcHI+hIKKwYBBAGXVQEFAQEH
+QLEg5FwJpuFkUcZlNwrgUL8pqm6tQP5H03kHrlEaRUZpAwEIB/4JAwhObU5t
+fQYriWAIzA7e3ZNHBa4Q2LHwxZUz3ACTwua2SXZ5OxD0Io4jFkxiTuETIOnl
+LFQzHg+VVXcdEno56hjnsqHFFB7M94bsNjIImFoNwngEGBYKACoFgmXByPoJ
+kLc30Qz6a91XApsMFiEE6Q8m5+76nNyfDKZEtzfRDPpr3VcAAAQ2AQCQOIGC
+yNzZ8VU8OLu4uKi/U/uQBUcvW5z8W/QkfMiFCwEAm35gvMJB1ScmKCFJNI0t
+PguJGsxgNW6mwkszNjYfCQY=
+=xVXK
 -----END PGP PRIVATE KEY BLOCK-----''',
-        userInfo["userPassphrase"] ?? "A4gFne6iUsqRFKnUGI75gVRVE/sqnay");
+        userInfo["userPassphrase"] ?? "4sFlJ8gesYLeYyS0cBFQ5biAZPIZyHe");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,

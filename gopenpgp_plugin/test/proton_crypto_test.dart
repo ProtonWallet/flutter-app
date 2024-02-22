@@ -1,16 +1,40 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:ffi/ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:proton_crypto/proton_crypto.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
-void main() {
-  if (Platform.isLinux) {
-    return;
-  }
-  group('Proton Crypto functions', () {
-    test('encrypt decrypt case 1', () async {
-      String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+class UserKeys {
+  String privateKey;
+  String passphrase;
+
+  UserKeys({required this.privateKey, required this.passphrase});
+}
+
+UserKeys protonWallet = UserKeys(
+    privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+Version: ProtonMail
+
+xYYEZcHI+hYJKwYBBAHaRw8BAQdAP95X+OxFf4BIZ6pVof0uGieuTrnlpxOn
+07kbnarFd9n+CQMIbH/7cYVS4IJg2yUdFVTAyfaM0gVEeMzGCM8+ZUPe6/qF
+AsMkTKFXYSvwwsjw/NwmCGxUGRlbOQilIHhrxRcgNnVZWM9vs+xlt1CUGRJL
+NM07bm90X2Zvcl9lbWFpbF91c2VAZG9tYWluLnRsZCA8bm90X2Zvcl9lbWFp
+bF91c2VAZG9tYWluLnRsZD7CjAQQFgoAPgWCZcHI+gQLCQcICZC3N9EM+mvd
+VwMVCAoEFgACAQIZAQKbAwIeARYhBOkPJufu+pzcnwymRLc30Qz6a91XAAAL
+6wD9EMH2oS2Eud7JNoslh8xWac9bT15sUUmGBgwMSWxfyW8A/jb7ubVOBoQv
+l0FQpevuWScbCwsNXI97l7j623a+f54Px4sEZcHI+hIKKwYBBAGXVQEFAQEH
+QLEg5FwJpuFkUcZlNwrgUL8pqm6tQP5H03kHrlEaRUZpAwEIB/4JAwhObU5t
+fQYriWAIzA7e3ZNHBa4Q2LHwxZUz3ACTwua2SXZ5OxD0Io4jFkxiTuETIOnl
+LFQzHg+VVXcdEno56hjnsqHFFB7M94bsNjIImFoNwngEGBYKACoFgmXByPoJ
+kLc30Qz6a91XApsMFiEE6Q8m5+76nNyfDKZEtzfRDPpr3VcAAAQ2AQCQOIGC
+yNzZ8VU8OLu4uKi/U/uQBUcvW5z8W/QkfMiFCwEAm35gvMJB1ScmKCFJNI0t
+PguJGsxgNW6mwkszNjYfCQY=
+=xVXK
+-----END PGP PRIVATE KEY BLOCK-----''',
+    passphrase: "4sFlJ8gesYLeYyS0cBFQ5biAZPIZyHe");
+
+UserKeys user1 = UserKeys(privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: Keybase OpenPGP v2.0.76
 Comment: https://keybase.io/crypto
 
@@ -108,18 +132,9 @@ tP2clyG9teSWEPzkFey7k7FM032v9MbW32t76E3DTe4FifRsf7krGRvEa3+ZddOX
 rCZjXwO/XGnIduMxvmnJ66VyqlQTYtt1L4YsFRysfkWrCC2kMwKyY/ziLql5MZHV
 81hM+A==
 =tMIn
------END PGP PRIVATE KEY BLOCK-----''';
-      String message = "Hello Proton Crypto!";
-      String passphrase = "hellopgp";
-      String armor =
-          encrypt(userPrivateKey.toNativeUtf8(), message.toNativeUtf8());
-      String decryptMessage = decrypt(userPrivateKey.toNativeUtf8(),
-          passphrase.toNativeUtf8(), armor.toNativeUtf8());
-      expect(decryptMessage, equals(message));
-    });
+-----END PGP PRIVATE KEY BLOCK-----''', passphrase: "hellopgp");
 
-    test('encrypt decrypt case 2', () async {
-      String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+UserKeys user2 = UserKeys(privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 
 xYYEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKS
 ObqnhO8lmx7+CQMIylIrAYAm2CTgEg659zXzpjkiKKZy7K/JuNkR2C/vTB5K
@@ -135,9 +150,462 @@ FgoAKgWCZbIlGQmQ82mcIewHU/ACmwwWIQTBvJGQGEVi/FbNLqDzaZwh7AdT
 8AAA9zsBANZH8j8OL7VsYbFE/+E8vN+Hra9iRFO5dP3b8G9BCPydAP46V4hM
 DeYE4U0ks7cI9VPmeImOYBNcTOZIqIA2hEniBg==
 =/tHc
------END PGP PRIVATE KEY BLOCK-----''';
+-----END PGP PRIVATE KEY BLOCK-----''', passphrase: "12345678");
+
+void main() {
+  if (Platform.isLinux) {
+    return;
+  }
+  group('Proton Crypto functions', () {
+    test('binary encryption & decryption case 1', () async {
+      Uint8List origin = Uint8List.fromList([
+        239,
+        203,
+        93,
+        93,
+        253,
+        145,
+        50,
+        82,
+        227,
+        145,
+        154,
+        177,
+        206,
+        86,
+        83,
+        32,
+        251,
+        160,
+        160,
+        29,
+        164,
+        144,
+        177,
+        101,
+        205,
+        128,
+        169,
+        38,
+        59,
+        33,
+        146,
+        218
+      ]);
+      Uint8List encryptBinaryArmor =
+          proton_crypto.encryptBinaryArmor(protonWallet.privateKey, origin);
+      Uint8List result = proton_crypto.decryptBinary(
+          protonWallet.privateKey, protonWallet.passphrase, encryptBinaryArmor);
+      expect(result, equals(origin));
+    });
+
+    test('binary decryption case 2', () async {
+      Uint8List origin = Uint8List.fromList([
+        239,
+        203,
+        93,
+        93,
+        253,
+        145,
+        50,
+        82,
+        227,
+        145,
+        154,
+        177,
+        206,
+        86,
+        83,
+        32,
+        251,
+        160,
+        160,
+        29,
+        164,
+        144,
+        177,
+        101,
+        205,
+        128,
+        169,
+        38,
+        59,
+        33,
+        146,
+        218
+      ]);
+      Uint8List encryptedBinary = Uint8List.fromList([
+        193,
+        94,
+        3,
+        244,
+        235,
+        160,
+        246,
+        244,
+        245,
+        221,
+        113,
+        18,
+        1,
+        7,
+        64,
+        22,
+        214,
+        162,
+        11,
+        26,
+        181,
+        249,
+        56,
+        92,
+        97,
+        7,
+        128,
+        223,
+        100,
+        248,
+        18,
+        178,
+        207,
+        81,
+        159,
+        25,
+        19,
+        170,
+        0,
+        101,
+        211,
+        206,
+        77,
+        221,
+        115,
+        196,
+        121,
+        48,
+        250,
+        109,
+        229,
+        105,
+        64,
+        127,
+        59,
+        226,
+        80,
+        32,
+        162,
+        175,
+        225,
+        90,
+        105,
+        27,
+        134,
+        49,
+        158,
+        218,
+        157,
+        46,
+        88,
+        215,
+        143,
+        169,
+        153,
+        193,
+        193,
+        216,
+        42,
+        47,
+        204,
+        248,
+        104,
+        32,
+        93,
+        246,
+        144,
+        45,
+        217,
+        186,
+        156,
+        252,
+        72,
+        63,
+        160,
+        176,
+        210,
+        192,
+        23,
+        1,
+        208,
+        177,
+        99,
+        227,
+        40,
+        211,
+        59,
+        183,
+        147,
+        160,
+        70,
+        242,
+        28,
+        3,
+        113,
+        219,
+        103,
+        0,
+        35,
+        38,
+        179,
+        123,
+        67,
+        202,
+        109,
+        116,
+        208,
+        188,
+        191,
+        17,
+        214,
+        220,
+        2,
+        22,
+        218,
+        77,
+        89,
+        110,
+        92,
+        218,
+        251,
+        23,
+        51,
+        80,
+        89,
+        123,
+        60,
+        254,
+        141,
+        159,
+        55,
+        239,
+        174,
+        46,
+        90,
+        30,
+        216,
+        18,
+        182,
+        231,
+        109,
+        113,
+        7,
+        141,
+        53,
+        233,
+        27,
+        117,
+        102,
+        174,
+        59,
+        163,
+        106,
+        60,
+        155,
+        167,
+        205,
+        17,
+        248,
+        35,
+        176,
+        194,
+        123,
+        18,
+        229,
+        160,
+        85,
+        78,
+        217,
+        17,
+        156,
+        130,
+        235,
+        24,
+        155,
+        158,
+        176,
+        194,
+        87,
+        54,
+        207,
+        90,
+        95,
+        210,
+        17,
+        210,
+        71,
+        220,
+        8,
+        130,
+        125,
+        21,
+        97,
+        166,
+        114,
+        29,
+        79,
+        144,
+        180,
+        159,
+        49,
+        80,
+        112,
+        8,
+        171,
+        136,
+        127,
+        252,
+        2,
+        137,
+        163,
+        173,
+        154,
+        78,
+        23,
+        218,
+        135,
+        155,
+        72,
+        228,
+        69,
+        65,
+        194,
+        144,
+        254,
+        6,
+        90,
+        153,
+        76,
+        16,
+        139,
+        5,
+        130,
+        119,
+        154,
+        109,
+        71,
+        200,
+        122,
+        87,
+        246,
+        112,
+        72,
+        223,
+        156,
+        160,
+        59,
+        173,
+        252,
+        101,
+        214,
+        11,
+        194,
+        107,
+        76,
+        7,
+        164,
+        19,
+        69,
+        16,
+        127,
+        172,
+        17,
+        66,
+        177,
+        19,
+        92,
+        145,
+        22,
+        200,
+        237,
+        167,
+        108,
+        59,
+        129,
+        133,
+        112,
+        35,
+        96,
+        134,
+        221,
+        143,
+        132,
+        151,
+        32,
+        222,
+        249,
+        224,
+        185,
+        139,
+        6,
+        81,
+        142,
+        186
+      ]);
+      Uint8List result = proton_crypto.decryptBinary(
+          protonWallet.privateKey, protonWallet.passphrase, encryptedBinary);
+      expect(result, equals(origin));
+    });
+
+    test('binary encryption & decryption case 3', () async {
+      Uint8List origin = Uint8List.fromList([
+        239,
+        203,
+        93,
+        93,
+        253,
+        145,
+        50,
+        82,
+        227,
+        145,
+        154,
+        177,
+        206,
+        86,
+        83,
+        32,
+        251,
+        160,
+        160,
+        29,
+        164,
+        144,
+        177,
+        101,
+        205,
+        128,
+        169,
+        38,
+        59,
+        33,
+        146,
+        218
+      ]);
+      String encodedEncryptedEntropy = "wV4D9Oug9vT13XESAQdAFtaiCxq1+ThcYQeA32T4ErLPUZ8ZE6oAZdPOTd1zxHkw+m3laUB/O+JQIKKv4VppG4YxntqdLljXj6mZwcHYKi/M+GggXfaQLdm6nPxIP6Cw0sAXAdCxY+Mo0zu3k6BG8hwDcdtnACMms3tDym100Ly/EdbcAhbaTVluXNr7FzNQWXs8/o2fN++uLloe2BK2521xB4016Rt1Zq47o2o8m6fNEfgjsMJ7EuWgVU7ZEZyC6xibnrDCVzbPWl/SEdJH3AiCfRVhpnIdT5C0nzFQcAiriH/8AomjrZpOF9qHm0jkRUHCkP4GWplMEIsFgneabUfIelf2cEjfnKA7rfxl1gvCa0wHpBNFEH+sEUKxE1yRFsjtp2w7gYVwI2CG3Y+ElyDe+eC5iwZRjro=";
+      Uint8List result = proton_crypto.decryptBinary(
+          protonWallet.privateKey, protonWallet.passphrase, base64Decode(encodedEncryptedEntropy));
+      expect(result, equals(origin));
+    });
+
+    test('encrypt decrypt case 1', () async {
+      String message = "Hello Proton Crypto!";
+      String armor = proton_crypto.encrypt(user1.privateKey, message);
+      String decryptMessage =
+          proton_crypto.decrypt(user1.privateKey, user1.passphrase, armor);
+      expect(decryptMessage, equals(message));
+    });
+
+    test('encrypt decrypt case 2', () async {
       String message = "Test message 2";
-      String passphrase = "12345678";
       String armor = '''-----BEGIN PGP MESSAGE-----
 
 wV4D6Ur1q/PBrZ4SAQdApm8uzokGXqEx6ZdyAjpAnkTokFEVtX/HfEEEAY8o
@@ -146,8 +614,8 @@ EjOJpeHY0j8B14q+E3Ci5XKAVQiX3hSmN/tiq8fKXx0WIxTl8W9C4GxbCH4Z
 S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
 =Md5n
 -----END PGP MESSAGE-----''';
-      String decryptMessage = decrypt(userPrivateKey.toNativeUtf8(),
-          passphrase.toNativeUtf8(), armor.toNativeUtf8());
+      String decryptMessage =
+          proton_crypto.decrypt(user2.privateKey, user2.passphrase, armor);
       expect(decryptMessage, equals(message));
     });
   });

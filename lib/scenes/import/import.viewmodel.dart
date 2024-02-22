@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
-import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:proton_crypto/proton_crypto.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:uuid/uuid.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -68,7 +67,7 @@ class ImportViewModelImpl extends ImportViewModel {
         id: null,
         userID: 0,
         name: nameTextController.text,
-        mnemonic: utf8.encode(await WalletKeyHelper.encrypt(
+        mnemonic: base64Decode(await WalletKeyHelper.encrypt(
             secretKey, mnemonicTextController.text)),
         // TO-DO: need encrypt
         passphrase: 0,
@@ -81,7 +80,7 @@ class ImportViewModelImpl extends ImportViewModel {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         localDBName: const Uuid().v4().replaceAll('-', ''),
         serverWalletID: "");
-
+    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     // TODO:: send correct wallet key instead of mock one
     CreateWalletReq walletReq = CreateWalletReq(
         name: wallet.name,
@@ -89,11 +88,10 @@ class ImportViewModelImpl extends ImportViewModel {
         type: wallet.type,
         hasPassphrase: wallet.passphrase,
         userKeyId: APIHelper.userKeyID,
-        walletKey: base64Encode(utf8.encode(encrypt(
-            userPrivateKey.toNativeUtf8(),
-            utf8.decode(await secretKey.extractBytes()).toNativeUtf8()))),
-        mnemonic: base64Encode(utf8.encode(await WalletKeyHelper.encrypt(
-            secretKey, mnemonicTextController.text))));
+        walletKey: base64Encode(proton_crypto.encryptBinaryArmor(userPrivateKey,
+            entropy)),
+        mnemonic: await WalletKeyHelper.encrypt(
+            secretKey, mnemonicTextController.text));
     WalletData walletData = await proton_api.createWallet(walletReq: walletReq);
 
     // TODO:: send correct wallet key instead of mock one
@@ -103,8 +101,8 @@ class ImportViewModelImpl extends ImportViewModel {
           wallet.serverWalletID, passphraseTextController.text);
     }
     CreateWalletAccountReq req = CreateWalletAccountReq(
-        label: base64Encode(utf8.encode(
-            await WalletKeyHelper.encrypt(secretKey, "Default Account"))),
+        label:
+            await WalletKeyHelper.encrypt(secretKey, "Default Account"),
         derivationPath: "m/84'/1'/0'",
         scriptType: ScriptType.nativeSegWit.index);
     WalletAccount walletAccount = await proton_api.createWalletAccount(
