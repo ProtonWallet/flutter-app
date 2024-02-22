@@ -14,9 +14,6 @@ fn persist_proton_api(id: String, proton_api: ProtonAPIService) {
 }
 
 pub(crate) struct ProtonAPIService {
-    //session renew need to connect to cache
-    // app_spec: AppSpec,
-    // auth_store: WalletAuthStore,
     session: Session,
 }
 

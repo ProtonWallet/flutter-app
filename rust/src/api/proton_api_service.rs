@@ -16,7 +16,16 @@ impl ProtonAPIService {
     pub async fn init_api_service(user_name: String, password: String) {
         // create a global proton api service
         let mut api = andromeda_api::ProtonWalletApiClient::default();
-        api.login(&user_name, &password).await.unwrap();
+        let response = api.login(&user_name, &password).await;
+        match response {
+            Ok(_) => {
+                // store the api service in the global state
+                // store the user_name and password in the global state
+            },
+            Err(err) => {
+                println!("Error: {:?}", err);
+            }
+        }
     }
 
     pub fn read_text(&self) -> String {

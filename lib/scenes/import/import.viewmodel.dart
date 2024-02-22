@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:uuid/uuid.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -88,8 +87,8 @@ class ImportViewModelImpl extends ImportViewModel {
         type: wallet.type,
         hasPassphrase: wallet.passphrase,
         userKeyId: APIHelper.userKeyID,
-        walletKey: base64Encode(proton_crypto.encryptBinaryArmor(userPrivateKey,
-            entropy)),
+        walletKey: base64Encode(
+            proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
         fingerprint: "12345678", // TODO:: send correct fingerprint
         mnemonic: await WalletKeyHelper.encrypt(
             secretKey, mnemonicTextController.text));
@@ -101,8 +100,7 @@ class ImportViewModelImpl extends ImportViewModel {
           wallet.serverWalletID, passphraseTextController.text);
     }
     CreateWalletAccountReq req = CreateWalletAccountReq(
-        label:
-            await WalletKeyHelper.encrypt(secretKey, "Default Account"),
+        label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
         derivationPath: "m/84'/1'/0'",
         scriptType: ScriptType.nativeSegWit.index);
     WalletAccount walletAccount = await proton_api.createWalletAccount(
