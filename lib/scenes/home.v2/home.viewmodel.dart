@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
-import 'package:ffi/ffi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:proton_crypto/proton_crypto.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -179,8 +178,8 @@ EjOJpeHY0j8B14q+E3Ci5XKAVQiX3hSmN/tiq8fKXx0WIxTl8W9C4GxbCH4Z
 S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
 =Md5n
 -----END PGP MESSAGE-----''';
-    String decryptMessage = decrypt(userPrivateKey.toNativeUtf8(),
-        passphrase.toNativeUtf8(), armor.toNativeUtf8());
+    String decryptMessage =
+        proton_crypto.decrypt(userPrivateKey, passphrase, armor);
     return decryptMessage;
   }
 
@@ -199,17 +198,15 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
         logger.i(
             "Wallet Key mismatch: \nuserKeyID from login response:$userKeyID\nuserKeyID from API response:${walletData.walletKey.userKeyId}");
       }
-      String encryptWalletKey = "";
-      String decryptWalletKey = "";
+      String encodedEncryptedEntropy = "";
+      Uint8List entropy = Uint8List(0);
       try {
-        encryptWalletKey =
-            utf8.decode(base64Decode(walletData.walletKey.walletKey));
-        decryptWalletKey = decrypt(userPrivateKey.toNativeUtf8(),
-            userPassphrase.toNativeUtf8(), encryptWalletKey.toNativeUtf8());
+        encodedEncryptedEntropy = walletData.walletKey.walletKey;
+        entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase, base64Decode(encodedEncryptedEntropy));
       } catch (e) {
         logger.i(e.toString());
       }
-      SecretKey secretKey = SecretKey(utf8.encode(decryptWalletKey));
+      SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
       if (walletModel == null) {
         DateTime now = DateTime.now();
         WalletModel wallet = WalletModel(
@@ -221,7 +218,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
             publicKey: Uint8List(0),
             imported: walletData.wallet.isImported,
             priority: walletData.wallet.priority,
-            status: decryptWalletKey.isNotEmpty
+            status: entropy.isNotEmpty
                 ? walletData.wallet.status
                 : WalletModel.statusDisabled,
             type: walletData.wallet.type,
@@ -230,7 +227,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
             localDBName: const Uuid().v4().replaceAll('-', ''),
             serverWalletID: walletData.wallet.id);
         int walletID = await DBHelper.walletDao!.insert(wallet);
-        if (decryptWalletKey.isNotEmpty) {
+        if (entropy.isNotEmpty) {
           await WalletManager.setWalletKey(walletID,
               secretKey); // need to set key first, so that we can decrypt for walletAccount
           List<WalletAccount> walletAccounts = await proton_api
@@ -248,7 +245,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
           }
         }
       } else {
-        if (decryptWalletKey.isNotEmpty) {
+        if (entropy.isNotEmpty) {
           List<String> existingAccountIDs = [];
           List<WalletAccount> walletAccounts = await proton_api
               .getWalletAccounts(walletId: walletData.wallet.id);

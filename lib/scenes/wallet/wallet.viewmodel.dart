@@ -122,10 +122,9 @@ class WalletViewModelImpl extends WalletViewModel {
       WalletAccount _ = await proton_api.updateWalletAccountLabel(
           walletId: walletModel.serverWalletID,
           walletAccountId: accountModel.serverAccountID,
-          newLabel: base64Encode(utf8
-              .encode(await WalletKeyHelper.encrypt(secretKey!, newLabel))));
+          newLabel: await WalletKeyHelper.encrypt(secretKey!, newLabel));
       accountModel.label =
-          utf8.encode(await WalletKeyHelper.encrypt(secretKey!, newLabel));
+          base64Decode(await WalletKeyHelper.encrypt(secretKey!, newLabel));
       accountModel.labelDecrypt = newLabel;
       await DBHelper.accountDao!.update(accountModel);
       await loadData();
