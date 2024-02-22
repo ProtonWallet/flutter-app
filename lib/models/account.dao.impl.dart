@@ -14,6 +14,8 @@ abstract class AccountDao extends BaseDao {
   Future<int> getAccountCount(int walletID);
 
   Future deleteAccountsNotInServers(int walletID, List<String> serverAccountIDs);
+
+  Future deleteAccountsByWalletID(int walletID);
 }
 
 class AccountDaoImpl extends AccountDao {
@@ -22,6 +24,11 @@ class AccountDaoImpl extends AccountDao {
   @override
   Future<void> delete(int id) async {
     await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<void> deleteAccountsByWalletID(int walletID) async {
+    await db.delete(tableName, where: 'walletID = ?', whereArgs: [walletID]);
   }
 
   @override

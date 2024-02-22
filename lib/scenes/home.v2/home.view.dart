@@ -9,6 +9,7 @@ import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -20,6 +21,7 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.newsbox.dart';
 import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/helper/user.session.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class HomeView extends ViewBase<HomeViewModel> {
   HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
@@ -280,6 +282,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 GestureDetector(
                                                     onTap: () {
                                                       showWalletMoreDialog(
+                                                          viewModel,
+                                                          wallet,
                                                           context,
                                                           expired: wallet
                                                                   .status ==
@@ -581,7 +585,9 @@ class HomeView extends ViewBase<HomeViewModel> {
   }
 }
 
-void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
+void showWalletMoreDialog(
+    HomeViewModel viewModel, WalletModel walletModel, BuildContext context,
+    {bool expired = false}) {
   showModalBottomSheet(
     context: context,
     constraints: BoxConstraints(
@@ -633,7 +639,15 @@ void showWalletMoreDialog(BuildContext context, {bool expired = false}) {
                         title: Text(S.of(context).delete_wallet,
                             style: FontManager.body2Regular(
                                 Theme.of(context).colorScheme.primary)),
-                        onTap: () {},
+                        onTap: () async {
+                          await proton_api.deleteWallet(
+                              walletId: walletModel.serverWalletID);
+                          await WalletManager.deleteWallet(walletModel.id!);
+                          if (context.mounted) {
+                            LocalToast.showToast(context, "Wallet deleted!");
+                            Navigator.of(context).pop();
+                          }
+                        },
                       ),
                     ],
                   )

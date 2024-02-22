@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
@@ -15,13 +14,12 @@ void main() {
       String encodedEntropy =
           await WalletKeyHelper.getEncodedEntropy(secretKeyOrg);
       String plainText = "Hello world";
-      String encryptText = base64Encode(
-          utf8.encode(await WalletKeyHelper.encrypt(secretKeyOrg, plainText)));
+      String encryptText = await WalletKeyHelper.encrypt(secretKeyOrg, plainText);
 
       SecretKey secretKeyNew =
           WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(encodedEntropy);
       String decryptText = await WalletKeyHelper.decrypt(
-          secretKeyNew, utf8.decode(base64Decode(encryptText)));
+          secretKeyNew, encryptText);
       expect(decryptText, equals(plainText));
     });
 
@@ -30,7 +28,7 @@ void main() {
       String encryptText =
           "dTb2Z1bsWkpo2TTCWOK09tanO3n5Ipepbj5WlCRZSuvlkEAxfePeUBCu4Qo6";
       SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(
-          "2b48dff46c3a7f2bd661e5a379ca40dd");
+          "MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=");
       String decryptText =
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plainText));
