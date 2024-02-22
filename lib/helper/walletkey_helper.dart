@@ -9,59 +9,18 @@ class WalletKeyHelper {
     return secretKey;
   }
 
-  static Uint8List mockKeysEntropy() {
-    return Uint8List.fromList([
-      239,
-      203,
-      93,
-      93,
-      253,
-      145,
-      50,
-      82,
-      227,
-      145,
-      154,
-      177,
-      206,
-      86,
-      83,
-      32,
-      251,
-      160,
-      160,
-      29,
-      164,
-      144,
-      177,
-      101,
-      205,
-      128,
-      169,
-      38,
-      59,
-      33,
-      146,
-      218
-    ]);
-  }
-
-  static List<int> mockIV(){
-    return [138, 168, 89, 85, 141, 143, 120, 250, 36, 179, 21, 3];
-  }
-
   static Uint8List getRandomValues(int length) {
     Random random = Random();
     List<int> bytes = List<int>.generate(length, (_) => random.nextInt(256));
     return Uint8List.fromList(bytes);
   }
 
-  static Future<String> secretKeyAsString(SecretKey secretKey) async {
-    return String.fromCharCodes(await secretKey.extractBytes());
+  static Future<String> getEncodedEntropy(SecretKey secretKey) async {
+    return base64Encode(await secretKey.extractBytes());
   }
 
-  static restoreSecretKeyFromString(String secretKeyStr) {
-    return SecretKey(secretKeyStr.codeUnits);
+  static restoreSecretKeyFromEncodedEntropy(String encodedEntropy) {
+    return SecretKey(base64Decode(encodedEntropy));
   }
 
   static restoreSecretKeyFromEntropy(Uint8List entropy) {
