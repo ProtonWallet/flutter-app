@@ -224,6 +224,7 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
                 ? walletData.wallet.status
                 : WalletModel.statusDisabled,
             type: walletData.wallet.type,
+            fingerprint: walletData.wallet.fingerprint,
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,
             serverWalletID: walletData.wallet.id);
