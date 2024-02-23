@@ -18,7 +18,7 @@ class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
   static String dbFolder = "databases";
   static String dbName = "proton_wallet_db";
-  int version = 3;
+  int version = 4;
   late Database db;
   late MigrationContainer migrationContainer;
 
@@ -33,6 +33,9 @@ class AppDatabase
     }),
     Migration(2, 3, (Database db) async {
       TransactionDatabase.migration_0.migrate(db);
+    }),
+    Migration(3, 4, (Database db) async {
+      WalletDatabase.migration_1.migrate(db);
     }),
   ];
 
