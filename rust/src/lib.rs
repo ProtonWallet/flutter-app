@@ -3,5 +3,6 @@ pub mod api;
 mod bdk;
 mod proton_api;
 mod ldk;
+mod bdk_common;
 mod utilities;
 pub use andromeda_api::wallet::CreateWalletAccountRequestBody;
