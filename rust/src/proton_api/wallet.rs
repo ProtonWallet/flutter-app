@@ -13,6 +13,7 @@ pub struct ProtonWallet {
     pub public_key: Option<String>,
     pub status: u8,
     pub r#type: u8,
+    pub fingerprint: Option<String>,
 }
 impl From<Wallet> for ProtonWallet {
     fn from(wallet: Wallet) -> Self {
@@ -26,6 +27,7 @@ impl From<Wallet> for ProtonWallet {
             public_key: wallet.PublicKey,
             status: wallet.Status,
             r#type: wallet.Type,
+            fingerprint: wallet.Fingerprint
         }
     }
 }

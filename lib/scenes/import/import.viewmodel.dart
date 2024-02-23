@@ -76,6 +76,7 @@ class ImportViewModelImpl extends ImportViewModel {
         priority: WalletModel.primary,
         status: WalletModel.statusActive,
         type: WalletModel.typeOnChain,
+        fingerprint: null, // TODO:: get fingerprint with bdk
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         serverWalletID: "");

@@ -3900,6 +3900,7 @@ impl SseDecode for crate::proton_api::wallet::ProtonWallet {
         let mut var_publicKey = <Option<String>>::sse_decode(deserializer);
         let mut var_status = <u8>::sse_decode(deserializer);
         let mut var_type = <u8>::sse_decode(deserializer);
+        let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         return crate::proton_api::wallet::ProtonWallet {
             id: var_id,
             has_passphrase: var_hasPassphrase,
@@ -3910,6 +3911,7 @@ impl SseDecode for crate::proton_api::wallet::ProtonWallet {
             public_key: var_publicKey,
             status: var_status,
             r#type: var_type,
+            fingerprint: var_fingerprint,
         };
     }
 }
@@ -4869,6 +4871,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::ProtonWallet {
             self.public_key.into_into_dart().into_dart(),
             self.status.into_into_dart().into_dart(),
             self.r#type.into_into_dart().into_dart(),
+            self.fingerprint.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -5900,6 +5903,7 @@ impl SseEncode for crate::proton_api::wallet::ProtonWallet {
         <Option<String>>::sse_encode(self.public_key, serializer);
         <u8>::sse_encode(self.status, serializer);
         <u8>::sse_encode(self.r#type, serializer);
+        <Option<String>>::sse_encode(self.fingerprint, serializer);
     }
 }
 

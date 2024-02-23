@@ -53,6 +53,13 @@ abstract class WalletDatabase extends BaseDatabase {
     ''');
   });
 
+  static DatabaseMigration migration_2 = DatabaseMigration((Database db) async {
+    // Drop column `localDBName`
+    await db.execute('''
+        ALTER TABLE wallet ADD COLUMN fingerprint TEXT NULL;
+    ''');
+  });
+
   static void Function(Database db) dropTables = (Database db) {
     db.execute('''
       DROP TABLE IF EXISTS `wallet`
