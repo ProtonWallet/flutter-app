@@ -226,7 +226,6 @@ S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
             type: walletData.wallet.type,
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-            localDBName: const Uuid().v4().replaceAll('-', ''),
             serverWalletID: walletData.wallet.id);
         int walletID = await DBHelper.walletDao!.insert(wallet);
         if (entropy.isNotEmpty) {

@@ -675,7 +675,15 @@ void showWalletMoreDialog(
                           title: Text(S.of(context).delete_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
-                          onTap: () {},
+                          onTap: () async {
+                            await proton_api.deleteWallet(
+                                walletId: walletModel.serverWalletID);
+                            await WalletManager.deleteWallet(walletModel.id!);
+                            if (context.mounted) {
+                              LocalToast.showToast(context, "Wallet deleted!");
+                              Navigator.of(context).pop();
+                            }
+                          },
                         )
                       ])
           ],
