@@ -87,7 +87,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                                   margin: const EdgeInsets.only(right: 50.0),
                                   child: Text(
                                     viewModel.initialed
-                                        ? viewModel.walletModel.localDBName
+                                        ? viewModel.walletModel.serverWalletID
                                             .substring(0, 20)
                                         : "",
                                     style: const TextStyle(

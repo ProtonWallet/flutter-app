@@ -78,7 +78,6 @@ class ImportViewModelImpl extends ImportViewModel {
         type: WalletModel.typeOnChain,
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        localDBName: const Uuid().v4().replaceAll('-', ''),
         serverWalletID: "");
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
 

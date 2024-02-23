@@ -24,7 +24,6 @@ class WalletModel {
   int type;
   int createTime;
   int modifyTime;
-  String localDBName;
 
   // optional
   int accountCount = 0;
@@ -45,7 +44,6 @@ class WalletModel {
       required this.type,
       required this.createTime,
       required this.modifyTime,
-      required this.localDBName,
       required this.serverWalletID});
 
   Map<String, dynamic> toMap() {
@@ -62,7 +60,6 @@ class WalletModel {
       'type': type,
       'createTime': createTime,
       'modifyTime': modifyTime,
-      'localDBName': localDBName,
       'serverWalletID': serverWalletID,
     };
   }
@@ -81,7 +78,6 @@ class WalletModel {
       type: map['type'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
-      localDBName: map['localDBName'],
       serverWalletID: map['serverWalletID'] ?? "",
     );
   }
