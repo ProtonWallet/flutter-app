@@ -97,6 +97,7 @@ pub struct CreateWalletReq {
     // "<base64_encoded_publickey>"
     // Encrypted wallet public key with the WalletKey, in base64 format
     pub public_key: Option<String>,
+    
     pub fingerprint: Option<String>,
 }
 
