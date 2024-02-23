@@ -22,6 +22,11 @@ Future<WalletData> createWallet(
         {required CreateWalletReq walletReq, dynamic hint}) =>
     RustLib.instance.api.createWallet(walletReq: walletReq, hint: hint);
 
+Future<ProtonWallet> updateWalletName(
+        {required String walletId, required String newName, dynamic hint}) =>
+    RustLib.instance.api
+        .updateWalletName(walletId: walletId, newName: newName, hint: hint);
+
 Future<void> deleteWallet({required String walletId, dynamic hint}) =>
     RustLib.instance.api.deleteWallet(walletId: walletId, hint: hint);
 
