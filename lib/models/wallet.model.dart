@@ -30,6 +30,7 @@ class WalletModel {
   double balance = 0;
 
   String serverWalletID;
+  String? fingerprint;
 
   WalletModel(
       {required this.id,
@@ -42,6 +43,7 @@ class WalletModel {
       required this.priority,
       required this.status,
       required this.type,
+      required this.fingerprint,
       required this.createTime,
       required this.modifyTime,
       required this.serverWalletID});
@@ -58,6 +60,7 @@ class WalletModel {
       'priority': priority,
       'status': status,
       'type': type,
+      'fingerprint': fingerprint,
       'createTime': createTime,
       'modifyTime': modifyTime,
       'serverWalletID': serverWalletID,
@@ -76,6 +79,7 @@ class WalletModel {
       priority: map['priority'],
       status: map['status'],
       type: map['type'],
+      fingerprint: map['fingerprint'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
       serverWalletID: map['serverWalletID'] ?? "",

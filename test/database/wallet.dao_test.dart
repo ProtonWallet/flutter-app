@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:uuid/uuid.dart';
 import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
 
@@ -29,6 +28,7 @@ Future<void> main() async {
           priority: WalletModel.primary,
           status: WalletModel.statusActive,
           type: WalletModel.typeOnChain,
+          fingerprint: "12345678",
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverWalletID: ""));
@@ -44,6 +44,7 @@ Future<void> main() async {
           priority: WalletModel.primary,
           status: WalletModel.statusDisabled,
           type: WalletModel.typeOnChain,
+          fingerprint: "22222222",
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverWalletID: ""));
@@ -62,6 +63,7 @@ Future<void> main() async {
       expect(results?[0].priority, WalletModel.primary);
       expect(results?[0].status, WalletModel.statusActive);
       expect(results?[0].type, WalletModel.typeOnChain);
+      expect(results?[0].fingerprint, "12345678");
       expect(results?[0].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results?[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
 
@@ -73,6 +75,7 @@ Future<void> main() async {
       expect(results?[1].priority, WalletModel.primary);
       expect(results?[1].status, WalletModel.statusDisabled);
       expect(results?[1].type, WalletModel.typeOnChain);
+      expect(results?[1].fingerprint, "22222222");
       expect(results?[1].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results?[1].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -88,6 +91,7 @@ Future<void> main() async {
       expect(walletModel.priority, WalletModel.primary);
       expect(walletModel.status, WalletModel.statusDisabled);
       expect(walletModel.type, WalletModel.typeOnChain);
+      expect(walletModel.fingerprint, "22222222");
       expect(walletModel.createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(walletModel.modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -108,6 +112,7 @@ Future<void> main() async {
       expect(results?[0].priority, WalletModel.primary);
       expect(results?[0].status, WalletModel.statusDisabled);
       expect(results?[0].type, WalletModel.typeOnChain);
+      expect(results?[0].fingerprint, "22222222");
       expect(results?[0].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results?[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -124,6 +129,7 @@ Future<void> main() async {
           priority: WalletModel.primary,
           status: WalletModel.statusDisabled,
           type: WalletModel.typeOnChain,
+          fingerprint: null,
           createTime: now.millisecondsSinceEpoch ~/ 1000 + 9487949,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000 - 87653,
           serverWalletID: ""));
@@ -136,6 +142,7 @@ Future<void> main() async {
       expect(walletModel.priority, WalletModel.primary);
       expect(walletModel.status, WalletModel.statusDisabled);
       expect(walletModel.type, WalletModel.typeOnChain);
+      expect(walletModel.fingerprint, null);
       expect(
           walletModel.createTime, now.millisecondsSinceEpoch ~/ 1000 + 9487949);
       expect(

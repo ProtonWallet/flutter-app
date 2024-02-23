@@ -68,6 +68,7 @@ class ProtonWallet {
   final String? publicKey;
   final int status;
   final int type;
+  final String? fingerprint;
 
   const ProtonWallet({
     required this.id,
@@ -79,6 +80,7 @@ class ProtonWallet {
     this.publicKey,
     required this.status,
     required this.type,
+    this.fingerprint,
   });
 
   @override
@@ -91,7 +93,8 @@ class ProtonWallet {
       priority.hashCode ^
       publicKey.hashCode ^
       status.hashCode ^
-      type.hashCode;
+      type.hashCode ^
+      fingerprint.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -106,7 +109,8 @@ class ProtonWallet {
           priority == other.priority &&
           publicKey == other.publicKey &&
           status == other.status &&
-          type == other.type;
+          type == other.type &&
+          fingerprint == other.fingerprint;
 }
 
 class ProtonWalletKey {

@@ -3591,8 +3591,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonWallet dco_decode_proton_wallet(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return ProtonWallet(
       id: dco_decode_String(arr[0]),
       hasPassphrase: dco_decode_u_8(arr[1]),
@@ -3603,6 +3603,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       publicKey: dco_decode_opt_String(arr[6]),
       status: dco_decode_u_8(arr[7]),
       type: dco_decode_u_8(arr[8]),
+      fingerprint: dco_decode_opt_String(arr[9]),
     );
   }
 
@@ -4703,6 +4704,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_publicKey = sse_decode_opt_String(deserializer);
     var var_status = sse_decode_u_8(deserializer);
     var var_type = sse_decode_u_8(deserializer);
+    var var_fingerprint = sse_decode_opt_String(deserializer);
     return ProtonWallet(
         id: var_id,
         hasPassphrase: var_hasPassphrase,
@@ -4712,7 +4714,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         priority: var_priority,
         publicKey: var_publicKey,
         status: var_status,
-        type: var_type);
+        type: var_type,
+        fingerprint: var_fingerprint);
   }
 
   @protected
@@ -5691,6 +5694,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.publicKey, serializer);
     sse_encode_u_8(self.status, serializer);
     sse_encode_u_8(self.type, serializer);
+    sse_encode_opt_String(self.fingerprint, serializer);
   }
 
   @protected
