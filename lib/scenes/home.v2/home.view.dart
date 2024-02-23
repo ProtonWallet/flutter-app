@@ -660,7 +660,14 @@ void showWalletMoreDialog(
                           title: Text(S.of(context).rename_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
-                          onTap: () {},
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return showUpdateWalletNameDialog(
+                                      context, viewModel, walletModel);
+                                });
+                          },
                         ),
                         ListTile(
                           leading:
@@ -690,6 +697,44 @@ void showWalletMoreDialog(
         ),
       );
     },
+  );
+}
+
+Widget showUpdateWalletNameDialog(
+    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+  TextEditingController textEditingController = TextEditingController();
+  textEditingController.text = walletModel.name;
+  return AlertDialog(
+    title: Text(S.of(context).update_wallet_name),
+    content: TextField(
+      decoration: InputDecoration(
+        hintText: S.of(context).your_new_wallet_name_here,
+      ),
+      controller: textEditingController,
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(S.of(context).cancel),
+      ),
+      TextButton(
+        onPressed: () async {
+          await proton_api.updateWalletName(
+              walletId: walletModel.serverWalletID,
+              newName: textEditingController.text);
+          walletModel.name = textEditingController.text;
+          await DBHelper.walletDao!.update(walletModel);
+          if (context.mounted) {
+            viewModel.forceReloadWallet = true;
+            LocalToast.showToast(context, "Wallet renamed!");
+            Navigator.of(context).pop();
+          }
+        },
+        child: Text(S.of(context).submit),
+      ),
+    ],
   );
 }
 
