@@ -169,13 +169,13 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         userKeyId: APIHelper.userKeyID,
         walletKey: base64Encode(
             proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
+        fingerprint: "12345678", // TODO:: send correct fingerprint
         mnemonic: await WalletKeyHelper.encrypt(secretKey, strMnemonic));
 
     try {
       WalletData walletData =
           await proton_api.createWallet(walletReq: walletReq);
 
-      // TODO:: send correct wallet key instead of mock one
       wallet.serverWalletID = walletData.wallet.id;
       if (passphraseTextController.text != "") {
         await SecureStorageHelper.set(

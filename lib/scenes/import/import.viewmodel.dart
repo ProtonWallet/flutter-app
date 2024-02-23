@@ -81,7 +81,7 @@ class ImportViewModelImpl extends ImportViewModel {
         localDBName: const Uuid().v4().replaceAll('-', ''),
         serverWalletID: "");
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-    // TODO:: send correct wallet key instead of mock one
+
     CreateWalletReq walletReq = CreateWalletReq(
         name: wallet.name,
         isImported: wallet.imported,
@@ -90,11 +90,11 @@ class ImportViewModelImpl extends ImportViewModel {
         userKeyId: APIHelper.userKeyID,
         walletKey: base64Encode(proton_crypto.encryptBinaryArmor(userPrivateKey,
             entropy)),
+        fingerprint: "12345678", // TODO:: send correct fingerprint
         mnemonic: await WalletKeyHelper.encrypt(
             secretKey, mnemonicTextController.text));
     WalletData walletData = await proton_api.createWallet(walletReq: walletReq);
 
-    // TODO:: send correct wallet key instead of mock one
     wallet.serverWalletID = walletData.wallet.id;
     if (passphraseTextController.text != "") {
       await SecureStorageHelper.set(
