@@ -67,9 +67,9 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         userInfo["userMail"] ?? "ProtonWallet@proton.black",
         userInfo["userName"] ?? "ProtonWallet",
         userInfo["userDisplayName"] ?? "ProtonWallet",
-        userInfo["sessionId"] ?? "6vqdjv7wo4eth7znqomh3mm33ndkyibu",
-        userInfo["accessToken"] ?? "4t65yuux7h4pq7zbbfqst5ss52hap7ed",
-        userInfo["refreshToken"] ?? "36anap6ij6rnwwmfdw5jvjsjb4trwbl4",
+        userInfo["sessionId"] ?? "pkjgxebzpgdeyeksokpipddbck3grij6",
+        userInfo["accessToken"] ?? "2k5g2moktwrolyo4bvug3rqxzej6jfge",
+        userInfo["refreshToken"] ?? "5p5shsj77okrd5wzskikwbpj7ljl7sy7",
         userInfo["userKeyID"] ??
             "tFiIeutJ52NsS8DN3lIExFV1mbg8_prfetgeerv-wsxoAJMqibBO373Pft0ZQQ1XF9qKPo-EaWjYijYNUoU9pQ==",
         userInfo["userPrivateKey"] ??

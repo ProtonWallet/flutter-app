@@ -25,9 +25,9 @@ class WalletManager {
     final aliceDescriptor = await _lib.createDerivedDescriptor(
         mnemonic, derivationPath,
         passphrase: passphrase);
-    String dbName = await getLocalDBNameWithID(walletID);
-    dbName +=
-        "_${derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_')}";
+    String derivationPathClean =
+        derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
+    String dbName = "${walletModel.serverWalletID}_$derivationPathClean";
     wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
     return wallet;
   }
@@ -90,15 +90,6 @@ class WalletManager {
     return accountModel.labelDecrypt;
   }
 
-  static Future<String> getLocalDBNameWithID(int walletID) async {
-    String dbName = "";
-
-    WalletModel walletRecord =
-        await await DBHelper.walletDao!.findById(walletID);
-    dbName = walletRecord.localDBName;
-    return dbName;
-  }
-
   static Future<String> getNameWithID(int walletID) async {
     String name = "Default Name";
     if (walletID == 0) {
@@ -123,7 +114,8 @@ class WalletManager {
 
   static Future<SecretKey?> getWalletKey(int walletID) async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    String keyPath = "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
+    String keyPath =
+        "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
     SecretKey secretKey;
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
@@ -136,7 +128,8 @@ class WalletManager {
 
   static Future<void> setWalletKey(int walletID, SecretKey secretKey) async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    String keyPath = "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
+    String keyPath =
+        "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
       encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
