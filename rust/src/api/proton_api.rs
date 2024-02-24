@@ -6,7 +6,7 @@ use lazy_static::lazy_static;
 
 use crate::proton_api::{
     errors::ApiError,
-    wallet::{CreateWalletReq, WalletData},
+    wallet::{CreateWalletReq, ProtonWallet, WalletData},
     wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
 
@@ -36,6 +36,21 @@ pub async fn get_wallets() -> Result<Vec<WalletData>, ApiError> {
 pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api.wallet.create_wallet(wallet_req.into()).await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn update_wallet_name(
+    wallet_id: String,
+    new_name: String,
+) -> Result<ProtonWallet, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .update_wallet_name(wallet_id, new_name)
+        .await;
     match result {
         Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),
