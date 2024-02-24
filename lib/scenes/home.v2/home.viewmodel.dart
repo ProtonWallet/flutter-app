@@ -53,6 +53,7 @@ abstract class HomeViewModel extends ViewModel {
 
   @override
   bool get keepAlive => true;
+  bool forceReloadWallet = false;
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -93,9 +94,10 @@ class HomeViewModelImpl extends HomeViewModel {
         totalAccount_ += walletModel.accountCount;
       }
       if (results.length != userWallets.length ||
-          totalAccount != totalAccount_) {
+          totalAccount != totalAccount_ || forceReloadWallet) {
         userWallets = results;
         totalAccount = totalAccount_;
+        forceReloadWallet = false;
       }
     });
     datasourceChangedStreamController.sink.add(this);
