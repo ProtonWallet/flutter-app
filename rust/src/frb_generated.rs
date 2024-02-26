@@ -4129,11 +4129,13 @@ impl SseDecode for crate::proton_api::wallet_account::WalletAccount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_walletId = <String>::sse_decode(deserializer);
         let mut var_derivationPath = <String>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
         return crate::proton_api::wallet_account::WalletAccount {
             id: var_id,
+            wallet_id: var_walletId,
             derivation_path: var_derivationPath,
             label: var_label,
             script_type: var_scriptType,
@@ -5109,6 +5111,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet_account::Wallet
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.id.into_into_dart().into_dart(),
+            self.wallet_id.into_into_dart().into_dart(),
             self.derivation_path.into_into_dart().into_dart(),
             self.label.into_into_dart().into_dart(),
             self.script_type.into_into_dart().into_dart(),
@@ -6079,6 +6082,7 @@ impl SseEncode for crate::proton_api::wallet_account::WalletAccount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.wallet_id, serializer);
         <String>::sse_encode(self.derivation_path, serializer);
         <String>::sse_encode(self.label, serializer);
         <u8>::sse_encode(self.script_type, serializer);
