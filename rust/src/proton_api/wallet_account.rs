@@ -33,6 +33,7 @@ impl From<CreateWalletAccountRequestBody> for CreateWalletAccountReq {
 #[derive(Debug)]
 pub struct WalletAccount {
     pub id: String,
+    pub wallet_id: String,
     pub derivation_path: String,
     pub label: String,
     pub script_type: u8,
@@ -44,6 +45,7 @@ impl From<WalletAccount> for Account {
             DerivationPath: wallet_account.derivation_path,
             Label: wallet_account.label,
             ScriptType: wallet_account.script_type,
+            WalletID: wallet_account.wallet_id,
         }
     }
 }
@@ -55,6 +57,7 @@ impl From<Account> for WalletAccount {
             label: account.Label,
             // This cast is generally safe since u8 can fit into i32
             script_type: account.ScriptType,
+            wallet_id: account.WalletID,
         }
     }
 }
