@@ -59,11 +59,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         itemBuilder: (context, index) {
           return TransactionListTitle(
             width: MediaQuery.of(context).size.width - 80,
-            address: viewModel.getAmount(index) == -600
-                ? "eric@proton.me"
-                : viewModel.getAmount(index) == -559
-                    ? "peter.smith@proton.me"
-                    : "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
+            address: "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
             coin: "Sat",
             amount: (viewModel.getAmount(index)).toDouble(),
             notional: CurrencyHelper.sat2usdt(
