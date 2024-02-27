@@ -27,7 +27,7 @@ class WalletManager {
         passphrase: passphrase);
     String derivationPathClean =
         derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
-    String dbName = "${walletModel.serverWalletID}_$derivationPathClean";
+    String dbName = "${walletModel.serverWalletID}_${derivationPathClean}_${passphrase.isNotEmpty}";
     wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
     return wallet;
   }

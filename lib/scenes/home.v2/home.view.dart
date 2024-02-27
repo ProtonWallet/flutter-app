@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/alert.warning.dart';
+import 'package:wallet/components/custom.fullpage.loading.dart';
 import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
@@ -76,7 +77,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                         Text(
-                            "Welcome ${Provider.of<UserSessionProvider>(context).userSession.userName} 👋",
+                            "${S.of(context).welcome} ${Provider.of<UserSessionProvider>(context).userSession.userName} 👋",
                             style: FontManager.body1Bold(ProtonColors.white)),
                         const SizedBox(height: 10),
                         Padding(
@@ -215,8 +216,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                               onTap: () {
                                 if (wallet.status ==
                                     WalletModel.statusDisabled) {
-                                  LocalToast.showErrorToast(context,
-                                      "Decryption error: your key had reset.");
+                                  LocalToast.showErrorToast(
+                                      context,
+                                      S
+                                          .of(context)
+                                          .wallet_decryption_error_message);
                                 } else {
                                   viewModel.setSelectedWallet(wallet.id ?? 0);
                                   viewModel.coordinator
@@ -467,20 +471,6 @@ class HomeView extends ViewBase<HomeViewModel> {
             height: 10,
           ),
           ButtonV5(
-              onPressed: () {
-                LocalToast.showToast(context, viewModel.gopenpgpTest());
-              },
-              text: "gopenpgp test",
-              width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
-              height: 48),
-          const SizedBox(
-            height: 10,
-          ),
-          ButtonV5(
               onPressed: () async {
                 viewModel.fetchWallets();
               },
@@ -522,23 +512,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                 }
               },
               text: "Secure Storage",
-              width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
-              height: 48),
-          const SizedBox(
-            height: 10,
-          ),
-          ButtonV5(
-              onPressed: () async {
-                await SecureStorageHelper.deleteAll();
-                if (context.mounted) {
-                  LocalToast.showToast(context, "Deleted!");
-                }
-              },
-              text: "Clear Secure Storage",
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: Theme.of(context).colorScheme.surface,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
@@ -615,21 +588,22 @@ void showWalletMoreDialog(
                           alignment: Alignment.center,
                           child: AlertWarning(
                               content:
-                                  "Decryption error\nDecryption of this wallet's encrypted content failed.",
+                                  S.of(context).wallet_decryption_error_message,
                               width: MediaQuery.of(context).size.width - 30)),
                       const SizedBox(
                         height: 5,
                       ),
                       ListTile(
                         leading: const Icon(Icons.lock_open, size: 18),
-                        title: Text("Decrypt with your old password",
+                        title: Text(
+                            S.of(context).wallet_recover_with_old_password,
                             style: FontManager.body2Regular(
                                 Theme.of(context).colorScheme.primary)),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.import_export, size: 18),
-                        title: Text("Recover with your mnemonic",
+                        title: Text(S.of(context).wallet_recover_with_mnemonic,
                             style: FontManager.body2Regular(
                                 Theme.of(context).colorScheme.primary)),
                         onTap: () {},
@@ -639,14 +613,13 @@ void showWalletMoreDialog(
                         title: Text(S.of(context).delete_wallet,
                             style: FontManager.body2Regular(
                                 Theme.of(context).colorScheme.primary)),
-                        onTap: () async {
-                          await proton_api.deleteWallet(
-                              walletId: walletModel.serverWalletID);
-                          await WalletManager.deleteWallet(walletModel.id!);
+                        onTap: () {
                           if (context.mounted) {
-                            LocalToast.showToast(context, "Wallet deleted!");
                             Navigator.of(context).pop();
                           }
+                          viewModel.setSelectedWallet(walletModel.id ?? 0);
+                          viewModel.coordinator
+                              .move(ViewIdentifiers.walletDeletion, context);
                         },
                       ),
                     ],
@@ -655,6 +628,20 @@ void showWalletMoreDialog(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                        ListTile(
+                          leading: const Icon(Icons.key, size: 18),
+                          title: Text(S.of(context).set_passphrase,
+                              style: FontManager.body2Regular(
+                                  Theme.of(context).colorScheme.primary)),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return showUpdateWalletPassphraseDialog(
+                                      context, viewModel, walletModel);
+                                });
+                          },
+                        ),
                         ListTile(
                           leading: const Icon(Icons.edit, size: 18),
                           title: Text(S.of(context).rename_wallet,
@@ -675,7 +662,15 @@ void showWalletMoreDialog(
                           title: Text(S.of(context).backup_wallet,
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
-                          onTap: () {},
+                          onTap: () async {
+                            Clipboard.setData(ClipboardData(
+                                    text: await WalletManager.getMnemonicWithID(
+                                        walletModel.id!)))
+                                .then((_) {
+                              LocalToast.showToast(
+                                  context, S.of(context).copied_mnemonic);
+                            });
+                          },
                         ),
                         ListTile(
                           leading: const Icon(Icons.delete, size: 18),
@@ -683,13 +678,12 @@ void showWalletMoreDialog(
                               style: FontManager.body2Regular(
                                   Theme.of(context).colorScheme.primary)),
                           onTap: () async {
-                            await proton_api.deleteWallet(
-                                walletId: walletModel.serverWalletID);
-                            await WalletManager.deleteWallet(walletModel.id!);
                             if (context.mounted) {
-                              LocalToast.showToast(context, "Wallet deleted!");
                               Navigator.of(context).pop();
                             }
+                            viewModel.setSelectedWallet(walletModel.id ?? 0);
+                            viewModel.coordinator
+                                .move(ViewIdentifiers.walletDeletion, context);
                           },
                         )
                       ])
@@ -721,15 +715,61 @@ Widget showUpdateWalletNameDialog(
       ),
       TextButton(
         onPressed: () async {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const CustomFullpageLoading();
+            },
+          );
           await proton_api.updateWalletName(
               walletId: walletModel.serverWalletID,
               newName: textEditingController.text);
           walletModel.name = textEditingController.text;
           await DBHelper.walletDao!.update(walletModel);
+          viewModel.forceReloadWallet = true;
           if (context.mounted) {
-            viewModel.forceReloadWallet = true;
-            LocalToast.showToast(context, "Wallet renamed!");
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // pop progressing overlay
+            Navigator.of(context).pop(); // pop current dialog
+          }
+        },
+        child: Text(S.of(context).submit),
+      ),
+    ],
+  );
+}
+
+Widget showUpdateWalletPassphraseDialog(
+    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+  TextEditingController textEditingController = TextEditingController();
+  textEditingController.text = "";
+  return AlertDialog(
+    title: Text(S.of(context).set_passphrase),
+    content: TextField(
+      controller: textEditingController,
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(S.of(context).cancel),
+      ),
+      TextButton(
+        onPressed: () async {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const CustomFullpageLoading();
+            },
+          );
+          await SecureStorageHelper.set(
+              walletModel.serverWalletID, textEditingController.text);
+          viewModel.forceReloadWallet = true;
+          if (context.mounted) {
+            Navigator.of(context).pop(); // pop progressing overlay
+            Navigator.of(context).pop(); // pop current dialog
           }
         },
         child: Text(S.of(context).submit),

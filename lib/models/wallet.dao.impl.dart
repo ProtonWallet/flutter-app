@@ -6,7 +6,9 @@ abstract class WalletDao extends BaseDao {
   WalletDao(super.db, super.tableName);
 
   Future<int> counts();
-  Future<WalletModel?> findByServerWalletId(String serverWalletID);
+  Future<WalletModel?> getWalletByServerWalletID(String serverWalletID);
+
+  Future<WalletModel?> getFirstPriorityWallet();
 }
 
 class WalletDaoImpl extends WalletDao {
@@ -19,7 +21,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    List<Map<String, dynamic>> maps = await db.query(tableName, orderBy: 'priority asc');
     return List.generate(
         maps.length, (index) => WalletModel.fromMap(maps[index]));
   }
@@ -37,9 +39,20 @@ class WalletDaoImpl extends WalletDao {
 
 
   @override
-  Future<WalletModel?> findByServerWalletId(String serverWalletID) async {
+  Future<WalletModel?> getWalletByServerWalletID(String serverWalletID) async {
     List<Map<String, dynamic>> maps =
     await db.query(tableName, where: 'serverWalletID = ?', whereArgs: [serverWalletID]);
+    if (maps.isNotEmpty) {
+      return WalletModel.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<WalletModel?> getFirstPriorityWallet() async {
+    List<Map<String, dynamic>> maps =
+    await db.query(tableName, where: 'status = ?', whereArgs: [WalletModel.statusActive], orderBy: 'priority asc', limit: 1);
     if (maps.isNotEmpty) {
       return WalletModel.fromMap(maps.first);
     } else {
