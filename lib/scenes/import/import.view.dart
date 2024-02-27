@@ -47,7 +47,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Text(
-                        "Wallet Name",
+                        S.of(context).wallet_name,
                         style: FontManager.captionMedian(
                             Theme.of(context).colorScheme.primary),
                         textAlign: TextAlign.left,

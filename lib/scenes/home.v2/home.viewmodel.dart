@@ -45,8 +45,6 @@ abstract class HomeViewModel extends ViewModel {
 
   void setSelectedWallet(int walletID);
 
-  String gopenpgpTest();
-
   int unconfirmed = 0;
   int totalAccount = 0;
   int confirmed = 0;
@@ -148,50 +146,13 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  String gopenpgpTest() {
-    // var sum = native_add.sum(1, 2);
-
-    // logger.i('sum: $sum');
-
-    String userPrivateKey = '''-----BEGIN PGP PRIVATE KEY BLOCK-----
-
-xYYEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKS
-ObqnhO8lmx7+CQMIylIrAYAm2CTgEg659zXzpjkiKKZy7K/JuNkR2C/vTB5K
-CpwWcEFVolPUBGnogZ2FXFbsaT+X4bhtjh3BvzCcZE98w8JCtDmuuO6RVSBV
-6c0Zd2lsbCA8d2lsbC5oc3VAcHJvdG9uLmNoPsKMBBAWCgA+BYJlsiUZBAsJ
-BwgJkPNpnCHsB1PwAxUICgQWAAIBAhkBApsDAh4BFiEEwbyRkBhFYvxWzS6g
-82mcIewHU/AAAPr/AQCYc0O+oIb5TgeRDbHIJTNbqziYbCWgyuxBh8tP4YRw
-ugEA2zsKx03i8SHf5D/Vp1gTFcxjd29UEcXsrliNuSmoSwDHiwRlsiUZEgor
-BgEEAZdVAQUBAQdAH6YJuedrpyBVOb40Nj+ptgoErSY1O4SL75Kj15HyIXcD
-AQgH/gkDCJb3DUJaU++C4Kfqo+7C0EyL7hLP8259PlWlQHO11Z1ZrQQKgjET
-LqlQAB80U19xsSzFZbmZ+MH6fZNwniysGCCBDglgS87JRnbk2OO7lZXCeAQY
-FgoAKgWCZbIlGQmQ82mcIewHU/ACmwwWIQTBvJGQGEVi/FbNLqDzaZwh7AdT
-8AAA9zsBANZH8j8OL7VsYbFE/+E8vN+Hra9iRFO5dP3b8G9BCPydAP46V4hM
-DeYE4U0ks7cI9VPmeImOYBNcTOZIqIA2hEniBg==
-=/tHc
------END PGP PRIVATE KEY BLOCK-----''';
-    String passphrase = "12345678";
-    String armor = '''-----BEGIN PGP MESSAGE-----
-
-wV4D6Ur1q/PBrZ4SAQdApm8uzokGXqEx6ZdyAjpAnkTokFEVtX/HfEEEAY8o
-fXsw7silZoz8i8ADeCIoltn9yxeAWFmNuIiVn/W0NS8Tq2X179OQR/J/K2zj
-EjOJpeHY0j8B14q+E3Ci5XKAVQiX3hSmN/tiq8fKXx0WIxTl8W9C4GxbCH4Z
-S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
-=Md5n
------END PGP MESSAGE-----''';
-    String decryptMessage =
-        proton_crypto.decrypt(userPrivateKey, passphrase, armor);
-    return decryptMessage;
-  }
-
-  @override
   Future<void> fetchWallets() async {
     isFetching = true;
     // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
     List<WalletData> wallets = await proton_api.getWallets();
     for (WalletData walletData in wallets.reversed) {
       WalletModel? walletModel =
-          await DBHelper.walletDao!.findByServerWalletId(walletData.wallet.id);
+          await DBHelper.walletDao!.getWalletByServerWalletID(walletData.wallet.id);
       String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
       String userKeyID = await SecureStorageHelper.get("userKeyID");
       String userPassphrase = await SecureStorageHelper.get("userPassphrase");

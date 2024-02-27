@@ -12,6 +12,7 @@
   "tab_home": "Home",
   "tab_history": "History",
   "tab_settings": "Settings",
+  "welcome": "Welcome",
   "welcome_to": "Welcome to",
   "@welcome_to": {
     "description": "The welcome message"
@@ -102,6 +103,7 @@
   "your_new_label_here": "Your new label here",
   "update_label": "Update Account Label",
   "your_new_wallet_name_here": "Your new name here",
+  "wallet_name": "Wallet Name",
   "update_wallet_name": "Update Wallet Name",
   "update_account": "Update Account",
   "delete_account": "Delete Account",
@@ -212,11 +214,12 @@
   "add_amount": "Add amount",
   "receive_address": "Receive Address",
   "share_button": "Share",
-
-
-
+  "set_passphrase": "Set passphrase",
+  "wallet_recover_with_old_password": "Decrypt with your old password",
+  "wallet_recover_with_mnemonic": "Recover with your mnemonic",
+  "wallet_decryption_error_message": "Decryption error\nDecryption of this wallet's encrypted content failed.",
   "end_line_ingore_translation": "",
-  "@end_line_ingore_translation" : {
-    "description": "l10n_nightly: this is the end line mark" 
+  "@end_line_ingore_translation": {
+    "description": "l10n_nightly: this is the end line mark"
   }
 }
