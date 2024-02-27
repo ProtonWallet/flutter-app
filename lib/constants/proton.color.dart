@@ -4,7 +4,6 @@ class ProtonColors {
   static const Color interactionNorm = Color(0xFF6D4AFF);
   static const Color white = Colors.white;
   static const Color clear = Colors.transparent;
-  // static const Color textNorm1 = Color.fromARGB(255, 18, 18, 170);
   static const Color textNorm = Color(0xFF0C0C14);
   static const Color textWeak = Color(0xFFB3A3F5);
   static const Color textHint = Color(0xFF999693);
@@ -14,24 +13,12 @@ class ProtonColors {
   static const Color backgroundSecondary = Color(0xFFF5F4F2);
   static const Color backgroundProton = Color(0xFFECE8FF);
   static const Color alertWaning = Color(0xFFF78400);
-  static const Color alertWaningBackground = Color.fromARGB(26, 255, 153, 0);
+  static const Color alertWaningBackground = Color(0x19FF9900);
   static const Color signalSuccess = Color(0xFF1EA885);
   static const Color signalError = Color(0xFFE32B6D);
   static const Color accentSlateblue = Color(0xFF415DF0);
   static const Color mailIntegrationBox = Color(0xFFEDEAFB);
 
-
-
-  static const Color surfaceLight = Color.fromARGB(255, 251, 251, 251);
-  static const Color surfaceTagText = Color.fromARGB(255, 239, 239, 239);
-
-  static Color calculateInverseColor(Color color) {
-    Color inverseColor = Color.fromARGB(
-      255,
-      255 - color.red,
-      255 - color.green,
-      255 - color.blue,
-    );
-    return inverseColor;
-  }
+  static const Color surfaceLight = Color(0xFFFBFBFB);
+  static const Color surfaceTagText = Color(0xFFFEFEFE);
 }
