@@ -16,5 +16,5 @@ void main() async {
   await DBHelper.init();
   SecureStorageHelper.init();
   await RustLib.init();
-  runApp(await AppCoordinator().startWithNewUser());
+  runApp(AppCoordinator().start());
 }

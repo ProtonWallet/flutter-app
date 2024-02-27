@@ -1,13 +1,17 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/custom.fullpage.loading.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/deletion/deletion.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
   WalletDeletionView(WalletDeletionViewModel viewModel)
@@ -42,10 +46,6 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                     color: ProtonColors.signalError,
                     size: 80,
                   ),
-                  // child: SvgPicture.asset(
-                  //   'assets/images/wallet_creation/passphrase_icon.svg',
-                  //   fit: BoxFit.contain,
-                  // ),
                 )),
           ),
           AppBar(
@@ -66,7 +66,9 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
               currentPage: 0,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
-              title: S.of(context).confirm_to_delete,
+              title: viewModel.walletModel != null
+                  ? "${S.of(context).confirm_to_delete} \"${viewModel.walletModel!.name}\""
+                  : S.of(context).confirm_to_delete,
               content: S.of(context).please_backup_mnemonic_before_delete_,
               children: [
                 ButtonV5(
@@ -80,11 +82,18 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                 SizedBoxes.box12,
                 ButtonV5(
                   onPressed: () async {
+                    if (viewModel.walletModel == null) {
+                      return;
+                    }
+                    showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return const CustomFullpageLoading();
+                        });
                     await viewModel.deleteWallet();
+                    viewModel.coordinator.end();
                     if (context.mounted) {
-                      LocalToast.showToast(
-                          context, S.of(context).wallet_deleted);
-                      viewModel.coordinator.end();
                       Navigator.of(context).popUntil((route) {
                         if (route.settings.name == null) {
                           return false;

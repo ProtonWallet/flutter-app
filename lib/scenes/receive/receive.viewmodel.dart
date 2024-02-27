@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
@@ -37,15 +38,20 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> loadData() async {
-    _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
+    if (walletID == 0) {
+      WalletModel? walletModel =
+          await DBHelper.walletDao!.getFirstPriorityWallet();
+      if (walletModel != null) {
+        walletID = walletModel.id!;
+      } else {
+        return;
+      }
+    }
     await DBHelper.walletDao!.findAll().then((results) async {
       if (results.length != userWallets.length) {
-        userWallets = results.take(5).toList();
+        userWallets = results;
       }
     });
-    if (walletID == 0) {
-      walletID = userWallets.first.id;
-    }
     for (var element in userWallets) {
       if (element.id == walletID) {
         valueNotifier = ValueNotifier(element);
@@ -61,6 +67,10 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<void> updateAccountList() async {
     userAccounts =
         await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
+    if (userAccounts.isEmpty){
+      return;
+    }
+    accountID = accountID == 0 ? userAccounts.first.id! : accountID;
     valueNotifierForAccount = ValueNotifier(userAccounts.first);
     valueNotifierForAccount.addListener(() {
       getAddress();

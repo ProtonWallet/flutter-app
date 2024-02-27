@@ -4,14 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class WalletDeletionViewModel extends ViewModel {
   WalletDeletionViewModel(super.coordinator, this.walletID);
 
   int walletID;
-
+  WalletModel? walletModel;
   bool hasSaveMnemonic = false;
 
   void copyMnemonic(BuildContext context);
@@ -31,6 +33,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
 
   @override
   Future<void> loadData() async {
+    walletModel = await DBHelper.walletDao!.findById(walletID);
     datasourceChangedStreamController.add(this);
   }
 
@@ -47,7 +50,9 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
 
   @override
   Future<void> deleteWallet() async {
-    await DBHelper.walletDao!.delete(walletID);
+    await proton_api.deleteWallet(
+        walletId: walletModel!.serverWalletID);
+    await WalletManager.deleteWallet(walletModel!.id!);
   }
 
   @override

@@ -256,9 +256,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
                   TagText(
-                      text: viewModel.address.startsWith("a1bb1fdd95")
-                          ? "eric@proton.me"
-                          : viewModel.address)
+                      text: viewModel.address)
                 ])),
       ],
     );
