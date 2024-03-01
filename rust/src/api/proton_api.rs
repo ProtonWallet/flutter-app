@@ -17,7 +17,10 @@ lazy_static! {
 // build functions
 pub async fn init_api_service(user_name: String, password: String) {
     // create a global proton api service
-    let mut api = ProtonWalletApiClient::from_version("android-wallet@1.0.0-dev".to_string(), "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string());
+    let mut api = ProtonWalletApiClient::from_version(
+        "android-wallet@1.0.0-dev".to_string(),
+        "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
+    );
     api.login(&user_name, &password).await.unwrap();
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(Arc::new(api));
@@ -26,7 +29,8 @@ pub async fn init_api_service(user_name: String, password: String) {
 // wallets
 pub async fn get_wallets() -> Result<Vec<WalletData>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result: Result<Vec<andromeda_api::wallet::WalletData>, andromeda_api::error::Error> = proton_api.wallet.get_wallets().await;
+    let result: Result<Vec<andromeda_api::wallet::ApiWalletData>, andromeda_api::error::Error> =
+        proton_api.wallet.get_wallets().await;
     match result {
         Ok(response) => Ok(response.into_iter().map(|w| w.into()).collect()),
         Err(err) => Err(err.into()),

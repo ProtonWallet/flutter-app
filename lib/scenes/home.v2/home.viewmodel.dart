@@ -74,7 +74,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> loadData() async {
     await proton_api.initApiService(
-        userName: 'ProtonWallet', password: '11111111');
+        userName: 'ProtonWallet', password: 'qwer1234');
     blockchain ??= await _lib.initializeBlockchain(false);
     hasWallet = await WalletManager.hasAccount();
     datasourceChangedStreamController.sink.add(this);
