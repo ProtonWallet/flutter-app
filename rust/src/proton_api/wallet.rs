@@ -1,4 +1,4 @@
-use andromeda_api::wallet::{CreateWalletRequestBody, Wallet, WalletKey};
+use andromeda_api::wallet::{ApiWallet, ApiWalletKey, CreateWalletRequestBody};
 
 use super::wallet_settings::WalletSettings;
 
@@ -15,8 +15,8 @@ pub struct ProtonWallet {
     pub r#type: u8,
     pub fingerprint: Option<String>,
 }
-impl From<Wallet> for ProtonWallet {
-    fn from(wallet: Wallet) -> Self {
+impl From<ApiWallet> for ProtonWallet {
+    fn from(wallet: ApiWallet) -> Self {
         ProtonWallet {
             id: wallet.ID,
             has_passphrase: wallet.HasPassphrase,
@@ -27,7 +27,7 @@ impl From<Wallet> for ProtonWallet {
             public_key: wallet.PublicKey,
             status: wallet.Status,
             r#type: wallet.Type,
-            fingerprint: wallet.Fingerprint
+            fingerprint: wallet.Fingerprint,
         }
     }
 }
@@ -37,8 +37,8 @@ pub struct ProtonWalletKey {
     pub user_key_id: String,
     pub wallet_key: String,
 }
-impl From<WalletKey> for ProtonWalletKey {
-    fn from(wallet_key: WalletKey) -> Self {
+impl From<ApiWalletKey> for ProtonWalletKey {
+    fn from(wallet_key: ApiWalletKey) -> Self {
         ProtonWalletKey {
             user_key_id: wallet_key.UserKeyID,
             wallet_key: wallet_key.WalletKey,
@@ -52,8 +52,8 @@ pub struct WalletData {
     pub wallet_key: ProtonWalletKey,
     pub wallet_settings: WalletSettings,
 }
-impl From<andromeda_api::wallet::WalletData> for WalletData {
-    fn from(wallet_data: andromeda_api::wallet::WalletData) -> Self {
+impl From<andromeda_api::wallet::ApiWalletData> for WalletData {
+    fn from(wallet_data: andromeda_api::wallet::ApiWalletData) -> Self {
         WalletData {
             wallet: wallet_data.Wallet.into(),
             wallet_key: wallet_data.WalletKey.into(),
@@ -65,14 +65,14 @@ impl From<andromeda_api::wallet::WalletData> for WalletData {
 // #[derive(Debug, Deserialize)]
 // pub struct WalletsResponse {
 //     pub Code: i32,
-//     pub Wallets: Vec<WalletData>,
+//     pub Wallets: Vec<ApiWalletData>,
 // }
 
 // #[derive(Debug, Deserialize)]
 // pub struct CreateWalletResponse {
 //     pub Code: i32,
-//     pub Wallet: ProtonWallet,
-//     pub WalletKey: ProtonWalletKey,
+//     pub ApiWallet: ProtonWallet,
+//     pub ApiWalletKey: ProtonWalletKey,
 //     pub WalletSettings: WalletSettings,
 //     // Error: Option<String>,
 // }
@@ -81,7 +81,7 @@ impl From<andromeda_api::wallet::WalletData> for WalletData {
 pub struct CreateWalletReq {
     // Name of the wallet
     pub name: String,
-    // 0 if the wallet is created with Proton Wallet
+    // 0 if the wallet is created with Proton ApiWallet
     pub is_imported: u8,
     // Enum: 1 2
     pub r#type: u8,
@@ -92,12 +92,12 @@ pub struct CreateWalletReq {
     // Base64 encoded binary data
     pub wallet_key: String,
     // "<base64_encoded_mnemonic>",
-    // Encrypted wallet mnemonic with the WalletKey, in base64 format
+    // Encrypted wallet mnemonic with the ApiWalletKey, in base64 format
     pub mnemonic: Option<String>,
     // "<base64_encoded_publickey>"
-    // Encrypted wallet public key with the WalletKey, in base64 format
+    // Encrypted wallet public key with the ApiWalletKey, in base64 format
     pub public_key: Option<String>,
-    
+
     pub fingerprint: Option<String>,
 }
 
@@ -172,7 +172,7 @@ impl From<CreateWalletReq> for CreateWalletRequestBody {
 //                 Type: 1,
 //                 HasPassphrase: 0,
 //                 UserKeyId: "base64 user key ID".into(),
-//                 WalletKey: "base64 wallet key".into(),
+//                 ApiWalletKey: "base64 wallet key".into(),
 //                 Mnemonic: Some("".into()), //not null
 //                 PublicKey: Option::None,
 //             })

@@ -69,21 +69,10 @@ class BdkLibrary {
   }
 
   Future<Blockchain> initializeBlockchain(bool isElectrumBlockchain) async {
-    if (Platform.isAndroid) {
-      final blockchain = await Blockchain.createElectrum(
-          config: const ElectrumConfig(
-              stopGap: 10,
-              timeout: 5,
-              retry: 5,
-              url: "ssl://electrum.blockstream.info:60002",
-              validateDomain: true));
-      return blockchain;
-    } else {
-      final blockchain = await Blockchain.create(
-          config: const EsploraConfig(
-              baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
-      return blockchain;
-    }
+    final blockchain = await Blockchain.create(
+        config: const EsploraConfig(
+            baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
+    return blockchain;
     //   final blockchain = await Blockchain.create(
     //       config: const BlockchainConfig.electrum(
     //           config: ElectrumConfig(
