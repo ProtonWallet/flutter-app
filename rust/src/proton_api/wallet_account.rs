@@ -1,4 +1,4 @@
-use andromeda_api::wallet::{Account, CreateWalletAccountRequestBody};
+use andromeda_api::wallet::{ApiWalletAccount, CreateWalletAccountRequestBody};
 
 #[derive(Debug)]
 pub struct CreateWalletAccountReq {
@@ -33,28 +33,31 @@ impl From<CreateWalletAccountRequestBody> for CreateWalletAccountReq {
 #[derive(Debug)]
 pub struct WalletAccount {
     pub id: String,
+    pub wallet_id: String,
     pub derivation_path: String,
     pub label: String,
     pub script_type: u8,
 }
-impl From<WalletAccount> for Account {
+impl From<WalletAccount> for ApiWalletAccount {
     fn from(wallet_account: WalletAccount) -> Self {
-        Account {
+        ApiWalletAccount {
             ID: wallet_account.id,
             DerivationPath: wallet_account.derivation_path,
             Label: wallet_account.label,
             ScriptType: wallet_account.script_type,
+            WalletID: wallet_account.wallet_id,
         }
     }
 }
-impl From<Account> for WalletAccount {
-    fn from(account: Account) -> Self {
+impl From<ApiWalletAccount> for WalletAccount {
+    fn from(account: ApiWalletAccount) -> Self {
         WalletAccount {
             id: account.ID,
             derivation_path: account.DerivationPath,
             label: account.Label,
             // This cast is generally safe since u8 can fit into i32
             script_type: account.ScriptType,
+            wallet_id: account.WalletID,
         }
     }
 }
@@ -68,7 +71,7 @@ pub struct WalletAccountsResponse {
 #[derive(Debug)]
 pub struct WalletAccountResponse {
     pub Code: i32,
-    pub Account: WalletAccount,
+    pub ApiWalletAccount: WalletAccount,
     // Error: Option<String>,
 }
 

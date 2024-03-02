@@ -3857,13 +3857,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletAccount dco_decode_wallet_account(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return WalletAccount(
       id: dco_decode_String(arr[0]),
-      derivationPath: dco_decode_String(arr[1]),
-      label: dco_decode_String(arr[2]),
-      scriptType: dco_decode_u_8(arr[3]),
+      walletId: dco_decode_String(arr[1]),
+      derivationPath: dco_decode_String(arr[2]),
+      label: dco_decode_String(arr[3]),
+      scriptType: dco_decode_u_8(arr[4]),
     );
   }
 
@@ -4936,11 +4937,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletAccount sse_decode_wallet_account(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
+    var var_walletId = sse_decode_String(deserializer);
     var var_derivationPath = sse_decode_String(deserializer);
     var var_label = sse_decode_String(deserializer);
     var var_scriptType = sse_decode_u_8(deserializer);
     return WalletAccount(
         id: var_id,
+        walletId: var_walletId,
         derivationPath: var_derivationPath,
         label: var_label,
         scriptType: var_scriptType);
@@ -5881,6 +5884,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_wallet_account(WalletAccount self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.id, serializer);
+    sse_encode_String(self.walletId, serializer);
     sse_encode_String(self.derivationPath, serializer);
     sse_encode_String(self.label, serializer);
     sse_encode_u_8(self.scriptType, serializer);
