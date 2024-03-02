@@ -21,7 +21,7 @@ impl ProtonAPIService {
             Ok(_) => {
                 // store the api service in the global state
                 // store the user_name and password in the global state
-            },
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
             }

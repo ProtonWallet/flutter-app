@@ -65,9 +65,9 @@ fn wire_add_one_impl(
             let api_right = <usize>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::api2::add_one(api_left, api_right)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::api2::add_one(api_left, api_right))
+                })())
             }
         },
     )
@@ -128,7 +128,9 @@ fn wire_greet_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_name = <String>::sse_decode(&mut deserializer);
             deserializer.end();
-            transform_result_sse((move || Result::<_, ()>::Ok(crate::api::api2::greet(api_name)))())
+            transform_result_sse((move || {
+                Result::<_, ()>::Ok(crate::api::api2::greet(api_name))
+            })())
         },
     )
 }
@@ -182,8 +184,7 @@ fn wire_init_app_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| {
-                transform_result_sse((move || Result::<_, ()>::Ok(crate::api::api2::init_app()))(
-                ))
+                transform_result_sse((move || Result::<_, ()>::Ok(crate::api::api2::init_app()))())
             }
         },
     )
@@ -277,10 +278,9 @@ fn wire_create_wallet_account_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_wallet_id = <String>::sse_decode(&mut deserializer);
-            let api_req =
-                <crate::proton_api::wallet_account::CreateWalletAccountReq>::sse_decode(
-                    &mut deserializer,
-                );
+            let api_req = <crate::proton_api::wallet_account::CreateWalletAccountReq>::sse_decode(
+                &mut deserializer,
+            );
             deserializer.end();
             move |context| async move {
                 transform_result_sse(
@@ -752,9 +752,9 @@ fn wire_Api_address_network_impl(
             let api_address = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::address_network(api_address))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::address_network(api_address)
+                })())
             }
         },
     )
@@ -784,9 +784,9 @@ fn wire_Api_address_to_script_pubkey_impl(
             let api_address = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::address_to_script_pubkey(api_address))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::address_to_script_pubkey(api_address)
+                })())
             }
         },
     )
@@ -817,9 +817,9 @@ fn wire_Api_broadcast_impl(
             let api_blockchain_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::broadcast(api_tx, api_blockchain_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::broadcast(api_tx, api_blockchain_id)
+                })())
             }
         },
     )
@@ -894,9 +894,9 @@ fn wire_Api_combine_psbt_impl(
             let api_other = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::combine_psbt(api_psbt_str, api_other))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::combine_psbt(api_psbt_str, api_other)
+                })())
             }
         },
     )
@@ -926,9 +926,9 @@ fn wire_Api_create_address_impl(
             let api_address = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_address(api_address))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_address(api_address)
+                })())
             }
         },
     )
@@ -958,9 +958,9 @@ fn wire_Api_create_derivation_path_impl(
             let api_path = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_derivation_path(api_path))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_derivation_path(api_path)
+                })())
             }
         },
     )
@@ -1098,9 +1098,9 @@ fn wire_Api_create_electrum_blockchain_impl(
                 <crate::bdk::blockchain::ElectrumConfig>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_electrum_blockchain(api_config))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_electrum_blockchain(api_config)
+                })())
             }
         },
     )
@@ -1130,9 +1130,9 @@ fn wire_Api_create_esplora_blockchain_impl(
             let api_config = <crate::bdk::blockchain::EsploraConfig>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_esplora_blockchain(api_config))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_esplora_blockchain(api_config)
+                })())
             }
         },
     )
@@ -1162,9 +1162,9 @@ fn wire_Api_create_script_impl(
             let api_raw_output_script = <Vec<u8>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_script(api_raw_output_script))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_script(api_raw_output_script)
+                })())
             }
         },
     )
@@ -1194,9 +1194,9 @@ fn wire_Api_create_transaction_impl(
             let api_tx = <Vec<u8>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::create_transaction(api_tx))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::create_transaction(api_tx)
+                })())
             }
         },
     )
@@ -1269,9 +1269,9 @@ fn wire_Api_derive_descriptor_secret_impl(
             deserializer.end();
             move |context| {
                 transform_result_sse((move || {
-                    Result::<_, ()>::Ok(
-                        crate::api::rust_api::Api::derive_descriptor_secret(api_secret, api_path)
-                    )
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::derive_descriptor_secret(
+                        api_secret, api_path,
+                    ))
                 })())
             }
         },
@@ -1403,9 +1403,9 @@ fn wire_Api_descriptor_secret_as_public_impl(
             let api_secret = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::descriptor_secret_as_public(api_secret))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::descriptor_secret_as_public(api_secret)
+                })())
             }
         },
     )
@@ -1534,9 +1534,9 @@ fn wire_Api_extend_descriptor_secret_impl(
             deserializer.end();
             move |context| {
                 transform_result_sse((move || {
-                    Result::<_, ()>::Ok(
-                        crate::api::rust_api::Api::extend_descriptor_secret(api_secret, api_path)
-                    )
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::extend_descriptor_secret(
+                        api_secret, api_path,
+                    ))
                 })())
             }
         },
@@ -1548,14 +1548,31 @@ fn wire_Api_extract_tx_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "Api_extract_tx", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_psbt_str = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
-                    transform_result_sse((move ||  {
-                         crate::api::rust_api::Api::extract_tx(api_psbt_str)
-                    })())
-                } })
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Api_extract_tx",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_psbt_str = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::extract_tx(api_psbt_str)
+                })())
+            }
+        },
+    )
 }
 fn wire_Api_generate_seed_from_entropy_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -1582,9 +1599,9 @@ fn wire_Api_generate_seed_from_entropy_impl(
             let api_entropy = <Vec<u8>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::generate_seed_from_entropy(api_entropy))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::generate_seed_from_entropy(api_entropy)
+                })())
             }
         },
     )
@@ -1614,9 +1631,9 @@ fn wire_Api_generate_seed_from_string_impl(
             let api_mnemonic = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::generate_seed_from_string(api_mnemonic))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::generate_seed_from_string(api_mnemonic)
+                })())
             }
         },
     )
@@ -1647,9 +1664,9 @@ fn wire_Api_generate_seed_from_word_count_impl(
             deserializer.end();
             move |context| {
                 transform_result_sse((move || {
-                    Result::<_, ()>::Ok(
-                        crate::api::rust_api::Api::generate_seed_from_word_count(api_word_count)
-                    )
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::generate_seed_from_word_count(
+                        api_word_count,
+                    ))
                 })())
             }
         },
@@ -1714,9 +1731,9 @@ fn wire_Api_get_balance_impl(
             let api_wallet_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::get_balance(api_wallet_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::get_balance(api_wallet_id)
+                })())
             }
         },
     )
@@ -1818,9 +1835,9 @@ fn wire_Api_get_height_impl(
             let api_blockchain_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::get_height(api_blockchain_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::get_height(api_blockchain_id)
+                })())
             }
         },
     )
@@ -1961,9 +1978,9 @@ fn wire_Api_input_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::input(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::input(api_tx))
+                })())
             }
         },
     )
@@ -2090,9 +2107,9 @@ fn wire_Api_is_mine_impl(
             let api_wallet_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::is_mine(api_script, api_wallet_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::is_mine(api_script, api_wallet_id)
+                })())
             }
         },
     )
@@ -2122,9 +2139,9 @@ fn wire_Api_json_serialize_impl(
             let api_psbt_str = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::json_serialize(api_psbt_str))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::json_serialize(api_psbt_str)
+                })())
             }
         },
     )
@@ -2154,9 +2171,9 @@ fn wire_Api_list_unspent_impl(
             let api_wallet_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::list_unspent(api_wallet_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::list_unspent(api_wallet_id)
+                })())
             }
         },
     )
@@ -2186,9 +2203,9 @@ fn wire_Api_list_unspent_outputs_impl(
             let api_wallet_id = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::list_unspent_outputs(api_wallet_id))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::list_unspent_outputs(api_wallet_id)
+                })())
             }
         },
     )
@@ -2218,9 +2235,9 @@ fn wire_Api_lock_time_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::lock_time(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::lock_time(api_tx))
+                })())
             }
         },
     )
@@ -2523,9 +2540,9 @@ fn wire_Api_output_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::output(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::output(api_tx))
+                })())
             }
         },
     )
@@ -2679,9 +2696,9 @@ fn wire_Api_serialize_psbt_impl(
             let api_psbt_str = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || crate::api::rust_api::Api::serialize_psbt(api_psbt_str))()
-                )
+                transform_result_sse((move || {
+                    crate::api::rust_api::Api::serialize_psbt(api_psbt_str)
+                })())
             }
         },
     )
@@ -2778,9 +2795,9 @@ fn wire_Api_size_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::size(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::size(api_tx))
+                })())
             }
         },
     )
@@ -2939,9 +2956,9 @@ fn wire_Api_version_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::version(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::version(api_tx))
+                })())
             }
         },
     )
@@ -2971,9 +2988,9 @@ fn wire_Api_vsize_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::vsize(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::vsize(api_tx))
+                })())
             }
         },
     )
@@ -3035,9 +3052,9 @@ fn wire_Api_weight_impl(
             let api_tx = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_api::Api::weight(api_tx)))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_api::Api::weight(api_tx))
+                })())
             }
         },
     )
@@ -3066,9 +3083,9 @@ fn wire_MyTestObject_new_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| {
-                transform_result_sse(
-                    (move || Result::<_, ()>::Ok(crate::api::rust_objects::MyTestObject::new()))()
-                )
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_objects::MyTestObject::new())
+                })())
             }
         },
     )
@@ -3079,14 +3096,33 @@ fn wire_MyTestObject_read_text_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "MyTestObject_read_text", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <crate::api::rust_objects::MyTestObject>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
-                    transform_result_sse((move ||  {
-                         Result::<_,()>::Ok(crate::api::rust_objects::MyTestObject::read_text(&api_that))
-                    })())
-                } })
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "MyTestObject_read_text",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <crate::api::rust_objects::MyTestObject>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse((move || {
+                    Result::<_, ()>::Ok(crate::api::rust_objects::MyTestObject::read_text(
+                        &api_that,
+                    ))
+                })())
+            }
+        },
+    )
 }
 
 // Section: related_funcs
@@ -3107,12 +3143,11 @@ impl SseDecode for flutter_rust_bridge::for_generated::anyhow::Error {
 impl SseDecode for andromeda_api::ProtonWalletApiClient {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner =
-            <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::rust_async::RwLock<
-                    andromeda_api::ProtonWalletApiClient,
-                >,
-            >>::sse_decode(deserializer);
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::rust_async::RwLock<
+                andromeda_api::ProtonWalletApiClient,
+            >,
+        >>::sse_decode(deserializer);
         return inner.rust_auto_opaque_decode_owned();
     }
 }
@@ -3618,7 +3653,9 @@ impl SseDecode for Vec<crate::bdk::types::TransactionDetails> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::bdk::types::TransactionDetails>::sse_decode(deserializer));
+            ans_.push(<crate::bdk::types::TransactionDetails>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -3666,7 +3703,9 @@ impl SseDecode for Vec<crate::proton_api::wallet::WalletData> {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::proton_api::wallet::WalletData>::sse_decode(deserializer));
+            ans_.push(<crate::proton_api::wallet::WalletData>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -3746,7 +3785,9 @@ impl SseDecode for Option<crate::bdk::types::PsbtSigHashType> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::bdk::types::PsbtSigHashType>::sse_decode(deserializer));
+            return Some(<crate::bdk::types::PsbtSigHashType>::sse_decode(
+                deserializer,
+            ));
         } else {
             return None;
         }
@@ -3768,7 +3809,9 @@ impl SseDecode for Option<(crate::bdk::types::OutPoint, String, usize)> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<(crate::bdk::types::OutPoint, String, usize)>::sse_decode(deserializer));
+            return Some(<(crate::bdk::types::OutPoint, String, usize)>::sse_decode(
+                deserializer,
+            ));
         } else {
             return None;
         }
@@ -4129,11 +4172,13 @@ impl SseDecode for crate::proton_api::wallet_account::WalletAccount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_walletId = <String>::sse_decode(deserializer);
         let mut var_derivationPath = <String>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
         return crate::proton_api::wallet_account::WalletAccount {
             id: var_id,
+            wallet_id: var_walletId,
             derivation_path: var_derivationPath,
             label: var_label,
             script_type: var_scriptType,
@@ -4591,14 +4636,12 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::error::Error {
             crate::bdk::error::Error::OutputBelowDustLimit(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::bdk::error::Error::InsufficientFunds { needed, available } => {
-                [
-                    6.into_dart(),
-                    needed.into_into_dart().into_dart(),
-                    available.into_into_dart().into_dart(),
-                ]
-                .into_dart()
-            }
+            crate::bdk::error::Error::InsufficientFunds { needed, available } => [
+                6.into_dart(),
+                needed.into_into_dart().into_dart(),
+                available.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
             crate::bdk::error::Error::BnBTotalTriesExceeded => [7.into_dart()].into_dart(),
             crate::bdk::error::Error::BnBNoExactMatch => [8.into_dart()].into_dart(),
             crate::bdk::error::Error::UnknownUtxo => [9.into_dart()].into_dart(),
@@ -4628,14 +4671,12 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::error::Error {
             crate::bdk::error::Error::Signer(field0) => {
                 [21.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::bdk::error::Error::InvalidNetwork { requested, found } => {
-                [
-                    22.into_dart(),
-                    requested.into_into_dart().into_dart(),
-                    found.into_into_dart().into_dart(),
-                ]
-                .into_dart()
-            }
+            crate::bdk::error::Error::InvalidNetwork { requested, found } => [
+                22.into_dart(),
+                requested.into_into_dart().into_dart(),
+                found.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
             crate::bdk::error::Error::InvalidOutpoint(field0) => {
                 [23.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
@@ -4669,14 +4710,12 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::error::Error {
             crate::bdk::error::Error::PsbtParse(field0) => {
                 [33.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::bdk::error::Error::MissingCachedScripts(field0, field1) => {
-                [
-                    34.into_dart(),
-                    field0.into_into_dart().into_dart(),
-                    field1.into_into_dart().into_dart(),
-                ]
-                .into_dart()
-            }
+            crate::bdk::error::Error::MissingCachedScripts(field0, field1) => [
+                34.into_dart(),
+                field0.into_into_dart().into_dart(),
+                field1.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
             crate::bdk::error::Error::Electrum(field0) => {
                 [35.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
@@ -4827,14 +4866,12 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::types::Payload {
             crate::bdk::types::Payload::ScriptHash { script_hash } => {
                 [1.into_dart(), script_hash.into_into_dart().into_dart()].into_dart()
             }
-            crate::bdk::types::Payload::WitnessProgram { version, program } => {
-                [
-                    2.into_dart(),
-                    version.into_into_dart().into_dart(),
-                    program.into_into_dart().into_dart(),
-                ]
-                .into_dart()
-            }
+            crate::bdk::types::Payload::WitnessProgram { version, program } => [
+                2.into_dart(),
+                version.into_into_dart().into_dart(),
+                program.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
         }
     }
 }
@@ -5109,6 +5146,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet_account::Wallet
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.id.into_into_dart().into_dart(),
+            self.wallet_id.into_into_dart().into_dart(),
             self.derivation_path.into_into_dart().into_dart(),
             self.label.into_into_dart().into_dart(),
             self.script_type.into_into_dart().into_dart(),
@@ -6079,6 +6117,7 @@ impl SseEncode for crate::proton_api::wallet_account::WalletAccount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.wallet_id, serializer);
         <String>::sse_encode(self.derivation_path, serializer);
         <String>::sse_encode(self.label, serializer);
         <u8>::sse_encode(self.script_type, serializer);

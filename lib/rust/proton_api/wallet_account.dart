@@ -33,12 +33,14 @@ class CreateWalletAccountReq {
 
 class WalletAccount {
   final String id;
+  final String walletId;
   final String derivationPath;
   final String label;
   final int scriptType;
 
   const WalletAccount({
     required this.id,
+    required this.walletId,
     required this.derivationPath,
     required this.label,
     required this.scriptType,
@@ -47,6 +49,7 @@ class WalletAccount {
   @override
   int get hashCode =>
       id.hashCode ^
+      walletId.hashCode ^
       derivationPath.hashCode ^
       label.hashCode ^
       scriptType.hashCode;
@@ -57,6 +60,7 @@ class WalletAccount {
       other is WalletAccount &&
           runtimeType == other.runtimeType &&
           id == other.id &&
+          walletId == other.walletId &&
           derivationPath == other.derivationPath &&
           label == other.label &&
           scriptType == other.scriptType;

@@ -12,7 +12,7 @@
 //     off = 0,
 // }
 
-use andromeda_api::wallet::WalletSettings as CommonWalletSettings;
+use andromeda_api::wallet::ApiWalletSettings as CommonWalletSettings;
 
 #[derive(Debug)]
 pub struct WalletSettings {
@@ -22,7 +22,7 @@ pub struct WalletSettings {
     pub max_channel_opening_fee: u64,
 }
 
-impl From<CommonWalletSettings> for WalletSettings  {
+impl From<CommonWalletSettings> for WalletSettings {
     fn from(value: CommonWalletSettings) -> Self {
         WalletSettings {
             hide_accounts: value.HideAccounts,

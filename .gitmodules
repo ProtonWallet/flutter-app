@@ -4,3 +4,6 @@
 [submodule "vendor/andromeda"]
 	path = vendor/andromeda
 	url = git@gitlab.protontech.ch:wallet/andromeda.git
+[submodule "vendor/esplora-client"]
+	path = vendor/esplora-client
+	url = git@gitlab.protontech.ch:wallet/rust-esplora-client.git
