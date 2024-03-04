@@ -218,7 +218,6 @@
   "setting_bitcoin_unit_label": "Bitcoin Unit",
   "setting_fiat_currency_label": "Fiat Currency",
   "setting_hide_empty_used_address_label": "Hide Empty Used Addresses",
-  "setting_show_wallet_recovery_label": "Show Wallet Recovery",
   "setting_2fa_amount_threshold_label": "2FA Amount Threshold",
   "setting_option_on": "On",
   "setting_option_off": "Off",

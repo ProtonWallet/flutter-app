@@ -3493,7 +3493,7 @@ impl SseDecode for crate::proton_api::user_settings::CommonBitcoinUnit {
         return match inner {
             0 => crate::proton_api::user_settings::CommonBitcoinUnit::BTC,
             1 => crate::proton_api::user_settings::CommonBitcoinUnit::MBTC,
-            2 => crate::proton_api::user_settings::CommonBitcoinUnit::SAT,
+            2 => crate::proton_api::user_settings::CommonBitcoinUnit::SATS,
             _ => unreachable!("Invalid variant for CommonBitcoinUnit: {}", inner),
         };
     }
@@ -4793,7 +4793,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::user_settings::CommonB
         match self {
             Self::BTC => 0.into_dart(),
             Self::MBTC => 1.into_dart(),
-            Self::SAT => 2.into_dart(),
+            Self::SATS => 2.into_dart(),
         }
     }
 }
@@ -5726,7 +5726,7 @@ impl SseEncode for crate::proton_api::user_settings::CommonBitcoinUnit {
             match self {
                 crate::proton_api::user_settings::CommonBitcoinUnit::BTC => 0,
                 crate::proton_api::user_settings::CommonBitcoinUnit::MBTC => 1,
-                crate::proton_api::user_settings::CommonBitcoinUnit::SAT => 2,
+                crate::proton_api::user_settings::CommonBitcoinUnit::SATS => 2,
                 _ => {
                     unimplemented!("");
                 }
