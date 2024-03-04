@@ -23,11 +23,9 @@ class TextChoices extends StatefulWidget {
 }
 
 class TextFieldTextState extends State<TextChoices> {
-  String _selectedValue = "";
 
   @override
   void initState() {
-    _selectedValue = widget.selectedValue;
     super.initState();
   }
 
@@ -53,13 +51,12 @@ class TextFieldTextState extends State<TextChoices> {
                   (index) => GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedValue = widget.choices[index];
                           if (widget.controller != null) {
-                            widget.controller!.text = _selectedValue;
+                            widget.controller!.text = widget.choices[index];;
                           }
                         });
                       },
-                      child: _selectedValue == widget.choices[index]
+                      child: widget.controller!.text == widget.choices[index]
                           ? Container(
                               width: 60,
                               height: 42,

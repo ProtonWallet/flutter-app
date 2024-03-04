@@ -5,6 +5,7 @@
 
 import '../frb_generated.dart';
 import '../proton_api/errors.dart';
+import '../proton_api/user_settings.dart';
 import '../proton_api/wallet.dart';
 import '../proton_api/wallet_account.dart';
 import '../proton_api/wallet_settings.dart';
@@ -58,3 +59,22 @@ Future<void> deleteWalletAccount(
         dynamic hint}) =>
     RustLib.instance.api.deleteWalletAccount(
         walletId: walletId, walletAccountId: walletAccountId, hint: hint);
+
+Future<ApiUserSettings> getUserSettings({dynamic hint}) =>
+    RustLib.instance.api.getUserSettings(hint: hint);
+
+Future<ApiUserSettings> bitcoinUnit(
+        {required CommonBitcoinUnit symbol, dynamic hint}) =>
+    RustLib.instance.api.bitcoinUnit(symbol: symbol, hint: hint);
+
+Future<ApiUserSettings> fiatCurrency(
+        {required ApiFiatCurrency symbol, dynamic hint}) =>
+    RustLib.instance.api.fiatCurrency(symbol: symbol, hint: hint);
+
+Future<ApiUserSettings> twoFaThreshold({required int amount, dynamic hint}) =>
+    RustLib.instance.api.twoFaThreshold(amount: amount, hint: hint);
+
+Future<ApiUserSettings> hideEmptyUsedAddresses(
+        {required bool hideEmptyUsedAddresses, dynamic hint}) =>
+    RustLib.instance.api.hideEmptyUsedAddresses(
+        hideEmptyUsedAddresses: hideEmptyUsedAddresses, hint: hint);

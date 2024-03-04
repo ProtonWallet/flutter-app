@@ -1,3 +1,96 @@
+use andromeda_api::settings::FiatCurrency;
+use andromeda_api::settings::UserSettings;
+use andromeda_common::BitcoinUnit;
+
+#[derive(Debug)]
+pub enum ApiFiatCurrency {
+    USD,
+    EUR,
+    CHF,
+}
+
+impl From<FiatCurrency> for ApiFiatCurrency {
+    fn from(value: FiatCurrency) -> Self {
+        match value {
+            FiatCurrency::USD => ApiFiatCurrency::USD,
+            FiatCurrency::EUR => ApiFiatCurrency::EUR,
+            FiatCurrency::CHF => ApiFiatCurrency::CHF,
+        }
+    }
+}
+
+impl From<ApiFiatCurrency> for FiatCurrency {
+    fn from(value: ApiFiatCurrency) -> Self {
+        match value {
+            ApiFiatCurrency::USD => FiatCurrency::USD,
+            ApiFiatCurrency::EUR => FiatCurrency::EUR,
+            ApiFiatCurrency::CHF => FiatCurrency::CHF,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum CommonBitcoinUnit {
+    /// 100,000,000 sats
+    BTC,
+    /// 100,000 sats
+    MBTC,
+    /// 1 sat
+    SAT,
+}
+
+impl From<BitcoinUnit> for CommonBitcoinUnit {
+    fn from(value: BitcoinUnit) -> Self {
+        match value {
+            BitcoinUnit::BTC => CommonBitcoinUnit::BTC,
+            BitcoinUnit::MBTC => CommonBitcoinUnit::MBTC,
+            BitcoinUnit::SAT => CommonBitcoinUnit::SAT,
+        }
+    }
+}
+
+impl From<CommonBitcoinUnit> for BitcoinUnit {
+    fn from(value: CommonBitcoinUnit) -> Self {
+        match value {
+            CommonBitcoinUnit::BTC => BitcoinUnit::BTC,
+            CommonBitcoinUnit::MBTC => BitcoinUnit::MBTC,
+            CommonBitcoinUnit::SAT => BitcoinUnit::SAT,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ApiUserSettings {
+    pub bitcoin_unit: CommonBitcoinUnit,
+    pub fiat_currency: ApiFiatCurrency,
+    pub hide_empty_used_addresses: u8,
+    pub show_wallet_recovery: u8,
+    pub two_factor_amount_threshold: Option<u64>,
+}
+
+impl From<UserSettings> for ApiUserSettings {
+    fn from(value: UserSettings) -> Self {
+        ApiUserSettings {
+            bitcoin_unit: value.BitcoinUnit.into(),
+            fiat_currency: value.FiatCurrency.into(),
+            hide_empty_used_addresses: value.HideEmptyUsedAddresses,
+            show_wallet_recovery: value.ShowWalletRecovery,
+            two_factor_amount_threshold: value.TwoFactorAmountThreshold,
+        }
+    }
+}
+
+impl From<ApiUserSettings> for UserSettings {
+    fn from(value: ApiUserSettings) -> Self {
+        UserSettings {
+            BitcoinUnit: value.bitcoin_unit.into(),
+            FiatCurrency: value.fiat_currency.into(),
+            HideEmptyUsedAddresses: value.hide_empty_used_addresses,
+            ShowWalletRecovery: value.show_wallet_recovery,
+            TwoFactorAmountThreshold: value.two_factor_amount_threshold,
+        }
+    }
+}
 // use crate::proton_api::route::RoutePath;
 
 // use super::api_service::ProtonAPIService;
