@@ -19,6 +19,7 @@ import 'dart:ffi' as ffi;
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 import 'proton_api/errors.dart';
+import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
 import 'proton_api/wallet_settings.dart';
@@ -59,6 +60,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiError dco_decode_api_error(dynamic raw);
+
+  @protected
+  ApiFiatCurrency dco_decode_api_fiat_currency(dynamic raw);
+
+  @protected
+  ApiUserSettings dco_decode_api_user_settings(dynamic raw);
 
   @protected
   Balance dco_decode_balance(dynamic raw);
@@ -140,6 +147,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
+
+  @protected
+  CommonBitcoinUnit dco_decode_common_bitcoin_unit(dynamic raw);
 
   @protected
   CreateWalletAccountReq dco_decode_create_wallet_account_req(dynamic raw);
@@ -355,6 +365,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiError sse_decode_api_error(SseDeserializer deserializer);
 
   @protected
+  ApiFiatCurrency sse_decode_api_fiat_currency(SseDeserializer deserializer);
+
+  @protected
+  ApiUserSettings sse_decode_api_user_settings(SseDeserializer deserializer);
+
+  @protected
   Balance sse_decode_balance(SseDeserializer deserializer);
 
   @protected
@@ -443,6 +459,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ChangeSpendPolicy sse_decode_change_spend_policy(
+      SseDeserializer deserializer);
+
+  @protected
+  CommonBitcoinUnit sse_decode_common_bitcoin_unit(
       SseDeserializer deserializer);
 
   @protected
@@ -673,6 +693,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_api_error(ApiError self, SseSerializer serializer);
 
   @protected
+  void sse_encode_api_fiat_currency(
+      ApiFiatCurrency self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_user_settings(
+      ApiUserSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_balance(Balance self, SseSerializer serializer);
 
   @protected
@@ -767,6 +795,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_change_spend_policy(
       ChangeSpendPolicy self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_common_bitcoin_unit(
+      CommonBitcoinUnit self, SseSerializer serializer);
 
   @protected
   void sse_encode_create_wallet_account_req(
