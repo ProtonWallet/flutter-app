@@ -221,6 +221,7 @@
   "setting_2fa_amount_threshold_label": "2FA Amount Threshold",
   "setting_option_on": "On",
   "setting_option_off": "Off",
+  "setting_2fa_setup": "Setup Two factor authentication (2FA)",
   "wallet_recover_with_old_password": "Decrypt with your old password",
   "wallet_recover_with_mnemonic": "Recover with your mnemonic",
   "wallet_decryption_error_message": "Decryption error\nDecryption of this wallet's encrypted content failed.",

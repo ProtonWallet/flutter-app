@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/text.choices.dart';
 import 'package:wallet/components/textfield.text.dart';
@@ -136,6 +137,20 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         ],
                       )),
                   Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: ButtonV5(
+                          onPressed: () {
+                            launchUrl(Uri.parse(
+                                "https://proton.me/support/two-factor-authentication-2fa"));
+                          },
+                          text: S.of(context).setting_2fa_setup,
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: ProtonColors.surfaceLight,
+                          borderColor: ProtonColors.wMajor1,
+                          textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                          height: 48)),
+                  Container(
                     padding: const EdgeInsets.symmetric(horizontal: 26.0),
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     child: ButtonV5(
@@ -144,7 +159,9 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         },
                         text: "Refresh Setting",
                         width: MediaQuery.of(context).size.width,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        backgroundColor: ProtonColors.surfaceLight,
+                        borderColor: ProtonColors.wMajor1,
+                        textStyle: FontManager.body1Median(ProtonColors.textNorm),
                         height: 48),
                   ),
                   Container(
@@ -156,7 +173,9 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         },
                         text: "Save Setting",
                         width: MediaQuery.of(context).size.width,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        backgroundColor: ProtonColors.surfaceLight,
+                        borderColor: ProtonColors.wMajor1,
+                        textStyle: FontManager.body1Median(ProtonColors.textNorm),
                         height: 48),
                   ),
                   Container(
