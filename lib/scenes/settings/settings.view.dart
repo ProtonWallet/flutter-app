@@ -58,7 +58,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                   ProtonColors.textNorm)),
                           TextChoices(
                               choices: [
-                                CommonBitcoinUnit.sat.name.toUpperCase(),
+                                CommonBitcoinUnit.sats.name.toUpperCase(),
                                 CommonBitcoinUnit.mbtc.name.toUpperCase(),
                                 CommonBitcoinUnit.btc.name.toUpperCase(),
                               ],
@@ -111,28 +111,6 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                   : S.of(context).setting_option_off,
                               controller:
                                   viewModel.hideEmptyUsedAddressesController),
-                        ],
-                      )),
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      margin: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(S.of(context).setting_show_wallet_recovery_label,
-                              style: FontManager.body1Regular(
-                                  ProtonColors.textNorm)),
-                          TextChoices(
-                              choices: [
-                                S.of(context).setting_option_off,
-                                S.of(context).setting_option_on
-                              ],
-                              selectedValue: viewModel.showWalletRecovery
-                                  ? S.of(context).setting_option_on
-                                  : S.of(context).setting_option_off,
-                              controller:
-                                  viewModel.showWalletRecoveryController),
                         ],
                       )),
                   Container(

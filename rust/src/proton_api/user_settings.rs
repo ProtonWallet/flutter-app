@@ -36,7 +36,7 @@ pub enum CommonBitcoinUnit {
     /// 100,000 sats
     MBTC,
     /// 1 sat
-    SAT,
+    SATS,
 }
 
 impl From<BitcoinUnit> for CommonBitcoinUnit {
@@ -44,7 +44,7 @@ impl From<BitcoinUnit> for CommonBitcoinUnit {
         match value {
             BitcoinUnit::BTC => CommonBitcoinUnit::BTC,
             BitcoinUnit::MBTC => CommonBitcoinUnit::MBTC,
-            BitcoinUnit::SAT => CommonBitcoinUnit::SAT,
+            BitcoinUnit::SATS => CommonBitcoinUnit::SATS,
         }
     }
 }
@@ -54,7 +54,7 @@ impl From<CommonBitcoinUnit> for BitcoinUnit {
         match value {
             CommonBitcoinUnit::BTC => BitcoinUnit::BTC,
             CommonBitcoinUnit::MBTC => BitcoinUnit::MBTC,
-            CommonBitcoinUnit::SAT => BitcoinUnit::SAT,
+            CommonBitcoinUnit::SATS => BitcoinUnit::SATS,
         }
     }
 }

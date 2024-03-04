@@ -20,10 +20,8 @@ abstract class SettingsViewModel extends ViewModel {
   late TextEditingController bitcoinUnitController;
   late TextEditingController faitCurrencyController;
   late TextEditingController hideEmptyUsedAddressesController;
-  late TextEditingController showWalletRecoveryController;
   late TextEditingController twoFactorAmountThresholdController;
 
-  bool showWalletRecovery = false;
   bool hideEmptyUsedAddresses = false;
 
   @override
@@ -48,7 +46,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
     bitcoinUnitController = TextEditingController();
     faitCurrencyController = TextEditingController();
     hideEmptyUsedAddressesController = TextEditingController();
-    showWalletRecoveryController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController();
     getUserSettings();
     return;
@@ -75,7 +72,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
       bitcoinUnitController.text = userSettings!.bitcoinUnit.name.toUpperCase();
       faitCurrencyController.text =
           userSettings!.fiatCurrency.name.toUpperCase();
-      showWalletRecovery = userSettings!.showWalletRecovery == 1;
       hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
       int twoFactorAmountThreshold = userSettings!.twoFactorAmountThreshold ?? 1000;
       twoFactorAmountThresholdController.text = twoFactorAmountThreshold.toString();
@@ -86,7 +82,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
   @override
   Future<void> saveUserSettings() async {
     hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
-    showWalletRecovery = showWalletRecoveryController.text == "On";
     int twoFactorAmountThreshold = int.parse(twoFactorAmountThresholdController.text);
     CommonBitcoinUnit bitcoinUnit;
     switch (bitcoinUnitController.text){
@@ -96,11 +91,11 @@ class SettingsViewModelImpl extends SettingsViewModel {
       case "MBTC":
         bitcoinUnit = CommonBitcoinUnit.mbtc;
         break;
-      case "SAT":
-        bitcoinUnit = CommonBitcoinUnit.sat;
+      case "SATS":
+        bitcoinUnit = CommonBitcoinUnit.sats;
         break;
       default:
-        bitcoinUnit = CommonBitcoinUnit.sat;
+        bitcoinUnit = CommonBitcoinUnit.sats;
         break;
     }
 
@@ -124,7 +119,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
     userSettings = await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
     userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
     userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
-    // userSettings = await proton_api.showWalletRecovery(showWalletRecovery: showWalletRecovery);
 
     loadUserSettings();
   }

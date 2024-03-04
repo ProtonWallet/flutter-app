@@ -55,5 +55,5 @@ enum CommonBitcoinUnit {
   mbtc,
 
   /// 1 sat
-  sat,
+  sats,
 }
