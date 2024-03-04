@@ -1,20 +1,28 @@
 import 'dart:async';
 
-import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/bdk/types.dart';
+import 'package:flutter/widgets.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class SettingsViewModel extends ViewModel {
   SettingsViewModel(super.coordinator);
 
   int selectedPage = 0;
-  String mnemonicString = 'No Wallet';
 
   void updateSelected(int index);
-  void updateMnemonic(String mnemonic);
 
-  Future<void> updateStringValue();
+  void getUserSettings();
+  void updateBitcoinUnit(CommonBitcoinUnit symbol);
+  void saveUserSettings();
+
+  ApiUserSettings? userSettings;
+  late TextEditingController bitcoinUnitController;
+  late TextEditingController faitCurrencyController;
+  late TextEditingController hideEmptyUsedAddressesController;
+  late TextEditingController twoFactorAmountThresholdController;
+
+  bool hideEmptyUsedAddresses = false;
 
   @override
   bool get keepAlive => true;
@@ -35,6 +43,11 @@ class SettingsViewModelImpl extends SettingsViewModel {
 
   @override
   Future<void> loadData() async {
+    bitcoinUnitController = TextEditingController();
+    faitCurrencyController = TextEditingController();
+    hideEmptyUsedAddressesController = TextEditingController();
+    twoFactorAmountThresholdController = TextEditingController();
+    getUserSettings();
     return;
   }
 
@@ -49,15 +62,70 @@ class SettingsViewModelImpl extends SettingsViewModel {
   }
 
   @override
-  void updateMnemonic(String mnemonic) {
-    mnemonicString = mnemonic;
+  Future<void> getUserSettings() async {
+    userSettings = await proton_api.getUserSettings();
+    loadUserSettings();
+  }
+
+  void loadUserSettings(){
+    if (userSettings != null) {
+      bitcoinUnitController.text = userSettings!.bitcoinUnit.name.toUpperCase();
+      faitCurrencyController.text =
+          userSettings!.fiatCurrency.name.toUpperCase();
+      hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
+      int twoFactorAmountThreshold = userSettings!.twoFactorAmountThreshold ?? 1000;
+      twoFactorAmountThresholdController.text = twoFactorAmountThreshold.toString();
+    }
     datasourceChangedStreamController.sink.add(this);
   }
 
   @override
-  Future<void> updateStringValue() async {
-    var mnemonic = await Mnemonic.create(WordCount.words12);
-    logger.d(mnemonic.asString());
-    updateMnemonic(mnemonic.asString());
+  Future<void> saveUserSettings() async {
+    hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
+    int twoFactorAmountThreshold = int.parse(twoFactorAmountThresholdController.text);
+    CommonBitcoinUnit bitcoinUnit;
+    switch (bitcoinUnitController.text){
+      case "BTC":
+        bitcoinUnit = CommonBitcoinUnit.btc;
+        break;
+      case "MBTC":
+        bitcoinUnit = CommonBitcoinUnit.mbtc;
+        break;
+      case "SATS":
+        bitcoinUnit = CommonBitcoinUnit.sats;
+        break;
+      default:
+        bitcoinUnit = CommonBitcoinUnit.sats;
+        break;
+    }
+
+    ApiFiatCurrency fiatCurrency;
+    switch (faitCurrencyController.text){
+      case "USD":
+        fiatCurrency = ApiFiatCurrency.usd;
+        break;
+      case "EUR":
+        fiatCurrency = ApiFiatCurrency.eur;
+        break;
+      case "CHF":
+        fiatCurrency = ApiFiatCurrency.chf;
+        break;
+      default:
+        fiatCurrency = ApiFiatCurrency.usd;
+        break;
+    }
+
+    userSettings = await proton_api.hideEmptyUsedAddresses(hideEmptyUsedAddresses: hideEmptyUsedAddresses);
+    userSettings = await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
+    userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
+    userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
+
+    loadUserSettings();
+  }
+
+  @override
+  Future<void> updateBitcoinUnit(CommonBitcoinUnit symbol) async {
+    userSettings = await proton_api.bitcoinUnit(symbol: symbol);
+    datasourceChangedStreamController.sink.add(this);
   }
 }

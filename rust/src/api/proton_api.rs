@@ -6,6 +6,7 @@ use lazy_static::lazy_static;
 
 use crate::proton_api::{
     errors::ApiError,
+    user_settings::{ApiFiatCurrency, ApiUserSettings, CommonBitcoinUnit},
     wallet::{CreateWalletReq, ProtonWallet, WalletData},
     wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
@@ -122,6 +123,56 @@ pub async fn delete_wallet_account(
         .await;
     match result {
         Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_user_settings() -> Result<ApiUserSettings, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.settings.get_user_settings().await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn bitcoin_unit(symbol: CommonBitcoinUnit) -> Result<ApiUserSettings, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.settings.bitcoin_unit(symbol.into()).await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn fiat_currency(symbol: ApiFiatCurrency) -> Result<ApiUserSettings, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.settings.fiat_currency(symbol.into()).await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn two_fa_threshold(amount: u64) -> Result<ApiUserSettings, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.settings.two_fa_threshold(amount).await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn hide_empty_used_addresses(
+    hide_empty_used_addresses: bool,
+) -> Result<ApiUserSettings, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .settings
+        .hide_empty_used_addresses(hide_empty_used_addresses)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),
     }
 }
