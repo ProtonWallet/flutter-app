@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/user.session.dart';
 
 class AccountInfo extends StatelessWidget {
   const AccountInfo({super.key});
@@ -13,8 +16,13 @@ class AccountInfo extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         radius: 50,
         child: Text(
-          S.of(context).login,
-          style: const TextStyle(fontSize: 20),
+          Provider.of<UserSessionProvider>(context)
+              .userSession
+              .userDisplayName
+              .split(' ')
+              .map((str) => str.substring(0, 1))
+              .join(''),
+          style: const TextStyle(fontSize: 40, color: ProtonColors.white),
         ),
       ),
     );
