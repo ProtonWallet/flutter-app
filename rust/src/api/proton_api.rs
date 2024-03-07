@@ -1,11 +1,11 @@
-use std::sync::{Arc, RwLock};
-
 use andromeda_api::ProtonWalletApiClient;
-
+use chrono::Utc;
 use lazy_static::lazy_static;
+use std::sync::{Arc, RwLock};
 
 use crate::proton_api::{
     errors::ApiError,
+    exchange_rate::ProtonExchangeRate,
     user_settings::{ApiFiatCurrency, ApiUserSettings, CommonBitcoinUnit},
     wallet::{CreateWalletReq, ProtonWallet, WalletData},
     wallet_account::{CreateWalletAccountReq, WalletAccount},
@@ -170,6 +170,26 @@ pub async fn hide_empty_used_addresses(
     let result = proton_api
         .settings
         .hide_empty_used_addresses(hide_empty_used_addresses)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_exchange_rate(
+    bitcoin_unit: CommonBitcoinUnit,
+    fiat_currency: ApiFiatCurrency,
+    time: Option<u64>,
+) -> Result<ProtonExchangeRate, ApiError> {
+    let timestamp = match time {
+        Some(t) => t,
+        None => Utc::now().timestamp() as u64,
+    };
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .exchange_rate
+        .get_exchange_rate(bitcoin_unit.into(), fiat_currency.into(), timestamp)
         .await;
     match result {
         Ok(response) => Ok(response.into()),

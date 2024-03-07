@@ -5,6 +5,7 @@
 
 import '../frb_generated.dart';
 import '../proton_api/errors.dart';
+import '../proton_api/exchange_rate.dart';
 import '../proton_api/user_settings.dart';
 import '../proton_api/wallet.dart';
 import '../proton_api/wallet_account.dart';
@@ -78,3 +79,14 @@ Future<ApiUserSettings> hideEmptyUsedAddresses(
         {required bool hideEmptyUsedAddresses, dynamic hint}) =>
     RustLib.instance.api.hideEmptyUsedAddresses(
         hideEmptyUsedAddresses: hideEmptyUsedAddresses, hint: hint);
+
+Future<ProtonExchangeRate> getExchangeRate(
+        {required CommonBitcoinUnit bitcoinUnit,
+        required ApiFiatCurrency fiatCurrency,
+        int? time,
+        dynamic hint}) =>
+    RustLib.instance.api.getExchangeRate(
+        bitcoinUnit: bitcoinUnit,
+        fiatCurrency: fiatCurrency,
+        time: time,
+        hint: hint);
