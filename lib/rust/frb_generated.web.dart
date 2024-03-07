@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 import 'proton_api/errors.dart';
+import 'proton_api/exchange_rate.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
@@ -261,6 +262,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService dco_decode_proton_api_service(dynamic raw);
+
+  @protected
+  ProtonExchangeRate dco_decode_proton_exchange_rate(dynamic raw);
 
   @protected
   ProtonWallet dco_decode_proton_wallet(dynamic raw);
@@ -583,6 +587,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService sse_decode_proton_api_service(SseDeserializer deserializer);
+
+  @protected
+  ProtonExchangeRate sse_decode_proton_exchange_rate(
+      SseDeserializer deserializer);
 
   @protected
   ProtonWallet sse_decode_proton_wallet(SseDeserializer deserializer);
@@ -926,6 +934,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_proton_api_service(
       ProtonAPIService self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_exchange_rate(
+      ProtonExchangeRate self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_wallet(ProtonWallet self, SseSerializer serializer);
