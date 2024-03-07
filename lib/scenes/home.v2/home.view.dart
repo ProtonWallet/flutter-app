@@ -12,6 +12,7 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
@@ -475,6 +476,23 @@ class HomeView extends ViewBase<HomeViewModel> {
                 viewModel.fetchWallets();
               },
               text: "API Sync",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () async {
+                int exchangeRate = await WalletManager.getExchangeRate(CommonBitcoinUnit.btc, ApiFiatCurrency.usd);
+                if (context.mounted){
+                  LocalToast.showToast(context, "exchangeRate = $exchangeRate");
+                }
+              },
+              text: "Get ExchangeRate",
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: Theme.of(context).colorScheme.surface,
               borderColor: const Color.fromARGB(255, 226, 226, 226),

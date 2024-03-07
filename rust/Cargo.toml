@@ -26,6 +26,7 @@ anyhow = "1.0.68"
 lazy_static = "1.4.0"
 http = "1.0.0"
 hex = "0.4.3"
+chrono = "0.4.34"
 
 
 ### proton dependencies

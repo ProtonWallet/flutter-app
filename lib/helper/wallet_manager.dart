@@ -6,7 +6,9 @@ import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 import 'bdk/helper.dart';
 
@@ -27,7 +29,8 @@ class WalletManager {
         passphrase: passphrase);
     String derivationPathClean =
         derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
-    String dbName = "${walletModel.serverWalletID}_${derivationPathClean}_${passphrase.isNotEmpty}";
+    String dbName =
+        "${walletModel.serverWalletID}_${derivationPathClean}_${passphrase.isNotEmpty}";
     wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
     return wallet;
   }
@@ -146,5 +149,12 @@ class WalletManager {
       return mnemonic;
     }
     return "";
+  }
+
+  static Future<int> getExchangeRate(
+      CommonBitcoinUnit bitcoinUnit, ApiFiatCurrency fiatCurrency) async {
+    var exchangeRate = await proton_api.getExchangeRate(
+        bitcoinUnit: bitcoinUnit, fiatCurrency: fiatCurrency);
+    return exchangeRate.exchangeRate;
   }
 }
