@@ -191,28 +191,6 @@ class OutPoint {
           vout == other.vout;
 }
 
-@freezed
-sealed class Payload with _$Payload {
-  /// P2PKH address.
-  const factory Payload.pubkeyHash({
-    required Uint8List pubkeyHash,
-  }) = Payload_PubkeyHash;
-
-  /// P2SH address.
-  const factory Payload.scriptHash({
-    required Uint8List scriptHash,
-  }) = Payload_ScriptHash;
-
-  /// Segwit address.
-  const factory Payload.witnessProgram({
-    /// The witness program version.
-    required WitnessVersion version,
-
-    /// The witness program.
-    required Uint8List program,
-  }) = Payload_WitnessProgram;
-}
-
 class PsbtSigHashType {
   final int inner;
 
@@ -340,7 +318,7 @@ class TxIn {
   final OutPoint previousOutput;
   final Script scriptSig;
   final int sequence;
-  final List<String> witness;
+  final List<Uint8List> witness;
 
   const TxIn({
     required this.previousOutput,
@@ -390,59 +368,6 @@ class TxOut {
           runtimeType == other.runtimeType &&
           value == other.value &&
           scriptPubkey == other.scriptPubkey;
-}
-
-enum WitnessVersion {
-  /// Initial version of witness program. Used for P2WPKH and P2WPK outputs
-  v0,
-
-  /// Version of witness program used for Taproot P2TR outputs.
-  v1,
-
-  /// Future (unsupported) version of witness program.
-  v2,
-
-  /// Future (unsupported) version of witness program.
-  v3,
-
-  /// Future (unsupported) version of witness program.
-  v4,
-
-  /// Future (unsupported) version of witness program.
-  v5,
-
-  /// Future (unsupported) version of witness program.
-  v6,
-
-  /// Future (unsupported) version of witness program.
-  v7,
-
-  /// Future (unsupported) version of witness program.
-  v8,
-
-  /// Future (unsupported) version of witness program.
-  v9,
-
-  /// Future (unsupported) version of witness program.
-  v10,
-
-  /// Future (unsupported) version of witness program.
-  v11,
-
-  /// Future (unsupported) version of witness program.
-  v12,
-
-  /// Future (unsupported) version of witness program.
-  v13,
-
-  /// Future (unsupported) version of witness program.
-  v14,
-
-  /// Future (unsupported) version of witness program.
-  v15,
-
-  /// Future (unsupported) version of witness program.
-  v16,
 }
 
 ///Type describing entropy length (aka word count) in the mnemonic

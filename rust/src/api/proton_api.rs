@@ -3,12 +3,11 @@ use andromeda_api::{
     transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
     AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid,
 };
+use andromeda_common::BitcoinUnit;
 use chrono::Utc;
 use lazy_static::lazy_static;
-use std::{
-    ptr::null,
-    sync::{Arc, RwLock},
-};
+use log::info;
+use std::sync::{Arc, RwLock};
 
 use crate::proton_api::{
     contacts::ProtonContactEmails,
@@ -16,7 +15,7 @@ use crate::proton_api::{
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
     proton_address::ProtonAddress,
-    user_settings::{ApiUserSettings, CommonBitcoinUnit},
+    user_settings::ApiUserSettings,
     wallet::{
         BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
         WalletBitcoinAddress, WalletData, WalletTransaction,
@@ -33,8 +32,13 @@ lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonWalletApiClient>>> = RwLock::new(None);
 }
 
+pub(crate) fn retrieve_proton_api() -> Arc<ProtonWalletApiClient> {
+    PROTON_API.read().unwrap().clone().unwrap()
+}
+
 // build functions
 pub async fn init_api_service(user_name: String, password: String) {
+    info!("start init_api_service");
     // create a global proton api service
     let mut api = ProtonWalletApiClient::from_version(
         "android-wallet@1.0.0-dev".to_string(),
@@ -184,9 +188,9 @@ pub async fn get_user_settings() -> Result<ApiUserSettings, ApiError> {
     }
 }
 
-pub async fn bitcoin_unit(symbol: CommonBitcoinUnit) -> Result<ApiUserSettings, ApiError> {
+pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result = proton_api.settings.bitcoin_unit(symbol.into()).await;
+    let result = proton_api.settings.bitcoin_unit(symbol).await;
     match result {
         Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),

@@ -5,6 +5,12 @@ pub struct ProtonAPIService {
     pub api: andromeda_api::ProtonWalletApiClient,
 }
 
+impl Default for ProtonAPIService {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ProtonAPIService {
     pub fn new() -> ProtonAPIService {
         ProtonAPIService {

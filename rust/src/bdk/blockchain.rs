@@ -1,20 +1,21 @@
 use super::psbt::Transaction;
+use andromeda_api::ProtonWalletApiClient;
 use bdk::blockchain::esplora::EsploraBlockchain;
-use bdk::blockchain::{Blockchain as BdkBlockchain, AnyBlockchainConfig, ElectrumBlockchainConfig, ConfigurableBlockchain};
-use bdk::blockchain::{
-    AnyBlockchain,
-    GetBlockHash,
-    GetHeight,
-};
+use bdk::blockchain::Blockchain as BdkBlockchain;
+use bdk::blockchain::{AnyBlockchain, GetBlockHash, GetHeight};
 use bdk::esplora_client::Builder;
 use bdk::{Error as BdkError, FeeRate};
+use esplora_client::AsyncClient;
 use lazy_static::lazy_static;
+use log::debug;
 use std::collections::HashMap;
 use std::sync::RwLock;
 use std::sync::{Arc, Mutex, MutexGuard};
+
 lazy_static! {
     static ref BLOCKCHAIN: RwLock<HashMap<String, Arc<Blockchain>>> = RwLock::new(HashMap::new());
 }
+
 fn persist_blockchain(id: String, blockchain: Blockchain) {
     let mut blockchain_lock = BLOCKCHAIN.write().unwrap();
     blockchain_lock.insert(id, Arc::new(blockchain));
@@ -25,25 +26,25 @@ pub struct Blockchain {
 }
 
 impl Blockchain {
+    /// Create a new EsploraBlockchain
+    #[deprecated(since = "0.1.0", note = "Use the `new_blockchain_with_api` instead.")]
     pub fn new_blockchain(esplora_config: EsploraConfig) -> Result<String, BdkError> {
-        // let blockchain = AnyBlockchain::from_config(&any_blockchain_config)?;
         let mut builder = Builder::new(esplora_config.base_url.as_str());
-
         if let Some(timeout) = esplora_config.timeout {
             builder = builder.timeout(timeout);
         }
-
         if let Some(proxy) = &esplora_config.proxy {
             builder = builder.proxy(proxy);
         }
-
-        let mut esplora_blockchain =
-            EsploraBlockchain::from_client(builder.build_blocking()?, usize::try_from(esplora_config.stop_gap).unwrap());
+        let mut esplora_blockchain = EsploraBlockchain::from_client(
+            builder.build_async()?,
+            usize::try_from(esplora_config.stop_gap).unwrap(),
+        );
 
         if let Some(concurrency) = esplora_config.concurrency {
             esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
         }
-        
+
         let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
         let id = rand::random::<char>().to_string();
         persist_blockchain(
@@ -55,15 +56,22 @@ impl Blockchain {
         Ok(id)
     }
 
-    pub fn build_electrum(electrum_config: ElectrumConfig) -> Result<String, BdkError> {
-        let blockchain = AnyBlockchain::from_config(&AnyBlockchainConfig::Electrum(ElectrumBlockchainConfig {
-            retry: electrum_config.retry,
-            socks5: electrum_config.socks5,
-            timeout: electrum_config.timeout,
-            url: electrum_config.url,
-            stop_gap: usize::try_from(electrum_config.stop_gap).unwrap(),
-            validate_domain: electrum_config.validate_domain,
-        }))?;
+    // Create a new EsploraBlockchain with an API client
+    pub fn new_blockchain_with_api(
+        esplora_config: EsploraConfig,
+        api: Arc<ProtonWalletApiClient>,
+    ) -> Result<String, BdkError> {
+        debug!("Creating new blockchain with api");
+        let async_client: AsyncClient = AsyncClient::from_client(esplora_config.base_url, api);
+        let mut esplora_blockchain = EsploraBlockchain::from_client(
+            async_client,
+            usize::try_from(esplora_config.stop_gap).unwrap(),
+        );
+        if let Some(concurrency) = esplora_config.concurrency {
+            esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
+        }
+
+        let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
         let id = rand::random::<char>().to_string();
         persist_blockchain(
             id.clone(),
@@ -74,6 +82,7 @@ impl Blockchain {
         Ok(id)
     }
 
+    // retrieve a blockchain by id
     pub fn retrieve_blockchain(id: String) -> Arc<Blockchain> {
         let blockchain_lock = BLOCKCHAIN.read().unwrap();
         blockchain_lock.get(id.as_str()).unwrap().clone()
@@ -82,44 +91,26 @@ impl Blockchain {
         self.blockchain_mutex.lock().expect("blockchain")
     }
 
-    pub(crate) fn broadcast(&self, tx: Transaction) -> Result<String, BdkError> {
-        self.get_blockchain()
-            .broadcast(&tx.internal.clone())
-            .expect("Broadcast Error");
+    // broadcast a transaction
+    pub(crate) async fn broadcast(&self, tx: Transaction) -> Result<String, BdkError> {
+        let _ = self.get_blockchain().broadcast(&tx.internal.clone()).await;
         Ok(tx.internal.txid().to_string())
     }
 
-    pub fn get_height(&self) -> Result<u32, BdkError> {
-        self.get_blockchain().get_height()
+    pub async fn get_height(&self) -> Result<u32, BdkError> {
+        self.get_blockchain().get_height().await
     }
-    pub fn estimate_fee(&self, target: u64) -> Result<Arc<FeeRate>, BdkError> {
-        let result: Result<FeeRate, bdk::Error> =
-            self.get_blockchain().estimate_fee(target as usize);
-        result.map(Arc::new)
+
+    // get the fee rate
+    pub async fn estimate_fee(&self, target: u64) -> Result<FeeRate, BdkError> {
+        self.get_blockchain().estimate_fee(target as usize).await
     }
-    pub fn get_block_hash(&self, height: u32) -> Result<String, BdkError> {
+    pub async fn get_block_hash(&self, height: u32) -> Result<String, BdkError> {
         self.get_blockchain()
             .get_block_hash(u64::from(height))
+            .await
             .map(|hash| hash.to_string())
     }
-}
-
-
-/// Configuration for an ElectrumBlockchain
-pub struct ElectrumConfig {
-    ///URL of the Electrum server (such as ElectrumX, Esplora, BWT) may start with ssl:// or tcp:// and include a port
-    ///eg. ssl://electrum.blockstream.info:60002
-    pub url: String,
-    ///URL of the socks5 proxy server or a Tor service
-    pub socks5: Option<String>,
-    ///Request retry count
-    pub retry: u8,
-    ///Request timeout (seconds)
-    pub timeout: Option<u8>,
-    ///Stop searching addresses for transactions after finding an unused gap of this length
-    pub stop_gap: u64,
-    /// Validate the domain when using SSL
-    pub validate_domain: bool,
 }
 
 ///Configuration for an EsploraBlockchain

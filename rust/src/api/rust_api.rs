@@ -1,5 +1,6 @@
+use super::proton_api::retrieve_proton_api;
 pub use crate::bdk::blockchain::Blockchain;
-use crate::bdk::blockchain::{ElectrumConfig, EsploraConfig};
+use crate::bdk::blockchain::EsploraConfig;
 pub use crate::bdk::descriptor::BdkDescriptor;
 use crate::bdk::error::Error;
 use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
@@ -7,79 +8,101 @@ use crate::bdk::psbt::PartiallySignedTransaction;
 pub use crate::bdk::psbt::Transaction;
 use crate::bdk::types::{
     to_input, Address, AddressIndex, AddressInfo, Balance, ChangeSpendPolicy, KeychainKind,
-    Network, OutPoint, Payload, PsbtSigHashType, RbfValue, Script, ScriptAmount,
-    TransactionDetails, TxIn, TxOut, WordCount,
+    Network, OutPoint, PsbtSigHashType, RbfValue, Script, ScriptAmount, TransactionDetails, TxIn,
+    TxOut, WordCount,
 };
 pub use crate::bdk::wallet::{DatabaseConfig, Wallet};
+use crate::bdk::wallet::{LocalUtxo, SignOptions};
 use bdk::bitcoin::{Address as BdkAddress, OutPoint as BdkOutPoint, Sequence, Txid};
 use bdk::keys::DescriptorSecretKey as BdkDescriptorSecretKey;
+use bitcoin::script::PushBytesBuf;
 use lazy_static::lazy_static;
+use log::info;
 use std::borrow::Borrow;
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex, RwLock};
-
-use crate::bdk::wallet::{LocalUtxo, SignOptions};
+use tokio::runtime::Runtime;
 
 lazy_static! {
-    static ref RUNTIME: RwLock<Option<tokio::runtime::Runtime>> = RwLock::new(None);
+    // runtime used for async calls but future or struct doesnt impl Send
+    static ref RUNTIME: RwLock<Arc<tokio::runtime::Runtime>> = RwLock::new(Arc::new(Runtime::new().unwrap()));
 }
 pub struct Api {}
 impl Api {
     //========Blockchain==========
-    pub fn create_esplora_blockchain(config: EsploraConfig) -> anyhow::Result<String, Error> {
-        let blockchain = Blockchain::new_blockchain(config);
+
+    /// create esplora blockchain with proton api
+    pub fn create_esplora_blockchain_with_api(config: EsploraConfig) -> Result<String, Error> {
+        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let blockchain = Blockchain::new_blockchain_with_api(config, proton_api);
         match blockchain {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
         }
     }
-    pub fn create_electrum_blockchain(config: ElectrumConfig) -> anyhow::Result<String, Error> {
-        let blockchain = Blockchain::build_electrum(config);
-        match blockchain {
-            Ok(e) => Ok(e),
-            Err(e) => Err(e.into()),
-        }
+
+    pub async fn get_height(blockchain_id: String) -> Result<u32, Error> {
+        RUNTIME.read().unwrap().clone().block_on(async {
+            match Blockchain::retrieve_blockchain(blockchain_id)
+                .get_height()
+                .await
+            {
+                Ok(e) => Ok(e),
+                Err(e) => Err(e.into()),
+            }
+        })
     }
-    pub fn get_height(blockchain_id: String) -> anyhow::Result<u32, Error> {
-        match Blockchain::retrieve_blockchain(blockchain_id).get_height() {
-            Ok(e) => Ok(e),
-            Err(e) => Err(e.into()),
-        }
-    }
-    pub fn get_blockchain_hash(
+    pub async fn get_blockchain_hash(
         blockchain_height: u32,
         blockchain_id: String,
-    ) -> anyhow::Result<String, Error> {
-        match Blockchain::retrieve_blockchain(blockchain_id).get_block_hash(blockchain_height) {
-            Ok(e) => Ok(e),
-            Err(e) => Err(e.into()),
-        }
+    ) -> Result<String, Error> {
+        RUNTIME.read().unwrap().clone().block_on(async {
+            match Blockchain::retrieve_blockchain(blockchain_id)
+                .get_block_hash(blockchain_height)
+                .await
+            {
+                Ok(e) => Ok(e),
+                Err(e) => Err(e.into()),
+            }
+        })
     }
-    pub fn estimate_fee(target: u64, blockchain_id: String) -> anyhow::Result<f32, Error> {
-        match Blockchain::retrieve_blockchain(blockchain_id).estimate_fee(target) {
-            Ok(e) => Ok(e.as_sat_per_vb()),
-            Err(e) => Err(e.into()),
-        }
+
+    pub fn estimate_fee(target: u64, blockchain_id: String) -> Result<f32, Error> {
+        RUNTIME.read().unwrap().clone().block_on(async {
+            match Blockchain::retrieve_blockchain(blockchain_id)
+                .estimate_fee(target)
+                .await
+            {
+                Ok(e) => Ok(e.as_sat_per_vb()),
+                Err(e) => Err(e.into()),
+            }
+        })
     }
-    pub fn broadcast(tx: String, blockchain_id: String) -> anyhow::Result<String, Error> {
-        let transaction: Transaction = tx.into();
-        match Blockchain::retrieve_blockchain(blockchain_id).broadcast(transaction) {
-            Ok(e) => Ok(e),
-            Err(e) => Err(e.into()),
-        }
+
+    pub fn broadcast(tx: String, blockchain_id: String) -> Result<String, Error> {
+        RUNTIME.read().unwrap().clone().block_on(async {
+            let transaction: Transaction = tx.into();
+
+            match Blockchain::retrieve_blockchain(blockchain_id)
+                .broadcast(transaction)
+                .await
+            {
+                Ok(e) => Ok(e),
+                Err(e) => Err(e.into()),
+            }
+        })
     }
 
     //=========Transaction===========
-
-    pub fn create_transaction(tx: Vec<u8>) -> anyhow::Result<String, Error> {
+    pub fn create_transaction(tx: Vec<u8>) -> Result<String, Error> {
         let res = Transaction::new(tx);
         match res {
             Ok(e) => Ok(e.into()),
             Err(e) => Err(e.into()),
         }
     }
-    pub fn tx_txid(tx: String) -> anyhow::Result<String, Error> {
+    pub fn tx_txid(tx: String) -> Result<String, Error> {
         let tx_: Transaction = tx.into();
         Ok(tx_.txid())
     }
@@ -95,10 +118,10 @@ impl Api {
         let tx_: Transaction = tx.into();
         tx_.vsize()
     }
-    pub fn serialize_tx(tx: String) -> Vec<u8> {
-        let tx_: Transaction = tx.into();
-        tx_.serialize()
-    }
+    // pub fn serialize_tx(tx: String) -> Vec<u8> {
+    //     let tx_: Transaction = tx.into();
+    //     tx_.serialize()
+    // }
     pub fn is_coin_base(tx: String) -> bool {
         let tx_: Transaction = tx.into();
         tx_.is_coin_base()
@@ -129,21 +152,21 @@ impl Api {
     }
 
     //========PartiallySignedTransaction==========
-    pub fn serialize_psbt(psbt_str: String) -> anyhow::Result<String, Error> {
+    pub fn serialize_psbt(psbt_str: String) -> Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
         match psbt {
             Ok(e) => Ok(e.serialize()),
             Err(e) => Err(e.into()),
         }
     }
-    pub fn psbt_txid(psbt_str: String) -> anyhow::Result<String, Error> {
+    pub fn psbt_txid(psbt_str: String) -> Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
         match psbt {
             Ok(e) => Ok(e.txid()),
             Err(e) => Err(e.into()),
         }
     }
-    pub fn extract_tx(psbt_str: String) -> anyhow::Result<String, Error> {
+    pub fn extract_tx(psbt_str: String) -> Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
         match psbt {
             Ok(e) => Ok(e.extract_tx().into()),
@@ -152,17 +175,13 @@ impl Api {
     }
     pub fn psbt_fee_rate(psbt_str: String) -> Option<f32> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
-        // match psbt.unwrap().fee_rate() {
-        //     None => None,
-        //     Some(e) => Some(e.as_sat_per_vb()),
-        // }
         psbt.unwrap().fee_rate().map(|e| e.as_sat_per_vb())
     }
     pub fn psbt_fee_amount(psbt_str: String) -> Option<u64> {
         let psbt = PartiallySignedTransaction::new(psbt_str);
         psbt.unwrap().fee_amount()
     }
-    pub fn combine_psbt(psbt_str: String, other: String) -> anyhow::Result<String, Error> {
+    pub fn combine_psbt(psbt_str: String, other: String) -> Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str).unwrap();
         let other = PartiallySignedTransaction::new(other).unwrap();
         match psbt.combine(Arc::new(other)) {
@@ -170,7 +189,7 @@ impl Api {
             Err(e) => Err(e.into()),
         }
     }
-    pub fn json_serialize(psbt_str: String) -> anyhow::Result<String, Error> {
+    pub fn json_serialize(psbt_str: String) -> Result<String, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str).unwrap();
         Ok(psbt.json_serialize())
     }
@@ -191,7 +210,7 @@ impl Api {
         drain_to: Option<Script>,
         rbf: Option<RbfValue>,
         data: Vec<u8>,
-    ) -> anyhow::Result<(String, TransactionDetails), Error> {
+    ) -> Result<(String, TransactionDetails), Error> {
         let binding = Wallet::retrieve_wallet(wallet_id);
         let binding = binding.get_wallet();
 
@@ -244,7 +263,11 @@ impl Api {
             }
         }
         if !data.is_empty() {
-            tx_builder.add_data(data.as_slice());
+            let mut buf = PushBytesBuf::new();
+            buf.extend_from_slice(data.as_slice())
+                .map_err(|e| Error::Psbt(e.to_string()))?;
+
+            tx_builder.add_data(&buf.as_push_bytes());
         }
 
         match tx_builder.finish() {
@@ -267,7 +290,7 @@ impl Api {
         wallet_id: String,
         enable_rbf: bool,
         n_sequence: Option<u32>,
-    ) -> anyhow::Result<(String, TransactionDetails), Error> {
+    ) -> Result<(String, TransactionDetails), Error> {
         let txid = Txid::from_str(txid.as_str()).unwrap();
         let binding = Wallet::retrieve_wallet(wallet_id);
         let bdk_wallet = binding.get_wallet();
@@ -277,7 +300,8 @@ impl Api {
         if let Some(allow_shrinking) = &allow_shrinking {
             let address = BdkAddress::from_str(allow_shrinking)
                 .map_err(|e| Error::Generic(e.to_string()))
-                .unwrap();
+                .unwrap()
+                .assume_checked();
             let script = address.script_pubkey();
             tx_builder.allow_shrinking(script).unwrap();
         }
@@ -301,10 +325,7 @@ impl Api {
 
     //================Descriptor=========
     //Checking if the descriptor has any errors
-    pub fn create_descriptor(
-        descriptor: String,
-        network: Network,
-    ) -> anyhow::Result<String, Error> {
+    pub fn create_descriptor(descriptor: String, network: Network) -> Result<String, Error> {
         match BdkDescriptor::new(descriptor, network.into()) {
             Ok(e) => Ok(e.as_string_private()),
             Err(e) => Err(e.into()),
@@ -314,7 +335,7 @@ impl Api {
         key_chain_kind: KeychainKind,
         secret_key: String,
         network: Network,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key = DescriptorSecretKey::from_string(secret_key)?;
         let descriptor = BdkDescriptor::new_bip44(key, key_chain_kind.into(), network.into());
         Ok(descriptor.as_string_private())
@@ -324,7 +345,7 @@ impl Api {
         public_key: String,
         network: Network,
         fingerprint: String,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key = DescriptorPublicKey::from_string(public_key)?;
         let descriptor = BdkDescriptor::new_bip44_public(
             key,
@@ -338,7 +359,7 @@ impl Api {
         key_chain_kind: KeychainKind,
         secret_key: String,
         network: Network,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key = DescriptorSecretKey::from_string(secret_key)?;
         let descriptor = BdkDescriptor::new_bip49(key, key_chain_kind.into(), network.into());
         Ok(descriptor.as_string_private())
@@ -348,7 +369,7 @@ impl Api {
         public_key: String,
         network: Network,
         fingerprint: String,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key = DescriptorPublicKey::from_string(public_key)?;
         let descriptor = BdkDescriptor::new_bip49_public(
             key,
@@ -362,7 +383,7 @@ impl Api {
         key_chain_kind: KeychainKind,
         secret_key: String,
         network: Network,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key = DescriptorSecretKey::from_string(secret_key)?;
         let descriptor = BdkDescriptor::new_bip84(key, key_chain_kind.into(), network.into());
         Ok(descriptor.as_string_private())
@@ -372,7 +393,7 @@ impl Api {
         public_key: String,
         network: Network,
         fingerprint: String,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let key: DescriptorPublicKey = DescriptorPublicKey::from_string(public_key)?;
         let descriptor = BdkDescriptor::new_bip84_public(
             key,
@@ -385,21 +406,15 @@ impl Api {
     pub fn descriptor_as_string_private(
         descriptor: String,
         network: Network,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let descriptor = BdkDescriptor::new(descriptor, network.into());
         Ok(descriptor?.as_string_private())
     }
-    pub fn descriptor_as_string(
-        descriptor: String,
-        network: Network,
-    ) -> anyhow::Result<String, Error> {
+    pub fn descriptor_as_string(descriptor: String, network: Network) -> Result<String, Error> {
         let descriptor = BdkDescriptor::new(descriptor, network.into());
         Ok(descriptor?.as_string())
     }
-    pub fn max_satisfaction_weight(
-        descriptor: String,
-        network: Network,
-    ) -> anyhow::Result<usize, Error> {
+    pub fn max_satisfaction_weight(descriptor: String, network: Network) -> Result<usize, Error> {
         Ok(BdkDescriptor::new(descriptor, network.into())?.max_satisfaction_weight()?)
     }
     //====================== Descriptor Secret =================
@@ -407,11 +422,11 @@ impl Api {
         network: Network,
         mnemonic: String,
         password: Option<String>,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let mnemonic = Mnemonic::from_str(mnemonic)?;
         Ok(DescriptorSecretKey::new(network.into(), mnemonic, password)?.as_string())
     }
-    pub fn descriptor_secret_from_string(secret: String) -> anyhow::Result<String> {
+    pub fn descriptor_secret_from_string(secret: String) -> Result<String, Error> {
         Ok(DescriptorSecretKey::from_string(secret)?.as_string())
     }
     pub fn extend_descriptor_secret(secret: String, path: String) -> String {
@@ -422,14 +437,14 @@ impl Api {
         let res = Self::descriptor_secret_config(secret, Some(path), true);
         res.as_string()
     }
-    pub fn descriptor_secret_as_secret_bytes(secret: String) -> anyhow::Result<Vec<u8>, Error> {
+    pub fn descriptor_secret_as_secret_bytes(secret: String) -> Result<Vec<u8>, Error> {
         let secret = BdkDescriptorSecretKey::from_str(secret.as_str())?;
         let descriptor_secret = DescriptorSecretKey {
             descriptor_secret_key_mutex: Mutex::new(secret),
         };
         Ok(descriptor_secret.secret_bytes()?)
     }
-    pub fn descriptor_secret_as_public(secret: String) -> anyhow::Result<String, Error> {
+    pub fn descriptor_secret_as_public(secret: String) -> Result<String, Error> {
         let secret = BdkDescriptorSecretKey::from_str(secret.as_str())?;
         let descriptor_secret = DescriptorSecretKey {
             descriptor_secret_key_mutex: Mutex::new(secret),
@@ -468,19 +483,19 @@ impl Api {
     }
 
     //==============Derivation Path ==========
-    pub fn create_derivation_path(path: String) -> anyhow::Result<String, Error> {
+    pub fn create_derivation_path(path: String) -> Result<String, Error> {
         Ok(DerivationPath::new(path)?.as_string())
     }
 
     //================Descriptor Public=========
-    pub fn descriptor_public_from_string(public_key: String) -> anyhow::Result<String, Error> {
+    pub fn descriptor_public_from_string(public_key: String) -> Result<String, Error> {
         Ok(DescriptorPublicKey::from_string(public_key)?.as_string())
     }
     pub fn create_descriptor_public(
         xpub: Option<String>,
         path: String,
         derive: bool,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let derivation_path = Arc::new(DerivationPath::new(path.to_string()).unwrap());
         let descriptor_public = DescriptorPublicKey::from_string(xpub.unwrap()).unwrap();
         if derive {
@@ -491,23 +506,25 @@ impl Api {
     }
 
     //============ Script Class===========
-    pub fn create_script(raw_output_script: Vec<u8>) -> anyhow::Result<Script, Error> {
-        Ok(Script::new(raw_output_script)?)
-    }
+    // pub fn create_script(raw_output_script: Vec<u8>) -> Result<Script, Error> {
+    //     Ok(Script::new(raw_output_script)?)
+    // }
 
     //================Address============
     pub fn create_address(address: String) -> anyhow::Result<String, Error> {
         Ok(Address::new(address)?.address.to_string())
     }
     pub fn address_from_script(script: Script, network: Network) -> anyhow::Result<String, Error> {
-        Ok(Address::from_script(script, network)?.address.to_string())
+        Ok(Address::from_script(script.into(), network)?
+            .address
+            .to_string())
     }
     pub fn address_to_script_pubkey(address: String) -> anyhow::Result<Script, Error> {
         Ok(Address::new(address)?.script_pubkey())
     }
-    pub fn payload(address: String) -> anyhow::Result<Payload, Error> {
-        Ok(Address::new(address)?.payload())
-    }
+    // pub fn payload(address: String) -> anyhow::Result<Payload, Error> {
+    //     Ok(Address::new(address)?.payload())
+    // }
     pub fn address_network(address: String) -> anyhow::Result<Network, Error> {
         Ok(Address::new(address)?.network())
     }
@@ -518,7 +535,7 @@ impl Api {
         change_descriptor: Option<String>,
         network: Network,
         database_config: DatabaseConfig,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         Ok(Wallet::new_wallet(
             descriptor,
             change_descriptor,
@@ -530,39 +547,44 @@ impl Api {
     pub fn get_address(
         wallet_id: String,
         address_index: AddressIndex,
-    ) -> anyhow::Result<AddressInfo, Error> {
+    ) -> Result<AddressInfo, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).get_address(address_index)?)
     }
-    pub fn is_mine(script: Script, wallet_id: String) -> anyhow::Result<bool, Error> {
+    pub fn is_mine(script: Script, wallet_id: String) -> Result<bool, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).is_mine(script.into())?)
     }
     pub fn get_internal_address(
         wallet_id: String,
         address_index: AddressIndex,
-    ) -> anyhow::Result<AddressInfo, Error> {
+    ) -> Result<AddressInfo, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).get_internal_address(address_index)?)
     }
     pub fn sync_wallet(wallet_id: String, blockchain_id: String) {
-        let _ = Wallet::retrieve_wallet(wallet_id)
-            .sync(Blockchain::retrieve_blockchain(blockchain_id).deref(), None);
+        info!("start syncing");
+        RUNTIME.read().unwrap().clone().block_on(async {
+            // Call your async function here.
+            Wallet::retrieve_wallet(wallet_id)
+                .sync(Blockchain::retrieve_blockchain(blockchain_id).deref(), None)
+                .await;
+        });
     }
-    pub fn get_balance(wallet_id: String) -> anyhow::Result<Balance, Error> {
+    pub fn get_balance(wallet_id: String) -> Result<Balance, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).get_balance()?)
     }
-    pub fn list_unspent_outputs(wallet_id: String) -> anyhow::Result<Vec<LocalUtxo>, Error> {
+    pub fn list_unspent_outputs(wallet_id: String) -> Result<Vec<LocalUtxo>, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).list_unspent()?)
     }
     pub fn get_transactions(
         wallet_id: String,
         include_raw: bool,
-    ) -> anyhow::Result<Vec<TransactionDetails>, Error> {
+    ) -> Result<Vec<TransactionDetails>, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).list_transactions(include_raw)?)
     }
     pub fn sign(
         wallet_id: String,
         psbt_str: String,
         sign_options: Option<SignOptions>,
-    ) -> anyhow::Result<Option<String>, Error> {
+    ) -> Result<Option<String>, Error> {
         let psbt = PartiallySignedTransaction::new(psbt_str)?;
         let signed = Wallet::retrieve_wallet(wallet_id).sign(&psbt, sign_options.clone())?;
         match signed {
@@ -586,7 +608,7 @@ impl Api {
             .network()
             .into()
     }
-    pub fn list_unspent(wallet_id: String) -> anyhow::Result<Vec<LocalUtxo>, Error> {
+    pub fn list_unspent(wallet_id: String) -> Result<Vec<LocalUtxo>, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).list_unspent()?)
     }
     /// get the corresponding PSBT Input for a LocalUtxo
@@ -595,7 +617,7 @@ impl Api {
         utxo: LocalUtxo,
         only_witness_utxo: bool,
         psbt_sighash_type: Option<PsbtSigHashType>,
-    ) -> anyhow::Result<String, Error> {
+    ) -> Result<String, Error> {
         let input = Wallet::retrieve_wallet(wallet_id).get_psbt_input(
             utxo,
             only_witness_utxo,
@@ -607,7 +629,7 @@ impl Api {
     pub fn get_descriptor_for_keychain(
         wallet_id: String,
         keychain: KeychainKind,
-    ) -> anyhow::Result<(String, Network), Error> {
+    ) -> Result<(String, Network), Error> {
         let wallet = Wallet::retrieve_wallet(wallet_id);
         let network: Network = wallet.get_wallet().network().into();
         match wallet.get_descriptor_for_keychain(keychain) {
@@ -620,10 +642,88 @@ impl Api {
         let mnemonic = Mnemonic::new(word_count.into());
         mnemonic.as_string()
     }
-    pub fn generate_seed_from_string(mnemonic: String) -> anyhow::Result<String, Error> {
+    pub fn generate_seed_from_string(mnemonic: String) -> Result<String, Error> {
         Ok(Mnemonic::from_str(mnemonic)?.as_string())
     }
-    pub fn generate_seed_from_entropy(entropy: Vec<u8>) -> anyhow::Result<String, Error> {
+    pub fn generate_seed_from_entropy(entropy: Vec<u8>) -> Result<String, Error> {
         Ok(Mnemonic::from_entropy(entropy)?.as_string())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use bdk::KeychainKind;
+    use bitcoin::Network;
+    use log::info;
+    use std::{ops::Deref, sync::Arc};
+
+    use crate::{
+        api::proton_api::{init_api_service, retrieve_proton_api},
+        bdk::{
+            blockchain::{Blockchain, EsploraConfig},
+            descriptor::BdkDescriptor,
+            key::{DescriptorSecretKey, Mnemonic},
+        },
+    };
+
+    use super::Wallet;
+
+    #[tokio::test]
+    async fn test_wallet_import_sync() {
+        // let alice_mnemonic = Mnemonic::from_str("certain sense kiss guide crumble hint transfer crime much stereo warm coral".to_string()).unwrap().as_string();
+        let network = Network::Testnet;
+        // let mnemonic = Mnemonic::from_str("certain sense kiss guide crumble hint transfer crime much stereo warm coral".to_string()).unwrap();
+        let mnemonic = Mnemonic::from_str(
+            "elbow guide topple state museum project goat split afraid rebuild hour destroy"
+                .to_string(),
+        )
+        .unwrap();
+        // let mnemonic = Mnemonic::from_str("category law logic swear involve banner pink room diesel fragile sunset remove whale lounge captain code hobby lesson material current moment funny vast fade".to_string()).unwrap();
+        // let mnemonic = Mnemonic::from_str("deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough".to_string()).unwrap();
+
+        let key = DescriptorSecretKey::new(network, mnemonic, None).unwrap();
+        // let key = DescriptorSecretKey::from_string(secret_key)?;
+        let descriptor = BdkDescriptor::new_bip84(key, KeychainKind::External, network);
+
+        let wallet_id = Wallet::new_wallet(
+            descriptor.as_string(),
+            None,
+            Network::Testnet,
+            super::DatabaseConfig::Memory,
+        )
+        .unwrap();
+
+        let wallet = Wallet::retrieve_wallet(wallet_id);
+
+        init_api_service("pro".to_string(), "pro".to_string()).await;
+
+        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let config = EsploraConfig {
+            base_url: "https://blockstream.info/testnet/api".to_string(),
+            proxy: None,
+            concurrency: Some(4),
+            stop_gap: 10,
+            timeout: None,
+        };
+        let blockchain_id = Blockchain::new_blockchain_with_api(config, proton_api).unwrap();
+        let blockchain = Blockchain::retrieve_blockchain(blockchain_id);
+
+        println!("start syncing");
+        info!("start syncing");
+        wallet.sync(blockchain.deref(), None).await;
+
+        println!("start syncing second time");
+        wallet.sync(blockchain.deref(), None).await;
+
+        println!("start getting banlance");
+        let balance = wallet.get_balance().unwrap();
+        println!("balance {:?}", balance.confirmed);
+        assert!(balance.confirmed != 0);
+
+        println!("check fee");
+        let fee_rate = blockchain.estimate_fee(100).await.unwrap();
+        println!("fee rate: {}", fee_rate.as_sat_per_vb());
+
+        assert!(fee_rate.as_sat_per_vb() > 0.0);
     }
 }

@@ -30,8 +30,9 @@ class Address {
   /// Throws a [GenericException] if the address is not valid
   static Future<Address> create({required String address}) async {
     try {
-      final res = await RustLib.instance.api.apiCreateAddress(address: address);
-      return Address._(res);
+      // final res = await RustLib.instance.api.apiCreateAddress(address: address);
+      // return Address._(res);
+      return Address._("");
     } on bridge.Error catch (e) {
       throw handleBdkException(e);
     }
@@ -75,9 +76,13 @@ class Address {
   /// Returns the script pub key of the [Address] object
   Future<type.Script> scriptPubKey() async {
     try {
-      final res = await RustLib.instance.api
-          .apiAddressToScriptPubkey(address: _address.toString());
-      return res;
+      // final res = await RustLib.instance.api
+      //     .apiAddressToScriptPubkey(address: _address.toString());
+      // return res;
+      var myScriptData = Uint8List.fromList([0x01, 0x02, 0x03, 0x04]);
+      // Initializing the Script object with the Uint8List
+      var myScript = type.Script(internal: myScriptData);
+      return myScript;
     } on bridge.Error {
       rethrow;
     }
@@ -100,18 +105,9 @@ class Blockchain {
   static Future<Blockchain> create({required EsploraConfig config}) async {
     try {
       final res =
-          await RustLib.instance.api.apiCreateEsploraBlockchain(config: config);
-      return Blockchain._(res);
-    } on bridge.Error catch (e) {
-      throw handleBdkException(e);
-    }
-  }
-
-  static Future<Blockchain> createElectrum(
-      {required ElectrumConfig config}) async {
-    try {
-      final res = await RustLib.instance.api
-          .apiCreateElectrumBlockchain(config: config);
+          // await RustLib.instance.api.apiCreateEsploraBlockchain(config: config);
+          await RustLib.instance.api
+              .apiCreateEsploraBlockchainWithApi(config: config);
       return Blockchain._(res);
     } on bridge.Error catch (e) {
       throw handleBdkException(e);
@@ -1181,7 +1177,7 @@ class Wallet {
   }
 
   ///Sync the internal database with the [Blockchain]
-  Future sync(Blockchain blockchain) async {
+  Future syncWallet(Blockchain blockchain) async {
     try {
       RustLib.instance.api.apiSyncWallet(
           walletId: _wallet, blockchainId: blockchain._blockchain);

@@ -1,6 +1,6 @@
 pub use andromeda_api::settings::FiatCurrency;
 use andromeda_api::settings::UserSettings;
-use andromeda_common::BitcoinUnit;
+pub use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;
 
 #[frb(mirror(FiatCurrency))]
@@ -100,9 +100,8 @@ pub enum _FiatCurrency {
     VND,
 }
 
-// TODO:: use frb - mirror
-#[derive(Debug)]
-pub enum CommonBitcoinUnit {
+#[frb(mirror(BitcoinUnit))]
+pub enum _BitcoinUnit {
     /// 100,000,000 sats
     BTC,
     /// 100,000 sats
@@ -111,29 +110,9 @@ pub enum CommonBitcoinUnit {
     SATS,
 }
 
-impl From<BitcoinUnit> for CommonBitcoinUnit {
-    fn from(value: BitcoinUnit) -> Self {
-        match value {
-            BitcoinUnit::BTC => CommonBitcoinUnit::BTC,
-            BitcoinUnit::MBTC => CommonBitcoinUnit::MBTC,
-            BitcoinUnit::SATS => CommonBitcoinUnit::SATS,
-        }
-    }
-}
-
-impl From<CommonBitcoinUnit> for BitcoinUnit {
-    fn from(value: CommonBitcoinUnit) -> Self {
-        match value {
-            CommonBitcoinUnit::BTC => BitcoinUnit::BTC,
-            CommonBitcoinUnit::MBTC => BitcoinUnit::MBTC,
-            CommonBitcoinUnit::SATS => BitcoinUnit::SATS,
-        }
-    }
-}
-
 #[derive(Debug)]
 pub struct ApiUserSettings {
-    pub bitcoin_unit: CommonBitcoinUnit,
+    pub bitcoin_unit: BitcoinUnit,
     pub fiat_currency: FiatCurrency,
     pub hide_empty_used_addresses: u8,
     pub show_wallet_recovery: u8,
@@ -143,7 +122,7 @@ pub struct ApiUserSettings {
 impl From<UserSettings> for ApiUserSettings {
     fn from(value: UserSettings) -> Self {
         ApiUserSettings {
-            bitcoin_unit: value.BitcoinUnit.into(),
+            bitcoin_unit: value.BitcoinUnit,
             fiat_currency: value.FiatCurrency,
             hide_empty_used_addresses: value.HideEmptyUsedAddresses,
             show_wallet_recovery: value.ShowWalletRecovery,
@@ -155,7 +134,7 @@ impl From<UserSettings> for ApiUserSettings {
 impl From<ApiUserSettings> for UserSettings {
     fn from(value: ApiUserSettings) -> Self {
         UserSettings {
-            BitcoinUnit: value.bitcoin_unit.into(),
+            BitcoinUnit: value.bitcoin_unit,
             FiatCurrency: value.fiat_currency,
             HideEmptyUsedAddresses: value.hide_empty_used_addresses,
             ShowWalletRecovery: value.show_wallet_recovery,
@@ -164,7 +143,6 @@ impl From<ApiUserSettings> for UserSettings {
     }
 }
 // use crate::proton_api::route::RoutePath;
-
 // use super::api_service::ProtonAPIService;
 // use muon::{
 //     request::{JsonRequest, Request, Response},

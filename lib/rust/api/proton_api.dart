@@ -89,7 +89,7 @@ Future<ApiUserSettings> getUserSettings({dynamic hint}) =>
     RustLib.instance.api.getUserSettings(hint: hint);
 
 Future<ApiUserSettings> bitcoinUnit(
-        {required CommonBitcoinUnit symbol, dynamic hint}) =>
+        {required BitcoinUnit symbol, dynamic hint}) =>
     RustLib.instance.api.bitcoinUnit(symbol: symbol, hint: hint);
 
 Future<ApiUserSettings> fiatCurrency(
