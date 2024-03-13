@@ -87,9 +87,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   AccountModel? currentAccount;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-  ValueNotifier(FiatCurrency.chf);
-  ValueNotifier<CommonBitcoinUnit> bitcoinUnitNotifier =
-  ValueNotifier(CommonBitcoinUnit.btc);
+      ValueNotifier(FiatCurrency.chf);
+  ValueNotifier<BitcoinUnit> bitcoinUnitNotifier =
+      ValueNotifier(BitcoinUnit.btc);
   late ValueNotifier<ProtonAddress> emailIntegrationNotifier;
   bool emailIntegrationEnable = false;
   String transactionFilter = "";
@@ -110,7 +110,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateTransactionFilter(String filter);
 
-  void updateBitcoinUnit(CommonBitcoinUnit symbol);
+  void updateBitcoinUnit(BitcoinUnit symbol);
 
   void saveUserSettings();
 
@@ -214,6 +214,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
+    await WalletManager.initMuon(apiEnv);
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     hideEmptyUsedAddressesController = TextEditingController();
@@ -223,7 +224,6 @@ class HomeViewModelImpl extends HomeViewModel {
         Coordinator.navigatorKey.currentContext!,
         listen: false);
     try {
-      await WalletManager.initMuon(apiEnv);
       await Future.delayed(const Duration(
           seconds:
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
@@ -250,7 +250,7 @@ class HomeViewModelImpl extends HomeViewModel {
     fiatCurrencyNotifier.addListener(() async {
       updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
     });
-    bitcoinUnitNotifier.addListener(() async{
+    bitcoinUnitNotifier.addListener(() async {
       updateBitcoinUnit(bitcoinUnitNotifier.value);
       userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
     });
@@ -427,7 +427,9 @@ class HomeViewModelImpl extends HomeViewModel {
         try {
           String addressKeyPassphrase = proton_crypto.decrypt(
               userPrivateKey, userPassphrase, addressKeyToken);
-          addressKeys.add(AddressKey(privateKey: addressKeyPrivateKey, passphrase: addressKeyPassphrase));
+          addressKeys.add(AddressKey(
+              privateKey: addressKeyPrivateKey,
+              passphrase: addressKeyPassphrase));
         } catch (e) {
           logger.e(e.toString());
         }
@@ -455,12 +457,13 @@ class HomeViewModelImpl extends HomeViewModel {
         String fromEmail = "";
         if (transactionModel != null) {
           bool isSend = transactionDetail.sent - transactionDetail.received > 0;
-          String encryptedBinaryMessage = isSend ? transactionModel.tolist??"" : transactionModel.sender??"";
+          String encryptedBinaryMessage = isSend
+              ? transactionModel.tolist ?? ""
+              : transactionModel.sender ?? "";
           if (encryptedBinaryMessage.isNotEmpty) {
-            for (AddressKey addressKey in addressKeys){
+            for (AddressKey addressKey in addressKeys) {
               try {
-                fromEmail = addressKey.decryptBinary(
-                    encryptedBinaryMessage);
+                fromEmail = addressKey.decryptBinary(encryptedBinaryMessage);
                 if (fromEmail.isNotEmpty) {
                   break;
                 }
@@ -533,10 +536,11 @@ class HomeViewModelImpl extends HomeViewModel {
     // });
   }
 
-  Future<void> updateFiatCurrencyInUserSettingProvider(FiatCurrency fiatCurrency) async {
+  Future<void> updateFiatCurrencyInUserSettingProvider(
+      FiatCurrency fiatCurrency) async {
     userSettingProvider.updateFiatCurrency(fiatCurrency);
     ProtonExchangeRate exchangeRate =
-    await ExchangeRateService.getExchangeRate(fiatCurrency);
+        await ExchangeRateService.getExchangeRate(fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
   }
 
@@ -588,7 +592,7 @@ class HomeViewModelImpl extends HomeViewModel {
         datasourceStreamSinkAdd();
         logger.d(
             "start syncing ${currentAccount!.labelDecrypt} at ${DateTime.now()}");
-        await _lib.sync(blockchain!, wallet!);
+        await _lib.syncWallet(blockchain!, wallet!);
         var walletBalance = await wallet!.getBalance();
         balance = walletBalance.total;
         var unconfirmedList = await _lib.getUnConfirmedTransactions(wallet!);
@@ -611,7 +615,7 @@ class HomeViewModelImpl extends HomeViewModel {
       hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
       int twoFactorAmountThreshold =
           int.parse(twoFactorAmountThresholdController.text);
-      CommonBitcoinUnit bitcoinUnit = bitcoinUnitNotifier.value;
+      BitcoinUnit bitcoinUnit = bitcoinUnitNotifier.value;
       FiatCurrency fiatCurrency = fiatCurrencyNotifier.value;
 
       userSettings = await proton_api.hideEmptyUsedAddresses(
@@ -627,7 +631,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> updateBitcoinUnit(CommonBitcoinUnit symbol) async {
+  Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
     if (initialed) {
       userSettings = await proton_api.bitcoinUnit(symbol: symbol);
       datasourceStreamSinkAdd();

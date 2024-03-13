@@ -188,7 +188,7 @@ class SendReviewViewModelImpl extends SendReviewViewModel {
       amount = double.parse(amountFiatCurrencyTextController.text);
     }
     double cryptoAmount = 0;
-    if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
+    if (coinController.text == BitcoinUnit.btc.name.toUpperCase()) {
       cryptoAmount =
           amount * 100 / fiatCurrency2exchangeRate[fiatCurrencyNotifier.value]!;
     }
@@ -229,7 +229,7 @@ class SendReviewViewModelImpl extends SendReviewViewModel {
     //   amountTextController.text = (balance / 100000000).toString();
     // }
     double fiatCurrencyAmount = 0;
-    if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
+    if (coinController.text == BitcoinUnit.btc.name.toUpperCase()) {
       fiatCurrencyAmount =
           amount * fiatCurrency2exchangeRate[fiatCurrencyNotifier.value]! / 100;
     }

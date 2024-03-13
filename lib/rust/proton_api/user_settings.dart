@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 class ApiUserSettings {
-  final CommonBitcoinUnit bitcoinUnit;
+  final BitcoinUnit bitcoinUnit;
   final FiatCurrency fiatCurrency;
   final int hideEmptyUsedAddresses;
   final int showWalletRecovery;
@@ -41,7 +41,7 @@ class ApiUserSettings {
           twoFactorAmountThreshold == other.twoFactorAmountThreshold;
 }
 
-enum CommonBitcoinUnit {
+enum BitcoinUnit {
   /// 100,000,000 sats
   btc,
 

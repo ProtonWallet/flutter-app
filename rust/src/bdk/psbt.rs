@@ -1,16 +1,15 @@
 use bdk::bitcoin::consensus::Decodable;
-use bdk::bitcoin::hashes::hex::ToHex;
-use bdk::bitcoin::psbt::serialize::Serialize;
-use bdk::bitcoin::util::psbt::PartiallySignedTransaction as BdkPartiallySignedTransaction;
+use crate::bdk::types::{TxIn, TxOut};
+use bdk::bitcoin::psbt::PartiallySignedTransaction as BdkPartiallySignedTransaction;
 use bdk::bitcoin::Transaction as BdkTransaction;
 use bdk::psbt::PsbtUtils;
 use bdk::{Error as BdkError, FeeRate};
+use bitcoin::consensus::serialize;
 use std::borrow::Borrow;
 use std::io::Cursor;
 use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
-use crate::bdk::types::{TxIn, TxOut};
 
 #[derive(Debug)]
 pub struct PartiallySignedTransaction {
@@ -34,7 +33,7 @@ impl PartiallySignedTransaction {
     pub(crate) fn txid(&self) -> String {
         let tx = self.internal.lock().unwrap().clone().extract_tx();
         let txid = tx.txid();
-        txid.to_hex()
+        txid.to_string()
     }
 
     /// Return the transaction.
@@ -111,7 +110,7 @@ impl Transaction {
     }
 
     pub fn weight(&self) -> u64 {
-        self.internal.weight() as u64
+        self.internal.weight().to_wu()
     }
 
     pub fn size(&self) -> u64 {
@@ -123,7 +122,7 @@ impl Transaction {
     }
 
     pub fn serialize(&self) -> Vec<u8> {
-        self.internal.serialize()
+        serialize(&self.internal)
     }
 
     pub fn is_coin_base(&self) -> bool {
@@ -143,8 +142,9 @@ impl Transaction {
     }
 
     pub fn lock_time(&self) -> u32 {
-        self.internal.lock_time.0
+        self.internal.lock_time.to_consensus_u32()
     }
+
     pub fn input(&self) -> Vec<TxIn> {
         self.internal.input.iter().map(|x| x.into()).collect()
     }

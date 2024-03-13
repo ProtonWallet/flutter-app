@@ -4,6 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/api2.dart';
+import 'api/flutter_logger.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/proton_api_service.dart';
@@ -39,9 +40,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ProtonApiServicePtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockProtonAPIServicePtr;
-
-  @protected
-  AnyhowException dco_decode_AnyhowException(dynamic raw);
 
   @protected
   ProtonApiService
@@ -80,6 +78,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BitcoinAddress dco_decode_bitcoin_address(dynamic raw);
 
   @protected
+  BitcoinUnit dco_decode_bitcoin_unit(dynamic raw);
+
+  @protected
   BlockTime dco_decode_block_time(dynamic raw);
 
   @protected
@@ -106,9 +107,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DatabaseConfig dco_decode_box_autoadd_database_config(dynamic raw);
-
-  @protected
-  ElectrumConfig dco_decode_box_autoadd_electrum_config(dynamic raw);
 
   @protected
   EsploraConfig dco_decode_box_autoadd_esplora_config(dynamic raw);
@@ -151,9 +149,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SignOptions dco_decode_box_autoadd_sign_options(dynamic raw);
 
   @protected
-  SledDbConfiguration dco_decode_box_autoadd_sled_db_configuration(dynamic raw);
-
-  @protected
   SqliteDbConfiguration dco_decode_box_autoadd_sqlite_db_configuration(
       dynamic raw);
 
@@ -176,9 +171,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
 
   @protected
-  CommonBitcoinUnit dco_decode_common_bitcoin_unit(dynamic raw);
-
-  @protected
   CreateWalletAccountReq dco_decode_create_wallet_account_req(dynamic raw);
 
   @protected
@@ -186,9 +178,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DatabaseConfig dco_decode_database_config(dynamic raw);
-
-  @protected
-  ElectrumConfig dco_decode_electrum_config(dynamic raw);
 
   @protected
   EmailAddress dco_decode_email_address(dynamic raw);
@@ -213,7 +202,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_32(dynamic raw);
 
   @protected
+  int dco_decode_i_64(dynamic raw);
+
+  @protected
   KeychainKind dco_decode_keychain_kind(dynamic raw);
+
+  @protected
+  Level dco_decode_level(dynamic raw);
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
@@ -223,6 +218,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<EmailAddress> dco_decode_list_email_address(dynamic raw);
+
+  @protected
+  List<Uint8List> dco_decode_list_list_prim_u_8_strict(dynamic raw);
 
   @protected
   List<LocalUtxo> dco_decode_list_local_utxo(dynamic raw);
@@ -287,6 +285,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LocalUtxo dco_decode_local_utxo(dynamic raw);
+
+  @protected
+  LogEntry dco_decode_log_entry(dynamic raw);
 
   @protected
   MyTestObject dco_decode_my_test_object(dynamic raw);
@@ -371,9 +372,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   OutPoint dco_decode_out_point(dynamic raw);
 
   @protected
-  Payload dco_decode_payload(dynamic raw);
-
-  @protected
   ProtonAddress dco_decode_proton_address(dynamic raw);
 
   @protected
@@ -418,9 +416,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SignOptions dco_decode_sign_options(dynamic raw);
-
-  @protected
-  SledDbConfiguration dco_decode_sled_db_configuration(dynamic raw);
 
   @protected
   SqliteDbConfiguration dco_decode_sqlite_db_configuration(dynamic raw);
@@ -480,13 +475,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletTransaction dco_decode_wallet_transaction(dynamic raw);
 
   @protected
-  WitnessVersion dco_decode_witness_version(dynamic raw);
-
-  @protected
   WordCount dco_decode_word_count(dynamic raw);
-
-  @protected
-  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
 
   @protected
   ProtonApiService
@@ -525,6 +514,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BitcoinAddress sse_decode_bitcoin_address(SseDeserializer deserializer);
 
   @protected
+  BitcoinUnit sse_decode_bitcoin_unit(SseDeserializer deserializer);
+
+  @protected
   BlockTime sse_decode_block_time(SseDeserializer deserializer);
 
   @protected
@@ -555,10 +547,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DatabaseConfig sse_decode_box_autoadd_database_config(
-      SseDeserializer deserializer);
-
-  @protected
-  ElectrumConfig sse_decode_box_autoadd_electrum_config(
       SseDeserializer deserializer);
 
   @protected
@@ -608,10 +596,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SignOptions sse_decode_box_autoadd_sign_options(SseDeserializer deserializer);
 
   @protected
-  SledDbConfiguration sse_decode_box_autoadd_sled_db_configuration(
-      SseDeserializer deserializer);
-
-  @protected
   SqliteDbConfiguration sse_decode_box_autoadd_sqlite_db_configuration(
       SseDeserializer deserializer);
 
@@ -637,10 +621,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  CommonBitcoinUnit sse_decode_common_bitcoin_unit(
-      SseDeserializer deserializer);
-
-  @protected
   CreateWalletAccountReq sse_decode_create_wallet_account_req(
       SseDeserializer deserializer);
 
@@ -649,9 +629,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DatabaseConfig sse_decode_database_config(SseDeserializer deserializer);
-
-  @protected
-  ElectrumConfig sse_decode_electrum_config(SseDeserializer deserializer);
 
   @protected
   EmailAddress sse_decode_email_address(SseDeserializer deserializer);
@@ -676,7 +653,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
   KeychainKind sse_decode_keychain_kind(SseDeserializer deserializer);
+
+  @protected
+  Level sse_decode_level(SseDeserializer deserializer);
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
@@ -687,6 +670,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<EmailAddress> sse_decode_list_email_address(
+      SseDeserializer deserializer);
+
+  @protected
+  List<Uint8List> sse_decode_list_list_prim_u_8_strict(
       SseDeserializer deserializer);
 
   @protected
@@ -762,6 +749,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer);
+
+  @protected
+  LogEntry sse_decode_log_entry(SseDeserializer deserializer);
 
   @protected
   MyTestObject sse_decode_my_test_object(SseDeserializer deserializer);
@@ -858,9 +848,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   OutPoint sse_decode_out_point(SseDeserializer deserializer);
 
   @protected
-  Payload sse_decode_payload(SseDeserializer deserializer);
-
-  @protected
   ProtonAddress sse_decode_proton_address(SseDeserializer deserializer);
 
   @protected
@@ -909,10 +896,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SignOptions sse_decode_sign_options(SseDeserializer deserializer);
-
-  @protected
-  SledDbConfiguration sse_decode_sled_db_configuration(
-      SseDeserializer deserializer);
 
   @protected
   SqliteDbConfiguration sse_decode_sqlite_db_configuration(
@@ -977,14 +960,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletTransaction sse_decode_wallet_transaction(SseDeserializer deserializer);
 
   @protected
-  WitnessVersion sse_decode_witness_version(SseDeserializer deserializer);
-
-  @protected
   WordCount sse_decode_word_count(SseDeserializer deserializer);
-
-  @protected
-  void sse_encode_AnyhowException(
-      AnyhowException self, SseSerializer serializer);
 
   @protected
   void
@@ -1025,6 +1001,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BitcoinAddress self, SseSerializer serializer);
 
   @protected
+  void sse_encode_bitcoin_unit(BitcoinUnit self, SseSerializer serializer);
+
+  @protected
   void sse_encode_block_time(BlockTime self, SseSerializer serializer);
 
   @protected
@@ -1057,10 +1036,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_database_config(
       DatabaseConfig self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_electrum_config(
-      ElectrumConfig self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_esplora_config(
@@ -1113,10 +1088,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SignOptions self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_sled_db_configuration(
-      SledDbConfiguration self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_sqlite_db_configuration(
       SqliteDbConfiguration self, SseSerializer serializer);
 
@@ -1142,10 +1113,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ChangeSpendPolicy self, SseSerializer serializer);
 
   @protected
-  void sse_encode_common_bitcoin_unit(
-      CommonBitcoinUnit self, SseSerializer serializer);
-
-  @protected
   void sse_encode_create_wallet_account_req(
       CreateWalletAccountReq self, SseSerializer serializer);
 
@@ -1156,10 +1123,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_database_config(
       DatabaseConfig self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_electrum_config(
-      ElectrumConfig self, SseSerializer serializer);
 
   @protected
   void sse_encode_email_address(EmailAddress self, SseSerializer serializer);
@@ -1184,7 +1147,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_i_64(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_keychain_kind(KeychainKind self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_level(Level self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
@@ -1196,6 +1165,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_email_address(
       List<EmailAddress> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_list_prim_u_8_strict(
+      List<Uint8List> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_local_utxo(
@@ -1275,6 +1248,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
 
   @protected
   void sse_encode_my_test_object(MyTestObject self, SseSerializer serializer);
@@ -1372,9 +1348,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_out_point(OutPoint self, SseSerializer serializer);
 
   @protected
-  void sse_encode_payload(Payload self, SseSerializer serializer);
-
-  @protected
   void sse_encode_proton_address(ProtonAddress self, SseSerializer serializer);
 
   @protected
@@ -1426,10 +1399,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_sign_options(SignOptions self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_sled_db_configuration(
-      SledDbConfiguration self, SseSerializer serializer);
 
   @protected
   void sse_encode_sqlite_db_configuration(
@@ -1495,10 +1464,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_wallet_transaction(
       WalletTransaction self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_witness_version(
-      WitnessVersion self, SseSerializer serializer);
 
   @protected
   void sse_encode_word_count(WordCount self, SseSerializer serializer);
