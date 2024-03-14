@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -83,37 +85,8 @@ class SettingsViewModelImpl extends SettingsViewModel {
   Future<void> saveUserSettings() async {
     hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
     int twoFactorAmountThreshold = int.parse(twoFactorAmountThresholdController.text);
-    CommonBitcoinUnit bitcoinUnit;
-    switch (bitcoinUnitController.text){
-      case "BTC":
-        bitcoinUnit = CommonBitcoinUnit.btc;
-        break;
-      case "MBTC":
-        bitcoinUnit = CommonBitcoinUnit.mbtc;
-        break;
-      case "SATS":
-        bitcoinUnit = CommonBitcoinUnit.sats;
-        break;
-      default:
-        bitcoinUnit = CommonBitcoinUnit.sats;
-        break;
-    }
-
-    ApiFiatCurrency fiatCurrency;
-    switch (faitCurrencyController.text){
-      case "USD":
-        fiatCurrency = ApiFiatCurrency.usd;
-        break;
-      case "EUR":
-        fiatCurrency = ApiFiatCurrency.eur;
-        break;
-      case "CHF":
-        fiatCurrency = ApiFiatCurrency.chf;
-        break;
-      default:
-        fiatCurrency = ApiFiatCurrency.usd;
-        break;
-    }
+    CommonBitcoinUnit bitcoinUnit = CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
+    ApiFiatCurrency fiatCurrency = CommonHelper.getFiatCurrency(faitCurrencyController.text);
 
     userSettings = await proton_api.hideEmptyUsedAddresses(hideEmptyUsedAddresses: hideEmptyUsedAddresses);
     userSettings = await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
@@ -121,6 +94,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
     userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
 
     loadUserSettings();
+    await WalletManager.saveUserSetting(userSettings!);
   }
 
   @override
