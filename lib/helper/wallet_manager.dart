@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -156,5 +158,14 @@ class WalletManager {
     var exchangeRate = await proton_api.getExchangeRate(
         bitcoinUnit: bitcoinUnit, fiatCurrency: fiatCurrency);
     return exchangeRate.exchangeRate;
+  }
+  
+  static Future<void> saveUserSetting(ApiUserSettings userSettings) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt(userSettingsHideEmptyUsedAddresses, userSettings.hideEmptyUsedAddresses);
+    preferences.setInt(userSettingsTwoFactorAmountThreshold, userSettings.twoFactorAmountThreshold ?? 0);
+    preferences.setInt(userSettingsShowWalletRecovery, userSettings.showWalletRecovery);
+    preferences.setString(userSettingsFiatCurrency, userSettings.fiatCurrency.name.toUpperCase());
+    preferences.setString(userSettingsBitcoinUnit, userSettings.bitcoinUnit.name.toUpperCase());
   }
 }
