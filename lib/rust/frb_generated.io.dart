@@ -19,6 +19,7 @@ import 'dart:ffi' as ffi;
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 import 'proton_api/errors.dart';
+import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
@@ -81,6 +82,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AddressIndex dco_decode_box_autoadd_address_index(dynamic raw);
 
   @protected
+  ApiUserSettings dco_decode_box_autoadd_api_user_settings(dynamic raw);
+
+  @protected
   BlockTime dco_decode_box_autoadd_block_time(dynamic raw);
 
   @protected
@@ -115,6 +119,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonAPIService dco_decode_box_autoadd_proton_api_service(dynamic raw);
 
   @protected
+  ProtonWallet dco_decode_box_autoadd_proton_wallet(dynamic raw);
+
+  @protected
+  ProtonWalletKey dco_decode_box_autoadd_proton_wallet_key(dynamic raw);
+
+  @protected
   PsbtSigHashType dco_decode_box_autoadd_psbt_sig_hash_type(dynamic raw);
 
   @protected
@@ -145,6 +155,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int dco_decode_box_autoadd_u_8(dynamic raw);
+
+  @protected
+  WalletAccount dco_decode_box_autoadd_wallet_account(dynamic raw);
+
+  @protected
+  WalletSettings dco_decode_box_autoadd_wallet_settings(dynamic raw);
 
   @protected
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
@@ -195,6 +211,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<ProtonEvent> dco_decode_list_proton_event(dynamic raw);
+
+  @protected
   List<ScriptAmount> dco_decode_list_script_amount(dynamic raw);
 
   @protected
@@ -210,7 +229,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<WalletAccount> dco_decode_list_wallet_account(dynamic raw);
 
   @protected
+  List<WalletAccountEvent> dco_decode_list_wallet_account_event(dynamic raw);
+
+  @protected
   List<WalletData> dco_decode_list_wallet_data(dynamic raw);
+
+  @protected
+  List<WalletEvent> dco_decode_list_wallet_event(dynamic raw);
+
+  @protected
+  List<WalletKeyEvent> dco_decode_list_wallet_key_event(dynamic raw);
+
+  @protected
+  List<WalletSettingsEvent> dco_decode_list_wallet_settings_event(dynamic raw);
 
   @protected
   LocalUtxo dco_decode_local_utxo(dynamic raw);
@@ -225,10 +256,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  ApiUserSettings? dco_decode_opt_box_autoadd_api_user_settings(dynamic raw);
+
+  @protected
   BlockTime? dco_decode_opt_box_autoadd_block_time(dynamic raw);
 
   @protected
   double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
+
+  @protected
+  ProtonWallet? dco_decode_opt_box_autoadd_proton_wallet(dynamic raw);
+
+  @protected
+  ProtonWalletKey? dco_decode_opt_box_autoadd_proton_wallet_key(dynamic raw);
 
   @protected
   PsbtSigHashType? dco_decode_opt_box_autoadd_psbt_sig_hash_type(dynamic raw);
@@ -256,6 +296,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? dco_decode_opt_box_autoadd_u_8(dynamic raw);
 
   @protected
+  WalletAccount? dco_decode_opt_box_autoadd_wallet_account(dynamic raw);
+
+  @protected
+  WalletSettings? dco_decode_opt_box_autoadd_wallet_settings(dynamic raw);
+
+  @protected
+  List<WalletAccountEvent>? dco_decode_opt_list_wallet_account_event(
+      dynamic raw);
+
+  @protected
+  List<WalletEvent>? dco_decode_opt_list_wallet_event(dynamic raw);
+
+  @protected
+  List<WalletKeyEvent>? dco_decode_opt_list_wallet_key_event(dynamic raw);
+
+  @protected
+  List<WalletSettingsEvent>? dco_decode_opt_list_wallet_settings_event(
+      dynamic raw);
+
+  @protected
   OutPoint dco_decode_out_point(dynamic raw);
 
   @protected
@@ -263,6 +323,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService dco_decode_proton_api_service(dynamic raw);
+
+  @protected
+  ProtonEvent dco_decode_proton_event(dynamic raw);
 
   @protected
   ProtonExchangeRate dco_decode_proton_exchange_rate(dynamic raw);
@@ -314,6 +377,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TxOut dco_decode_tx_out(dynamic raw);
 
   @protected
+  int dco_decode_u_16(dynamic raw);
+
+  @protected
   int dco_decode_u_32(dynamic raw);
 
   @protected
@@ -332,10 +398,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletAccount dco_decode_wallet_account(dynamic raw);
 
   @protected
+  WalletAccountEvent dco_decode_wallet_account_event(dynamic raw);
+
+  @protected
   WalletData dco_decode_wallet_data(dynamic raw);
 
   @protected
+  WalletEvent dco_decode_wallet_event(dynamic raw);
+
+  @protected
+  WalletKeyEvent dco_decode_wallet_key_event(dynamic raw);
+
+  @protected
   WalletSettings dco_decode_wallet_settings(dynamic raw);
+
+  @protected
+  WalletSettingsEvent dco_decode_wallet_settings_event(dynamic raw);
 
   @protected
   WitnessVersion dco_decode_witness_version(dynamic raw);
@@ -388,6 +466,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ApiUserSettings sse_decode_box_autoadd_api_user_settings(
+      SseDeserializer deserializer);
+
+  @protected
   BlockTime sse_decode_box_autoadd_block_time(SseDeserializer deserializer);
 
   @protected
@@ -428,6 +510,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ProtonWallet sse_decode_box_autoadd_proton_wallet(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonWalletKey sse_decode_box_autoadd_proton_wallet_key(
+      SseDeserializer deserializer);
+
+  @protected
   PsbtSigHashType sse_decode_box_autoadd_psbt_sig_hash_type(
       SseDeserializer deserializer);
 
@@ -460,6 +550,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_u_8(SseDeserializer deserializer);
+
+  @protected
+  WalletAccount sse_decode_box_autoadd_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  WalletSettings sse_decode_box_autoadd_wallet_settings(
+      SseDeserializer deserializer);
 
   @protected
   ChangeSpendPolicy sse_decode_change_spend_policy(
@@ -513,6 +611,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<ProtonEvent> sse_decode_list_proton_event(SseDeserializer deserializer);
+
+  @protected
   List<ScriptAmount> sse_decode_list_script_amount(
       SseDeserializer deserializer);
 
@@ -531,7 +632,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<WalletAccountEvent> sse_decode_list_wallet_account_event(
+      SseDeserializer deserializer);
+
+  @protected
   List<WalletData> sse_decode_list_wallet_data(SseDeserializer deserializer);
+
+  @protected
+  List<WalletEvent> sse_decode_list_wallet_event(SseDeserializer deserializer);
+
+  @protected
+  List<WalletKeyEvent> sse_decode_list_wallet_key_event(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletSettingsEvent> sse_decode_list_wallet_settings_event(
+      SseDeserializer deserializer);
 
   @protected
   LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer);
@@ -546,11 +662,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  ApiUserSettings? sse_decode_opt_box_autoadd_api_user_settings(
+      SseDeserializer deserializer);
+
+  @protected
   BlockTime? sse_decode_opt_box_autoadd_block_time(
       SseDeserializer deserializer);
 
   @protected
   double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
+  ProtonWallet? sse_decode_opt_box_autoadd_proton_wallet(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonWalletKey? sse_decode_opt_box_autoadd_proton_wallet_key(
+      SseDeserializer deserializer);
 
   @protected
   PsbtSigHashType? sse_decode_opt_box_autoadd_psbt_sig_hash_type(
@@ -581,6 +709,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? sse_decode_opt_box_autoadd_u_8(SseDeserializer deserializer);
 
   @protected
+  WalletAccount? sse_decode_opt_box_autoadd_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  WalletSettings? sse_decode_opt_box_autoadd_wallet_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletAccountEvent>? sse_decode_opt_list_wallet_account_event(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletEvent>? sse_decode_opt_list_wallet_event(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletKeyEvent>? sse_decode_opt_list_wallet_key_event(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletSettingsEvent>? sse_decode_opt_list_wallet_settings_event(
+      SseDeserializer deserializer);
+
+  @protected
   OutPoint sse_decode_out_point(SseDeserializer deserializer);
 
   @protected
@@ -588,6 +740,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService sse_decode_proton_api_service(SseDeserializer deserializer);
+
+  @protected
+  ProtonEvent sse_decode_proton_event(SseDeserializer deserializer);
 
   @protected
   ProtonExchangeRate sse_decode_proton_exchange_rate(
@@ -645,6 +800,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TxOut sse_decode_tx_out(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_u_16(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_u_32(SseDeserializer deserializer);
 
   @protected
@@ -663,10 +821,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletAccount sse_decode_wallet_account(SseDeserializer deserializer);
 
   @protected
+  WalletAccountEvent sse_decode_wallet_account_event(
+      SseDeserializer deserializer);
+
+  @protected
   WalletData sse_decode_wallet_data(SseDeserializer deserializer);
 
   @protected
+  WalletEvent sse_decode_wallet_event(SseDeserializer deserializer);
+
+  @protected
+  WalletKeyEvent sse_decode_wallet_key_event(SseDeserializer deserializer);
+
+  @protected
   WalletSettings sse_decode_wallet_settings(SseDeserializer deserializer);
+
+  @protected
+  WalletSettingsEvent sse_decode_wallet_settings_event(
+      SseDeserializer deserializer);
 
   @protected
   WitnessVersion sse_decode_witness_version(SseDeserializer deserializer);
@@ -722,6 +894,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       AddressIndex self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_api_user_settings(
+      ApiUserSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_block_time(
       BlockTime self, SseSerializer serializer);
 
@@ -765,6 +941,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonAPIService self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_proton_wallet(
+      ProtonWallet self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_proton_wallet_key(
+      ProtonWalletKey self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_psbt_sig_hash_type(
       PsbtSigHashType self, SseSerializer serializer);
 
@@ -799,6 +983,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_u_8(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_wallet_account(
+      WalletAccount self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_wallet_settings(
+      WalletSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_change_spend_policy(
@@ -857,6 +1049,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_proton_event(
+      List<ProtonEvent> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_script_amount(
       List<ScriptAmount> self, SseSerializer serializer);
 
@@ -875,8 +1071,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<WalletAccount> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_wallet_account_event(
+      List<WalletAccountEvent> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_wallet_data(
       List<WalletData> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_event(
+      List<WalletEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_key_event(
+      List<WalletKeyEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_settings_event(
+      List<WalletSettingsEvent> self, SseSerializer serializer);
 
   @protected
   void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer);
@@ -891,11 +1103,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_api_user_settings(
+      ApiUserSettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_block_time(
       BlockTime? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_wallet(
+      ProtonWallet? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_wallet_key(
+      ProtonWalletKey? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_psbt_sig_hash_type(
@@ -927,6 +1151,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_u_8(int? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_wallet_account(
+      WalletAccount? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_wallet_settings(
+      WalletSettings? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_wallet_account_event(
+      List<WalletAccountEvent>? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_wallet_event(
+      List<WalletEvent>? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_wallet_key_event(
+      List<WalletKeyEvent>? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_wallet_settings_event(
+      List<WalletSettingsEvent>? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_out_point(OutPoint self, SseSerializer serializer);
 
   @protected
@@ -935,6 +1183,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_proton_api_service(
       ProtonAPIService self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_event(ProtonEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_exchange_rate(
@@ -994,6 +1245,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_tx_out(TxOut self, SseSerializer serializer);
 
   @protected
+  void sse_encode_u_16(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_u_32(int self, SseSerializer serializer);
 
   @protected
@@ -1012,11 +1266,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_wallet_account(WalletAccount self, SseSerializer serializer);
 
   @protected
+  void sse_encode_wallet_account_event(
+      WalletAccountEvent self, SseSerializer serializer);
+
+  @protected
   void sse_encode_wallet_data(WalletData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_event(WalletEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_key_event(
+      WalletKeyEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_settings(
       WalletSettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_settings_event(
+      WalletSettingsEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_witness_version(

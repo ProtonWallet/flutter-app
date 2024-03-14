@@ -8,6 +8,7 @@ import 'package:wallet/components/custom.piechart.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -487,7 +488,21 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () async {
-                int exchangeRate = await WalletManager.getExchangeRate(CommonBitcoinUnit.btc, ApiFiatCurrency.usd);
+                EventLoopHelper.runOnce();
+              },
+              text: "Event Loop Check",
+              width: MediaQuery.of(context).size.width - 52,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              borderColor: const Color.fromARGB(255, 226, 226, 226),
+              textStyle: FontManager.body1Median(
+                  Theme.of(context).colorScheme.primary),
+              height: 48),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonV5(
+              onPressed: () async {
+                int exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.usd);
                 if (context.mounted){
                   LocalToast.showToast(context, "exchangeRate = $exchangeRate");
                 }
