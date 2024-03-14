@@ -5,6 +5,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -75,11 +76,12 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> loadData() async {
     await proton_api.initApiService(
         userName: 'ProtonWallet', password: 'alicebob');
+    EventLoopHelper.start();
     blockchain ??= await _lib.initializeBlockchain(false);
     hasWallet = await WalletManager.hasAccount();
     datasourceChangedStreamController.sink.add(this);
     checkNewWallet();
-    fetchWallets();
+    // fetchWallets();
   }
 
   @override
@@ -198,9 +200,9 @@ class HomeViewModelImpl extends HomeViewModel {
               .getWalletAccounts(walletId: walletData.wallet.id);
           if (walletAccounts.isNotEmpty) {
             for (WalletAccount walletAccount in walletAccounts) {
-              WalletManager.importAccount(
+              WalletManager.insertOrUpdateAccount(
                   walletID,
-                  await WalletKeyHelper.decrypt(secretKey, walletAccount.label),
+                  walletAccount.label,
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
                   walletAccount.id);
@@ -215,9 +217,9 @@ class HomeViewModelImpl extends HomeViewModel {
           if (walletAccounts.isNotEmpty) {
             for (WalletAccount walletAccount in walletAccounts) {
               existingAccountIDs.add(walletAccount.id);
-              WalletManager.importAccount(
+              WalletManager.insertOrUpdateAccount(
                   walletModel.id!,
-                  await WalletKeyHelper.decrypt(secretKey, walletAccount.label),
+                  walletAccount.label,
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
                   walletAccount.id);

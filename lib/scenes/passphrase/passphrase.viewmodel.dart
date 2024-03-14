@@ -191,7 +191,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       int walletID = await DBHelper.walletDao!.insert(wallet);
       await WalletManager.setWalletKey(walletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
-      WalletManager.importAccount(walletID, "Default Account",
+      WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
           ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
     } catch (e) {
       logger.e(e);

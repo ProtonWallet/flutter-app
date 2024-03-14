@@ -7,3 +7,6 @@
 [submodule "vendor/esplora-client"]
 	path = vendor/esplora-client
 	url = git@gitlab.protontech.ch:wallet/rust-esplora-client.git
+[submodule "vendor/proton-srp"]
+	path = vendor/proton-srp
+	url = git@gitlab.protontech.ch:ProtonVPN/rust/proton-srp.git
