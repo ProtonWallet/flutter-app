@@ -113,11 +113,15 @@ class SendView extends ViewBase<SendViewModel> {
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).add_address,
-                      style: FontManager.captionMedian(
-                          ProtonColors.interactionNorm),
-                    ),
+                    child: GestureDetector(
+                        onTap: () {
+                          LocalToast.showToast(context, "TODO");
+                        },
+                        child: Text(
+                          S.of(context).add_address,
+                          style: FontManager.captionMedian(
+                              ProtonColors.interactionNorm),
+                        )),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -145,11 +149,19 @@ class SendView extends ViewBase<SendViewModel> {
                             digitOnly: true,
                           ),
                           TextChoices(
-                              choices: const ["SAT", "BTC"],
-                              selectedValue: "SAT",
+                              choices: const ["SATS", "BTC"],
+                              selectedValue: viewModel.coinController.text,
                               controller: viewModel.coinController),
                         ],
                       )),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "~ €${viewModel.getFiatCurrencyValue()}",
+                      style: FontManager.captionMedian(ProtonColors.textHint),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
@@ -220,14 +232,15 @@ class SendView extends ViewBase<SendViewModel> {
               children: [
                 ButtonV5(
                     onPressed: () {
-                      if (viewModel.coinController.text != "SAT") {
-                        LocalToast.showErrorToast(
-                            context, S.of(context).only_support_sat_now);
-                      } else {
-                        viewModel.sendCoin();
-                        viewModel.coordinator.end();
-                        Navigator.of(context).pop();
-                      }
+                      viewModel.updateExchangeRate();
+                      // if (viewModel.coinController.text != "SATS") {
+                      //   LocalToast.showErrorToast(
+                      //       context, S.of(context).only_support_sat_now);
+                      // } else {
+                      //   viewModel.sendCoin();
+                      //   viewModel.coordinator.end();
+                      //   Navigator.of(context).pop();
+                      // }
                     },
                     text: S.of(context).review_transaction,
                     width: MediaQuery.of(context).size.width,

@@ -116,7 +116,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
                 req: req,
               );
 
-              WalletManager.importAccount(widget.walletID, label,
+              WalletManager.insertOrUpdateAccount(widget.walletID, walletAccount.label,
                   scriptType.index, "$derivationPath/0", walletAccount.id);
               if (context.mounted) {
                 LocalToast.showToast(context, S.of(context).account_created);
