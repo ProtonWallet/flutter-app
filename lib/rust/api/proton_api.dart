@@ -5,6 +5,7 @@
 
 import '../frb_generated.dart';
 import '../proton_api/errors.dart';
+import '../proton_api/event_routes.dart';
 import '../proton_api/exchange_rate.dart';
 import '../proton_api/user_settings.dart';
 import '../proton_api/wallet.dart';
@@ -90,3 +91,11 @@ Future<ProtonExchangeRate> getExchangeRate(
         fiatCurrency: fiatCurrency,
         time: time,
         hint: hint);
+
+Future<String> getLatestEventId({dynamic hint}) =>
+    RustLib.instance.api.getLatestEventId(hint: hint);
+
+Future<List<ProtonEvent>> collectEvents(
+        {required String latestEventId, dynamic hint}) =>
+    RustLib.instance.api
+        .collectEvents(latestEventId: latestEventId, hint: hint);

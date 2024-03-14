@@ -42,17 +42,26 @@ class WalletManager {
     DBHelper.accountDao!.deleteAccountsByWalletID(walletID);
   }
 
-  static Future<void> importAccount(int walletID, String label, int scriptType,
-      String derivationPath, String serverAccountID) async {
+  static Future<int> getWalletIDByServerWalletID(String serverWalletID) async {
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    if (walletModel != null) {
+      return walletModel.id!;
+    }
+    return -1;
+  }
+
+  static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,
+      int scriptType, String derivationPath, String serverAccountID) async {
     SecretKey? secretKey = await getWalletKey(walletID);
     if (walletID != -1 && secretKey != null) {
       DateTime now = DateTime.now();
       AccountModel? account =
           await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
       if (account != null) {
-        account.label =
-            base64Decode(await WalletKeyHelper.encrypt(secretKey, label));
-        account.labelDecrypt = label;
+        account.label = base64Decode(labelEncrypted);
+        account.labelDecrypt =
+            await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
         account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
         account.scriptType = scriptType;
         DBHelper.accountDao!.update(account);
@@ -61,12 +70,13 @@ class WalletManager {
             id: null,
             walletID: walletID,
             derivationPath: derivationPath,
-            label:
-                base64Decode(await WalletKeyHelper.encrypt(secretKey, label)),
+            label: base64Decode(labelEncrypted),
             scriptType: scriptType,
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,
             serverAccountID: serverAccountID);
+        account.labelDecrypt =
+            await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
         DBHelper.accountDao!.insert(account);
       }
     }
@@ -153,19 +163,30 @@ class WalletManager {
     return "";
   }
 
-  static Future<int> getExchangeRate(
-      CommonBitcoinUnit bitcoinUnit, ApiFiatCurrency fiatCurrency) async {
+  static Future<int> getExchangeRate(ApiFiatCurrency fiatCurrency,
+      {int? time}) async {
     var exchangeRate = await proton_api.getExchangeRate(
-        bitcoinUnit: bitcoinUnit, fiatCurrency: fiatCurrency);
+        bitcoinUnit: CommonBitcoinUnit.btc,
+        fiatCurrency: fiatCurrency,
+        time: time);
     return exchangeRate.exchangeRate;
   }
-  
+
   static Future<void> saveUserSetting(ApiUserSettings userSettings) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setInt(userSettingsHideEmptyUsedAddresses, userSettings.hideEmptyUsedAddresses);
-    preferences.setInt(userSettingsTwoFactorAmountThreshold, userSettings.twoFactorAmountThreshold ?? 0);
-    preferences.setInt(userSettingsShowWalletRecovery, userSettings.showWalletRecovery);
-    preferences.setString(userSettingsFiatCurrency, userSettings.fiatCurrency.name.toUpperCase());
-    preferences.setString(userSettingsBitcoinUnit, userSettings.bitcoinUnit.name.toUpperCase());
+    preferences.setInt(userSettingsHideEmptyUsedAddresses,
+        userSettings.hideEmptyUsedAddresses);
+    preferences.setInt(userSettingsTwoFactorAmountThreshold,
+        userSettings.twoFactorAmountThreshold ?? 0);
+    preferences.setInt(
+        userSettingsShowWalletRecovery, userSettings.showWalletRecovery);
+    preferences.setString(
+        userSettingsFiatCurrency, userSettings.fiatCurrency.name.toUpperCase());
+    preferences.setString(
+        userSettingsBitcoinUnit, userSettings.bitcoinUnit.name.toUpperCase());
+  }
+
+  static int getCurrentTime() {
+    return DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
   }
 }

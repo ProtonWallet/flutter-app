@@ -1,55 +1,119 @@
-use super::{api_service::ProtonAPIService, types::ResponseCode};
+use super::user_settings::ApiUserSettings;
+use super::wallet::{ProtonWallet, ProtonWalletKey};
+use super::wallet_account::WalletAccount;
+use super::wallet_settings::WalletSettings;
+use andromeda_api::event::{
+    ApiProtonEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
+    ApiWalletSettingsEvent,
+};
 
-
-// either web-wallet or android-wallet, both are whitelisted
-pub(crate) trait EventRoute {
-    fn get_latest() -> Result<ResponseCode, Box<dyn std::error::Error>>;
+#[derive(Debug)]
+pub struct ProtonEvent {
+    pub code: u16,
+    pub event_id: String,
+    pub more: u32,
+    pub wallet_events: Option<Vec<WalletEvent>>,
+    pub wallet_account_events: Option<Vec<WalletAccountEvent>>,
+    pub wallet_key_events: Option<Vec<WalletKeyEvent>>,
+    pub wallet_setting_events: Option<Vec<WalletSettingsEvent>>,
+    // // pub wallet_transactions: Option<Vec<ApiWalletTransactionsEvent>>,
+    pub wallet_user_settings: Option<ApiUserSettings>,
 }
 
-
-impl EventRoute for ProtonAPIService {
-    fn get_latest() -> Result<ResponseCode, Box<dyn std::error::Error>> {
-        todo!()
+impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
+    fn from(event: andromeda_api::event::ApiProtonEvent) -> Self {
+        ProtonEvent {
+            code: event.Code.into(),
+            event_id: event.EventID.into(),
+            more: event.More.into(),
+            wallet_events: event
+                .Wallets
+                .map(|v| v.into_iter().map(|x| x.into()).collect()),
+            wallet_account_events: event
+                .WalletAccounts
+                .map(|v| v.into_iter().map(|x| x.into()).collect()),
+            wallet_key_events: event
+                .WalletKeys
+                .map(|v| v.into_iter().map(|x| x.into()).collect()),
+            wallet_setting_events: event
+                .WalletSettings
+                .map(|v| v.into_iter().map(|x| x.into()).collect()),
+            wallet_user_settings: event.WalletUserSettings.map(|v| v.into()),
+        }
     }
 }
 
+#[derive(Debug)]
+pub struct WalletEvent {
+    pub id: String,
+    pub action: u32,
+    pub wallet: Option<ProtonWallet>,
+}
 
-// #[cfg(test)]
-// mod test {
-//     use crate::proton_api::{api_service::ProtonAPIService, network_routes::NetworkRoute};
+impl From<ApiWalletEvent> for WalletEvent {
+    fn from(event: ApiWalletEvent) -> Self {
+        WalletEvent {
+            id: event.ID.into(),
+            action: event.Action.into(),
+            wallet: event.Wallet.map(|x| x.into()),
+        }
+    }
+}
 
-//     #[tokio::test]
-//     async fn test_ping_ok() {
-//         let api_service = ProtonAPIService::default();
-//         let result = api_service.ping().await;
-//         assert!(result.is_ok());
-//         assert_eq!(result.unwrap(), 200);
-//     }
-//     #[tokio::test]
-//     async fn test_ping_object_ok() {
-//         let api_service = ProtonAPIService::default();
-//         let result = api_service.ping_object().await;
-//         assert!(result.is_ok());
-//         assert_eq!(result.unwrap().code, 1000);
-//     }
+#[derive(Debug)]
+pub struct WalletAccountEvent {
+    pub id: String,
+    pub action: u32,
+    pub wallet_account: Option<WalletAccount>,
+}
 
-//     #[tokio::test]
-//     async fn test_get_network_ok() {
-//         let mut api_service = ProtonAPIService::default();
-//         api_service.login("feng100", "12345678").await.unwrap();
+impl From<ApiWalletAccountEvent> for WalletAccountEvent {
+    fn from(event: ApiWalletAccountEvent) -> Self {
+        WalletAccountEvent {
+            id: event.ID.into(),
+            action: event.Action.into(),
+            wallet_account: event.WalletAccount.map(|x| x.into()),
+        }
+    }
+}
 
-//         let result = api_service.get_network_type().await;
-//         print!("{:?}", result);
-//         assert!(result.is_ok());
-//         let auth_response = result.unwrap();
-//         assert_eq!(auth_response.Code, 1000);
-//         assert_eq!(auth_response.Network, 1);
-//     }
+#[derive(Debug)]
+pub struct WalletKeyEvent {
+    pub id: String,
+    pub action: u32,
+    pub wallet_key: Option<ProtonWalletKey>,
+}
 
-//     #[tokio::test]
-//     #[should_panic] //session issue
-//     async fn test_get_network_401() {
-//         let api_service = ProtonAPIService::default();
-//         api_service.get_network_type().await.unwrap();
-//     }
+impl From<ApiWalletKeyEvent> for WalletKeyEvent {
+    fn from(event: ApiWalletKeyEvent) -> Self {
+        WalletKeyEvent {
+            id: event.ID.into(),
+            action: event.Action.into(),
+            wallet_key: event.WalletKey.map(|x| x.into()),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct WalletSettingsEvent {
+    pub id: String,
+    pub action: u32,
+    pub wallet_settings: Option<WalletSettings>,
+}
+
+impl From<ApiWalletSettingsEvent> for WalletSettingsEvent {
+    fn from(event: ApiWalletSettingsEvent) -> Self {
+        WalletSettingsEvent {
+            id: event.ID.into(),
+            action: event.Action.into(),
+            wallet_settings: event.WalletSettings.map(|x| x.into()),
+        }
+    }
+}
+
+// #[derive(Debug)]
+// pub struct ApiWalletTransactionsEvent {
+//     pub id: String,
+//     pub action: u32,
+//     pub wallet_transaction: Option<WalletTransaction>,
 // }
