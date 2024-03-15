@@ -1,3 +1,4 @@
+pub mod contacts;
 pub mod errors;
 pub mod event_routes;
 pub mod exchange_rate;

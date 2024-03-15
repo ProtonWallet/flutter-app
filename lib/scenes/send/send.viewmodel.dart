@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -32,6 +33,7 @@ abstract class SendViewModel extends ViewModel {
   Future<void> updateExchangeRate();
   double getFiatCurrencyValue();
   int lastExchangeRateTime = 0;
+  List<String> contactsEmail = [];
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -82,6 +84,9 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     updateAccountList();
+    List<ContactsModel> contacts = await WalletManager.getContacts();
+    contactsEmail = contacts.map((e) => e.canonicalEmail).toList();
+    datasourceChangedStreamController.add(this);
   }
 
   Future<void> updateAccountList() async {

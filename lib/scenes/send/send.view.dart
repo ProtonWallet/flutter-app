@@ -4,6 +4,7 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/text.choices.dart';
+import 'package:wallet/components/textfield.autocomplete.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -101,15 +102,9 @@ class SendView extends ViewBase<SendViewModel> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  TextFieldText(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      color: ProtonColors.backgroundSecondary,
-                      suffixIcon: const Icon(Icons.close),
-                      showSuffixIcon: false,
-                      showEnabledBorder: false,
-                      controller: viewModel.recipientTextController,
-                      showMailTag: true),
+                  TextFieldAutoComplete(
+                      options: viewModel.contactsEmail,
+                      color: ProtonColors.backgroundSecondary),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,

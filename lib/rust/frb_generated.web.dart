@@ -17,6 +17,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
+import 'proton_api/contacts.dart';
 import 'proton_api/errors.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
@@ -210,6 +211,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<ProtonContactEmails> dco_decode_list_proton_contact_emails(dynamic raw);
+
+  @protected
   List<ProtonEvent> dco_decode_list_proton_event(dynamic raw);
 
   @protected
@@ -322,6 +326,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService dco_decode_proton_api_service(dynamic raw);
+
+  @protected
+  ProtonContactEmails dco_decode_proton_contact_emails(dynamic raw);
 
   @protected
   ProtonEvent dco_decode_proton_event(dynamic raw);
@@ -610,6 +617,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<ProtonContactEmails> sse_decode_list_proton_contact_emails(
+      SseDeserializer deserializer);
+
+  @protected
   List<ProtonEvent> sse_decode_list_proton_event(SseDeserializer deserializer);
 
   @protected
@@ -739,6 +750,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAPIService sse_decode_proton_api_service(SseDeserializer deserializer);
+
+  @protected
+  ProtonContactEmails sse_decode_proton_contact_emails(
+      SseDeserializer deserializer);
 
   @protected
   ProtonEvent sse_decode_proton_event(SseDeserializer deserializer);
@@ -1048,6 +1063,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_proton_contact_emails(
+      List<ProtonContactEmails> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_proton_event(
       List<ProtonEvent> self, SseSerializer serializer);
 
@@ -1182,6 +1201,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_proton_api_service(
       ProtonAPIService self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_contact_emails(
+      ProtonContactEmails self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_event(ProtonEvent self, SseSerializer serializer);
