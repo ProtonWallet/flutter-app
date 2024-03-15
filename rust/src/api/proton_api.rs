@@ -4,6 +4,7 @@ use lazy_static::lazy_static;
 use std::sync::{Arc, RwLock};
 
 use crate::proton_api::{
+    contacts::ProtonContactEmails,
     errors::ApiError,
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
@@ -210,6 +211,15 @@ pub async fn get_latest_event_id() -> Result<String, ApiError> {
 pub async fn collect_events(latest_event_id: String) -> Result<Vec<ProtonEvent>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api.event.collect_events(latest_event_id).await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_contacts() -> Result<Vec<ProtonContactEmails>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api.contacts.get_contacts(1000, 0).await;
     match result {
         Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
         Err(err) => Err(err.into()),

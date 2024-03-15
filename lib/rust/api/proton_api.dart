@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import '../proton_api/contacts.dart';
 import '../proton_api/errors.dart';
 import '../proton_api/event_routes.dart';
 import '../proton_api/exchange_rate.dart';
@@ -99,3 +100,6 @@ Future<List<ProtonEvent>> collectEvents(
         {required String latestEventId, dynamic hint}) =>
     RustLib.instance.api
         .collectEvents(latestEventId: latestEventId, hint: hint);
+
+Future<List<ProtonContactEmails>> getContacts({dynamic hint}) =>
+    RustLib.instance.api.getContacts(hint: hint);
