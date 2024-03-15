@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/constants.dart';
@@ -55,7 +56,8 @@ class WalletManager {
 
   static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,
       int scriptType, String derivationPath, String serverAccountID) async {
-    SecretKey? secretKey = await getWalletKey(walletID);
+    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+    SecretKey? secretKey = await getWalletKey(walletModel.serverWalletID);
     if (walletID != -1 && secretKey != null) {
       DateTime now = DateTime.now();
       AccountModel? account =
@@ -81,6 +83,46 @@ class WalletManager {
             await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
         DBHelper.accountDao!.insert(account);
       }
+    }
+  }
+
+  static Future<int> insertOrUpdateWallet(
+      {required int userID,
+      required String name,
+      required String encryptedMnemonic,
+      required int passphrase,
+      required int imported,
+      required int priority,
+      required int status,
+      required int type,
+      required String serverWalletID}) async {
+    WalletModel? wallet =
+        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    DateTime now = DateTime.now();
+    if (wallet == null) {
+      wallet = WalletModel(
+          id: null,
+          userID: userID,
+          name: name,
+          mnemonic: base64Decode(encryptedMnemonic),
+          passphrase: passphrase,
+          publicKey: Uint8List(0),
+          imported: imported,
+          priority: priority,
+          status: status,
+          type: type,
+          fingerprint: "12345678",
+          // TODO:: send correct fingerprint
+          createTime: now.millisecondsSinceEpoch ~/ 1000,
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          serverWalletID: serverWalletID);
+      int walletID = await DBHelper.walletDao!.insert(wallet);
+      return walletID;
+    } else {
+      wallet.name = name;
+      wallet.status = status;
+      await DBHelper.walletDao!.update(wallet);
+      return wallet.id!;
     }
   }
 
@@ -129,10 +171,9 @@ class WalletManager {
     return balance;
   }
 
-  static Future<SecretKey?> getWalletKey(int walletID) async {
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+  static Future<SecretKey?> getWalletKey(String serverWalletID) async {
     String keyPath =
-        "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
+        "${SecureStorageHelper.walletKey}_$serverWalletID";
     SecretKey secretKey;
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
@@ -143,10 +184,9 @@ class WalletManager {
     return secretKey;
   }
 
-  static Future<void> setWalletKey(int walletID, SecretKey secretKey) async {
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    String keyPath =
-        "${SecureStorageHelper.walletKey}_${walletModel.serverWalletID}";
+  static Future<void> setWalletKey(
+      String serverWalletID, SecretKey secretKey) async {
+    String keyPath = "${SecureStorageHelper.walletKey}_$serverWalletID";
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
       encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
@@ -155,11 +195,11 @@ class WalletManager {
   }
 
   static Future<String> getMnemonicWithID(int walletID) async {
-    WalletModel walletRecord = await DBHelper.walletDao!.findById(walletID);
-    SecretKey? secretKey = await getWalletKey(walletID);
+    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+    SecretKey? secretKey = await getWalletKey(walletModel.serverWalletID);
     if (secretKey != null) {
       String mnemonic = await WalletKeyHelper.decrypt(
-          secretKey, base64Encode(walletRecord.mnemonic));
+          secretKey, base64Encode(walletModel.mnemonic));
       return mnemonic;
     }
     return "";
