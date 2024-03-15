@@ -81,6 +81,7 @@ class HomeViewModelImpl extends HomeViewModel {
     hasWallet = await WalletManager.hasAccount();
     datasourceChangedStreamController.sink.add(this);
     checkNewWallet();
+    await WalletManager.initContacts();
     // fetchWallets();
   }
 

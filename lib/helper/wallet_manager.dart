@@ -7,7 +7,9 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -188,5 +190,17 @@ class WalletManager {
 
   static int getCurrentTime() {
     return DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
+  }
+
+  static Future<void> initContacts() async{
+    List<ProtonContactEmails> mails = await proton_api.getContacts();
+    for (ProtonContactEmails mail in mails){
+      DBHelper.contactsDao!.insertOrUpdate(mail.id, mail.name, mail.email, mail.canonicalEmail, mail.isProton);
+    }
+  }
+
+  static Future<List<ContactsModel>> getContacts() async{
+    List contacts = await DBHelper.contactsDao!.findAll();
+    return contacts.cast<ContactsModel>();
   }
 }
