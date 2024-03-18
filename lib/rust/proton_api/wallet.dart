@@ -114,22 +114,26 @@ class ProtonWallet {
 }
 
 class ProtonWalletKey {
+  final String walletId;
   final String userKeyId;
   final String walletKey;
 
   const ProtonWalletKey({
+    required this.walletId,
     required this.userKeyId,
     required this.walletKey,
   });
 
   @override
-  int get hashCode => userKeyId.hashCode ^ walletKey.hashCode;
+  int get hashCode =>
+      walletId.hashCode ^ userKeyId.hashCode ^ walletKey.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProtonWalletKey &&
           runtimeType == other.runtimeType &&
+          walletId == other.walletId &&
           userKeyId == other.userKeyId &&
           walletKey == other.walletKey;
 }

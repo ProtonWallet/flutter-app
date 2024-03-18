@@ -96,7 +96,7 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
         TextButton(
           onPressed: () async {
             SecretKey? secretKey =
-                await WalletManager.getWalletKey(widget.walletID);
+                await WalletManager.getWalletKey(widget.serverWalletID);
             if (secretKey == null) {
               if (context.mounted) {
                 LocalToast.showErrorToast(context, "secretKey is null!");

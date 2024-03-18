@@ -72,7 +72,7 @@ class WalletViewModelImpl extends WalletViewModel {
     accountModel = accounts.first;
     await initAccount();
     wallet = await WalletManager.loadWalletWithID(walletID, accountModel.id!);
-    secretKey = await WalletManager.getWalletKey(walletID);
+    secretKey = await WalletManager.getWalletKey(walletModel.serverWalletID);
     valueNotifier = ValueNotifier(accountModel);
     valueNotifier.addListener(() {
       updateAccount(valueNotifier.value);
