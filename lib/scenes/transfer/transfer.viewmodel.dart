@@ -22,7 +22,7 @@ class TransferViewModelImpl extends TransferViewModel {
 
   @override
   Future<void> loadData() async {
-    var testObject = await MyTestObject.newMyTestObject();
+    var testObject = await MyTestObject.newInstance();
     var out = await testObject.readText();
     logger.i("out: $out");
     await initApiService(userName: 'pro', password: 'pro');
