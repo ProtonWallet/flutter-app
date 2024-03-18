@@ -95,7 +95,8 @@ class HomeViewModelImpl extends HomeViewModel {
         totalAccount_ += walletModel.accountCount;
       }
       if (results.length != userWallets.length ||
-          totalAccount != totalAccount_ || forceReloadWallet) {
+          totalAccount != totalAccount_ ||
+          forceReloadWallet) {
         userWallets = results;
         totalAccount = totalAccount_;
         forceReloadWallet = false;
@@ -154,8 +155,8 @@ class HomeViewModelImpl extends HomeViewModel {
     // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
     List<WalletData> wallets = await proton_api.getWallets();
     for (WalletData walletData in wallets.reversed) {
-      WalletModel? walletModel =
-          await DBHelper.walletDao!.getWalletByServerWalletID(walletData.wallet.id);
+      WalletModel? walletModel = await DBHelper.walletDao!
+          .getWalletByServerWalletID(walletData.wallet.id);
       String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
       String userKeyID = await SecureStorageHelper.get("userKeyID");
       String userPassphrase = await SecureStorageHelper.get("userPassphrase");
@@ -175,27 +176,23 @@ class HomeViewModelImpl extends HomeViewModel {
       SecretKey secretKey =
           WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
       if (walletModel == null) {
-        DateTime now = DateTime.now();
-        WalletModel wallet = WalletModel(
-            id: null,
+        String serverWalletID = walletData.wallet.id;
+        int status = entropy.isNotEmpty
+            ? walletData.wallet.status
+            : WalletModel.statusDisabled;
+        int walletID = await WalletManager.insertOrUpdateWallet(
             userID: 0,
             name: walletData.wallet.name,
-            mnemonic: base64Decode(walletData.wallet.mnemonic!),
+            encryptedMnemonic: walletData.wallet.mnemonic!,
             passphrase: walletData.wallet.hasPassphrase,
-            publicKey: Uint8List(0),
             imported: walletData.wallet.isImported,
             priority: walletData.wallet.priority,
-            status: entropy.isNotEmpty
-                ? walletData.wallet.status
-                : WalletModel.statusDisabled,
+            status: status,
             type: walletData.wallet.type,
-            fingerprint: walletData.wallet.fingerprint,
-            createTime: now.millisecondsSinceEpoch ~/ 1000,
-            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-            serverWalletID: walletData.wallet.id);
-        int walletID = await DBHelper.walletDao!.insert(wallet);
+            serverWalletID: serverWalletID);
+
         if (entropy.isNotEmpty) {
-          await WalletManager.setWalletKey(walletID,
+          await WalletManager.setWalletKey(serverWalletID,
               secretKey); // need to set key first, so that we can decrypt for walletAccount
           List<WalletAccount> walletAccounts = await proton_api
               .getWalletAccounts(walletId: walletData.wallet.id);

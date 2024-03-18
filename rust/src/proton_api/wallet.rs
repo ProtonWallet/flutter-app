@@ -34,12 +34,14 @@ impl From<ApiWallet> for ProtonWallet {
 
 #[derive(Debug)]
 pub struct ProtonWalletKey {
+    pub wallet_id: String,
     pub user_key_id: String,
     pub wallet_key: String,
 }
 impl From<ApiWalletKey> for ProtonWalletKey {
     fn from(wallet_key: ApiWalletKey) -> Self {
         ProtonWalletKey {
+            wallet_id: wallet_key.WalletID,
             user_key_id: wallet_key.UserKeyID,
             wallet_key: wallet_key.WalletKey,
         }

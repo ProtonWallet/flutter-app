@@ -4105,11 +4105,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonWalletKey dco_decode_proton_wallet_key(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return ProtonWalletKey(
-      userKeyId: dco_decode_String(arr[0]),
-      walletKey: dco_decode_String(arr[1]),
+      walletId: dco_decode_String(arr[0]),
+      userKeyId: dco_decode_String(arr[1]),
+      walletKey: dco_decode_String(arr[2]),
     );
   }
 
@@ -5587,9 +5588,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   ProtonWalletKey sse_decode_proton_wallet_key(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_walletId = sse_decode_String(deserializer);
     var var_userKeyId = sse_decode_String(deserializer);
     var var_walletKey = sse_decode_String(deserializer);
-    return ProtonWalletKey(userKeyId: var_userKeyId, walletKey: var_walletKey);
+    return ProtonWalletKey(
+        walletId: var_walletId,
+        userKeyId: var_userKeyId,
+        walletKey: var_walletKey);
   }
 
   @protected
@@ -6877,6 +6882,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_proton_wallet_key(
       ProtonWalletKey self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.walletId, serializer);
     sse_encode_String(self.userKeyId, serializer);
     sse_encode_String(self.walletKey, serializer);
   }
