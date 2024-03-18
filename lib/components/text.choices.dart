@@ -23,7 +23,6 @@ class TextChoices extends StatefulWidget {
 }
 
 class TextFieldTextState extends State<TextChoices> {
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +51,7 @@ class TextFieldTextState extends State<TextChoices> {
                       onTap: () {
                         setState(() {
                           if (widget.controller != null) {
-                            widget.controller!.text = widget.choices[index];;
+                            widget.controller!.text = widget.choices[index];
                           }
                         });
                       },
