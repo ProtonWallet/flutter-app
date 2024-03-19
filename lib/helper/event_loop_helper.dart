@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/event_loop.dart';
 
 class EventLoopHelper {

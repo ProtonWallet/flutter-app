@@ -117,12 +117,12 @@ class EventLoop {
         if (event.walletSettingEvents != null) {
           for (WalletSettingsEvent walletSettingEvent
               in event.walletSettingEvents!) {
-            WalletSettings? walletSettings = walletSettingEvent.walletSettings;
+            WalletSettings? _ = walletSettingEvent.walletSettings;
             // TODO::
           }
         }
         if (event.walletUserSettings != null) {
-          ApiUserSettings userSettings = event.walletUserSettings!;
+          ApiUserSettings _ = event.walletUserSettings!;
 
           // TODO::
         }

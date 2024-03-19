@@ -29,7 +29,7 @@ impl From<Error> for ApiError {
             }
             Error::SerializeError => ApiError::Generic("Serialization error occurred".to_string()),
             Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
-            // Error::GeneralError(strErr) => ApiError::Generic(format!("Generic error occurred: {}",strErr)),
+            Error::MuonRequestError(mre) => ApiError::SessionError(format!("Muon request error: {}", mre)),
         }
     }
 }
