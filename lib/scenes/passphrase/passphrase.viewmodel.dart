@@ -15,7 +15,6 @@ import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/network/api.helper.dart';
 
