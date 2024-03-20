@@ -62,24 +62,23 @@ impl From<ApiWalletAccount> for WalletAccount {
     }
 }
 
-#[derive(Debug)]
-pub struct WalletAccountsResponse {
-    pub Code: i32,
-    pub Accounts: Vec<WalletAccount>,
-}
+// #[derive(Debug)]
+// pub struct WalletAccountsResponse {
+//     pub code: i32,
+//     pub accounts: Vec<WalletAccount>,
+// }
 
-#[derive(Debug)]
-pub struct WalletAccountResponse {
-    pub Code: i32,
-    pub ApiWalletAccount: WalletAccount,
-    // Error: Option<String>,
-}
+// #[derive(Debug)]
+// pub struct WalletAccountResponse {
+//     pub code: i32,
+//     pub api_wallet_account: WalletAccount,
+// }
 
-#[derive(Debug)]
-pub struct UpdateWalletAccountLabelReq {
-    // Label of the account
-    pub Label: String,
-}
+// #[derive(Debug)]
+// pub struct UpdateWalletAccountLabelReq {
+//     // Label of the account
+//     pub label: String,
+// }
 
 // #[cfg(test)]
 // mod test {
