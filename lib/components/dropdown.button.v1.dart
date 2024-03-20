@@ -7,14 +7,16 @@ class DropdownButtonV1 extends StatefulWidget {
   final double width;
   final List items;
   final List itemsText;
-  final ValueNotifier valueNotifier;
+  final ValueNotifier? valueNotifier;
+  final TextStyle? textStyle;
 
   const DropdownButtonV1(
       {super.key,
       required this.width,
       required this.items,
       required this.itemsText,
-      required this.valueNotifier});
+        this.textStyle,
+      this.valueNotifier});
 
   @override
   DropdownButtonV1State createState() => DropdownButtonV1State();
@@ -45,10 +47,10 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
         child: DropdownButton(
           isExpanded: true,
           dropdownColor: ProtonColors.backgroundSecondary,
-          value: widget.valueNotifier.value,
+          value: widget.valueNotifier?.value,
           onChanged: (item) {
             setState(() {
-              widget.valueNotifier.value = item;
+              widget.valueNotifier?.value = item;
             });
           },
           items: [
@@ -57,7 +59,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
                   value: widget.items[i],
                   child: Text(
                     "${widget.itemsText[i]}",
-                    style: FontManager.body2Median(
+                    style: widget.textStyle ?? FontManager.body2Median(
                         Theme.of(context).colorScheme.primary),
                   ))
           ],
