@@ -7,7 +7,9 @@ import 'package:wallet/components/text.choices.dart';
 import 'package:wallet/components/textfield.autocomplete.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
@@ -88,7 +90,7 @@ class SendView extends ViewBase<SendViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      S.of(context).current_balance_sat(viewModel.balance),
+                      S.of(context).current_balance_btc(viewModel.balance / 100000000),
                       style: FontManager.captionMedian(ProtonColors.textHint),
                     ),
                   ),
@@ -144,19 +146,42 @@ class SendView extends ViewBase<SendViewModel> {
                             digitOnly: true,
                           ),
                           TextChoices(
-                              choices: const ["SATS", "BTC"],
+                              choices: const ["BTC"],
                               selectedValue: viewModel.coinController.text,
                               controller: viewModel.coinController),
                         ],
                       )),
                   const SizedBox(height: 5),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      "~ €${viewModel.getFiatCurrencyValue()}",
-                      style: FontManager.captionMedian(ProtonColors.textHint),
-                    ),
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextFieldText(
+                            width: MediaQuery.of(context).size.width - 200,
+                            height: 50,
+                            color: ProtonColors.backgroundSecondary,
+                            suffixIcon: const Icon(Icons.close),
+                            showSuffixIcon: false,
+                            showEnabledBorder: false,
+                            controller:
+                                viewModel.amountFiatCurrencyTextController,
+                            digitOnly: true,
+                          ),
+                          DropdownButtonV1(
+                              width: 132,
+                              items: viewModel.fiatCurrency2exchangeRate.keys
+                                  .toList(),
+                              itemsText: viewModel
+                                  .fiatCurrency2exchangeRate.keys
+                                  .toList()
+                                  .map((e) => FiatCurrencyHelper.getText(e))
+                                  .toList(),
+                              textStyle: FontManager.captionSemiBold(
+                                  Theme.of(context).colorScheme.primary),
+                              valueNotifier: viewModel.fiatCurrencyNotifier),
+                        ],
+                      )),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
@@ -210,38 +235,20 @@ class SendView extends ViewBase<SendViewModel> {
                           ProtonColors.interactionNorm),
                     ),
                   ),
-                  const SizedBox(height: 50)
+                  const SizedBox(height: 20),
+                  ButtonV5(
+                      onPressed: () {
+                        viewModel.sendCoin();
+                        viewModel.coordinator.end();
+                        Navigator.of(context).pop();
+                      },
+                      text: S.of(context).review_transaction,
+                      width: MediaQuery.of(context).size.width,
+                      textStyle: FontManager.body1Median(ProtonColors.white),
+                      height: 48),
+                  const SizedBox(height: 20),
                 ])))
-      ]),
-      Container(
-          padding: const EdgeInsets.only(bottom: 50),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height -
-              56 -
-              MediaQuery.of(context).padding.top,
-          // AppBar default height is 56
-          margin: const EdgeInsets.only(left: 40, right: 40),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updateExchangeRate();
-                      // if (viewModel.coinController.text != "SATS") {
-                      //   LocalToast.showErrorToast(
-                      //       context, S.of(context).only_support_sat_now);
-                      // } else {
-                      //   viewModel.sendCoin();
-                      //   viewModel.coordinator.end();
-                      //   Navigator.of(context).pop();
-                      // }
-                    },
-                    text: S.of(context).review_transaction,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-              ]))
+      ])
     ]);
   }
 }

@@ -15,13 +15,6 @@ class CommonSettings extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 10),
-            child: Text(S.of(context).settings_title),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
           ExpansionTile(
             initiallyExpanded: true,
             title: Row(

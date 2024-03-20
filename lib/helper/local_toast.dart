@@ -15,7 +15,7 @@ class LocalToast {
 
   static showToast(BuildContext context, String message,
       {int duration = 1,
-      Icon icon = const Icon(Icons.check),
+      Icon? icon = const Icon(Icons.check),
       bool isWarning = false}) {
     fToast.init(context);
     Widget toast = Container(
@@ -35,10 +35,11 @@ class LocalToast {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          icon,
-          const SizedBox(
-            width: 12.0,
-          ),
+          if (icon != null) icon,
+          if (icon != null)
+            const SizedBox(
+              width: 12.0,
+            ),
           Text(
             message,
             style: TextStyle(

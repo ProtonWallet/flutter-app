@@ -10,7 +10,7 @@ class AccountInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(top: 80, bottom: 50),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       child: CircleAvatar(
         backgroundColor: Theme.of(context).primaryColor,
         radius: 50,

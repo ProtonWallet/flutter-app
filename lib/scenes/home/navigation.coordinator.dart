@@ -5,7 +5,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/history/history.coordinator.dart';
-import 'package:wallet/scenes/home.v2/home.coordinator.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/scenes/home/navigation.view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
 import 'package:wallet/scenes/settings/settings.coordinator.dart';
@@ -37,10 +37,10 @@ class HomeNavigationCoordinator extends Coordinator {
   List<ViewBase<ViewModel>> starts() {
     return [
       HomeCoordinator().start(),
-      HistoryCoordinator().start(),
-      BuyBitcoinCoordinator().start(),
-      TransferCoordinator().start(),
-      SettingsCoordinator().start()
+      // HistoryCoordinator().start(),
+      // BuyBitcoinCoordinator().start(),
+      // TransferCoordinator().start(),
+      // SettingsCoordinator().start()
     ];
   }
 }

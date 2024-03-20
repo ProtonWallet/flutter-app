@@ -13,7 +13,8 @@
   "tab_history": "History",
   "tab_settings": "Settings",
   "welcome": "Welcome",
-  "welcome_to": "Welcome to",
+  "welcome_to": "Welcome to Proton Wallet \uD83C\uDF89",
+  "welcome_hint": "Here is a checklist to get you started:",
   "@welcome_to": {
     "description": "The welcome message"
   },
@@ -72,7 +73,8 @@
   "import_button": "Import",
   "signup": "Signup",
   "ok": "Ok",
-  "copy_button": "Copy",
+  "ok_i_have_save": "Ok, I saved it somewhere",
+  "copy_button": "Copy to clipboard",
   "quick_action": "Quick Actions",
   "explore_wallet": "Explore Proton Wallet",
   "security_n_proton_wallet": "Security & Proton Wallet",
@@ -104,7 +106,8 @@
   "update_label": "Update Account Label",
   "your_new_wallet_name_here": "Your new name here",
   "wallet_name": "Wallet Name",
-  "update_wallet_name": "Update Wallet Name",
+  "update_wallet_name": "Wallet rename",
+  "rename_account": "Rename Account",
   "update_account": "Update Account",
   "delete_account": "Delete Account",
   "account_deleted": "Account deleted!",
@@ -136,6 +139,7 @@
   "send_from_account": "Send from Account",
   "current_balance_sats": "Current Balance: {balance} SATs",
   "current_balance_sat": "Current Balance: {balance} SAT",
+  "current_balance_btc": "Current Balance: {balance} BTC",
   "current_balance_usd": "{balance} USD",
   "send_to_recipient_s": "Send to Recipient(s)",
   "add_address": "Add Address",
@@ -215,8 +219,8 @@
   "receive_address": "Receive Address",
   "share_button": "Share",
   "set_passphrase": "Set passphrase",
-  "setting_bitcoin_unit_label": "Bitcoin Unit",
-  "setting_fiat_currency_label": "Fiat Currency",
+  "setting_bitcoin_unit_label": "Preferred Bitcoin Unit",
+  "setting_fiat_currency_label": "Preferred Fiat Currency",
   "setting_hide_empty_used_address_label": "Hide Empty Used Addresses",
   "setting_2fa_amount_threshold_label": "2FA Amount Threshold",
   "setting_option_on": "On",
@@ -226,6 +230,7 @@
   "wallet_recover_with_mnemonic": "Recover with your mnemonic",
   "wallet_decryption_error_message": "Decryption error\nDecryption of this wallet's encrypted content failed.",
   "end_line_ingore_translation": "",
+  "inactivate_wallet": "Inactive",
   "@end_line_ingore_translation": {
     "description": "l10n_nightly: this is the end line mark"
   }
