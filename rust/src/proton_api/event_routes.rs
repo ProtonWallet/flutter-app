@@ -3,7 +3,7 @@ use super::wallet::{ProtonWallet, ProtonWalletKey};
 use super::wallet_account::WalletAccount;
 use super::wallet_settings::WalletSettings;
 use andromeda_api::event::{
-    ApiProtonEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
+    ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
     ApiWalletSettingsEvent,
 };
 
@@ -16,16 +16,16 @@ pub struct ProtonEvent {
     pub wallet_account_events: Option<Vec<WalletAccountEvent>>,
     pub wallet_key_events: Option<Vec<WalletKeyEvent>>,
     pub wallet_setting_events: Option<Vec<WalletSettingsEvent>>,
-    // // pub wallet_transactions: Option<Vec<ApiWalletTransactionsEvent>>,
+    // pub wallet_transactions: Option<Vec<ApiWalletTransactionsEvent>>,
     pub wallet_user_settings: Option<ApiUserSettings>,
 }
 
 impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
     fn from(event: andromeda_api::event::ApiProtonEvent) -> Self {
         ProtonEvent {
-            code: event.Code.into(),
-            event_id: event.EventID.into(),
-            more: event.More.into(),
+            code: event.Code,
+            event_id: event.EventID,
+            more: event.More,
             wallet_events: event
                 .Wallets
                 .map(|v| v.into_iter().map(|x| x.into()).collect()),
@@ -53,8 +53,8 @@ pub struct WalletEvent {
 impl From<ApiWalletEvent> for WalletEvent {
     fn from(event: ApiWalletEvent) -> Self {
         WalletEvent {
-            id: event.ID.into(),
-            action: event.Action.into(),
+            id: event.ID,
+            action: event.Action,
             wallet: event.Wallet.map(|x| x.into()),
         }
     }
@@ -70,8 +70,8 @@ pub struct WalletAccountEvent {
 impl From<ApiWalletAccountEvent> for WalletAccountEvent {
     fn from(event: ApiWalletAccountEvent) -> Self {
         WalletAccountEvent {
-            id: event.ID.into(),
-            action: event.Action.into(),
+            id: event.ID,
+            action: event.Action,
             wallet_account: event.WalletAccount.map(|x| x.into()),
         }
     }
@@ -87,8 +87,8 @@ pub struct WalletKeyEvent {
 impl From<ApiWalletKeyEvent> for WalletKeyEvent {
     fn from(event: ApiWalletKeyEvent) -> Self {
         WalletKeyEvent {
-            id: event.ID.into(),
-            action: event.Action.into(),
+            id: event.ID,
+            action: event.Action,
             wallet_key: event.WalletKey.map(|x| x.into()),
         }
     }
@@ -104,8 +104,8 @@ pub struct WalletSettingsEvent {
 impl From<ApiWalletSettingsEvent> for WalletSettingsEvent {
     fn from(event: ApiWalletSettingsEvent) -> Self {
         WalletSettingsEvent {
-            id: event.ID.into(),
-            action: event.Action.into(),
+            id: event.ID,
+            action: event.Action,
             wallet_settings: event.WalletSettings.map(|x| x.into()),
         }
     }

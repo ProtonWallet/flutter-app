@@ -203,7 +203,7 @@ pub async fn get_latest_event_id() -> Result<String, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api.event.get_latest_event_id().await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
