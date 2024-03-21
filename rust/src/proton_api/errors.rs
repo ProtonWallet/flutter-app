@@ -20,16 +20,15 @@ impl From<Error> for ApiError {
     fn from(error: Error) -> Self {
         match error {
             Error::MuonError(me) => ApiError::Generic(format!("Muon error occurred: {}", me)),
-            Error::MuonSessionError => ApiError::SessionError(format!("Muon session error")),
-            Error::MuonRequestError(me) => {
-                ApiError::SessionError(format!("Muon request error: {}", me))
+            Error::MuonSessionError => ApiError::SessionError("Muon session error".to_string()),
+            Error::MuonRequestError(mre) => {
+                ApiError::SessionError(format!("Muon request error: {}", mre))
             }
             Error::DeserializeError => {
                 ApiError::Generic("Deserialization error occurred".to_string())
             }
             Error::SerializeError => ApiError::Generic("Serialization error occurred".to_string()),
             Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
-            Error::MuonRequestError(mre) => ApiError::SessionError(format!("Muon request error: {}", mre)),
         }
     }
 }
