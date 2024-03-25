@@ -4580,7 +4580,7 @@ impl SseDecode for crate::proton_api::exchange_rate::ProtonExchangeRate {
             <crate::proton_api::user_settings::CommonBitcoinUnit>::sse_decode(deserializer);
         let mut var_fiatCurrency =
             <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(deserializer);
-        let mut var_exchangeRateTime = <String>::sse_decode(deserializer);
+        let mut var_exchangeRateTime = <u64>::sse_decode(deserializer);
         let mut var_exchangeRate = <u64>::sse_decode(deserializer);
         let mut var_cents = <u64>::sse_decode(deserializer);
         return crate::proton_api::exchange_rate::ProtonExchangeRate {
@@ -7141,7 +7141,7 @@ impl SseEncode for crate::proton_api::exchange_rate::ProtonExchangeRate {
             self.fiat_currency,
             serializer,
         );
-        <String>::sse_encode(self.exchange_rate_time, serializer);
+        <u64>::sse_encode(self.exchange_rate_time, serializer);
         <u64>::sse_encode(self.exchange_rate, serializer);
         <u64>::sse_encode(self.cents, serializer);
     }
