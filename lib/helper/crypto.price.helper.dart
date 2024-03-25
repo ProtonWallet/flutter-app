@@ -6,7 +6,8 @@ import 'package:wallet/helper/crypto.price.info.dart';
 class CryptoPriceHelper {
   static Future<CryptoPriceInfo> getPriceInfo(String symbol) async {
     HttpClient httpClient = HttpClient();
-    var uri = Uri.https('api.binance.com', '/api/v3/ticker/24hr', {'symbol': symbol});
+    var uri =
+        Uri.https('api.binance.com', '/api/v3/ticker/24hr', {'symbol': symbol});
     var request = await httpClient.getUrl(uri);
     var response = await request.close();
 
@@ -21,13 +22,24 @@ class CryptoPriceHelper {
     } else {
       return CryptoPriceInfo(
         symbol: symbol,
-          price: 0.0,
-          priceChange24h: 0.0,
+        price: 0.0,
+        priceChange24h: 0.0,
       );
     }
   }
 
-  static Future<double> getBTCFee() async {
+  static Future<BitcoinTransactionFee> getBitcoinTransactionFee() async {
+    return BitcoinTransactionFee(
+      block1Fee: await getBitcoinTransactionFeeByBlock(1),
+      block2Fee: await getBitcoinTransactionFeeByBlock(2),
+      block3Fee: await getBitcoinTransactionFeeByBlock(3),
+      block5Fee: await getBitcoinTransactionFeeByBlock(5),
+      block10Fee: await getBitcoinTransactionFeeByBlock(10),
+      block20Fee: await getBitcoinTransactionFeeByBlock(20),
+    );
+  }
+
+  static Future<double> getBitcoinTransactionFeeByBlock(int block) async {
     try {
       HttpClient httpClient = HttpClient();
       var uri = Uri.https('blockstream.info', '/api/fee-estimates');
@@ -36,13 +48,13 @@ class CryptoPriceHelper {
       if (response.statusCode == 200) {
         var responseBody = await response.transform(utf8.decoder).join();
         var jsonData = jsonDecode(responseBody);
-        final double feePerByte = jsonData['1'] / 1000; // fee of 1sat/byte
+        final double feePerByte = jsonData[block.toString()]; // ? sat/vB
         return feePerByte;
       } else {
         throw Exception('Failed to load BTC transaction fee');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      return 1.0;
     }
   }
 }

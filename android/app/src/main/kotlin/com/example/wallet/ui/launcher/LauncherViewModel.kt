@@ -73,6 +73,7 @@ import me.proton.core.plan.presentation.onUpgradeResult
 import me.proton.core.report.presentation.ReportOrchestrator
 import me.proton.core.user.domain.UserManager
 import me.proton.core.usersettings.presentation.UserSettingsOrchestrator
+import com.example.wallet.WalletApiClient
 
 //import com.example.wallet.common.api.flatMap
 //import com.example.wallet.commonrust.api.CommonLibraryVersionChecker
@@ -219,10 +220,16 @@ class LauncherViewModel @Inject constructor(
                     result["userPassphrase"] = String(user.keys[0].privateKey.passphrase?.decrypt(AndroidKeyStoreCrypto.default)?.array
                         ?: byteArrayOf(), Charsets.UTF_8)
                     result["userKeyID"] = user.keys[0].keyId.id
+                    result["scopes"] = session.scopes.joinToString(separator = ",")
                     result["sessionId"] = session.sessionId.id
                     result["accessToken"] = session.accessToken
                     result["refreshToken"] = session.refreshToken
+
+                    val walletApiClient = WalletApiClient()
+                    result["appVersion"] = walletApiClient.appVersionHeader
+                    result["userAgent"] = walletApiClient.userAgent
                 }
+
             }
         }
         return result

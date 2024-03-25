@@ -6,6 +6,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
+import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
 import 'package:wallet/scenes/setup/create.view.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
 
@@ -17,11 +18,11 @@ class SetupCreateCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    if (to == ViewIdentifiers.setupBackup) {
+    if (to == ViewIdentifiers.passphrase) {
       Map<String, String> params = {
         "Mnemonic": (widget as SetupCreateView).viewModel.strMnemonic
       };
-      var view = SetupBackupCoordinator().start(params: params);
+      var view = SetupPassPhraseCoordinator().start(params: params);
       Navigator.push(
           context, CustomPageRoute(page: view, fullscreenDialog: false));
       return view;

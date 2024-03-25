@@ -12,13 +12,17 @@ import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 import 'bdk/helper.dart';
 
 class WalletManager {
   static final BdkLibrary _lib = BdkLibrary();
+  static bool isFetchingWallets = false;
 
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
@@ -38,6 +42,13 @@ class WalletManager {
         "${walletModel.serverWalletID.replaceAll('-', '_').replaceAll('=', '_')}_${derivationPathClean}_${passphrase.isNotEmpty}";
     wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
     return wallet;
+  }
+
+  static Future<void> deleteWalletByServerWalletID(String serverWalletID) async{
+    WalletModel? walletModel = await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    if (walletModel != null){
+      await (deleteWallet(walletModel.id!));
+    }
   }
 
   static Future<void> deleteWallet(int walletID) async {
@@ -98,6 +109,7 @@ class WalletManager {
       required String serverWalletID}) async {
     WalletModel? wallet =
         await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+
     DateTime now = DateTime.now();
     if (wallet == null) {
       wallet = WalletModel(
@@ -135,7 +147,7 @@ class WalletManager {
     return "m/$purpose'/$coin'/$accountIndex'/0";
   }
 
-  static Future<bool> hasAccount() async {
+  static Future<bool> hasWallet() async {
     return await DBHelper.walletDao!.counts() > 0;
   }
 
@@ -172,8 +184,7 @@ class WalletManager {
   }
 
   static Future<SecretKey?> getWalletKey(String serverWalletID) async {
-    String keyPath =
-        "${SecureStorageHelper.walletKey}_$serverWalletID";
+    String keyPath = "${SecureStorageHelper.walletKey}_$serverWalletID";
     SecretKey secretKey;
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
@@ -190,7 +201,7 @@ class WalletManager {
     String encodedEntropy = await SecureStorageHelper.get(keyPath);
     if (encodedEntropy.isEmpty) {
       encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
-      SecureStorageHelper.set(keyPath, encodedEntropy);
+      await SecureStorageHelper.set(keyPath, encodedEntropy);
     }
   }
 
@@ -232,15 +243,113 @@ class WalletManager {
     return DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
   }
 
-  static Future<void> initContacts() async{
+  static Future<void> initContacts() async {
     List<ProtonContactEmails> mails = await proton_api.getContacts();
-    for (ProtonContactEmails mail in mails){
-      DBHelper.contactsDao!.insertOrUpdate(mail.id, mail.name, mail.email, mail.canonicalEmail, mail.isProton);
+    for (ProtonContactEmails mail in mails) {
+      DBHelper.contactsDao!.insertOrUpdate(
+          mail.id, mail.name, mail.email, mail.canonicalEmail, mail.isProton);
     }
   }
 
-  static Future<List<ContactsModel>> getContacts() async{
+  static Future<List<ContactsModel>> getContacts() async {
     List contacts = await DBHelper.contactsDao!.findAll();
     return contacts.cast<ContactsModel>();
+  }
+
+  static Future<void> fetchWalletsFromServer() async {
+    if (isFetchingWallets) {
+      return;
+    }
+    isFetchingWallets = true;
+    // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
+    List<WalletData> wallets = await proton_api.getWallets();
+    for (WalletData walletData in wallets.reversed) {
+      WalletModel? walletModel = await DBHelper.walletDao!
+          .getWalletByServerWalletID(walletData.wallet.id);
+      String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+      String userKeyID = await SecureStorageHelper.get("userKeyID");
+      String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+
+      String encodedEncryptedEntropy = "";
+      Uint8List entropy = Uint8List(0);
+      try {
+        encodedEncryptedEntropy = walletData.walletKey.walletKey;
+        entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase,
+            base64Decode(encodedEncryptedEntropy));
+      } catch (e) {}
+      SecretKey secretKey =
+          WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
+      if (walletModel == null) {
+        String serverWalletID = walletData.wallet.id;
+        // int status = entropy.isNotEmpty
+        //     ? WalletModel.statusActive
+        //     : WalletModel.statusDisabled;
+        int status = WalletModel.statusActive;
+        int walletID = await WalletManager.insertOrUpdateWallet(
+            userID: 0,
+            name: walletData.wallet.name,
+            encryptedMnemonic: walletData.wallet.mnemonic!,
+            passphrase: walletData.wallet.hasPassphrase,
+            imported: walletData.wallet.isImported,
+            priority: walletData.wallet.priority,
+            status: status,
+            type: walletData.wallet.type,
+            serverWalletID: serverWalletID);
+        if (entropy.isNotEmpty) {
+          await WalletManager.setWalletKey(serverWalletID,
+              secretKey); // need to set key first, so that we can decrypt for walletAccount
+          List<WalletAccount> walletAccounts = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccounts.isNotEmpty) {
+            for (WalletAccount walletAccount in walletAccounts) {
+              WalletManager.insertOrUpdateAccount(
+                  walletID,
+                  walletAccount.label,
+                  walletAccount.scriptType,
+                  "${walletAccount.derivationPath}/0",
+                  walletAccount.id);
+            }
+          }
+        }
+      } else {
+        if (entropy.isNotEmpty) {
+          List<String> existingAccountIDs = [];
+          List<WalletAccount> walletAccounts = await proton_api
+              .getWalletAccounts(walletId: walletData.wallet.id);
+          if (walletAccounts.isNotEmpty) {
+            for (WalletAccount walletAccount in walletAccounts) {
+              existingAccountIDs.add(walletAccount.id);
+              WalletManager.insertOrUpdateAccount(
+                  walletModel.id!,
+                  walletAccount.label,
+                  walletAccount.scriptType,
+                  "${walletAccount.derivationPath}/0",
+                  walletAccount.id);
+            }
+          }
+          try {
+            if (walletModel.accountCount != walletAccounts.length) {
+              DBHelper.accountDao!.deleteAccountsNotInServers(
+                  walletModel.id!, existingAccountIDs);
+            }
+          } catch (e) {
+            e.toString();
+          }
+        } else {
+          walletModel.status = WalletModel.statusDisabled;
+          DBHelper.walletDao!.update(walletModel);
+        }
+      }
+    }
+    isFetchingWallets = false;
+  }
+
+  static Future<void> setLatestEventId(String latestEventId) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("latestEventId", latestEventId);
+  }
+  static Future<String?> getLatestEventId() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString("latestEventId");
   }
 }

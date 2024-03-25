@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallet/components/alert.warning.dart';
+import 'package:wallet/components/add_account_dialog.dart';
 import 'package:wallet/components/button.icon.with.text.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/custom.fullpage.loading.dart';
 import 'package:wallet/components/custom.newsbox.dart';
 import 'package:wallet/components/custom.symbol.box.dart';
 import 'package:wallet/components/custom.todo.dart';
@@ -16,9 +16,13 @@ import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/text.choices.dart';
 import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/components/transaction.fee.box.dart';
+import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.session.dart';
@@ -41,8 +45,8 @@ class HomeView extends ViewBase<HomeViewModel> {
   @override
   Widget buildWithViewModel(
       BuildContext context, HomeViewModel viewModel, ViewSize viewSize) {
-    if (viewModel.hasWallet == false) {
-      // viewModel.setOnBoard(context);
+    if (viewModel.hasWallet == false && viewModel.initialed) {
+      viewModel.setOnBoard(context);
     }
     return Scaffold(
       appBar: AppBar(
@@ -53,31 +57,39 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
-          S.of(context).proton_wallet,
+          viewModel.currentWallet != null
+              ? viewModel.currentWallet!.name
+                  .substring(0, min(viewModel.currentWallet!.name.length, 10))
+              : S.of(context).proton_wallet,
           style:
               FontManager.titleHeadline(Theme.of(context).colorScheme.primary),
         ),
         actions: [
-          CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
-            radius: 14,
-            child: Text(
-              Provider.of<UserSessionProvider>(context)
-                  .userSession
-                  .userDisplayName
-                  .split(' ')
-                  .map((str) => str.substring(0, 1))
-                  .join(''),
-              style: const TextStyle(fontSize: 12, color: ProtonColors.white),
-            ),
-          )
+          Container(
+              margin: const EdgeInsets.only(right: defaultPadding),
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 14,
+                child: Text(
+                  Provider.of<UserSessionProvider>(context)
+                      .userSession
+                      .userDisplayName
+                      .split(' ')
+                      .map((str) => str.substring(0, 1))
+                      .join(''),
+                  style:
+                      const TextStyle(fontSize: 12, color: ProtonColors.white),
+                ),
+              ))
         ],
         centerTitle: true,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(
-                  Icons.account_balance_wallet_rounded), // 自定义的打开Drawer图标
+                Icons.account_balance_wallet_outlined,
+                size: 26,
+              ), // 自定义的打开Drawer图标
               onPressed: () {
                 Scaffold.of(context).openDrawer(); // 打开Drawer
               },
@@ -118,8 +130,14 @@ class HomeView extends ViewBase<HomeViewModel> {
               content: "Keep your account safe!",
               checked: viewModel.hadBackup,
               callback: () {
-                viewModel.coordinator
-                    .move(ViewIdentifiers.setupBackup, context);
+                if (viewModel.currentWallet == null) {
+                  LocalToast.showToast(
+                      context, "Please select your wallet first",
+                      icon: null);
+                } else {
+                  viewModel.coordinator
+                      .move(ViewIdentifiers.setupBackup, context);
+                }
               }),
           CustomTodos(
             title: "Setup Email Integration",
@@ -154,15 +172,38 @@ class HomeView extends ViewBase<HomeViewModel> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    DropdownButtonV1(
-                        width: 160,
-                        items: viewModel.accounts,
-                        itemsText: viewModel.accounts
-                            .map((v) => "${v.labelDecrypt}")
-                            .toList(),
-                        textStyle: FontManager.captionSemiBold(
-                            Theme.of(context).colorScheme.primary),
-                        valueNotifier: viewModel.accountNotifier),
+                    Row(children: [
+                      DropdownButtonV1(
+                          width: 160,
+                          items: viewModel.userAccounts,
+                          itemsText: viewModel.userAccounts
+                              .map((v) => "${v.labelDecrypt}")
+                              .toList(),
+                          textStyle: FontManager.captionSemiBold(
+                              Theme.of(context).colorScheme.primary),
+                          valueNotifier: viewModel.accountNotifier),
+                      if (viewModel.currentWallet != null)
+                        if (viewModel.isSyncingMap.containsKey(
+                            viewModel.currentWallet!.serverWalletID))
+                          viewModel.isSyncingMap[
+                                  viewModel.currentWallet!.serverWalletID]!
+                              ? Container(
+                                  margin: const EdgeInsets.only(left: 8),
+                                  width: 26,
+                                  height: 26,
+                                  child: const CircularProgressIndicator())
+                              : GestureDetector(
+                                  onTap: () {
+                                    viewModel.syncWallet();
+                                  },
+                                  child: Container(
+                                      margin: const EdgeInsets.only(left: 8),
+                                      width: 26,
+                                      height: 26,
+                                      child: const CircularProgressIndicator(
+                                        value: 1,
+                                      )))
+                    ]),
                     GestureDetector(
                       onTap: () {
                         showAccountMoreDialog(context, viewModel);
@@ -183,7 +224,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                 const SizedBox(
                   height: 4,
                 ),
-                Text("\$ ${viewModel.exchangeRate * viewModel.balance / 100 / 100000000}",
+                Text(
+                    "\$ ${viewModel.exchangeRate * viewModel.balance / 100 / 100000000}",
                     style: FontManager.captionRegular(
                         Theme.of(context).colorScheme.secondary)),
                 const SizedBox(
@@ -200,8 +242,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                         size: 24,
                       ),
                       callback: () {
-                        viewModel.coordinator
-                            .move(ViewIdentifiers.send, context);
+                        if (viewModel.currentWallet == null) {
+                          LocalToast.showToast(
+                              context, "Please select your wallet first",
+                              icon: null);
+                        } else {
+                          viewModel.coordinator
+                              .move(ViewIdentifiers.send, context);
+                        }
                       },
                     ),
                     ButtonIconWithText(
@@ -212,8 +260,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                         size: 24,
                       ),
                       callback: () {
-                        viewModel.coordinator
-                            .move(ViewIdentifiers.receive, context);
+                        if (viewModel.currentWallet == null) {
+                          LocalToast.showToast(
+                              context, "Please select your wallet first",
+                              icon: null);
+                        } else {
+                          viewModel.coordinator
+                              .move(ViewIdentifiers.receive, context);
+                        }
                       },
                     ),
                     ButtonIconWithText(
@@ -239,7 +293,81 @@ class HomeView extends ViewBase<HomeViewModel> {
             width: MediaQuery.of(context).size.width - defaultPadding * 2,
             price: viewModel.btcPriceInfo.price,
             priceChange: viewModel.btcPriceInfo.priceChange24h,
+            callback: () {
+              LocalToast.showToast(context, "TODO", icon: null);
+            },
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Text("History Transactions",
+                  style: FontManager.body1Median(
+                      Theme.of(context).colorScheme.primary))),
+          Column(children: [
+            for (int index = 0; index < viewModel.history.length; index++)
+              TransactionListTitle(
+                width: MediaQuery.of(context).size.width - defaultPadding * 2,
+                address:
+                    "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
+                coin: "Sat",
+                amount: (viewModel.getAmount(index)).toDouble(),
+                notional: CurrencyHelper.sat2usdt(
+                    (viewModel.getAmount(index)).abs().toDouble()),
+                isSend: viewModel.history[index].sent >
+                    viewModel.history[index].received,
+                note: viewModel.userLabels[index],
+                timestamp: viewModel.history[index].confirmationTime!.timestamp,
+                onTap: () {
+                  viewModel.selectedTXID = viewModel.history[index].txid;
+                  viewModel.coordinator
+                      .move(ViewIdentifiers.historyDetails, context);
+                },
+              )
+          ]),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Text("Transaction Fees",
+                  style: FontManager.body1Median(
+                      Theme.of(context).colorScheme.primary))),
+          const SizedBox(height: 10),
+          Container(
+              width: MediaQuery.of(context).size.width,
+              height: 110,
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    TransactionFeeBox(
+                      priorityText: "High Priority",
+                      timeEstimate: "In ~10 minutes",
+                      fee: viewModel.bitcoinTransactionFee.block1Fee,
+                    ),
+                    const SizedBox(width: 10),
+                    TransactionFeeBox(
+                      priorityText: "Median Priority",
+                      timeEstimate: "In ~30 minutes",
+                      fee: viewModel.bitcoinTransactionFee.block3Fee,
+                    ),
+                    const SizedBox(width: 10),
+                    TransactionFeeBox(
+                      priorityText: "Low Priority",
+                      timeEstimate: "In ~50 minutes",
+                      fee: viewModel.bitcoinTransactionFee.block5Fee,
+                    ),
+                    const SizedBox(width: 10),
+                    TransactionFeeBox(
+                      priorityText: "No Priority",
+                      timeEstimate: "In ~3.5 hours",
+                      fee: viewModel.bitcoinTransactionFee.block20Fee,
+                    ),
+                  ])),
           const SizedBox(
             height: 20,
           ),
@@ -305,12 +433,10 @@ void showFiatCurrencySettingGuide(
                   const SizedBox(height: 12),
                   DropdownButtonV1(
                       width: 200,
-                      items: const [
-                        ApiFiatCurrency.usd,
-                        ApiFiatCurrency.eur,
-                        ApiFiatCurrency.chf
-                      ],
-                      itemsText: const ["USD \$", "EUR €", "CHF ₣"],
+                      items: viewModel.fiatCurrencies,
+                      itemsText: viewModel.fiatCurrencies
+                          .map((v) => FiatCurrencyHelper.getText(v))
+                          .toList(),
                       textStyle: FontManager.captionSemiBold(
                           Theme.of(context).colorScheme.primary),
                       valueNotifier: viewModel.fiatCurrencyNotifier),
@@ -320,8 +446,9 @@ void showFiatCurrencySettingGuide(
                           horizontal: defaultButtonPadding),
                       child: ButtonV5(
                           onPressed: () {
-                            LocalToast.showToast(context, "TODO - put to api", icon: null);
-                            viewModel.updateFiatCurrency(viewModel.fiatCurrencyNotifier.value);
+                            viewModel.updateFiatCurrency(
+                                viewModel.fiatCurrencyNotifier.value);
+                            viewModel.saveUserSettings();
                             Navigator.pop(context);
                           },
                           backgroundColor: ProtonColors.backgroundBlack,
@@ -335,6 +462,11 @@ void showFiatCurrencySettingGuide(
 }
 
 void showAccountMoreDialog(BuildContext context, HomeViewModel viewModel) {
+  if (viewModel.currentWallet == null) {
+    LocalToast.showToast(context, "Please select your wallet first",
+        icon: null);
+    return;
+  }
   showModalBottomSheet(
     context: context,
     constraints: BoxConstraints(
@@ -356,6 +488,20 @@ void showAccountMoreDialog(BuildContext context, HomeViewModel viewModel) {
               children: [
                 const SizedBox(
                   height: 5,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.key, size: 18),
+                  title: Text(S.of(context).set_passphrase,
+                      style: FontManager.body2Regular(
+                          Theme.of(context).colorScheme.primary)),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return showUpdateWalletPassphraseDialog(
+                              context, viewModel, viewModel.currentWallet!);
+                        });
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit, size: 18),
@@ -395,6 +541,20 @@ void showAccountMoreDialog(BuildContext context, HomeViewModel viewModel) {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(Icons.add, size: 18),
+                  title: Text(S.of(context).create_account,
+                      style: FontManager.body2Regular(
+                          Theme.of(context).colorScheme.primary)),
+                  onTap: () {
+                    AddAccountAlertDialog.show(
+                        context,
+                        viewModel.currentWallet!.id!,
+                        viewModel.currentWallet!.serverWalletID, callback: () {
+                      viewModel.loadData();
+                    });
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.edit, size: 18),
                   title: Text(S.of(context).rename_account,
                       style: FontManager.body2Regular(
@@ -413,17 +573,18 @@ void showAccountMoreDialog(BuildContext context, HomeViewModel viewModel) {
                       style: FontManager.body2Regular(
                           Theme.of(context).colorScheme.primary)),
                   onTap: () async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return const CustomFullpageLoading();
-                      },
-                    );
-                    await viewModel.deleteAccount();
-                    if (context.mounted) {
-                      Navigator.of(context).pop(); // pop progressing overlay
-                      Navigator.of(context).pop(); // pop current dialog
+                    if (viewModel.userAccounts.length > 1) {
+                      EasyLoading.show(
+                          status: "loading..",
+                          maskType: EasyLoadingMaskType.black);
+                      await viewModel.deleteAccount();
+                      EasyLoading.dismiss();
+                      if (context.mounted) {
+                        Navigator.of(context).pop(); // pop current dialog
+                      }
+                    } else {
+                      LocalToast.showErrorToast(
+                          context, "Can not delete last account in wallet!");
                     }
                   },
                 )
@@ -504,14 +665,15 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                   children: [
                     Text(S.of(context).setting_fiat_currency_label,
                         style: FontManager.body1Regular(ProtonColors.textNorm)),
-                    TextChoices(
-                        choices: [
-                          ApiFiatCurrency.usd.name.toUpperCase(),
-                          ApiFiatCurrency.eur.name.toUpperCase(),
-                          ApiFiatCurrency.chf.name.toUpperCase(),
-                        ],
-                        selectedValue: viewModel.faitCurrencyController.text,
-                        controller: viewModel.faitCurrencyController),
+                    DropdownButtonV1(
+                        width: 200,
+                        items: viewModel.fiatCurrencies,
+                        itemsText: viewModel.fiatCurrencies
+                            .map((v) => FiatCurrencyHelper.getText(v))
+                            .toList(),
+                        textStyle: FontManager.captionSemiBold(
+                            Theme.of(context).colorScheme.primary),
+                        valueNotifier: viewModel.fiatCurrencyNotifier),
                   ],
                 )),
             Container(
@@ -571,6 +733,24 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     textStyle: FontManager.body1Median(ProtonColors.textNorm),
                     height: 48)),
             Container(
+                padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: ButtonV5(
+                    onPressed: () async {
+                      EasyLoading.show(
+                          status: "reloading..",
+                          maskType: EasyLoadingMaskType.black);
+                      await DBHelper.reset();
+                      await WalletManager.fetchWalletsFromServer();
+                      EasyLoading.dismiss();
+                    },
+                    text: "Reset Local Data and Reload",
+                    width: MediaQuery.of(context).size.width,
+                    backgroundColor: ProtonColors.surfaceLight,
+                    borderColor: ProtonColors.wMajor1,
+                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                    height: 48)),
+            Container(
               padding: const EdgeInsets.symmetric(horizontal: 26.0),
               margin: const EdgeInsets.symmetric(vertical: 30),
               child: ButtonV5(
@@ -609,21 +789,15 @@ Widget showUpdateWalletNameDialog(
       ),
       TextButton(
         onPressed: () async {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const CustomFullpageLoading();
-            },
-          );
+          EasyLoading.show(
+              status: "loading..", maskType: EasyLoadingMaskType.black);
           await proton_api.updateWalletName(
               walletId: walletModel.serverWalletID,
               newName: textEditingController.text);
           walletModel.name = textEditingController.text;
           await DBHelper.walletDao!.update(walletModel);
-          viewModel.forceReloadWallet = true;
+          EasyLoading.dismiss();
           if (context.mounted) {
-            Navigator.of(context).pop(); // pop progressing overlay
             Navigator.of(context).pop(); // pop current dialog
           }
         },
@@ -651,51 +825,20 @@ Widget showUpdateWalletPassphraseDialog(
       ),
       TextButton(
         onPressed: () async {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const CustomFullpageLoading();
-            },
-          );
+          EasyLoading.show(
+              status: "saving passphrase..",
+              maskType: EasyLoadingMaskType.black);
           await SecureStorageHelper.set(
               walletModel.serverWalletID, textEditingController.text);
-          viewModel.forceReloadWallet = true;
+          await Future.delayed(const Duration(seconds: 1));
+          EasyLoading.dismiss();
           if (context.mounted) {
-            Navigator.of(context).pop(); // pop progressing overlay
             Navigator.of(context).pop(); // pop current dialog
           }
         },
         child: Text(S.of(context).submit),
       ),
     ],
-  );
-}
-
-void showMyAlertDialog(BuildContext context, String content) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Secure Storage Info"),
-        content: Text(content),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: content)).then(
-                  (v) => {LocalToast.showToast(context, S.of(context).copied)});
-            },
-            child: Text(S.of(context).copy_button),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(S.of(context).ok),
-          ),
-        ],
-      );
-    },
   );
 }
 
@@ -713,35 +856,38 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
       ],
     ),
     children: [
-      for (WalletModel walletModel in viewModel.userWallets)
-        ListTile(
-            onTap: () {
-              if (walletModel.status == WalletModel.statusActive) {
-                viewModel.selectWallet(walletModel.id!);
-              } else {
-                LocalToast.showErrorToast(
-                    context, S.of(context).wallet_decryption_error_message);
-              }
-            },
-            leading: walletModel.status == WalletModel.statusActive
-                ? TagText(
-                    text: S.of(context).on_chain,
-                    radius: 10.0,
-                    background: const Color.fromARGB(255, 200, 248, 255),
-                    textColor: const Color.fromARGB(255, 18, 134, 159))
-                : TagText(
-                    text: S.of(context).inactivate_wallet,
-                    radius: 10.0,
-                    background: ProtonColors.signalError,
-                    textColor: ProtonColors.white,
-                  ),
-            title: Container(
-              transform: Matrix4.translationValues(0, 0.0, 0.0),
-              child: Text(walletModel.name),
-            ),
-            trailing: walletModel.id == viewModel.currentWallet!.id
-                ? const Icon(Icons.done)
-                : null),
+      if (viewModel.initialed)
+        for (WalletModel walletModel in viewModel.userWallets)
+          ListTile(
+              onTap: () {
+                if (walletModel.status == WalletModel.statusActive) {
+                  viewModel.selectWallet(walletModel.id!);
+                } else {
+                  LocalToast.showErrorToast(
+                      context, S.of(context).wallet_decryption_error_message);
+                }
+              },
+              leading: walletModel.status == WalletModel.statusActive
+                  ? TagText(
+                      text: S.of(context).on_chain,
+                      radius: 10.0,
+                      background: const Color.fromARGB(255, 200, 248, 255),
+                      textColor: const Color.fromARGB(255, 18, 134, 159))
+                  : TagText(
+                      text: S.of(context).inactivate_wallet,
+                      radius: 10.0,
+                      background: ProtonColors.signalError,
+                      textColor: ProtonColors.white,
+                    ),
+              title: Container(
+                transform: Matrix4.translationValues(0, 0.0, 0.0),
+                child: Text(walletModel.name),
+              ),
+              trailing: viewModel.currentWallet == null
+                  ? null
+                  : walletModel.id == viewModel.currentWallet!.id
+                      ? const Icon(Icons.done)
+                      : null),
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 26.0),
           margin: const EdgeInsets.symmetric(vertical: 10),
@@ -758,22 +904,4 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
           )),
     ],
   );
-}
-
-class NestedDialog extends StatelessWidget {
-  const NestedDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Navigator(
-            key: const Key("NestedDialogForSetup"),
-            // add a unique key to refer to this navigator programmatically
-
-            initialRoute: '/',
-            onGenerateRoute: (RouteSettings settings) {
-              return MaterialPageRoute(
-                  builder: (_) => SetupOnbaordCoordinator().start());
-            }));
-  }
 }

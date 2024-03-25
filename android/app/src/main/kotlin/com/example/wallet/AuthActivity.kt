@@ -21,6 +21,7 @@ package com.example.wallet
 //import com.example.wallet.autofill.di.UserPreferenceEntryPoint
 //import com.example.wallet.commonui.api.setSecureMode
 //import com.example.wallet.preferences.AllowScreenshotsPreference
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
