@@ -163,9 +163,9 @@ class HomeViewModelImpl extends HomeViewModel {
       String appVersion = "Other";
       String userAgent = "None";
       if (Platform.isWindows) {
-        uid = "xbpj3o7lkjobuzh25jogc4dsadcu4psw";
-        accessToken = "w7s5ag3drgzlnkotndhgp5ayc27canfx";
-        refreshToken = "57hzf2ui5xhhjnuylbii7xzj4vrvotwu";
+        uid = "yjc622iyeu652edpocjm5kxgn365ccnr";
+        accessToken = "gcd5itcos4wmmqjhuihaulicuda2a7q2";
+        refreshToken = "m2pwhgzhx5roz6aocbkkdufdce3sq4uo";
       }
       if (Platform.isAndroid) {
         appVersion = await SecureStorageHelper.get("appVersion");

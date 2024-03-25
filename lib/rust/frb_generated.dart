@@ -4121,7 +4121,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       id: dco_decode_String(arr[0]),
       bitcoinUnit: dco_decode_common_bitcoin_unit(arr[1]),
       fiatCurrency: dco_decode_api_fiat_currency(arr[2]),
-      exchangeRateTime: dco_decode_String(arr[3]),
+      exchangeRateTime: dco_decode_u_64(arr[3]),
       exchangeRate: dco_decode_u_64(arr[4]),
       cents: dco_decode_u_64(arr[5]),
     );
@@ -5586,7 +5586,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_id = sse_decode_String(deserializer);
     var var_bitcoinUnit = sse_decode_common_bitcoin_unit(deserializer);
     var var_fiatCurrency = sse_decode_api_fiat_currency(deserializer);
-    var var_exchangeRateTime = sse_decode_String(deserializer);
+    var var_exchangeRateTime = sse_decode_u_64(deserializer);
     var var_exchangeRate = sse_decode_u_64(deserializer);
     var var_cents = sse_decode_u_64(deserializer);
     return ProtonExchangeRate(
@@ -6890,7 +6890,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.id, serializer);
     sse_encode_common_bitcoin_unit(self.bitcoinUnit, serializer);
     sse_encode_api_fiat_currency(self.fiatCurrency, serializer);
-    sse_encode_String(self.exchangeRateTime, serializer);
+    sse_encode_u_64(self.exchangeRateTime, serializer);
     sse_encode_u_64(self.exchangeRate, serializer);
     sse_encode_u_64(self.cents, serializer);
   }
