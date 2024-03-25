@@ -102,7 +102,7 @@ class ImportViewModelImpl extends ImportViewModel {
 
     await WalletManager.setWalletKey(serverWalletID,
         secretKey); // need to set key first, so that we can decrypt for walletAccount
-    WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
+    await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
         ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
   }
 }

@@ -44,7 +44,6 @@ class SecureStorageHelper {
 
   static Future<void> set(String key_, String value_) async {
     // TODO:: figure out why windows can not write to storage, this is current workaround
-    await storage!.delete(key: key_);
     for (int i = 0; i< 1000; i++) {
       await storage!.write(key: key_, value: value_);
       bool saved = await storage!.containsKey(key: key_);
@@ -55,8 +54,7 @@ class SecureStorageHelper {
   }
 
   static Future<String> get(String key_) async {
-    String value = await storage!.read(key: key_) ?? "";
-    return value;
+    return await storage!.read(key: key_) ?? "";
   }
 
   static Future<void> deleteAll() async {

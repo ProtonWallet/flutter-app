@@ -13,7 +13,7 @@ class ThemeProvider extends ChangeNotifier {
   };
 
   SharedPreferences? _preferences;
-  String _themeMode = "system";
+  String _themeMode = "light";
 
   // return current mode
   String get themeMode => _themeMode;
@@ -30,7 +30,7 @@ class ThemeProvider extends ChangeNotifier {
       case 'light':
         return S.of(context).light_mode;
       default:
-        return S.of(context).auto_by_system;
+        return S.of(context).light_mode;
     }
   }
 
@@ -57,7 +57,7 @@ class ThemeProvider extends ChangeNotifier {
   // read
   _loadFromPreferences() async {
     await _initialPreferences();
-    _themeMode = _preferences?.getString(key) ?? 'system';
+    _themeMode = _preferences?.getString(key) ?? 'light';
     notifyListeners(); // notify
   }
 

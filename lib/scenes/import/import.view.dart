@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
@@ -105,19 +106,22 @@ class ImportView extends ViewBase<ImportViewModel> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ButtonV5(
-                        onPressed: () {
-                          viewModel.importWallet();
-                          LocalToast.showToast(
-                              context, S.of(context).wallet_imported,
-                              duration: 2);
+                        onPressed: () async {
+                          EasyLoading.show(
+                              status: "creating wallet..",
+                              maskType: EasyLoadingMaskType.black);
+                          await viewModel.importWallet();
                           viewModel.coordinator.end();
-                          Navigator.of(context).popUntil((route) {
-                            if (route.settings.name == null) {
-                              return false;
-                            }
-                            return route.settings.name ==
-                                "[<'HomeNavigationView'>]";
-                          });
+                          EasyLoading.dismiss();
+                          if (context.mounted) {
+                            Navigator.of(context).popUntil((route) {
+                              if (route.settings.name == null) {
+                                return false;
+                              }
+                              return route.settings.name ==
+                                  "[<'HomeNavigationView'>]";
+                            });
+                          }
                         },
                         text: S.of(context).import_button,
                         width: MediaQuery.of(context).size.width,

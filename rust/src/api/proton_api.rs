@@ -1,4 +1,4 @@
-use andromeda_api::ProtonWalletApiClient;
+use andromeda_api::{AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid};
 use chrono::Utc;
 use lazy_static::lazy_static;
 use std::sync::{Arc, RwLock};
@@ -25,6 +25,34 @@ pub async fn init_api_service(user_name: String, password: String) {
         "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
     );
     api.login(&user_name, &password).await.unwrap();
+    let mut api_ref = PROTON_API.write().unwrap();
+    *api_ref = Some(Arc::new(api));
+}
+
+pub fn init_api_service_from_auth_and_version(
+    uid: String,
+    access: String,
+    refresh: String,
+    scopes: Vec<String>,
+    app_version: String,
+    user_agent: String,
+) {
+    // create a global proton api service
+    let auth = AuthData::Access(
+        Uid::from(uid.clone()),
+        RefreshToken::from(refresh.clone()),
+        AccessToken::from(access.clone()),
+        scopes
+            .into_iter()
+            .map(|scope_string| Scope::from(scope_string))
+            .collect(),
+    );
+    let api = ProtonWalletApiClient::from_auth_with_version(
+        auth,
+        app_version.clone(),
+        user_agent.clone(),
+    )
+    .expect("error from auth()");
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(Arc::new(api));
 }

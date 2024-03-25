@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/contacts.model.dart';
@@ -62,16 +63,19 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> loadData() async {
+    EasyLoading.show(
+        status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
     coinController = TextEditingController(text: "BTC");
     recipientTextController = TextEditingController();
     memoTextController = TextEditingController();
     amountTextController = TextEditingController();
+    amountFiatCurrencyTextController = TextEditingController();
+    await updateExchangeRate();
     amountTextController.addListener(() {
       if (amountTextControllerChanged == false) {
         setFiatCurrencyValue();
       }
     });
-    amountFiatCurrencyTextController = TextEditingController();
     amountFiatCurrencyTextController.addListener(() {
       if (amountFiatCurrencyTextControllerChanged == false) {
         setCryptoCurrencyValue();
@@ -109,6 +113,7 @@ class SendViewModelImpl extends SendViewModel {
     updateAccountList();
     List<ContactsModel> contacts = await WalletManager.getContacts();
     contactsEmail = contacts.map((e) => e.canonicalEmail).toList();
+    EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
   }
 
@@ -143,7 +148,8 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> sendCoin() async {
     if (amountTextController.text != "") {
       var receipinetAddress = recipientTextController.text;
-      int amount = int.parse(amountTextController.text);
+      double btcAmount = double.parse(amountTextController.text);
+      int amount = (btcAmount * 100000000).round();
       logger.i("Target addr: $receipinetAddress\nAmount: $amount");
       await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, amount);
     }
@@ -195,7 +201,7 @@ class SendViewModelImpl extends SendViewModel {
     // } else {
     //   amountTextController.text = cryptoAmount.toString();
     // }
-    amountTextController.text = cryptoAmount.toString();
+    amountTextController.text = cryptoAmount.toStringAsFixed(8);
     unlockAmountTextController();
     datasourceChangedStreamController.add(this);
   }
