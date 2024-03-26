@@ -4,6 +4,10 @@ import 'dart:io';
 import 'package:wallet/helper/crypto.price.info.dart';
 
 class CryptoPriceHelper {
+  /*
+  Get crypto price via binance API
+  TODO:: change to rust backend if needed
+  */
   static Future<CryptoPriceInfo> getPriceInfo(String symbol) async {
     HttpClient httpClient = HttpClient();
     var uri =
@@ -39,6 +43,10 @@ class CryptoPriceHelper {
     );
   }
 
+  /*
+  Get bitcoin transaction fee
+  TODO:: change to rust backend if needed
+  */
   static Future<double> getBitcoinTransactionFeeByBlock(int block) async {
     try {
       HttpClient httpClient = HttpClient();

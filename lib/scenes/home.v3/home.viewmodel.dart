@@ -163,9 +163,9 @@ class HomeViewModelImpl extends HomeViewModel {
       String appVersion = "Other";
       String userAgent = "None";
       if (Platform.isWindows) {
-        uid = "yjc622iyeu652edpocjm5kxgn365ccnr";
-        accessToken = "gcd5itcos4wmmqjhuihaulicuda2a7q2";
-        refreshToken = "m2pwhgzhx5roz6aocbkkdufdce3sq4uo";
+        uid = "xg6qjlagxdosjze4367jl7jsc6vq6aqo";
+        accessToken = "7xjertnxaqxhovsy6brbk6fjdqq5pcuk";
+        refreshToken = "sr7f73paxa6bvhtdga47lehxclgkjgmj";
       }
       if (Platform.isAndroid) {
         appVersion = await SecureStorageHelper.get("appVersion");
@@ -245,8 +245,8 @@ class HomeViewModelImpl extends HomeViewModel {
     if (WalletManager.getCurrentTime() >
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
-      exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.eur,
-          time: lastExchangeRateTime);
+      // don't send time since client time may be faster than server time, it will raise error
+      exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.eur);
       datasourceChangedStreamController.add(this);
     }
   }

@@ -18,7 +18,7 @@ class ProtonExchangeRate {
   final ApiFiatCurrency fiatCurrency;
 
   /// string <date-time>
-  final int exchangeRateTime;
+  final String exchangeRateTime;
 
   /// Exchange rate BitcoinUnit/FiatCurrency
   final int exchangeRate;

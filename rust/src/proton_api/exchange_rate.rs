@@ -9,7 +9,7 @@ pub struct ProtonExchangeRate {
     /// Fiat currency of the exchange rate
     pub fiat_currency: ApiFiatCurrency,
     /// string <date-time>
-    pub exchange_rate_time: u64,
+    pub exchange_rate_time: String,
     /// Exchange rate BitcoinUnit/FiatCurrency
     pub exchange_rate: u64,
     /// Cents precision of the fiat currency (e.g. 1 for JPY, 100 for USD)

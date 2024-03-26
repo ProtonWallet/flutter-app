@@ -120,10 +120,7 @@ abstract class RustLibApi extends BaseApi {
   Future<List<ProtonContactEmails>> getContacts({dynamic hint});
 
   Future<ProtonExchangeRate> getExchangeRate(
-      {required CommonBitcoinUnit bitcoinUnit,
-      required ApiFiatCurrency fiatCurrency,
-      int? time,
-      dynamic hint});
+      {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint});
 
   Future<String> getLatestEventId({dynamic hint});
 
@@ -797,14 +794,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<ProtonExchangeRate> getExchangeRate(
-      {required CommonBitcoinUnit bitcoinUnit,
-      required ApiFiatCurrency fiatCurrency,
-      int? time,
-      dynamic hint}) {
+      {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_common_bitcoin_unit(bitcoinUnit, serializer);
         sse_encode_api_fiat_currency(fiatCurrency, serializer);
         sse_encode_opt_box_autoadd_u_64(time, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -815,7 +808,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: sse_decode_api_error,
       ),
       constMeta: kGetExchangeRateConstMeta,
-      argValues: [bitcoinUnit, fiatCurrency, time],
+      argValues: [fiatCurrency, time],
       apiImpl: this,
       hint: hint,
     ));
@@ -823,7 +816,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kGetExchangeRateConstMeta => const TaskConstMeta(
         debugName: "get_exchange_rate",
-        argNames: ["bitcoinUnit", "fiatCurrency", "time"],
+        argNames: ["fiatCurrency", "time"],
       );
 
   @override
@@ -4121,7 +4114,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       id: dco_decode_String(arr[0]),
       bitcoinUnit: dco_decode_common_bitcoin_unit(arr[1]),
       fiatCurrency: dco_decode_api_fiat_currency(arr[2]),
-      exchangeRateTime: dco_decode_u_64(arr[3]),
+      exchangeRateTime: dco_decode_String(arr[3]),
       exchangeRate: dco_decode_u_64(arr[4]),
       cents: dco_decode_u_64(arr[5]),
     );
@@ -5586,7 +5579,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_id = sse_decode_String(deserializer);
     var var_bitcoinUnit = sse_decode_common_bitcoin_unit(deserializer);
     var var_fiatCurrency = sse_decode_api_fiat_currency(deserializer);
-    var var_exchangeRateTime = sse_decode_u_64(deserializer);
+    var var_exchangeRateTime = sse_decode_String(deserializer);
     var var_exchangeRate = sse_decode_u_64(deserializer);
     var var_cents = sse_decode_u_64(deserializer);
     return ProtonExchangeRate(
@@ -6890,7 +6883,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.id, serializer);
     sse_encode_common_bitcoin_unit(self.bitcoinUnit, serializer);
     sse_encode_api_fiat_currency(self.fiatCurrency, serializer);
-    sse_encode_u_64(self.exchangeRateTime, serializer);
+    sse_encode_String(self.exchangeRateTime, serializer);
     sse_encode_u_64(self.exchangeRate, serializer);
     sse_encode_u_64(self.cents, serializer);
   }

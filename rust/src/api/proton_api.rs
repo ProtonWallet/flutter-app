@@ -208,18 +208,13 @@ pub async fn hide_empty_used_addresses(
 }
 
 pub async fn get_exchange_rate(
-    bitcoin_unit: CommonBitcoinUnit,
     fiat_currency: ApiFiatCurrency,
     time: Option<u64>,
 ) -> Result<ProtonExchangeRate, ApiError> {
-    let timestamp = match time {
-        Some(t) => t,
-        None => Utc::now().timestamp() as u64,
-    };
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .exchange_rate
-        .get_exchange_rate(bitcoin_unit.into(), fiat_currency.into(), timestamp)
+        .get_exchange_rate(fiat_currency.into(), time)
         .await;
     match result {
         Ok(response) => Ok(response.into()),
