@@ -219,7 +219,6 @@ class WalletManager {
   static Future<int> getExchangeRate(ApiFiatCurrency fiatCurrency,
       {int? time}) async {
     var exchangeRate = await proton_api.getExchangeRate(
-        bitcoinUnit: CommonBitcoinUnit.btc,
         fiatCurrency: fiatCurrency,
         time: time);
     return exchangeRate.exchangeRate;
