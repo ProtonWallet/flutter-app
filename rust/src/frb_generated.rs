@@ -520,10 +520,6 @@ fn wire_get_exchange_rate_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_bitcoin_unit =
-                <crate::proton_api::user_settings::CommonBitcoinUnit>::sse_decode(
-                    &mut deserializer,
-                );
             let api_fiat_currency =
                 <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(&mut deserializer);
             let api_time = <Option<u64>>::sse_decode(&mut deserializer);
@@ -531,12 +527,7 @@ fn wire_get_exchange_rate_impl(
             move |context| async move {
                 transform_result_sse(
                     (move || async move {
-                        crate::api::proton_api::get_exchange_rate(
-                            api_bitcoin_unit,
-                            api_fiat_currency,
-                            api_time,
-                        )
-                        .await
+                        crate::api::proton_api::get_exchange_rate(api_fiat_currency, api_time).await
                     })()
                     .await,
                 )
@@ -4580,7 +4571,7 @@ impl SseDecode for crate::proton_api::exchange_rate::ProtonExchangeRate {
             <crate::proton_api::user_settings::CommonBitcoinUnit>::sse_decode(deserializer);
         let mut var_fiatCurrency =
             <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(deserializer);
-        let mut var_exchangeRateTime = <u64>::sse_decode(deserializer);
+        let mut var_exchangeRateTime = <String>::sse_decode(deserializer);
         let mut var_exchangeRate = <u64>::sse_decode(deserializer);
         let mut var_cents = <u64>::sse_decode(deserializer);
         return crate::proton_api::exchange_rate::ProtonExchangeRate {
@@ -7141,7 +7132,7 @@ impl SseEncode for crate::proton_api::exchange_rate::ProtonExchangeRate {
             self.fiat_currency,
             serializer,
         );
-        <u64>::sse_encode(self.exchange_rate_time, serializer);
+        <String>::sse_encode(self.exchange_rate_time, serializer);
         <u64>::sse_encode(self.exchange_rate, serializer);
         <u64>::sse_encode(self.cents, serializer);
     }

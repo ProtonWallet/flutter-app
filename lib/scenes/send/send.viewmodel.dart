@@ -187,9 +187,8 @@ class SendViewModelImpl extends SendViewModel {
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
       for (ApiFiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
-        fiatCurrency2exchangeRate[apiFiatCurrency] = 6000000;
-        // await WalletManager.getExchangeRate(apiFiatCurrency,
-        //     time: lastExchangeRateTime);
+        // don't send time since client time may be faster than server time, it will raise error
+        fiatCurrency2exchangeRate[apiFiatCurrency] = await WalletManager.getExchangeRate(apiFiatCurrency);
       }
       datasourceChangedStreamController.add(this);
     }
