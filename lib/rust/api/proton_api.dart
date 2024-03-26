@@ -102,15 +102,9 @@ Future<ApiUserSettings> hideEmptyUsedAddresses(
         hideEmptyUsedAddresses: hideEmptyUsedAddresses, hint: hint);
 
 Future<ProtonExchangeRate> getExchangeRate(
-        {required CommonBitcoinUnit bitcoinUnit,
-        required ApiFiatCurrency fiatCurrency,
-        int? time,
-        dynamic hint}) =>
-    RustLib.instance.api.getExchangeRate(
-        bitcoinUnit: bitcoinUnit,
-        fiatCurrency: fiatCurrency,
-        time: time,
-        hint: hint);
+        {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint}) =>
+    RustLib.instance.api
+        .getExchangeRate(fiatCurrency: fiatCurrency, time: time, hint: hint);
 
 Future<String> getLatestEventId({dynamic hint}) =>
     RustLib.instance.api.getLatestEventId(hint: hint);
