@@ -61,7 +61,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             ),
         ]),
         OnboardingContent(
-          totalPages: 6,
+          totalPages: 2,
           currentPage: 1,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height / 2,

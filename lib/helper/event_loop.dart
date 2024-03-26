@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -22,8 +23,8 @@ class EventLoop {
   Future<void> start() async {
     if (!_isRunning) {
       _isRunning = true;
-      latestEventId = await proton_api.getLatestEventId();
-      print(latestEventId);
+      String? savedLatestEventId = await WalletManager.getLatestEventId();
+      latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
       await _run();
     }
   }
@@ -42,6 +43,7 @@ class EventLoop {
           await proton_api.collectEvents(latestEventId: latestEventId);
       for (ProtonEvent event in events) {
         latestEventId = event.eventId;
+        await WalletManager.setLatestEventId(latestEventId);
         if (event.walletKeyEvents != null) {
           for (WalletKeyEvent walletKeyEvent in event.walletKeyEvents!) {
             ProtonWalletKey? walletKey = walletKeyEvent.walletKey;
@@ -56,6 +58,11 @@ class EventLoop {
         }
         if (event.walletEvents != null) {
           for (WalletEvent walletEvent in event.walletEvents!) {
+            if (walletEvent.action == 0) {
+              String serverWalletID = walletEvent.id;
+              await WalletManager.deleteWalletByServerWalletID(
+                  serverWalletID); // Will also delete account
+            }
             ProtonWallet? walletData = walletEvent.wallet;
 
             String userPrivateKey =
@@ -86,9 +93,10 @@ class EventLoop {
                     WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
                 await WalletManager.setWalletKey(serverWalletID, secretKey);
               }
-              int status = entropy.isNotEmpty
-                  ? walletData.status
-                  : WalletModel.statusDisabled;
+              // int status = entropy.isNotEmpty
+              //     ? WalletModel.statusActive
+              //     : WalletModel.statusDisabled;
+              int status = WalletModel.statusActive;
               await WalletManager.insertOrUpdateWallet(
                   userID: 0,
                   name: walletData.name,

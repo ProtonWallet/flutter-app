@@ -40,6 +40,7 @@ class TextFieldText extends StatefulWidget {
 }
 
 class TextFieldTextState extends State<TextFieldText> {
+  final _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'));
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,12 +64,12 @@ class TextFieldTextState extends State<TextFieldText> {
                   controller: widget.controller,
                   focusNode: widget.focusNode,
                   keyboardType: widget.digitOnly
-                      ? TextInputType.number
+                      ? TextInputType.numberWithOptions(decimal: true)
                       : widget.multiLine
                           ? TextInputType.multiline
                           : TextInputType.text,
                   inputFormatters: widget.digitOnly
-                      ? [FilteringTextInputFormatter.digitsOnly]
+                      ? [_decimalFormatter]
                       : [],
                   decoration: InputDecoration(
                     hintText: widget.hintText,

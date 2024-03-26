@@ -20,9 +20,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
   Widget buildWithViewModel(
       BuildContext context, SetupCreateViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
-      body: viewModel.inProgress
-          ? buildInProgress(context, viewModel, viewSize)
-          : buildFinished(context, viewModel, viewSize),
+      body: buildInProgress(context, viewModel, viewSize)
     );
   }
 
@@ -75,8 +73,8 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
               )),
         ]),
         OnboardingContent(
-          totalPages: 6,
-          currentPage: 2,
+          totalPages: 2,
+          currentPage: 1,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height / 2,
           title: S.of(context).financial_freedom_,
@@ -102,84 +100,6 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
                 height: 48),
           ],
         )
-      ],
-    );
-  }
-
-  Widget buildFinished(
-      BuildContext context, SetupCreateViewModel viewModel, ViewSize viewSize) {
-    return Column(
-      children: <Widget>[
-        Stack(children: [
-          Container(
-              alignment: Alignment.topCenter,
-              child: Container(
-                color: Colors.red,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/bg.svg',
-                  fit: BoxFit.fill,
-                ),
-              )),
-          Container(
-              alignment: Alignment.topLeft,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Container(
-                margin: const EdgeInsets.only(left: 40, top: 40),
-                width: 48,
-                height: 48,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/wallet.svg',
-                  fit: BoxFit.fill,
-                ),
-              )),
-          Container(
-              alignment: Alignment.centerRight,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        S.of(context).bitcoin_wallet,
-                        style: FontManager.body1Bold(ProtonColors.white),
-                        textAlign: TextAlign.right,
-                      ),
-                      Text(
-                        "0 BTC",
-                        style: FontManager.body1Regular(ProtonColors.white),
-                        textAlign: TextAlign.right,
-                      ),
-                      Text(
-                        "bc1p54***3297",
-                        style: FontManager.body1Regular(ProtonColors.white),
-                        textAlign: TextAlign.right,
-                      ),
-                    ],
-                  )))
-        ]),
-        OnboardingContent(
-            totalPages: 6,
-            currentPage: 2,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2,
-            title: S.of(context).your_bitcoin_wallet_created,
-            content: S.of(context).your_new_wallet_is_created_,
-            children: [
-              ButtonV5(
-                  onPressed: () {
-                    viewModel.coordinator
-                        .move(ViewIdentifiers.setupBackup, context);
-                  },
-                  text: S.of(context).backup_your_wallet,
-                  width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
-                  height: 48)
-            ]),
       ],
     );
   }

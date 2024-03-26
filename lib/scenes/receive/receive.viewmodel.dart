@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -60,22 +61,28 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         });
       }
     }
-    updateAccountList();
+    await updateAccountList();
     datasourceChangedStreamController.add(this);
   }
 
   Future<void> updateAccountList() async {
     userAccounts =
         await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
-    if (userAccounts.isEmpty){
+    if (userAccounts.isEmpty) {
       return;
     }
-    accountID = accountID == 0 ? userAccounts.first.id! : accountID;
-    valueNotifierForAccount = ValueNotifier(userAccounts.first);
+    AccountModel selectedAccount = userAccounts.first;
+    for (AccountModel accountModel in userAccounts) {
+      if (accountModel.id == accountID) {
+        selectedAccount = accountModel;
+        break;
+      }
+    }
+    valueNotifierForAccount = ValueNotifier(selectedAccount);
     valueNotifierForAccount.addListener(() {
       getAddress();
     });
-    getAddress();
+    await getAddress(init: true);
     datasourceChangedStreamController.add(this);
   }
 
@@ -84,16 +91,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void getAddress() async {
-    if (walletID != valueNotifier.value.id ||
+  Future<void> getAddress({bool init = false}) async {
+    if (init ||
+        walletID != valueNotifier.value.id ||
         accountID != valueNotifierForAccount.value.id) {
       walletID = valueNotifier.value.id;
       accountID = valueNotifierForAccount.value.id;
       _wallet = await WalletManager.loadWalletWithID(
           valueNotifier.value.id, valueNotifierForAccount.value.id);
     }
-    var addressinfo = await _lib.getAddress(_wallet);
-    address = addressinfo.address;
+    var addressInfo = await _lib.getAddress(_wallet);
+    address = addressInfo.address;
     datasourceChangedStreamController.add(this);
   }
 }

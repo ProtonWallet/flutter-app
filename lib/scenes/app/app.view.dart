@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.session.dart';
@@ -77,7 +78,7 @@ class AppView extends ViewBase<AppViewModel> {
             routes: <String, WidgetBuilder>{
               '/': (BuildContext context) => homeView,
             },
-            builder: FToastBuilder(),
+            builder:  EasyLoading.init(builder: FToastBuilder()),
             navigatorKey: navigatorKey
             // home: homeView,
             // routes: ["/", homeView],

@@ -1,12 +1,17 @@
-use std::{collections::HashMap, sync::{Arc, RwLock}};
 use lazy_static::lazy_static;
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock},
+};
 
-use muon::{
-    session::{Error, Session}, store::SimpleAuthStore, AppSpec
+pub use muon::{
+    environment::ApiEnv, store::SimpleAuthStore, transports::ReqwestTransportFactory, AccessToken,
+    AppSpec, AuthData, AuthStore, Error as MuonError, Product, RefreshToken, Scope, Session, Uid,
 };
 
 lazy_static! {
-    static ref PROTON_API: RwLock<HashMap<String, Arc<ProtonAPIService>>> = RwLock::new(HashMap::new());
+    static ref PROTON_API: RwLock<HashMap<String, Arc<ProtonAPIService>>> =
+        RwLock::new(HashMap::new());
 }
 fn persist_proton_api(id: String, proton_api: ProtonAPIService) {
     let mut api_lock = PROTON_API.write().unwrap();
@@ -35,7 +40,6 @@ impl Default for ProtonAPIService {
 }
 
 impl ProtonAPIService {
-
     pub fn new_proton_api() -> Result<String, Error> {
         let proton_api = ProtonAPIService::default();
         let id = "1234567890".to_string();
@@ -53,6 +57,26 @@ impl ProtonAPIService {
         _ = self.session.authenticate(username, password).await;
         Ok(())
     }
+
+    pub async fn derive_from_tokens(
+        &mut self,
+        uid: String,
+        access: String,
+        refresh: String,
+    ) -> Result<(), Error> {
+        let app_spec = AppSpec::default();
+        let auth_store = SimpleAuthStore::new("atlas");
+        auth_store.set_uid_auth(Uid(uid));
+        auth_store.set_access_auth(
+            Uid(uid),
+            RefreshToken(refresh),
+            AccessToken(access),
+            [Scope("full")],
+        );
+        self.session = Session::new(auth_store, app_spec).unwrap();
+        Ok(())
+    }
+
     pub fn session_ref(&self) -> &Session {
         &self.session
     }
@@ -61,6 +85,4 @@ impl ProtonAPIService {
 // TODO:: add generarc error parser
 
 #[cfg(test)]
-mod test {
-   
-}
+mod test {}

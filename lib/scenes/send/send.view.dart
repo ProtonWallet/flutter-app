@@ -5,8 +5,12 @@ import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/text.choices.dart';
 import 'package:wallet/components/textfield.autocomplete.dart';
+import 'package:wallet/components/textfield.big.text.dart';
 import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/components/transaction.fee.box.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
@@ -30,6 +34,7 @@ class SendView extends ViewBase<SendViewModel> {
         title: Text(S.of(context).send_bitcoin,
             style: FontManager.titleHeadline(
                 Theme.of(context).colorScheme.primary)),
+        centerTitle: true,
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
@@ -47,201 +52,105 @@ class SendView extends ViewBase<SendViewModel> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                  const SizedBox(height: 40),
+                  TextFieldBigText(
+                    width:
+                        MediaQuery.of(context).size.width - defaultPadding * 2,
+                    height: 140,
+                    controller: viewModel.amountTextController,
+                    digitOnly: true,
+                    hintText: "0",
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    S.of(context).current_balance_usd(
+                        viewModel.fiatCurrencyAmount),
+                    style: FontManager.captionMedian(ProtonColors.textHint),
+                  ),
+                  const SizedBox(height: 10),
+                  TextChoices(
+                      choices: const ["BTC", "SATS", "USD"],
+                      selectedValue: viewModel.coinController.text,
+                      controller: viewModel.coinController),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).send_from_wallet,
-                      style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  if (viewModel.userWallets.isNotEmpty)
-                    DropdownButtonV1(
-                      width: MediaQuery.of(context).size.width,
-                      items: viewModel.userWallets,
-                      valueNotifier: viewModel.valueNotifier,
-                      itemsText:
-                          viewModel.userWallets.map((v) => v.name).toList(),
-                    ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).send_from_account,
-                      style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  if (viewModel.userAccounts.isNotEmpty)
-                    DropdownButtonV1(
-                      width: MediaQuery.of(context).size.width,
-                      items: viewModel.userAccounts,
-                      valueNotifier: viewModel.valueNotifierForAccount,
-                      itemsText: viewModel.userAccounts
-                          .map((v) => "${v.labelDecrypt} (${v.derivationPath})")
-                          .toList(),
-                    ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).current_balance_sat(viewModel.balance),
-                      style: FontManager.captionMedian(ProtonColors.textHint),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).send_to_recipient_s,
-                      style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFieldAutoComplete(
-                      options: viewModel.contactsEmail,
-                      color: ProtonColors.backgroundSecondary),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: GestureDetector(
-                        onTap: () {
-                          LocalToast.showToast(context, "TODO");
-                        },
-                        child: Text(
-                          S.of(context).add_address,
-                          style: FontManager.captionMedian(
-                              ProtonColors.interactionNorm),
-                        )),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).amount,
-                      style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextFieldText(
-                            width: MediaQuery.of(context).size.width - 200,
-                            height: 50,
-                            color: ProtonColors.backgroundSecondary,
-                            suffixIcon: const Icon(Icons.close),
-                            showSuffixIcon: false,
-                            showEnabledBorder: false,
-                            controller: viewModel.amountTextController,
-                            digitOnly: true,
-                          ),
-                          TextChoices(
-                              choices: const ["SATS", "BTC"],
-                              selectedValue: viewModel.coinController.text,
-                              controller: viewModel.coinController),
-                        ],
-                      )),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      "~ €${viewModel.getFiatCurrencyValue()}",
-                      style: FontManager.captionMedian(ProtonColors.textHint),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).message_to_recipient_optional,
-                      style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFieldText(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    multiLine: true,
-                    color: ProtonColors.backgroundSecondary,
-                    showSuffixIcon: false,
-                    showEnabledBorder: false,
-                    controller: viewModel.memoTextController,
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(S.of(context).available_funds),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            S.of(context).fees_default,
-                            style: FontManager.captionSemiBold(
-                                Theme.of(context).colorScheme.primary),
+                            S.of(context).current_balance_btc(
+                                viewModel.balance / 100000000),
+                            style: FontManager.captionMedian(
+                                ProtonColors.textHint),
                           ),
-                          TagText(
-                            text: S.of(context).moderate,
-                            radius: 10.0,
-                            background:
-                                const Color.fromARGB(255, 237, 252, 221),
-                            textColor: const Color.fromARGB(255, 40, 116, 4),
+                          Text(
+                            S.of(context).current_balance_usd(
+                                viewModel.getFiatCurrencyValue(
+                                    satsAmount: viewModel.balance.toDouble())),
+                            style: FontManager.captionMedian(
+                                ProtonColors.textHint),
                           ),
-                        ]),
+                        ],
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 60),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Text("Transaction Fees",
+                          style: FontManager.body1Median(
+                              Theme.of(context).colorScheme.primary))),
+                  const SizedBox(height: 10),
                   Container(
                       width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          "${viewModel.feeRate.toStringAsFixed(1)} sats/vb\nConfirmation in 2hours")),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      S.of(context).advanced_options,
-                      style: FontManager.captionMedian(
-                          ProtonColors.interactionNorm),
-                    ),
-                  ),
-                  const SizedBox(height: 50)
+                      height: 110,
+                      child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          children: [
+                            TransactionFeeBox(
+                              priorityText: "High Priority",
+                              timeEstimate: "In ~10 minutes",
+                              fee: viewModel.bitcoinTransactionFee.block1Fee,
+                            ),
+                            const SizedBox(width: 10),
+                            TransactionFeeBox(
+                              priorityText: "Median Priority",
+                              timeEstimate: "In ~30 minutes",
+                              fee: viewModel.bitcoinTransactionFee.block3Fee,
+                            ),
+                            const SizedBox(width: 10),
+                            TransactionFeeBox(
+                              priorityText: "Low Priority",
+                              timeEstimate: "In ~50 minutes",
+                              fee: viewModel.bitcoinTransactionFee.block5Fee,
+                            ),
+                            const SizedBox(width: 10),
+                            TransactionFeeBox(
+                              priorityText: "No Priority",
+                              timeEstimate: "In ~3.5 hours",
+                              fee: viewModel.bitcoinTransactionFee.block20Fee,
+                            ),
+                          ])),
+                  const SizedBox(height: 30),
+                  ButtonV5(
+                      onPressed: () {
+                        viewModel.sendCoin();
+                        viewModel.coordinator.end();
+                        Navigator.of(context).pop();
+                      },
+                      text: S.of(context).review_transaction,
+                      width: MediaQuery.of(context).size.width,
+                      textStyle: FontManager.body1Median(ProtonColors.white),
+                      height: 48),
+                  const SizedBox(height: 20),
                 ])))
-      ]),
-      Container(
-          padding: const EdgeInsets.only(bottom: 50),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height -
-              56 -
-              MediaQuery.of(context).padding.top,
-          // AppBar default height is 56
-          margin: const EdgeInsets.only(left: 40, right: 40),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updateExchangeRate();
-                      // if (viewModel.coinController.text != "SATS") {
-                      //   LocalToast.showErrorToast(
-                      //       context, S.of(context).only_support_sat_now);
-                      // } else {
-                      //   viewModel.sendCoin();
-                      //   viewModel.coordinator.end();
-                      //   Navigator.of(context).pop();
-                      // }
-                    },
-                    text: S.of(context).review_transaction,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-              ]))
+      ])
     ]);
   }
 }

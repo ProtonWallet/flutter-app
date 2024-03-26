@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/components/textfield.password.dart';
+import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -149,19 +151,39 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
           alignment: Alignment.topCenter,
           width: MediaQuery.of(context).size.width,
           child: OnboardingContent(
-              totalPages: 6,
-              currentPage: 5,
+              totalPages: 2,
+              currentPage: 2,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
               title: S.of(context).your_passphrase_optional,
               content:
                   S.of(context).for_additional_security_you_can_use_passphrase_,
               children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: TextFieldText(
+                    width: MediaQuery.of(context).size.width,
+                    controller: viewModel.nameTextController,
+                    hintText: S.of(context).wallet_name,
+                  ),
+                ),
+                SizedBoxes.box12,
                 ButtonV5(
-                    onPressed: () {
-                      this.viewModel.updateDB();
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.setupReady, context);
+                    onPressed: () async {
+                      EasyLoading.show(
+                          status: "creating wallet..",
+                          maskType: EasyLoadingMaskType.black);
+                      await this.viewModel.updateDB();
+                      EasyLoading.dismiss();
+                      if (context.mounted) {
+                        Navigator.of(context).popUntil((route) {
+                          if (route.settings.name == null) {
+                            return false;
+                          }
+                          return route.settings.name ==
+                              "[<'HomeNavigationView'>]";
+                        });
+                      }
                     },
                     text: S.of(context).continue_without_passphrase_button,
                     width: MediaQuery.of(context).size.width,
