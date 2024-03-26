@@ -29,6 +29,7 @@ abstract class SetupPassPhraseViewModel extends ViewModel {
   bool isAddingPassPhrase = false;
   late TextEditingController passphraseTextController;
   late TextEditingController passphraseTextConfirmController;
+  late TextEditingController nameTextController;
 
   void updateUserPhraseList(String title, bool remove);
 
@@ -38,7 +39,7 @@ abstract class SetupPassPhraseViewModel extends ViewModel {
 
   void updateState(bool isAddingPassPhrase);
 
-  void updateDB();
+  Future<void> updateDB();
 
   bool checkPassphrase();
 }
@@ -58,6 +59,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   Future<void> loadData() async {
     passphraseTextController = TextEditingController();
     passphraseTextConfirmController = TextEditingController();
+    nameTextController = TextEditingController(text: "New Wallet");
     strMnemonic.split(" ").forEachIndexed((index, element) {
       itemList.add(Item(
         title: element,
@@ -142,7 +144,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     int passphrase = passphraseTextController.text != "" ? 1 : 0;
     String encryptedMnemonic =
         await WalletKeyHelper.encrypt(secretKey, strMnemonic);
-    String walletName = "New Wallet";
+    String walletName = nameTextController.text.isNotEmpty ? nameTextController.text : "New Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     CreateWalletReq walletReq = CreateWalletReq(
       name: walletName,
@@ -184,7 +186,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
           serverWalletID: serverWalletID);
       await WalletManager.setWalletKey(serverWalletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
-      WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
+      await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
           ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
     } catch (e) {
       logger.e(e);

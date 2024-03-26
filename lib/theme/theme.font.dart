@@ -3,6 +3,17 @@ import 'package:flutter/material.dart';
 class FontManager {
   static const String primaryFontFamily = 'Inter'; // font name
 
+
+  static TextStyle sendAmount(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 52,
+        height: 1.2,
+        // lineHeight = 34
+        fontWeight: FontWeight.bold,
+        color: color);
+  }
+
   static TextStyle titleHero(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

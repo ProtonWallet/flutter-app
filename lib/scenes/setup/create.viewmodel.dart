@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/setup/create.coordinator.dart';
 
 class AnimatedSquare {
   double squareSize;
@@ -21,8 +23,6 @@ abstract class SetupCreateViewModel extends ViewModel {
   bool isAnimationStart = false;
   List<AnimatedSquare> animatedSquares = [];
   String strMnemonic = "";
-
-  void updateProgressStatus(bool inProgress);
 
   void startAnimate(bool start);
 }
@@ -47,7 +47,8 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
       startAnimate(true);
     });
     Future.delayed(const Duration(milliseconds: 2400), () {
-      updateProgressStatus(!inProgress);
+      coordinator
+          .move(ViewIdentifiers.passphrase, (coordinator as SetupCreateCoordinator).widget.context);
     });
     return;
   }
@@ -55,12 +56,6 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
-
-  @override
-  void updateProgressStatus(bool inProgress) {
-    this.inProgress = inProgress;
-    datasourceChangedStreamController.add(this);
-  }
 
   @override
   void startAnimate(bool start) {

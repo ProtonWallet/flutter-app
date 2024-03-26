@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 
@@ -15,13 +16,6 @@ class CommonSettings extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 10),
-            child: Text(S.of(context).settings_title),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
           ExpansionTile(
             initiallyExpanded: true,
             title: Row(
@@ -33,9 +27,9 @@ class CommonSettings extends StatelessWidget {
               ],
             ),
             children: [
-              // auto
-              _themeModeItem(const Icon(Icons.sync), 'system', context),
-              // dark
+              // // auto
+              // _themeModeItem(const Icon(Icons.sync), 'system', context),
+              // // dark
               _themeModeItem(const Icon(Icons.brightness_2), 'dark', context),
               // light
               _themeModeItem(
@@ -115,7 +109,11 @@ class CommonSettings extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) => InkWell(
         onTap: () {
-          themeProvider.toggleChangeTheme(mode);
+          if (mode == "dark"){
+            LocalToast.showToast(context, "TODO");
+          } else {
+            themeProvider.toggleChangeTheme(mode);
+          }
         },
         child: Container(
           padding: const EdgeInsets.only(

@@ -78,7 +78,7 @@ class HomeViewModelImpl extends HomeViewModel {
         userName: 'ProtonWallet', password: 'alicebob');
     EventLoopHelper.start();
     blockchain ??= await _lib.initializeBlockchain(false);
-    hasWallet = await WalletManager.hasAccount();
+    hasWallet = await WalletManager.hasWallet();
     datasourceChangedStreamController.sink.add(this);
     checkNewWallet();
     await WalletManager.initContacts();

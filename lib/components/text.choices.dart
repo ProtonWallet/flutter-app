@@ -31,14 +31,15 @@ class TextFieldTextState extends State<TextChoices> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 52,
+        constraints: const BoxConstraints.tightFor(),
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: ProtonColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Wrap(

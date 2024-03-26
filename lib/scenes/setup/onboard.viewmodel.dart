@@ -21,7 +21,7 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
 
   @override
   Future<void> loadData() async {
-    hasAccount = await WalletManager.hasAccount();
+    hasAccount = await WalletManager.hasWallet();
     datasourceChangedStreamController.sink.add(this);
     return;
   }

@@ -46,6 +46,15 @@ class MainActivity : FlutterFragmentActivity() {
                         intent.putExtra("method", "signup")
                         startActivity(intent)
                     }
+                    "native.navigation.restartApp" -> {
+                        val context = this
+                        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                        intent?.let {
+                            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(it)
+                        }
+                        Runtime.getRuntime().exit(0)
+                    }
                 }
             }
     }

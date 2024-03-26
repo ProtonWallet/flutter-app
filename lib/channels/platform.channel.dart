@@ -19,4 +19,12 @@ class NativeViewSwitcher {
       logger.e("Failed to switch to native view: '${e.message}'.");
     }
   }
+
+  static Future<void> restartNative() async {
+    try {
+      await platform.invokeMethod('native.navigation.restartApp');
+    } on PlatformException catch (e) {
+      logger.e("Failed to switch to native view: '${e.message}'.");
+    }
+  }
 }

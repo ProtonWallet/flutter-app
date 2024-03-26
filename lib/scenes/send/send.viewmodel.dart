@@ -1,5 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/crypto.price.helper.dart';
+import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -12,7 +17,6 @@ import '../../helper/logger.dart';
 abstract class SendViewModel extends ViewModel {
   SendViewModel(super.coordinator, this.walletID, this.accountID);
 
-  final int exchangeRateRefreshThreshold = 30; // refresh every 30 seconds
   int walletID;
   int accountID;
   String fromAddress = "";
@@ -23,17 +27,43 @@ abstract class SendViewModel extends ViewModel {
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
 
+  ApiFiatCurrency fiatCurrency = ApiFiatCurrency.chf;
+
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
-  int balance = 0;
+  int balance = 2222;
   double feeRate = 1.0;
-  int exchangeRate = 0;
-  Future<void> sendCoin();
-  Future<void> updateFeeRate();
-  Future<void> updateExchangeRate();
-  double getFiatCurrencyValue();
+  Map<ApiFiatCurrency, int> fiatCurrency2exchangeRate = {
+    ApiFiatCurrency.eur: 0,
+    ApiFiatCurrency.usd: 0,
+    ApiFiatCurrency.chf: 0,
+  };
   int lastExchangeRateTime = 0;
+  bool amountTextControllerChanged = false;
+  double fiatCurrencyAmount = 0;
+
+  Future<void> sendCoin();
+
+  Future<void> updateFeeRate();
+
+  Future<void> updateExchangeRate();
+
+  double getFiatCurrencyValue({required double satsAmount});
+
+  void setFiatCurrencyValue();
+
+  void setCryptoCurrencyValue();
+
+  void updateTransactionFee();
+
   List<String> contactsEmail = [];
+  BitcoinTransactionFee bitcoinTransactionFee = BitcoinTransactionFee(
+      block1Fee: 1.0,
+      block2Fee: 1.0,
+      block3Fee: 1.0,
+      block5Fee: 1.0,
+      block10Fee: 1.0,
+      block20Fee: 1.0);
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -52,25 +82,29 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> loadData() async {
-    coinController = TextEditingController(text: "SATS");
+    EasyLoading.show(
+        status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
+    coinController = TextEditingController(text: "BTC");
     recipientTextController = TextEditingController();
     memoTextController = TextEditingController();
     amountTextController = TextEditingController();
+    await updateExchangeRate();
+    amountTextController.addListener(() {
+      if (amountTextControllerChanged == false) {
+        setFiatCurrencyValue();
+      }
+    });
     amountTextController.addListener(() {
       datasourceChangedStreamController.add(this);
     });
     coinController.addListener(() {
-      getFiatCurrencyValue();
+      setFiatCurrencyValue();
       datasourceChangedStreamController.add(this);
     });
     recipientTextController.text = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
     datasourceChangedStreamController.add(this);
     _blockchain = await _lib.initializeBlockchain(false);
-    await DBHelper.walletDao!.findAll().then((results) async {
-      if (results.length != userWallets.length) {
-        userWallets = results.take(5).toList();
-      }
-    });
+    userWallets = await DBHelper.walletDao!.findAll();
     updateFeeRate();
     if (walletID == 0) {
       walletID = userWallets.first.id;
@@ -86,7 +120,17 @@ class SendViewModelImpl extends SendViewModel {
     updateAccountList();
     List<ContactsModel> contacts = await WalletManager.getContacts();
     contactsEmail = contacts.map((e) => e.canonicalEmail).toList();
+    EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  Future<void> updateTransactionFee() async {
+    bitcoinTransactionFee = await CryptoPriceHelper.getBitcoinTransactionFee();
+    datasourceChangedStreamController.sink.add(this);
+    Future.delayed(const Duration(seconds: 30), () {
+      updateTransactionFee();
+    });
   }
 
   Future<void> updateAccountList() async {
@@ -108,7 +152,7 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> updateWallet() async {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     var walletBalance = await _wallet.getBalance();
-    balance = walletBalance.total;
+    balance = 2222;//walletBalance.total;
     datasourceChangedStreamController.add(this);
   }
 
@@ -120,7 +164,8 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> sendCoin() async {
     if (amountTextController.text != "") {
       var receipinetAddress = recipientTextController.text;
-      int amount = int.parse(amountTextController.text);
+      double btcAmount = double.parse(amountTextController.text);
+      int amount = (btcAmount * 100000000).round();
       logger.i("Target addr: $receipinetAddress\nAmount: $amount");
       await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, amount);
     }
@@ -138,27 +183,52 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> updateExchangeRate() async {
-    if (WalletManager.getCurrentTime() > lastExchangeRateTime + exchangeRateRefreshThreshold) {
+    if (WalletManager.getCurrentTime() >
+        lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
-      exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.eur, time: lastExchangeRateTime);
+      for (ApiFiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
+        fiatCurrency2exchangeRate[apiFiatCurrency] = 6000000;
+        // await WalletManager.getExchangeRate(apiFiatCurrency,
+        //     time: lastExchangeRateTime);
+      }
       datasourceChangedStreamController.add(this);
     }
   }
 
   @override
-  double getFiatCurrencyValue() {
+  void setCryptoCurrencyValue() {
     updateExchangeRate();
-    int amount = 0;
-    if (amountTextController.text != "") {
-      amount = int.parse(amountTextController.text);
-    }
-    // EUR
+    double amount = 0;
+    double cryptoAmount = 0;
     if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
-      return amount * exchangeRate / 100;
+      cryptoAmount = amount * 100 / fiatCurrency2exchangeRate[fiatCurrency]!;
+    }
+    amountTextController.text = cryptoAmount.toStringAsFixed(8);
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  void setFiatCurrencyValue() {
+    updateExchangeRate();
+    double amount = 0;
+    if (amountTextController.text != "") {
+      amount = double.parse(amountTextController.text);
+    }
+    fiatCurrencyAmount = 0;
+    if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
+      fiatCurrencyAmount = getFiatCurrencyValue(satsAmount: amount * 100000000);
     }
     if (coinController.text == CommonBitcoinUnit.sats.name.toUpperCase()) {
-      return amount * exchangeRate / 100 / 100000000;
+      fiatCurrencyAmount = getFiatCurrencyValue(satsAmount: amount);
     }
-    return 0;
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  double getFiatCurrencyValue({required double satsAmount}) {
+    return satsAmount *
+        fiatCurrency2exchangeRate[fiatCurrency]! /
+        100 /
+        100000000;
   }
 }

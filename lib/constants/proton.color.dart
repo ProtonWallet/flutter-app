@@ -5,7 +5,8 @@ class ProtonColors {
   static const Color white = Colors.white;
   static const Color clear = Colors.transparent;
   static const Color textNorm = Color(0xFF0C0C14);
-  static const Color textWeak = Color(0xFFB3A3F5);
+  static const Color backgroundBlack = Color(0xFF000000);
+  static const Color textWeak = Color(0xFF706D6B);
   static const Color textHint = Color(0xFF999693);
   static const Color iconWeak = Color(0xFF706D6B);
   static const Color wMajor1 = Color(0xFFDEDBD9);

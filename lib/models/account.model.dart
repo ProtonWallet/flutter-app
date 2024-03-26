@@ -45,15 +45,20 @@ class AccountModel {
   }
 
   Future<void> decrypt() async {
-    try {
-      WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-      SecretKey? secretKey = await WalletManager.getWalletKey(walletModel.serverWalletID);
-      String value = base64Encode(label);
-      if (value != "" && secretKey != null) {
-        labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
+    for (int i =0; i< 5; i++) {
+      try {
+        WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+        SecretKey? secretKey = await WalletManager.getWalletKey(
+            walletModel.serverWalletID);
+        String value = base64Encode(label);
+        if (value != "" && secretKey != null) {
+          labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
+        }
+        break;
+      } catch (e) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        labelDecrypt = e.toString();
       }
-    } catch (e){
-      labelDecrypt = e.toString();
     }
   }
 
@@ -68,7 +73,6 @@ class AccountModel {
       modifyTime: map['modifyTime'],
       serverAccountID: map['serverAccountID'] ?? "",
     );
-    accountModel.decrypt();
     return accountModel;
   }
 }
