@@ -3,9 +3,9 @@ import ProtonCoreLog
 import ProtonCoreNetworking
 import ProtonCoreServices
 
-let appVersionHeader = AppVersionHeader(appNamePrefix: "ios-mail@")
+let appVersionHeader = AppVersionHeader(appNamePrefix: "ios-wallet@")
 
-public class AnonymousServiceManager: APIServiceDelegate {
+public class WalletApiServiceManager: APIServiceDelegate {
     
     public init() {}
     

@@ -13,7 +13,12 @@ import ProtonCoreNetworking
 import ProtonCorePayments
 import Flutter
 import flutter_local_notifications
+import ProtonCoreLog
+import ProtonCoreCryptoGoInterface
+import ProtonCoreCryptoGoImplementation
 import SwiftUI // If using SwiftUI
+import CommonCrypto
+import CryptoKit
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SimpleViewDelegate {
@@ -26,7 +31,7 @@ import SwiftUI // If using SwiftUI
     private var humanVerificationDelegate: HumanVerifyDelegate?
     // private var missingScopesDelegate: MissingScopesDelegate?
     var authManager: AuthHelper?
-    private let serviceDelegate = AnonymousServiceManager()
+    private let serviceDelegate = WalletApiServiceManager()
     
     private var getInAppTheme: () -> InAppTheme {
         return { .matchSystem }
@@ -38,11 +43,13 @@ import SwiftUI // If using SwiftUI
     ) -> Bool {
         // Set up the Flutter window
         self.flutterWindow = self.window
+        // crash without this line. Inject crypto with the default implementation.
+        injectDefaultCryptoImplementation()
         let controller = self.flutterWindow?.rootViewController as! FlutterViewController
         let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native.views", binaryMessenger: controller.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "native.navigation.login" {
-                self?.switchToSignin()
+                self?.switchToSignIn()
             } else if call.method == "native.navigation.signup" {
                 self?.switchToSignup()
             } else {
@@ -51,7 +58,7 @@ import SwiftUI // If using SwiftUI
         }
         
         navigationChannel = FlutterMethodChannel(name: "com.example.wallet/app.view", binaryMessenger: controller.binaryMessenger)
-        
+        PMLog.setEnvironment(environment: "wallet-test")
         self.initSignupLogin()
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
@@ -170,23 +177,39 @@ import SwiftUI // If using SwiftUI
     }
     
     func onButtonTap() {
-        switchToFlutterView()
+        //  switchToFlutterView()
     }
     
-    private func sendDataToFlutter(data: String) {
-        navigationChannel?.invokeMethod("flutter.navigation.to.home", arguments: data)
+    private func sendDataToFlutter(jsonData: String) {
+        navigationChannel?.invokeMethod("flutter.navigation.to.home", arguments: jsonData)
     }
 
-    // Example function to trigger sending data
-    func triggerSendingData() {
-        sendDataToFlutter(data: "Hello from Swift!")
-    }
-    
-    func switchToFlutterView() {
-        self.triggerSendingData()
+    func switchToFlutterView(loginData: LoginData) {
+        let jsonObject: [String: Any?] = [
+            "sessionId": loginData.credential.sessionID,
+            "userId": loginData.credential.userID,
+            "userMail": loginData.user.email,
+            "userName": loginData.user.displayName,
+            "userDisplayName": loginData.user.displayName,
+            "accessToken": loginData.credential.accessToken,
+            "refreshToken": loginData.credential.refreshToken,
+            "scopes": loginData.scopes.joined(separator: ","),
+            "userKeyID": loginData.user.keys[0].keyID,
+            "userPrivateKey": loginData.credential.privateKey,
+            "userPassphraseSalt": loginData.salts[0].keySalt,
+            "userPassphrase": loginData.passphrases[loginData.salts[0].ID],
+            //
+            "mailboxpasswordKeySalt": loginData.credential.passwordKeySalt,
+            "mailboxpassword": loginData.credential.mailboxpassword,
+        ]
+        
+        let jsonData = try! JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+        let convertedString = String(data: jsonData, encoding: .utf8)!
+        
+        sendDataToFlutter(jsonData: convertedString)
     }
 
-    func switchToSignin() {
+    func switchToSignIn() {
         print("Showing login view")
         login?.presentLoginFlow(over: flutterWindow?.rootViewController as! UIViewController,
                                 customization: LoginCustomizationOptions(
@@ -195,19 +218,7 @@ import SwiftUI // If using SwiftUI
                                     initialError: initialLoginError(),
                                     helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
-                                )) { [weak self] result in
-                                    switch result {
-                                    case .loginStateChanged(.loginFinished):
-                                        print("dismissed")
-                                    case .signupStateChanged(.signupFinished):
-                                        print("dismissed")
-                                    case .loginStateChanged(.dataIsAvailable(let loginData)), .signupStateChanged(.dataIsAvailable(let loginData)):
-                                        print(loginData)
-                                    case .dismissed:
-                                        print("dismissed")
-                                        self?.switchToFlutterView()
-                                    }
-                                }
+                                ), updateBlock: processLoginResult)
     }
 
     func switchToSignup() {
@@ -219,35 +230,19 @@ import SwiftUI // If using SwiftUI
                                     initialError: initialLoginError(),
                                     helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
-                                 )) { [weak self] result in
-                                     switch result {
-                                     case .loginStateChanged(.loginFinished):
-                                         print("dismissed")
-                                     case .signupStateChanged(.signupFinished):
-                                         print("dismissed")
-                                     case .loginStateChanged(.dataIsAvailable(let loginData)), .signupStateChanged(.dataIsAvailable(let loginData)):
-                                         print(loginData)
-                                     case .dismissed:
-                                         print("dismissed")
-                                         self?.switchToFlutterView()
-                                     }
-                                 }
+                                 ), updateBlock: processLoginResult)
     }
     
     private func processLoginResult(_ result: LoginAndSignupResult) {
         switch result {
         case .loginStateChanged(.loginFinished):
-            login = nil
+            print("loginStateChanged(.loginFinished)")
         case .signupStateChanged(.signupFinished):
-            login = nil
+            print("signupStateChanged(.signupFinished)")
         case .loginStateChanged(.dataIsAvailable(let loginData)), .signupStateChanged(.dataIsAvailable(let loginData)):
-            //data = loginData
-            //authManager?.onSessionObtaining(credential: loginData.getCredential)
-            print(loginData)
+            self.switchToFlutterView(loginData: loginData)
         case .dismissed:
             print("dismissed")
-            login = nil
-            self.switchToFlutterView()
         }
     }
 }
