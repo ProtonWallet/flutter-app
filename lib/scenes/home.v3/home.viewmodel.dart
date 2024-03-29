@@ -144,6 +144,12 @@ class HomeViewModelImpl extends HomeViewModel {
     //clean up wallet ....
   }
 
+  void datasourceStreamSinkAdd() {
+    if (datasourceChangedStreamController.isClosed == false) {
+      datasourceChangedStreamController.sink.add(this);
+    }
+  }
+
   @override
   Future<void> loadData() async {
     EasyLoading.show(
@@ -206,8 +212,10 @@ class HomeViewModelImpl extends HomeViewModel {
     checkNetwork();
     try {
       EasyLoading.dismiss();
-    } catch (e) {}
-    datasourceChangedStreamController.sink.add(this);
+    } catch (e) {
+      logger.d(e.toString());
+    }
+    datasourceStreamSinkAdd();
   }
 
   @override
@@ -217,11 +225,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void updateSelected(int index) {
     selectedPage = index;
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
   }
 
-  Future<void> checkNetwork() async{
-    List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+  Future<void> checkNetwork() async {
+    List<ConnectivityResult> connectivityResult =
+        await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.none)) {
       if (isShowingNoInternet == false) {
         isShowingNoInternet = true;
@@ -229,13 +238,13 @@ class HomeViewModelImpl extends HomeViewModel {
             status: "waiting for connection..",
             maskType: EasyLoadingMaskType.black);
       }
-    } else{
+    } else {
       if (isShowingNoInternet) {
         isShowingNoInternet = false;
         EasyLoading.dismiss();
       }
     }
-    Future.delayed(const Duration(seconds: 1), (){
+    Future.delayed(const Duration(seconds: 1), () {
       checkNetwork();
     });
   }
@@ -281,7 +290,7 @@ class HomeViewModelImpl extends HomeViewModel {
       userAccounts = [];
       balance = 0;
     }
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
     Future.delayed(const Duration(milliseconds: 1000), () async {
       await checkNewWallet();
     });
@@ -308,9 +317,9 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     userLabels = newUserLabels;
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
     syncWallet();
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
   }
 
   @override
@@ -335,7 +344,7 @@ class HomeViewModelImpl extends HomeViewModel {
         selectAccount(accountNotifier!.value);
       });
     }
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
   }
 
   @override
@@ -343,14 +352,14 @@ class HomeViewModelImpl extends HomeViewModel {
     hasWallet = true;
     Future.delayed(const Duration(milliseconds: 100), () {
       coordinator.move(ViewIdentifiers.setupOnboard, context);
-      datasourceChangedStreamController.sink.add(this);
+      datasourceStreamSinkAdd();
     });
   }
 
   @override
   Future<void> updateBtcPrice() async {
     btcPriceInfo = await CryptoPriceHelper.getPriceInfo("BTCUSDT");
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
     Future.delayed(const Duration(seconds: 1), () {
       updateBtcPrice();
     });
@@ -359,7 +368,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> updateTransactionFee() async {
     bitcoinTransactionFee = await CryptoPriceHelper.getBitcoinTransactionFee();
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
     Future.delayed(const Duration(seconds: 30), () {
       updateTransactionFee();
     });
@@ -386,7 +395,7 @@ class HomeViewModelImpl extends HomeViewModel {
       twoFactorAmountThresholdController.text =
           twoFactorAmountThreshold.toString();
     }
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
   }
 
   @override
@@ -402,7 +411,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       var walletBalance = await wallet!.getBalance();
       balance = walletBalance.total;
-      datasourceChangedStreamController.sink.add(this);
+      datasourceStreamSinkAdd();
       if (otherIsSyncing) {
         Future.delayed(const Duration(seconds: 1), () async {
           await syncWallet();
@@ -413,8 +422,8 @@ class HomeViewModelImpl extends HomeViewModel {
           isSyncingMap[serverWalletID]! == false &&
           wallet != null) {
         isSyncingMap[serverWalletID] = true;
-        datasourceChangedStreamController.sink.add(this);
-        print("start syncing ${currentWallet!.name} at ${DateTime.now()}");
+        datasourceStreamSinkAdd();
+        logger.d("start syncing ${currentWallet!.name} at ${DateTime.now()}");
         await _lib.sync(blockchain!, wallet!);
         var walletBalance = await wallet!.getBalance();
         balance = walletBalance.total;
@@ -423,9 +432,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
         var confirmedList = await _lib.getConfirmedTransactions(wallet!);
         confirmed = confirmedList.length;
-        datasourceChangedStreamController.sink.add(this);
+        datasourceStreamSinkAdd();
         isSyncingMap[serverWalletID] = false;
-        print("end syncing ${currentWallet!.name} at ${DateTime.now()}");
+        logger.d("end syncing ${currentWallet!.name} at ${DateTime.now()}");
       }
     }
   }
@@ -456,7 +465,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> updateBitcoinUnit(CommonBitcoinUnit symbol) async {
     if (initialed) {
       userSettings = await proton_api.bitcoinUnit(symbol: symbol);
-      datasourceChangedStreamController.sink.add(this);
+      datasourceStreamSinkAdd();
     }
   }
 
@@ -508,7 +517,7 @@ class HomeViewModelImpl extends HomeViewModel {
       hadSetupEmailIntegration =
           preferences.getBool("todo_hadSetupEmailIntegration") ?? false;
     }
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
     Future.delayed(const Duration(seconds: 1), () async {
       await checkPreference();
     });
@@ -519,6 +528,6 @@ class HomeViewModelImpl extends HomeViewModel {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("todo_hadSetFiatCurrency", true);
     hadSetFiatCurrency = true;
-    datasourceChangedStreamController.sink.add(this);
+    datasourceStreamSinkAdd();
   }
 }
