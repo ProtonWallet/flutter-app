@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift",
       "state" : {
-        "revision" : "db51c407d3be4a051484a141bf0bff36c43d3b1e",
-        "version" : "1.8.0"
+        "revision" : "7892a123f7e8d0fe62f9f03728b17bbd4f94df5c",
+        "version" : "1.8.1"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "f79b0ced057cca0c6d2db51bd5c0bd11e90dd003",
-        "version" : "15.0.0"
+        "revision" : "f9b0db843e3e1ac487124653b69348b28b239991",
+        "version" : "20.2.2"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ashleymills/Reachability.swift",
       "state" : {
-        "revision" : "c01bbdf2d633cf049ae1ed1a68a2020a8bda32e2",
-        "version" : "5.1.0"
+        "revision" : "7b7018a69c84ea94ac2a38dff626e16ea81d1db9",
+        "version" : "5.2.1"
       }
     },
     {
@@ -82,21 +82,30 @@
       }
     },
     {
+      "identity" : "sentry-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/sentry-cocoa.git",
+      "state" : {
+        "revision" : "3b9a8e69ca296bd8cd0e317ad7a448e5daf4a342",
+        "version" : "8.18.0"
+      }
+    },
+    {
       "identity" : "swift-snapshot-testing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
       "state" : {
-        "revision" : "59b663f68e69f27a87b45de48cb63264b8194605",
-        "version" : "1.15.1"
+        "revision" : "5b0c434778f2c1a4c9b5ebdb8682b28e84dd69bd",
+        "version" : "1.15.4"
       }
     },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/apple/swift-syntax",
       "state" : {
-        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
-        "version" : "509.0.2"
+        "revision" : "fa8f95c2d536d6620cc2f504ebe8a6167c9fc2dd",
+        "version" : "510.0.1"
       }
     },
     {

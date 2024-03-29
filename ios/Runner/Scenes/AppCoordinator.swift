@@ -9,7 +9,6 @@ import CryptoKit
 //import Macro
 //import MBProgressHUD
 import ProtonCoreAuthentication
-import ProtonCoreFeatureSwitch
 import ProtonCoreKeymaker
 import ProtonCoreLogin
 import ProtonCoreNetworking
