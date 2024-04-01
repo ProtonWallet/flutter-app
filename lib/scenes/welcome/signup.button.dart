@@ -3,7 +3,7 @@ import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/rust/bdk/types.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 var count = 1;
 

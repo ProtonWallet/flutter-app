@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
@@ -109,7 +109,7 @@ class CommonSettings extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) => InkWell(
         onTap: () {
-          if (mode == "dark"){
+          if (mode == "dark") {
             LocalToast.showToast(context, "TODO");
           } else {
             themeProvider.toggleChangeTheme(mode);

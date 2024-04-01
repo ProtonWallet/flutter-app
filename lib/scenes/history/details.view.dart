@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/textfield.text.dart';
@@ -255,8 +255,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   Text(S.of(context).trans_to,
                       style: FontManager.captionMedian(
                           Theme.of(context).colorScheme.primary)),
-                  TagText(
-                      text: viewModel.address)
+                  TagText(text: viewModel.address)
                 ])),
       ],
     );

@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/dropdown.button.v1.dart';
-import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/text.choices.dart';
-import 'package:wallet/components/textfield.autocomplete.dart';
 import 'package:wallet/components/textfield.big.text.dart';
-import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/transaction.fee.box.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
@@ -63,8 +57,9 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    S.of(context).current_balance_usd(
-                        viewModel.fiatCurrencyAmount),
+                    S
+                        .of(context)
+                        .current_balance_usd(viewModel.fiatCurrencyAmount),
                     style: FontManager.captionMedian(ProtonColors.textHint),
                   ),
                   const SizedBox(height: 10),
@@ -105,7 +100,7 @@ class SendView extends ViewBase<SendViewModel> {
                           style: FontManager.body1Median(
                               Theme.of(context).colorScheme.primary))),
                   const SizedBox(height: 10),
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 110,
                       child: ListView(

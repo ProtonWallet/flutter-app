@@ -9,7 +9,7 @@ import 'package:wallet/scenes/backup/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   SetupBackupView(SetupBackupViewModel viewModel)

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/onboarding/content.dart';
-import 'package:wallet/components/tag.v1.dart';
 import 'package:wallet/components/tag.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   SetupBackupView(SetupBackupViewModel viewModel)

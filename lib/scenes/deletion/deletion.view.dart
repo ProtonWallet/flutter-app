@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/custom.fullpage.loading.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/deletion/deletion.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
-// import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/l10n/generated/locale.dart';
 
 class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
   WalletDeletionView(WalletDeletionViewModel viewModel)
@@ -84,7 +82,8 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                       return;
                     }
                     EasyLoading.show(
-                        status: "deleting wallet..", maskType: EasyLoadingMaskType.black);
+                        status: "deleting wallet..",
+                        maskType: EasyLoadingMaskType.black);
                     await viewModel.deleteWallet();
                     EasyLoading.dismiss();
                     viewModel.coordinator.end();

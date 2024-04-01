@@ -6,7 +6,7 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class WalletDeletionViewModel extends ViewModel {
@@ -50,8 +50,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
 
   @override
   Future<void> deleteWallet() async {
-    await proton_api.deleteWallet(
-        walletId: walletModel!.serverWalletID);
+    await proton_api.deleteWallet(walletId: walletModel!.serverWalletID);
     await WalletManager.deleteWallet(walletModel!.id!);
   }
 
