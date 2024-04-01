@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class DropdownButtonV1 extends StatefulWidget {
   final double width;
@@ -15,7 +15,7 @@ class DropdownButtonV1 extends StatefulWidget {
       required this.width,
       required this.items,
       required this.itemsText,
-        this.textStyle,
+      this.textStyle,
       this.valueNotifier});
 
   @override
@@ -59,8 +59,9 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
                   value: widget.items[i],
                   child: Text(
                     "${widget.itemsText[i]}",
-                    style: widget.textStyle ?? FontManager.body2Median(
-                        Theme.of(context).colorScheme.primary),
+                    style: widget.textStyle ??
+                        FontManager.body2Median(
+                            Theme.of(context).colorScheme.primary),
                   ))
           ],
           underline: Container(),

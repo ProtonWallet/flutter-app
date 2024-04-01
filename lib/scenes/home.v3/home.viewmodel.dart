@@ -13,7 +13,6 @@ import 'package:wallet/helper/crypto.price.helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -28,7 +27,6 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);

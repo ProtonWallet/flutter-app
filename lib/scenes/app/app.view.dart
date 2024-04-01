@@ -8,7 +8,7 @@ import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +78,7 @@ class AppView extends ViewBase<AppViewModel> {
             routes: <String, WidgetBuilder>{
               '/': (BuildContext context) => homeView,
             },
-            builder:  EasyLoading.init(builder: FToastBuilder()),
+            builder: EasyLoading.init(builder: FToastBuilder()),
             navigatorKey: navigatorKey
             // home: homeView,
             // routes: ["/", homeView],

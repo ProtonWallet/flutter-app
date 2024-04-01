@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/proton.color.dart';

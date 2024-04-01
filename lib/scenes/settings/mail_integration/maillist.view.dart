@@ -5,7 +5,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/settings/mail_integration/maillist.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class MailListView extends ViewBase<MailListViewModel> {

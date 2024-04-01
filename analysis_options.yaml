@@ -17,6 +17,7 @@ analyzer:
     - lib/helper/bdk/**  # temporary
     - lib/helper/proton_api/**  # temporary
     - rust_builder/** 
+    - lib/l10n/generated/**
 
 linter:
   # The lint rules applied to this project can be customized in the

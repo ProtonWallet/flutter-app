@@ -34,9 +34,8 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/settings/settings.account.view.dart';
 import 'package:wallet/scenes/settings/settings.common.view.dart';
-import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class HomeView extends ViewBase<HomeViewModel> {

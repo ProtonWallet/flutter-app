@@ -1,7 +1,6 @@
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
@@ -26,7 +25,7 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
             // Page controller to manage a PageView
             controller: viewModel.sideMenu,
             // Will shows on top of all items, it can be a logo or a Title text
-            title: Image.asset('assets/images/wallet.png'),
+            title: Assets.images.wallet.image(),
             // Will show on bottom of SideMenu when displayMode was SideMenuDisplayMode.open
             footer: const Text('demo'),
             // Notify when display mode changed

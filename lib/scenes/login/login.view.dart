@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/login/login.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class LoginView extends ViewBase<LoginViewModel> {
   LoginView(LoginViewModel viewModel)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 

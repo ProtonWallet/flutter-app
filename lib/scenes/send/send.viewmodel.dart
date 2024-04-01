@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
@@ -151,8 +150,8 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> updateWallet() async {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
-    var walletBalance = await _wallet.getBalance();
-    balance = 2222;//walletBalance.total;
+    // var walletBalance = await _wallet.getBalance();
+    balance = 2222; //walletBalance.total;
     datasourceChangedStreamController.add(this);
   }
 
@@ -188,7 +187,8 @@ class SendViewModelImpl extends SendViewModel {
       lastExchangeRateTime = WalletManager.getCurrentTime();
       for (ApiFiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
         // don't send time since client time may be faster than server time, it will raise error
-        fiatCurrency2exchangeRate[apiFiatCurrency] = await WalletManager.getExchangeRate(apiFiatCurrency);
+        fiatCurrency2exchangeRate[apiFiatCurrency] =
+            await WalletManager.getExchangeRate(apiFiatCurrency);
       }
       datasourceChangedStreamController.add(this);
     }

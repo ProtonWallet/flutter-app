@@ -11,7 +11,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/settings/settings.account.view.dart';
 import 'package:wallet/scenes/settings/settings.common.view.dart';
 import 'package:wallet/scenes/settings/settings.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SettingsView extends ViewBase<SettingsViewModel> {
@@ -148,7 +148,8 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                           width: MediaQuery.of(context).size.width,
                           backgroundColor: ProtonColors.surfaceLight,
                           borderColor: ProtonColors.wMajor1,
-                          textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                          textStyle:
+                              FontManager.body1Median(ProtonColors.textNorm),
                           height: 48)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 26.0),
@@ -161,7 +162,8 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         width: MediaQuery.of(context).size.width,
                         backgroundColor: ProtonColors.surfaceLight,
                         borderColor: ProtonColors.wMajor1,
-                        textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                        textStyle:
+                            FontManager.body1Median(ProtonColors.textNorm),
                         height: 48),
                   ),
                   Container(
@@ -175,7 +177,8 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         width: MediaQuery.of(context).size.width,
                         backgroundColor: ProtonColors.surfaceLight,
                         borderColor: ProtonColors.wMajor1,
-                        textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                        textStyle:
+                            FontManager.body1Median(ProtonColors.textNorm),
                         height: 48),
                   ),
                   Container(

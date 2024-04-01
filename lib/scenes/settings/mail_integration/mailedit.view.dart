@@ -8,7 +8,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/settings/mail_integration/mailedit.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class MailEditView extends ViewBase<MailEditViewModel> {
