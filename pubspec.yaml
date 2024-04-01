@@ -2,7 +2,7 @@ name: wallet
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ">=3.2.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   ffi: ^2.1.0
-  
+
   #rust
   rust_builder:
     path: rust_builder
@@ -83,9 +83,7 @@ dependencies:
   http: ^1.1.2
   flutter_secure_storage: ^9.0.0
   flutter_easyloading: ^3.0.5
-  connectivity_plus : ^6.0.1
-
-
+  connectivity_plus: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -99,18 +97,50 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   ffigen: ^9.0.1
   build_runner: ^2.4.6
+  #auto gen assets to const
+  flutter_gen_runner: ^5.4.0
   freezed: ^2.4.5
   test: ^1.24.9
   intl_translation: ^0.18.2
+  flutter_gen: ^5.4.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  # auto config app icons
+  flutter_launcher_icons: ^0.13.1
+
+#flutter launcher icons configs
+flutter_launcher_icons:
+  image_path: "assets/images/icon/launch_icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  # background_color_ios: "#ffffff"
+  web:
+    generate: true
+  windows:
+    generate: true
+    # image_path: "assets/images/icon-1024x1024.png"
+    icon_size: 256 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    # image_path: "assets/images/icon-1024x1024.png"
+
+# flutter_gen configs
+flutter_gen:
+  output: lib/constants/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
+  # Optional
+  integrations:
+    flutter_svg: true
+    # flare_flutter: true
+    # rive: true
+    # lottie: true
+  # colors:
+  #   inputs:
+  #     - assets/color/colors.xml
 
 # The following section is specific to Flutter packages.
 flutter:
-
-  generate: true
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -121,8 +151,6 @@ flutter:
     - assets/images/
     - assets/images/icon/
     - assets/images/wallet_creation/
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

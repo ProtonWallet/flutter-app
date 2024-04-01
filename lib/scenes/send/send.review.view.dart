@@ -11,11 +11,12 @@ import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.review.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SendReviewView extends ViewBase<SendReviewViewModel> {
-  SendReviewView(SendReviewViewModel viewModel) : super(viewModel, const Key("SendReviewView"));
+  SendReviewView(SendReviewViewModel viewModel)
+      : super(viewModel, const Key("SendReviewView"));
 
   @override
   Widget buildWithViewModel(
@@ -90,7 +91,9 @@ class SendReviewView extends ViewBase<SendReviewViewModel> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      S.of(context).current_balance_btc(viewModel.balance / 100000000),
+                      S
+                          .of(context)
+                          .current_balance_btc(viewModel.balance / 100000000),
                       style: FontManager.captionMedian(ProtonColors.textHint),
                     ),
                   ),

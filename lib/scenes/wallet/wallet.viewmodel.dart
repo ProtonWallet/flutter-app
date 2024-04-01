@@ -15,7 +15,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 abstract class WalletViewModel extends ViewModel {
   List accounts = [];

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -44,9 +45,11 @@ class WalletManager {
     return wallet;
   }
 
-  static Future<void> deleteWalletByServerWalletID(String serverWalletID) async{
-    WalletModel? walletModel = await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
-    if (walletModel != null){
+  static Future<void> deleteWalletByServerWalletID(
+      String serverWalletID) async {
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    if (walletModel != null) {
       await (deleteWallet(walletModel.id!));
     }
   }
@@ -219,8 +222,7 @@ class WalletManager {
   static Future<int> getExchangeRate(ApiFiatCurrency fiatCurrency,
       {int? time}) async {
     var exchangeRate = await proton_api.getExchangeRate(
-        fiatCurrency: fiatCurrency,
-        time: time);
+        fiatCurrency: fiatCurrency, time: time);
     return exchangeRate.exchangeRate;
   }
 
@@ -266,7 +268,7 @@ class WalletManager {
       WalletModel? walletModel = await DBHelper.walletDao!
           .getWalletByServerWalletID(walletData.wallet.id);
       String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-      String userKeyID = await SecureStorageHelper.get("userKeyID");
+      // String userKeyID = await SecureStorageHelper.get("userKeyID");
       String userPassphrase = await SecureStorageHelper.get("userPassphrase");
 
       String encodedEncryptedEntropy = "";
@@ -275,7 +277,9 @@ class WalletManager {
         encodedEncryptedEntropy = walletData.walletKey.walletKey;
         entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase,
             base64Decode(encodedEncryptedEntropy));
-      } catch (e) {}
+      } catch (e) {
+        logger.e(e.toString());
+      }
       SecretKey secretKey =
           WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
       if (walletModel == null) {
@@ -343,11 +347,12 @@ class WalletManager {
     isFetchingWallets = false;
   }
 
-  static Future<void> setLatestEventId(String latestEventId) async{
+  static Future<void> setLatestEventId(String latestEventId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("latestEventId", latestEventId);
   }
-  static Future<String?> getLatestEventId() async{
+
+  static Future<String?> getLatestEventId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString("latestEventId");
   }

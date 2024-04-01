@@ -12,7 +12,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   SetupPassPhraseView(SetupPassPhraseViewModel viewModel)

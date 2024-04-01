@@ -8,9 +8,8 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/textfield.password.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
   ImportView(ImportViewModel viewModel)

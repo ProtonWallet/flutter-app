@@ -46,3 +46,8 @@ protonvpn = { index = "sparse+<https://protonvpn.gitlab-pages.protontech.ch/rust
 
 - cargo build stuck when building openssl
     Run `cargo build -vv` to check if it really stuck. It may take more than 5+ minutes in windows build.
+
+## Assets generation
+
+- make make build-runner
+  if you see conflits errors. select `Delete` then everything should be good.

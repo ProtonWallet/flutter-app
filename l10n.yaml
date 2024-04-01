@@ -2,6 +2,9 @@ arb-dir: lib/l10n
 template-arb-file: locale_en.arb
 output-class: S
 output-localization-file: locale.dart
+output-dir: lib/l10n/generated
 #S.of(context).yourMessage
 nullable-getter: false
 untranslated-messages-file: untranslated_strings.txt
+synthetic-package: false
+
