@@ -1,14 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -19,9 +18,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
   @override
   Widget buildWithViewModel(
       BuildContext context, SetupCreateViewModel viewModel, ViewSize viewSize) {
-    return Scaffold(
-      body: buildInProgress(context, viewModel, viewSize)
-    );
+    return Scaffold(body: buildInProgress(context, viewModel, viewSize));
   }
 
   Widget buildInProgress(
@@ -35,10 +32,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
                 color: Colors.red,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 2,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/bg.svg',
-                  fit: BoxFit.fill,
-                ),
+                child: Assets.images.walletCreation.bg.svg(fit: BoxFit.fill),
               )),
           for (int i = 0; i < viewModel.animatedSquares.length; i++)
             AnimatedPositioned(
@@ -66,10 +60,8 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
               height: MediaQuery.of(context).size.height / 2,
               child: SizedBox(
                 height: 57,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/title.svg',
-                  fit: BoxFit.fitHeight,
-                ),
+                child: Assets.images.walletCreation.title
+                    .svg(fit: BoxFit.fitHeight),
               )),
         ]),
         OnboardingContent(

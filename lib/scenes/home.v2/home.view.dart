@@ -19,7 +19,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.newsbox.dart';
 import 'package:wallet/components/tag.text.dart';
@@ -502,8 +502,9 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () async {
-                int exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.usd);
-                if (context.mounted){
+                int exchangeRate =
+                    await WalletManager.getExchangeRate(ApiFiatCurrency.usd);
+                if (context.mounted) {
                   LocalToast.showToast(context, "exchangeRate = $exchangeRate");
                 }
               },

@@ -5,7 +5,7 @@ import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/add_account_dialog.dart';
 import 'package:wallet/components/custom.barchart.dart';
 import 'package:wallet/constants/proton.color.dart';

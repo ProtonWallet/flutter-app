@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/components/button.v5.dart';
@@ -128,8 +126,10 @@ wQY+jJXAXl46XDaJETkdMgE=
               userKeyID: userInfo["userKeyID"] ?? "",
               userPrivateKey: userInfo["userPrivateKey"] ?? "",
               userPassphrase: userInfo["userPassphrase"] ?? "");
-          await SecureStorageHelper.set("appVersion", userInfo["appVersion"] ?? "");
-          await SecureStorageHelper.set("userAgent", userInfo["userAgent"] ?? "");
+          await SecureStorageHelper.set(
+              "appVersion", userInfo["appVersion"] ?? "");
+          await SecureStorageHelper.set(
+              "userAgent", userInfo["userAgent"] ?? "");
           APIHelper.init(
               userSessionProvider.userSession.accessToken,
               userSessionProvider.userSession.sessionId,
@@ -174,10 +174,7 @@ wQY+jJXAXl46XDaJETkdMgE=
                 color: Colors.red,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/bg.svg',
-                  fit: BoxFit.fill,
-                ),
+                child: Assets.images.walletCreation.bg.svg(fit: BoxFit.fill),
               )),
           Container(
             alignment: Alignment.bottomCenter,
@@ -189,13 +186,10 @@ wQY+jJXAXl46XDaJETkdMgE=
                   alignment: Alignment.center,
                   height: 50,
                   child: SizedBox(
-                    width: 190.8,
-                    height: 44.15,
-                    child: SvgPicture.asset(
-                      'assets/images/wallet_creation/logo.svg',
-                      fit: BoxFit.fill,
-                    ),
-                  )),
+                      width: 190.8,
+                      height: 44.15,
+                      child: Assets.images.walletCreation.protonWalletLogoDark
+                          .svg(fit: BoxFit.fill))),
               SizedBoxes.box32,
               Container(
                   margin: const EdgeInsets.symmetric(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/logger.dart';
 

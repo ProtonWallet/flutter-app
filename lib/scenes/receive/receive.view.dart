@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class ReceiveView extends ViewBase<ReceiveViewModel> {
   ReceiveView(ReceiveViewModel viewModel)

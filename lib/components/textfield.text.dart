@@ -18,29 +18,29 @@ class TextFieldText extends StatefulWidget {
   final Color color;
   final bool showMailTag;
 
-  const TextFieldText({
-    super.key,
-    required this.width,
-    this.height,
-    this.controller,
-    this.focusNode,
-    this.hintText,
-    this.multiLine = false,
-    this.suffixIconOnPressed,
-    this.showSuffixIcon = true,
-    this.suffixIcon = const Icon(Icons.text_fields),
-    this.color = Colors.transparent,
-    this.showEnabledBorder = true,
-    this.digitOnly = false,
-    this.showMailTag = false
-  });
+  const TextFieldText(
+      {super.key,
+      required this.width,
+      this.height,
+      this.controller,
+      this.focusNode,
+      this.hintText,
+      this.multiLine = false,
+      this.suffixIconOnPressed,
+      this.showSuffixIcon = true,
+      this.suffixIcon = const Icon(Icons.text_fields),
+      this.color = Colors.transparent,
+      this.showEnabledBorder = true,
+      this.digitOnly = false,
+      this.showMailTag = false});
 
   @override
   TextFieldTextState createState() => TextFieldTextState();
 }
 
 class TextFieldTextState extends State<TextFieldText> {
-  final _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'));
+  final _decimalFormatter =
+      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'));
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +51,8 @@ class TextFieldTextState extends State<TextFieldText> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
-          child: (widget.controller!.text.endsWith("@proton.me") && widget.showMailTag)
+          child: (widget.controller!.text.endsWith("@proton.me") &&
+                  widget.showMailTag)
               ? Container(
                   alignment: Alignment.centerLeft,
                   child: buildTagWidget(widget.controller!.text))
@@ -64,13 +65,11 @@ class TextFieldTextState extends State<TextFieldText> {
                   controller: widget.controller,
                   focusNode: widget.focusNode,
                   keyboardType: widget.digitOnly
-                      ? TextInputType.numberWithOptions(decimal: true)
+                      ? const TextInputType.numberWithOptions(decimal: true)
                       : widget.multiLine
                           ? TextInputType.multiline
                           : TextInputType.text,
-                  inputFormatters: widget.digitOnly
-                      ? [_decimalFormatter]
-                      : [],
+                  inputFormatters: widget.digitOnly ? [_decimalFormatter] : [],
                   decoration: InputDecoration(
                     hintText: widget.hintText,
                     enabledBorder: OutlineInputBorder(

@@ -6,7 +6,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class HistoryView extends ViewBase<HistoryViewModel> {
   HistoryView(HistoryViewModel viewModel)
@@ -59,7 +59,8 @@ class HistoryView extends ViewBase<HistoryViewModel> {
         itemBuilder: (context, index) {
           return TransactionListTitle(
             width: MediaQuery.of(context).size.width - 80,
-            address: "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
+            address:
+                "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
             coin: "Sat",
             amount: (viewModel.getAmount(index)).toDouble(),
             notional: CurrencyHelper.sat2usdt(

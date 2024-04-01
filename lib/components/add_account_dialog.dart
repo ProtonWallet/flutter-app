@@ -4,9 +4,9 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account.dart';
-import 'package:flutter_gen/gen_l10n/locale.dart';
 
 class AddAccountAlertDialog extends StatefulWidget {
   final int walletID;
@@ -116,8 +116,12 @@ class AddAccountAlertDialogState extends State<AddAccountAlertDialog> {
                 req: req,
               );
 
-              WalletManager.insertOrUpdateAccount(widget.walletID, walletAccount.label,
-                  scriptType.index, "$derivationPath/0", walletAccount.id);
+              WalletManager.insertOrUpdateAccount(
+                  widget.walletID,
+                  walletAccount.label,
+                  scriptType.index,
+                  "$derivationPath/0",
+                  walletAccount.id);
               if (context.mounted) {
                 LocalToast.showToast(context, S.of(context).account_created);
               }
