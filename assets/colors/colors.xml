@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray_70">#EEEEEE</color>
+    <color name="gray_410">#979797</color>
+    <color name="milk_tea">#F5CB84</color>
+    <color name="cinnamon" type="material">#955E1C</color>
+    <color name="yellow_ocher" type="material material-accent">#DF9527</color>
+</resources>
