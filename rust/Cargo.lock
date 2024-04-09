@@ -3213,7 +3213,7 @@ dependencies = [
 [[package]]
 name = "proton-srp"
 version = "0.1.0"
-source = "sparse+https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/"
+source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
 checksum = "0997cde0aee94878e7adc66a9f90c69bf9318e4b113e5a6790810c945dfb0248"
 dependencies = [
  "bcrypt",
