@@ -31,12 +31,34 @@ class CreateWalletAccountReq {
           scriptType == other.scriptType;
 }
 
+class EmailAddress {
+  final String id;
+  final String email;
+
+  const EmailAddress({
+    required this.id,
+    required this.email,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ email.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EmailAddress &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          email == other.email;
+}
+
 class WalletAccount {
   final String id;
   final String walletId;
   final String derivationPath;
   final String label;
   final int scriptType;
+  final List<EmailAddress> addresses;
 
   const WalletAccount({
     required this.id,
@@ -44,6 +66,7 @@ class WalletAccount {
     required this.derivationPath,
     required this.label,
     required this.scriptType,
+    required this.addresses,
   });
 
   @override
@@ -52,7 +75,8 @@ class WalletAccount {
       walletId.hashCode ^
       derivationPath.hashCode ^
       label.hashCode ^
-      scriptType.hashCode;
+      scriptType.hashCode ^
+      addresses.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -63,5 +87,6 @@ class WalletAccount {
           walletId == other.walletId &&
           derivationPath == other.derivationPath &&
           label == other.label &&
-          scriptType == other.scriptType;
+          scriptType == other.scriptType &&
+          addresses == other.addresses;
 }

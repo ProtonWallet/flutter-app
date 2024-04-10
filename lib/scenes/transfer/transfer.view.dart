@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/rust/api/api2.dart';
 import 'package:wallet/scenes/core/view.dart';
 
@@ -12,6 +13,7 @@ class TransferView extends ViewBase<TransferViewModel> {
   Widget buildWithViewModel(
       BuildContext context, TransferViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("TransferView"),

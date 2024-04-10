@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/debug/websocket.viewmodel.dart';
 
@@ -10,6 +11,7 @@ class WebSocketView extends ViewBase<WebSocketViewModel> {
   Widget buildWithViewModel(
       BuildContext context, WebSocketViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("WebSocketView"),

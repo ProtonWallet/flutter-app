@@ -5,7 +5,6 @@ import 'package:wallet/theme/theme.font.dart';
 
 class CustomSymbolBox extends StatelessWidget {
   final String title;
-  final String content;
   final String iconPath;
   final double width;
   final double price;
@@ -15,7 +14,6 @@ class CustomSymbolBox extends StatelessWidget {
   const CustomSymbolBox({
     super.key,
     required this.title,
-    required this.content,
     required this.iconPath,
     this.width = 440,
     this.price = 0,
@@ -30,7 +28,7 @@ class CustomSymbolBox extends StatelessWidget {
           width: width,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: ProtonColors.surfaceLight,
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
                 color: const Color.fromARGB(255, 226, 226, 226),
@@ -48,7 +46,7 @@ class CustomSymbolBox extends StatelessWidget {
                     const SizedBox(width: 10),
                     Text(title,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: ProtonColors.textNorm,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ))
@@ -59,7 +57,7 @@ class CustomSymbolBox extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Row(children: [
-                      Text("\$${price.toStringAsFixed(2)}",
+                      Text("\$${price.toStringAsFixed(5)}",
                           style:
                               FontManager.body1Median(ProtonColors.textNorm)),
                       const SizedBox(

@@ -27,7 +27,7 @@ class CustomTodos extends StatelessWidget {
         padding: const EdgeInsets.all(defaultPadding),
         margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: ProtonColors.surfaceLight,
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
               color: const Color.fromARGB(255, 226, 226, 226),
@@ -56,8 +56,8 @@ class CustomTodos extends StatelessWidget {
             )
           ]),
           checked
-              ? const Icon(Icons.check, color: ProtonColors.signalSuccess)
-              : const Icon(
+              ? Icon(Icons.check, color: ProtonColors.signalSuccess)
+              : Icon(
                   Icons.arrow_forward_ios,
                   color: ProtonColors.textNorm,
                   size: 20,

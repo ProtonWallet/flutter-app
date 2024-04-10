@@ -61,7 +61,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
           AppBar(
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
               onPressed: () {
                 viewModel.updateState(false);
               },
@@ -132,7 +132,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
           AppBar(
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
               onPressed: () {
                 Navigator.pop(context);
               },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:wallet/constants/proton.color.dart';
 
 class LocalToast {
   static final LocalAuthentication auth = LocalAuthentication();
@@ -30,7 +31,7 @@ class LocalToast {
             : const Border(),
         color: isWarning
             ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.background,
+            : ProtonColors.backgroundProton,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

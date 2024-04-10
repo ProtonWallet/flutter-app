@@ -40,7 +40,7 @@ class CustomMailBox extends StatelessWidget {
                   ),
                 ],
               ),
-              const Icon(
+              Icon(
                 Icons.arrow_forward_ios,
                 color: ProtonColors.textNorm,
                 size: 16,

@@ -7,6 +7,33 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'wallet_settings.dart';
 
+class BitcoinAddress {
+  final String bitcoinAddress;
+  final String bitcoinAddressSignature;
+  final int bitcoinAddressIndex;
+
+  const BitcoinAddress({
+    required this.bitcoinAddress,
+    required this.bitcoinAddressSignature,
+    required this.bitcoinAddressIndex,
+  });
+
+  @override
+  int get hashCode =>
+      bitcoinAddress.hashCode ^
+      bitcoinAddressSignature.hashCode ^
+      bitcoinAddressIndex.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BitcoinAddress &&
+          runtimeType == other.runtimeType &&
+          bitcoinAddress == other.bitcoinAddress &&
+          bitcoinAddressSignature == other.bitcoinAddressSignature &&
+          bitcoinAddressIndex == other.bitcoinAddressIndex;
+}
+
 class CreateWalletReq {
   final String name;
   final int isImported;
@@ -56,6 +83,28 @@ class CreateWalletReq {
           mnemonic == other.mnemonic &&
           publicKey == other.publicKey &&
           fingerprint == other.fingerprint;
+}
+
+class EmailIntegrationBitcoinAddress {
+  final String? bitcoinAddress;
+  final String? bitcoinAddressSignature;
+
+  const EmailIntegrationBitcoinAddress({
+    this.bitcoinAddress,
+    this.bitcoinAddressSignature,
+  });
+
+  @override
+  int get hashCode =>
+      bitcoinAddress.hashCode ^ bitcoinAddressSignature.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EmailIntegrationBitcoinAddress &&
+          runtimeType == other.runtimeType &&
+          bitcoinAddress == other.bitcoinAddress &&
+          bitcoinAddressSignature == other.bitcoinAddressSignature;
 }
 
 class ProtonWallet {
@@ -136,6 +185,53 @@ class ProtonWalletKey {
           walletId == other.walletId &&
           userKeyId == other.userKeyId &&
           walletKey == other.walletKey;
+}
+
+class WalletBitcoinAddress {
+  final String id;
+  final String walletId;
+  final String walletAccountId;
+  final int fetched;
+  final int used;
+  final String? bitcoinAddress;
+  final String? bitcoinAddressSignature;
+  final int? bitcoinAddressIndex;
+
+  const WalletBitcoinAddress({
+    required this.id,
+    required this.walletId,
+    required this.walletAccountId,
+    required this.fetched,
+    required this.used,
+    this.bitcoinAddress,
+    this.bitcoinAddressSignature,
+    this.bitcoinAddressIndex,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      walletId.hashCode ^
+      walletAccountId.hashCode ^
+      fetched.hashCode ^
+      used.hashCode ^
+      bitcoinAddress.hashCode ^
+      bitcoinAddressSignature.hashCode ^
+      bitcoinAddressIndex.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WalletBitcoinAddress &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          walletId == other.walletId &&
+          walletAccountId == other.walletAccountId &&
+          fetched == other.fetched &&
+          used == other.used &&
+          bitcoinAddress == other.bitcoinAddress &&
+          bitcoinAddressSignature == other.bitcoinAddressSignature &&
+          bitcoinAddressIndex == other.bitcoinAddressIndex;
 }
 
 class WalletData {

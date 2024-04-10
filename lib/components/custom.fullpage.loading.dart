@@ -6,11 +6,11 @@ class CustomFullpageLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Dialog(
+    return Dialog(
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.transparent,
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
