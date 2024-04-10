@@ -3,10 +3,11 @@ import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
-import 'package:wallet/scenes/send/send.review.view.dart';
-import 'package:wallet/scenes/send/send.review.viewmodel.dart';
 
-class SendReviewCoordinator extends Coordinator {
+import 'two.factor.auth.view.dart';
+import 'two.factor.auth.viewmodel.dart';
+
+class TwoFactorAuthCoordinator extends Coordinator {
   late ViewBase widget;
 
   @override
@@ -19,10 +20,8 @@ class SendReviewCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
-    int walletID = params.containsKey("WalletID") ? int.parse(params["WalletID"]!) : 0;
-    int accountID = params.containsKey("AccountID") ? int.parse(params["AccountID"]!) : 0;
-    var viewModel = SendReviewViewModelImpl(this, walletID, accountID);
-    widget = SendReviewView(
+    var viewModel = TwoFactorAuthViewModelImpl(this);
+    widget = TwoFactorAuthView(
       viewModel,
     );
     return widget;

@@ -37,7 +37,7 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                   constraints: const BoxConstraints(
                     maxWidth: 100.0,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.warning,
                     color: ProtonColors.signalError,
                     size: 80,
@@ -47,7 +47,7 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
           AppBar(
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
               onPressed: () {
                 Navigator.pop(context);
               },

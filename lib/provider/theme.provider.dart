@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -58,12 +59,22 @@ class ThemeProvider extends ChangeNotifier {
   _loadFromPreferences() async {
     await _initialPreferences();
     _themeMode = _preferences?.getString(key) ?? 'light';
+    if (_themeMode == "light") {
+      ProtonColors.updateLightTheme();
+    } else {
+      ProtonColors.updateDarkTheme();
+    }
     notifyListeners(); // notify
   }
 
   toggleChangeTheme(val) {
     _themeMode = val;
     logger.d('current theme mode: $_themeMode');
+    if (_themeMode == "light") {
+      ProtonColors.updateLightTheme();
+    } else {
+      ProtonColors.updateDarkTheme();
+    }
     _savePreferences();
     notifyListeners(); // notify
   }

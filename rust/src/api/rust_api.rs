@@ -1,5 +1,5 @@
-use crate::bdk::blockchain::{EsploraConfig, ElectrumConfig};
 pub use crate::bdk::blockchain::Blockchain;
+use crate::bdk::blockchain::{ElectrumConfig, EsploraConfig};
 pub use crate::bdk::descriptor::BdkDescriptor;
 use crate::bdk::error::Error;
 use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
@@ -51,9 +51,7 @@ impl Api {
         blockchain_height: u32,
         blockchain_id: String,
     ) -> anyhow::Result<String, Error> {
-        match Blockchain::retrieve_blockchain(blockchain_id)
-            .get_block_hash(blockchain_height)
-        {
+        match Blockchain::retrieve_blockchain(blockchain_id).get_block_hash(blockchain_height) {
             Ok(e) => Ok(e),
             Err(e) => Err(e.into()),
         }
@@ -502,9 +500,7 @@ impl Api {
         Ok(Address::new(address)?.address.to_string())
     }
     pub fn address_from_script(script: Script, network: Network) -> anyhow::Result<String, Error> {
-        Ok(Address::from_script(script, network)?
-            .address
-            .to_string())
+        Ok(Address::from_script(script, network)?.address.to_string())
     }
     pub fn address_to_script_pubkey(address: String) -> anyhow::Result<Script, Error> {
         Ok(Address::new(address)?.script_pubkey())

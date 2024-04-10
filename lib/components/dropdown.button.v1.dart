@@ -9,6 +9,7 @@ class DropdownButtonV1 extends StatefulWidget {
   final List itemsText;
   final ValueNotifier? valueNotifier;
   final TextStyle? textStyle;
+  final String? defaultOption;
 
   const DropdownButtonV1(
       {super.key,
@@ -16,6 +17,7 @@ class DropdownButtonV1 extends StatefulWidget {
       required this.items,
       required this.itemsText,
       this.textStyle,
+      this.defaultOption,
       this.valueNotifier});
 
   @override
@@ -53,18 +55,31 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
               widget.valueNotifier?.value = item;
             });
           },
-          items: [
-            for (int i = 0; i < widget.items.length; i++)
-              DropdownMenuItem<dynamic>(
-                  value: widget.items[i],
-                  child: Text(
-                    "${widget.itemsText[i]}",
-                    style: widget.textStyle ??
-                        FontManager.body2Median(
-                            Theme.of(context).colorScheme.primary),
-                  ))
-          ],
+          items: getDropdownMenuItems(),
           underline: Container(),
         ));
+  }
+
+  List<DropdownMenuItem> getDropdownMenuItems() {
+    List<DropdownMenuItem> dropdownMenuItems = [];
+    if (widget.defaultOption != null) {
+      dropdownMenuItems.add(DropdownMenuItem<String>(
+          value: widget.defaultOption,
+          child: Text(
+            "${widget.defaultOption}",
+            style: widget.textStyle ??
+                FontManager.body2Median(ProtonColors.textNorm),
+          )));
+    }
+    for (int i = 0; i < widget.items.length; i++) {
+      dropdownMenuItems.add(DropdownMenuItem<dynamic>(
+          value: widget.items[i],
+          child: Text(
+            "${widget.itemsText[i]}",
+            style: widget.textStyle ??
+                FontManager.body2Median(ProtonColors.textNorm),
+          )));
+    }
+    return dropdownMenuItems;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/proton.color.dart';
 
 class CustomNewsBox extends StatelessWidget {
   final String title;
@@ -22,7 +23,7 @@ class CustomNewsBox extends StatelessWidget {
           width: width,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: ProtonColors.surfaceLight,
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
                 color: const Color.fromARGB(255, 226, 226, 226),
@@ -38,7 +39,7 @@ class CustomNewsBox extends StatelessWidget {
                     const SizedBox(width: 10),
                     Text(title,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: ProtonColors.textNorm,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ))
@@ -50,7 +51,7 @@ class CustomNewsBox extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(content,
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: ProtonColors.textWeak,
                         fontSize: 16,
                       ))),
             ],

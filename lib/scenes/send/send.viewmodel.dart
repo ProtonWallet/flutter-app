@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/crypto.price.helper.dart';
-import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -13,33 +11,36 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import '../../helper/dbhelper.dart';
 import '../../helper/logger.dart';
 
+enum TransactionFeeMode {
+  highPriority,
+  medianPriority,
+  lowPriority,
+}
+
 abstract class SendViewModel extends ViewModel {
   SendViewModel(super.coordinator, this.walletID, this.accountID);
 
   int walletID;
   int accountID;
+  final int maxRecipientCount = 5;
   String fromAddress = "";
   List userWallets = [];
   List userAccounts = [];
-  late TextEditingController coinController;
-  late TextEditingController recipientTextController;
+  List<TextEditingController> recipientTextControllers = [];
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
+  Map<String, String> bitcoinAddresses = {};
 
-  FiatCurrency fiatCurrency = FiatCurrency.chf;
-
-  late ValueNotifier valueNotifier;
-  late ValueNotifier valueNotifierForAccount;
-  int balance = 2222;
+  int balance = 0;
   double feeRate = 1.0;
-  Map<FiatCurrency, int> fiatCurrency2exchangeRate = {
-    FiatCurrency.eur: 0,
-    FiatCurrency.usd: 0,
-    FiatCurrency.chf: 0,
-  };
+  bool inReview = false;
+  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
+  FiatCurrency userFiatCurrency = FiatCurrency.usd;
+  Map<FiatCurrency, int> fiatCurrency2exchangeRate = {};
   int lastExchangeRateTime = 0;
   bool amountTextControllerChanged = false;
-  double fiatCurrencyAmount = 0;
+  ValueNotifier isBitcoinBaseValueNotifier = ValueNotifier(true);
+  bool amountFiatCurrencyTextControllerChanged = false;
 
   Future<void> sendCoin();
 
@@ -47,22 +48,15 @@ abstract class SendViewModel extends ViewModel {
 
   Future<void> updateExchangeRate();
 
-  double getFiatCurrencyValue({required double satsAmount});
+  void addRecipient();
 
-  void setFiatCurrencyValue();
+  void removeRecipient(int index);
 
-  void setCryptoCurrencyValue();
+  void updatePageStatus({required bool inReview});
 
-  void updateTransactionFee();
+  void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
-  List<String> contactsEmail = [];
-  BitcoinTransactionFee bitcoinTransactionFee = BitcoinTransactionFee(
-      block1Fee: 1.0,
-      block2Fee: 1.0,
-      block3Fee: 1.0,
-      block5Fee: 1.0,
-      block10Fee: 1.0,
-      block20Fee: 1.0);
+  List<ContactsModel> contactsEmail = [];
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -83,24 +77,14 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> loadData() async {
     EasyLoading.show(
         status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
-    coinController = TextEditingController(text: "BTC");
-    recipientTextController = TextEditingController();
+    recipientTextControllers.add(TextEditingController(text: ""));
     memoTextController = TextEditingController();
     amountTextController = TextEditingController();
     await updateExchangeRate();
     amountTextController.addListener(() {
-      if (amountTextControllerChanged == false) {
-        setFiatCurrencyValue();
-      }
-    });
-    amountTextController.addListener(() {
       datasourceChangedStreamController.add(this);
     });
-    coinController.addListener(() {
-      setFiatCurrencyValue();
-      datasourceChangedStreamController.add(this);
-    });
-    recipientTextController.text = "tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6";
+
     datasourceChangedStreamController.add(this);
     _blockchain = await _lib.initializeBlockchain(false);
     userWallets = await DBHelper.walletDao!.findAll();
@@ -108,50 +92,56 @@ class SendViewModelImpl extends SendViewModel {
     if (walletID == 0) {
       walletID = userWallets.first.id;
     }
-    for (var element in userWallets) {
-      if (element.id == walletID) {
-        valueNotifier = ValueNotifier(element);
-        valueNotifier.addListener(() {
-          updateAccountList();
-        });
-      }
-    }
-    updateAccountList();
-    List<ContactsModel> contacts = await WalletManager.getContacts();
-    contactsEmail = contacts.map((e) => e.canonicalEmail).toList();
-    EasyLoading.dismiss();
-    datasourceChangedStreamController.add(this);
-  }
-
-  @override
-  Future<void> updateTransactionFee() async {
-    bitcoinTransactionFee = await CryptoPriceHelper.getBitcoinTransactionFee();
-    datasourceChangedStreamController.sink.add(this);
-    Future.delayed(const Duration(seconds: 30), () {
-      updateTransactionFee();
-    });
-  }
-
-  Future<void> updateAccountList() async {
-    userAccounts =
-        await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
-    accountID = userAccounts.first.id;
-    valueNotifierForAccount = ValueNotifier(userAccounts.first);
-    valueNotifierForAccount.addListener(() {
-      walletID = valueNotifier.value.id;
-      accountID = valueNotifierForAccount.value.id;
-      updateWallet();
-    });
-    walletID = valueNotifier.value.id;
-    accountID = valueNotifierForAccount.value.id;
+    contactsEmail = await WalletManager.getContacts();
     updateWallet();
+    EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
   }
 
   Future<void> updateWallet() async {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
-    // var walletBalance = await _wallet.getBalance();
-    balance = 2222; //walletBalance.total;
+    var walletBalance = await _wallet.getBalance();
+    balance = walletBalance.total;
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) {
+    userTransactionFeeMode = transactionFeeMode;
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  Future<void> updatePageStatus({required bool inReview}) async{
+    if (inReview == true) {
+      EasyLoading.show(
+          status: "loading bitcoin address..", maskType: EasyLoadingMaskType.black);
+      await loadBitcoinAddresses();
+      EasyLoading.dismiss();
+    }
+    this.inReview = inReview;
+    datasourceChangedStreamController.add(this);
+  }
+
+  Future<void> loadBitcoinAddresses() async {
+    bitcoinAddresses.clear();
+    for (TextEditingController textEditingController
+        in recipientTextControllers) {
+      String? bitcoinAddress =
+          await WalletManager.lookupBitcoinAddress(textEditingController.text);
+      bitcoinAddresses[textEditingController.text] = bitcoinAddress ?? "";
+    }
+  }
+
+  @override
+  void addRecipient() {
+    recipientTextControllers.add(TextEditingController(text: ""));
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  void removeRecipient(int index) {
+    recipientTextControllers.removeAt(index);
     datasourceChangedStreamController.add(this);
   }
 
@@ -162,11 +152,24 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<void> sendCoin() async {
     if (amountTextController.text != "") {
-      var receipinetAddress = recipientTextController.text;
       double btcAmount = double.parse(amountTextController.text);
       int amount = (btcAmount * 100000000).round();
-      logger.i("Target addr: $receipinetAddress\nAmount: $amount");
-      await _lib.sendBitcoin(_blockchain!, _wallet, receipinetAddress, amount);
+      // TODO:: email integration here
+      for (TextEditingController textEditingController in recipientTextControllers) {
+        String email = textEditingController.text;
+        String bitcoinAddress = "";
+        if (email.contains("@")){
+          bitcoinAddress = bitcoinAddresses[email] ?? email;
+        } else {
+          bitcoinAddress = email;
+        }
+        if (bitcoinAddress.startsWith("tb")) {
+          var receipinetAddress = bitcoinAddress;
+          logger.i("Target addr: $receipinetAddress\nAmount: $amount");
+          await _lib.sendBitcoin(
+              _blockchain!, _wallet, receipinetAddress, amount);
+        }
+      }
     }
   }
 
@@ -185,49 +188,13 @@ class SendViewModelImpl extends SendViewModel {
     if (WalletManager.getCurrentTime() >
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
-      for (FiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
-        // don't send time since client time may be faster than server time, it will raise error
-        fiatCurrency2exchangeRate[apiFiatCurrency] =
-            await WalletManager.getExchangeRate(apiFiatCurrency);
-      }
+      fiatCurrency2exchangeRate[userFiatCurrency] = 6000000;
+      // await WalletManager.getExchangeRate(userFiatCurrency);
       datasourceChangedStreamController.add(this);
     }
-  }
-
-  @override
-  void setCryptoCurrencyValue() {
-    updateExchangeRate();
-    double amount = 0;
-    double cryptoAmount = 0;
-    if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
-      cryptoAmount = amount * 100 / fiatCurrency2exchangeRate[fiatCurrency]!;
-    }
-    amountTextController.text = cryptoAmount.toStringAsFixed(8);
-    datasourceChangedStreamController.add(this);
-  }
-
-  @override
-  void setFiatCurrencyValue() {
-    updateExchangeRate();
-    double amount = 0;
-    if (amountTextController.text != "") {
-      amount = double.parse(amountTextController.text);
-    }
-    fiatCurrencyAmount = 0;
-    if (coinController.text == CommonBitcoinUnit.btc.name.toUpperCase()) {
-      fiatCurrencyAmount = getFiatCurrencyValue(satsAmount: amount * 100000000);
-    }
-    if (coinController.text == CommonBitcoinUnit.sats.name.toUpperCase()) {
-      fiatCurrencyAmount = getFiatCurrencyValue(satsAmount: amount);
-    }
-    datasourceChangedStreamController.add(this);
-  }
-
-  @override
-  double getFiatCurrencyValue({required double satsAmount}) {
-    return satsAmount *
-        fiatCurrency2exchangeRate[fiatCurrency]! /
-        100 /
-        100000000;
+    Future.delayed(const Duration(seconds: exchangeRateRefreshThreshold + 1),
+        () {
+      updateExchangeRate();
+    });
   }
 }

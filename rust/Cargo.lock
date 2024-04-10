@@ -122,6 +122,7 @@ version = "0.1.0"
 dependencies = [
  "andromeda-common",
  "async-std",
+ "base64 0.21.7",
  "bitcoin 0.30.2",
  "cfg-if",
  "muon",

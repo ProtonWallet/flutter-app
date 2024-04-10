@@ -48,9 +48,12 @@ class LocalNotification {
         requestBadgePermission: false,
         requestSoundPermission: false,
       );
+      const  initializationSettingsLinux =
+      LinuxInitializationSettings(
+          defaultActionName: 'Open notification');
       const navigationActionId = "Ok";
       const initSettings = InitializationSettings(
-          android: androidInitializationSetting, iOS: iosInitializationSetting);
+          android: androidInitializationSetting, iOS: iosInitializationSetting, linux: initializationSettingsLinux);
       await _flutterLocalNotificationsPlugin.initialize(initSettings,
           onDidReceiveNotificationResponse:
               (NotificationResponse notificationResponse) {

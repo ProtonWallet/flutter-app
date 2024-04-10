@@ -3,7 +3,6 @@ use andromeda_api::settings::UserSettings;
 use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;
 
-
 #[frb(mirror(FiatCurrency))]
 pub enum _FiatCurrency {
     ALL,

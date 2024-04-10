@@ -26,4 +26,19 @@ class CommonHelper {
         return FiatCurrency.eur;
     }
   }
+
+  static String getFirstNChar(String str, int n){
+    if (n >= str.length){
+      return str;
+    }
+    return str.substring(0, n);
+  }
+
+  static double getEstimateValue({required double amount, required bool isBitcoinBase, required int currencyExchangeRate}) {
+    if (isBitcoinBase) {
+      return amount * currencyExchangeRate / 100;
+    } else {
+      return amount * 100 / currencyExchangeRate;
+    }
+  }
 }

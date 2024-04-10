@@ -9,6 +9,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/contacts.dart';
@@ -66,6 +67,25 @@ class WalletManager {
       return walletModel.id!;
     }
     return -1;
+  }
+
+  static Future<void> addEmailAddressToWalletAccount(AccountModel accountModel, EmailAddress address) async {
+    WalletModel walletModel = await DBHelper.walletDao!.findById(accountModel.walletID);
+    AddressModel? addressModelExisted = await DBHelper.addressDao!.findByServerID(address.id);
+    AddressModel addressModel = AddressModel(
+      id: null,
+      email: address.email,
+      serverID: address.id,
+      serverWalletID: walletModel.serverWalletID,
+      serverAccountID: accountModel.serverAccountID,
+    );
+    if (addressModelExisted == null) {
+      await DBHelper.addressDao!.insert(addressModel);
+    }
+  }
+
+  static Future<void> removeEmailAddressInWalletAccount(EmailAddress address) async {
+    await DBHelper.addressDao!.deleteByServerID(address.id);
   }
 
   static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,
@@ -256,6 +276,15 @@ class WalletManager {
     List contacts = await DBHelper.contactsDao!.findAll();
     return contacts.cast<ContactsModel>();
   }
+  
+  static Future<List<String>> getAccountAddressIDs(String serverAccountID) async {
+    List<AddressModel> result = await DBHelper.addressDao!.findByServerAccountID(serverAccountID);
+    return result.map((e) => e.serverID).toList();
+  }
+
+  static Future<void> deleteAddress(String addressID) async{
+    await DBHelper.addressDao!.deleteByServerID(addressID);
+  }
 
   static Future<void> fetchWalletsFromServer() async {
     if (isFetchingWallets) {
@@ -305,12 +334,17 @@ class WalletManager {
               .getWalletAccounts(walletId: walletData.wallet.id);
           if (walletAccounts.isNotEmpty) {
             for (WalletAccount walletAccount in walletAccounts) {
-              WalletManager.insertOrUpdateAccount(
+              await WalletManager.insertOrUpdateAccount(
                   walletID,
                   walletAccount.label,
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
-                  walletAccount.id);
+                  walletAccount.id,);
+              AccountModel accountModel = await DBHelper.accountDao!.findByServerAccountID(walletAccount.id);
+              for (EmailAddress address in walletAccount.addresses) {
+                WalletManager.addEmailAddressToWalletAccount(
+                    accountModel, address);
+              }
             }
           }
         }
@@ -322,12 +356,17 @@ class WalletManager {
           if (walletAccounts.isNotEmpty) {
             for (WalletAccount walletAccount in walletAccounts) {
               existingAccountIDs.add(walletAccount.id);
-              WalletManager.insertOrUpdateAccount(
+              await WalletManager.insertOrUpdateAccount(
                   walletModel.id!,
                   walletAccount.label,
                   walletAccount.scriptType,
                   "${walletAccount.derivationPath}/0",
                   walletAccount.id);
+              AccountModel accountModel = await DBHelper.accountDao!.findByServerAccountID(walletAccount.id);
+              for (EmailAddress address in walletAccount.addresses) {
+                WalletManager.addEmailAddressToWalletAccount(
+                    accountModel, address);
+              }
             }
           }
           try {
@@ -355,5 +394,12 @@ class WalletManager {
   static Future<String?> getLatestEventId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString("latestEventId");
+  }
+
+  static Future<String?> lookupBitcoinAddress(String email) async{
+    EmailIntegrationBitcoinAddress emailIntegrationBitcoinAddress =
+    await proton_api.lookupBitcoinAddress(email: email);
+    // TODO:: check signature!
+    return emailIntegrationBitcoinAddress.bitcoinAddress;
   }
 }

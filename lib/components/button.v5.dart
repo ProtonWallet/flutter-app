@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/proton.color.dart';
 
 class ButtonV5 extends StatelessWidget {
   final String text;
@@ -19,8 +18,8 @@ class ButtonV5 extends StatelessWidget {
       required this.height,
       this.onPressed,
       this.radius = 30.0,
-      this.backgroundColor = ProtonColors.interactionNorm,
-      this.borderColor = ProtonColors.clear,
+      this.backgroundColor = const Color(0xFF6D4AFF),
+      this.borderColor = Colors.transparent,
       this.textStyle = const TextStyle(
         color: Colors.white,
         fontSize: 14,

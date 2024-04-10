@@ -36,17 +36,18 @@ class HomeView extends ViewBase<HomeViewModel> {
       // viewModel.setOnBoard(context);
     }
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: ProtonColors.backgroundProton,
         title: Text(
           S.of(context).proton_wallet,
           style:
-              FontManager.titleHeadline(Theme.of(context).colorScheme.primary),
+              FontManager.titleHeadline(ProtonColors.textNorm),
         ),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -58,7 +59,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               height: 169,
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: ProtonColors.surfaceLight,
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
                     color: const Color.fromARGB(255, 226, 226, 226),
@@ -101,11 +102,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 width: 140,
                                 radius: 28,
                                 backgroundColor:
-                                    Theme.of(context).colorScheme.surface,
+                                    ProtonColors.surfaceLight,
                                 borderColor:
                                     const Color.fromARGB(255, 226, 226, 226),
                                 textStyle: FontManager.captionRegular(
-                                    Theme.of(context).colorScheme.primary),
+                                    ProtonColors.textNorm),
                                 height: 32),
                             const SizedBox(width: 10),
                             ButtonV5(
@@ -114,11 +115,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 width: 140,
                                 radius: 28,
                                 backgroundColor:
-                                    Theme.of(context).colorScheme.surface,
+                                    ProtonColors.surfaceLight,
                                 borderColor:
                                     const Color.fromARGB(255, 226, 226, 226),
                                 textStyle: FontManager.captionRegular(
-                                    Theme.of(context).colorScheme.primary),
+                                    ProtonColors.textNorm),
                                 height: 32),
                           ],
                         ),
@@ -133,7 +134,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 width: MediaQuery.of(context).size.width / 2 - 36,
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: ProtonColors.surfaceLight,
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
                       color: const Color.fromARGB(255, 226, 226, 226),
@@ -144,14 +145,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                   children: [
                     Text(S.of(context).my_assets,
                         style: FontManager.captionRegular(
-                            Theme.of(context).colorScheme.secondary)),
+                            ProtonColors.textWeak)),
                     Text("${viewModel.totalBalance} Sat",
                         style: FontManager.titleSubHeadline(
-                            Theme.of(context).colorScheme.primary)),
+                            ProtonColors.textNorm)),
                     Text(
                         "${CurrencyHelper.sat2usdt(viewModel.totalBalance).toStringAsFixed(2)} USD",
                         style: FontManager.overlineRegular(
-                            Theme.of(context).colorScheme.secondary)),
+                            ProtonColors.textWeak)),
                   ],
                 )),
             const SizedBox(
@@ -161,7 +162,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 width: MediaQuery.of(context).size.width / 2 - 36,
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: ProtonColors.surfaceLight,
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
                       color: const Color.fromARGB(255, 226, 226, 226),
@@ -172,14 +173,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                   children: [
                     Text(S.of(context).last_7_days,
                         style: FontManager.captionRegular(
-                            Theme.of(context).colorScheme.secondary)),
+                            ProtonColors.textWeak)),
                     Text("+${viewModel.totalBalance} Sat",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.signalSuccess)),
                     Text(
                         "${CurrencyHelper.sat2usdt(viewModel.totalBalance).toStringAsFixed(2)} USD",
                         style: FontManager.overlineRegular(
-                            Theme.of(context).colorScheme.secondary)),
+                            ProtonColors.textWeak)),
                   ],
                 )),
           ]),
@@ -191,7 +192,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                     padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                     child: Text(S.of(context).your_wallets,
                         style: FontManager.body1Median(
-                            Theme.of(context).colorScheme.primary))),
+                            ProtonColors.textNorm))),
                 GestureDetector(
                     onTap: () {
                       viewModel.coordinator
@@ -236,7 +237,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   margin: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
                                       color:
-                                          Theme.of(context).colorScheme.surface,
+                                          ProtonColors.surfaceLight,
                                       borderRadius: BorderRadius.circular(10.0),
                                       border: Border.all(
                                         color: const Color.fromARGB(
@@ -396,7 +397,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                   child: Text(S.of(context).statistic,
                       style: FontManager.body1Median(
-                          Theme.of(context).colorScheme.primary))),
+                          ProtonColors.textNorm))),
               CustomPieChart(
                 width: 400,
                 height: 240,
@@ -414,7 +415,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: Text(S.of(context).quick_actions,
                   style: FontManager.body1Median(
-                      Theme.of(context).colorScheme.primary))),
+                      ProtonColors.textNorm))),
           const SizedBox(
             height: 10,
           ),
@@ -424,10 +425,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: S.of(context).send_button,
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -438,10 +439,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: S.of(context).receive_button,
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -450,10 +451,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               onPressed: () {},
               text: S.of(context).swap_button,
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -464,10 +465,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: "Reset DB",
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -478,10 +479,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: "API Sync",
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -492,10 +493,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: "Event Loop Check",
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -510,10 +511,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: "Get ExchangeRate",
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -547,10 +548,10 @@ class HomeView extends ViewBase<HomeViewModel> {
               },
               text: "Secure Storage",
               width: MediaQuery.of(context).size.width - 52,
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
               textStyle: FontManager.body1Median(
-                  Theme.of(context).colorScheme.primary),
+                  ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 20,
@@ -559,7 +560,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: Text(S.of(context).explore_wallet,
                   style: FontManager.body1Median(
-                      Theme.of(context).colorScheme.primary))),
+                      ProtonColors.textNorm))),
           const SizedBox(height: 10),
           CustomNewsBox(
               title: S.of(context).security_n_proton_wallet,
@@ -632,21 +633,21 @@ void showWalletMoreDialog(
                         title: Text(
                             S.of(context).wallet_recover_with_old_password,
                             style: FontManager.body2Regular(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.import_export, size: 18),
                         title: Text(S.of(context).wallet_recover_with_mnemonic,
                             style: FontManager.body2Regular(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.delete, size: 18),
                         title: Text(S.of(context).delete_wallet,
                             style: FontManager.body2Regular(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         onTap: () {
                           if (context.mounted) {
                             Navigator.of(context).pop();
@@ -666,7 +667,7 @@ void showWalletMoreDialog(
                           leading: const Icon(Icons.key, size: 18),
                           title: Text(S.of(context).set_passphrase,
                               style: FontManager.body2Regular(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                           onTap: () {
                             showDialog(
                                 context: context,
@@ -680,7 +681,7 @@ void showWalletMoreDialog(
                           leading: const Icon(Icons.edit, size: 18),
                           title: Text(S.of(context).rename_wallet,
                               style: FontManager.body2Regular(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                           onTap: () {
                             showDialog(
                                 context: context,
@@ -695,7 +696,7 @@ void showWalletMoreDialog(
                               const Icon(Icons.download_for_offline, size: 18),
                           title: Text(S.of(context).backup_wallet,
                               style: FontManager.body2Regular(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                           onTap: () async {
                             Clipboard.setData(ClipboardData(
                                     text: await WalletManager.getMnemonicWithID(
@@ -710,7 +711,7 @@ void showWalletMoreDialog(
                           leading: const Icon(Icons.delete, size: 18),
                           title: Text(S.of(context).delete_wallet,
                               style: FontManager.body2Regular(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                           onTap: () async {
                             if (context.mounted) {
                               Navigator.of(context).pop();

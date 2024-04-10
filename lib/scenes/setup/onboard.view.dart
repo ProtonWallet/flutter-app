@@ -53,7 +53,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             AppBar(
               backgroundColor: Colors.transparent,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: ProtonColors.white),
+                icon: Icon(Icons.arrow_back, color: ProtonColors.white),
                 onPressed: () {
                   Navigator.pop(context);
                 },

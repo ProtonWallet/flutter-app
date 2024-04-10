@@ -16,6 +16,8 @@ import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/scenes/settings/mail_integration/maillist.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
+import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
+import 'package:wallet/scenes/two.factor.auth/two.factor.auth.coordinator.dart';
 import 'package:wallet/scenes/wallet/wallet.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
@@ -110,6 +112,14 @@ class HomeCoordinator extends Coordinator {
     } else if (to == ViewIdentifiers.historyDetails) {
       map["TXID"] = (widget as HomeView).viewModel.selectedTXID.toString();
       var view = HistoryDetailCoordinator().start(params: map);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
+      return view;
+    }  else if (to == ViewIdentifiers.twoFactorAuthSetup) {
+      var view = TwoFactorAuthCoordinator().start(params: map);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
+      return view;
+    } else if (to == ViewIdentifiers.twoFactorAuthDisable) {
+      var view = TwoFactorAuthDisableCoordinator().start(params: map);
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
       return view;
     }

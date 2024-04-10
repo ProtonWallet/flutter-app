@@ -44,7 +44,7 @@ class TransactionListTitle extends StatelessWidget {
           margin: const EdgeInsets.only(left: 26, right: 26, top: 10),
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           width: width,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
               color: ProtonColors.wMajor1,
@@ -57,7 +57,7 @@ class TransactionListTitle extends StatelessWidget {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(address,
                     style: FontManager.body2Regular(
-                        Theme.of(context).colorScheme.primary)),
+                        ProtonColors.textNorm)),
                 isSend
                     ? Text("$amount $coin",
                         style:
@@ -70,7 +70,7 @@ class TransactionListTitle extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: ProtonColors.wMajor1,
                         ),
@@ -97,13 +97,13 @@ class TransactionListTitle extends StatelessWidget {
               if (note != "")
                 Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: ProtonColors.wMajor1,
                       ),
                       margin: const EdgeInsets.only(right: 4, top: 2),
                       padding: const EdgeInsets.all(2.0),
-                      child: const Icon(Icons.edit_outlined,
+                      child: Icon(Icons.edit_outlined,
                           size: 10, color: ProtonColors.textHint)),
                   Text(S.of(context).trans_note(note),
                       style: FontManager.captionRegular(ProtonColors.textHint))
