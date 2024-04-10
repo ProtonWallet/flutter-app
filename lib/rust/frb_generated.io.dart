@@ -70,9 +70,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiError dco_decode_api_error(dynamic raw);
 
   @protected
-  ApiFiatCurrency dco_decode_api_fiat_currency(dynamic raw);
-
-  @protected
   ApiUserSettings dco_decode_api_user_settings(dynamic raw);
 
   @protected
@@ -191,6 +188,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double dco_decode_f_32(dynamic raw);
+
+  @protected
+  FiatCurrency dco_decode_fiat_currency(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -458,9 +458,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiError sse_decode_api_error(SseDeserializer deserializer);
 
   @protected
-  ApiFiatCurrency sse_decode_api_fiat_currency(SseDeserializer deserializer);
-
-  @protected
   ApiUserSettings sse_decode_api_user_settings(SseDeserializer deserializer);
 
   @protected
@@ -595,6 +592,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double sse_decode_f_32(SseDeserializer deserializer);
+
+  @protected
+  FiatCurrency sse_decode_fiat_currency(SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -890,10 +890,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_api_error(ApiError self, SseSerializer serializer);
 
   @protected
-  void sse_encode_api_fiat_currency(
-      ApiFiatCurrency self, SseSerializer serializer);
-
-  @protected
   void sse_encode_api_user_settings(
       ApiUserSettings self, SseSerializer serializer);
 
@@ -1037,6 +1033,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_f_32(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_fiat_currency(FiatCurrency self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
