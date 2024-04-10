@@ -74,7 +74,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                       .userSession
                       .userDisplayName
                       .split(' ')
-                      .map((str) => str.substring(0, 1))
+                      .map((str) => str.isEmpty ? '' : str.substring(0, 1))
                       .join(''),
                   style:
                       const TextStyle(fontSize: 12, color: ProtonColors.white),
