@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -20,13 +21,14 @@ class HistoryView extends ViewBase<HistoryViewModel> {
   Widget buildWithViewModel(
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: ProtonColors.backgroundProton,
         title: Text(S.of(context).transactions),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -47,7 +49,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
               Text(
                 S.of(context).no_data,
                 style: FontManager.titleHeadline(
-                    Theme.of(context).colorScheme.primary),
+                    ProtonColors.textNorm),
               ),
             ]));
   }

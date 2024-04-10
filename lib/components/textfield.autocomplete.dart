@@ -24,7 +24,9 @@ class TextFieldAutoComplete extends StatelessWidget {
           });
         },
         onSelected: (String selection) {},
-        optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
+        optionsViewBuilder: (BuildContext context,
+            AutocompleteOnSelected<String> onSelected,
+            Iterable<String> options) {
           return _AutocompleteOptions(
             displayStringForOption: RawAutocomplete.defaultStringForOption,
             onSelected: onSelected,
@@ -38,24 +40,23 @@ class TextFieldAutoComplete extends StatelessWidget {
             VoidCallback onFieldSubmitted) {
           return Container(
               decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: TextField(
-              controller: textEditingController,
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                      color: color, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                      color: ProtonColors.interactionNorm, width: 2),
-                ),
-              )));
+                color: color,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: TextField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: color, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: ProtonColors.interactionNorm, width: 2),
+                    ),
+                  )));
         });
   }
 }
@@ -80,28 +81,29 @@ class _AutocompleteOptions<T extends Object> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-    margin: const EdgeInsets.only(right: 52),
-        child:Align(
-      alignment: Alignment.topLeft,
-      child: Material(
-        elevation: 4.0,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxOptionsHeight),
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: options.length,
-            itemBuilder: (BuildContext context, int index) {
-              final T option = options.elementAt(index);
-              return InkWell(
-                onTap: () {
-                  onSelected(option);
-                },
-                child: Builder(
-                    builder: (BuildContext context) {
-                      final bool highlight = AutocompleteHighlightedOption.of(context) == index;
+        margin: const EdgeInsets.only(right: 52),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxOptionsHeight),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final T option = options.elementAt(index);
+                  return InkWell(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: Builder(builder: (BuildContext context) {
+                      final bool highlight =
+                          AutocompleteHighlightedOption.of(context) == index;
                       if (highlight) {
-                        SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((Duration timeStamp) {
                           Scrollable.ensureVisible(context, alignment: 0.5);
                         });
                       }
@@ -110,13 +112,12 @@ class _AutocompleteOptions<T extends Object> extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Text(displayStringForOption(option)),
                       );
-                    }
-                ),
-              );
-            },
+                    }),
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }

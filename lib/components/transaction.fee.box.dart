@@ -17,10 +17,10 @@ class TransactionFeeBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
+      width: 160,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: ProtonColors.surfaceLight,
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(
             color: const Color.fromARGB(255, 226, 226, 226),

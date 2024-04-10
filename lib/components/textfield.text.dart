@@ -59,7 +59,7 @@ class TextFieldTextState extends State<TextFieldText> {
               : TextField(
                   textAlignVertical: TextAlignVertical.center,
                   style: FontManager.body2Regular(
-                      Theme.of(context).colorScheme.primary),
+                      ProtonColors.textNorm),
                   maxLines: widget.multiLine ? null : 1,
                   minLines: widget.multiLine ? 5 : 1,
                   controller: widget.controller,
@@ -76,13 +76,13 @@ class TextFieldTextState extends State<TextFieldText> {
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
                           color: widget.showEnabledBorder
-                              ? Theme.of(context).colorScheme.primary
+                              ? ProtonColors.textNorm
                               : widget.color,
                           width: 1),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
                           color: ProtonColors.interactionNorm, width: 2),
                     ),
                     suffixIcon: widget.showSuffixIcon
@@ -105,7 +105,7 @@ class TextFieldTextState extends State<TextFieldText> {
               style: FontManager.body2Median(ProtonColors.interactionNorm)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: ProtonColors.backgroundProton),
+            side: BorderSide(color: ProtonColors.backgroundProton),
           ),
           onDeleted: () {
             setState(() {

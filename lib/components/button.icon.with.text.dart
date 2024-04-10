@@ -17,24 +17,24 @@ class ButtonIconWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: callback,
+        onTap: callback,
         child: Column(
-      children: [
-        Container(
-          width: 50,
-          height: 50,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: ProtonColors.textHint,
-          ),
-          child: icon,
-        ),
-        const SizedBox(height: 2), // 间距
-        Text(
-          text,
-          style: FontManager.body2Regular(ProtonColors.textNorm),
-        ),
-      ],
-    ));
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: ProtonColors.textHint,
+              ),
+              child: icon,
+            ),
+            const SizedBox(height: 2), // 间距
+            Text(
+              text,
+              style: FontManager.body2Regular(ProtonColors.textNorm),
+            ),
+          ],
+        ));
   }
 }

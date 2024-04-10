@@ -1,15 +1,19 @@
+pub use andromeda_api::settings::FiatCurrency;
 use andromeda_api::{AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid};
 use lazy_static::lazy_static;
 use std::sync::{Arc, RwLock};
-pub use andromeda_api::settings::FiatCurrency;
 
 use crate::proton_api::{
     contacts::ProtonContactEmails,
     errors::ApiError,
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
+    proton_address::ProtonAddress,
     user_settings::{ApiUserSettings, CommonBitcoinUnit},
-    wallet::{CreateWalletReq, ProtonWallet, WalletData},
+    wallet::{
+        BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
+        WalletBitcoinAddress, WalletData,
+    },
     wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
 
@@ -248,3 +252,185 @@ pub async fn get_contacts() -> Result<Vec<ProtonContactEmails>, ApiError> {
         Err(err) => Err(err.into()),
     }
 }
+
+pub async fn get_proton_address() -> Result<Vec<ProtonAddress>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .proton_email_address
+        .get_proton_email_addresses()
+        .await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn add_email_address(
+    wallet_id: String,
+    wallet_account_id: String,
+    address_id: String,
+) -> Result<WalletAccount, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .add_email_address(wallet_id, wallet_account_id, address_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn remove_email_address(
+    wallet_id: String,
+    wallet_account_id: String,
+    address_id: String,
+) -> Result<WalletAccount, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .remove_email_address(wallet_id, wallet_account_id, address_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn update_bitcoin_address(
+    wallet_id: String,
+    wallet_account_id: String,
+    wallet_account_bitcoin_address_id: String,
+    bitcoin_address: BitcoinAddress,
+) -> Result<WalletBitcoinAddress, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .update_bitcoin_address(
+            wallet_id,
+            wallet_account_id,
+            wallet_account_bitcoin_address_id,
+            bitcoin_address.into(),
+        )
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn add_bitcoin_addresses(
+    wallet_id: String,
+    wallet_account_id: String,
+    bitcoin_addresses: Vec<BitcoinAddress>,
+) -> Result<Vec<WalletBitcoinAddress>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .add_bitcoin_addresses(
+            wallet_id,
+            wallet_account_id,
+            bitcoin_addresses.into_iter().map(|v| v.into()).collect(),
+        )
+        .await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn lookup_bitcoin_address(
+    email: String,
+) -> Result<EmailIntegrationBitcoinAddress, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .email_integration
+        .lookup_bitcoin_address(email)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_wallet_bitcoin_address(
+    wallet_id: String,
+    wallet_account_id: String,
+    only_request: u8,
+) -> Result<Vec<WalletBitcoinAddress>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .get_bitcoin_addresses(wallet_id, wallet_account_id, only_request)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_bitcoin_address_latest_index(
+    wallet_id: String,
+    wallet_account_id: String,
+) -> Result<u64, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
+        .wallet
+        .get_bitcoin_address_latest_index(wallet_id, wallet_account_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
+// enable it after 2fa mr ready for andromeda
+
+// pub async fn get_2fa_enabled() -> Result<u32, ApiError> {
+//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let result = proton_api.two_factor_auth.get_2fa_enabled().await;
+//     match result {
+//         Ok(response) => Ok(response.into()),
+//         Err(err) => Err(err.into()),
+//     }
+// }
+
+// pub async fn set_2fa_totp(
+//     username: String,
+//     password: String,
+//     totp_shared_secret: String,
+//     totp_confirmation: String,
+// ) -> Result<Vec<String>, ApiError> {
+//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let result = proton_api
+//         .two_factor_auth
+//         .set_2fa_totp(username, password, totp_shared_secret, totp_confirmation)
+//         .await;
+//     match result {
+//         Ok(response) => Ok(response.into()),
+//         Err(err) => Err(err.into()),
+//     }
+// }
+
+// pub async fn disable_2fa_totp(
+//     username: String,
+//     password: String,
+//     two_factor_code: String,
+// ) -> Result<u32, ApiError> {
+//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let result = proton_api
+//         .two_factor_auth
+//         .disable_2fa_totp(username, password, two_factor_code)
+//         .await;
+//     match result {
+//         Ok(response) => Ok(response.into()),
+//         Err(err) => Err(err.into()),
+//     }
+// }

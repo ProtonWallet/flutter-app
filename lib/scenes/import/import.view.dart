@@ -49,7 +49,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                       child: Text(
                         S.of(context).wallet_name,
                         style: FontManager.captionMedian(
-                            Theme.of(context).colorScheme.primary),
+                            ProtonColors.textNorm),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -66,7 +66,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                       child: Text(
                         S.of(context).your_mnemonic,
                         style: FontManager.captionMedian(
-                            Theme.of(context).colorScheme.primary),
+                            ProtonColors.textNorm),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -82,7 +82,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                       child: Text(
                         S.of(context).your_passphrase_optional,
                         style: FontManager.captionMedian(
-                            Theme.of(context).colorScheme.primary),
+                            ProtonColors.textNorm),
                         textAlign: TextAlign.left,
                       ),
                     ),

@@ -16,13 +16,14 @@ class MailListView extends ViewBase<MailListViewModel> {
   Widget buildWithViewModel(
       BuildContext context, MailListViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: ProtonColors.backgroundProton,
         title: Text(S.of(context).settings_title),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -40,7 +41,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                         padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                         child: Text(S.of(context).email_integration,
                             style: FontManager.body2Median(
-                                Theme.of(context).colorScheme.primary))),
+                                ProtonColors.textNorm))),
                     GestureDetector(
                         onTap: () {
                           viewModel.mailSettingID =

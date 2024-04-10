@@ -27,7 +27,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                 Brightness.dark, // For Android (dark icons)
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: ProtonColors.backgroundProton,
           scrolledUnderElevation:
               0.0, // don't change background color when scroll down
         ),
@@ -53,7 +53,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                         const SizedBox(height: 40),
                         Text(
                           viewModel.initialed ? viewModel.walletModel.name : "",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16.0,
                             color: ProtonColors.white,
                             fontWeight: FontWeight.w500,
@@ -65,7 +65,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                             padding: const EdgeInsets.only(right: 72.0),
                             child: Text(
                               S.of(context).bitcoin_wallet,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 14.0, color: ProtonColors.wMajor1),
                             )),
                         Row(
@@ -77,7 +77,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                                     viewModel.initialed
                                         ? "${viewModel.totalBalance} Sat"
                                         : "",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16.0,
                                       color: ProtonColors.white,
                                       fontWeight: FontWeight.w500,
@@ -90,7 +90,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                                         ? viewModel.walletModel.serverWalletID
                                             .substring(0, 20)
                                         : "",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 14.0,
                                         color: ProtonColors.wMajor1),
                                   )),
@@ -106,7 +106,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                       padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                       child: Text(S.of(context).your_account,
                           style: FontManager.body1Median(
-                              Theme.of(context).colorScheme.primary))),
+                              ProtonColors.textNorm))),
                   GestureDetector(
                       onTap: () {
                         if (viewModel.initialed) {
@@ -144,7 +144,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                       padding: const EdgeInsets.all(10.0),
                       margin: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
+                        color: ProtonColors.backgroundProton,
                         borderRadius: BorderRadius.circular(10.0),
                         boxShadow: [
                           BoxShadow(
@@ -161,22 +161,22 @@ class WalletView extends ViewBase<WalletViewModel> {
                           Text(
                               S.of(context).transaction_sats(viewModel.balance),
                               style: FontManager.titleHeadline(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                           Text(
                               S
                                   .of(context)
                                   .confirmed_trans(viewModel.confirmed),
                               style: FontManager.captionRegular(
-                                  Theme.of(context).colorScheme.secondary)),
+                                  ProtonColors.textWeak)),
                           Text(
                               S
                                   .of(context)
                                   .unconfirmed_trans(viewModel.unconfirmed),
                               style: FontManager.captionRegular(
-                                  Theme.of(context).colorScheme.secondary)),
+                                  ProtonColors.textWeak)),
                           Text(viewModel.isSyncing ? S.of(context).syncing : "",
                               style: FontManager.captionRegular(
-                                  Theme.of(context).colorScheme.secondary)),
+                                  ProtonColors.textWeak)),
                         ],
                       ))),
             const SizedBox(
@@ -189,7 +189,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                 child: const BarChartSample3()),
             Text(S.of(context).trans_past_seven,
                 style: FontManager.body1Median(
-                    Theme.of(context).colorScheme.primary)),
+                    ProtonColors.textNorm)),
             const SizedBox(
               height: 20,
             ),

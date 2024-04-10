@@ -45,7 +45,7 @@ class TagV1 extends StatelessWidget {
             child: Container(
               width: 24.0,
               height: 24.0,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   color: ProtonColors.textNorm, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text(

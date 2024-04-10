@@ -28,7 +28,7 @@ class TextFieldPasswordState extends State<TextFieldPassword> {
         child: Center(
           child: TextField(
             style:
-                FontManager.body2Regular(Theme.of(context).colorScheme.primary),
+                FontManager.body2Regular(ProtonColors.textNorm),
             controller: widget.controller,
             obscureText: isTextVisible,
             decoration: InputDecoration(
@@ -36,12 +36,12 @@ class TextFieldPasswordState extends State<TextFieldPassword> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary, width: 1),
+                    color: ProtonColors.textNorm, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: const BorderSide(
-                    color: ProtonColors.interactionNorm, width: 2),
+                borderSide:
+                    BorderSide(color: ProtonColors.interactionNorm, width: 2),
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.visibility),

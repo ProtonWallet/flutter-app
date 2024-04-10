@@ -7,10 +7,10 @@ class FontManager {
   static TextStyle sendAmount(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,
-        fontSize: 52,
+        fontSize: 36,
         height: 1.2,
         // lineHeight = 34
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
         color: color);
   }
 

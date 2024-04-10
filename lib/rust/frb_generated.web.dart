@@ -21,6 +21,7 @@ import 'proton_api/contacts.dart';
 import 'proton_api/errors.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
+import 'proton_api/proton_address.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
@@ -75,6 +76,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Balance dco_decode_balance(dynamic raw);
 
   @protected
+  BitcoinAddress dco_decode_bitcoin_address(dynamic raw);
+
+  @protected
   BlockTime dco_decode_block_time(dynamic raw);
 
   @protected
@@ -85,6 +89,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiUserSettings dco_decode_box_autoadd_api_user_settings(dynamic raw);
+
+  @protected
+  BitcoinAddress dco_decode_box_autoadd_bitcoin_address(dynamic raw);
 
   @protected
   BlockTime dco_decode_box_autoadd_block_time(dynamic raw);
@@ -180,6 +187,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ElectrumConfig dco_decode_electrum_config(dynamic raw);
 
   @protected
+  EmailAddress dco_decode_email_address(dynamic raw);
+
+  @protected
+  EmailIntegrationBitcoinAddress dco_decode_email_integration_bitcoin_address(
+      dynamic raw);
+
+  @protected
   Error dco_decode_error(dynamic raw);
 
   @protected
@@ -201,6 +215,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<String> dco_decode_list_String(dynamic raw);
 
   @protected
+  List<BitcoinAddress> dco_decode_list_bitcoin_address(dynamic raw);
+
+  @protected
+  List<EmailAddress> dco_decode_list_email_address(dynamic raw);
+
+  @protected
   List<LocalUtxo> dco_decode_list_local_utxo(dynamic raw);
 
   @protected
@@ -211,6 +231,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<ProtonAddress> dco_decode_list_proton_address(dynamic raw);
+
+  @protected
+  List<ProtonAddressKey> dco_decode_list_proton_address_key(dynamic raw);
 
   @protected
   List<ProtonContactEmails> dco_decode_list_proton_contact_emails(dynamic raw);
@@ -235,6 +261,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<WalletAccountEvent> dco_decode_list_wallet_account_event(dynamic raw);
+
+  @protected
+  List<WalletBitcoinAddress> dco_decode_list_wallet_bitcoin_address(
+      dynamic raw);
 
   @protected
   List<WalletData> dco_decode_list_wallet_data(dynamic raw);
@@ -307,6 +337,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletSettings? dco_decode_opt_box_autoadd_wallet_settings(dynamic raw);
 
   @protected
+  List<ProtonAddressKey>? dco_decode_opt_list_proton_address_key(dynamic raw);
+
+  @protected
   List<WalletAccountEvent>? dco_decode_opt_list_wallet_account_event(
       dynamic raw);
 
@@ -325,6 +358,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Payload dco_decode_payload(dynamic raw);
+
+  @protected
+  ProtonAddress dco_decode_proton_address(dynamic raw);
+
+  @protected
+  ProtonAddressKey dco_decode_proton_address_key(dynamic raw);
 
   @protected
   ProtonContactEmails dco_decode_proton_contact_emails(dynamic raw);
@@ -406,6 +445,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletAccountEvent dco_decode_wallet_account_event(dynamic raw);
 
   @protected
+  WalletBitcoinAddress dco_decode_wallet_bitcoin_address(dynamic raw);
+
+  @protected
   WalletData dco_decode_wallet_data(dynamic raw);
 
   @protected
@@ -463,6 +505,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Balance sse_decode_balance(SseDeserializer deserializer);
 
   @protected
+  BitcoinAddress sse_decode_bitcoin_address(SseDeserializer deserializer);
+
+  @protected
   BlockTime sse_decode_block_time(SseDeserializer deserializer);
 
   @protected
@@ -474,6 +519,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiUserSettings sse_decode_box_autoadd_api_user_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  BitcoinAddress sse_decode_box_autoadd_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
@@ -584,6 +633,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ElectrumConfig sse_decode_electrum_config(SseDeserializer deserializer);
 
   @protected
+  EmailAddress sse_decode_email_address(SseDeserializer deserializer);
+
+  @protected
+  EmailIntegrationBitcoinAddress sse_decode_email_integration_bitcoin_address(
+      SseDeserializer deserializer);
+
+  @protected
   Error sse_decode_error(SseDeserializer deserializer);
 
   @protected
@@ -605,6 +661,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<String> sse_decode_list_String(SseDeserializer deserializer);
 
   @protected
+  List<BitcoinAddress> sse_decode_list_bitcoin_address(
+      SseDeserializer deserializer);
+
+  @protected
+  List<EmailAddress> sse_decode_list_email_address(
+      SseDeserializer deserializer);
+
+  @protected
   List<LocalUtxo> sse_decode_list_local_utxo(SseDeserializer deserializer);
 
   @protected
@@ -615,6 +679,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<ProtonAddress> sse_decode_list_proton_address(
+      SseDeserializer deserializer);
+
+  @protected
+  List<ProtonAddressKey> sse_decode_list_proton_address_key(
+      SseDeserializer deserializer);
 
   @protected
   List<ProtonContactEmails> sse_decode_list_proton_contact_emails(
@@ -643,6 +715,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<WalletAccountEvent> sse_decode_list_wallet_account_event(
+      SseDeserializer deserializer);
+
+  @protected
+  List<WalletBitcoinAddress> sse_decode_list_wallet_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
@@ -727,6 +803,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<ProtonAddressKey>? sse_decode_opt_list_proton_address_key(
+      SseDeserializer deserializer);
+
+  @protected
   List<WalletAccountEvent>? sse_decode_opt_list_wallet_account_event(
       SseDeserializer deserializer);
 
@@ -747,6 +827,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Payload sse_decode_payload(SseDeserializer deserializer);
+
+  @protected
+  ProtonAddress sse_decode_proton_address(SseDeserializer deserializer);
+
+  @protected
+  ProtonAddressKey sse_decode_proton_address_key(SseDeserializer deserializer);
 
   @protected
   ProtonContactEmails sse_decode_proton_contact_emails(
@@ -836,6 +922,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  WalletBitcoinAddress sse_decode_wallet_bitcoin_address(
+      SseDeserializer deserializer);
+
+  @protected
   WalletData sse_decode_wallet_data(SseDeserializer deserializer);
 
   @protected
@@ -896,6 +986,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_balance(Balance self, SseSerializer serializer);
 
   @protected
+  void sse_encode_bitcoin_address(
+      BitcoinAddress self, SseSerializer serializer);
+
+  @protected
   void sse_encode_block_time(BlockTime self, SseSerializer serializer);
 
   @protected
@@ -908,6 +1002,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_api_user_settings(
       ApiUserSettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_bitcoin_address(
+      BitcoinAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_block_time(
@@ -1025,6 +1123,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ElectrumConfig self, SseSerializer serializer);
 
   @protected
+  void sse_encode_email_address(EmailAddress self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_email_integration_bitcoin_address(
+      EmailIntegrationBitcoinAddress self, SseSerializer serializer);
+
+  @protected
   void sse_encode_error(Error self, SseSerializer serializer);
 
   @protected
@@ -1046,6 +1151,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_bitcoin_address(
+      List<BitcoinAddress> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_email_address(
+      List<EmailAddress> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_local_utxo(
       List<LocalUtxo> self, SseSerializer serializer);
 
@@ -1058,6 +1171,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_proton_address(
+      List<ProtonAddress> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_proton_address_key(
+      List<ProtonAddressKey> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_proton_contact_emails(
@@ -1088,6 +1209,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_wallet_account_event(
       List<WalletAccountEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_wallet_bitcoin_address(
+      List<WalletBitcoinAddress> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_wallet_data(
@@ -1174,6 +1299,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       WalletSettings? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_list_proton_address_key(
+      List<ProtonAddressKey>? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_list_wallet_account_event(
       List<WalletAccountEvent>? self, SseSerializer serializer);
 
@@ -1194,6 +1323,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_payload(Payload self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_address(ProtonAddress self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_address_key(
+      ProtonAddressKey self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_contact_emails(
@@ -1283,6 +1419,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_wallet_account_event(
       WalletAccountEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_bitcoin_address(
+      WalletBitcoinAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_data(WalletData self, SseSerializer serializer);

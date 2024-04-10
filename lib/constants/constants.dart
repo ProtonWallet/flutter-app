@@ -5,7 +5,7 @@ const kPrimaryLightColor = Color(0xFFF1E6FF);
 
 const double defaultPadding = 16.0;
 const double defaultButtonPadding = 26.0;
-const int exchangeRateRefreshThreshold = 30;
+const int exchangeRateRefreshThreshold = 10;
 
 const String userSettingsHideEmptyUsedAddresses = "userSettings.hideEmptyUsedAddresses";
 const String userSettingsTwoFactorAmountThreshold = "userSettings.twoFactorAmountThreshold";

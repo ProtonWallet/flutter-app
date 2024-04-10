@@ -43,13 +43,13 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 SizedBoxes.box20,
                 Text(S.of(context).your_passphrase_optional,
                     style: FontManager.titleHeadline(
-                        Theme.of(context).colorScheme.primary),
+                        ProtonColors.textNorm),
                     textAlign: TextAlign.center),
                 SizedBoxes.box8,
                 Text(
                   S.of(context).for_additional_security_you_can_use_passphrase_,
                   style: FontManager.body1Median(
-                      Theme.of(context).colorScheme.primary),
+                      ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
                 SizedBoxes.box24,
@@ -63,7 +63,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   child: Text(
                     S.of(context).passphrase_label,
                     style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
+                        ProtonColors.textNorm),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -76,7 +76,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   child: Text(
                     S.of(context).confirm_passphrase_label,
                     style: FontManager.captionMedian(
-                        Theme.of(context).colorScheme.primary),
+                        ProtonColors.textNorm),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -87,7 +87,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
       AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+          icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
           onPressed: () {
             viewModel.updateState(false);
           },

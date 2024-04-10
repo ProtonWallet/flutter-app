@@ -19,13 +19,14 @@ class MailEditView extends ViewBase<MailEditViewModel> {
   Widget buildWithViewModel(
       BuildContext context, MailEditViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: ProtonColors.backgroundProton,
         title: Text(S.of(context).email_integration),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -43,7 +44,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                     child: Text(
                       S.of(context).email_address,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
+                          ProtonColors.textNorm),
                     ),
                   ),
                   TextFieldText(
@@ -62,7 +63,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                     child: Text(
                       S.of(context).link_to_wallet,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
+                          ProtonColors.textNorm),
                     ),
                   ),
                   DropdownButtonV1(
@@ -90,7 +91,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                           child: Text(
                             S.of(context).minimum_amount,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary),
+                                ProtonColors.textNorm),
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -123,7 +124,7 @@ class MailEditView extends ViewBase<MailEditViewModel> {
                           child: Text(
                             S.of(context).maximum_amount,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary),
+                                ProtonColors.textNorm),
                           ),
                         ),
                         const SizedBox(height: 5),

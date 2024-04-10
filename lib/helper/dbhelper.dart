@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
 import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/models/account.dao.impl.dart';
@@ -20,6 +21,13 @@ class DBHelper {
   static AccountDao? get accountDao {
     if (_appDatabase != null) {
       return _appDatabase!.accountDao;
+    }
+    return null;
+  }
+
+  static AddressDao? get addressDao {
+    if (_appDatabase != null) {
+      return _appDatabase!.addressDao;
     }
     return null;
   }
