@@ -457,7 +457,7 @@ fn wire_fiat_currency_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_symbol =
-                <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(&mut deserializer);
+                <crate::proton_api::user_settings::FiatCurrency>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse((move || async move {
@@ -521,7 +521,7 @@ fn wire_get_exchange_rate_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_fiat_currency =
-                <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(&mut deserializer);
+                <crate::proton_api::user_settings::FiatCurrency>::sse_decode(&mut deserializer);
             let api_time = <Option<u64>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
@@ -3479,6 +3479,11 @@ fn wire_MyTestObject_read_text_impl(
     )
 }
 
+// Section: wrapper_structs
+
+#[derive(Clone)]
+pub struct mirror_FiatCurrency(crate::proton_api::user_settings::FiatCurrency);
+
 // Section: related_funcs
 
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
@@ -3580,26 +3585,13 @@ impl SseDecode for crate::proton_api::errors::ApiError {
     }
 }
 
-impl SseDecode for crate::proton_api::user_settings::ApiFiatCurrency {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
-        return match inner {
-            0 => crate::proton_api::user_settings::ApiFiatCurrency::USD,
-            1 => crate::proton_api::user_settings::ApiFiatCurrency::EUR,
-            2 => crate::proton_api::user_settings::ApiFiatCurrency::CHF,
-            _ => unreachable!("Invalid variant for ApiFiatCurrency: {}", inner),
-        };
-    }
-}
-
 impl SseDecode for crate::proton_api::user_settings::ApiUserSettings {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_bitcoinUnit =
             <crate::proton_api::user_settings::CommonBitcoinUnit>::sse_decode(deserializer);
         let mut var_fiatCurrency =
-            <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(deserializer);
+            <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer);
         let mut var_hideEmptyUsedAddresses = <u8>::sse_decode(deserializer);
         let mut var_showWalletRecovery = <u8>::sse_decode(deserializer);
         let mut var_twoFactorAmountThreshold = <Option<u64>>::sse_decode(deserializer);
@@ -3959,6 +3951,109 @@ impl SseDecode for f32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_f32::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::proton_api::user_settings::FiatCurrency {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::proton_api::user_settings::FiatCurrency::ALL,
+            1 => crate::proton_api::user_settings::FiatCurrency::DZD,
+            2 => crate::proton_api::user_settings::FiatCurrency::ARS,
+            3 => crate::proton_api::user_settings::FiatCurrency::AMD,
+            4 => crate::proton_api::user_settings::FiatCurrency::AUD,
+            5 => crate::proton_api::user_settings::FiatCurrency::AZN,
+            6 => crate::proton_api::user_settings::FiatCurrency::BHD,
+            7 => crate::proton_api::user_settings::FiatCurrency::BDT,
+            8 => crate::proton_api::user_settings::FiatCurrency::BYN,
+            9 => crate::proton_api::user_settings::FiatCurrency::BMD,
+            10 => crate::proton_api::user_settings::FiatCurrency::BOB,
+            11 => crate::proton_api::user_settings::FiatCurrency::BAM,
+            12 => crate::proton_api::user_settings::FiatCurrency::BRL,
+            13 => crate::proton_api::user_settings::FiatCurrency::BGN,
+            14 => crate::proton_api::user_settings::FiatCurrency::KHR,
+            15 => crate::proton_api::user_settings::FiatCurrency::CAD,
+            16 => crate::proton_api::user_settings::FiatCurrency::CLP,
+            17 => crate::proton_api::user_settings::FiatCurrency::CNY,
+            18 => crate::proton_api::user_settings::FiatCurrency::COP,
+            19 => crate::proton_api::user_settings::FiatCurrency::CRC,
+            20 => crate::proton_api::user_settings::FiatCurrency::HRK,
+            21 => crate::proton_api::user_settings::FiatCurrency::CUP,
+            22 => crate::proton_api::user_settings::FiatCurrency::CZK,
+            23 => crate::proton_api::user_settings::FiatCurrency::DKK,
+            24 => crate::proton_api::user_settings::FiatCurrency::DOP,
+            25 => crate::proton_api::user_settings::FiatCurrency::EGP,
+            26 => crate::proton_api::user_settings::FiatCurrency::EUR,
+            27 => crate::proton_api::user_settings::FiatCurrency::GEL,
+            28 => crate::proton_api::user_settings::FiatCurrency::GHS,
+            29 => crate::proton_api::user_settings::FiatCurrency::GTQ,
+            30 => crate::proton_api::user_settings::FiatCurrency::HNL,
+            31 => crate::proton_api::user_settings::FiatCurrency::HKD,
+            32 => crate::proton_api::user_settings::FiatCurrency::HUF,
+            33 => crate::proton_api::user_settings::FiatCurrency::ISK,
+            34 => crate::proton_api::user_settings::FiatCurrency::INR,
+            35 => crate::proton_api::user_settings::FiatCurrency::IDR,
+            36 => crate::proton_api::user_settings::FiatCurrency::IRR,
+            37 => crate::proton_api::user_settings::FiatCurrency::IQD,
+            38 => crate::proton_api::user_settings::FiatCurrency::ILS,
+            39 => crate::proton_api::user_settings::FiatCurrency::JMD,
+            40 => crate::proton_api::user_settings::FiatCurrency::JPY,
+            41 => crate::proton_api::user_settings::FiatCurrency::JOD,
+            42 => crate::proton_api::user_settings::FiatCurrency::KZT,
+            43 => crate::proton_api::user_settings::FiatCurrency::KES,
+            44 => crate::proton_api::user_settings::FiatCurrency::KWD,
+            45 => crate::proton_api::user_settings::FiatCurrency::KGS,
+            46 => crate::proton_api::user_settings::FiatCurrency::LBP,
+            47 => crate::proton_api::user_settings::FiatCurrency::MKD,
+            48 => crate::proton_api::user_settings::FiatCurrency::MYR,
+            49 => crate::proton_api::user_settings::FiatCurrency::MUR,
+            50 => crate::proton_api::user_settings::FiatCurrency::MXN,
+            51 => crate::proton_api::user_settings::FiatCurrency::MDL,
+            52 => crate::proton_api::user_settings::FiatCurrency::MNT,
+            53 => crate::proton_api::user_settings::FiatCurrency::MAD,
+            54 => crate::proton_api::user_settings::FiatCurrency::MMK,
+            55 => crate::proton_api::user_settings::FiatCurrency::NAD,
+            56 => crate::proton_api::user_settings::FiatCurrency::NPR,
+            57 => crate::proton_api::user_settings::FiatCurrency::TWD,
+            58 => crate::proton_api::user_settings::FiatCurrency::NZD,
+            59 => crate::proton_api::user_settings::FiatCurrency::NIO,
+            60 => crate::proton_api::user_settings::FiatCurrency::NGN,
+            61 => crate::proton_api::user_settings::FiatCurrency::NOK,
+            62 => crate::proton_api::user_settings::FiatCurrency::OMR,
+            63 => crate::proton_api::user_settings::FiatCurrency::PKR,
+            64 => crate::proton_api::user_settings::FiatCurrency::PAB,
+            65 => crate::proton_api::user_settings::FiatCurrency::PEN,
+            66 => crate::proton_api::user_settings::FiatCurrency::PHP,
+            67 => crate::proton_api::user_settings::FiatCurrency::PLN,
+            68 => crate::proton_api::user_settings::FiatCurrency::GBP,
+            69 => crate::proton_api::user_settings::FiatCurrency::QAR,
+            70 => crate::proton_api::user_settings::FiatCurrency::RON,
+            71 => crate::proton_api::user_settings::FiatCurrency::RUB,
+            72 => crate::proton_api::user_settings::FiatCurrency::SAR,
+            73 => crate::proton_api::user_settings::FiatCurrency::RSD,
+            74 => crate::proton_api::user_settings::FiatCurrency::SGD,
+            75 => crate::proton_api::user_settings::FiatCurrency::ZAR,
+            76 => crate::proton_api::user_settings::FiatCurrency::KRW,
+            77 => crate::proton_api::user_settings::FiatCurrency::SSP,
+            78 => crate::proton_api::user_settings::FiatCurrency::VES,
+            79 => crate::proton_api::user_settings::FiatCurrency::LKR,
+            80 => crate::proton_api::user_settings::FiatCurrency::SEK,
+            81 => crate::proton_api::user_settings::FiatCurrency::CHF,
+            82 => crate::proton_api::user_settings::FiatCurrency::THB,
+            83 => crate::proton_api::user_settings::FiatCurrency::TTD,
+            84 => crate::proton_api::user_settings::FiatCurrency::TND,
+            85 => crate::proton_api::user_settings::FiatCurrency::TRY,
+            86 => crate::proton_api::user_settings::FiatCurrency::UGX,
+            87 => crate::proton_api::user_settings::FiatCurrency::UAH,
+            88 => crate::proton_api::user_settings::FiatCurrency::AED,
+            89 => crate::proton_api::user_settings::FiatCurrency::USD,
+            90 => crate::proton_api::user_settings::FiatCurrency::UYU,
+            91 => crate::proton_api::user_settings::FiatCurrency::UZS,
+            92 => crate::proton_api::user_settings::FiatCurrency::VND,
+            _ => unreachable!("Invalid variant for FiatCurrency: {}", inner),
+        };
     }
 }
 
@@ -4570,7 +4665,7 @@ impl SseDecode for crate::proton_api::exchange_rate::ProtonExchangeRate {
         let mut var_bitcoinUnit =
             <crate::proton_api::user_settings::CommonBitcoinUnit>::sse_decode(deserializer);
         let mut var_fiatCurrency =
-            <crate::proton_api::user_settings::ApiFiatCurrency>::sse_decode(deserializer);
+            <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer);
         let mut var_exchangeRateTime = <String>::sse_decode(deserializer);
         let mut var_exchangeRate = <u64>::sse_decode(deserializer);
         let mut var_cents = <u64>::sse_decode(deserializer);
@@ -5207,27 +5302,6 @@ impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::errors::ApiError>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::proton_api::user_settings::ApiFiatCurrency {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            Self::USD => 0.into_dart(),
-            Self::EUR => 1.into_dart(),
-            Self::CHF => 2.into_dart(),
-        }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::proton_api::user_settings::ApiFiatCurrency
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::user_settings::ApiFiatCurrency>
-    for crate::proton_api::user_settings::ApiFiatCurrency
-{
-    fn into_into_dart(self) -> crate::proton_api::user_settings::ApiFiatCurrency {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::proton_api::user_settings::ApiUserSettings {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -5575,6 +5649,114 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::blockchain::EsploraConfig>
 {
     fn into_into_dart(self) -> crate::bdk::blockchain::EsploraConfig {
         self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_FiatCurrency {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::proton_api::user_settings::FiatCurrency::ALL => 0.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::DZD => 1.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::ARS => 2.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::AMD => 3.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::AUD => 4.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::AZN => 5.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BHD => 6.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BDT => 7.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BYN => 8.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BMD => 9.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BOB => 10.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BAM => 11.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BRL => 12.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::BGN => 13.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KHR => 14.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CAD => 15.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CLP => 16.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CNY => 17.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::COP => 18.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CRC => 19.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::HRK => 20.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CUP => 21.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CZK => 22.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::DKK => 23.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::DOP => 24.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::EGP => 25.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::EUR => 26.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::GEL => 27.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::GHS => 28.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::GTQ => 29.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::HNL => 30.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::HKD => 31.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::HUF => 32.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::ISK => 33.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::INR => 34.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::IDR => 35.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::IRR => 36.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::IQD => 37.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::ILS => 38.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::JMD => 39.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::JPY => 40.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::JOD => 41.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KZT => 42.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KES => 43.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KWD => 44.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KGS => 45.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::LBP => 46.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MKD => 47.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MYR => 48.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MUR => 49.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MXN => 50.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MDL => 51.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MNT => 52.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MAD => 53.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::MMK => 54.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NAD => 55.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NPR => 56.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::TWD => 57.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NZD => 58.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NIO => 59.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NGN => 60.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::NOK => 61.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::OMR => 62.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::PKR => 63.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::PAB => 64.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::PEN => 65.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::PHP => 66.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::PLN => 67.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::GBP => 68.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::QAR => 69.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::RON => 70.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::RUB => 71.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::SAR => 72.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::RSD => 73.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::SGD => 74.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::ZAR => 75.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::KRW => 76.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::SSP => 77.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::VES => 78.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::LKR => 79.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::SEK => 80.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::CHF => 81.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::THB => 82.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::TTD => 83.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::TND => 84.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::TRY => 85.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::UGX => 86.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::UAH => 87.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::AED => 88.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::USD => 89.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::UYU => 90.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::UZS => 91.into_dart(),
+            crate::proton_api::user_settings::FiatCurrency::VND => 92.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_FiatCurrency {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_FiatCurrency>
+    for crate::proton_api::user_settings::FiatCurrency
+{
+    fn into_into_dart(self) -> mirror_FiatCurrency {
+        mirror_FiatCurrency(self)
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -6303,23 +6485,6 @@ impl SseEncode for crate::proton_api::errors::ApiError {
     }
 }
 
-impl SseEncode for crate::proton_api::user_settings::ApiFiatCurrency {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(
-            match self {
-                crate::proton_api::user_settings::ApiFiatCurrency::USD => 0,
-                crate::proton_api::user_settings::ApiFiatCurrency::EUR => 1,
-                crate::proton_api::user_settings::ApiFiatCurrency::CHF => 2,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
-    }
-}
-
 impl SseEncode for crate::proton_api::user_settings::ApiUserSettings {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -6327,7 +6492,7 @@ impl SseEncode for crate::proton_api::user_settings::ApiUserSettings {
             self.bitcoin_unit,
             serializer,
         );
-        <crate::proton_api::user_settings::ApiFiatCurrency>::sse_encode(
+        <crate::proton_api::user_settings::FiatCurrency>::sse_encode(
             self.fiat_currency,
             serializer,
         );
@@ -6628,6 +6793,113 @@ impl SseEncode for f32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_f32::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::proton_api::user_settings::FiatCurrency {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::proton_api::user_settings::FiatCurrency::ALL => 0,
+                crate::proton_api::user_settings::FiatCurrency::DZD => 1,
+                crate::proton_api::user_settings::FiatCurrency::ARS => 2,
+                crate::proton_api::user_settings::FiatCurrency::AMD => 3,
+                crate::proton_api::user_settings::FiatCurrency::AUD => 4,
+                crate::proton_api::user_settings::FiatCurrency::AZN => 5,
+                crate::proton_api::user_settings::FiatCurrency::BHD => 6,
+                crate::proton_api::user_settings::FiatCurrency::BDT => 7,
+                crate::proton_api::user_settings::FiatCurrency::BYN => 8,
+                crate::proton_api::user_settings::FiatCurrency::BMD => 9,
+                crate::proton_api::user_settings::FiatCurrency::BOB => 10,
+                crate::proton_api::user_settings::FiatCurrency::BAM => 11,
+                crate::proton_api::user_settings::FiatCurrency::BRL => 12,
+                crate::proton_api::user_settings::FiatCurrency::BGN => 13,
+                crate::proton_api::user_settings::FiatCurrency::KHR => 14,
+                crate::proton_api::user_settings::FiatCurrency::CAD => 15,
+                crate::proton_api::user_settings::FiatCurrency::CLP => 16,
+                crate::proton_api::user_settings::FiatCurrency::CNY => 17,
+                crate::proton_api::user_settings::FiatCurrency::COP => 18,
+                crate::proton_api::user_settings::FiatCurrency::CRC => 19,
+                crate::proton_api::user_settings::FiatCurrency::HRK => 20,
+                crate::proton_api::user_settings::FiatCurrency::CUP => 21,
+                crate::proton_api::user_settings::FiatCurrency::CZK => 22,
+                crate::proton_api::user_settings::FiatCurrency::DKK => 23,
+                crate::proton_api::user_settings::FiatCurrency::DOP => 24,
+                crate::proton_api::user_settings::FiatCurrency::EGP => 25,
+                crate::proton_api::user_settings::FiatCurrency::EUR => 26,
+                crate::proton_api::user_settings::FiatCurrency::GEL => 27,
+                crate::proton_api::user_settings::FiatCurrency::GHS => 28,
+                crate::proton_api::user_settings::FiatCurrency::GTQ => 29,
+                crate::proton_api::user_settings::FiatCurrency::HNL => 30,
+                crate::proton_api::user_settings::FiatCurrency::HKD => 31,
+                crate::proton_api::user_settings::FiatCurrency::HUF => 32,
+                crate::proton_api::user_settings::FiatCurrency::ISK => 33,
+                crate::proton_api::user_settings::FiatCurrency::INR => 34,
+                crate::proton_api::user_settings::FiatCurrency::IDR => 35,
+                crate::proton_api::user_settings::FiatCurrency::IRR => 36,
+                crate::proton_api::user_settings::FiatCurrency::IQD => 37,
+                crate::proton_api::user_settings::FiatCurrency::ILS => 38,
+                crate::proton_api::user_settings::FiatCurrency::JMD => 39,
+                crate::proton_api::user_settings::FiatCurrency::JPY => 40,
+                crate::proton_api::user_settings::FiatCurrency::JOD => 41,
+                crate::proton_api::user_settings::FiatCurrency::KZT => 42,
+                crate::proton_api::user_settings::FiatCurrency::KES => 43,
+                crate::proton_api::user_settings::FiatCurrency::KWD => 44,
+                crate::proton_api::user_settings::FiatCurrency::KGS => 45,
+                crate::proton_api::user_settings::FiatCurrency::LBP => 46,
+                crate::proton_api::user_settings::FiatCurrency::MKD => 47,
+                crate::proton_api::user_settings::FiatCurrency::MYR => 48,
+                crate::proton_api::user_settings::FiatCurrency::MUR => 49,
+                crate::proton_api::user_settings::FiatCurrency::MXN => 50,
+                crate::proton_api::user_settings::FiatCurrency::MDL => 51,
+                crate::proton_api::user_settings::FiatCurrency::MNT => 52,
+                crate::proton_api::user_settings::FiatCurrency::MAD => 53,
+                crate::proton_api::user_settings::FiatCurrency::MMK => 54,
+                crate::proton_api::user_settings::FiatCurrency::NAD => 55,
+                crate::proton_api::user_settings::FiatCurrency::NPR => 56,
+                crate::proton_api::user_settings::FiatCurrency::TWD => 57,
+                crate::proton_api::user_settings::FiatCurrency::NZD => 58,
+                crate::proton_api::user_settings::FiatCurrency::NIO => 59,
+                crate::proton_api::user_settings::FiatCurrency::NGN => 60,
+                crate::proton_api::user_settings::FiatCurrency::NOK => 61,
+                crate::proton_api::user_settings::FiatCurrency::OMR => 62,
+                crate::proton_api::user_settings::FiatCurrency::PKR => 63,
+                crate::proton_api::user_settings::FiatCurrency::PAB => 64,
+                crate::proton_api::user_settings::FiatCurrency::PEN => 65,
+                crate::proton_api::user_settings::FiatCurrency::PHP => 66,
+                crate::proton_api::user_settings::FiatCurrency::PLN => 67,
+                crate::proton_api::user_settings::FiatCurrency::GBP => 68,
+                crate::proton_api::user_settings::FiatCurrency::QAR => 69,
+                crate::proton_api::user_settings::FiatCurrency::RON => 70,
+                crate::proton_api::user_settings::FiatCurrency::RUB => 71,
+                crate::proton_api::user_settings::FiatCurrency::SAR => 72,
+                crate::proton_api::user_settings::FiatCurrency::RSD => 73,
+                crate::proton_api::user_settings::FiatCurrency::SGD => 74,
+                crate::proton_api::user_settings::FiatCurrency::ZAR => 75,
+                crate::proton_api::user_settings::FiatCurrency::KRW => 76,
+                crate::proton_api::user_settings::FiatCurrency::SSP => 77,
+                crate::proton_api::user_settings::FiatCurrency::VES => 78,
+                crate::proton_api::user_settings::FiatCurrency::LKR => 79,
+                crate::proton_api::user_settings::FiatCurrency::SEK => 80,
+                crate::proton_api::user_settings::FiatCurrency::CHF => 81,
+                crate::proton_api::user_settings::FiatCurrency::THB => 82,
+                crate::proton_api::user_settings::FiatCurrency::TTD => 83,
+                crate::proton_api::user_settings::FiatCurrency::TND => 84,
+                crate::proton_api::user_settings::FiatCurrency::TRY => 85,
+                crate::proton_api::user_settings::FiatCurrency::UGX => 86,
+                crate::proton_api::user_settings::FiatCurrency::UAH => 87,
+                crate::proton_api::user_settings::FiatCurrency::AED => 88,
+                crate::proton_api::user_settings::FiatCurrency::USD => 89,
+                crate::proton_api::user_settings::FiatCurrency::UYU => 90,
+                crate::proton_api::user_settings::FiatCurrency::UZS => 91,
+                crate::proton_api::user_settings::FiatCurrency::VND => 92,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -7128,7 +7400,7 @@ impl SseEncode for crate::proton_api::exchange_rate::ProtonExchangeRate {
             self.bitcoin_unit,
             serializer,
         );
-        <crate::proton_api::user_settings::ApiFiatCurrency>::sse_encode(
+        <crate::proton_api::user_settings::FiatCurrency>::sse_encode(
             self.fiat_currency,
             serializer,
         );

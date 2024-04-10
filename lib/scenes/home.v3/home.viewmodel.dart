@@ -53,15 +53,15 @@ abstract class HomeViewModel extends ViewModel {
   bool isFetching = false;
   bool isShowingNoInternet = false;
   List userAccounts = [];
-  List<ApiFiatCurrency> fiatCurrencies = [
-    ApiFiatCurrency.usd,
-    ApiFiatCurrency.eur,
-    ApiFiatCurrency.chf
+  List<FiatCurrency> fiatCurrencies = [
+    FiatCurrency.usd,
+    FiatCurrency.eur,
+    FiatCurrency.chf
   ];
   WalletModel? currentWallet;
   AccountModel? currentAccount;
   ValueNotifier? accountNotifier;
-  ValueNotifier fiatCurrencyNotifier = ValueNotifier(ApiFiatCurrency.chf);
+  ValueNotifier fiatCurrencyNotifier = ValueNotifier(FiatCurrency.chf);
 
   bool initialed = false;
   bool protonApiSessionError = false;
@@ -102,7 +102,7 @@ abstract class HomeViewModel extends ViewModel {
 
   void updateTransactionFee();
 
-  void updateFiatCurrency(ApiFiatCurrency fiatCurrency);
+  void updateFiatCurrency(FiatCurrency fiatCurrency);
 
   void syncWallet();
 
@@ -253,7 +253,7 @@ class HomeViewModelImpl extends HomeViewModel {
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
       // don't send time since client time may be faster than server time, it will raise error
-      exchangeRate = await WalletManager.getExchangeRate(ApiFiatCurrency.eur);
+      exchangeRate = await WalletManager.getExchangeRate(FiatCurrency.eur);
       datasourceChangedStreamController.add(this);
     }
   }
@@ -445,7 +445,7 @@ class HomeViewModelImpl extends HomeViewModel {
           int.parse(twoFactorAmountThresholdController.text);
       CommonBitcoinUnit bitcoinUnit =
           CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
-      ApiFiatCurrency fiatCurrency = fiatCurrencyNotifier.value;
+      FiatCurrency fiatCurrency = fiatCurrencyNotifier.value;
 
       userSettings = await proton_api.hideEmptyUsedAddresses(
           hideEmptyUsedAddresses: hideEmptyUsedAddresses);
@@ -522,7 +522,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> updateFiatCurrency(ApiFiatCurrency fiatCurrency) async {
+  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("todo_hadSetFiatCurrency", true);
     hadSetFiatCurrency = true;

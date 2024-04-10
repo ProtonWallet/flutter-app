@@ -24,16 +24,16 @@ abstract class SendReviewViewModel extends ViewModel {
   late TextEditingController amountTextController;
   late TextEditingController amountFiatCurrencyTextController;
 
-  ValueNotifier fiatCurrencyNotifier = ValueNotifier(ApiFiatCurrency.chf);
+  ValueNotifier fiatCurrencyNotifier = ValueNotifier(FiatCurrency.chf);
 
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
   int balance = 0;
   double feeRate = 1.0;
-  Map<ApiFiatCurrency, int> fiatCurrency2exchangeRate = {
-    ApiFiatCurrency.eur: 0,
-    ApiFiatCurrency.usd: 0,
-    ApiFiatCurrency.chf: 0,
+  Map<FiatCurrency, int> fiatCurrency2exchangeRate = {
+    FiatCurrency.eur: 0,
+    FiatCurrency.usd: 0,
+    FiatCurrency.chf: 0,
   };
   int lastExchangeRateTime = 0;
   bool amountTextControllerChanged = false;
@@ -169,10 +169,10 @@ class SendReviewViewModelImpl extends SendReviewViewModel {
     if (WalletManager.getCurrentTime() >
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
-      for (ApiFiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
+      for (FiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
         fiatCurrency2exchangeRate[apiFiatCurrency] = 6000000;
-            // await WalletManager.getExchangeRate(apiFiatCurrency,
-            //     time: lastExchangeRateTime);
+        // await WalletManager.getExchangeRate(apiFiatCurrency,
+        //     time: lastExchangeRateTime);
       }
       datasourceChangedStreamController.add(this);
     }

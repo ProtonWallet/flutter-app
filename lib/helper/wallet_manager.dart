@@ -219,7 +219,7 @@ class WalletManager {
     return "";
   }
 
-  static Future<int> getExchangeRate(ApiFiatCurrency fiatCurrency,
+  static Future<int> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
     var exchangeRate = await proton_api.getExchangeRate(
         fiatCurrency: fiatCurrency, time: time);
