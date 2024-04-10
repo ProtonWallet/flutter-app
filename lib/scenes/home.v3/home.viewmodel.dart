@@ -338,13 +338,8 @@ class HomeViewModelImpl extends HomeViewModel {
     } else {
       lastExchangeRateTime = WalletManager.getCurrentTime();
       // don't send time since client time may be faster than server time, it will raise error
-<<<<<<< HEAD
-      exchangeRate = await WalletManager.getExchangeRate(FiatCurrency.eur);
-      datasourceChangedStreamController.add(this);
-=======
       exchangeRate = 6000000;
       // await WalletManager.getExchangeRate(fiatCurrencyNotifier.value);
->>>>>>> 3346490 (apply email integration for flutter app, some code clean and polish)
     }
     datasourceStreamSinkAdd();
     Future.delayed(const Duration(seconds: exchangeRateRefreshThreshold + 1),
@@ -629,9 +624,6 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-<<<<<<< HEAD
-  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
-=======
   void reloadPage() {
     datasourceStreamSinkAdd();
   }
@@ -705,7 +697,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
->>>>>>> 3346490 (apply email integration for flutter app, some code clean and polish)
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("todo_hadSetFiatCurrency", true);
     hadSetFiatCurrency = true;
