@@ -15,7 +15,7 @@ class ProtonExchangeRate {
   final CommonBitcoinUnit bitcoinUnit;
 
   /// Fiat currency of the exchange rate
-  final ApiFiatCurrency fiatCurrency;
+  final FiatCurrency fiatCurrency;
 
   /// string <date-time>
   final String exchangeRateTime;

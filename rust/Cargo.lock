@@ -2638,7 +2638,9 @@ dependencies = [
 
 [[package]]
 name = "muon"
-version = "0.1.0"
+version = "0.1.1"
+source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
+checksum = "b9f0024df40d633df947303c62cc30d3153cec961bde5709164fd1900e6af08b"
 dependencies = [
  "anyhow",
  "async-std",
@@ -3212,9 +3214,9 @@ dependencies = [
 
 [[package]]
 name = "proton-srp"
-version = "0.1.0"
+version = "0.2.1"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "0997cde0aee94878e7adc66a9f90c69bf9318e4b113e5a6790810c945dfb0248"
+checksum = "174d3e40371417625fe34ac26039032f2a8cc91db3105595f4a82aa2ba30e158"
 dependencies = [
  "bcrypt",
  "lazy_static",

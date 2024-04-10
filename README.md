@@ -30,7 +30,7 @@ run once after install: `lefthook install`
 
 Add this lines to ~/.cargo/config.toml
 [registries]
-protonvpn = { index = "sparse+<https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/>" }
+proton_internal = { index = "sparse+<https://rust.gitlab-pages.protontech.ch/shared/registry/index/>" }
 
 ### Trouble-shooting
 

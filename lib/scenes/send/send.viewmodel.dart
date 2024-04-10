@@ -26,16 +26,16 @@ abstract class SendViewModel extends ViewModel {
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
 
-  ApiFiatCurrency fiatCurrency = ApiFiatCurrency.chf;
+  FiatCurrency fiatCurrency = FiatCurrency.chf;
 
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
   int balance = 2222;
   double feeRate = 1.0;
-  Map<ApiFiatCurrency, int> fiatCurrency2exchangeRate = {
-    ApiFiatCurrency.eur: 0,
-    ApiFiatCurrency.usd: 0,
-    ApiFiatCurrency.chf: 0,
+  Map<FiatCurrency, int> fiatCurrency2exchangeRate = {
+    FiatCurrency.eur: 0,
+    FiatCurrency.usd: 0,
+    FiatCurrency.chf: 0,
   };
   int lastExchangeRateTime = 0;
   bool amountTextControllerChanged = false;
@@ -185,7 +185,7 @@ class SendViewModelImpl extends SendViewModel {
     if (WalletManager.getCurrentTime() >
         lastExchangeRateTime + exchangeRateRefreshThreshold) {
       lastExchangeRateTime = WalletManager.getCurrentTime();
-      for (ApiFiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
+      for (FiatCurrency apiFiatCurrency in fiatCurrency2exchangeRate.keys) {
         // don't send time since client time may be faster than server time, it will raise error
         fiatCurrency2exchangeRate[apiFiatCurrency] =
             await WalletManager.getExchangeRate(apiFiatCurrency);

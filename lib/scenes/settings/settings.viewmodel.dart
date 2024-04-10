@@ -69,14 +69,16 @@ class SettingsViewModelImpl extends SettingsViewModel {
     loadUserSettings();
   }
 
-  void loadUserSettings(){
+  void loadUserSettings() {
     if (userSettings != null) {
       bitcoinUnitController.text = userSettings!.bitcoinUnit.name.toUpperCase();
       faitCurrencyController.text =
           userSettings!.fiatCurrency.name.toUpperCase();
       hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
-      int twoFactorAmountThreshold = userSettings!.twoFactorAmountThreshold ?? 1000;
-      twoFactorAmountThresholdController.text = twoFactorAmountThreshold.toString();
+      int twoFactorAmountThreshold =
+          userSettings!.twoFactorAmountThreshold ?? 1000;
+      twoFactorAmountThresholdController.text =
+          twoFactorAmountThreshold.toString();
     }
     datasourceChangedStreamController.sink.add(this);
   }
@@ -84,12 +86,17 @@ class SettingsViewModelImpl extends SettingsViewModel {
   @override
   Future<void> saveUserSettings() async {
     hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
-    int twoFactorAmountThreshold = int.parse(twoFactorAmountThresholdController.text);
-    CommonBitcoinUnit bitcoinUnit = CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
-    ApiFiatCurrency fiatCurrency = CommonHelper.getFiatCurrency(faitCurrencyController.text);
+    int twoFactorAmountThreshold =
+        int.parse(twoFactorAmountThresholdController.text);
+    CommonBitcoinUnit bitcoinUnit =
+        CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
+    FiatCurrency fiatCurrency =
+        CommonHelper.getFiatCurrency(faitCurrencyController.text);
 
-    userSettings = await proton_api.hideEmptyUsedAddresses(hideEmptyUsedAddresses: hideEmptyUsedAddresses);
-    userSettings = await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
+    userSettings = await proton_api.hideEmptyUsedAddresses(
+        hideEmptyUsedAddresses: hideEmptyUsedAddresses);
+    userSettings =
+        await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
     userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
     userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
 
