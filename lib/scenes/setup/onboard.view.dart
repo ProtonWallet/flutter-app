@@ -70,8 +70,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
           children: [
             ButtonV5(
                 onPressed: () {
-                  viewModel.coordinator
-                      .move(ViewIdentifiers.setupCreate, context);
+                  viewModel.move(ViewIdentifiers.setupCreate);
                 },
                 text: S.of(context).create_new_wallet,
                 width: MediaQuery.of(context).size.width,
@@ -80,8 +79,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             SizedBoxes.box12,
             ButtonV5(
                 onPressed: () {
-                  viewModel.coordinator
-                      .move(ViewIdentifiers.importWallet, context);
+                  viewModel.move(ViewIdentifiers.importWallet);
                 },
                 text: S.of(context).import_your_wallet,
                 width: MediaQuery.of(context).size.width,

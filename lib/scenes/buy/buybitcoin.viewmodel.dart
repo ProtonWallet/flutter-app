@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-abstract class BuyBitcoinViewModel extends ViewModel {
+abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   BuyBitcoinViewModel(super.coordinator);
 }
 
@@ -20,4 +22,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

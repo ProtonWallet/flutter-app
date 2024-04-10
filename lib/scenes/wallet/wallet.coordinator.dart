@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
 import 'package:wallet/scenes/history/history.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -14,57 +11,39 @@ import 'package:wallet/scenes/wallet/wallet.viewmodel.dart';
 class WalletCoordinator extends Coordinator {
   late ViewBase widget;
 
+  final int walletID;
+
+  WalletCoordinator(this.walletID);
+
   @override
   void end() {}
 
   @override
-  ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    Map<String, String> map = {
-      "WalletID":
-          (widget as WalletView).viewModel.accountModel.walletID.toString(),
-      "AccountID": (widget as WalletView).viewModel.accountModel.id.toString(),
-    };
-    if (to == ViewIdentifiers.send) {
-      var view = SendCoordinator().start(params: map);
-
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: true,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    } else if (to == ViewIdentifiers.receive) {
-      var view = ReceiveCoordinator().start(params: map);
-
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: true,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    } else if (to == ViewIdentifiers.history) {
-      var view = HistoryCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: true,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    } else if (to == ViewIdentifiers.walletDeletion) {
-      var view = WalletDeletionCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: true,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    }
-    throw UnimplementedError();
-  }
-
-  @override
-  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
-    int walletID = int.parse(params["WalletID"]!);
+  ViewBase<ViewModel> start() {
     var viewModel = WalletViewModelImpl(this, walletID);
     widget = WalletView(
       viewModel,
     );
     return widget;
+  }
+
+  void showSend(int walletID, int accountID) {
+    var view = SendCoordinator(walletID, accountID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showReceive(int walletID, int accountID) {
+    var view = ReceiveCoordinator(walletID, accountID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showHistory(int walletID, int accountID) {
+    var view = HistoryCoordinator(walletID, accountID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showDeletion(int walletID) {
+    var view = WalletDeletionCoordinator(walletID).start();
+    push(view, fullscreenDialog: true);
   }
 }

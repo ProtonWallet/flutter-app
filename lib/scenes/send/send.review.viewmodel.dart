@@ -2,14 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-import '../../helper/dbhelper.dart';
-import '../../helper/logger.dart';
 
 abstract class SendReviewViewModel extends ViewModel {
   SendReviewViewModel(super.coordinator, this.walletID, this.accountID);
@@ -242,4 +243,7 @@ class SendReviewViewModelImpl extends SendReviewViewModel {
     unlockAmountTextController();
     datasourceChangedStreamController.add(this);
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

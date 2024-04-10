@@ -2,14 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
-import '../../helper/dbhelper.dart';
-import '../../helper/logger.dart';
+import 'package:wallet/scenes/send/send.coordinator.dart';
 
 enum TransactionFeeMode {
   highPriority,
@@ -17,7 +19,7 @@ enum TransactionFeeMode {
   lowPriority,
 }
 
-abstract class SendViewModel extends ViewModel {
+abstract class SendViewModel extends ViewModel<SendCoordinator> {
   SendViewModel(super.coordinator, this.walletID, this.accountID);
 
   int walletID;
@@ -112,10 +114,11 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  Future<void> updatePageStatus({required bool inReview}) async{
+  Future<void> updatePageStatus({required bool inReview}) async {
     if (inReview == true) {
       EasyLoading.show(
-          status: "loading bitcoin address..", maskType: EasyLoadingMaskType.black);
+          status: "loading bitcoin address..",
+          maskType: EasyLoadingMaskType.black);
       await loadBitcoinAddresses();
       EasyLoading.dismiss();
     }
@@ -155,10 +158,11 @@ class SendViewModelImpl extends SendViewModel {
       double btcAmount = double.parse(amountTextController.text);
       int amount = (btcAmount * 100000000).round();
       // TODO:: email integration here
-      for (TextEditingController textEditingController in recipientTextControllers) {
+      for (TextEditingController textEditingController
+          in recipientTextControllers) {
         String email = textEditingController.text;
         String bitcoinAddress = "";
-        if (email.contains("@")){
+        if (email.contains("@")) {
           bitcoinAddress = bitcoinAddresses[email] ?? email;
         } else {
           bitcoinAddress = email;
@@ -196,5 +200,10 @@ class SendViewModelImpl extends SendViewModel {
         () {
       updateExchangeRate();
     });
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    // TODO: implement move
   }
 }

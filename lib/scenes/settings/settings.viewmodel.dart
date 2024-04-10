@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/scenes/settings/settings.coordinator.dart';
 
-abstract class SettingsViewModel extends ViewModel {
+abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   SettingsViewModel(super.coordinator);
 
   int selectedPage = 0;
@@ -108,5 +112,17 @@ class SettingsViewModelImpl extends SettingsViewModel {
   Future<void> updateBitcoinUnit(CommonBitcoinUnit symbol) async {
     userSettings = await proton_api.bitcoinUnit(symbol: symbol);
     datasourceChangedStreamController.sink.add(this);
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.welcome:
+        UserSessionProvider().logout();
+        DBHelper.reset();
+        coordinator.logout();
+        break;
+      default:
+    }
   }
 }

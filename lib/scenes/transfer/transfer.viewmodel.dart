@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/proton_api.dart';
 import 'package:wallet/rust/api/rust_objects.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/transfer/transfer.coordinator.dart';
 
-abstract class TransferViewModel extends ViewModel {
+abstract class TransferViewModel extends ViewModel<TransferCoordinator> {
   TransferViewModel(super.coordinator);
 
   int testCode = 0;
@@ -35,4 +37,7 @@ class TransferViewModelImpl extends TransferViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

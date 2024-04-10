@@ -6,10 +6,12 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/scenes/history/history.coordinator.dart';
 
-abstract class HistoryViewModel extends ViewModel {
+abstract class HistoryViewModel extends ViewModel<HistoryCoordinator> {
   HistoryViewModel(super.coordinator, this.walletID, this.accountID);
 
   int walletID;
@@ -74,5 +76,14 @@ class HistoryViewModelImpl extends HistoryViewModel {
   int getAmount(int index) {
     var amount = history[index].received - history[index].sent;
     return amount;
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.historyDetails:
+        coordinator.showHistoryDetails(walletID, accountID, selectedTXID);
+        break;
+    }
   }
 }

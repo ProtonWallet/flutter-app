@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/home/navigation.coordinator.dart';
 
-abstract class HomeNavigationViewModel extends ViewModel {
+abstract class HomeNavigationViewModel
+    extends ViewModel<HomeNavigationCoordinator> {
   HomeNavigationViewModel(super.coordinator);
 
   int selectedPage = 0;
@@ -70,4 +73,7 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
     pageController.jumpToPage(index);
     datasourceChangedStreamController.sink.add(this);
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

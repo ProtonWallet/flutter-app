@@ -5,10 +5,12 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/scenes/receive/receive.coordinator.dart';
 
-abstract class ReceiveViewModel extends ViewModel {
+abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   ReceiveViewModel(super.coordinator, this.walletID, this.accountID);
 
   int walletID;
@@ -103,5 +105,10 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     var addressInfo = await _lib.getAddress(_wallet);
     address = addressInfo.address;
     datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    // TODO: implement move
   }
 }

@@ -13,12 +13,15 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
 
-abstract class SetupPassPhraseViewModel extends ViewModel {
+abstract class SetupPassPhraseViewModel
+    extends ViewModel<SetupPassPhraseCoordinator> {
   SetupPassPhraseViewModel(super.coordinator, this.strMnemonic);
 
   List<Item> itemList = [];
@@ -144,7 +147,9 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     int passphrase = passphraseTextController.text != "" ? 1 : 0;
     String encryptedMnemonic =
         await WalletKeyHelper.encrypt(secretKey, strMnemonic);
-    String walletName = nameTextController.text.isNotEmpty ? nameTextController.text : "New Wallet";
+    String walletName = nameTextController.text.isNotEmpty
+        ? nameTextController.text
+        : "New Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     CreateWalletReq walletReq = CreateWalletReq(
       name: walletName,
@@ -199,5 +204,14 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     String passphrase2 = passphraseTextConfirmController.text;
     // TO-DO: check passphrase is strong enough?
     return passphrase1 == passphrase2;
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.setupReady:
+        coordinator.showSetupReady();
+        break;
+    }
   }
 }
