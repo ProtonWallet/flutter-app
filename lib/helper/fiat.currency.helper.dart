@@ -1,14 +1,14 @@
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
-class FiatCurrencyHelper{
-  static String getText(ApiFiatCurrency apiFiatCurrency){
-    if (apiFiatCurrency == ApiFiatCurrency.eur){
+class FiatCurrencyHelper {
+  static String getText(FiatCurrency apiFiatCurrency) {
+    if (apiFiatCurrency == FiatCurrency.eur) {
       return "EUR €";
     }
-    if (apiFiatCurrency == ApiFiatCurrency.chf){
+    if (apiFiatCurrency == FiatCurrency.chf) {
       return "CHF ₣";
     }
-    if (apiFiatCurrency == ApiFiatCurrency.usd){
+    if (apiFiatCurrency == FiatCurrency.usd) {
       return "USD \$";
     }
     return "Unknown";

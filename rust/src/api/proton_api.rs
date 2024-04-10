@@ -1,14 +1,14 @@
 use andromeda_api::{AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid};
-use chrono::Utc;
 use lazy_static::lazy_static;
 use std::sync::{Arc, RwLock};
+pub use andromeda_api::settings::FiatCurrency;
 
 use crate::proton_api::{
     contacts::ProtonContactEmails,
     errors::ApiError,
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
-    user_settings::{ApiFiatCurrency, ApiUserSettings, CommonBitcoinUnit},
+    user_settings::{ApiUserSettings, CommonBitcoinUnit},
     wallet::{CreateWalletReq, ProtonWallet, WalletData},
     wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
@@ -175,7 +175,7 @@ pub async fn bitcoin_unit(symbol: CommonBitcoinUnit) -> Result<ApiUserSettings, 
     }
 }
 
-pub async fn fiat_currency(symbol: ApiFiatCurrency) -> Result<ApiUserSettings, ApiError> {
+pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api.settings.fiat_currency(symbol.into()).await;
     match result {
@@ -208,7 +208,7 @@ pub async fn hide_empty_used_addresses(
 }
 
 pub async fn get_exchange_rate(
-    fiat_currency: ApiFiatCurrency,
+    fiat_currency: FiatCurrency,
     time: Option<u64>,
 ) -> Result<ProtonExchangeRate, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();

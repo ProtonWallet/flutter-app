@@ -80,9 +80,9 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                   ProtonColors.textNorm)),
                           TextChoices(
                               choices: [
-                                ApiFiatCurrency.usd.name.toUpperCase(),
-                                ApiFiatCurrency.eur.name.toUpperCase(),
-                                ApiFiatCurrency.chf.name.toUpperCase(),
+                                FiatCurrency.usd.name.toUpperCase(),
+                                FiatCurrency.eur.name.toUpperCase(),
+                                FiatCurrency.chf.name.toUpperCase(),
                               ],
                               selectedValue:
                                   viewModel.faitCurrencyController.text,

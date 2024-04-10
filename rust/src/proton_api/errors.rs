@@ -29,6 +29,7 @@ impl From<Error> for ApiError {
             }
             Error::SerializeError => ApiError::Generic("Serialization error occurred".to_string()),
             Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
+            Error::ErrorCode(error) => ApiError::Generic(format!("Response Code:{} Details:{}", error.code, error.details)),
         }
     }
 }

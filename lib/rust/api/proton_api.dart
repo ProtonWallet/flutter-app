@@ -90,7 +90,7 @@ Future<ApiUserSettings> bitcoinUnit(
     RustLib.instance.api.bitcoinUnit(symbol: symbol, hint: hint);
 
 Future<ApiUserSettings> fiatCurrency(
-        {required ApiFiatCurrency symbol, dynamic hint}) =>
+        {required FiatCurrency symbol, dynamic hint}) =>
     RustLib.instance.api.fiatCurrency(symbol: symbol, hint: hint);
 
 Future<ApiUserSettings> twoFaThreshold({required int amount, dynamic hint}) =>
@@ -102,7 +102,7 @@ Future<ApiUserSettings> hideEmptyUsedAddresses(
         hideEmptyUsedAddresses: hideEmptyUsedAddresses, hint: hint);
 
 Future<ProtonExchangeRate> getExchangeRate(
-        {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint}) =>
+        {required FiatCurrency fiatCurrency, int? time, dynamic hint}) =>
     RustLib.instance.api
         .getExchangeRate(fiatCurrency: fiatCurrency, time: time, hint: hint);
 

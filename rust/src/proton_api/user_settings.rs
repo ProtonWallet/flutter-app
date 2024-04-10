@@ -1,32 +1,104 @@
-use andromeda_api::settings::FiatCurrency;
+pub use andromeda_api::settings::FiatCurrency;
 use andromeda_api::settings::UserSettings;
 use andromeda_common::BitcoinUnit;
+use flutter_rust_bridge::frb;
 
-#[derive(Debug)]
-pub enum ApiFiatCurrency {
-    USD,
+
+#[frb(mirror(FiatCurrency))]
+pub enum _FiatCurrency {
+    ALL,
+    DZD,
+    ARS,
+    AMD,
+    AUD,
+    AZN,
+    BHD,
+    BDT,
+    BYN,
+    BMD,
+    BOB,
+    BAM,
+    BRL,
+    BGN,
+    KHR,
+    CAD,
+    CLP,
+    CNY,
+    COP,
+    CRC,
+    HRK,
+    CUP,
+    CZK,
+    DKK,
+    DOP,
+    EGP,
     EUR,
+    GEL,
+    GHS,
+    GTQ,
+    HNL,
+    HKD,
+    HUF,
+    ISK,
+    INR,
+    IDR,
+    IRR,
+    IQD,
+    ILS,
+    JMD,
+    JPY,
+    JOD,
+    KZT,
+    KES,
+    KWD,
+    KGS,
+    LBP,
+    MKD,
+    MYR,
+    MUR,
+    MXN,
+    MDL,
+    MNT,
+    MAD,
+    MMK,
+    NAD,
+    NPR,
+    TWD,
+    NZD,
+    NIO,
+    NGN,
+    NOK,
+    OMR,
+    PKR,
+    PAB,
+    PEN,
+    PHP,
+    PLN,
+    GBP,
+    QAR,
+    RON,
+    RUB,
+    SAR,
+    RSD,
+    SGD,
+    ZAR,
+    KRW,
+    SSP,
+    VES,
+    LKR,
+    SEK,
     CHF,
-}
-
-impl From<FiatCurrency> for ApiFiatCurrency {
-    fn from(value: FiatCurrency) -> Self {
-        match value {
-            FiatCurrency::USD => ApiFiatCurrency::USD,
-            FiatCurrency::EUR => ApiFiatCurrency::EUR,
-            FiatCurrency::CHF => ApiFiatCurrency::CHF,
-        }
-    }
-}
-
-impl From<ApiFiatCurrency> for FiatCurrency {
-    fn from(value: ApiFiatCurrency) -> Self {
-        match value {
-            ApiFiatCurrency::USD => FiatCurrency::USD,
-            ApiFiatCurrency::EUR => FiatCurrency::EUR,
-            ApiFiatCurrency::CHF => FiatCurrency::CHF,
-        }
-    }
+    THB,
+    TTD,
+    TND,
+    TRY,
+    UGX,
+    UAH,
+    AED,
+    USD,
+    UYU,
+    UZS,
+    VND,
 }
 
 #[derive(Debug)]
@@ -62,7 +134,7 @@ impl From<CommonBitcoinUnit> for BitcoinUnit {
 #[derive(Debug)]
 pub struct ApiUserSettings {
     pub bitcoin_unit: CommonBitcoinUnit,
-    pub fiat_currency: ApiFiatCurrency,
+    pub fiat_currency: FiatCurrency,
     pub hide_empty_used_addresses: u8,
     pub show_wallet_recovery: u8,
     pub two_factor_amount_threshold: Option<u64>,

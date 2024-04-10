@@ -115,12 +115,12 @@ abstract class RustLibApi extends BaseApi {
       dynamic hint});
 
   Future<ApiUserSettings> fiatCurrency(
-      {required ApiFiatCurrency symbol, dynamic hint});
+      {required FiatCurrency symbol, dynamic hint});
 
   Future<List<ProtonContactEmails>> getContacts({dynamic hint});
 
   Future<ProtonExchangeRate> getExchangeRate(
-      {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint});
+      {required FiatCurrency fiatCurrency, int? time, dynamic hint});
 
   Future<String> getLatestEventId({dynamic hint});
 
@@ -744,11 +744,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<ApiUserSettings> fiatCurrency(
-      {required ApiFiatCurrency symbol, dynamic hint}) {
+      {required FiatCurrency symbol, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_api_fiat_currency(symbol, serializer);
+        sse_encode_fiat_currency(symbol, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 19, port: port_);
       },
@@ -794,11 +794,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<ProtonExchangeRate> getExchangeRate(
-      {required ApiFiatCurrency fiatCurrency, int? time, dynamic hint}) {
+      {required FiatCurrency fiatCurrency, int? time, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_api_fiat_currency(fiatCurrency, serializer);
+        sse_encode_fiat_currency(fiatCurrency, serializer);
         sse_encode_opt_box_autoadd_u_64(time, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 22, port: port_);
@@ -3301,12 +3301,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ApiFiatCurrency dco_decode_api_fiat_currency(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ApiFiatCurrency.values[raw as int];
-  }
-
-  @protected
   ApiUserSettings dco_decode_api_user_settings(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -3314,7 +3308,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return ApiUserSettings(
       bitcoinUnit: dco_decode_common_bitcoin_unit(arr[0]),
-      fiatCurrency: dco_decode_api_fiat_currency(arr[1]),
+      fiatCurrency: dco_decode_fiat_currency(arr[1]),
       hideEmptyUsedAddresses: dco_decode_u_8(arr[2]),
       showWalletRecovery: dco_decode_u_8(arr[3]),
       twoFactorAmountThreshold: dco_decode_opt_box_autoadd_u_64(arr[4]),
@@ -3766,6 +3760,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FiatCurrency dco_decode_fiat_currency(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FiatCurrency.values[raw as int];
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -4113,7 +4113,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return ProtonExchangeRate(
       id: dco_decode_String(arr[0]),
       bitcoinUnit: dco_decode_common_bitcoin_unit(arr[1]),
-      fiatCurrency: dco_decode_api_fiat_currency(arr[2]),
+      fiatCurrency: dco_decode_fiat_currency(arr[2]),
       exchangeRateTime: dco_decode_String(arr[3]),
       exchangeRate: dco_decode_u_64(arr[4]),
       cents: dco_decode_u_64(arr[5]),
@@ -4557,17 +4557,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ApiFiatCurrency sse_decode_api_fiat_currency(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_i_32(deserializer);
-    return ApiFiatCurrency.values[inner];
-  }
-
-  @protected
   ApiUserSettings sse_decode_api_user_settings(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_bitcoinUnit = sse_decode_common_bitcoin_unit(deserializer);
-    var var_fiatCurrency = sse_decode_api_fiat_currency(deserializer);
+    var var_fiatCurrency = sse_decode_fiat_currency(deserializer);
     var var_hideEmptyUsedAddresses = sse_decode_u_8(deserializer);
     var var_showWalletRecovery = sse_decode_u_8(deserializer);
     var var_twoFactorAmountThreshold =
@@ -5021,6 +5014,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double sse_decode_f_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getFloat32();
+  }
+
+  @protected
+  FiatCurrency sse_decode_fiat_currency(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return FiatCurrency.values[inner];
   }
 
   @protected
@@ -5578,7 +5578,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
     var var_bitcoinUnit = sse_decode_common_bitcoin_unit(deserializer);
-    var var_fiatCurrency = sse_decode_api_fiat_currency(deserializer);
+    var var_fiatCurrency = sse_decode_fiat_currency(deserializer);
     var var_exchangeRateTime = sse_decode_String(deserializer);
     var var_exchangeRate = sse_decode_u_64(deserializer);
     var var_cents = sse_decode_u_64(deserializer);
@@ -5986,18 +5986,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_api_fiat_currency(
-      ApiFiatCurrency self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.index, serializer);
-  }
-
-  @protected
   void sse_encode_api_user_settings(
       ApiUserSettings self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_common_bitcoin_unit(self.bitcoinUnit, serializer);
-    sse_encode_api_fiat_currency(self.fiatCurrency, serializer);
+    sse_encode_fiat_currency(self.fiatCurrency, serializer);
     sse_encode_u_8(self.hideEmptyUsedAddresses, serializer);
     sse_encode_u_8(self.showWalletRecovery, serializer);
     sse_encode_opt_box_autoadd_u_64(self.twoFactorAmountThreshold, serializer);
@@ -6409,6 +6402,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_f_32(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putFloat32(self);
+  }
+
+  @protected
+  void sse_encode_fiat_currency(FiatCurrency self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -6882,7 +6881,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.id, serializer);
     sse_encode_common_bitcoin_unit(self.bitcoinUnit, serializer);
-    sse_encode_api_fiat_currency(self.fiatCurrency, serializer);
+    sse_encode_fiat_currency(self.fiatCurrency, serializer);
     sse_encode_String(self.exchangeRateTime, serializer);
     sse_encode_u_64(self.exchangeRate, serializer);
     sse_encode_u_64(self.cents, serializer);
