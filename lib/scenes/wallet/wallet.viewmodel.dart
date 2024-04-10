@@ -9,6 +9,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -16,8 +17,9 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/wallet/wallet.coordinator.dart';
 
-abstract class WalletViewModel extends ViewModel {
+abstract class WalletViewModel extends ViewModel<WalletCoordinator> {
   List accounts = [];
   int walletID;
   bool initialed = false;
@@ -173,6 +175,24 @@ class WalletViewModelImpl extends WalletViewModel {
           await WalletManager.loadWalletWithID(walletID, accountModel.id!);
       totalBalance += (await wallet.getBalance()).total;
       datasourceChangedStreamController.sink.add(this);
+    }
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.send:
+        coordinator.showSend(accountModel.walletID, accountModel.id ?? 0);
+        break;
+      case ViewIdentifiers.receive:
+        coordinator.showReceive(accountModel.walletID, accountModel.id ?? 0);
+        break;
+      case ViewIdentifiers.history:
+        coordinator.showHistory(accountModel.walletID, accountModel.id ?? 0);
+        break;
+      case ViewIdentifiers.walletDeletion:
+        coordinator.showDeletion(accountModel.walletID);
+        break;
     }
   }
 }

@@ -199,7 +199,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator.move(ViewIdentifiers.send, context);
+                      viewModel.move(ViewIdentifiers.send);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
@@ -221,8 +221,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.receive, context);
+                      viewModel.move(ViewIdentifiers.receive);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
@@ -290,8 +289,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.history, context);
+                      viewModel.move(ViewIdentifiers.history);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),
@@ -313,8 +311,7 @@ class WalletView extends ViewBase<WalletViewModel> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.walletDeletion, context);
+                      viewModel.move(ViewIdentifiers.walletDeletion);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6D4AFF), elevation: 0),

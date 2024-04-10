@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/login/login.coordinator.dart';
 
-abstract class LoginViewModel extends ViewModel {
+abstract class LoginViewModel extends ViewModel<LoginCoordinator> {
   LoginViewModel(super.coordinator);
 }
 
@@ -20,4 +22,7 @@ class LoginViewModelImpl extends LoginViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

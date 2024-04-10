@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/debug/websocket.coordinator.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-abstract class WebSocketViewModel extends ViewModel {
+abstract class WebSocketViewModel extends ViewModel<WebSocketCoordinator> {
   WebSocketViewModel(super.coordinator);
 
   late WebSocketChannel channel;
@@ -40,4 +42,7 @@ class WebSocketViewModelImpl extends WebSocketViewModel {
       channel.sink.add(textController.text);
     }
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

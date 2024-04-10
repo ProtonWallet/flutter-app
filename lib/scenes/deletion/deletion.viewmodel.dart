@@ -5,11 +5,14 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
 
-abstract class WalletDeletionViewModel extends ViewModel {
+abstract class WalletDeletionViewModel
+    extends ViewModel<WalletDeletionCoordinator> {
   WalletDeletionViewModel(super.coordinator, this.walletID);
 
   int walletID;
@@ -57,4 +60,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

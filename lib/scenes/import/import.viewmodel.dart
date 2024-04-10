@@ -13,9 +13,11 @@ import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/import/import.coordinator.dart';
 
-abstract class ImportViewModel extends ViewModel {
+abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   ImportViewModel(super.coordinator);
 
   late TextEditingController mnemonicTextController;
@@ -105,4 +107,7 @@ class ImportViewModelImpl extends ImportViewModel {
     await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
         ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

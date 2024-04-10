@@ -13,10 +13,6 @@ class HistoryView extends ViewBase<HistoryViewModel> {
   HistoryView(HistoryViewModel viewModel)
       : super(viewModel, const Key("HistoryView"));
 
-  Future<void> goDetails(BuildContext context) async {
-    viewModel.coordinator.move(ViewIdentifiers.historyDetails, context);
-  }
-
   @override
   Widget buildWithViewModel(
       BuildContext context, HistoryViewModel viewModel, ViewSize viewSize) {
@@ -73,7 +69,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
             timestamp: viewModel.history[index].confirmationTime!.timestamp,
             onTap: () {
               viewModel.selectedTXID = viewModel.history[index].txid;
-              goDetails(context);
+              viewModel.move(ViewIdentifiers.historyDetails);
             },
           );
         });

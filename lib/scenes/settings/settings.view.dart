@@ -186,8 +186,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     margin: const EdgeInsets.symmetric(vertical: 30),
                     child: ButtonV5(
                         onPressed: () {
-                          viewModel.coordinator
-                              .move(ViewIdentifiers.welcome, context);
+                          viewModel.move(ViewIdentifiers.welcome);
                         },
                         text: S.of(context).logout.toUpperCase(),
                         width: MediaQuery.of(context).size.width,

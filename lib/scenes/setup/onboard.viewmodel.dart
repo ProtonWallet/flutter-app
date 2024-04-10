@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 
-abstract class SetupOnboardViewModel extends ViewModel {
+abstract class SetupOnboardViewModel
+    extends ViewModel<SetupOnbaordCoordinator> {
   SetupOnboardViewModel(super.coordinator);
   bool hasAccount = false;
-
-  void goHome();
 }
 
 class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
@@ -27,11 +28,18 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
   }
 
   @override
-  void goHome() {
-    // coordinator.move(to, context);
-  }
-
-  @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.setupCreate:
+        coordinator.showSetupCreate();
+        break;
+      case ViewIdentifiers.importWallet:
+        coordinator.showImportWallet();
+        break;
+    }
+  }
 }

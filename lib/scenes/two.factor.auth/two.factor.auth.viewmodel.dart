@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/two_factor_auth_helper.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-// import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class TwoFactorAuthViewModel extends ViewModel {
   TwoFactorAuthViewModel(super.coordinator);
@@ -64,4 +64,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

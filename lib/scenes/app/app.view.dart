@@ -7,16 +7,16 @@ import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 class AppView extends ViewBase<AppViewModel> {
-  AppView(AppViewModel viewModel, this.homeView)
+  AppView(AppViewModel viewModel, this.rootView)
       : super(viewModel, const Key("AppView"));
-  final Widget homeView;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final Widget rootView;
 
   @override
   Widget buildWithViewModel(
@@ -34,55 +34,55 @@ class AppView extends ViewBase<AppViewModel> {
       child: Consumer2<ThemeProvider, LocaleProvider>(builder: (context,
           ThemeProvider themeProvider, LocaleProvider localeProvider, child) {
         return MaterialApp(
-            debugShowMaterialGrid: false,
-            showSemanticsDebugger: false,
-            debugShowCheckedModeBanner: kDebugMode,
-            title: "Proton Wallet",
-            onGenerateTitle: (context) {
-              return S.of(context).app_name;
-            },
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', ''),
-              ...S.supportedLocales,
-            ],
-            localeResolutionCallback: (locale, supportLocales) {
-              if (locale?.languageCode == 'zh') {
-                if (locale?.scriptCode == 'Hant') {
-                  return const Locale('zh', 'HK'); //tranditional
-                } else {
-                  return const Locale('zh', 'CN'); //simplified
-                }
+          debugShowMaterialGrid: false,
+          showSemanticsDebugger: false,
+          debugShowCheckedModeBanner: kDebugMode,
+          title: "Proton Wallet",
+          onGenerateTitle: (context) {
+            return S.of(context).app_name;
+          },
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+            ...S.supportedLocales,
+          ],
+          localeResolutionCallback: (locale, supportLocales) {
+            if (locale?.languageCode == 'zh') {
+              if (locale?.scriptCode == 'Hant') {
+                return const Locale('zh', 'HK'); //tranditional
+              } else {
+                return const Locale('zh', 'CN'); //simplified
               }
-              return null;
-            },
-            locale: Provider.of<LocaleProvider>(context, listen: false).locale,
-            theme: ThemeData(
-              colorScheme:
-                  ThemeData(brightness: Brightness.light).colorScheme.copyWith(
-                        primary: ProtonColors.textNorm,
-                        surface: ProtonColors.surfaceLight,
-                      ),
-              useMaterial3: true,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            themeMode: themeProvider.getThemeMode(
-                Provider.of<ThemeProvider>(context, listen: false).themeMode),
-            darkTheme: ThemeData(brightness: Brightness.dark),
-            initialRoute: '/',
-            routes: <String, WidgetBuilder>{
-              '/': (BuildContext context) => homeView,
-            },
-            builder: EasyLoading.init(builder: FToastBuilder()),
-            navigatorKey: navigatorKey
-            // home: homeView,
-            // routes: ["/", homeView],
-            );
+            }
+            return null;
+          },
+          locale: Provider.of<LocaleProvider>(context, listen: false).locale,
+          theme: ThemeData(
+            colorScheme:
+                ThemeData(brightness: Brightness.light).colorScheme.copyWith(
+                      primary: ProtonColors.textNorm,
+                      surface: ProtonColors.surfaceLight,
+                    ),
+            useMaterial3: true,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          themeMode: themeProvider.getThemeMode(
+              Provider.of<ThemeProvider>(context, listen: false).themeMode),
+          darkTheme: ThemeData(brightness: Brightness.dark),
+          initialRoute: '/',
+          routes: <String, WidgetBuilder>{
+            '/': (BuildContext context) => rootView,
+          },
+          builder: EasyLoading.init(builder: FToastBuilder()),
+          navigatorKey: Coordinator.navigatorKey,
+          // home: homeView,
+          // routes: ["/", homeView],
+        );
       }),
     );
   }

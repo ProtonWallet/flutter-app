@@ -195,8 +195,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             ProtonColors.textNorm))),
                 GestureDetector(
                     onTap: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.setupOnboard, context);
+                      viewModel.move(ViewIdentifiers.setupOnboard);
                     },
                     child: Padding(
                         padding: const EdgeInsets.only(left: 26.0, right: 26.0),
@@ -226,8 +225,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           .wallet_decryption_error_message);
                                 } else {
                                   viewModel.setSelectedWallet(wallet.id ?? 0);
-                                  viewModel.coordinator
-                                      .move(ViewIdentifiers.wallet, context);
+                                  viewModel.move(ViewIdentifiers.wallet);
                                 }
                               },
                               child: Container(
@@ -356,8 +354,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           GestureDetector(
                               onTap: () {
                                 // viewModel.mailIntegration();
-                                viewModel.coordinator
-                                    .move(ViewIdentifiers.mailList, context);
+                                viewModel.move(ViewIdentifiers.mailList);
                               },
                               child: Container(
                                 constraints: const BoxConstraints(
@@ -421,7 +418,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () {
-                viewModel.coordinator.move(ViewIdentifiers.send, context);
+                viewModel.move(ViewIdentifiers.send);
               },
               text: S.of(context).send_button,
               width: MediaQuery.of(context).size.width - 52,
@@ -435,7 +432,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () {
-                viewModel.coordinator.move(ViewIdentifiers.receive, context);
+                viewModel.move(ViewIdentifiers.receive);
               },
               text: S.of(context).receive_button,
               width: MediaQuery.of(context).size.width - 52,
@@ -653,8 +650,7 @@ void showWalletMoreDialog(
                             Navigator.of(context).pop();
                           }
                           viewModel.setSelectedWallet(walletModel.id ?? 0);
-                          viewModel.coordinator
-                              .move(ViewIdentifiers.walletDeletion, context);
+                          viewModel.move(ViewIdentifiers.walletDeletion);
                         },
                       ),
                     ],
@@ -717,8 +713,7 @@ void showWalletMoreDialog(
                               Navigator.of(context).pop();
                             }
                             viewModel.setSelectedWallet(walletModel.id ?? 0);
-                            viewModel.coordinator
-                                .move(ViewIdentifiers.walletDeletion, context);
+                            viewModel.move(ViewIdentifiers.walletDeletion);
                           },
                         )
                       ])

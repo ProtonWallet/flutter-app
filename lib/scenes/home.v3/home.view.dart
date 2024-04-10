@@ -134,8 +134,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                       context, "Please select your wallet first",
                       icon: null);
                 } else {
-                  viewModel.coordinator
-                      .move(ViewIdentifiers.setupBackup, context);
+                  viewModel.move(ViewIdentifiers.setupBackup);
                 }
               }),
           CustomTodos(
@@ -247,8 +246,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               context, "Please select your wallet first",
                               icon: null);
                         } else {
-                          viewModel.coordinator
-                              .move(ViewIdentifiers.send, context);
+                          viewModel.move(ViewIdentifiers.send);
                         }
                       },
                     ),
@@ -265,8 +263,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               context, "Please select your wallet first",
                               icon: null);
                         } else {
-                          viewModel.coordinator
-                              .move(ViewIdentifiers.receive, context);
+                          viewModel.move(ViewIdentifiers.receive);
                         }
                       },
                     ),
@@ -345,8 +342,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 timestamp: viewModel.history[index].confirmationTime!.timestamp,
                 onTap: () {
                   viewModel.selectedTXID = viewModel.history[index].txid;
-                  viewModel.coordinator
-                      .move(ViewIdentifiers.historyDetails, context);
+                  viewModel.move(ViewIdentifiers.historyDetails);
                 },
               )
           ]),
@@ -597,7 +593,7 @@ void showEmailIntegrationSettingGuide(
                                 horizontal: defaultButtonPadding),
                             child: Column(children: [
                               ButtonV5(
-                                  onPressed: () async{
+                                  onPressed: () async {
                                     EasyLoading.show(
                                         status: "adding email..",
                                         maskType: EasyLoadingMaskType.black);
@@ -857,8 +853,7 @@ Widget buildWalletPreference(BuildContext context, HomeViewModel viewModel) {
                   height: 48,
                   onPressed: () {
                     viewModel.currentWallet = viewModel.walletForPreference;
-                    viewModel.coordinator
-                        .move(ViewIdentifiers.setupBackup, context);
+                    viewModel.move(ViewIdentifiers.setupBackup);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -871,8 +866,7 @@ Widget buildWalletPreference(BuildContext context, HomeViewModel viewModel) {
                   height: 48,
                   onPressed: () {
                     viewModel.currentWallet = viewModel.walletForPreference;
-                    viewModel.coordinator
-                        .move(ViewIdentifiers.walletDeletion, context);
+                    viewModel.move(ViewIdentifiers.walletDeletion);
                   },
                 ),
                 const SizedBox(height: 20),
@@ -1016,8 +1010,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: ButtonV5(
                     onPressed: () {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.twoFactorAuthSetup, context);
+                      viewModel.move(ViewIdentifiers.twoFactorAuthSetup);
                     },
                     text: S.of(context).setting_2fa_setup,
                     width: MediaQuery.of(context).size.width,
@@ -1048,8 +1041,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
               margin: const EdgeInsets.symmetric(vertical: 30),
               child: ButtonV5(
                   onPressed: () {
-                    viewModel.coordinator
-                        .move(ViewIdentifiers.welcome, context);
+                    viewModel.logout();
                   },
                   text: S.of(context).logout.toUpperCase(),
                   width: MediaQuery.of(context).size.width,
@@ -1156,7 +1148,7 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
             textStyle: FontManager.body1Median(ProtonColors.textNorm),
             height: 48,
             onPressed: () {
-              viewModel.coordinator.move(ViewIdentifiers.setupOnboard, context);
+              viewModel.move(ViewIdentifiers.setupOnboard);
             },
           )),
     ],

@@ -15,6 +15,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/transaction.model.dart';
@@ -29,6 +30,7 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 enum WalletDrawerStatus {
   close,
@@ -36,7 +38,7 @@ enum WalletDrawerStatus {
   openWalletPreference,
 }
 
-abstract class HomeViewModel extends ViewModel {
+abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   HomeViewModel(super.coordinator);
 
   int selectedPage = 0;
@@ -163,6 +165,8 @@ abstract class HomeViewModel extends ViewModel {
 
   @override
   bool get keepAlive => true;
+
+  void logout();
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -448,7 +452,7 @@ class HomeViewModelImpl extends HomeViewModel {
   void setOnBoard(BuildContext context) {
     hasWallet = true;
     Future.delayed(const Duration(milliseconds: 100), () {
-      coordinator.move(ViewIdentifiers.setupOnboard, context);
+      coordinator.showSetupOnbaord();
       datasourceStreamSinkAdd();
     });
   }
@@ -729,5 +733,53 @@ class HomeViewModelImpl extends HomeViewModel {
       WalletManager.deleteAddress(addressID);
     }
     await loadIntegratedAddresses();
+  }
+
+  @override
+  void logout() {
+    UserSessionProvider().logout();
+    DBHelper.reset();
+    coordinator.logout();
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.wallet:
+        coordinator.showWallet(currentWallet?.id ?? 0);
+        break;
+      case ViewIdentifiers.setupOnboard:
+        coordinator.showSetupOnbaord();
+        break;
+      case ViewIdentifiers.send:
+        coordinator.showSend(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        break;
+      case ViewIdentifiers.receive:
+        coordinator.showReceive(
+            currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        break;
+      case ViewIdentifiers.testWebsocket:
+        coordinator.showWebSocket();
+        break;
+      case ViewIdentifiers.mailList:
+        coordinator.showMailList();
+        break;
+      case ViewIdentifiers.welcome:
+        coordinator.logout();
+        break;
+      case ViewIdentifiers.walletDeletion:
+        coordinator.showWalletDeletion(currentWallet?.id ?? 0);
+        break;
+      case ViewIdentifiers.historyDetails:
+        coordinator.showHistoryDetails(
+            currentWallet?.id ?? 0, currentAccount?.id ?? 0, selectedTXID);
+        break;
+      case ViewIdentifiers.twoFactorAuthSetup:
+        coordinator.showTwoFactorAuthSetup();
+        break;
+      case ViewIdentifiers.twoFactorAuthDisable:
+        coordinator.showTwoFactorAuthDisable();
+        break;
+    }
   }
 }

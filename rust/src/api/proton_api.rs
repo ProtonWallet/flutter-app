@@ -181,7 +181,7 @@ pub async fn bitcoin_unit(symbol: CommonBitcoinUnit) -> Result<ApiUserSettings, 
 
 pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result = proton_api.settings.fiat_currency(symbol.into()).await;
+    let result = proton_api.settings.fiat_currency(symbol).await;
     match result {
         Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),
@@ -218,7 +218,7 @@ pub async fn get_exchange_rate(
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .exchange_rate
-        .get_exchange_rate(fiat_currency.into(), time)
+        .get_exchange_rate(fiat_currency, time)
         .await;
     match result {
         Ok(response) => Ok(response.into()),

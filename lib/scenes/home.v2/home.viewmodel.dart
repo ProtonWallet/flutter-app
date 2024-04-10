@@ -18,8 +18,9 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
-abstract class HomeViewModel extends ViewModel {
+abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   HomeViewModel(super.coordinator);
 
   int selectedPage = 0;
@@ -129,7 +130,7 @@ class HomeViewModelImpl extends HomeViewModel {
   void setOnBoard(BuildContext context) {
     hasWallet = true;
     Future.delayed(const Duration(milliseconds: 100), () {
-      coordinator.move(ViewIdentifiers.setupOnboard, context);
+      coordinator.showSetupOnbaord();
       datasourceChangedStreamController.sink.add(this);
     });
   }
@@ -247,4 +248,7 @@ class HomeViewModelImpl extends HomeViewModel {
   void setSelectedWallet(int walletID) {
     selectedWalletID = walletID;
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

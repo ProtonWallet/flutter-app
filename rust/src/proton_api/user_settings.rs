@@ -100,6 +100,7 @@ pub enum _FiatCurrency {
     VND,
 }
 
+// TODO:: use frb - mirror
 #[derive(Debug)]
 pub enum CommonBitcoinUnit {
     /// 100,000,000 sats
@@ -143,7 +144,7 @@ impl From<UserSettings> for ApiUserSettings {
     fn from(value: UserSettings) -> Self {
         ApiUserSettings {
             bitcoin_unit: value.BitcoinUnit.into(),
-            fiat_currency: value.FiatCurrency.into(),
+            fiat_currency: value.FiatCurrency,
             hide_empty_used_addresses: value.HideEmptyUsedAddresses,
             show_wallet_recovery: value.ShowWalletRecovery,
             two_factor_amount_threshold: value.TwoFactorAmountThreshold,
@@ -155,7 +156,7 @@ impl From<ApiUserSettings> for UserSettings {
     fn from(value: ApiUserSettings) -> Self {
         UserSettings {
             BitcoinUnit: value.bitcoin_unit.into(),
-            FiatCurrency: value.fiat_currency.into(),
+            FiatCurrency: value.fiat_currency,
             HideEmptyUsedAddresses: value.hide_empty_used_addresses,
             ShowWalletRecovery: value.show_wallet_recovery,
             TwoFactorAmountThreshold: value.two_factor_amount_threshold,
