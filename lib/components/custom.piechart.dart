@@ -78,7 +78,7 @@ class CustomPieChartState extends State<CustomPieChart> {
                     color: CustomPieChart.colors[i],
                     text: widget.data[i].name,
                     isSquare: true,
-                    textColor: Theme.of(context).colorScheme.secondary,
+                    textColor: ProtonColors.textWeak,
                   ),
                   const SizedBox(
                     width: 12,

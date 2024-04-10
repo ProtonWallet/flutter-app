@@ -20,13 +20,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   Widget buildWithViewModel(BuildContext context,
       HistoryDetailViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: ProtonColors.backgroundProton,
         title: Text(S.of(context).trans_details),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -49,7 +50,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: ProtonColors.wMajor1,
                         ),
@@ -91,10 +92,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       children: [
                         Text(S.of(context).trans_submitted,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         Text(parsetime(viewModel.submitTimestamp),
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                       ]),
                 ),
                 Container(
@@ -105,10 +106,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       children: [
                         Text(S.of(context).trans_completed,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         Text(parsetime(viewModel.completeTimestamp),
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                       ]),
                 ),
                 Container(
@@ -119,7 +120,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       children: [
                         Text(S.of(context).trans_amount,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         Row(children: [
                           Text(
                               viewModel.isSend
@@ -136,7 +137,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                       .of(context)
                                       .transaction_sats(viewModel.amount.abs()),
                               style: FontManager.captionMedian(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                         ])
                       ]),
                 ),
@@ -148,7 +149,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       children: [
                         Text(S.of(context).trans_metworkFee,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         Row(children: [
                           Text(
                               "\$${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
@@ -157,7 +158,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           const SizedBox(width: 8),
                           Text(S.of(context).transaction_sats(viewModel.fee),
                               style: FontManager.captionMedian(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                         ])
                       ]),
                 ),
@@ -169,7 +170,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       children: [
                         Text(S.of(context).trans_total,
                             style: FontManager.captionMedian(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         Row(children: [
                           Text(
                               viewModel.isSend
@@ -183,7 +184,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                   ? "${viewModel.amount.abs()} SAT"
                                   : "${viewModel.amount.abs() + viewModel.fee} SAT",
                               style: FontManager.captionMedian(
-                                  Theme.of(context).colorScheme.primary)),
+                                  ProtonColors.textNorm)),
                         ])
                       ]),
                 ),
@@ -195,7 +196,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         children: [
                           Text(S.of(context).trans_userLable,
                               style: FontManager.captionMedian(
-                                  Theme.of(context).colorScheme.primary))
+                                  ProtonColors.textNorm))
                         ])),
                 Container(
                     margin: const EdgeInsets.only(bottom: 8.0),
@@ -219,7 +220,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     backgroundColor: ProtonColors.surfaceLight,
                     borderColor: const Color.fromARGB(255, 226, 226, 226),
                     textStyle: FontManager.body1Median(
-                        Theme.of(context).colorScheme.primary),
+                        ProtonColors.textNorm),
                     height: 48),
               ],
             )));
@@ -239,11 +240,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 children: [
                   Text(S.of(context).trans_from,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary)),
+                          ProtonColors.textNorm)),
                   Row(children: [
-                    TagText(text: viewModel.strWallet),
+                    TagText(text: viewModel.strWallet, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,),
                     const SizedBox(width: 4),
-                    TagText(text: viewModel.strAccount)
+                    TagText(text: viewModel.strAccount, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,)
                   ])
                 ])),
         Container(
@@ -254,8 +255,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 children: [
                   Text(S.of(context).trans_to,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary)),
-                  TagText(text: viewModel.address)
+                          ProtonColors.textNorm)),
+                  TagText(text: viewModel.address, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,)
                 ])),
       ],
     );
@@ -275,7 +276,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 children: [
                   Text(S.of(context).trans_from,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary)),
+                          ProtonColors.textNorm)),
                   TagText(text: viewModel.address)
                 ])),
         Container(
@@ -286,7 +287,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 children: [
                   Text(S.of(context).trans_to,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary)),
+                          ProtonColors.textNorm)),
                   Row(children: [
                     TagText(text: viewModel.strWallet),
                     const SizedBox(width: 4),

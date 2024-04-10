@@ -20,13 +20,21 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+
+enum WalletDrawerStatus {
+  close,
+  openSetting,
+  openWalletPreference,
+}
 
 abstract class HomeViewModel extends ViewModel {
   HomeViewModel(super.coordinator);
@@ -53,15 +61,28 @@ abstract class HomeViewModel extends ViewModel {
   bool isFetching = false;
   bool isShowingNoInternet = false;
   List userAccounts = [];
+  List<ProtonAddress> protonAddresses = [];
+  List<String> integratedEmailIDs = [];
+  WalletModel? currentWallet;
+  WalletModel? walletForPreference;
+  List userAccountsForPreference = [];
+
+  AccountModel? currentAccount;
+  ValueNotifier? accountNotifier;
+  ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
+      ValueNotifier(FiatCurrency.chf);
+  late ValueNotifier<ProtonAddress> emailIntegrationNotifier;
+  bool emailIntegrationEnable = false;
   List<FiatCurrency> fiatCurrencies = [
     FiatCurrency.usd,
     FiatCurrency.eur,
     FiatCurrency.chf
   ];
-  WalletModel? currentWallet;
-  AccountModel? currentAccount;
-  ValueNotifier? accountNotifier;
-  ValueNotifier fiatCurrencyNotifier = ValueNotifier(FiatCurrency.chf);
+
+  late ValueNotifier accountValueNotifierForPreference;
+
+  TextEditingController walletPreferenceTextEditingController =
+      TextEditingController(text: "");
 
   bool initialed = false;
   bool protonApiSessionError = false;
@@ -96,7 +117,7 @@ abstract class HomeViewModel extends ViewModel {
 
   void selectWallet(int walletID);
 
-  void checkAccounts();
+  Future<void> checkAccounts();
 
   void updateBtcPrice();
 
@@ -104,15 +125,34 @@ abstract class HomeViewModel extends ViewModel {
 
   void updateFiatCurrency(FiatCurrency fiatCurrency);
 
+  Future<void> updateEmailIntegration();
+
   void syncWallet();
 
   void checkPreference();
+
+  void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
+
+  void openWalletPreference(int walletID);
+
+  void checkProtonAddresses();
 
   Future<void> renameAccount(String newName);
 
   Future<void> deleteAccount();
 
+  Future<void> addBitcoinAddress();
+
+  Future<void> checkBitcoinAddress();
+
+  Future<void> removeEmailAddress(String addressID);
+
+  ProtonAddress? getProtonAddressByID(String addressID);
+
+  void reloadPage();
+
   int balance = 0;
+  WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
   String selectedTXID = "";
 
@@ -157,7 +197,6 @@ class HomeViewModelImpl extends HomeViewModel {
     twoFactorAmountThresholdController = TextEditingController(text: "3");
     blockchain ??= await _lib.initializeBlockchain(false);
     try {
-      await Future.delayed(const Duration(seconds: 3));
       // await proton_api.initApiService(
       //     userName: 'ProtonWallet', password: 'alicebob');
       String scopes = await SecureStorageHelper.get("scopes");
@@ -166,10 +205,10 @@ class HomeViewModelImpl extends HomeViewModel {
       String refreshToken = await SecureStorageHelper.get("refreshToken");
       String appVersion = "Other";
       String userAgent = "None";
-      if (Platform.isWindows) {
-        uid = "xg6qjlagxdosjze4367jl7jsc6vq6aqo";
-        accessToken = "7xjertnxaqxhovsy6brbk6fjdqq5pcuk";
-        refreshToken = "sr7f73paxa6bvhtdga47lehxclgkjgmj";
+      if (Platform.isWindows || Platform.isLinux) {
+        uid = "culsidb6ydy2cp44idul37ocm2vaegsw";
+        accessToken = "d2mvzcxdmms6evygtsz3ujlvzlrl5pki";
+        refreshToken = "utvo4z6mnennsllibj2ggdraca4ycthb";
       }
       if (Platform.isAndroid) {
         appVersion = await SecureStorageHelper.get("appVersion");
@@ -187,6 +226,9 @@ class HomeViewModelImpl extends HomeViewModel {
         appVersion: appVersion,
         userAgent: userAgent,
       );
+      await Future.delayed(const Duration(
+          seconds:
+              1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
 
       hasWallet = await WalletManager.hasWallet();
       if (hasWallet == false) {
@@ -208,6 +250,10 @@ class HomeViewModelImpl extends HomeViewModel {
     checkNewWallet();
     checkPreference();
     checkNetwork();
+    checkProtonAddresses();
+    fiatCurrencyNotifier.addListener(() {
+      updateExchangeRate(runOnce: true);
+    });
     try {
       EasyLoading.dismiss();
     } catch (e) {
@@ -223,6 +269,34 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void updateSelected(int index) {
     selectedPage = index;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void checkProtonAddresses() async {
+    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    protonAddresses =
+        addresses.where((element) => element.status == 1).toList();
+    emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void openWalletPreference(int walletID) async {
+    walletForPreference = await DBHelper.walletDao!.findById(walletID);
+    if (walletForPreference != null) {
+      userAccountsForPreference =
+          await DBHelper.accountDao!.findAllByWalletID(walletID);
+      walletPreferenceTextEditingController.text = walletForPreference!.name;
+      accountValueNotifierForPreference =
+          ValueNotifier(userAccountsForPreference.firstOrNull);
+      updateDrawerStatus(WalletDrawerStatus.openWalletPreference);
+    }
+  }
+
+  @override
+  void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus) {
+    this.walletDrawerStatus = walletDrawerStatus;
     datasourceStreamSinkAdd();
   }
 
@@ -248,14 +322,30 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> updateExchangeRate() async {
-    if (WalletManager.getCurrentTime() >
-        lastExchangeRateTime + exchangeRateRefreshThreshold) {
+  Future<void> updateExchangeRate({bool runOnce = false}) async {
+    if (runOnce == false) {
+      if (WalletManager.getCurrentTime() >
+          lastExchangeRateTime + exchangeRateRefreshThreshold) {
+        lastExchangeRateTime = WalletManager.getCurrentTime();
+        // don't send time since client time may be faster than server time, it will raise error
+        exchangeRate = 6000000;
+        // await WalletManager.getExchangeRate(fiatCurrencyNotifier.value);
+      }
+      Future.delayed(const Duration(seconds: exchangeRateRefreshThreshold + 1),
+          () {
+        updateExchangeRate();
+      });
+    } else {
       lastExchangeRateTime = WalletManager.getCurrentTime();
       // don't send time since client time may be faster than server time, it will raise error
-      exchangeRate = await WalletManager.getExchangeRate(FiatCurrency.eur);
-      datasourceChangedStreamController.add(this);
+      exchangeRate = 6000000;
+      // await WalletManager.getExchangeRate(fiatCurrencyNotifier.value);
     }
+    datasourceStreamSinkAdd();
+    Future.delayed(const Duration(seconds: exchangeRateRefreshThreshold + 1),
+        () {
+      updateExchangeRate();
+    });
   }
 
   @override
@@ -271,6 +361,8 @@ class HomeViewModelImpl extends HomeViewModel {
       for (WalletModel walletModel in results) {
         walletModel.accountCount =
             await DBHelper.accountDao!.getAccountCount(walletModel.id!);
+        walletModel.balance =
+            await WalletManager.getWalletBalance(walletModel.id!);
         if (currentWallet != null && currentWallet!.id! == walletModel.id!) {
           currentWalletExist = true;
         }
@@ -299,6 +391,7 @@ class HomeViewModelImpl extends HomeViewModel {
     currentAccount = accountModel;
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
+    await loadIntegratedAddresses();
     if (wallet != null) {
       history = await _lib.getConfirmedTransactions(wallet!);
       history.sort((a, b) {
@@ -315,8 +408,14 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     userLabels = newUserLabels;
-    datasourceStreamSinkAdd();
     syncWallet();
+    datasourceStreamSinkAdd();
+  }
+
+  Future<void> loadIntegratedAddresses() async {
+    integratedEmailIDs = await WalletManager.getAccountAddressIDs(
+        currentAccount!.serverAccountID);
+    emailIntegrationEnable = integratedEmailIDs.isNotEmpty;
     datasourceStreamSinkAdd();
   }
 
@@ -505,15 +604,18 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> checkPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     if (currentWallet != null) {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
       String serverWalletID = currentWallet!.serverWalletID;
       hadBackup =
           preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
       hadSetFiatCurrency =
           preferences.getBool("todo_hadSetFiatCurrency") ?? false;
-      hadSetupEmailIntegration =
-          preferences.getBool("todo_hadSetupEmailIntegration") ?? false;
+    }
+    if (currentAccount != null) {
+      hadSetupEmailIntegration = preferences.getBool(
+              "todo_hadSetEmailIntegration_${currentAccount!.serverAccountID}") ??
+          false;
     }
     datasourceStreamSinkAdd();
     Future.delayed(const Duration(seconds: 1), () async {
@@ -522,10 +624,110 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
+  void reloadPage() {
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  Future<void> updateEmailIntegration() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool(
+        "todo_hadSetEmailIntegration_${currentAccount!.serverAccountID}", true);
+    WalletAccount walletAccount = await proton_api.addEmailAddress(
+        walletId: currentWallet!.serverWalletID,
+        walletAccountId: currentAccount!.serverAccountID,
+        addressId: emailIntegrationNotifier.value.id);
+
+    for (EmailAddress address in walletAccount.addresses) {
+      await WalletManager.addEmailAddressToWalletAccount(
+          currentAccount!, address);
+    }
+    await loadIntegratedAddresses();
+    hadSetFiatCurrency = true;
+    datasourceStreamSinkAdd();
+    for (int i = 0; i < 10; i++) {
+      addBitcoinAddress();
+    }
+  }
+
+  @override
+  Future<void> checkBitcoinAddress() async {
+    List<WalletBitcoinAddress> walletBitcoinAddresses =
+        await proton_api.getWalletBitcoinAddress(
+            walletId: currentWallet!.serverWalletID,
+            walletAccountId: currentAccount!.serverAccountID,
+            onlyRequest: 1);
+    for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
+      if (wallet != null && walletBitcoinAddress.bitcoinAddress == null) {
+        var addressInfo = await _lib.getAddress(wallet!);
+        String address = addressInfo.address;
+        BitcoinAddress bitcoinAddress = BitcoinAddress(
+            bitcoinAddress: address,
+            bitcoinAddressSignature:
+                "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
+            bitcoinAddressIndex: 0);
+        await proton_api.updateBitcoinAddress(
+            walletId: currentWallet!.serverWalletID,
+            walletAccountId: currentAccount!.serverAccountID,
+            walletAccountBitcoinAddressId: walletBitcoinAddress.id,
+            bitcoinAddress: bitcoinAddress);
+      }
+    }
+  }
+
+  @override
+  Future<void> addBitcoinAddress() async {
+    if (wallet != null) {
+      var addressInfo = await _lib.getAddress(wallet!);
+      String address = addressInfo.address;
+      BitcoinAddress bitcoinAddress = BitcoinAddress(
+          bitcoinAddress: address,
+          bitcoinAddressSignature:
+              "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
+          bitcoinAddressIndex: addressInfo.index);
+      var results = await proton_api.addBitcoinAddresses(
+          walletId: currentWallet!.serverWalletID,
+          walletAccountId: currentAccount!.serverAccountID,
+          bitcoinAddresses: [bitcoinAddress]);
+      for (var result in results) {
+        logger.d(result.bitcoinAddress);
+      }
+    }
+  }
+
+  @override
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("todo_hadSetFiatCurrency", true);
     hadSetFiatCurrency = true;
     datasourceStreamSinkAdd();
+  }
+
+  @override
+  ProtonAddress? getProtonAddressByID(String addressID) {
+    for (ProtonAddress protonAddress in protonAddresses) {
+      if (protonAddress.id == addressID) {
+        return protonAddress;
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<void> removeEmailAddress(String addressID) async {
+    WalletAccount walletAccount = await proton_api.removeEmailAddress(
+        walletId: currentWallet!.serverWalletID,
+        walletAccountId: currentAccount!.serverAccountID,
+        addressId: addressID);
+    bool deleted = true;
+    for (EmailAddress emailAddress in walletAccount.addresses) {
+      if (emailAddress.id == addressID) {
+        deleted = false;
+      }
+    }
+    if (deleted) {
+      WalletManager.deleteAddress(addressID);
+    }
+    await loadIntegratedAddresses();
   }
 }

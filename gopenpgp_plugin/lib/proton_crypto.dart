@@ -118,8 +118,11 @@ final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
     return DynamicLibrary.open('$_libName.framework/$_libName');
   }
-  if (Platform.isAndroid || Platform.isLinux) {
+  if (Platform.isAndroid) {
     return DynamicLibrary.open('libproton_crypto.so');
+  }
+  if (Platform.isLinux) {
+    return DynamicLibrary.open('proton_crypto.so');
   }
   if (Platform.isWindows) {
     if (Platform.environment.containsKey('FLUTTER_TEST')) {

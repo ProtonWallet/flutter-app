@@ -8,6 +8,7 @@ import '../proton_api/contacts.dart';
 import '../proton_api/errors.dart';
 import '../proton_api/event_routes.dart';
 import '../proton_api/exchange_rate.dart';
+import '../proton_api/proton_address.dart';
 import '../proton_api/user_settings.dart';
 import '../proton_api/wallet.dart';
 import '../proton_api/wallet_account.dart';
@@ -116,3 +117,74 @@ Future<List<ProtonEvent>> collectEvents(
 
 Future<List<ProtonContactEmails>> getContacts({dynamic hint}) =>
     RustLib.instance.api.getContacts(hint: hint);
+
+Future<List<ProtonAddress>> getProtonAddress({dynamic hint}) =>
+    RustLib.instance.api.getProtonAddress(hint: hint);
+
+Future<WalletAccount> addEmailAddress(
+        {required String walletId,
+        required String walletAccountId,
+        required String addressId,
+        dynamic hint}) =>
+    RustLib.instance.api.addEmailAddress(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        addressId: addressId,
+        hint: hint);
+
+Future<WalletAccount> removeEmailAddress(
+        {required String walletId,
+        required String walletAccountId,
+        required String addressId,
+        dynamic hint}) =>
+    RustLib.instance.api.removeEmailAddress(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        addressId: addressId,
+        hint: hint);
+
+Future<WalletBitcoinAddress> updateBitcoinAddress(
+        {required String walletId,
+        required String walletAccountId,
+        required String walletAccountBitcoinAddressId,
+        required BitcoinAddress bitcoinAddress,
+        dynamic hint}) =>
+    RustLib.instance.api.updateBitcoinAddress(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        walletAccountBitcoinAddressId: walletAccountBitcoinAddressId,
+        bitcoinAddress: bitcoinAddress,
+        hint: hint);
+
+Future<List<WalletBitcoinAddress>> addBitcoinAddresses(
+        {required String walletId,
+        required String walletAccountId,
+        required List<BitcoinAddress> bitcoinAddresses,
+        dynamic hint}) =>
+    RustLib.instance.api.addBitcoinAddresses(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        bitcoinAddresses: bitcoinAddresses,
+        hint: hint);
+
+Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
+        {required String email, dynamic hint}) =>
+    RustLib.instance.api.lookupBitcoinAddress(email: email, hint: hint);
+
+Future<List<WalletBitcoinAddress>> getWalletBitcoinAddress(
+        {required String walletId,
+        required String walletAccountId,
+        required int onlyRequest,
+        dynamic hint}) =>
+    RustLib.instance.api.getWalletBitcoinAddress(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        onlyRequest: onlyRequest,
+        hint: hint);
+
+Future<int> getBitcoinAddressLatestIndex(
+        {required String walletId,
+        required String walletAccountId,
+        dynamic hint}) =>
+    RustLib.instance.api.getBitcoinAddressLatestIndex(
+        walletId: walletId, walletAccountId: walletAccountId, hint: hint);

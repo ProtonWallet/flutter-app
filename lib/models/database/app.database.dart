@@ -6,10 +6,12 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
+import 'package:wallet/models/database/address.database.dart';
 import 'package:wallet/models/database/contacts.database.dart';
 import 'package:wallet/models/database/transaction.database.dart';
 import 'package:wallet/models/database/wallet.database.dart';
 import 'package:wallet/models/database/account.database.dart';
+import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 
@@ -20,7 +22,7 @@ class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
   static String dbFolder = "databases";
   static String dbName = "proton_wallet_db";
-  int version = 6;
+  int version = 7;
   late Database db;
   late MigrationContainer migrationContainer;
 
@@ -28,6 +30,7 @@ class AppDatabase
   late WalletDao walletDao;
   late TransactionDao transactionDao;
   late ContactsDao contactsDao;
+  late AddressDao addressDao;
 
   List<Migration> migrations = [
     Migration(1, 2, (Database db) async {
@@ -45,6 +48,9 @@ class AppDatabase
     }),
     Migration(5, 6, (Database db) async {
       ContactsDatabase.migration_0.migrate(db);
+    }),
+    Migration(6, 7, (Database db) async {
+      AddressDatabase.migration_0.migrate(db);
     }),
   ];
 
@@ -70,6 +76,7 @@ class AppDatabase
     walletDao = WalletDaoImpl(db);
     transactionDao = TransactionDaoImpl(db);
     contactsDao = ContactsDaoImpl(db);
+    addressDao = AddressDaoImpl(db);
   }
 
   Future<void> init(Database database) async {

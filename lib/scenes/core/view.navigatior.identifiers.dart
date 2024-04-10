@@ -18,6 +18,9 @@ abstract class ViewIdentifiers extends NavigationIdentifiers {
   static const NavigationIdentifier mailList = 14;
   static const NavigationIdentifier mailEdit = 15;
   static const NavigationIdentifier walletDeletion = 16;
+  static const NavigationIdentifier sendReview = 17;
+  static const NavigationIdentifier twoFactorAuthSetup = 18;
+  static const NavigationIdentifier twoFactorAuthDisable = 19;
   static const NavigationIdentifier testWallet = 100;
   static const NavigationIdentifier testWebsocket = 101;
   static const NavigationIdentifier newuser = 200;

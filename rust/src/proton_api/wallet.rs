@@ -1,4 +1,8 @@
-use andromeda_api::wallet::{ApiWallet, ApiWalletKey, CreateWalletRequestBody};
+use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
+use andromeda_api::wallet::{
+    ApiBitcoinAddressCreationPayload, ApiWallet, ApiWalletBitcoinAddress, ApiWalletKey,
+    CreateWalletRequestBody,
+};
 
 use super::wallet_settings::WalletSettings;
 
@@ -28,6 +32,71 @@ impl From<ApiWallet> for ProtonWallet {
             status: wallet.Status,
             r#type: wallet.Type,
             fingerprint: wallet.Fingerprint,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct EmailIntegrationBitcoinAddress {
+    pub bitcoin_address: Option<String>,
+    pub bitcoin_address_signature: Option<String>,
+}
+impl From<ApiWalletBitcoinAddressLookup> for EmailIntegrationBitcoinAddress {
+    fn from(wallet_bitcoin_address: ApiWalletBitcoinAddressLookup) -> Self {
+        EmailIntegrationBitcoinAddress {
+            bitcoin_address: wallet_bitcoin_address.BitcoinAddress,
+            bitcoin_address_signature: wallet_bitcoin_address.BitcoinAddressSignature,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct WalletBitcoinAddress {
+    pub id: String,
+    pub wallet_id: String,
+    pub wallet_account_id: String,
+    pub fetched: u8,
+    pub used: u8,
+    pub bitcoin_address: Option<String>,
+    pub bitcoin_address_signature: Option<String>,
+    pub bitcoin_address_index: Option<u64>,
+}
+impl From<ApiWalletBitcoinAddress> for WalletBitcoinAddress {
+    fn from(wallet_bitcoin_address: ApiWalletBitcoinAddress) -> Self {
+        WalletBitcoinAddress {
+            id: wallet_bitcoin_address.ID,
+            wallet_id: wallet_bitcoin_address.WalletID,
+            wallet_account_id: wallet_bitcoin_address.WalletAccountID,
+            fetched: wallet_bitcoin_address.Fetched,
+            used: wallet_bitcoin_address.Used,
+            bitcoin_address: wallet_bitcoin_address.BitcoinAddress,
+            bitcoin_address_signature: wallet_bitcoin_address.BitcoinAddressSignature,
+            bitcoin_address_index: wallet_bitcoin_address.BitcoinAddressIndex,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct BitcoinAddress {
+    pub bitcoin_address: String,
+    pub bitcoin_address_signature: String,
+    pub bitcoin_address_index: u64,
+}
+impl From<ApiBitcoinAddressCreationPayload> for BitcoinAddress {
+    fn from(wallet_bitcoin_address: ApiBitcoinAddressCreationPayload) -> Self {
+        BitcoinAddress {
+            bitcoin_address: wallet_bitcoin_address.BitcoinAddress,
+            bitcoin_address_signature: wallet_bitcoin_address.BitcoinAddressSignature,
+            bitcoin_address_index: wallet_bitcoin_address.BitcoinAddressIndex,
+        }
+    }
+}
+impl From<BitcoinAddress> for ApiBitcoinAddressCreationPayload {
+    fn from(wallet_bitcoin_address: BitcoinAddress) -> Self {
+        ApiBitcoinAddressCreationPayload {
+            BitcoinAddress: wallet_bitcoin_address.bitcoin_address,
+            BitcoinAddressSignature: wallet_bitcoin_address.bitcoin_address_signature,
+            BitcoinAddressIndex: wallet_bitcoin_address.bitcoin_address_index,
         }
     }
 }

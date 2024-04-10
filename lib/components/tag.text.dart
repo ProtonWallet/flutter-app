@@ -9,13 +9,19 @@ class TagText extends StatelessWidget {
   final Color background;
   final Color textColor;
   final double radius;
+  final double? width;
+  final String? hint;
+  final CrossAxisAlignment crossAxisAlignment;
 
   const TagText({
     super.key,
     this.text = "",
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.onTap,
-    this.background = ProtonColors.surfaceTagText,
-    this.textColor = ProtonColors.textNorm,
+    this.hint,
+    this.width,
+    this.background = const Color(0xFFFEFEFE),
+    this.textColor = const Color(0xFF0C0C14),
     this.radius = 6.0,
   });
 
@@ -27,15 +33,25 @@ class TagText extends StatelessWidget {
         GestureDetector(
             onTap: onTap,
             child: Container(
+                width: width,
+                alignment: Alignment.center,
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 10.0, top: 6.0, bottom: 6.0),
                 decoration: BoxDecoration(
                     color: background,
                     borderRadius: BorderRadius.circular(radius)),
-                child: Text(
-                  text,
-                  style: FontManager.captionMedian(textColor),
-                ))),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                  Text(
+                    text,
+                    style: FontManager.captionMedian(textColor),
+                  ),
+                  if (hint != null)
+                    Text(hint!,
+                        style:
+                            FontManager.overlineRegular(ProtonColors.textHint))
+                ]))),
       ],
     );
   }

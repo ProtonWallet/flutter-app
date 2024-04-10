@@ -64,7 +64,7 @@
   "your_account": "Your Accounts",
   "add_email": "Add Email",
   "email_integration": "Email Integration",
-  "send_bitcoin": "Send Bitcoin",
+  "send_bitcoin": "Send Bitcoin to",
   "your_personal_addr": "Your Personal Wallet Address",
   "receive_bitcoin": "Receive Bitcoin",
   "your_passphrase_optional": "Your passphrase (optional)",
@@ -143,8 +143,9 @@
   "current_balance_usd": "≈{balance} USD",
   "current_balance_eur": "≈{balance} EUR",
   "current_balance_chf": "≈{balance} CHF",
-  "send_to_recipient_s": "Send to Recipient(s)",
+  "send_to_recipient_s": "Proton email or BTC address",
   "add_address": "Add Address",
+  "add_recipient": "Add Recipent",
   "amount": "Amount",
   "message_to_recipient_optional": "Message to recipient (optional)",
   "fees_default": "Fees (Default)",
@@ -216,6 +217,8 @@
   "passphrase_are_not_match": "Passphrase are not match!",
   "continue_without_passphrase_button": "Continue without Passphrase",
   "yes_use_a_passphrase_button": "Yes, use a Passphrase",
+  "yes": "Yes",
+  "no": "No",
   "receive_to_wallet": "Receive to Wallet",
   "account_label": "Account",
   "add_amount": "Add amount",
@@ -224,6 +227,8 @@
   "set_passphrase": "Set passphrase",
   "setting_bitcoin_unit_label": "Preferred Bitcoin Unit",
   "setting_fiat_currency_label": "Preferred Fiat Currency",
+  "setting_email_integration_label": "Link your email to this account",
+  "setting_email_integration_option_default": "Don't link to any email",
   "setting_hide_empty_used_address_label": "Hide Empty Used Addresses",
   "setting_2fa_amount_threshold_label": "2FA Amount Threshold",
   "setting_option_on": "On",
@@ -236,5 +241,14 @@
   "inactivate_wallet": "Inactive",
   "@end_line_ingore_translation": {
     "description": "l10n_nightly: this is the end line mark"
-  }
+  },
+  "setting_2fa_authenticator_app": "Authenticator app",
+  "setting_2fa_disable": "Disable two-factor authentication",
+  "setting_2fa_code_hint": "Enter the code from your authenticator app",
+  "setting_2fa_guide_step1": "This wizard will enable Two-Factor Authentication (2FA) on your Proton account. Two-factor authentication will make your Proton account more secure so we recommend enabling it.\nIf you have never used two-factor authentication before, we strongly recommend you read our two-factor authentication guide first.",
+  "setting_2fa_guide_step2": "Scan this code with your two-factor authentication device to set up your account. Enter key manually instead.",
+  "setting_2fa_enter_key_manual": "Enter key manually instead.",
+  "setting_2fa_scan_qrcode": "Scan QR code instead.",
+  "setting_2fa_backup_alert_title": "Important: Please make sure you save the recovery codes. Otherwise you can permanently lose access to your account if you lose your two-factor authentication device.",
+  "setting_2fa_backup_alert_content": "If you lose your two-factor-enabled device, these codes can be used instead of the 6-digit two-factor authentication code to sign in to your account. Each code can only be used once."
 }

@@ -28,10 +28,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                 Brightness.dark, // For Android (dark icons)
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: ProtonColors.backgroundProton,
           title: Text(S.of(context).receive_bitcoin,
               style: FontManager.titleHeadline(
-                  Theme.of(context).colorScheme.primary)),
+                  ProtonColors.textNorm)),
           scrolledUnderElevation:
               0.0, // don't change background color when scroll down
         ),
@@ -47,7 +47,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     child: Text(
                       S.of(context).receive_to_wallet,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
+                          ProtonColors.textNorm),
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -65,7 +65,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     child: Text(
                       S.of(context).account_label,
                       style: FontManager.captionMedian(
-                          Theme.of(context).colorScheme.primary),
+                          ProtonColors.textNorm),
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -100,10 +100,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         const SizedBox(height: 14),
                         Text(S.of(context).your_personal_addr,
                             style: FontManager.body1Median(
-                                Theme.of(context).colorScheme.primary)),
+                                ProtonColors.textNorm)),
                         const SizedBox(height: 14),
                         Container(
-                          color: Theme.of(context).colorScheme.background,
+                          color: ProtonColors.white,
                           padding: const EdgeInsets.all(10),
                           child: QrImageView(
                             size: min(MediaQuery.of(context).size.width, 260),
@@ -114,7 +114,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         const SizedBox(height: 10),
                         Text(viewModel.address,
                             style: FontManager.body2Regular(
-                                Theme.of(context).colorScheme.secondary)),
+                                ProtonColors.textWeak)),
                         const SizedBox(height: 10),
                       ])),
                 ],

@@ -222,6 +222,91 @@ fn wire_add_two_impl(
         },
     )
 }
+fn wire_add_bitcoin_addresses_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "add_bitcoin_addresses",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            let api_bitcoin_addresses =
+                <Vec<crate::proton_api::wallet::BitcoinAddress>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::add_bitcoin_addresses(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                            api_bitcoin_addresses,
+                        )
+                        .await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_add_email_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "add_email_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            let api_address_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::add_email_address(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                            api_address_id,
+                        )
+                        .await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_bitcoin_unit_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -467,6 +552,46 @@ fn wire_fiat_currency_impl(
         },
     )
 }
+fn wire_get_bitcoin_address_latest_index_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_bitcoin_address_latest_index",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::get_bitcoin_address_latest_index(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                        )
+                        .await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_contacts_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -567,6 +692,38 @@ fn wire_get_latest_event_id_impl(
         },
     )
 }
+fn wire_get_proton_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_proton_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move { crate::api::proton_api::get_proton_address().await })()
+                        .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_user_settings_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -627,6 +784,48 @@ fn wire_get_wallet_accounts_impl(
                 transform_result_sse(
                     (move || async move {
                         crate::api::proton_api::get_wallet_accounts(api_wallet_id).await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_get_wallet_bitcoin_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_wallet_bitcoin_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            let api_only_request = <u8>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::get_wallet_bitcoin_address(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                            api_only_request,
+                        )
+                        .await
                     })()
                     .await,
                 )
@@ -788,6 +987,83 @@ fn wire_init_api_service_from_auth_and_version_impl(
         },
     )
 }
+fn wire_lookup_bitcoin_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "lookup_bitcoin_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_email = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::lookup_bitcoin_address(api_email).await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_remove_email_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "remove_email_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            let api_address_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::remove_email_address(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                            api_address_id,
+                        )
+                        .await
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_two_fa_threshold_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -816,6 +1092,51 @@ fn wire_two_fa_threshold_impl(
                 transform_result_sse((move || async move {
                          crate::api::proton_api::two_fa_threshold(api_amount).await
                     })().await)
+            }
+        },
+    )
+}
+fn wire_update_bitcoin_address_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "update_bitcoin_address",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+            let api_wallet_account_bitcoin_address_id = <String>::sse_decode(&mut deserializer);
+            let api_bitcoin_address =
+                <crate::proton_api::wallet::BitcoinAddress>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::update_bitcoin_address(
+                            api_wallet_id,
+                            api_wallet_account_id,
+                            api_wallet_account_bitcoin_address_id,
+                            api_bitcoin_address,
+                        )
+                        .await
+                    })()
+                    .await,
+                )
             }
         },
     )
@@ -3625,6 +3946,20 @@ impl SseDecode for crate::bdk::types::Balance {
     }
 }
 
+impl SseDecode for crate::proton_api::wallet::BitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_bitcoinAddress = <String>::sse_decode(deserializer);
+        let mut var_bitcoinAddressSignature = <String>::sse_decode(deserializer);
+        let mut var_bitcoinAddressIndex = <u64>::sse_decode(deserializer);
+        return crate::proton_api::wallet::BitcoinAddress {
+            bitcoin_address: var_bitcoinAddress,
+            bitcoin_address_signature: var_bitcoinAddressSignature,
+            bitcoin_address_index: var_bitcoinAddressIndex,
+        };
+    }
+}
+
 impl SseDecode for crate::bdk::types::BlockTime {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3751,6 +4086,30 @@ impl SseDecode for crate::bdk::blockchain::ElectrumConfig {
             timeout: var_timeout,
             stop_gap: var_stopGap,
             validate_domain: var_validateDomain,
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::wallet_account::EmailAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_email = <String>::sse_decode(deserializer);
+        return crate::proton_api::wallet_account::EmailAddress {
+            id: var_id,
+            email: var_email,
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::wallet::EmailIntegrationBitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_bitcoinAddress = <Option<String>>::sse_decode(deserializer);
+        let mut var_bitcoinAddressSignature = <Option<String>>::sse_decode(deserializer);
+        return crate::proton_api::wallet::EmailIntegrationBitcoinAddress {
+            bitcoin_address: var_bitcoinAddress,
+            bitcoin_address_signature: var_bitcoinAddressSignature,
         };
     }
 }
@@ -4088,6 +4447,32 @@ impl SseDecode for Vec<String> {
     }
 }
 
+impl SseDecode for Vec<crate::proton_api::wallet::BitcoinAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::proton_api::wallet::BitcoinAddress>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::wallet_account::EmailAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::proton_api::wallet_account::EmailAddress>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::bdk::wallet::LocalUtxo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4119,6 +4504,32 @@ impl SseDecode for Vec<u8> {
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
             ans_.push(<u8>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::proton_address::ProtonAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::proton_api::proton_address::ProtonAddress>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::proton_address::ProtonAddressKey> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::proton_api::proton_address::ProtonAddressKey>::sse_decode(deserializer),
+            );
         }
         return ans_;
     }
@@ -4221,6 +4632,18 @@ impl SseDecode for Vec<crate::proton_api::event_routes::WalletAccountEvent> {
             ans_.push(
                 <crate::proton_api::event_routes::WalletAccountEvent>::sse_decode(deserializer),
             );
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::wallet::WalletBitcoinAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::proton_api::wallet::WalletBitcoinAddress>::sse_decode(deserializer));
         }
         return ans_;
     }
@@ -4507,6 +4930,21 @@ impl SseDecode for Option<crate::proton_api::wallet_settings::WalletSettings> {
     }
 }
 
+impl SseDecode for Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(
+                    deserializer,
+                ),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<Vec<crate::proton_api::event_routes::WalletAccountEvent>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4604,6 +5042,61 @@ impl SseDecode for crate::bdk::types::Payload {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseDecode for crate::proton_api::proton_address::ProtonAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_domainId = <String>::sse_decode(deserializer);
+        let mut var_email = <String>::sse_decode(deserializer);
+        let mut var_status = <u32>::sse_decode(deserializer);
+        let mut var_type = <u32>::sse_decode(deserializer);
+        let mut var_receive = <u32>::sse_decode(deserializer);
+        let mut var_send = <u32>::sse_decode(deserializer);
+        let mut var_displayName = <String>::sse_decode(deserializer);
+        let mut var_keys =
+            <Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>>>::sse_decode(
+                deserializer,
+            );
+        return crate::proton_api::proton_address::ProtonAddress {
+            id: var_id,
+            domain_id: var_domainId,
+            email: var_email,
+            status: var_status,
+            r#type: var_type,
+            receive: var_receive,
+            send: var_send,
+            display_name: var_displayName,
+            keys: var_keys,
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::proton_address::ProtonAddressKey {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_version = <u32>::sse_decode(deserializer);
+        let mut var_publicKey = <String>::sse_decode(deserializer);
+        let mut var_privateKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_token = <Option<String>>::sse_decode(deserializer);
+        let mut var_signature = <Option<String>>::sse_decode(deserializer);
+        let mut var_primary = <u32>::sse_decode(deserializer);
+        let mut var_active = <u32>::sse_decode(deserializer);
+        let mut var_flags = <u32>::sse_decode(deserializer);
+        return crate::proton_api::proton_address::ProtonAddressKey {
+            id: var_id,
+            version: var_version,
+            public_key: var_publicKey,
+            private_key: var_privateKey,
+            token: var_token,
+            signature: var_signature,
+            primary: var_primary,
+            active: var_active,
+            flags: var_flags,
+        };
     }
 }
 
@@ -4940,12 +5433,15 @@ impl SseDecode for crate::proton_api::wallet_account::WalletAccount {
         let mut var_derivationPath = <String>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
+        let mut var_addresses =
+            <Vec<crate::proton_api::wallet_account::EmailAddress>>::sse_decode(deserializer);
         return crate::proton_api::wallet_account::WalletAccount {
             id: var_id,
             wallet_id: var_walletId,
             derivation_path: var_derivationPath,
             label: var_label,
             script_type: var_scriptType,
+            addresses: var_addresses,
         };
     }
 }
@@ -4961,6 +5457,30 @@ impl SseDecode for crate::proton_api::event_routes::WalletAccountEvent {
             id: var_id,
             action: var_action,
             wallet_account: var_walletAccount,
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::wallet::WalletBitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_walletId = <String>::sse_decode(deserializer);
+        let mut var_walletAccountId = <String>::sse_decode(deserializer);
+        let mut var_fetched = <u8>::sse_decode(deserializer);
+        let mut var_used = <u8>::sse_decode(deserializer);
+        let mut var_bitcoinAddress = <Option<String>>::sse_decode(deserializer);
+        let mut var_bitcoinAddressSignature = <Option<String>>::sse_decode(deserializer);
+        let mut var_bitcoinAddressIndex = <Option<u64>>::sse_decode(deserializer);
+        return crate::proton_api::wallet::WalletBitcoinAddress {
+            id: var_id,
+            wallet_id: var_walletId,
+            wallet_account_id: var_walletAccountId,
+            fetched: var_fetched,
+            used: var_used,
+            bitcoin_address: var_bitcoinAddress,
+            bitcoin_address_signature: var_bitcoinAddressSignature,
+            bitcoin_address_index: var_bitcoinAddressIndex,
         };
     }
 }
@@ -5095,6 +5615,8 @@ fn pde_ffi_dispatcher_primary_impl(
         2 => wire_add_three_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
+        30 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
         18 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
         24 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
         10 => wire_create_wallet_impl(port, ptr, rust_vec_len, data_len),
@@ -5102,93 +5624,99 @@ fn pde_ffi_dispatcher_primary_impl(
         12 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
         16 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
         19 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        33 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
         25 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
         22 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
         23 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+        26 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
         17 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
         13 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+        32 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
         9 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
         21 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
         7 => wire_init_api_service_impl(port, ptr, rust_vec_len, data_len),
         8 => wire_init_api_service_from_auth_and_version_impl(port, ptr, rust_vec_len, data_len),
+        31 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
         20 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+        29 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
         15 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
         11 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-        29 => wire_ProtonAPIService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire_ProtonAPIService_init_api_service_impl(port, ptr, rust_vec_len, data_len),
-        26 => wire_ProtonAPIService_new_impl(port, ptr, rust_vec_len, data_len),
-        28 => wire_ProtonAPIService_read_text_impl(port, ptr, rust_vec_len, data_len),
-        79 => wire_Api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire_Api_address_network_impl(port, ptr, rust_vec_len, data_len),
-        80 => wire_Api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
-        35 => wire_Api_broadcast_impl(port, ptr, rust_vec_len, data_len),
-        57 => wire_Api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        54 => wire_Api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
-        78 => wire_Api_create_address_impl(port, ptr, rust_vec_len, data_len),
-        74 => wire_Api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        58 => wire_Api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire_Api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
-        68 => wire_Api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        31 => wire_Api_create_electrum_blockchain_impl(port, ptr, rust_vec_len, data_len),
-        30 => wire_Api_create_esplora_blockchain_impl(port, ptr, rust_vec_len, data_len),
-        77 => wire_Api_create_script_impl(port, ptr, rust_vec_len, data_len),
-        36 => wire_Api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
-        83 => wire_Api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        71 => wire_Api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        66 => wire_Api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire_Api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire_Api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
-        73 => wire_Api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
-        72 => wire_Api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
-        69 => wire_Api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire_Api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
-        70 => wire_Api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        51 => wire_Api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire_Api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
-        97 => wire_Api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-        96 => wire_Api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-        84 => wire_Api_get_address_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire_Api_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        33 => wire_Api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
-        95 => wire_Api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
-        32 => wire_Api_get_height_impl(port, ptr, rust_vec_len, data_len),
-        86 => wire_Api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
-        94 => wire_Api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire_Api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        47 => wire_Api_input_impl(port, ptr, rust_vec_len, data_len),
-        42 => wire_Api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
-        43 => wire_Api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
-        44 => wire_Api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire_Api_is_mine_impl(port, ptr, rust_vec_len, data_len),
-        55 => wire_Api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
-        93 => wire_Api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
-        89 => wire_Api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
-        46 => wire_Api_lock_time_impl(port, ptr, rust_vec_len, data_len),
-        67 => wire_Api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
-        59 => wire_Api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        60 => wire_Api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
-        61 => wire_Api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        62 => wire_Api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
-        63 => wire_Api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        64 => wire_Api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
-        48 => wire_Api_output_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire_Api_payload_impl(port, ptr, rust_vec_len, data_len),
-        53 => wire_Api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
-        52 => wire_Api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-        50 => wire_Api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
-        49 => wire_Api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
-        41 => wire_Api_serialize_tx_impl(port, ptr, rust_vec_len, data_len),
-        91 => wire_Api_sign_impl(port, ptr, rust_vec_len, data_len),
-        39 => wire_Api_size_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire_Api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
-        56 => wire_Api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        37 => wire_Api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
-        45 => wire_Api_version_impl(port, ptr, rust_vec_len, data_len),
-        40 => wire_Api_vsize_impl(port, ptr, rust_vec_len, data_len),
-        92 => wire_Api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
-        38 => wire_Api_weight_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire_MyTestObject_new_impl(port, ptr, rust_vec_len, data_len),
-        100 => wire_MyTestObject_read_text_impl(port, ptr, rust_vec_len, data_len),
+        37 => wire_ProtonAPIService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        35 => wire_ProtonAPIService_init_api_service_impl(port, ptr, rust_vec_len, data_len),
+        34 => wire_ProtonAPIService_new_impl(port, ptr, rust_vec_len, data_len),
+        36 => wire_ProtonAPIService_read_text_impl(port, ptr, rust_vec_len, data_len),
+        87 => wire_Api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+        90 => wire_Api_address_network_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire_Api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
+        43 => wire_Api_broadcast_impl(port, ptr, rust_vec_len, data_len),
+        65 => wire_Api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        62 => wire_Api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire_Api_create_address_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire_Api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        66 => wire_Api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire_Api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
+        76 => wire_Api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        39 => wire_Api_create_electrum_blockchain_impl(port, ptr, rust_vec_len, data_len),
+        38 => wire_Api_create_esplora_blockchain_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire_Api_create_script_impl(port, ptr, rust_vec_len, data_len),
+        44 => wire_Api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
+        91 => wire_Api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        79 => wire_Api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        74 => wire_Api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
+        73 => wire_Api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire_Api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
+        81 => wire_Api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire_Api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
+        77 => wire_Api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
+        42 => wire_Api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
+        78 => wire_Api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire_Api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire_Api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
+        105 => wire_Api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire_Api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+        92 => wire_Api_get_address_impl(port, ptr, rust_vec_len, data_len),
+        96 => wire_Api_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        41 => wire_Api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire_Api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
+        40 => wire_Api_get_height_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire_Api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
+        102 => wire_Api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
+        98 => wire_Api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        55 => wire_Api_input_impl(port, ptr, rust_vec_len, data_len),
+        50 => wire_Api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
+        51 => wire_Api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
+        52 => wire_Api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
+        93 => wire_Api_is_mine_impl(port, ptr, rust_vec_len, data_len),
+        63 => wire_Api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
+        101 => wire_Api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
+        97 => wire_Api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
+        54 => wire_Api_lock_time_impl(port, ptr, rust_vec_len, data_len),
+        75 => wire_Api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
+        67 => wire_Api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        68 => wire_Api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
+        69 => wire_Api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        70 => wire_Api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
+        71 => wire_Api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        72 => wire_Api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
+        56 => wire_Api_output_impl(port, ptr, rust_vec_len, data_len),
+        89 => wire_Api_payload_impl(port, ptr, rust_vec_len, data_len),
+        61 => wire_Api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire_Api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire_Api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire_Api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire_Api_serialize_tx_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire_Api_sign_impl(port, ptr, rust_vec_len, data_len),
+        47 => wire_Api_size_impl(port, ptr, rust_vec_len, data_len),
+        95 => wire_Api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
+        64 => wire_Api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        45 => wire_Api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
+        53 => wire_Api_version_impl(port, ptr, rust_vec_len, data_len),
+        48 => wire_Api_vsize_impl(port, ptr, rust_vec_len, data_len),
+        100 => wire_Api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
+        46 => wire_Api_weight_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire_MyTestObject_new_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire_MyTestObject_read_text_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5344,6 +5872,28 @@ impl flutter_rust_bridge::IntoDart for crate::bdk::types::Balance {
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::bdk::types::Balance {}
 impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::Balance> for crate::bdk::types::Balance {
     fn into_into_dart(self) -> crate::bdk::types::Balance {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::BitcoinAddress {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.bitcoin_address.into_into_dart().into_dart(),
+            self.bitcoin_address_signature.into_into_dart().into_dart(),
+            self.bitcoin_address_index.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::wallet::BitcoinAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::wallet::BitcoinAddress>
+    for crate::proton_api::wallet::BitcoinAddress
+{
+    fn into_into_dart(self) -> crate::proton_api::wallet::BitcoinAddress {
         self
     }
 }
@@ -5504,6 +6054,48 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::blockchain::ElectrumConfig>
     for crate::bdk::blockchain::ElectrumConfig
 {
     fn into_into_dart(self) -> crate::bdk::blockchain::ElectrumConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet_account::EmailAddress {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.email.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::wallet_account::EmailAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::wallet_account::EmailAddress>
+    for crate::proton_api::wallet_account::EmailAddress
+{
+    fn into_into_dart(self) -> crate::proton_api::wallet_account::EmailAddress {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::EmailIntegrationBitcoinAddress {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.bitcoin_address.into_into_dart().into_dart(),
+            self.bitcoin_address_signature.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::wallet::EmailIntegrationBitcoinAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::wallet::EmailIntegrationBitcoinAddress>
+    for crate::proton_api::wallet::EmailIntegrationBitcoinAddress
+{
+    fn into_into_dart(self) -> crate::proton_api::wallet::EmailIntegrationBitcoinAddress {
         self
     }
 }
@@ -5877,6 +6469,62 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::Payload> for crate::bd
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::proton_address::ProtonAddress {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.domain_id.into_into_dart().into_dart(),
+            self.email.into_into_dart().into_dart(),
+            self.status.into_into_dart().into_dart(),
+            self.r#type.into_into_dart().into_dart(),
+            self.receive.into_into_dart().into_dart(),
+            self.send.into_into_dart().into_dart(),
+            self.display_name.into_into_dart().into_dart(),
+            self.keys.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::proton_address::ProtonAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::proton_address::ProtonAddress>
+    for crate::proton_api::proton_address::ProtonAddress
+{
+    fn into_into_dart(self) -> crate::proton_api::proton_address::ProtonAddress {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::proton_address::ProtonAddressKey {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.version.into_into_dart().into_dart(),
+            self.public_key.into_into_dart().into_dart(),
+            self.private_key.into_into_dart().into_dart(),
+            self.token.into_into_dart().into_dart(),
+            self.signature.into_into_dart().into_dart(),
+            self.primary.into_into_dart().into_dart(),
+            self.active.into_into_dart().into_dart(),
+            self.flags.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::proton_address::ProtonAddressKey
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::proton_address::ProtonAddressKey>
+    for crate::proton_api::proton_address::ProtonAddressKey
+{
+    fn into_into_dart(self) -> crate::proton_api::proton_address::ProtonAddressKey {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::proton_api::contacts::ProtonContactEmails {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -6205,6 +6853,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet_account::Wallet
             self.derivation_path.into_into_dart().into_dart(),
             self.label.into_into_dart().into_dart(),
             self.script_type.into_into_dart().into_dart(),
+            self.addresses.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -6239,6 +6888,33 @@ impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::event_routes::WalletAc
     for crate::proton_api::event_routes::WalletAccountEvent
 {
     fn into_into_dart(self) -> crate::proton_api::event_routes::WalletAccountEvent {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::WalletBitcoinAddress {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.wallet_id.into_into_dart().into_dart(),
+            self.wallet_account_id.into_into_dart().into_dart(),
+            self.fetched.into_into_dart().into_dart(),
+            self.used.into_into_dart().into_dart(),
+            self.bitcoin_address.into_into_dart().into_dart(),
+            self.bitcoin_address_signature.into_into_dart().into_dart(),
+            self.bitcoin_address_index.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::wallet::WalletBitcoinAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::wallet::WalletBitcoinAddress>
+    for crate::proton_api::wallet::WalletBitcoinAddress
+{
+    fn into_into_dart(self) -> crate::proton_api::wallet::WalletBitcoinAddress {
         self
     }
 }
@@ -6514,6 +7190,15 @@ impl SseEncode for crate::bdk::types::Balance {
     }
 }
 
+impl SseEncode for crate::proton_api::wallet::BitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.bitcoin_address, serializer);
+        <String>::sse_encode(self.bitcoin_address_signature, serializer);
+        <u64>::sse_encode(self.bitcoin_address_index, serializer);
+    }
+}
+
 impl SseEncode for crate::bdk::types::BlockTime {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -6615,6 +7300,22 @@ impl SseEncode for crate::bdk::blockchain::ElectrumConfig {
         <Option<u8>>::sse_encode(self.timeout, serializer);
         <u64>::sse_encode(self.stop_gap, serializer);
         <bool>::sse_encode(self.validate_domain, serializer);
+    }
+}
+
+impl SseEncode for crate::proton_api::wallet_account::EmailAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.email, serializer);
+    }
+}
+
+impl SseEncode for crate::proton_api::wallet::EmailIntegrationBitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Option<String>>::sse_encode(self.bitcoin_address, serializer);
+        <Option<String>>::sse_encode(self.bitcoin_address_signature, serializer);
     }
 }
 
@@ -6936,6 +7637,26 @@ impl SseEncode for Vec<String> {
     }
 }
 
+impl SseEncode for Vec<crate::proton_api::wallet::BitcoinAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::wallet::BitcoinAddress>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::wallet_account::EmailAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::wallet_account::EmailAddress>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::bdk::wallet::LocalUtxo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -6962,6 +7683,26 @@ impl SseEncode for Vec<u8> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <u8>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::proton_address::ProtonAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::proton_address::ProtonAddress>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::proton_address::ProtonAddressKey> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::proton_address::ProtonAddressKey>::sse_encode(item, serializer);
         }
     }
 }
@@ -7042,6 +7783,16 @@ impl SseEncode for Vec<crate::proton_api::event_routes::WalletAccountEvent> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::proton_api::event_routes::WalletAccountEvent>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::wallet::WalletBitcoinAddress> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::wallet::WalletBitcoinAddress>::sse_encode(item, serializer);
         }
     }
 }
@@ -7279,6 +8030,18 @@ impl SseEncode for Option<crate::proton_api::wallet_settings::WalletSettings> {
     }
 }
 
+impl SseEncode for Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_encode(
+                value, serializer,
+            );
+        }
+    }
+}
+
 impl SseEncode for Option<Vec<crate::proton_api::event_routes::WalletAccountEvent>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7349,6 +8112,38 @@ impl SseEncode for crate::bdk::types::Payload {
                 <Vec<u8>>::sse_encode(program, serializer);
             }
         }
+    }
+}
+
+impl SseEncode for crate::proton_api::proton_address::ProtonAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.domain_id, serializer);
+        <String>::sse_encode(self.email, serializer);
+        <u32>::sse_encode(self.status, serializer);
+        <u32>::sse_encode(self.r#type, serializer);
+        <u32>::sse_encode(self.receive, serializer);
+        <u32>::sse_encode(self.send, serializer);
+        <String>::sse_encode(self.display_name, serializer);
+        <Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>>>::sse_encode(
+            self.keys, serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::proton_api::proton_address::ProtonAddressKey {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <u32>::sse_encode(self.version, serializer);
+        <String>::sse_encode(self.public_key, serializer);
+        <Option<String>>::sse_encode(self.private_key, serializer);
+        <Option<String>>::sse_encode(self.token, serializer);
+        <Option<String>>::sse_encode(self.signature, serializer);
+        <u32>::sse_encode(self.primary, serializer);
+        <u32>::sse_encode(self.active, serializer);
+        <u32>::sse_encode(self.flags, serializer);
     }
 }
 
@@ -7607,6 +8402,10 @@ impl SseEncode for crate::proton_api::wallet_account::WalletAccount {
         <String>::sse_encode(self.derivation_path, serializer);
         <String>::sse_encode(self.label, serializer);
         <u8>::sse_encode(self.script_type, serializer);
+        <Vec<crate::proton_api::wallet_account::EmailAddress>>::sse_encode(
+            self.addresses,
+            serializer,
+        );
     }
 }
 
@@ -7619,6 +8418,20 @@ impl SseEncode for crate::proton_api::event_routes::WalletAccountEvent {
             self.wallet_account,
             serializer,
         );
+    }
+}
+
+impl SseEncode for crate::proton_api::wallet::WalletBitcoinAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.wallet_id, serializer);
+        <String>::sse_encode(self.wallet_account_id, serializer);
+        <u8>::sse_encode(self.fetched, serializer);
+        <u8>::sse_encode(self.used, serializer);
+        <Option<String>>::sse_encode(self.bitcoin_address, serializer);
+        <Option<String>>::sse_encode(self.bitcoin_address_signature, serializer);
+        <Option<u64>>::sse_encode(self.bitcoin_address_index, serializer);
     }
 }
 
