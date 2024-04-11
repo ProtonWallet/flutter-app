@@ -46,8 +46,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                         onTap: () {
                           viewModel.mailSettingID =
                               0; // 0 as create, otherwise its editing existing mailSetting
-                          viewModel.coordinator
-                              .move(ViewIdentifiers.mailEdit, context);
+                          viewModel.move(ViewIdentifiers.mailEdit);
                         },
                         child: Padding(
                             padding:
@@ -71,8 +70,7 @@ class MailListView extends ViewBase<MailListViewModel> {
                     onTap: () {
                       // TODO:: add perisist table to store mail setting
                       viewModel.mailSettingID = 1;
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.mailEdit, context);
+                      viewModel.move(ViewIdentifiers.mailEdit);
                     },
                   )
               ],

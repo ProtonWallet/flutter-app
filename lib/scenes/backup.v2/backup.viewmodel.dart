@@ -5,9 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-abstract class SetupBackupViewModel extends ViewModel {
+abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   SetupBackupViewModel(super.coordinator, this.walletID);
 
   List<Item> itemList = [];
@@ -44,10 +46,13 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void setBackup() async{
+  void setBackup() async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String serverWalletID = walletModel.serverWalletID;
     preferences.setBool("todo_hadBackup_$serverWalletID", true);
   }
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class MailEditViewModel extends ViewModel {
@@ -40,4 +41,7 @@ class MailEditViewModelImpl extends MailEditViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }
