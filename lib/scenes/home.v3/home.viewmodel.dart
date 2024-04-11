@@ -780,6 +780,9 @@ class HomeViewModelImpl extends HomeViewModel {
       case ViewIdentifiers.twoFactorAuthDisable:
         coordinator.showTwoFactorAuthDisable();
         break;
+      case ViewIdentifiers.setupBackup:
+        coordinator.showSetupBackup(currentWallet?.id ?? 0);
+        break;
     }
   }
 }
