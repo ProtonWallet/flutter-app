@@ -543,7 +543,7 @@ impl Api {
         Ok(Wallet::retrieve_wallet(wallet_id).get_internal_address(address_index)?)
     }
     pub fn sync_wallet(wallet_id: String, blockchain_id: String) {
-        Wallet::retrieve_wallet(wallet_id)
+        let _ = Wallet::retrieve_wallet(wallet_id)
             .sync(Blockchain::retrieve_blockchain(blockchain_id).deref(), None);
     }
     pub fn get_balance(wallet_id: String) -> anyhow::Result<Balance, Error> {
