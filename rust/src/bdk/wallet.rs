@@ -76,7 +76,7 @@ impl Wallet {
     pub(crate) fn get_wallet(&self) -> MutexGuard<BdkWallet<AnyDatabase>> {
         self.wallet_mutex.lock().expect("wallet")
     }
-    pub fn sync(&self, blockchain: &Blockchain, progress: Option<Box<dyn Progress>>) {
+    pub fn sync(&self, blockchain: &Blockchain, progress: Option<Box<dyn Progress>>) -> Result<(), BdkError> {
         let bdk_sync_option: SyncOptions = if let Some(p) = progress {
             SyncOptions {
                 progress: Some(Box::new(ProgressHolder { progress: p })
@@ -88,7 +88,6 @@ impl Wallet {
         let blockchain = blockchain.get_blockchain();
         self.get_wallet()
             .sync(blockchain.deref(), bdk_sync_option)
-            .unwrap()
     }
     /// Return the balance, meaning the sum of this wallet’s unspent outputs’ values. Note that this method only operates
     /// on the internal database, which first needs to be Wallet.sync manually.
