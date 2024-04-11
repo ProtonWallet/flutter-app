@@ -1,14 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:wallet/components/page_route.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 
 abstract class Coordinator implements ViewNavigator {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   Coordinator();
-
-  ViewBase start({Map<String, String> params = const {}});
-
+  ViewBase start();
   void end();
-
   List<ViewBase> starts() {
     throw UnimplementedError();
+  }
+
+  void pushReplacement(ViewBase view, {bool fullscreenDialog = false}) {
+    Coordinator.navigatorKey.currentState?.pushReplacement(
+      MaterialPageRoute(
+          settings: RouteSettings(name: view.key.toString()),
+          builder: (context) {
+            return view;
+          },
+          fullscreenDialog: fullscreenDialog),
+    );
+  }
+
+  void push(ViewBase view, {bool fullscreenDialog = false}) {
+    Coordinator.navigatorKey.currentState?.push(
+      MaterialPageRoute(
+          settings: RouteSettings(name: view.key.toString()),
+          builder: (context) {
+            return view;
+          },
+          fullscreenDialog: fullscreenDialog),
+    );
+  }
+
+  void pushCustom(ViewBase view, {bool fullscreenDialog = false}) {
+    Coordinator.navigatorKey.currentState
+        ?.push(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
   }
 }

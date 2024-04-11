@@ -79,8 +79,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
               ButtonV5(
                   onPressed: () {
                     if (viewModel.checkUserMnemonic()) {
-                      viewModel.coordinator
-                          .move(ViewIdentifiers.passphrase, context);
+                      viewModel.move(ViewIdentifiers.passphrase);
                     } else {
                       LocalToast.showErrorToast(
                           context, S.of(context).wrong_mnemonic_order);

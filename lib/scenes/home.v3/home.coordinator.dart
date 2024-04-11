@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/debug/websocket.coordinator.dart';
 import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
@@ -27,107 +22,68 @@ class HomeCoordinator extends Coordinator {
   @override
   void end() {}
 
-  @override
-  ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    Map<String, String> map = {};
-    WalletModel? currentWallet = (widget as HomeView).viewModel.currentWallet;
-    AccountModel? currentAccount =
-        (widget as HomeView).viewModel.currentAccount;
-    if (currentWallet != null) {
-      map["WalletID"] = currentWallet.id.toString();
-    }
-    if (currentAccount != null) {
-      map["AccountID"] = currentAccount.id.toString();
-    }
+  void showWallet(int walletID) {
+    var view = WalletCoordinator(walletID).start();
+    push(view, fullscreenDialog: false);
+  }
 
-    if (to == ViewIdentifiers.wallet) {
-      var view = WalletCoordinator().start(params: map);
+  void showSetupOnbaord() {
+    var view = SetupOnbaordCoordinator().start();
+    push(view, fullscreenDialog: true);
+  }
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: false,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    } else if (to == ViewIdentifiers.setupOnboard) {
-      var view = SetupOnbaordCoordinator().start();
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.send) {
-      var view = SendCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.setupBackup) {
-      var view = SetupBackupCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.receive) {
-      var view = ReceiveCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.testWebsocket) {
-      var view = WebSocketCoordinator().start();
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.mailList) {
-      var view = MailListCoordinator().start();
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => view,
-        fullscreenDialog: true,
-      ));
-      return view;
-    } else if (to == ViewIdentifiers.walletDeletion) {
-      var view = WalletDeletionCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => view,
-          fullscreenDialog: true,
-          settings: RouteSettings(arguments: map)));
-      return view;
-    } else if (ViewIdentifiers.welcome == to) {
-      //Logout
-      var view = WelcomeCoordinator().start();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) {
-              return view;
-            },
-            fullscreenDialog: false),
-      );
-      return view;
-    } else if (to == ViewIdentifiers.historyDetails) {
-      map["TXID"] = (widget as HomeView).viewModel.selectedTXID.toString();
-      var view = HistoryDetailCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
-      return view;
-    }  else if (to == ViewIdentifiers.twoFactorAuthSetup) {
-      var view = TwoFactorAuthCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
-      return view;
-    } else if (to == ViewIdentifiers.twoFactorAuthDisable) {
-      var view = TwoFactorAuthDisableCoordinator().start(params: map);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => view));
-      return view;
-    }
-    throw UnimplementedError();
+  void showSend(int walletID, int accountID) {
+    var view = SendCoordinator(walletID, accountID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showSetupBackup(int walletID) {
+    var view = SetupBackupCoordinator(walletID).start();
+    push(view, fullscreenDialog: false);
+  }
+
+  void showReceive(int walletID, int accountID) {
+    var view = ReceiveCoordinator(walletID, accountID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showWebSocket() {
+    var view = WebSocketCoordinator().start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showMailList() {
+    var view = MailListCoordinator().start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showWalletDeletion(int walletID) {
+    var view = WalletDeletionCoordinator(walletID).start();
+    push(view, fullscreenDialog: true);
+  }
+
+  void showHistoryDetails(int walletID, int accountID, String txID) {
+    var view = HistoryDetailCoordinator(walletID, accountID, txID).start();
+    push(view);
+  }
+
+  void showTwoFactorAuthSetup() {
+    var view = TwoFactorAuthCoordinator().start();
+    push(view);
+  }
+
+  void showTwoFactorAuthDisable() {
+    var view = TwoFactorAuthDisableCoordinator().start();
+    push(view);
+  }
+
+  void logout() {
+    var view = WelcomeCoordinator().start();
+    pushReplacement(view);
   }
 
   @override
-  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
+  ViewBase<ViewModel> start() {
     var viewModel = HomeViewModelImpl(
       this,
     );

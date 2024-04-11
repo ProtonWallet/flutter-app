@@ -1,39 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:wallet/components/page_route.dart';
 import 'package:wallet/scenes/backup/backup.view.dart';
 import 'package:wallet/scenes/backup/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
 
 class SetupBackupCoordinator extends Coordinator {
   late ViewBase widget;
+  final String strMnemonic;
+
+  SetupBackupCoordinator(this.strMnemonic);
 
   @override
   void end() {}
 
-  @override
-  ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    if (to == ViewIdentifiers.passphrase) {
-      Map<String, String> params = {
-        "Mnemonic": (widget as SetupBackupView).viewModel.strMnemonic
-      };
-      var view = SetupPassPhraseCoordinator().start(params: params);
-      Navigator.push(
-          context, CustomPageRoute(page: view, fullscreenDialog: false));
-      return view;
-    }
-    throw UnimplementedError();
+  void goPassphrase(String strMnemonic) {
+    var view = SetupPassPhraseCoordinator(strMnemonic).start();
+    Coordinator.navigatorKey.currentState
+        ?.push(CustomPageRoute(page: view, fullscreenDialog: false));
   }
 
   @override
-  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
-    String? strMnemonic =
-        params.containsKey("Mnemonic") ? params["Mnemonic"] : "";
-    var viewModel = SetupBackupViewModelImpl(this, strMnemonic!);
+  ViewBase<ViewModel> start() {
+    var viewModel = SetupBackupViewModelImpl(this, strMnemonic);
     widget = SetupBackupView(
       viewModel,
     );

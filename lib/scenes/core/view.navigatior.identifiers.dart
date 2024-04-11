@@ -1,7 +1,10 @@
-import 'package:wallet/scenes/core/view.navigator.dart';
+typedef NavigationIdentifier = int;
+
+abstract class NavigationIdentifiers {
+  static const NavigationIdentifier root = 0;
+}
 
 abstract class ViewIdentifiers extends NavigationIdentifiers {
-  static const NavigationIdentifier root = 0;
   static const NavigationIdentifier welcome = 1;
   static const NavigationIdentifier home = 2;
   static const NavigationIdentifier send = 3;
@@ -21,7 +24,13 @@ abstract class ViewIdentifiers extends NavigationIdentifiers {
   static const NavigationIdentifier sendReview = 17;
   static const NavigationIdentifier twoFactorAuthSetup = 18;
   static const NavigationIdentifier twoFactorAuthDisable = 19;
+  static const NavigationIdentifier nativeSignin = 20;
+  static const NavigationIdentifier nativeSignup = 21;
+  static const NavigationIdentifier signin = 22;
+  static const NavigationIdentifier signup = 23;
   static const NavigationIdentifier testWallet = 100;
   static const NavigationIdentifier testWebsocket = 101;
   static const NavigationIdentifier newuser = 200;
+
+  void move(NavigationIdentifier to);
 }

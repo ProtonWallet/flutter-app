@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-// import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class TwoFactorAuthDisableViewModel extends ViewModel {
   TwoFactorAuthDisableViewModel(super.coordinator);
@@ -48,4 +48,7 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
+
+  @override
+  void move(NavigationIdentifier to) {}
 }

@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:wallet/components/page_route.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/core/view.navigator.dart';
 import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
 import 'package:wallet/scenes/setup/create.view.dart';
 import 'package:wallet/scenes/setup/create.viewmodel.dart';
@@ -15,22 +11,13 @@ class SetupCreateCoordinator extends Coordinator {
   @override
   void end() {}
 
-  @override
-  ViewBase<ViewModel> move(NavigationIdentifier to, BuildContext context) {
-    if (to == ViewIdentifiers.passphrase) {
-      Map<String, String> params = {
-        "Mnemonic": (widget as SetupCreateView).viewModel.strMnemonic
-      };
-      var view = SetupPassPhraseCoordinator().start(params: params);
-      Navigator.push(
-          context, CustomPageRoute(page: view, fullscreenDialog: false));
-      return view;
-    }
-    throw UnimplementedError();
+  void showPassphrase(String strMnemonic) {
+    var view = SetupPassPhraseCoordinator(strMnemonic).start();
+    pushCustom(view);
   }
 
   @override
-  ViewBase<ViewModel> start({Map<String, String> params = const {}}) {
+  ViewBase<ViewModel> start() {
     var viewModel = SetupCreateViewModelImpl(this);
     widget = SetupCreateView(
       viewModel,

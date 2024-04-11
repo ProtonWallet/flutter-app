@@ -107,8 +107,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     onPressed: () {
                       if (viewModel.checkPassphrase()) {
                         this.viewModel.updateDB();
-                        viewModel.coordinator
-                            .move(ViewIdentifiers.setupReady, context);
+                        viewModel.move(ViewIdentifiers.setupReady);
                       } else {
                         var snackBar = SnackBar(
                           content: Text(S.of(context).passphrase_are_not_match),

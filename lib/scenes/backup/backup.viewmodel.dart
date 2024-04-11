@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:wallet/scenes/backup/backup.coordinator.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-abstract class SetupBackupViewModel extends ViewModel {
+abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   SetupBackupViewModel(super.coordinator, this.strMnemonic);
 
   List<Item> itemList = [];
@@ -91,5 +93,14 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
           active: true);
     }
     datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.passphrase:
+        coordinator.goPassphrase(strMnemonic);
+        break;
+    }
   }
 }

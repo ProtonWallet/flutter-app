@@ -16,7 +16,7 @@ class AnimatedSquare {
       {required this.squareSize, required this.alpha, required this.top});
 }
 
-abstract class SetupCreateViewModel extends ViewModel {
+abstract class SetupCreateViewModel extends ViewModel<SetupCreateCoordinator> {
   SetupCreateViewModel(super.coordinator);
 
   bool inProgress = true;
@@ -47,8 +47,7 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
       startAnimate(true);
     });
     Future.delayed(const Duration(milliseconds: 2400), () {
-      coordinator
-          .move(ViewIdentifiers.passphrase, (coordinator as SetupCreateCoordinator).widget.context);
+      coordinator.showPassphrase(strMnemonic);
     });
     return;
   }
@@ -74,6 +73,15 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
           squareSize: squareSize,
           alpha: alpha,
           top: Random().nextInt(1000).toDouble()));
+    }
+  }
+
+  @override
+  void move(NavigationIdentifier to) {
+    switch (to) {
+      case ViewIdentifiers.passphrase:
+        coordinator.showPassphrase(strMnemonic);
+        break;
     }
   }
 }
