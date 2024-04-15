@@ -40,6 +40,7 @@ pub fn init_api_service_from_auth_and_version(
     scopes: Vec<String>,
     app_version: String,
     user_agent: String,
+    env: Option<String>,
 ) {
     // create a global proton api service
     let auth = AuthData::Access(
@@ -55,6 +56,7 @@ pub fn init_api_service_from_auth_and_version(
         auth,
         app_version.clone(),
         user_agent.clone(),
+        env,
     )
     .expect("error from auth()");
     let mut api_ref = PROTON_API.write().unwrap();

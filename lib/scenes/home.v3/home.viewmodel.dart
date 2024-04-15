@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.helper.dart';
@@ -39,7 +40,9 @@ enum WalletDrawerStatus {
 }
 
 abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
-  HomeViewModel(super.coordinator);
+  HomeViewModel(super.coordinator, this.apiEnv);
+
+  ApiEnv apiEnv;
 
   int selectedPage = 0;
   int selectedWalletID = -1;
@@ -170,7 +173,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 }
 
 class HomeViewModelImpl extends HomeViewModel {
-  HomeViewModelImpl(super.coordinator);
+  HomeViewModelImpl(super.coordinator, super.apiEnv);
 
   final datasourceChangedStreamController =
       StreamController<HomeViewModel>.broadcast();
@@ -222,6 +225,7 @@ class HomeViewModelImpl extends HomeViewModel {
       //   appVersion = "android-wallet@1.0.0-dev";
       //   userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
       // }
+      String strEnv = apiEnv.toString();
       proton_api.initApiServiceFromAuthAndVersion(
         uid: uid,
         access: accessToken,
@@ -229,6 +233,7 @@ class HomeViewModelImpl extends HomeViewModel {
         scopes: scopes.split(","),
         appVersion: appVersion,
         userAgent: userAgent,
+        env: strEnv,
       );
       await Future.delayed(const Duration(
           seconds:

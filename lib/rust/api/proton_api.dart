@@ -29,6 +29,7 @@ Future<void> initApiServiceFromAuthAndVersion(
         required List<String> scopes,
         required String appVersion,
         required String userAgent,
+        String? env,
         dynamic hint}) =>
     RustLib.instance.api.initApiServiceFromAuthAndVersion(
         uid: uid,
@@ -37,6 +38,7 @@ Future<void> initApiServiceFromAuthAndVersion(
         scopes: scopes,
         appVersion: appVersion,
         userAgent: userAgent,
+        env: env,
         hint: hint);
 
 Future<List<WalletData>> getWallets({dynamic hint}) =>

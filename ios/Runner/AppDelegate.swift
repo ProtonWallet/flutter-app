@@ -48,18 +48,33 @@ import CryptoKit
         let controller = self.flutterWindow?.rootViewController as! FlutterViewController
         let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native.views", binaryMessenger: controller.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "native.navigation.login" {
-                self?.switchToSignIn()
-            } else if call.method == "native.navigation.signup" {
-                self?.switchToSignup()
-            } else {
+            guard let self = self else { return }
+            switch call.method {
+            case "native.navigation.login", "native.navigation.signup":
+                if let arguments = call.arguments as? [String: Any] {
+                    let environment = Environment(from: arguments)
+                    switch environment.type {
+                    case .prod, .atlas, .atlasCustom:
+                        if call.method == "native.navigation.login" {
+                            print("Logging in with environment:", environment.type)
+                            self.switchToSignIn(env: environment)
+                        } else if call.method == "native.navigation.signup" {
+                            print("Signing up with environment:", environment.type)
+                            self.switchToSignup(env: environment)
+                        }
+                    default:
+                        result(FlutterError(code: "INVALID_ENVIRONMENT", message: "Environment unknown", details: nil))
+                    }
+                } else {
+                    result(FlutterError(code: "INVALID_ARGUMENTS", message: "Can't parse arguments", details: nil))
+                }
+            default:
                 result(FlutterMethodNotImplemented)
             }
         }
         
         navigationChannel = FlutterMethodChannel(name: "com.example.wallet/app.view", binaryMessenger: controller.binaryMessenger)
         PMLog.setEnvironment(environment: "wallet-test")
-        self.initSignupLogin()
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
             GeneratedPluginRegistrant.register(with: registry)
@@ -73,10 +88,10 @@ import CryptoKit
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func initSignupLogin() {
+    func initSignupLogin(env: Environment) {
         let clientApp: ClientApp = .mail
         PMAPIService.noTrustKit = true
-        let apiService = PMAPIService.createAPIServiceWithoutSession(environment: .black,
+        let apiService = PMAPIService.createAPIServiceWithoutSession(environment: env.toCoreEnv(),
                                                                      challengeParametersProvider: ChallengeParametersProvider.forAPIService(clientApp: clientApp,
                                                                                                                                             challenge: PMChallenge()))
         self.apiService = apiService
@@ -209,8 +224,9 @@ import CryptoKit
         sendDataToFlutter(jsonData: convertedString)
     }
 
-    func switchToSignIn() {
+    func switchToSignIn(env: Environment) {
         print("Showing login view")
+        self.initSignupLogin(env: env)
         login?.presentLoginFlow(over: flutterWindow?.rootViewController as! UIViewController,
                                 customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
@@ -221,8 +237,9 @@ import CryptoKit
                                 ), updateBlock: processLoginResult)
     }
 
-    func switchToSignup() {
+    func switchToSignup(env: Environment) {
         print("Showing login view")
+        self.initSignupLogin(env: env)
         login?.presentSignupFlow(over: flutterWindow?.rootViewController as! UIViewController,
                                  customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
