@@ -128,6 +128,10 @@ final DynamicLibrary _dylib = () {
     return DynamicLibrary.open('libproton_crypto.so');
   }
   if (Platform.isLinux) {
+    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      return DynamicLibrary.open(
+          '${Directory.current.path}/linux/shared/proton_crypto.so');
+    }
     return DynamicLibrary.open('proton_crypto.so');
   }
   if (Platform.isWindows) {

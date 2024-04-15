@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -153,9 +152,6 @@ DeYE4U0ks7cI9VPmeImOYBNcTOZIqIA2hEniBg==
 -----END PGP PRIVATE KEY BLOCK-----''', passphrase: "12345678");
 
 void main() {
-  if (Platform.isLinux) {
-    return;
-  }
   group('Proton Crypto functions', () {
     test('binary encryption & decryption case 1', () async {
       Uint8List origin = Uint8List.fromList([
@@ -590,9 +586,10 @@ void main() {
         146,
         218
       ]);
-      String encodedEncryptedEntropy = "wV4D9Oug9vT13XESAQdAFtaiCxq1+ThcYQeA32T4ErLPUZ8ZE6oAZdPOTd1zxHkw+m3laUB/O+JQIKKv4VppG4YxntqdLljXj6mZwcHYKi/M+GggXfaQLdm6nPxIP6Cw0sAXAdCxY+Mo0zu3k6BG8hwDcdtnACMms3tDym100Ly/EdbcAhbaTVluXNr7FzNQWXs8/o2fN++uLloe2BK2521xB4016Rt1Zq47o2o8m6fNEfgjsMJ7EuWgVU7ZEZyC6xibnrDCVzbPWl/SEdJH3AiCfRVhpnIdT5C0nzFQcAiriH/8AomjrZpOF9qHm0jkRUHCkP4GWplMEIsFgneabUfIelf2cEjfnKA7rfxl1gvCa0wHpBNFEH+sEUKxE1yRFsjtp2w7gYVwI2CG3Y+ElyDe+eC5iwZRjro=";
-      Uint8List result = proton_crypto.decryptBinary(
-          protonWallet.privateKey, protonWallet.passphrase, base64Decode(encodedEncryptedEntropy));
+      String encodedEncryptedEntropy =
+          "wV4D9Oug9vT13XESAQdAFtaiCxq1+ThcYQeA32T4ErLPUZ8ZE6oAZdPOTd1zxHkw+m3laUB/O+JQIKKv4VppG4YxntqdLljXj6mZwcHYKi/M+GggXfaQLdm6nPxIP6Cw0sAXAdCxY+Mo0zu3k6BG8hwDcdtnACMms3tDym100Ly/EdbcAhbaTVluXNr7FzNQWXs8/o2fN++uLloe2BK2521xB4016Rt1Zq47o2o8m6fNEfgjsMJ7EuWgVU7ZEZyC6xibnrDCVzbPWl/SEdJH3AiCfRVhpnIdT5C0nzFQcAiriH/8AomjrZpOF9qHm0jkRUHCkP4GWplMEIsFgneabUfIelf2cEjfnKA7rfxl1gvCa0wHpBNFEH+sEUKxE1yRFsjtp2w7gYVwI2CG3Y+ElyDe+eC5iwZRjro=";
+      Uint8List result = proton_crypto.decryptBinary(protonWallet.privateKey,
+          protonWallet.passphrase, base64Decode(encodedEncryptedEntropy));
       expect(result, equals(origin));
     });
 
