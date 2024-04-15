@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/database/app.database.dart';
@@ -9,6 +10,7 @@ Future<void> main() async {
   DateTime now = DateTime.now();
 
   setUpAll(() async {
+    databaseFactory = databaseFactoryFfi;
     await appDatabase.init(await AppDatabase.getInMemoryDatabase());
     await appDatabase.buildDatabase();
   });
