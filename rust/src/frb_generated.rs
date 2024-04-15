@@ -969,6 +969,7 @@ fn wire_init_api_service_from_auth_and_version_impl(
             let api_scopes = <Vec<String>>::sse_decode(&mut deserializer);
             let api_app_version = <String>::sse_decode(&mut deserializer);
             let api_user_agent = <String>::sse_decode(&mut deserializer);
+            let api_env = <Option<String>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse((move || {
@@ -980,6 +981,7 @@ fn wire_init_api_service_from_auth_and_version_impl(
                             api_scopes,
                             api_app_version,
                             api_user_agent,
+                            api_env,
                         ),
                     )
                 })())
