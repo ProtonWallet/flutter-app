@@ -22,7 +22,7 @@ Future<Wallet> prepareWallet(
 }
 
 Future<void> main() async {
-  if (Platform.isLinux) {
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     return;
   }
   Mnemonic? mnemonic12;

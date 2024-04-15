@@ -116,6 +116,12 @@ const String _libName = 'proton_crypto';
 /// The dynamic library in which the symbols for [NativeAddBindings] can be found.
 final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
+    // this is workaround. Env or have a lib in build folder is better option.
+    //   we can fix it later
+    if (Platform.isMacOS && Platform.environment.containsKey('FLUTTER_TEST')) {
+      return DynamicLibrary.open(
+          '${Directory.current.path}/macos/libproton_crypto.dylib');
+    }
     return DynamicLibrary.open('$_libName.framework/$_libName');
   }
   if (Platform.isAndroid) {
