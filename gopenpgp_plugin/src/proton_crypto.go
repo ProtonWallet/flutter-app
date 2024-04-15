@@ -20,54 +20,57 @@ import (
 
 //export encrypt
 func encrypt(userPrivateKey *C.char, message *C.char) *C.char {
-	key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
-	userPublicKey, _ := key.GetArmoredPublicKey()
-	armor, _ := helper.EncryptMessageArmored(userPublicKey, C.GoString(message))
-	return C.CString(armor)
+    key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
+    userPublicKey, _ := key.GetArmoredPublicKey()
+    armor, _ := helper.EncryptMessageArmored(userPublicKey, C.GoString(message))
+    return C.CString(armor)
 }
 
 //export decrypt
 func decrypt(userPrivateKey *C.char, passphrase *C.char, armor *C.char) *C.char {
-	passphraseBytes := []byte(C.GoString(passphrase))
-	decryptedMessage, _ := helper.DecryptMessageArmored(C.GoString(userPrivateKey), passphraseBytes, C.GoString(armor))
-	return C.CString(decryptedMessage)
+    passphraseBytes := []byte(C.GoString(passphrase))
+    decryptedMessage, _ := helper.DecryptMessageArmored(C.GoString(userPrivateKey), passphraseBytes, C.GoString(armor))
+    return C.CString(decryptedMessage)
 }
 
 //export encryptBinary
 func encryptBinary(userPrivateKey *C.char, binaryMessage *C.char, length C.int) C.struct_BinaryResult {
-	data := C.GoBytes(unsafe.Pointer(binaryMessage), length)
-	key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
-	userPublicKey, _ := key.GetArmoredPublicKey()
-	armor, _ := helper.EncryptBinaryMessageArmored(userPublicKey, data)
-	encryptedBinary, _ := armor_helper.Unarmor(armor)
-	resultBytes := GoBytes2CBytes(encryptedBinary)
-	resultBytesLength := C.int(len(encryptedBinary))
-	return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
+    data := C.GoBytes(unsafe.Pointer(binaryMessage), length)
+    key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
+    userPublicKey, _ := key.GetArmoredPublicKey()
+    armor, _ := helper.EncryptBinaryMessageArmored(userPublicKey, data)
+    encryptedBinary, _ := armor_helper.Unarmor(armor)
+    resultBytes := GoBytes2CBytes(encryptedBinary)
+    resultBytesLength := C.int(len(encryptedBinary))
+    return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
 }
 
 //export encryptBinaryArmor
 func encryptBinaryArmor(userPrivateKey *C.char, binaryMessage *C.char, length C.int) *C.char {
-	data := C.GoBytes(unsafe.Pointer(binaryMessage), length)
-	key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
-	userPublicKey, _ := key.GetArmoredPublicKey()
-	armor, _ := helper.EncryptBinaryMessageArmored(userPublicKey, data)
-	return C.CString(armor)
+    data := C.GoBytes(unsafe.Pointer(binaryMessage), length)
+    key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
+    userPublicKey, _ := key.GetArmoredPublicKey()
+    armor, _ := helper.EncryptBinaryMessageArmored(userPublicKey, data)
+    return C.CString(armor)
 }
 
 //export decryptBinary
 func decryptBinary(userPrivateKey *C.char, passphrase *C.char, encryptedBinary *C.char, length C.int) C.struct_BinaryResult {
-	data := C.GoBytes(unsafe.Pointer(encryptedBinary), length)
-	passphraseBytes := []byte(C.GoString(passphrase))
-	ciphertext := crypto.NewPGPMessage(data)
-	message, err:= decryptMessage(C.GoString(userPrivateKey), passphraseBytes, ciphertext)
-	if err != nil {
-		fmt.Printf("Error in decryptMessage, %v", err)
-		return C.struct_BinaryResult{length: C.int(0), data: GoBytes2CBytes(make([]byte, 0))}
-	}
-	resultBytes := GoBytes2CBytes(message.GetBinary())
-	resultBytesLength := C.int(len(message.GetBinary()))
-	return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
+    data := C.GoBytes(unsafe.Pointer(encryptedBinary), length)
+    passphraseBytes := []byte(C.GoString(passphrase))
+    ciphertext := crypto.NewPGPMessage(data)
+
+    message, err := decryptMessage(C.GoString(userPrivateKey), passphraseBytes, ciphertext)
+    if err != nil {
+        fmt.Printf("Error in decryptMessage: %v\n", err)
+        return C.struct_BinaryResult{length: C.int(0), data: GoBytes2CBytes(make([]byte, 0))}
+    }
+
+    resultBytes := GoBytes2CBytes(message.GetBinary())
+    resultBytesLength := C.int(len(message.GetBinary()))
+    return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
 }
+
 
 //export enforce_binding
 func enforce_binding() {}
@@ -101,15 +104,9 @@ func decryptMessage(privateKey string, passphrase []byte, ciphertext *crypto.PGP
 }
 
 func GoBytes2CBytes(bytes []byte) *C.char {
-	cBytes := C.malloc(C.size_t(len(bytes) + 1))
-    defer C.free(cBytes)
-
-    for i, b := range bytes {
-        *(*C.char)(unsafe.Pointer(uintptr(cBytes) + uintptr(i))) = C.char(b)
-    }
-    *(*C.char)(unsafe.Pointer(uintptr(cBytes) + uintptr(len(bytes)))) = 0 // EOF
-
-    return (*C.char)(cBytes)
+    str := string(bytes)
+    cStr := C.CString(str)
+    return cStr
 }
 
 func main() {}
