@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/channels/platform.channel.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
@@ -20,7 +19,7 @@ class LoginAndSignupBtn extends StatelessWidget {
           tag: "login_btn",
           child: ElevatedButton(
             onPressed: () {
-              NativeViewSwitcher.switchToNativeLogin();
+              // NativeViewSwitcher.switchToNativeLogin();
             },
             child: Text(
               S.of(context).login.toUpperCase(),

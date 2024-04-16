@@ -1,3 +1,4 @@
+import 'package:wallet/constants/env.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -18,6 +19,9 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 class HomeCoordinator extends Coordinator {
   late ViewBase widget;
+  ApiEnv apiEnv;
+
+  HomeCoordinator(this.apiEnv);
 
   @override
   void end() {}
@@ -86,6 +90,7 @@ class HomeCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     var viewModel = HomeViewModelImpl(
       this,
+      apiEnv,
     );
     widget = HomeView(
       viewModel,
