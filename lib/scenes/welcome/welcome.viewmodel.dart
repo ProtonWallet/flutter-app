@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.session.dart';
@@ -27,6 +28,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   final datasourceChangedStreamController =
       StreamController<WelcomeViewModel>.broadcast();
 
+  late ApiEnv env;
+
   @override
   void dispose() {
     _appChannel.setMethodCallHandler(null);
@@ -37,6 +40,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     if (!hadLocallogin) {
       hadLocallogin = true;
       if (await SecureStorageHelper.get("sessionId") != "") {
+        // need also check if current session is same env with current env
+
         loginResume();
         // LocalAuth.authenticate("Authenticate to login").then((auth) {
         //   if (auth) {
@@ -51,6 +56,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   @override
   Future<void> loadData() async {
+    env = jenner;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
     _localLogin();
@@ -74,7 +80,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
           userSessionProvider.userSession.accessToken,
           userSessionProvider.userSession.sessionId,
           userSessionProvider.userSession.userKeyID);
-      coordinator.showHome();
+      coordinator.showHome(env);
     }
   }
 
@@ -166,7 +172,7 @@ wQY+jJXAXl46XDaJETkdMgE=
           //
           // await Future.delayed(const Duration(seconds: 5));
           // EasyLoading.dismiss();
-          coordinator.showHome();
+          coordinator.showHome(env);
         } else {
           // LocalToast.showErrorToast(context, S.of(context).login_failed);
         }
@@ -183,18 +189,18 @@ wQY+jJXAXl46XDaJETkdMgE=
     switch (to) {
       case ViewIdentifiers.nativeSignin:
         if (_isMobile()) {
-          coordinator.showNativeSignin();
+          coordinator.showNativeSignin(env);
         } else {
           mockUserSession();
-          coordinator.showHome();
+          coordinator.showHome(env);
         }
         break;
       case ViewIdentifiers.nativeSignup:
         if (_isMobile()) {
-          coordinator.showNativeSignup();
+          coordinator.showNativeSignup(env);
         } else {
           mockUserSession();
-          coordinator.showHome();
+          coordinator.showHome(env);
         }
         break;
     }

@@ -170,6 +170,7 @@ abstract class RustLibApi extends BaseApi {
       required List<String> scopes,
       required String appVersion,
       required String userAgent,
+      String? env,
       dynamic hint});
 
   Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
@@ -1167,6 +1168,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       required List<String> scopes,
       required String appVersion,
       required String userAgent,
+      String? env,
       dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
@@ -1177,6 +1179,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_list_String(scopes, serializer);
         sse_encode_String(appVersion, serializer);
         sse_encode_String(userAgent, serializer);
+        sse_encode_opt_String(env, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 8, port: port_);
       },
@@ -1185,7 +1188,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kInitApiServiceFromAuthAndVersionConstMeta,
-      argValues: [uid, access, refresh, scopes, appVersion, userAgent],
+      argValues: [uid, access, refresh, scopes, appVersion, userAgent, env],
       apiImpl: this,
       hint: hint,
     ));
@@ -1200,7 +1203,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           "refresh",
           "scopes",
           "appVersion",
-          "userAgent"
+          "userAgent",
+          "env"
         ],
       );
 

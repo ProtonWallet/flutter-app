@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/env.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home/navigation.coordinator.dart';
 
 abstract class HomeNavigationViewModel
     extends ViewModel<HomeNavigationCoordinator> {
-  HomeNavigationViewModel(super.coordinator);
+  HomeNavigationViewModel(super.coordinator, this.apiEnv);
 
   int selectedPage = 0;
   void updateSelected(int index);
@@ -18,10 +19,12 @@ abstract class HomeNavigationViewModel
   SideMenuController sideMenu = SideMenuController();
 
   List<SideMenuItem> items = [];
+
+  ApiEnv apiEnv;
 }
 
 class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
-  HomeNavigationViewModelImpl(super.coordinator);
+  HomeNavigationViewModelImpl(super.coordinator, super.apiEnv);
 
   final datasourceChangedStreamController =
       StreamController<HomeNavigationViewModel>.broadcast();
