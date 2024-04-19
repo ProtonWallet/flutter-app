@@ -4,7 +4,9 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import 'exchange_rate.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'user_settings.dart';
 import 'wallet_settings.dart';
 
 class BitcoinAddress {
@@ -257,4 +259,67 @@ class WalletData {
           wallet == other.wallet &&
           walletKey == other.walletKey &&
           walletSettings == other.walletSettings;
+}
+
+class WalletTransaction {
+  final String id;
+  final String walletId;
+  final String? walletAccountId;
+  final String? label;
+  final String transactionId;
+  final String transactionTime;
+  final ProtonExchangeRate? exchangeRate;
+  final String? hashedTransactionId;
+  final String? subject;
+  final String? body;
+  final String? sender;
+  final String? tolist;
+
+  const WalletTransaction({
+    required this.id,
+    required this.walletId,
+    this.walletAccountId,
+    this.label,
+    required this.transactionId,
+    required this.transactionTime,
+    this.exchangeRate,
+    this.hashedTransactionId,
+    this.subject,
+    this.body,
+    this.sender,
+    this.tolist,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      walletId.hashCode ^
+      walletAccountId.hashCode ^
+      label.hashCode ^
+      transactionId.hashCode ^
+      transactionTime.hashCode ^
+      exchangeRate.hashCode ^
+      hashedTransactionId.hashCode ^
+      subject.hashCode ^
+      body.hashCode ^
+      sender.hashCode ^
+      tolist.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WalletTransaction &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          walletId == other.walletId &&
+          walletAccountId == other.walletAccountId &&
+          label == other.label &&
+          transactionId == other.transactionId &&
+          transactionTime == other.transactionTime &&
+          exchangeRate == other.exchangeRate &&
+          hashedTransactionId == other.hashedTransactionId &&
+          subject == other.subject &&
+          body == other.body &&
+          sender == other.sender &&
+          tolist == other.tolist;
 }

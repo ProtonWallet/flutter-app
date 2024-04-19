@@ -6,6 +6,7 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/components/textfield.password.dart';
 import 'package:wallet/components/textfield.text.dart';
+import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -22,6 +23,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   Widget buildWithViewModel(BuildContext context,
       SetupPassPhraseViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: viewModel.isAddingPassPhrase
             ? buildAddPassPhrase(context, viewModel, viewSize)
             : buildMain(context, viewModel, viewSize));
@@ -42,14 +44,12 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               children: [
                 SizedBoxes.box20,
                 Text(S.of(context).your_passphrase_optional,
-                    style: FontManager.titleHeadline(
-                        ProtonColors.textNorm),
+                    style: FontManager.titleHeadline(ProtonColors.textNorm),
                     textAlign: TextAlign.center),
                 SizedBoxes.box8,
                 Text(
                   S.of(context).for_additional_security_you_can_use_passphrase_,
-                  style: FontManager.body1Median(
-                      ProtonColors.textNorm),
+                  style: FontManager.body1Median(ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
                 SizedBoxes.box24,
@@ -58,31 +58,25 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         S.of(context).store_your_passphrase_at_safe_location_,
                     width: MediaQuery.of(context).size.width),
                 SizedBoxes.box24,
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    S.of(context).passphrase_label,
-                    style: FontManager.captionMedian(
-                        ProtonColors.textNorm),
-                    textAlign: TextAlign.left,
-                  ),
+                TextFieldTextV2(
+                  labelText: S.of(context).passphrase_label,
+                  textController: viewModel.passphraseTextController,
+                  myFocusNode: FocusNode(),
+                  validation: (String _) {
+                    return "";
+                  },
+                  isPassword: true,
                 ),
-                TextFieldPassword(
-                    width: MediaQuery.of(context).size.width,
-                    controller: viewModel.passphraseTextController),
                 SizedBoxes.box24,
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    S.of(context).confirm_passphrase_label,
-                    style: FontManager.captionMedian(
-                        ProtonColors.textNorm),
-                    textAlign: TextAlign.left,
-                  ),
+                TextFieldTextV2(
+                  labelText: S.of(context).confirm_passphrase_label,
+                  textController: viewModel.passphraseTextConfirmController,
+                  myFocusNode: FocusNode(),
+                  validation: (String _) {
+                    return "";
+                  },
+                  isPassword: true,
                 ),
-                TextFieldPassword(
-                    width: MediaQuery.of(context).size.width,
-                    controller: viewModel.passphraseTextConfirmController),
               ])),
       AppBar(
         backgroundColor: Colors.transparent,
@@ -117,6 +111,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     },
                     text: S.of(context).save_passphrase_button,
                     width: MediaQuery.of(context).size.width,
+                    backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
               ]))
@@ -159,13 +154,15 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   S.of(context).for_additional_security_you_can_use_passphrase_,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFieldText(
                     width: MediaQuery.of(context).size.width,
-                    controller: viewModel.nameTextController,
-                    hintText: S.of(context).wallet_name,
-                  ),
-                ),
+                    child: TextFieldTextV2(
+                      labelText: S.of(context).wallet_name,
+                      textController: viewModel.nameTextController,
+                      myFocusNode: viewModel.walletNameFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
+                    )),
                 SizedBoxes.box12,
                 ButtonV5(
                     onPressed: () async {
@@ -186,6 +183,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     },
                     text: S.of(context).continue_without_passphrase_button,
                     width: MediaQuery.of(context).size.width,
+                    backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48),
                 SizedBoxes.box12,
@@ -196,9 +194,8 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     text: S.of(context).yes_use_a_passphrase_button,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.interactionNorm,
-                    textStyle:
-                        FontManager.body1Median(ProtonColors.interactionNorm),
+                    borderColor: ProtonColors.protonBlue,
+                    textStyle: FontManager.body1Median(ProtonColors.protonBlue),
                     height: 48),
               ]),
         ),

@@ -61,20 +61,56 @@ class $AssetsImagesGen {
 class $AssetsImagesIconGen {
   const $AssetsImagesIconGen();
 
+  /// File path: assets/images/icon/bitcoin.svg
+  SvgGenImage get bitcoin =>
+      const SvgGenImage('assets/images/icon/bitcoin.svg');
+
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
+
+  /// File path: assets/images/icon/do_transactions.svg
+  SvgGenImage get doTransactions =>
+      const SvgGenImage('assets/images/icon/do_transactions.svg');
+
+  /// File path: assets/images/icon/drawer_menu.svg
+  SvgGenImage get drawerMenu =>
+      const SvgGenImage('assets/images/icon/drawer_menu.svg');
+
+  /// File path: assets/images/icon/ic-arrow-out-from-rectanglesignout.svg
+  SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
+      'assets/images/icon/ic-arrow-out-from-rectanglesignout.svg');
 
   /// File path: assets/images/icon/ic-arrow-right-arrow-left.svg
   SvgGenImage get icArrowRightArrowLeft =>
       const SvgGenImage('assets/images/icon/ic-arrow-right-arrow-left.svg');
 
+  /// File path: assets/images/icon/ic-bugreport.svg
+  SvgGenImage get icBugreport =>
+      const SvgGenImage('assets/images/icon/ic-bugreport.svg');
+
+  /// File path: assets/images/icon/ic-cog-wheel.svg
+  SvgGenImage get icCogWheel =>
+      const SvgGenImage('assets/images/icon/ic-cog-wheel.svg');
+
+  /// File path: assets/images/icon/ic-diamondwallet_plus.svg
+  SvgGenImage get icDiamondwalletPlus =>
+      const SvgGenImage('assets/images/icon/ic-diamondwallet_plus.svg');
+
   /// File path: assets/images/icon/ic-list-bullets.svg
   SvgGenImage get icListBullets =>
       const SvgGenImage('assets/images/icon/ic-list-bullets.svg');
 
+  /// File path: assets/images/icon/ic-lock2fa.svg
+  SvgGenImage get icLock2fa =>
+      const SvgGenImage('assets/images/icon/ic-lock2fa.svg');
+
   /// File path: assets/images/icon/ic-money-bills.svg
   SvgGenImage get icMoneyBills =>
       const SvgGenImage('assets/images/icon/ic-money-bills.svg');
+
+  /// File path: assets/images/icon/ic-squares-in-squarediscover.svg
+  SvgGenImage get icSquaresInSquarediscover =>
+      const SvgGenImage('assets/images/icon/ic-squares-in-squarediscover.svg');
 
   /// File path: assets/images/icon/ic-wallet.svg
   SvgGenImage get icWallet =>
@@ -84,12 +120,27 @@ class $AssetsImagesIconGen {
   AssetGenImage get launchIcon =>
       const AssetGenImage('assets/images/icon/launch_icon.png');
 
+  /// File path: assets/images/icon/logo_text.svg
+  SvgGenImage get logoText =>
+      const SvgGenImage('assets/images/icon/logo_text.svg');
+
   /// File path: assets/images/icon/mobile.svg
   SvgGenImage get mobile => const SvgGenImage('assets/images/icon/mobile.svg');
 
   /// File path: assets/images/icon/protect.svg
   SvgGenImage get protect =>
       const SvgGenImage('assets/images/icon/protect.svg');
+
+  /// File path: assets/images/icon/receive.svg
+  SvgGenImage get receive =>
+      const SvgGenImage('assets/images/icon/receive.svg');
+
+  /// File path: assets/images/icon/send.svg
+  SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
+
+  /// File path: assets/images/icon/setup-preference.svg
+  SvgGenImage get setupPreference =>
+      const SvgGenImage('assets/images/icon/setup-preference.svg');
 
   /// File path: assets/images/icon/transfer.svg
   SvgGenImage get transfer =>
@@ -98,18 +149,36 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/images/icon/wallet.svg');
 
+  /// File path: assets/images/icon/wallet_edit.svg
+  SvgGenImage get walletEdit =>
+      const SvgGenImage('assets/images/icon/wallet_edit.svg');
+
   /// List of all assets
   List<dynamic> get values => [
+        bitcoin,
         btc,
+        doTransactions,
+        drawerMenu,
+        icArrowOutFromRectanglesignout,
         icArrowRightArrowLeft,
+        icBugreport,
+        icCogWheel,
+        icDiamondwalletPlus,
         icListBullets,
+        icLock2fa,
         icMoneyBills,
+        icSquaresInSquarediscover,
         icWallet,
         launchIcon,
+        logoText,
         mobile,
         protect,
+        receive,
+        send,
+        setupPreference,
         transfer,
-        wallet
+        wallet,
+        walletEdit
       ];
 }
 

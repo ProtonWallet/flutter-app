@@ -36,7 +36,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
               )),
           for (int i = 0; i < viewModel.animatedSquares.length; i++)
             AnimatedPositioned(
-              duration: Duration(seconds: Random().nextInt(3) + 4),
+              duration: Duration(seconds: Random().nextInt(3) + 2),
               left: viewModel.isAnimationStart
                   ? MediaQuery.of(context).size.width + 100
                   : -(Random().nextInt((i ~/ 10 * 100) + 1) + 20).toDouble(),
@@ -78,6 +78,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
                 text: S.of(context).create_new_wallet,
                 width: MediaQuery.of(context).size.width,
                 textStyle: FontManager.body1Median(ProtonColors.white),
+                backgroundColor: ProtonColors.protonBlue,
                 height: 48),
             SizedBoxes.box12,
             ButtonV5(
@@ -86,7 +87,7 @@ class SetupCreateView extends ViewBase<SetupCreateViewModel> {
                 text: S.of(context).import_your_wallet,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.white,
-                borderColor: ProtonColors.interactionNorm,
+                borderColor: ProtonColors.protonBlue,
                 textStyle:
                     FontManager.body1Median(ProtonColors.interactionNorm),
                 height: 48),

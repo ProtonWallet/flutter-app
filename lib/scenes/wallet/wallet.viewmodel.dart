@@ -8,6 +8,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -188,7 +189,7 @@ class WalletViewModelImpl extends WalletViewModel {
         coordinator.showReceive(accountModel.walletID, accountModel.id ?? 0);
         break;
       case ViewIdentifiers.history:
-        coordinator.showHistory(accountModel.walletID, accountModel.id ?? 0);
+        coordinator.showHistory(accountModel.walletID, accountModel.id ?? 0, FiatCurrency.usd);
         break;
       case ViewIdentifiers.walletDeletion:
         coordinator.showDeletion(accountModel.walletID);

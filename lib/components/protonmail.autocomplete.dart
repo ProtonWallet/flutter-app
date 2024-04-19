@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -10,6 +15,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
   final Color color;
   final TextEditingController textEditingController;
   final FocusNode focusNode;
+  final String? labelText;
   final VoidCallback? callback;
 
   const ProtonMailAutoComplete({
@@ -18,6 +24,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
     required this.textEditingController,
     required this.focusNode,
     this.callback,
+    this.labelText,
     this.color = Colors.transparent,
   });
 
@@ -37,6 +44,9 @@ class ProtonMailAutoComplete extends StatelessWidget {
         },
         onSelected: (ContactsModel selection) {
           textEditingController.text = selection.email;
+          if (callback != null) {
+            callback!();
+          }
           focusNode.unfocus();
         },
         optionsViewBuilder: (BuildContext context,
@@ -73,44 +83,104 @@ class ProtonMailAutoComplete extends StatelessWidget {
             FocusNode focusNode,
             VoidCallback onFieldSubmitted) {
           return Container(
-              decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            decoration: BoxDecoration(
                 color: color,
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                border: Border.all(
+                  width: 1.6,
+                  style: BorderStyle.solid,
+                  color: focusNode.hasFocus
+                      ? ProtonColors.interactionNorm
+                      : ProtonColors.textHint,
+                )),
+            child: TextFormField(
+              focusNode: focusNode,
+              controller: textEditingController,
+              style: FontManager.body1Median(ProtonColors.textNorm),
+              onFieldSubmitted: (value) {
+                if (callback != null) {
+                  callback!();
+                }
+              },
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      showQRScanBottomSheet(
+                          context, textEditingController, callback);
+                    }
+                  },
+                  icon: Icon(Icons.qr_code_rounded,
+                      size: 26, color: ProtonColors.textWeak),
+                ),
+                labelText: labelText,
+                labelStyle:
+                    FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                contentPadding: const EdgeInsets.only(
+                    left: 10, right: 10, top: 4, bottom: 16),
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                border: InputBorder.none,
+                errorStyle: const TextStyle(height: 0),
+                focusedErrorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
-              child: TextField(
-                  controller: textEditingController,
-                  focusNode: focusNode,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: color, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                          color: ProtonColors.interactionNorm, width: 2),
-                    ),
-                    suffixIcon: callback != null ? IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: callback,
-                    ): const Icon(null)
-                  )));
+            ),
+          );
         });
   }
 }
 
 Widget getEmailAvatar(String name) {
   return Container(
+      margin: const EdgeInsets.only(top: 8),
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(10),
+        color: AvatarColorHelper.getBackgroundColor(AvatarColorHelper.getIndexFromString(name)),
+        borderRadius: BorderRadius.circular(21),
       ),
       child: Center(
         child: Text(
-          CommonHelper.getFirstNChar(name, 1),
-          style: FontManager.body2Median(ProtonColors.white),
+          CommonHelper.getFirstNChar(name, 1).toUpperCase(),
+          style: FontManager.body2Median(AvatarColorHelper.getTextColor(AvatarColorHelper.getIndexFromString(name)),),
         ),
       ));
+}
+
+void showQRScanBottomSheet(BuildContext context,
+    TextEditingController textEditingController, VoidCallback? callback) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
+          child: Stack(children: [
+            Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      S.of(context).scan_btc_address,
+                      style: FontManager.body2Regular(ProtonColors.textNorm),textAlign: TextAlign.center,
+                    )),
+            Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: MobileScanner(
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      textEditingController.text = barcode.rawValue ?? "";
+                      if (callback != null) {
+                        Navigator.of(context).pop();
+                        callback();
+                      }
+                      break;
+                    }
+                  },
+                )),
+          ]));
+    },
+  );
 }

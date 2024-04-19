@@ -7,6 +7,16 @@ class TransactionModel {
   Uint8List externalTransactionID;
   int createTime;
   int modifyTime;
+  Uint8List hashedTransactionID;
+  String transactionID;
+  String transactionTime;
+  String exchangeRateID;
+  String serverWalletID;
+  String serverAccountID;
+  String? sender;
+  String? tolist;
+  String? subject;
+  String? body;
 
   TransactionModel({
     required this.id,
@@ -15,6 +25,16 @@ class TransactionModel {
     required this.externalTransactionID,
     required this.createTime,
     required this.modifyTime,
+    required this.hashedTransactionID,
+    required this.transactionID,
+    required this.transactionTime,
+    required this.exchangeRateID,
+    required this.serverWalletID,
+    required this.serverAccountID,
+    required this.sender,
+    required this.tolist,
+    required this.subject,
+    required this.body,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +45,16 @@ class TransactionModel {
       'externalTransactionID': externalTransactionID,
       'createTime': createTime,
       'modifyTime': modifyTime,
+      'hashedTransactionID': hashedTransactionID,
+      'transactionID': transactionID,
+      'transactionTime': transactionTime,
+      'exchangeRateID': exchangeRateID,
+      'serverWalletID': serverWalletID,
+      'serverAccountID': serverAccountID,
+      'sender': sender,
+      'tolist': tolist,
+      'subject': subject,
+      'body': body,
     };
   }
 
@@ -36,6 +66,16 @@ class TransactionModel {
       externalTransactionID: map['externalTransactionID'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
+      hashedTransactionID: map['hashedTransactionID'],
+      transactionID: map['transactionID'],
+      transactionTime: map['transactionTime'],
+      exchangeRateID: map['exchangeRateID'],
+      serverWalletID: map['serverWalletID'],
+      serverAccountID: map['serverAccountID'],
+      sender: map['sender'],
+      tolist: map['tolist'],
+      subject: map['subject'],
+      body: map['body'],
     );
   }
 }

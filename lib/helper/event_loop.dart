@@ -1,27 +1,40 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/event_routes.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/rust/proton_api/wallet_settings.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:wallet/scenes/core/coordinator.dart';
 
 class EventLoop {
-  static const int loopDuration = 30;
+  static const int loopDuration = 10;
   bool _isRunning = false;
   String latestEventId = "";
+  late UserSettingProvider userSettingProvider;
 
   Future<void> start() async {
     if (!_isRunning) {
       _isRunning = true;
+      userSettingProvider = Provider.of<UserSettingProvider>(
+          Coordinator.navigatorKey.currentContext!, listen: false);
       String? savedLatestEventId = await WalletManager.getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
       await _run();
@@ -36,6 +49,7 @@ class EventLoop {
   }
 
   Future<void> runOnce() async {
+    logger.i("event loop runOnce()");
     Map<String, List<ProtonWalletKey>> walletID2ProtonWalletKey = {};
     try {
       List<ProtonEvent> events =
@@ -134,8 +148,43 @@ class EventLoop {
           // TODO::
         }
       }
+      await polling();
     } catch (e) {
-      // print("EventLoop error: ${e.toString()}");
+      logger.e("Event Loop error: ${e.toString()}");
+      await WalletManager.initMuon(WalletManager.apiEnv);
+    }
+  }
+
+  Future<void> polling() async {
+    await handleBitcoinAddress();
+    await ExchangeRateService.runOnce(userSettingProvider.walletUserSetting.fiatCurrency);
+    ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(userSettingProvider.walletUserSetting.fiatCurrency);
+    userSettingProvider.updateExchangeRate(exchangeRate);
+  }
+
+  Future<void> handleBitcoinAddress() async {
+    List<WalletModel> walletModels =
+        (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
+    for (WalletModel walletModel in walletModels) {
+      List<AccountModel> accountModels =
+          (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
+              .cast<AccountModel>();
+      for (AccountModel accountModel in accountModels) {
+        Wallet wallet = await WalletManager.loadWalletWithID(
+            walletModel.id!, accountModel.id!);
+        try {
+          WalletManager.handleBitcoinAddressRequests(
+              wallet, walletModel.serverWalletID, accountModel.serverAccountID);
+        } catch (e) {
+          print("handleBitcoinAddressRequests error: ${e.toString()}");
+        }
+        try {
+          WalletManager.bitcoinAddressPoolHealthCheck(
+              wallet, walletModel.serverWalletID, accountModel.serverAccountID);
+        } catch (e) {
+          print("bitcoinAddressPoolHealthCheck error: ${e.toString()}");
+        }
+      }
     }
   }
 

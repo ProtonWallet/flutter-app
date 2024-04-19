@@ -500,11 +500,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
           ButtonV5(
               onPressed: () async {
-                int exchangeRate =
-                    await WalletManager.getExchangeRate(FiatCurrency.usd);
-                if (context.mounted) {
-                  LocalToast.showToast(context, "exchangeRate = $exchangeRate");
-                }
+
               },
               text: "Get ExchangeRate",
               width: MediaQuery.of(context).size.width - 52,
