@@ -13,6 +13,8 @@ abstract class AccountDao extends BaseDao {
 
   Future<int> getAccountCount(int walletID);
 
+  Future deleteByServerAccountID(String serverAccountID);
+
   Future deleteAccountsNotInServers(
       int walletID, List<String> serverAccountIDs);
 
@@ -25,6 +27,12 @@ class AccountDaoImpl extends AccountDao {
   @override
   Future<void> delete(int id) async {
     await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<void> deleteByServerAccountID(String serverAccountID) async {
+    await db.delete(tableName,
+        where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
   }
 
   @override
@@ -99,7 +107,7 @@ class AccountDaoImpl extends AccountDao {
         await db.query(tableName, where: 'walletID = ?', whereArgs: [walletID]);
     List accounts = List.generate(
         maps.length, (index) => AccountModel.fromMap(maps[index]));
-    for (dynamic account in accounts){
+    for (dynamic account in accounts) {
       await account.decrypt();
     }
     return accounts;

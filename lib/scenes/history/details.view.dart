@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/components/transaction.history.item.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/user.session.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/tag.text.dart';
-import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -20,14 +26,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   Widget buildWithViewModel(BuildContext context,
       HistoryDetailViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
-      backgroundColor: ProtonColors.backgroundProton,
+      backgroundColor: ProtonColors.white,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: ProtonColors.white,
         title: Text(S.of(context).trans_details),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -70,158 +76,142 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   ],
                 ),
                 viewModel.isSend
-                    ? Text("${viewModel.amount} SAT",
+                    ? Text(S
+                    .of(context)
+                    .current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8)),
                         style: FontManager.titleHero(ProtonColors.signalError))
-                    : Text("+${viewModel.amount} SAT",
+                    : Text("+${S
+                    .of(context)
+                    .current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8))}",
                         style:
                             FontManager.titleHero(ProtonColors.signalSuccess)),
                 Text(
                     viewModel.isSend
-                        ? "-\$${viewModel.notional}"
-                        : "+\$${viewModel.notional}",
+                        ? "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.notional}"
+                        : "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.notional}",
                     style: FontManager.titleSubHeadline(ProtonColors.textHint)),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
+                viewModel.isEditing == false
+                    ? Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.all(defaultPadding),
+                        decoration: BoxDecoration(
+                            color: ProtonColors.transactionNoteBackground,
+                            borderRadius: BorderRadius.circular(40.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset("assets/images/icon/ic_note.svg",
+                                fit: BoxFit.fill, width: 32, height: 32),
+                            const SizedBox(width: 10),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (viewModel.memoController.text.isNotEmpty)
+                                  Text(viewModel.memoController.text,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textNorm)),
+                                GestureDetector(
+                                    onTap: () {
+                                      viewModel.editMemo();
+                                    },
+                                    child: Text(S.of(context).trans_edit_note,
+                                        style: FontManager.body2Median(
+                                            ProtonColors.protonBlue))),
+                              ],
+                            )
+                          ],
+                        ))
+                    : Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: TextFieldTextV2(
+                          labelText: S.of(context).trans_userLable,
+                          textController: viewModel.memoController,
+                          myFocusNode: viewModel.memoFocusNode,
+                          paddingSize: 7,
+                          validation: (String value) {
+                            return "";
+                          },
+                        ),
+                      ),
                 viewModel.isSend
                     ? buildSendInfo(context, viewModel, viewSize)
                     : buildReceiveInfo(context, viewModel, viewSize),
-                Container(
-                  height: 30,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).trans_submitted,
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                        Text(parsetime(viewModel.submitTimestamp),
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                      ]),
+                const Divider(
+                  thickness: 0.2,
+                  height: 1,
                 ),
-                Container(
-                  height: 30,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).trans_completed,
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                        Text(parsetime(viewModel.completeTimestamp),
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                      ]),
+                TransactionHistoryItem(
+                    title: S.of(context).trans_status,
+                    content: viewModel.blockConfirmTimestamp != null
+                        ? S.of(context).confirmed
+                        : S.of(context).in_progress,
+                    contentColor: viewModel.blockConfirmTimestamp != null
+                        ? ProtonColors.signalSuccess
+                        : ProtonColors.signalError),
+                const Divider(
+                  thickness: 0.2,
+                  height: 1,
                 ),
-                Container(
-                  height: 30,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).trans_amount,
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                        Row(children: [
-                          Text(
-                              viewModel.isSend
-                                  ? "\$${CurrencyHelper.sat2usdt(viewModel.amount.abs() - viewModel.fee).toStringAsFixed(3)}"
-                                  : "\$${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}",
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textHint)),
-                          const SizedBox(width: 8),
-                          Text(
-                              viewModel.isSend
-                                  ? S.of(context).transaction_sats(
-                                      viewModel.amount.abs() - viewModel.fee)
-                                  : S
-                                      .of(context)
-                                      .transaction_sats(viewModel.amount.abs()),
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textNorm)),
-                        ])
-                      ]),
+                if (viewModel.blockConfirmTimestamp != null)
+                  TransactionHistoryItem(
+                      title: S.of(context).trans_date,
+                      content: parsetime(viewModel.blockConfirmTimestamp!)),
+                const Divider(
+                  thickness: 0.2,
+                  height: 1,
                 ),
-                Container(
-                  height: 30,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).trans_metworkFee,
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                        Row(children: [
-                          Text(
-                              "\$${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textHint)),
-                          const SizedBox(width: 8),
-                          Text(S.of(context).transaction_sats(viewModel.fee),
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textNorm)),
-                        ])
-                      ]),
-                ),
-                Container(
-                  height: 30,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(S.of(context).trans_total,
-                            style: FontManager.captionMedian(
-                                ProtonColors.textNorm)),
-                        Row(children: [
-                          Text(
-                              viewModel.isSend
-                                  ? "\$${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}"
-                                  : "\$${CurrencyHelper.sat2usdt(viewModel.amount.abs() + viewModel.fee).toStringAsFixed(3)}",
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textHint)),
-                          const SizedBox(width: 8),
-                          Text(
-                              viewModel.isSend
-                                  ? "${viewModel.amount.abs()} SAT"
-                                  : "${viewModel.amount.abs() + viewModel.fee} SAT",
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textNorm)),
-                        ])
-                      ]),
-                ),
-                Container(
-                    height: 30,
-                    margin: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(S.of(context).trans_userLable,
-                              style: FontManager.captionMedian(
-                                  ProtonColors.textNorm))
-                        ])),
-                Container(
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    child: TextFieldText(
-                      width: MediaQuery.of(context).size.width,
-                      height: 120,
-                      multiLine: true,
-                      suffixIcon: const Icon(Icons.save_as_rounded),
-                      showSuffixIcon: false,
-                      controller: viewModel.memoController,
-                      focusNode: viewModel.memoFocusNode,
-                    )),
-                const SizedBox(height: 40),
-                ButtonV5(
-                    onPressed: () {
-                      launchUrl(Uri.parse(
-                          "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
-                    },
-                    text: S.of(context).view_on_blockstream,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.surfaceLight,
-                    borderColor: const Color.fromARGB(255, 226, 226, 226),
-                    textStyle: FontManager.body1Median(
-                        ProtonColors.textNorm),
-                    height: 48),
+                ExpansionTile(
+                    shape: const Border(),
+                    initiallyExpanded: false,
+                    title: Text(S.of(context).view_more,
+                        style: FontManager.body2Median(ProtonColors.textWeak)),
+                    iconColor: ProtonColors.textHint,
+                    collapsedIconColor: ProtonColors.textHint,
+                    children: [
+                      TransactionHistoryItem(
+                        title: S.of(context).trans_metworkFee,
+                        titleCallback: () {
+                          showNetworkFee(context);
+                        },
+                        content:
+                            "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
+                        memo: S
+                            .of(context)
+                            .current_balance_btc((viewModel.fee / 100000000).toStringAsFixed(8)),
+                      ),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
+                      ),
+                      TransactionHistoryItem(
+                        title: S.of(context).trans_total,
+                        content: viewModel.isSend
+                            ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}"
+                            : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs() + viewModel.fee).toStringAsFixed(3)}",
+                        memo: viewModel.isSend
+                            ? S
+                                .of(context)
+                                .current_balance_btc((viewModel.amount.abs() / 100000000).toStringAsFixed(8))
+                            : S.of(context).current_balance_btc(((
+                                viewModel.amount.abs() + viewModel.fee) / 100000000).toStringAsFixed(8)),
+                      ),
+                      const SizedBox(height: 20),
+                      ButtonV5(
+                          onPressed: () {
+                            launchUrl(Uri.parse(
+                                "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
+                          },
+                          text: S.of(context).view_on_blockstream,
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: ProtonColors.protonBlue,
+                          textStyle:
+                              FontManager.body1Median(ProtonColors.white),
+                          height: 48),
+                      const SizedBox(height: 20),
+                    ])
               ],
             )));
   }
@@ -232,32 +222,22 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-            height: 30,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(S.of(context).trans_from,
-                      style: FontManager.captionMedian(
-                          ProtonColors.textNorm)),
-                  Row(children: [
-                    TagText(text: viewModel.strWallet, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,),
-                    const SizedBox(width: 4),
-                    TagText(text: viewModel.strAccount, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,)
-                  ])
-                ])),
-        Container(
-            height: 30,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(S.of(context).trans_to,
-                      style: FontManager.captionMedian(
-                          ProtonColors.textNorm)),
-                  TagText(text: viewModel.address, background: ProtonColors.primaryColor, textColor: ProtonColors.backgroundProton,)
-                ])),
+        TransactionHistoryItem(
+          title: S.of(context).trans_from,
+          content:
+              "${Provider.of<UserSessionProvider>(context).userSession.userMail} (You)",
+          memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
+        ),
+        const Divider(
+          thickness: 0.2,
+          height: 1,
+        ),
+        TransactionHistoryItem(
+          title: S.of(context).trans_to,
+          content: viewModel.toEmail.isNotEmpty ? WalletManager.getEmailFromWalletTransaction(viewModel.toEmail) : viewModel.address,
+          copyContent: true,
+          memo: viewModel.toEmail.isNotEmpty ? WalletManager.getBitcoinAddressFromWalletTransaction(viewModel.toEmail) : null,
+        ),
       ],
     );
   }
@@ -268,32 +248,22 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-            height: 30,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(S.of(context).trans_from,
-                      style: FontManager.captionMedian(
-                          ProtonColors.textNorm)),
-                  TagText(text: viewModel.address)
-                ])),
-        Container(
-            height: 30,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(S.of(context).trans_to,
-                      style: FontManager.captionMedian(
-                          ProtonColors.textNorm)),
-                  Row(children: [
-                    TagText(text: viewModel.strWallet),
-                    const SizedBox(width: 4),
-                    TagText(text: viewModel.strAccount)
-                  ])
-                ])),
+        TransactionHistoryItem(
+          title: S.of(context).trans_from,
+          content: viewModel.address,
+          copyContent: true,
+          memo: viewModel.fromEmail.isNotEmpty ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail) : null,
+        ),
+        const Divider(
+          thickness: 0.2,
+          height: 1,
+        ),
+        TransactionHistoryItem(
+          title: S.of(context).trans_to,
+          content:
+              "${Provider.of<UserSessionProvider>(context).userSession.userMail} (You)",
+          memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
+        ),
       ],
     );
   }
@@ -308,4 +278,51 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
     // var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
     return d12.toString();
   }
+}
+
+void showNetworkFee(BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+      backgroundColor: ProtonColors.white,
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
+                          fit: BoxFit.fill, width: 86, height: 87),
+                      const SizedBox(height: 10),
+                      Text(S.of(context).placeholder,
+                          style:
+                              FontManager.body1Median(ProtonColors.textNorm)),
+                      const SizedBox(height: 5),
+                      Text(S.of(context).placeholder,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textWeak)),
+                      const SizedBox(height: 20),
+                      ButtonV5(
+                        text: S.of(context).ok,
+                        width: MediaQuery.of(context).size.width,
+                        backgroundColor: ProtonColors.protonBlue,
+                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        height: 48,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  )));
+        });
+      });
 }

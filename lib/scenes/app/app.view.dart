@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.session.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
@@ -25,6 +26,9 @@ class AppView extends ViewBase<AppViewModel> {
       providers: [
         ChangeNotifierProvider<UserSessionProvider>(
           create: (context) => UserSessionProvider(),
+        ),
+        ChangeNotifierProvider<UserSettingProvider>(
+          create: (context) => UserSettingProvider(),
         ),
         ChangeNotifierProvider<ThemeProvider>(
             create: (context) => ThemeProvider()),

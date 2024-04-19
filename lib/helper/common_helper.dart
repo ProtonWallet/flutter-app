@@ -31,6 +31,9 @@ class CommonHelper {
     if (n >= str.length){
       return str;
     }
+    if (n > 1) {
+      return "${str.substring(0, n)}..";
+    }
     return str.substring(0, n);
   }
 
@@ -40,5 +43,9 @@ class CommonHelper {
     } else {
       return amount * 100 / currencyExchangeRate;
     }
+  }
+
+  static bool isBitcoinAddress(String bitcoinAddress){
+    return bitcoinAddress.toLowerCase().startsWith("tb") && bitcoinAddress.length > 30;
   }
 }

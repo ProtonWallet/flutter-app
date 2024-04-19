@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:path/path.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/bdk/helper.dart' as bdk_helper;
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/logger.dart';
 
@@ -16,6 +17,7 @@ import 'dart:async';
 
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/bdk/wallet.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class BdkLibrary {
   Future<Mnemonic> createMnemonic() async {
@@ -86,7 +88,7 @@ class BdkLibrary {
   Future<Wallet> restoreWallet(Descriptor descriptor,
       {String databaseName = "test_database"}) async {
     DatabaseConfig config;
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
       var databaseFactory = databaseFactoryFfi;
       final Directory appDocumentsDir =
@@ -168,6 +170,11 @@ class BdkLibrary {
     return confirmed;
   }
 
+  Future<List<TransactionDetails>> getAllTransactions(
+      Wallet aliceWallet) async {
+    return await aliceWallet.listTransactions(true);
+  }
+
   Future<Balance> getBalance(Wallet aliceWallet) async {
     final res = await aliceWallet.getBalance();
     return res;
@@ -228,6 +235,45 @@ class BdkLibrary {
     } on Exception catch (e) {
       e.toString();
       rethrow;
+    }
+  }
+
+  Future<String> sendBitcoinWithAtlas(
+      Blockchain blockchain,
+      Wallet aliceWallet,
+      String serverWalletID,
+      String serverAccountID,
+      String addressStr,
+      int amount,
+      {String? emailAddressID,
+      String? label,
+      String? exchangeRateID,
+      String? transactionTime}) async {
+    try {
+      final txBuilder = TxBuilder();
+      final address = await Address.create(address: addressStr);
+
+      final script = await address.scriptPubKey();
+      //   final feeRate = await estimateFeeRate(25, blockchain);
+      final txBuilderResult = await txBuilder
+          .addRecipient(script, amount)
+          .feeRate(2)
+          .finish(aliceWallet);
+      getInputOutPuts(txBuilderResult, blockchain);
+      final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
+      bdk_helper.Transaction tx = await aliceSbt.extractTx();
+      String transactionID = await proton_api.broadcastRawTransaction(
+          signedTransactionHex: tx.toString(),
+          walletId: serverWalletID,
+          walletAccountId: serverAccountID,
+          label: label,
+          addressId: emailAddressID,
+          exchangeRateId: exchangeRateID,
+          transactionTime: transactionTime);
+      return transactionID;
+    } on Exception catch (e) {
+      e.toString();
+      return "Error: ${e.toString()}";
     }
   }
 }

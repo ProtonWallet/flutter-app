@@ -85,6 +85,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   connectivity_plus : ^6.0.1
   toggle_switch: ^2.3.0
+  mobile_scanner: ^4.0.1
+  xml: ^6.5.0
 
 
 

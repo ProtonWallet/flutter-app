@@ -22,7 +22,7 @@ class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
   static String dbFolder = "databases";
   static String dbName = "proton_wallet_db";
-  int version = 7;
+  int version = 9;
   late Database db;
   late MigrationContainer migrationContainer;
 
@@ -52,6 +52,12 @@ class AppDatabase
     Migration(6, 7, (Database db) async {
       AddressDatabase.migration_0.migrate(db);
     }),
+    Migration(7, 8, (Database db) async {
+      TransactionDatabase.migration_1.migrate(db);
+    }),
+    Migration(8, 9, (Database db) async {
+      TransactionDatabase.migration_2.migrate(db);
+    }),
   ];
 
   AppDatabase() {
@@ -69,6 +75,7 @@ class AppDatabase
     AccountDatabase.dropTables(db);
     TransactionDatabase.dropTables(db);
     ContactsDatabase.dropTables(db);
+    AddressDatabase.dropTables(db);
   }
 
   void initDAO() {
@@ -104,6 +111,7 @@ class AppDatabase
         dbPath,
       );
     }
+    logger.i("dbPath: $dbPath");
     return database;
   }
 

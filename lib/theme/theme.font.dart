@@ -14,6 +14,26 @@ class FontManager {
         color: color);
   }
 
+  static TextStyle balanceInFiatCurrency(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 36,
+        height: 1,
+        // lineHeight = 16
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
+
+  static TextStyle balanceInBTC(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 16,
+        height: 1,
+        // lineHeight = 16
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
+
   static TextStyle titleHero(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,
@@ -119,6 +139,17 @@ class FontManager {
         fontFamily: primaryFontFamily,
         fontSize: 12,
         height: 1.33,
+        // lineHeight = 16
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
+
+
+  static TextStyle textFieldLabelStyle(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 14,
+        height: 0.6,
         // lineHeight = 16
         fontWeight: FontWeight.w400,
         color: color);

@@ -25,10 +25,7 @@ class CustomNewsBox extends StatelessWidget {
           decoration: BoxDecoration(
               color: ProtonColors.surfaceLight,
               borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                color: const Color.fromARGB(255, 226, 226, 226),
-                width: 1.0,
-              )),
+              ),
           child: Column(
             children: [
               Align(

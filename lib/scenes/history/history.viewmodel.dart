@@ -80,10 +80,6 @@ class HistoryViewModelImpl extends HistoryViewModel {
 
   @override
   void move(NavigationIdentifier to) {
-    switch (to) {
-      case ViewIdentifiers.historyDetails:
-        coordinator.showHistoryDetails(walletID, accountID, selectedTXID);
-        break;
-    }
+
   }
 }
