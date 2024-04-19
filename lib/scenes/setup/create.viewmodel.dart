@@ -46,7 +46,7 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
     Future.delayed(const Duration(microseconds: 100), () {
       startAnimate(true);
     });
-    Future.delayed(const Duration(milliseconds: 2400), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       coordinator.showPassphrase(strMnemonic);
     });
     return;

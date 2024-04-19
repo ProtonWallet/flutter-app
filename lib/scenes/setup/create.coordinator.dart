@@ -13,7 +13,7 @@ class SetupCreateCoordinator extends Coordinator {
 
   void showPassphrase(String strMnemonic) {
     var view = SetupPassPhraseCoordinator(strMnemonic).start();
-    pushCustom(view);
+    pushReplacement(view);
   }
 
   @override

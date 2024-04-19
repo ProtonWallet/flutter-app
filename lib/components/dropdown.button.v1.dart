@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -8,15 +9,19 @@ class DropdownButtonV1 extends StatefulWidget {
   final List items;
   final List itemsText;
   final ValueNotifier? valueNotifier;
-  final TextStyle? textStyle;
   final String? defaultOption;
+  final String? labelText;
+  final double? paddingSize;
+  final Color? backgroundColor;
 
   const DropdownButtonV1(
       {super.key,
       required this.width,
       required this.items,
       required this.itemsText,
-      this.textStyle,
+      this.labelText,
+      this.paddingSize,
+        this.backgroundColor,
       this.defaultOption,
       this.valueNotifier});
 
@@ -40,15 +45,23 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
   Widget buildWithList(BuildContext buildContext) {
     return Container(
         width: widget.width,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(
+            horizontal: defaultPadding, vertical: widget.paddingSize ?? 12),
         decoration: BoxDecoration(
-          color: ProtonColors.backgroundSecondary,
+          color: widget.backgroundColor??ProtonColors.white,
           // border: Border.all(color: Colors.black, width: 1.0),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(18.0),
         ),
-        child: DropdownButton(
+        child: DropdownButtonFormField(
+          decoration: InputDecoration(
+            enabledBorder: InputBorder.none,
+            border: InputBorder.none,
+            labelText: widget.labelText,
+            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+            contentPadding: EdgeInsets.only(top: 4, bottom: widget.paddingSize?? 16),
+          ),
           isExpanded: true,
-          dropdownColor: ProtonColors.backgroundSecondary,
+          dropdownColor: ProtonColors.white,
           value: widget.valueNotifier?.value,
           onChanged: (item) {
             setState(() {
@@ -56,7 +69,6 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
             });
           },
           items: getDropdownMenuItems(),
-          underline: Container(),
         ));
   }
 
@@ -67,8 +79,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
           value: widget.defaultOption,
           child: Text(
             "${widget.defaultOption}",
-            style: widget.textStyle ??
-                FontManager.body2Median(ProtonColors.textNorm),
+            style: FontManager.body1Median(ProtonColors.textNorm),
           )));
     }
     for (int i = 0; i < widget.items.length; i++) {
@@ -76,8 +87,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
           value: widget.items[i],
           child: Text(
             "${widget.itemsText[i]}",
-            style: widget.textStyle ??
-                FontManager.body2Median(ProtonColors.textNorm),
+            style: FontManager.body1Median(ProtonColors.textNorm),
           )));
     }
     return dropdownMenuItems;

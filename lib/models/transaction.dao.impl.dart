@@ -8,8 +8,7 @@ import 'package:wallet/models/transaction.model.dart';
 abstract class TransactionDao extends BaseDao {
   TransactionDao(super.db, super.tableName);
 
-  Future<void> insertOrUpdate(
-      int walletID, Uint8List externalTransactionID, String label);
+  Future<void> insertOrUpdate(TransactionModel transactionModel);
 
   Future<TransactionModel?> findByExternalTransactionID(
       Uint8List externalTransactionID);
@@ -66,27 +65,16 @@ class TransactionDaoImpl extends TransactionDao {
   }
 
   @override
-  Future<void> insertOrUpdate(
-      int walletID, Uint8List externalTransactionID, String label) async {
-    TransactionModel? transactionModel =
-        await findByExternalTransactionID(externalTransactionID);
+  Future<void> insertOrUpdate(TransactionModel transactionModel) async {
+    TransactionModel? transactionModelExists =
+        await findByExternalTransactionID(transactionModel.externalTransactionID);
     DateTime now = DateTime.now();
-    if (transactionModel != null) {
+    if (transactionModelExists != null) {
       // data exist, need update db
-      update({
-        "id": transactionModel.id,
-        "label": utf8.encode(label), // TODO:: encrypt label
-        "modifyTime": now.millisecondsSinceEpoch ~/ 1000
-      });
+      update(transactionModel);
     } else {
       // data not exist, insert data
-      insert({
-        "walletID": walletID,
-        "label": utf8.encode(label), // TODO:: encrypt label
-        "externalTransactionID": externalTransactionID,
-        "createTime": now.millisecondsSinceEpoch ~/ 1000,
-        "modifyTime": now.millisecondsSinceEpoch ~/ 1000,
-      });
+      insert(transactionModel);
     }
   }
 

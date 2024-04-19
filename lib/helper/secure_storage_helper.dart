@@ -7,6 +7,7 @@ class SecureStorageHelper {
   static const String walletKey = "WALLET_KEY";
   static FlutterSecureStorage? storage;
   static bool _initialized = false;
+  static List<String> keys = [];
 
   static AndroidOptions getAndroidOptions() => const AndroidOptions(
         encryptedSharedPreferences: true,
@@ -51,6 +52,9 @@ class SecureStorageHelper {
         break;
       }
     }
+    if (keys.contains(key_) == false) {
+      keys.add(key_);
+    }
   }
 
   static Future<String> get(String key_) async {
@@ -59,7 +63,10 @@ class SecureStorageHelper {
 
   static Future<void> deleteAll() async {
     if (Platform.isWindows) {
-      logger.w("Windows not support to deleteAll secure storage");
+      logger.w("Windows not support to deleteAll secure storage, try to delete with cached keys");
+      for (String key in keys){
+        await storage!.delete(key: key);
+      }
       return;
     }
     await storage!.deleteAll();

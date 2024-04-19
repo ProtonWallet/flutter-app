@@ -1,3 +1,4 @@
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -10,14 +11,15 @@ class HistoryCoordinator extends Coordinator {
 
   final int walletID;
   final int accountID;
+  final FiatCurrency userFiatCurrency;
 
-  HistoryCoordinator(this.walletID, this.accountID);
+  HistoryCoordinator(this.walletID, this.accountID, this.userFiatCurrency);
 
   @override
   void end() {}
 
-  void showHistoryDetails(int walletID, int accountID, String txID) {
-    var view = HistoryDetailCoordinator(walletID, accountID, txID).start();
+  void showHistoryDetails(int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
+    var view = HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency).start();
     push(view, fullscreenDialog: true);
   }
 

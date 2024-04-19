@@ -20,12 +20,9 @@ class TransactionFeeBox extends StatelessWidget {
       width: 160,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-          color: ProtonColors.surfaceLight,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(
-            color: const Color.fromARGB(255, 226, 226, 226),
-            width: 1.0,
-          )),
+        color: ProtonColors.surfaceLight,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

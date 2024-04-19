@@ -54,7 +54,7 @@ abstract class WalletDatabase extends BaseDatabase {
   });
 
   static DatabaseMigration migration_2 = DatabaseMigration((Database db) async {
-    // Drop column `localDBName`
+    // Add column `fingerprint`
     await db.execute('''
         ALTER TABLE wallet ADD COLUMN fingerprint TEXT NULL;
     ''');

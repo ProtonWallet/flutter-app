@@ -1,7 +1,14 @@
 pub use andromeda_api::settings::FiatCurrency;
-use andromeda_api::{AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid};
+use andromeda_api::{
+    transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
+    AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid,
+};
+use chrono::Utc;
 use lazy_static::lazy_static;
-use std::sync::{Arc, RwLock};
+use std::{
+    ptr::null,
+    sync::{Arc, RwLock},
+};
 
 use crate::proton_api::{
     contacts::ProtonContactEmails,
@@ -12,10 +19,15 @@ use crate::proton_api::{
     user_settings::{ApiUserSettings, CommonBitcoinUnit},
     wallet::{
         BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
-        WalletBitcoinAddress, WalletData,
+        WalletBitcoinAddress, WalletData, WalletTransaction,
     },
     wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
+
+use crate::bdk::psbt::Transaction;
+use bdk::bitcoin::consensus::serialize;
+use bdk::bitcoin::Transaction as bdkTransaction;
+use bitcoin_internals::hex::display::DisplayHex;
 
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonWalletApiClient>>> = RwLock::new(None);
@@ -310,7 +322,7 @@ pub async fn update_bitcoin_address(
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
-        .wallet
+        .bitcoin_address
         .update_bitcoin_address(
             wallet_id,
             wallet_account_id,
@@ -332,7 +344,7 @@ pub async fn add_bitcoin_addresses(
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
-        .wallet
+        .bitcoin_address
         .add_bitcoin_addresses(
             wallet_id,
             wallet_account_id,
@@ -363,12 +375,12 @@ pub async fn lookup_bitcoin_address(
 pub async fn get_wallet_bitcoin_address(
     wallet_id: String,
     wallet_account_id: String,
-    only_request: u8,
+    only_request: Option<u8>,
 ) -> Result<Vec<WalletBitcoinAddress>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
-        .wallet
+        .bitcoin_address
         .get_bitcoin_addresses(wallet_id, wallet_account_id, only_request)
         .await;
     match result {
@@ -384,8 +396,127 @@ pub async fn get_bitcoin_address_latest_index(
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
+        .bitcoin_address
+        .get_bitcoin_address_highest_index(wallet_id, wallet_account_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_wallet_transactions(
+    wallet_id: String,
+    wallet_account_id: Option<String>,
+    hashed_txids: Option<Vec<String>>,
+) -> Result<Vec<WalletTransaction>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+
+    let result = proton_api
         .wallet
-        .get_bitcoin_address_latest_index(wallet_id, wallet_account_id)
+        .get_wallet_transactions(wallet_id, wallet_account_id, hashed_txids)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn create_wallet_transactions(
+    wallet_id: String,
+    wallet_account_id: String,
+    transaction_id: String,
+    hashed_transaction_id: String,
+    label: Option<String>,
+    exchange_rate_id: Option<String>,
+    transaction_time: Option<String>,
+) -> Result<WalletTransaction, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let payload = CreateWalletTransactionRequestBody {
+        TransactionID: transaction_id,
+        HashedTransactionID: hashed_transaction_id,
+        Label: label,
+        ExchangeRateID: exchange_rate_id,
+        TransactionTime: transaction_time,
+    };
+    let result = proton_api
+        .wallet
+        .create_wallet_transaction(wallet_id, wallet_account_id, payload)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn update_wallet_transaction_label(
+    wallet_id: String,
+    wallet_account_id: String,
+    wallet_transaction_id: String,
+    label: String,
+) -> Result<WalletTransaction, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .update_wallet_transaction_label(wallet_id, wallet_account_id, wallet_transaction_id, label)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn delete_wallet_transactions(
+    wallet_id: String,
+    wallet_account_id: String,
+    wallet_transaction_id: String,
+) -> Result<(), ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
+        .await;
+    match result {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn broadcast_raw_transaction(
+    signed_transaction_hex: String,
+    wallet_id: String,
+    wallet_account_id: String,
+    label: Option<String>,
+    exchange_rate_id: Option<String>,
+    transaction_time: Option<String>,
+    address_id: Option<String>,
+    subject: Option<String>,
+    body: Option<String>,
+) -> Result<String, ApiError> {
+    let transaction: Transaction = signed_transaction_hex.into();
+    let bdk_transaction: &bdkTransaction = &transaction.internal;
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let signed_transaction_hex = serialize(bdk_transaction).to_lower_hex_string();
+    println!("signed_transaction_hex: {}", signed_transaction_hex);
+    let exchange_rate_or_transaction_time = if let Some(exchange_rate_id) = exchange_rate_id {
+        ExchangeRateOrTransactionTime::ExchangeRate(exchange_rate_id)
+    } else if let Some(transaction_time) = transaction_time {
+        ExchangeRateOrTransactionTime::TransactionTime(transaction_time)
+    } else {
+        ExchangeRateOrTransactionTime::TransactionTime(Utc::now().timestamp().to_string())
+    };
+    let result = proton_api
+        .transaction
+        .broadcast_raw_transaction(
+            signed_transaction_hex,
+            wallet_id,
+            wallet_account_id,
+            label,
+            exchange_rate_or_transaction_time,
+            address_id,
+            subject,
+            body,
+        )
         .await;
     match result {
         Ok(response) => Ok(response),

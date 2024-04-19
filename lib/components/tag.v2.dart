@@ -23,7 +23,7 @@ class TagV2 extends StatelessWidget {
         padding: const EdgeInsets.only(
             left: 20.0, right: 20.0, top: 12.0, bottom: 12.0),
         decoration: BoxDecoration(
-            color: ProtonColors.backgroundSecondary,
+            color: ProtonColors.white,
             borderRadius: BorderRadius.circular(40.0)),
         child: Row(children: [
           SizedBox(

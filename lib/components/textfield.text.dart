@@ -9,6 +9,7 @@ class TextFieldText extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final String? hintText;
+  final String? labelText;
   final bool multiLine;
   final bool showSuffixIcon;
   final bool showEnabledBorder;
@@ -25,6 +26,7 @@ class TextFieldText extends StatefulWidget {
       this.controller,
       this.focusNode,
       this.hintText,
+      this.labelText,
       this.multiLine = false,
       this.suffixIconOnPressed,
       this.showSuffixIcon = true,
@@ -58,8 +60,7 @@ class TextFieldTextState extends State<TextFieldText> {
                   child: buildTagWidget(widget.controller!.text))
               : TextField(
                   textAlignVertical: TextAlignVertical.center,
-                  style: FontManager.body2Regular(
-                      ProtonColors.textNorm),
+                  style: FontManager.body2Regular(ProtonColors.textNorm),
                   maxLines: widget.multiLine ? null : 1,
                   minLines: widget.multiLine ? 5 : 1,
                   controller: widget.controller,
@@ -71,7 +72,10 @@ class TextFieldTextState extends State<TextFieldText> {
                           : TextInputType.text,
                   inputFormatters: widget.digitOnly ? [_decimalFormatter] : [],
                   decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: widget.hintText,
+                    labelText: widget.labelText,
+                    labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
