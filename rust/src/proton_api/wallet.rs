@@ -1,9 +1,11 @@
 use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
 use andromeda_api::wallet::{
-    ApiBitcoinAddressCreationPayload, ApiWallet, ApiWalletBitcoinAddress, ApiWalletKey,
-    CreateWalletRequestBody,
+    ApiWallet, ApiWalletKey, ApiWalletTransaction, CreateWalletRequestBody,
 };
 
+use andromeda_api::bitcoin_address::{ApiBitcoinAddressCreationPayload, ApiWalletBitcoinAddress};
+
+use super::exchange_rate::ProtonExchangeRate;
 use super::wallet_settings::WalletSettings;
 
 #[derive(Debug)]
@@ -32,6 +34,40 @@ impl From<ApiWallet> for ProtonWallet {
             status: wallet.Status,
             r#type: wallet.Type,
             fingerprint: wallet.Fingerprint,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct WalletTransaction {
+    pub id: String,
+    pub wallet_id: String,
+    pub wallet_account_id: Option<String>,
+    pub label: Option<String>,
+    pub transaction_id: String,
+    pub transaction_time: String,
+    pub exchange_rate: Option<ProtonExchangeRate>,
+    pub hashed_transaction_id: Option<String>,
+    pub subject: Option<String>,
+    pub body: Option<String>,
+    pub sender: Option<String>,
+    pub tolist: Option<String>,
+}
+impl From<ApiWalletTransaction> for WalletTransaction {
+    fn from(wallet_transaction: ApiWalletTransaction) -> Self {
+        WalletTransaction {
+            id: wallet_transaction.ID,
+            wallet_id: wallet_transaction.WalletID,
+            wallet_account_id: wallet_transaction.WalletAccountID,
+            label: wallet_transaction.Label,
+            transaction_id: wallet_transaction.TransactionID,
+            transaction_time: wallet_transaction.TransactionTime,
+            exchange_rate: wallet_transaction.ExchangeRate.map(|v| v.into()),
+            hashed_transaction_id: wallet_transaction.HashedTransactionID,
+            subject: wallet_transaction.Subject,
+            body: wallet_transaction.Body,
+            sender: wallet_transaction.Sender,
+            tolist: wallet_transaction.ToList,
         }
     }
 }

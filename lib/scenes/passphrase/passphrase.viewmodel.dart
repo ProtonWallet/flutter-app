@@ -33,6 +33,7 @@ abstract class SetupPassPhraseViewModel
   late TextEditingController passphraseTextController;
   late TextEditingController passphraseTextConfirmController;
   late TextEditingController nameTextController;
+  late FocusNode walletNameFocusNode;
 
   void updateUserPhraseList(String title, bool remove);
 
@@ -62,6 +63,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   Future<void> loadData() async {
     passphraseTextController = TextEditingController();
     passphraseTextConfirmController = TextEditingController();
+    walletNameFocusNode = FocusNode();
     nameTextController = TextEditingController(text: "New Wallet");
     strMnemonic.split(" ").forEachIndexed((index, element) {
       itemList.add(Item(

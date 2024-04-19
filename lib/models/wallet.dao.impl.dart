@@ -21,7 +21,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName, orderBy: 'priority desc');
+    List<Map<String, dynamic>> maps = await db.query(tableName, orderBy: 'priority asc');
     return List.generate(
         maps.length, (index) => WalletModel.fromMap(maps[index]));
   }

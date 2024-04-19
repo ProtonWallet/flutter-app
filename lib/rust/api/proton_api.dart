@@ -176,7 +176,7 @@ Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
 Future<List<WalletBitcoinAddress>> getWalletBitcoinAddress(
         {required String walletId,
         required String walletAccountId,
-        required int onlyRequest,
+        int? onlyRequest,
         dynamic hint}) =>
     RustLib.instance.api.getWalletBitcoinAddress(
         walletId: walletId,
@@ -190,3 +190,80 @@ Future<int> getBitcoinAddressLatestIndex(
         dynamic hint}) =>
     RustLib.instance.api.getBitcoinAddressLatestIndex(
         walletId: walletId, walletAccountId: walletAccountId, hint: hint);
+
+Future<List<WalletTransaction>> getWalletTransactions(
+        {required String walletId,
+        String? walletAccountId,
+        List<String>? hashedTxids,
+        dynamic hint}) =>
+    RustLib.instance.api.getWalletTransactions(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        hashedTxids: hashedTxids,
+        hint: hint);
+
+Future<WalletTransaction> createWalletTransactions(
+        {required String walletId,
+        required String walletAccountId,
+        required String transactionId,
+        required String hashedTransactionId,
+        String? label,
+        String? exchangeRateId,
+        String? transactionTime,
+        dynamic hint}) =>
+    RustLib.instance.api.createWalletTransactions(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        transactionId: transactionId,
+        hashedTransactionId: hashedTransactionId,
+        label: label,
+        exchangeRateId: exchangeRateId,
+        transactionTime: transactionTime,
+        hint: hint);
+
+Future<WalletTransaction> updateWalletTransactionLabel(
+        {required String walletId,
+        required String walletAccountId,
+        required String walletTransactionId,
+        required String label,
+        dynamic hint}) =>
+    RustLib.instance.api.updateWalletTransactionLabel(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        walletTransactionId: walletTransactionId,
+        label: label,
+        hint: hint);
+
+Future<void> deleteWalletTransactions(
+        {required String walletId,
+        required String walletAccountId,
+        required String walletTransactionId,
+        dynamic hint}) =>
+    RustLib.instance.api.deleteWalletTransactions(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        walletTransactionId: walletTransactionId,
+        hint: hint);
+
+Future<String> broadcastRawTransaction(
+        {required String signedTransactionHex,
+        required String walletId,
+        required String walletAccountId,
+        String? label,
+        String? exchangeRateId,
+        String? transactionTime,
+        String? addressId,
+        String? subject,
+        String? body,
+        dynamic hint}) =>
+    RustLib.instance.api.broadcastRawTransaction(
+        signedTransactionHex: signedTransactionHex,
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        label: label,
+        exchangeRateId: exchangeRateId,
+        transactionTime: transactionTime,
+        addressId: addressId,
+        subject: subject,
+        body: body,
+        hint: hint);

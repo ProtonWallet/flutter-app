@@ -75,6 +75,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                 text: S.of(context).create_new_wallet,
                 width: MediaQuery.of(context).size.width,
                 textStyle: FontManager.body1Median(ProtonColors.white),
+                backgroundColor: ProtonColors.protonBlue,
                 height: 48),
             SizedBoxes.box12,
             ButtonV5(
@@ -84,9 +85,9 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
                 text: S.of(context).import_your_wallet,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.white,
-                borderColor: ProtonColors.interactionNorm,
+                borderColor: ProtonColors.protonBlue,
                 textStyle:
-                    FontManager.body1Median(ProtonColors.interactionNorm),
+                    FontManager.body1Median(ProtonColors.protonBlue),
                 height: 48),
           ],
         ),

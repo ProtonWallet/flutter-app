@@ -61,8 +61,6 @@ class HistoryView extends ViewBase<HistoryViewModel> {
                 "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
             coin: "Sat",
             amount: (viewModel.getAmount(index)).toDouble(),
-            notional: CurrencyHelper.sat2usdt(
-                (viewModel.getAmount(index)).abs().toDouble()),
             isSend: viewModel.history[index].sent >
                 viewModel.history[index].received,
             note: viewModel.userLabels[index],

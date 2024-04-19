@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:cryptography/cryptography.dart';
 
 class WalletKeyHelper {
@@ -39,7 +40,19 @@ class WalletKeyHelper {
     return encryptText;
   }
 
+  static Future<String> getHmacHashedString(SecretKey secretKey, String message) async{
+    var key = await secretKey.extractBytes();
+    var bytes = utf8.encode(message);
+
+    var hmacSha256 = crypto.Hmac(crypto.sha256, key);
+    var digest = hmacSha256.convert(bytes);
+    return base64Encode(digest.bytes);
+  }
+
   static Future<String> decrypt(SecretKey secretKey, String encryptText) async {
+    if (encryptText.isEmpty){
+      return "";
+    }
     Uint8List bytes = base64Decode(encryptText);
     Uint8List iv = bytes.sublist(0, 12);
     Uint8List ciphertext = bytes.sublist(12, bytes.length - 16);

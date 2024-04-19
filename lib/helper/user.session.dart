@@ -57,7 +57,7 @@ class UserSessionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
+  Future<void> logout() async{
     _userSession.userId = "";
     _userSession.userMail = "";
     _userSession.userName = "";
@@ -69,7 +69,7 @@ class UserSessionProvider with ChangeNotifier {
     _userSession.userKeyID = "";
     _userSession.userPrivateKey = "";
     _userSession.userPassphrase = "";
-    SecureStorageHelper.deleteAll();
+    await SecureStorageHelper.deleteAll();
     notifyListeners();
   }
 }

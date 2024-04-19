@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet/components/custom.loading.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
+
+import '../../constants/constants.dart';
 
 class TransactionListTitle extends StatelessWidget {
   final double width;
   final String address;
   final String coin;
   final double amount;
-  final double notional;
   final bool isSend;
-  final int timestamp;
+  final int? timestamp;
   final VoidCallback? onTap;
   final String note;
 
@@ -21,9 +27,8 @@ class TransactionListTitle extends StatelessWidget {
     required this.address,
     required this.coin,
     required this.amount,
-    required this.notional,
     required this.isSend,
-    required this.timestamp,
+    this.timestamp,
     this.note = "",
     this.onTap,
   });
@@ -38,6 +43,14 @@ class TransactionListTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double notional = CommonHelper.getEstimateValue(
+        amount:
+            coin.toLowerCase().contains("sat") ? amount / 100000000 : amount,
+        isBitcoinBase: true,
+        currencyExchangeRate: Provider.of<UserSettingProvider>(context)
+            .walletUserSetting
+            .exchangeRate
+            .exchangeRate);
     return GestureDetector(
         onTap: onTap,
         child: Container(
@@ -48,68 +61,83 @@ class TransactionListTitle extends StatelessWidget {
             border: Border(
                 bottom: BorderSide(
               color: ProtonColors.wMajor1,
-              width: 1,
+              width: 0.5,
             )),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(address,
-                    style: FontManager.body2Regular(
-                        ProtonColors.textNorm)),
+          child: Row(children: [
+            SvgPicture.asset(
                 isSend
-                    ? Text("$amount $coin",
-                        style:
-                            FontManager.body2Regular(ProtonColors.signalError))
-                    : Text("+$amount $coin",
-                        style: FontManager.body2Regular(
-                            ProtonColors.signalSuccess)),
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Row(
+                    ? "assets/images/icon/send.svg"
+                    : "assets/images/icon/receive.svg",
+                fit: BoxFit.fill,
+                width: 32,
+                height: 32),
+            const SizedBox(
+              width: 12,
+            ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 130,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: ProtonColors.wMajor1,
-                        ),
-                        margin: const EdgeInsets.only(right: 4, top: 2),
-                        padding: const EdgeInsets.all(2.0),
-                        child: Icon(
-                            isSend ? Icons.arrow_upward : Icons.arrow_downward,
-                            size: 10,
-                            color: ProtonColors.textHint)),
-                    Text(
-                        isSend
-                            ? "Send‧${parsetime(timestamp)}"
-                            : "Receive‧${parsetime(timestamp)}",
-                        style:
-                            FontManager.captionRegular(ProtonColors.textHint))
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(address,
+                              style: FontManager.body2Regular(
+                                  ProtonColors.textNorm)),
+                          isSend
+                              ? Text("$amount $coin",
+                                  style: FontManager.body2Regular(
+                                      ProtonColors.signalError))
+                              : Text("+$amount $coin",
+                                  style: FontManager.body2Regular(
+                                      ProtonColors.signalSuccess)),
+                        ]),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          timestamp != null
+                              ? Text(parsetime(timestamp!),
+                                  style: FontManager.captionRegular(
+                                      ProtonColors.textHint))
+                              : Row(children: [
+                                  const CustomLoading(),
+                                  const SizedBox(width: 6),
+                                  Text(S.of(context).in_progress,
+                                      style: FontManager.captionRegular(
+                                          ProtonColors.protonBlue)),
+                                ]),
+                          isSend
+                              ? Text(
+                                  "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
+                                  style: FontManager.body2Regular(
+                                      ProtonColors.textHint))
+                              : Text(
+                                  "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.toStringAsFixed(defaultDisplayDigits)}",
+                                  style: FontManager.body2Regular(
+                                      ProtonColors.textHint))
+                        ]),
+                    if (note != "")
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ProtonColors.wMajor1,
+                                ),
+                                margin: const EdgeInsets.only(right: 4, top: 2),
+                                padding: const EdgeInsets.all(2.0),
+                                child: Icon(Icons.edit_outlined,
+                                    size: 10, color: ProtonColors.textHint)),
+                            Text(S.of(context).trans_note(note),
+                                style: FontManager.captionRegular(
+                                    ProtonColors.textHint))
+                          ]),
                   ],
-                ),
-                isSend
-                    ? Text("-\$${notional.toStringAsFixed(3)}",
-                        style: FontManager.body2Regular(ProtonColors.textHint))
-                    : Text("+\$${notional.toStringAsFixed(3)}",
-                        style: FontManager.body2Regular(ProtonColors.textHint))
-              ]),
-              if (note != "")
-                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ProtonColors.wMajor1,
-                      ),
-                      margin: const EdgeInsets.only(right: 4, top: 2),
-                      padding: const EdgeInsets.all(2.0),
-                      child: Icon(Icons.edit_outlined,
-                          size: 10, color: ProtonColors.textHint)),
-                  Text(S.of(context).trans_note(note),
-                      style: FontManager.captionRegular(ProtonColors.textHint))
-                ]),
-            ],
-          ),
+                )),
+          ]),
         ));
   }
 }

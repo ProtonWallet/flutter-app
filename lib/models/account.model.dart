@@ -19,6 +19,7 @@ class AccountModel {
 
   String labelDecrypt = "Default Account";
   String serverAccountID;
+  double balance = 0;
 
   AccountModel({
     required this.id,

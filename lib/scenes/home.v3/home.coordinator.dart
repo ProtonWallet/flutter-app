@@ -1,10 +1,12 @@
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/websocket.coordinator.dart';
 import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
+import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -61,13 +63,18 @@ class HomeCoordinator extends Coordinator {
     push(view, fullscreenDialog: true);
   }
 
+  void showDiscover() {
+    var view = DiscoverCoordinator().start();
+    push(view);
+  }
+
   void showWalletDeletion(int walletID) {
     var view = WalletDeletionCoordinator(walletID).start();
     push(view, fullscreenDialog: true);
   }
 
-  void showHistoryDetails(int walletID, int accountID, String txID) {
-    var view = HistoryDetailCoordinator(walletID, accountID, txID).start();
+  void showHistoryDetails(int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
+    var view = HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency).start();
     push(view);
   }
 
