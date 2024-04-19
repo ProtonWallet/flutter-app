@@ -1,37 +1,29 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.expansion.dart';
-import 'package:wallet/components/custom.loading.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
 import 'package:wallet/components/custom.newsbox.v2.dart';
 import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
-import 'package:wallet/components/text.choices.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
-import 'package:wallet/components/transaction.fee.box.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -42,8 +34,6 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
-import 'package:wallet/scenes/settings/settings.account.view.dart';
-import 'package:wallet/scenes/settings/settings.common.view.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -82,14 +72,13 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
         centerTitle: true,
         actions: [
-          Container(
-              child: IconButton(
-            icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
-                fit: BoxFit.fill, width: 40, height: 40),
-            onPressed: () {
-              showWalletSetting(context, viewModel);
-            },
-          ))
+          IconButton(
+                      icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
+            fit: BoxFit.fill, width: 40, height: 40),
+                      onPressed: () {
+          showWalletSetting(context, viewModel);
+                      },
+                    )
         ],
         leading: Builder(
           builder: (BuildContext context) {
@@ -435,7 +424,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                     Text(S.of(context).explore_wallet,
                         style: FontManager.body1Median(ProtonColors.textNorm)),
                     const SizedBox(height: 10),
-                    Container(
+                    SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: 200,
                         child: ListView(
