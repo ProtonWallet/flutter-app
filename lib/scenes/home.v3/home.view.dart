@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -136,10 +137,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate.exchangeRate * viewModel.balance / 100 / 100000000).toStringAsFixed(defaultDisplayDigits)}",
+                                  viewModel.customFiatCurrency
+                                      ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate.exchangeRate * viewModel.balance / 100 / 100000000).toStringAsFixed(defaultDisplayDigits)}"
+                                      : "${viewModel.balance / 100000000} BTC",
                                   style: FontManager.balanceInFiatCurrency(
                                       ProtonColors.textNorm)),
-                              Text("${viewModel.balance / 100000000} BTC",
+                              Text(
+                                  viewModel.customFiatCurrency
+                                      ? "${viewModel.balance / 100000000} BTC"
+                                      : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate.exchangeRate * viewModel.balance / 100 / 100000000).toStringAsFixed(defaultDisplayDigits)}",
                                   style: FontManager.balanceInBTC(
                                       ProtonColors.textWeak))
                             ],
@@ -697,26 +703,12 @@ void showEmailIntegrationSettingGuide(
                                 Text("Email Integration",
                                     style: FontManager.body2Regular(
                                         ProtonColors.textNorm)),
-                                ToggleSwitch(
-                                  minWidth: 60.0,
-                                  cornerRadius: 20.0,
-                                  activeBgColors: [
-                                    [ProtonColors.signalError],
-                                    [ProtonColors.protonBlue],
-                                  ],
-                                  activeFgColor:
-                                      ProtonColors.backgroundSecondary,
-                                  inactiveBgColor: ProtonColors.textWeak,
-                                  inactiveFgColor:
-                                      ProtonColors.backgroundSecondary,
-                                  initialLabelIndex:
-                                      emailIntegrationEnable ? 1 : 0,
-                                  totalSwitches: 2,
-                                  labels: [S.of(context).no, S.of(context).yes],
-                                  radiusStyle: true,
-                                  onToggle: (toggleIndex) {
+                                CupertinoSwitch(
+                                  value: emailIntegrationEnable,
+                                  activeColor: ProtonColors.protonBlue,
+                                  onChanged: (bool newValue) {
                                     setState(() {
-                                      emailIntegrationEnable = toggleIndex == 1;
+                                      emailIntegrationEnable = newValue;
                                     });
                                   },
                                 )
@@ -965,15 +957,59 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                       const SizedBox(
                         height: 10,
                       ),
-                      DropdownButtonV1(
-                          labelText: S.of(context).setting_fiat_currency_label,
-                          width: MediaQuery.of(context).size.width -
-                              defaultPadding * 2,
-                          items: fiatCurrencies,
-                          itemsText: fiatCurrencies
-                              .map((v) => FiatCurrencyHelper.getText(v))
-                              .toList(),
-                          valueNotifier: viewModel.fiatCurrencyNotifier),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: ProtonColors.white,
+                            // border: Border.all(color: Colors.black, width: 1.0),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(S.of(context).custom_fiat_currency,
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textNorm)),
+                                      CupertinoSwitch(
+                                        value: viewModel.customFiatCurrency,
+                                        activeColor: ProtonColors.protonBlue,
+                                        onChanged: (bool newValue) {
+                                          setState(() {
+                                            viewModel.customFiatCurrency =
+                                                newValue;
+                                            if (newValue == false) {
+                                              viewModel.fiatCurrencyNotifier
+                                                  .value = FiatCurrency.usd;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ])),
+                            if (viewModel.customFiatCurrency)
+                              DropdownButtonV1(
+                                  labelText:
+                                      S.of(context).setting_fiat_currency_label,
+                                  width: MediaQuery.of(context).size.width -
+                                      defaultPadding * 2,
+                                  items: fiatCurrencies,
+                                  itemsText: fiatCurrencies
+                                      .map((v) => FiatCurrencyHelper.getText(v))
+                                      .toList(),
+                                  valueNotifier:
+                                      viewModel.fiatCurrencyNotifier),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ])),
                       const SizedBox(
                         height: defaultPadding,
                       ),
@@ -1025,38 +1061,18 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("Email Integration",
+                                        Text(S.of(context).email_integration,
                                             style: FontManager.body2Regular(
                                                 ProtonColors.textNorm)),
-                                        ToggleSwitch(
-                                          minWidth: 60.0,
-                                          cornerRadius: 20.0,
-                                          activeBgColors: [
-                                            [ProtonColors.signalError],
-                                            [ProtonColors.protonBlue],
-                                          ],
-                                          activeFgColor:
-                                              ProtonColors.backgroundSecondary,
-                                          inactiveBgColor:
-                                              ProtonColors.textWeak,
-                                          inactiveFgColor:
-                                              ProtonColors.backgroundSecondary,
-                                          initialLabelIndex:
-                                              emailIntegrationEnables[
-                                                      userAccount.id!]!
-                                                  ? 1
-                                                  : 0,
-                                          totalSwitches: 2,
-                                          labels: [
-                                            S.of(context).no,
-                                            S.of(context).yes
-                                          ],
-                                          radiusStyle: true,
-                                          onToggle: (toggleIndex) {
+                                        CupertinoSwitch(
+                                          value: emailIntegrationEnables[
+                                                  userAccount.id!] ??
+                                              false,
+                                          activeColor: ProtonColors.protonBlue,
+                                          onChanged: (bool newValue) {
                                             setState(() {
                                               emailIntegrationEnables[
-                                                      userAccount.id!] =
-                                                  toggleIndex == 1;
+                                                  userAccount.id!] = newValue;
                                             });
                                           },
                                         )
@@ -1572,10 +1588,15 @@ Widget getWalletBalanceWidget(
           .exchangeRate);
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+        viewModel.customFiatCurrency
+            ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}"
+            : "${walletModel.balance / 100000000} BTC",
         style: FontManager.captionSemiBold(AvatarColorHelper.getTextColor(
             viewModel.userWallets.indexOf(walletModel)))),
-    Text("${walletModel.balance / 100000000} BTC",
+    Text(
+        viewModel.customFiatCurrency
+            ? "${walletModel.balance / 100000000} BTC"
+            : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
 }
@@ -1591,9 +1612,14 @@ Widget getWalletAccountBalanceWidget(BuildContext context,
           .exchangeRate);
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+        viewModel.customFiatCurrency
+            ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}"
+            : "${accountModel.balance / 100000000} BTC",
         style: FontManager.captionSemiBold(textColor)),
-    Text("${accountModel.balance / 100000000} BTC",
+    Text(
+        viewModel.customFiatCurrency
+            ? "${accountModel.balance / 100000000} BTC"
+            : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
 }

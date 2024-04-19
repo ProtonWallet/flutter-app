@@ -177,6 +177,8 @@
   "fee_rate_sats_confirmation_in_hours": "{fee_rate} sats/vb\nConfirmation in 2hours",
   "dashboard": "Dashboard",
   "exit": "Exit",
+  "custom_fiat_currency": "Custom Fiat Currency",
+
   "confirm_to_delete": "Confirm to delete",
   "you_are_sending": "You are sending",
   "receive_desc": "Receive bitcoin with your email address, lorem ipsum dolor sit amet consectetur.",

@@ -76,6 +76,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hasMailIntegration = false;
   bool isFetching = false;
   bool isShowingNoInternet = false;
+  bool customFiatCurrency = false;
   Map<int, List<AccountModel>> walletID2Accounts = {};
   Map<int, List<String>> accountID2IntegratedEmailIDs = {};
   List<ProtonAddress> protonAddresses = [];
