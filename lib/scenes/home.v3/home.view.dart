@@ -73,12 +73,12 @@ class HomeView extends ViewBase<HomeViewModel> {
         centerTitle: true,
         actions: [
           IconButton(
-                      icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
-            fit: BoxFit.fill, width: 40, height: 40),
-                      onPressed: () {
-          showWalletSetting(context, viewModel);
-                      },
-                    )
+            icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
+                fit: BoxFit.fill, width: 40, height: 40),
+            onPressed: () {
+              showWalletSetting(context, viewModel);
+            },
+          )
         ],
         leading: Builder(
           builder: (BuildContext context) {
@@ -339,12 +339,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 isSend: viewModel.history[index].sent >
                                     viewModel.history[index].received,
                                 note: viewModel.userLabels[index],
-                                timestamp:
-                                    viewModel.history[index].confirmationTime !=
-                                            null
-                                        ? viewModel.history[index]
-                                            .confirmationTime!.timestamp
-                                        : null,
+                                timestamp: viewModel
+                                    .history[index].confirmationTime?.timestamp,
                                 onTap: () {
                                   viewModel.selectedTXID =
                                       viewModel.history[index].txid;

@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -275,7 +273,7 @@ class HomeViewModelImpl extends HomeViewModel {
         addresses.where((element) => element.status == 1).toList();
     emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
     for (ProtonAddress add in protonAddresses) {
-      print("${add.id}, ${add.email}");
+      logger.i("${add.id}, ${add.email}");
     }
     datasourceStreamSinkAdd();
   }
@@ -348,7 +346,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> checkNewWallet() async {
     bool currentWalletExist = false;
     await DBHelper.walletDao!.findAll().then((results) async {
-      Map<int, List<AccountModel>> _walletID2Accounts = {};
+      Map<int, List<AccountModel>> walletID2Accounts = {};
       for (WalletModel walletModel in results) {
         walletModel.accountCount =
             await DBHelper.accountDao!.getAccountCount(walletModel.id!);
@@ -366,10 +364,10 @@ class HomeViewModelImpl extends HomeViewModel {
               await WalletManager.getAccountAddressIDs(
                   accountModel.serverAccountID);
         }
-        _walletID2Accounts[walletModel.id!] = accounts.cast<AccountModel>();
+        walletID2Accounts[walletModel.id!] = accounts.cast<AccountModel>();
       }
       userWallets = results;
-      walletID2Accounts = _walletID2Accounts;
+      walletID2Accounts = walletID2Accounts;
     });
     if (currentWalletExist == false) {
       currentWallet = null;
@@ -522,7 +520,7 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  Future<void> syncWalletService() async{
+  Future<void> syncWalletService() async {
     await Future.delayed(const Duration(seconds: 5), () async {
       await syncWallet();
     });
@@ -554,7 +552,8 @@ class HomeViewModelImpl extends HomeViewModel {
           wallet != null) {
         isSyncingMap[serverAccountID] = true;
         datasourceStreamSinkAdd();
-        logger.d("start syncing ${currentAccount!.labelDecrypt} at ${DateTime.now()}");
+        logger.d(
+            "start syncing ${currentAccount!.labelDecrypt} at ${DateTime.now()}");
         await _lib.sync(blockchain!, wallet!);
         var walletBalance = await wallet!.getBalance();
         balance = walletBalance.total;
@@ -565,7 +564,8 @@ class HomeViewModelImpl extends HomeViewModel {
         confirmed = confirmedList.length;
         datasourceStreamSinkAdd();
         isSyncingMap[serverAccountID] = false;
-        logger.d("end syncing ${currentAccount!.labelDecrypt} at ${DateTime.now()}");
+        logger.d(
+            "end syncing ${currentAccount!.labelDecrypt} at ${DateTime.now()}");
         await loadTransactionHistory();
       }
     }
@@ -757,7 +757,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> logout() async{
+  Future<void> logout() async {
     await UserSessionProvider().logout();
     await DBHelper.reset();
     coordinator.logout();

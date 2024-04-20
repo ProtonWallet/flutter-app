@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/tag.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -165,7 +163,9 @@ void showConfirm(BuildContext context, SetupBackupViewModel viewModel) {
                             },
                             backgroundColor: ProtonColors.protonGrey,
                             text: S.of(context).cancel,
-                            width: MediaQuery.of(context).size.width / 2 - defaultPadding-5,
+                            width: MediaQuery.of(context).size.width / 2 -
+                                defaultPadding -
+                                5,
                             textStyle:
                                 FontManager.body1Median(ProtonColors.textNorm),
                             radius: 40,
@@ -178,7 +178,9 @@ void showConfirm(BuildContext context, SetupBackupViewModel viewModel) {
                             },
                             backgroundColor: ProtonColors.protonBlue,
                             text: S.of(context).done,
-                            width: MediaQuery.of(context).size.width / 2 - defaultPadding-5,
+                            width: MediaQuery.of(context).size.width / 2 -
+                                defaultPadding -
+                                5,
                             textStyle:
                                 FontManager.body1Median(ProtonColors.white),
                             radius: 40,

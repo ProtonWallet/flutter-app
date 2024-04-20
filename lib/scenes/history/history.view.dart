@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/history.viewmodel.dart';
@@ -44,8 +43,7 @@ class HistoryView extends ViewBase<HistoryViewModel> {
             children: <Widget>[
               Text(
                 S.of(context).no_data,
-                style: FontManager.titleHeadline(
-                    ProtonColors.textNorm),
+                style: FontManager.titleHeadline(ProtonColors.textNorm),
               ),
             ]));
   }

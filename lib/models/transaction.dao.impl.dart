@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:sqflite/sqflite.dart';
@@ -67,8 +66,9 @@ class TransactionDaoImpl extends TransactionDao {
   @override
   Future<void> insertOrUpdate(TransactionModel transactionModel) async {
     TransactionModel? transactionModelExists =
-        await findByExternalTransactionID(transactionModel.externalTransactionID);
-    DateTime now = DateTime.now();
+        await findByExternalTransactionID(
+            transactionModel.externalTransactionID);
+    //DateTime now = DateTime.now();
     if (transactionModelExists != null) {
       // data exist, need update db
       update(transactionModel);

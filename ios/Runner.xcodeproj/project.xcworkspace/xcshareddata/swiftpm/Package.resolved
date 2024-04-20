@@ -1,4 +1,5 @@
 {
+  "originHash" : "93f330f5417a9a1c0bd5b6476c3bf2ebbeba37836059e861cc9cc539c5b10846",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -59,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "f9b0db843e3e1ac487124653b69348b28b239991",
-        "version" : "20.2.2"
+        "revision" : "839d017c80b8f55453cd1b7cb28dc4eb4f10df55",
+        "version" : "22.0.2"
       }
     },
     {
@@ -127,5 +128,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

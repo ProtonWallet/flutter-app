@@ -6,6 +6,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:http/http.dart' as http;
+import 'package:xml/xml.dart';
 
 class ProtonFeedItem {
   String title;
@@ -75,17 +76,27 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
     final items = document.findAllElements('item');
     for (var item in items) {
       protonFeedItems.add(ProtonFeedItem(
-        title: item.findElements('title').single.innerText ?? "Default title",
-        pubDate:
-            item.findElements('pubDate').single.innerText ?? "Default pubDate",
-        link: item.findElements('link').single.innerText ?? "Default link",
-        description: item.findElements('description').single.innerText ??
-            "Default description",
-        category: item.findElements('category').single.innerText ??
-            "Default category",
-        author:
-            item.findElements('author').single.innerText ?? "Default author",
+        title: _findElementOrDefault(item, 'title', "Default title"),
+        pubDate: _findElementOrDefault(item, 'pubDate', "Default pubDate"),
+        link: _findElementOrDefault(item, 'link', "Default link"),
+        description:
+            _findElementOrDefault(item, 'description', "Default description"),
+        category: _findElementOrDefault(item, 'category', "Default category"),
+        author: _findElementOrDefault(item, 'author', "Default author"),
       ));
+    }
+  }
+
+  String _findElementOrDefault(
+      XmlElement item, String tagName, String defaultValue) {
+    try {
+      var element = item.findElements(tagName).single;
+      return element.innerText.trim().isEmpty
+          ? defaultValue
+          : element.innerText;
+    } catch (e) {
+      logger.e(e.toString());
+      return defaultValue;
     }
   }
 }
