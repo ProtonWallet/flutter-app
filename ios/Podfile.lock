@@ -89,7 +89,7 @@ PODS:
   - PromisesObjC (2.4.0)
   - proton_crypto (0.0.1):
     - Flutter
-  - ReachabilitySwift (5.2.1)
+  - ReachabilitySwift (5.2.2)
   - rust_builder (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -183,7 +183,7 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: bcb5acffd4ea05e12a783ecf835f2210ce3dc6af
   FirebaseInstallations: 8f581fca6478a50705d2bd2abd66d306e0f5736e
   FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
@@ -195,7 +195,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   proton_crypto: 69238ad48734e5d5dca3ac19b965cf682c5e5bcf
-  ReachabilitySwift: 5ae15e16814b5f9ef568963fb2c87aeb49158c66
+  ReachabilitySwift: 2128f3a8c9107e1ad33574c6e58e8285d460b149
   rust_builder: fe99dacddf57fc7b3a8e5e54484d24c310151628
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695

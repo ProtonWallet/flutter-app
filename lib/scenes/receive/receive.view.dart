@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';

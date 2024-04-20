@@ -4,8 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
-import 'package:wallet/components/textfield.password.dart';
-import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';

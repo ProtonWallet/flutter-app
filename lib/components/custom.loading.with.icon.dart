@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/proton.color.dart';
 
 class CustomLoadingWithIcon extends StatefulWidget {
   final int durationInMilliSeconds;

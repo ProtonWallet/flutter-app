@@ -12,6 +12,7 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		750D4A4E2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 750D4A4D2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface */; };
 		750F3B0F2BCD4F9800626388 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F3B0E2BCD4F9800626388 /* Environment.swift */; };
 		7548D9F62B17ED57002588F4 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548D9F52B17ED57002588F4 /* SwiftUIView.swift */; };
 		7548DA8C2B180942002588F4 /* ProtonCoreNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DA8B2B180942002588F4 /* ProtonCoreNetworking */; };
@@ -48,7 +49,6 @@
 		7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */; };
 		7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DB312B184683002588F4 /* AppCoordinator.swift */; };
 		759E12712BB56CEF00B3400B /* ProtonCoreCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12702BB56CEF00B3400B /* ProtonCoreCrypto */; };
-		759E12732BB56CEF00B3400B /* ProtonCoreCryptoGoInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12722BB56CEF00B3400B /* ProtonCoreCryptoGoInterface */; };
 		759E12772BB56DBF00B3400B /* GoLibsCryptoGo in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12762BB56DBF00B3400B /* GoLibsCryptoGo */; };
 		759E12792BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12782BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation */; };
 		7881ED66DFC77AA9943FFC12 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B177F81A4556CAEF7B3768B9 /* Pods_RunnerTests.framework */; };
@@ -118,8 +118,8 @@
 				7548DA952B180994002588F4 /* ProtonCoreAuthenticationKeyGeneration in Frameworks */,
 				7548DA972B180994002588F4 /* ProtonCoreChallenge in Frameworks */,
 				7548DAAF2B180994002588F4 /* ProtonCoreFoundations in Frameworks */,
+				750D4A4E2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface in Frameworks */,
 				7548DACD2B180994002588F4 /* ProtonCoreServices in Frameworks */,
-				759E12732BB56CEF00B3400B /* ProtonCoreCryptoGoInterface in Frameworks */,
 				759E12792BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation in Frameworks */,
 				7548DABF2B180994002588F4 /* ProtonCoreMissingScopes in Frameworks */,
 				7548DAAD2B180994002588F4 /* ProtonCoreForceUpgrade in Frameworks */,
@@ -315,9 +315,9 @@
 				7548DAD42B180994002588F4 /* ProtonCoreUIFoundations */,
 				7548DAD62B180994002588F4 /* ProtonCoreUtilities */,
 				759E12702BB56CEF00B3400B /* ProtonCoreCrypto */,
-				759E12722BB56CEF00B3400B /* ProtonCoreCryptoGoInterface */,
 				759E12762BB56DBF00B3400B /* GoLibsCryptoGo */,
 				759E12782BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation */,
+				750D4A4D2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -330,7 +330,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					331C8080294A63A400263BE5 = {
@@ -864,12 +864,17 @@
 			repositoryURL = "https://gitlab.protontech.ch/apple/shared/protoncore";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 20.0.0;
+				minimumVersion = 22.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		750D4A4D2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
+			productName = ProtonCoreCryptoGoInterface;
+		};
 		7548DA8B2B180942002588F4 /* ProtonCoreNetworking */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
@@ -1024,11 +1029,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
 			productName = ProtonCoreCrypto;
-		};
-		759E12722BB56CEF00B3400B /* ProtonCoreCryptoGoInterface */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
-			productName = ProtonCoreCryptoGoInterface;
 		};
 		759E12762BB56DBF00B3400B /* GoLibsCryptoGo */ = {
 			isa = XCSwiftPackageProductDependency;

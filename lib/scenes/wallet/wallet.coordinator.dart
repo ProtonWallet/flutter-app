@@ -1,4 +1,3 @@
-import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -40,7 +39,8 @@ class WalletCoordinator extends Coordinator {
   }
 
   void showHistory(int walletID, int accountID, FiatCurrency userFiatCurrency) {
-    var view = HistoryCoordinator(walletID, accountID, userFiatCurrency).start();
+    var view =
+        HistoryCoordinator(walletID, accountID, userFiatCurrency).start();
     push(view, fullscreenDialog: true);
   }
 
