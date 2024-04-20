@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
@@ -34,7 +33,8 @@ class EventLoop {
     if (!_isRunning) {
       _isRunning = true;
       userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.navigatorKey.currentContext!, listen: false);
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
       String? savedLatestEventId = await WalletManager.getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
       await _run();
@@ -157,8 +157,10 @@ class EventLoop {
 
   Future<void> polling() async {
     await handleBitcoinAddress();
-    await ExchangeRateService.runOnce(userSettingProvider.walletUserSetting.fiatCurrency);
-    ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(userSettingProvider.walletUserSetting.fiatCurrency);
+    await ExchangeRateService.runOnce(
+        userSettingProvider.walletUserSetting.fiatCurrency);
+    ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(
+        userSettingProvider.walletUserSetting.fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
   }
 
@@ -176,13 +178,13 @@ class EventLoop {
           WalletManager.handleBitcoinAddressRequests(
               wallet, walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
-          print("handleBitcoinAddressRequests error: ${e.toString()}");
+          logger.e("handleBitcoinAddressRequests error: ${e.toString()}");
         }
         try {
           WalletManager.bitcoinAddressPoolHealthCheck(
               wallet, walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
-          print("bitcoinAddressPoolHealthCheck error: ${e.toString()}");
+          logger.e("bitcoinAddressPoolHealthCheck error: ${e.toString()}");
         }
       }
     }

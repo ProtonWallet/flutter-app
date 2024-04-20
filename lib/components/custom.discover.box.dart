@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/tag.proton.discover.dart';
-import 'package:wallet/components/tag.v1.dart';
-import 'package:wallet/components/tag.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -30,8 +28,8 @@ class CustomDiscoverBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(
-            vertical: 4, horizontal: defaultPadding),
+        margin:
+            const EdgeInsets.symmetric(vertical: 4, horizontal: defaultPadding),
         decoration: BoxDecoration(
             color: ProtonColors.backgroundProton,
             borderRadius: BorderRadius.circular(16.0)),

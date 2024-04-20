@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
@@ -57,7 +56,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
       ValueNotifier(FiatCurrency.usd);
 
-
   bool isEditingEmailBody = false;
   bool isEditingMemo = false;
   late TextEditingController emailBodyController;
@@ -107,7 +105,6 @@ class SendViewModelImpl extends SendViewModel {
     emailBodyFocusNode = FocusNode();
     memoTextController = TextEditingController();
     emailBodyController = TextEditingController();
-
 
     memoFocusNode.addListener(() {
       if (memoFocusNode.hasFocus == false) {
@@ -183,10 +180,9 @@ class SendViewModelImpl extends SendViewModel {
         continue;
       }
       String? bitcoinAddress;
-      if (CommonHelper.isBitcoinAddress(recipent)){
+      if (CommonHelper.isBitcoinAddress(recipent)) {
         bitcoinAddress = recipent;
-      }
-      else {
+      } else {
         try {
           bitcoinAddress = await WalletManager.lookupBitcoinAddress(recipent);
         } catch (e) {
@@ -239,10 +235,8 @@ class SendViewModelImpl extends SendViewModel {
       double btcAmount = CommonHelper.getEstimateValue(
           amount: amount,
           isBitcoinBase: isBitcoinBase,
-          currencyExchangeRate: userSettingProvider
-              .walletUserSetting
-              .exchangeRate
-              .exchangeRate);
+          currencyExchangeRate:
+              userSettingProvider.walletUserSetting.exchangeRate.exchangeRate);
       int amountInSats = (btcAmount * 100000000).round();
       // TODO:: email integration here
       for (String email in recipents) {
@@ -306,7 +300,7 @@ class SendViewModelImpl extends SendViewModel {
     isEditingMemo = false;
     datasourceChangedStreamController.add(this);
   }
-  
+
   @override
   void editEmailBody() {
     isEditingEmailBody = true;

@@ -13,7 +13,6 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v2/home.viewmodel.dart';
@@ -46,8 +45,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         backgroundColor: ProtonColors.backgroundProton,
         title: Text(
           S.of(context).proton_wallet,
-          style:
-              FontManager.titleHeadline(ProtonColors.textNorm),
+          style: FontManager.titleHeadline(ProtonColors.textNorm),
         ),
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
@@ -101,8 +99,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 text: S.of(context).buy_bitcoin,
                                 width: 140,
                                 radius: 28,
-                                backgroundColor:
-                                    ProtonColors.surfaceLight,
+                                backgroundColor: ProtonColors.surfaceLight,
                                 borderColor:
                                     const Color.fromARGB(255, 226, 226, 226),
                                 textStyle: FontManager.captionRegular(
@@ -114,8 +111,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 text: S.of(context).transfer_bitcoin,
                                 width: 140,
                                 radius: 28,
-                                backgroundColor:
-                                    ProtonColors.surfaceLight,
+                                backgroundColor: ProtonColors.surfaceLight,
                                 borderColor:
                                     const Color.fromARGB(255, 226, 226, 226),
                                 textStyle: FontManager.captionRegular(
@@ -144,15 +140,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(S.of(context).my_assets,
-                        style: FontManager.captionRegular(
-                            ProtonColors.textWeak)),
+                        style:
+                            FontManager.captionRegular(ProtonColors.textWeak)),
                     Text("${viewModel.totalBalance} Sat",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.textNorm)),
                     Text(
                         "${CurrencyHelper.sat2usdt(viewModel.totalBalance).toStringAsFixed(2)} USD",
-                        style: FontManager.overlineRegular(
-                            ProtonColors.textWeak)),
+                        style:
+                            FontManager.overlineRegular(ProtonColors.textWeak)),
                   ],
                 )),
             const SizedBox(
@@ -172,15 +168,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(S.of(context).last_7_days,
-                        style: FontManager.captionRegular(
-                            ProtonColors.textWeak)),
+                        style:
+                            FontManager.captionRegular(ProtonColors.textWeak)),
                     Text("+${viewModel.totalBalance} Sat",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.signalSuccess)),
                     Text(
                         "${CurrencyHelper.sat2usdt(viewModel.totalBalance).toStringAsFixed(2)} USD",
-                        style: FontManager.overlineRegular(
-                            ProtonColors.textWeak)),
+                        style:
+                            FontManager.overlineRegular(ProtonColors.textWeak)),
                   ],
                 )),
           ]),
@@ -191,8 +187,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 Padding(
                     padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                     child: Text(S.of(context).your_wallets,
-                        style: FontManager.body1Median(
-                            ProtonColors.textNorm))),
+                        style: FontManager.body1Median(ProtonColors.textNorm))),
                 GestureDetector(
                     onTap: () {
                       viewModel.move(ViewIdentifiers.setupOnboard);
@@ -234,8 +229,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   padding: const EdgeInsets.all(10.0),
                                   margin: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
-                                      color:
-                                          ProtonColors.surfaceLight,
+                                      color: ProtonColors.surfaceLight,
                                       borderRadius: BorderRadius.circular(10.0),
                                       border: Border.all(
                                         color: const Color.fromARGB(
@@ -393,8 +387,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               Padding(
                   padding: const EdgeInsets.only(left: 26.0, right: 26.0),
                   child: Text(S.of(context).statistic,
-                      style: FontManager.body1Median(
-                          ProtonColors.textNorm))),
+                      style: FontManager.body1Median(ProtonColors.textNorm))),
               CustomPieChart(
                 width: 400,
                 height: 240,
@@ -411,8 +404,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: Text(S.of(context).quick_actions,
-                  style: FontManager.body1Median(
-                      ProtonColors.textNorm))),
+                  style: FontManager.body1Median(ProtonColors.textNorm))),
           const SizedBox(
             height: 10,
           ),
@@ -424,8 +416,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -438,8 +429,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -450,8 +440,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -464,8 +453,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -478,8 +466,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -492,22 +479,18 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
           ),
           ButtonV5(
-              onPressed: () async {
-
-              },
+              onPressed: () async {},
               text: "Get ExchangeRate",
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 10,
@@ -543,8 +526,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               width: MediaQuery.of(context).size.width - 52,
               backgroundColor: ProtonColors.surfaceLight,
               borderColor: const Color.fromARGB(255, 226, 226, 226),
-              textStyle: FontManager.body1Median(
-                  ProtonColors.textNorm),
+              textStyle: FontManager.body1Median(ProtonColors.textNorm),
               height: 48),
           const SizedBox(
             height: 20,
@@ -552,8 +534,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: Text(S.of(context).explore_wallet,
-                  style: FontManager.body1Median(
-                      ProtonColors.textNorm))),
+                  style: FontManager.body1Median(ProtonColors.textNorm))),
           const SizedBox(height: 10),
           CustomNewsBox(
               title: S.of(context).security_n_proton_wallet,

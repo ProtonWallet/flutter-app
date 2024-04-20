@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
@@ -139,13 +139,17 @@ Widget getEmailAvatar(String name) {
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: AvatarColorHelper.getBackgroundColor(AvatarColorHelper.getIndexFromString(name)),
+        color: AvatarColorHelper.getBackgroundColor(
+            AvatarColorHelper.getIndexFromString(name)),
         borderRadius: BorderRadius.circular(21),
       ),
       child: Center(
         child: Text(
           CommonHelper.getFirstNChar(name, 1).toUpperCase(),
-          style: FontManager.body2Median(AvatarColorHelper.getTextColor(AvatarColorHelper.getIndexFromString(name)),),
+          style: FontManager.body2Median(
+            AvatarColorHelper.getTextColor(
+                AvatarColorHelper.getIndexFromString(name)),
+          ),
         ),
       ));
 }
@@ -160,26 +164,27 @@ void showQRScanBottomSheet(BuildContext context,
               const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
           child: Stack(children: [
             Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      S.of(context).scan_btc_address,
-                      style: FontManager.body2Regular(ProtonColors.textNorm),textAlign: TextAlign.center,
-                    )),
-            Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: MobileScanner(
-                  onDetect: (capture) {
-                    final List<Barcode> barcodes = capture.barcodes;
-                    for (final barcode in barcodes) {
-                      textEditingController.text = barcode.rawValue ?? "";
-                      if (callback != null) {
-                        Navigator.of(context).pop();
-                        callback();
-                      }
-                      break;
-                    }
-                  },
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  S.of(context).scan_btc_address,
+                  style: FontManager.body2Regular(ProtonColors.textNorm),
+                  textAlign: TextAlign.center,
                 )),
+            // Padding(
+            //     padding: const EdgeInsets.only(top: 40),
+            //     child: MobileScanner(
+            //       onDetect: (capture) {
+            //         final List<Barcode> barcodes = capture.barcodes;
+            //         for (final barcode in barcodes) {
+            //           textEditingController.text = barcode.rawValue ?? "";
+            //           if (callback != null) {
+            //             Navigator.of(context).pop();
+            //             callback();
+            //           }
+            //           break;
+            //         }
+            //       },
+            //     )),
           ]));
     },
   );
