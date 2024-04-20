@@ -75,6 +75,8 @@ Uint8List pointerToUint8List(Pointer<Uint8> ptr, int length) {
 
 int getPointerLength(Pointer<Uint8> ptr) {
   int length = 0;
+  // TODO:: fix me
+  // ignore: deprecated_member_use
   while (ptr.elementAt(length).value != 0) {
     length++;
   }
