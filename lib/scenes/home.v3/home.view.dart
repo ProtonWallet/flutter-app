@@ -62,9 +62,10 @@ class HomeView extends ViewBase<HomeViewModel> {
         backgroundColor: ProtonColors.backgroundProton,
         title: Text(
           viewModel.currentWallet != null
-              ? viewModel.walletID2Accounts[viewModel.currentWallet!.id]!
-                          .length >
-                      1
+              ? (viewModel.walletID2Accounts.isNotEmpty &&
+                      viewModel.walletID2Accounts[viewModel.currentWallet!.id]!
+                              .length >
+                          1)
                   ? "${viewModel.currentWallet!.name} - ${viewModel.currentAccount!.labelDecrypt}"
                   : viewModel.currentWallet!.name
               : S.of(context).proton_wallet,
