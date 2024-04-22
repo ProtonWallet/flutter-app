@@ -17,23 +17,19 @@ abstract class TransactionDatabase extends BaseDatabase {
   });
 
   static DatabaseMigration migration_1 = DatabaseMigration((Database db) async {
-    await db.execute('''
-        ALTER TABLE walletTransaction ADD COLUMN hashedTransactionID BLOB;
-        ALTER TABLE walletTransaction ADD COLUMN transactionID TEXT;
-        ALTER TABLE walletTransaction ADD COLUMN transactionTime TEXT null;
-        ALTER TABLE walletTransaction ADD COLUMN exchangeRateID TEXT null;
-        ALTER TABLE walletTransaction ADD COLUMN serverWalletID TEXT;
-        ALTER TABLE walletTransaction ADD COLUMN serverAccountID TEXT;
-    ''');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN hashedTransactionID BLOB;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN transactionID TEXT;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN transactionTime TEXT null;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN exchangeRateID TEXT null;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN serverWalletID TEXT;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN serverAccountID TEXT;');
   });
 
   static DatabaseMigration migration_2 = DatabaseMigration((Database db) async {
-    await db.execute('''
-        ALTER TABLE walletTransaction ADD COLUMN sender TEXT null;
-        ALTER TABLE walletTransaction ADD COLUMN tolist TEXT null;
-        ALTER TABLE walletTransaction ADD COLUMN subject TEXT null;
-        ALTER TABLE walletTransaction ADD COLUMN body TEXT null;
-    ''');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN sender TEXT null;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN tolist TEXT null;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN subject TEXT null;');
+    await db.execute('ALTER TABLE walletTransaction ADD COLUMN body TEXT null;');
   });
 
   static void Function(Database db) dropTables = (Database db) {

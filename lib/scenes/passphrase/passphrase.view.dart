@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -21,6 +24,28 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   Widget buildWithViewModel(BuildContext context,
       SetupPassPhraseViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: ProtonColors.backgroundProton,
+          scrolledUnderElevation: 0.0,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            // For Android (dark icons)
+            statusBarBrightness: Brightness.light,
+          ),
+          // don't change background color when scroll down
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+            onPressed: () {
+              if (viewModel.isAddingPassPhrase == false) {
+                Navigator.pop(context);
+              } else {
+                viewModel.updateState(false);
+              }
+            },
+          ),
+        ),
+        backgroundColor: ProtonColors.backgroundProton,
         resizeToAvoidBottomInset: false,
         body: viewModel.isAddingPassPhrase
             ? buildAddPassPhrase(context, viewModel, viewSize)
@@ -30,16 +55,18 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   Widget buildAddPassPhrase(BuildContext context,
       SetupPassPhraseViewModel viewModel, ViewSize viewSize) {
     return SingleChildScrollView(
-        child: Stack(children: [
+        child: Center(
+            child: Stack(children: [
       Container(
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          margin: const EdgeInsets.only(left: 40, right: 40),
+          height: MediaQuery.of(context).size.height -
+              56 -
+              MediaQuery.of(context).padding.top,
+          margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 SizedBoxes.box20,
                 Text(S.of(context).your_passphrase_optional,
                     style: FontManager.titleHeadline(ProtonColors.textNorm),
@@ -76,21 +103,14 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   isPassword: true,
                 ),
               ])),
-      AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
-          onPressed: () {
-            viewModel.updateState(false);
-          },
-        ),
-      ),
       Container(
-          padding: const EdgeInsets.only(bottom: 50),
+          padding: const EdgeInsets.only(bottom: defaultPadding),
           width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.only(left: 40, right: 40),
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height -
+              56 -
+              MediaQuery.of(context).padding.top,
           // AppBar default height is 56
+          margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -109,11 +129,11 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     },
                     text: S.of(context).save_passphrase_button,
                     width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),
+                    backgroundColor: ProtonColors.protonBlue,
                     height: 48),
               ]))
-    ]));
+    ])));
   }
 
   Widget buildMain(BuildContext context, SetupPassPhraseViewModel viewModel,
@@ -123,15 +143,16 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
       children: <Widget>[
         Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
-          color: ProtonColors.backgroundSecondary,
+          height: MediaQuery.of(context).size.height / 3 - 56,
+          color: ProtonColors.backgroundProton,
+          alignment: Alignment.topCenter,
           child: Padding(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 7,
-                  bottom: MediaQuery.of(context).size.height / 7),
+                  top: MediaQuery.of(context).size.height / 16,
+                  bottom: MediaQuery.of(context).size.height / 16),
               child: Container(
                 constraints: const BoxConstraints(
-                  maxWidth: 100.0,
+                  maxWidth: 200.0,
                 ),
                 child: SvgPicture.asset(
                   'assets/images/wallet_creation/passphrase_icon.svg',
@@ -139,64 +160,69 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 ),
               )),
         ),
-        Container(
-          alignment: Alignment.topCenter,
-          width: MediaQuery.of(context).size.width,
-          child: OnboardingContent(
-              totalPages: 2,
-              currentPage: 2,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              title: S.of(context).your_passphrase_optional,
-              content:
-                  S.of(context).for_additional_security_you_can_use_passphrase_,
-              children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: TextFieldTextV2(
-                      labelText: S.of(context).wallet_name,
-                      textController: viewModel.nameTextController,
-                      myFocusNode: viewModel.walletNameFocusNode,
-                      validation: (String _) {
-                        return "";
-                      },
-                    )),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () async {
-                      EasyLoading.show(
-                          status: "creating wallet..",
-                          maskType: EasyLoadingMaskType.black);
-                      await this.viewModel.updateDB();
-                      EasyLoading.dismiss();
-                      if (context.mounted) {
-                        Navigator.of(context).popUntil((route) {
-                          if (route.settings.name == null) {
-                            return false;
-                          }
-                          return route.settings.name ==
-                              "[<'HomeNavigationView'>]";
-                        });
-                      }
-                    },
-                    text: S.of(context).continue_without_passphrase_button,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.protonBlue,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updateState(true);
-                    },
-                    text: S.of(context).yes_use_a_passphrase_button,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.protonBlue,
-                    textStyle: FontManager.body1Median(ProtonColors.protonBlue),
-                    height: 48),
-              ]),
-        ),
+        Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 200: 0),
+                child: OnboardingContent(
+                  totalPages: 2,
+                  currentPage: 2,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 3 * 2,
+                  title: S.of(context).your_passphrase_optional,
+                  content: S
+                      .of(context)
+                      .for_additional_security_you_can_use_passphrase_,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: TextFieldTextV2(
+                          labelText: S.of(context).wallet_name,
+                          textController: viewModel.nameTextController,
+                          myFocusNode: viewModel.walletNameFocusNode,
+                          validation: (String _) {
+                            return "";
+                          },
+                        )),
+                  ]),
+            )),
+        Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(children: [
+              ButtonV5(
+                  onPressed: () async {
+                    EasyLoading.show(
+                        status: "creating wallet..",
+                        maskType: EasyLoadingMaskType.black);
+                    await this.viewModel.updateDB();
+                    EasyLoading.dismiss();
+                    if (context.mounted) {
+                      Navigator.of(context).popUntil((route) {
+                        if (route.settings.name == null) {
+                          return false;
+                        }
+                        return route.settings.name ==
+                            "[<'HomeNavigationView'>]";
+                      });
+                    }
+                  },
+                  text: S.of(context).continue_without_passphrase_button,
+                  width: MediaQuery.of(context).size.width,
+                  backgroundColor: ProtonColors.protonBlue,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  height: 48),
+              SizedBoxes.box12,
+              ButtonV5(
+                  onPressed: () {
+                    viewModel.updateState(true);
+                  },
+                  text: S.of(context).yes_use_a_passphrase_button,
+                  width: MediaQuery.of(context).size.width,
+                  backgroundColor: ProtonColors.white,
+                  borderColor: ProtonColors.protonBlue,
+                  textStyle: FontManager.body1Median(ProtonColors.protonBlue),
+                  height: 48)
+            ])),
       ],
     );
   }

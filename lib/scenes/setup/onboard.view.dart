@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
@@ -25,72 +26,76 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
   Widget buildNoHistory(BuildContext context, SetupOnboardViewModel viewModel,
       ViewSize viewSize) {
     return Column(
-      children: <Widget>[
-        Stack(children: [
-          Container(
-              alignment: Alignment.topCenter,
-              child: Container(
-                color: Colors.red,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/bg.svg',
-                  fit: BoxFit.fill,
+      children: [
+        SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 3,
+            child: Stack(children: [
+              Container(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: SvgPicture.asset(
+                      'assets/images/wallet_creation/bg.svg',
+                      fit: BoxFit.fill,
+                    ),
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: SizedBox(
+                    width: 190.8,
+                    height: 44.15,
+                    child: SvgPicture.asset(
+                      'assets/images/wallet_creation/logo.svg',
+                      fit: BoxFit.fill,
+                    ),
+                  )),
+              if (viewModel.hasAccount)
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back, color: ProtonColors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              )),
-          Container(
-              alignment: Alignment.center,
-              height: MediaQuery.of(context).size.height / 2,
-              child: SizedBox(
-                width: 190.8,
-                height: 44.15,
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/logo.svg',
-                  fit: BoxFit.fill,
-                ),
-              )),
-          if (viewModel.hasAccount)
-            AppBar(
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: ProtonColors.white),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-        ]),
-        OnboardingContent(
+            ])),
+        Expanded(
+            child: OnboardingContent(
           totalPages: 2,
           currentPage: 1,
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 3 * 2,
           title: S.of(context).financial_freedom_,
           content: S.of(context).get_started_and_,
-          children: [
-            ButtonV5(
-                onPressed: () {
-                  viewModel.move(ViewIdentifiers.setupCreate);
-                },
-                text: S.of(context).create_new_wallet,
-                width: MediaQuery.of(context).size.width,
-                textStyle: FontManager.body1Median(ProtonColors.white),
-                backgroundColor: ProtonColors.protonBlue,
-                height: 48),
-            SizedBoxes.box12,
-            ButtonV5(
-                onPressed: () {
-                  viewModel.move(ViewIdentifiers.importWallet);
-                },
-                text: S.of(context).import_your_wallet,
-                width: MediaQuery.of(context).size.width,
-                backgroundColor: ProtonColors.white,
-                borderColor: ProtonColors.protonBlue,
-                textStyle:
-                    FontManager.body1Median(ProtonColors.protonBlue),
-                height: 48),
-          ],
-        ),
+        )),
+        Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(children: [
+              ButtonV5(
+                  onPressed: () {
+                    viewModel.move(ViewIdentifiers.setupCreate);
+                  },
+                  text: S.of(context).create_new_wallet,
+                  width: MediaQuery.of(context).size.width,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  backgroundColor: ProtonColors.protonBlue,
+                  height: 48),
+              SizedBoxes.box12,
+              ButtonV5(
+                  onPressed: () {
+                    viewModel.move(ViewIdentifiers.importWallet);
+                  },
+                  text: S.of(context).import_your_wallet,
+                  width: MediaQuery.of(context).size.width,
+                  backgroundColor: ProtonColors.white,
+                  borderColor: ProtonColors.protonBlue,
+                  textStyle: FontManager.body1Median(ProtonColors.protonBlue),
+                  height: 48),
+            ])),
       ],
     );
   }
