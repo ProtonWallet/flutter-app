@@ -23,6 +23,9 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   late TextEditingController mnemonicTextController;
   late TextEditingController nameTextController;
   late TextEditingController passphraseTextController;
+  late FocusNode mnemonicFocusNode;
+  late FocusNode nameFocusNode;
+  late FocusNode passphraseFocusNode;
   int mnemonicLength = 12;
 
   void updateMnemonic(int length);
@@ -46,6 +49,9 @@ class ImportViewModelImpl extends ImportViewModel {
     mnemonicTextController = TextEditingController();
     nameTextController = TextEditingController();
     passphraseTextController = TextEditingController();
+    mnemonicFocusNode = FocusNode();
+    nameFocusNode = FocusNode();
+    passphraseFocusNode = FocusNode();
   }
 
   @override

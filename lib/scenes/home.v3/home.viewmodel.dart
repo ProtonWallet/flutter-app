@@ -346,7 +346,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> checkNewWallet() async {
     bool currentWalletExist = false;
     await DBHelper.walletDao!.findAll().then((results) async {
-      Map<int, List<AccountModel>> walletID2Accounts = {};
+      Map<int, List<AccountModel>> newWalletID2Accounts = {};
       for (WalletModel walletModel in results) {
         walletModel.accountCount =
             await DBHelper.accountDao!.getAccountCount(walletModel.id!);
@@ -364,10 +364,10 @@ class HomeViewModelImpl extends HomeViewModel {
               await WalletManager.getAccountAddressIDs(
                   accountModel.serverAccountID);
         }
-        walletID2Accounts[walletModel.id!] = accounts.cast<AccountModel>();
+        newWalletID2Accounts[walletModel.id!] = accounts.cast<AccountModel>();
       }
       userWallets = results;
-      walletID2Accounts = walletID2Accounts;
+      walletID2Accounts = newWalletID2Accounts;
     });
     if (currentWalletExist == false) {
       currentWallet = null;

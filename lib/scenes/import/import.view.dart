@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/textfield.password.dart';
-import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -20,6 +20,7 @@ class ImportView extends ViewBase<ImportViewModel> {
       BuildContext context, ImportViewModel viewModel, ViewSize viewSize) {
     return Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0.0,
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark,
@@ -27,10 +28,12 @@ class ImportView extends ViewBase<ImportViewModel> {
             statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
           title: Text(S.of(context).import_your_wallet),
+          centerTitle: true,
           // automaticallyImplyLeading: false,
           backgroundColor: Colors
               .transparent, // Theme.of(context).colorScheme.inversePrimary,
         ),
+        backgroundColor: ProtonColors.backgroundProton,
         body: SingleChildScrollView(
             child: Center(
                 child: Stack(children: [
@@ -40,66 +43,47 @@ class ImportView extends ViewBase<ImportViewModel> {
               height: MediaQuery.of(context).size.height -
                   56 -
                   MediaQuery.of(context).padding.top,
-              margin: const EdgeInsets.only(left: 40, right: 40),
+              margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        S.of(context).wallet_name,
-                        style: FontManager.captionMedian(
-                            ProtonColors.textNorm),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: TextFieldText(
-                        width: MediaQuery.of(context).size.width,
-                        controller: viewModel.nameTextController,
-                      ),
+                    TextFieldTextV2(
+                      labelText: S.of(context).wallet_name,
+                      textController: viewModel.nameTextController,
+                      myFocusNode: viewModel.nameFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
                     ),
                     SizedBoxes.box24,
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        S.of(context).your_mnemonic,
-                        style: FontManager.captionMedian(
-                            ProtonColors.textNorm),
-                        textAlign: TextAlign.left,
-                      ),
+                    TextFieldTextV2(
+                      labelText: S.of(context).your_mnemonic,
+                      textController: viewModel.mnemonicTextController,
+                      myFocusNode: viewModel.mnemonicFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
+                      isPassword: true,
                     ),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: TextFieldPassword(
-                          width: MediaQuery.of(context).size.width,
-                          controller: viewModel.mnemonicTextController,
-                        )),
                     SizedBoxes.box24,
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        S.of(context).your_passphrase_optional,
-                        style: FontManager.captionMedian(
-                            ProtonColors.textNorm),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: TextFieldPassword(
-                            width: MediaQuery.of(context).size.width,
-                            controller: viewModel.passphraseTextController)),
+                    TextFieldTextV2(
+                      labelText: S.of(context).your_passphrase_optional,
+                      textController: viewModel.passphraseTextController,
+                      myFocusNode: viewModel.passphraseFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
+                      isPassword: true,
+                    )
                   ])),
           Container(
-              padding: const EdgeInsets.only(bottom: 50),
+              padding: const EdgeInsets.only(bottom: defaultPadding),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height -
                   56 -
                   MediaQuery.of(context).padding.top,
               // AppBar default height is 56
-              margin: const EdgeInsets.only(left: 40, right: 40),
+              margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -125,6 +109,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                         text: S.of(context).import_button,
                         width: MediaQuery.of(context).size.width,
                         textStyle: FontManager.body1Median(ProtonColors.white),
+                        backgroundColor: ProtonColors.protonBlue,
                         height: 48),
                   ]))
         ]))));
