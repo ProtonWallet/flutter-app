@@ -53,11 +53,11 @@ class HomeView extends ViewBase<HomeViewModel> {
       resizeToAvoidBottomInset: false,
       backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
+        systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: viewModel.walletDrawerStatus == WalletDrawerStatus.close ? Brightness.dark: Brightness.light,
           // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+          statusBarBrightness: viewModel.walletDrawerStatus == WalletDrawerStatus.close ? Brightness.light : Brightness.dark,
         ),
         backgroundColor: ProtonColors.backgroundProton,
         title: Text(
@@ -106,6 +106,7 @@ class HomeView extends ViewBase<HomeViewModel> {
       onDrawerChanged: (isOpen) {
         if (isOpen == false) {
           viewModel.saveUserSettings();
+          viewModel.updateDrawerStatus(WalletDrawerStatus.close);
         } else {
           viewModel.updateDrawerStatus(WalletDrawerStatus.openSetting);
         }

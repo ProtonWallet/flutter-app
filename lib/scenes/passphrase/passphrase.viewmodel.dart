@@ -35,6 +35,9 @@ abstract class SetupPassPhraseViewModel
   late TextEditingController nameTextController;
   late FocusNode walletNameFocusNode;
 
+  late FocusNode passphraseFocusNode;
+  late FocusNode passphraseConfirmFocusNode;
+
   void updateUserPhraseList(String title, bool remove);
 
   bool checkUserMnemonic();
@@ -64,6 +67,8 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     passphraseTextController = TextEditingController();
     passphraseTextConfirmController = TextEditingController();
     walletNameFocusNode = FocusNode();
+    passphraseFocusNode = FocusNode();
+    passphraseConfirmFocusNode = FocusNode();
     nameTextController = TextEditingController(text: "New Wallet");
     strMnemonic.split(" ").forEachIndexed((index, element) {
       itemList.add(Item(
