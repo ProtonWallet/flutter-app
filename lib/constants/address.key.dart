@@ -24,4 +24,12 @@ class AddressKey {
   String decrypt(String encryptedArmor) {
     return proton_crypto.decrypt(privateKey, passphrase, encryptedArmor);
   }
+
+  String encrypt(String plainText) {
+    return proton_crypto.encrypt(privateKey, plainText);
+  }
+
+  String encryptBinary(Uint8List data) {
+    return base64Encode(proton_crypto.encryptBinary(privateKey, data));
+  }
 }
