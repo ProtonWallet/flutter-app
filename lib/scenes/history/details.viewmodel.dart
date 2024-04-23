@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/currency_helper.dart';
@@ -16,6 +17,7 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -55,6 +57,7 @@ abstract class HistoryDetailViewModel
   FiatCurrency userFiatCurrency;
 
   void editMemo();
+
   Future<void> updateExchangeRate();
 }
 
@@ -155,12 +158,40 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           secretKey!, utf8.decode(transactionModel!.label));
     }
     memoController.text = userLabel;
+
+    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    addresses = addresses.where((element) => element.status == 1).toList();
+
     String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
     String userPassphrase = await SecureStorageHelper.get("userPassphrase");
-    toEmail = WalletManager.decodeBinaryToMessage(
-        userPrivateKey, userPassphrase, transactionModel!.tolist);
-    fromEmail = WalletManager.decodeBinaryToMessage(
-        userPrivateKey, userPassphrase, transactionModel!.sender);
+
+    List<AddressKey> addressKeys = [];
+    for (ProtonAddress address in addresses) {
+      for (ProtonAddressKey addressKey in address.keys ?? []) {
+        String addressKeyPrivateKey = addressKey.privateKey ?? "";
+        String addressKeyToken = addressKey.token ?? "";
+        try {
+          String addressKeyPassphrase = proton_crypto.decrypt(
+              userPrivateKey, userPassphrase, addressKeyToken);
+          addressKeys.add(AddressKey(privateKey: addressKeyPrivateKey, passphrase: addressKeyPassphrase));
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+    }
+
+    for (AddressKey addressKey in addressKeys) {
+      try {
+        toEmail = addressKey.decryptBinary(transactionModel!.tolist);
+        fromEmail = addressKey.decryptBinary(transactionModel!.sender);
+        if (toEmail.isNotEmpty) {
+          break;
+        }
+      } catch (e) {
+        logger.e(e.toString());
+      }
+    }
+
     logger.i("txid: $txid");
     logger.i("toEmail: $toEmail, ${transactionModel!.tolist}");
     logger.i("fromEmail: $fromEmail, ${transactionModel!.sender}");
