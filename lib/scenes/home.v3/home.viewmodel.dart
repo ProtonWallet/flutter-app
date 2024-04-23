@@ -11,7 +11,6 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';

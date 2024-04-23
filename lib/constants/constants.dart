@@ -11,22 +11,25 @@ const int defaultBitcoinAddressCountForOneEmail = 10;
 const int defaultTransactionPerPage = 3;
 const int defaultDisplayDigits = 4;
 
-const String userSettingsHideEmptyUsedAddresses = "userSettings.hideEmptyUsedAddresses";
-const String userSettingsTwoFactorAmountThreshold = "userSettings.twoFactorAmountThreshold";
+const String userSettingsHideEmptyUsedAddresses =
+    "userSettings.hideEmptyUsedAddresses";
+const String userSettingsTwoFactorAmountThreshold =
+    "userSettings.twoFactorAmountThreshold";
 const String userSettingsShowWalletRecovery = "userSettings.showWalletRecovery";
 const String userSettingsFiatCurrency = "userSettings.fiatCurrency";
 const String userSettingsBitcoinUnit = "userSettings.bitcoinUnit";
 
+// TODO:: those 3 constants should be moved to Rust and it could be auto gen
 const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.usd,
   FiatCurrency.eur,
   FiatCurrency.chf
 ];
 
-const List<CommonBitcoinUnit> bitcoinUnits = [
-  CommonBitcoinUnit.btc,
-  CommonBitcoinUnit.mbtc,
-  CommonBitcoinUnit.sats,
+const List<BitcoinUnit> bitcoinUnits = [
+  BitcoinUnit.btc,
+  BitcoinUnit.mbtc,
+  BitcoinUnit.sats,
 ];
 
 const Map<FiatCurrency, String> fiatCurrency2Sign = {
