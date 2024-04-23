@@ -3,7 +3,6 @@ import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/setup/ready.coordinator.dart';
 
 class SetupPassPhraseCoordinator extends Coordinator {
   late ViewBase widget;
@@ -13,11 +12,6 @@ class SetupPassPhraseCoordinator extends Coordinator {
 
   @override
   void end() {}
-
-  void showSetupReady() {
-    var view = SetupReadyCoordinator().start();
-    pushCustom(view, fullscreenDialog: false);
-  }
 
   @override
   ViewBase<ViewModel> start() {

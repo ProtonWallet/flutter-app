@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -10,7 +9,6 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -116,10 +114,22 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ButtonV5(
-                    onPressed: () {
+                    onPressed: () async {
                       if (viewModel.checkPassphrase()) {
-                        this.viewModel.updateDB();
-                        viewModel.move(ViewIdentifiers.setupReady);
+                        EasyLoading.show(
+                            status: "creating wallet..",
+                            maskType: EasyLoadingMaskType.black);
+                        await viewModel.updateDB();
+                        EasyLoading.dismiss();
+                        if (context.mounted) {
+                          Navigator.of(context).popUntil((route) {
+                            if (route.settings.name == null) {
+                              return false;
+                            }
+                            return route.settings.name ==
+                                "[<'HomeNavigationView'>]";
+                          });
+                        }
                       } else {
                         var snackBar = SnackBar(
                           content: Text(S.of(context).passphrase_are_not_match),
@@ -161,31 +171,30 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               )),
         ),
         Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 200: 0),
-                child: OnboardingContent(
-                  totalPages: 2,
-                  currentPage: 2,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3 * 2,
-                  title: S.of(context).your_passphrase_optional,
-                  content: S
-                      .of(context)
-                      .for_additional_security_you_can_use_passphrase_,
-                  children: [
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: TextFieldTextV2(
-                          labelText: S.of(context).wallet_name,
-                          textController: viewModel.nameTextController,
-                          myFocusNode: viewModel.walletNameFocusNode,
-                          validation: (String _) {
-                            return "";
-                          },
-                        )),
-                  ]),
-            )),
+            child: Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 200 : 0),
+          child: OnboardingContent(
+              totalPages: 2,
+              currentPage: 2,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 3 * 2,
+              title: S.of(context).your_passphrase_optional,
+              content:
+                  S.of(context).for_additional_security_you_can_use_passphrase_,
+              children: [
+                SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFieldTextV2(
+                      labelText: S.of(context).wallet_name,
+                      textController: viewModel.nameTextController,
+                      myFocusNode: viewModel.walletNameFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
+                    )),
+              ]),
+        )),
         Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: Column(children: [

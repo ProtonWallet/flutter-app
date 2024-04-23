@@ -799,9 +799,6 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void move(NavigationIdentifier to) {
     switch (to) {
-      case ViewIdentifiers.wallet:
-        coordinator.showWallet(currentWallet?.id ?? 0);
-        break;
       case ViewIdentifiers.setupOnboard:
         coordinator.showSetupOnbaord();
         break;
@@ -814,9 +811,6 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case ViewIdentifiers.testWebsocket:
         coordinator.showWebSocket();
-        break;
-      case ViewIdentifiers.mailList:
-        coordinator.showMailList();
         break;
       case ViewIdentifiers.welcome:
         coordinator.logout();
