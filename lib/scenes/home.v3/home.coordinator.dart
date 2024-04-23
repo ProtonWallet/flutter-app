@@ -12,11 +12,9 @@ import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
-import 'package:wallet/scenes/settings/mail_integration/maillist.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth/two.factor.auth.coordinator.dart';
-import 'package:wallet/scenes/wallet/wallet.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 class HomeCoordinator extends Coordinator {
@@ -27,11 +25,6 @@ class HomeCoordinator extends Coordinator {
 
   @override
   void end() {}
-
-  void showWallet(int walletID) {
-    var view = WalletCoordinator(walletID).start();
-    push(view, fullscreenDialog: false);
-  }
 
   void showSetupOnbaord() {
     var view = SetupOnbaordCoordinator().start();
@@ -55,11 +48,6 @@ class HomeCoordinator extends Coordinator {
 
   void showWebSocket() {
     var view = WebSocketCoordinator().start();
-    push(view, fullscreenDialog: true);
-  }
-
-  void showMailList() {
-    var view = MailListCoordinator().start();
     push(view, fullscreenDialog: true);
   }
 
