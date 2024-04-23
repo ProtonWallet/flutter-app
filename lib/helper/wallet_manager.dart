@@ -484,9 +484,9 @@ class WalletManager {
       refreshToken = "r56k4x2bbcxrao4at77noqes7bpwicrb";
       // //
       // // // user "qqqq"
-      // uid = "x2oo7agibvr2fd4ufuen6xdcovdyts2g";
-      // accessToken = "hhefdxwikgcrgjrun3a4oac2igah2cca";
-      // refreshToken = "brldwaqzrdncczx6ea3ybrzf724chig4";
+      uid = "5z5cijpdulozisq2kewuazg4fezfdw4i";
+      accessToken = "y2w3mcwmj6ljtr4hk5hiszuhusjngzrn";
+      refreshToken = "zadcnadfdjl43enonuyiqga7lpftls3a";
 
       // // user "cccc"
       // uid = "jaohw4to23x5qp4zpgj4ktucbdyg5xgf";
