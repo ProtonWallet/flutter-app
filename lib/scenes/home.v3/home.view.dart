@@ -55,9 +55,15 @@ class HomeView extends ViewBase<HomeViewModel> {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: viewModel.walletDrawerStatus == WalletDrawerStatus.close ? Brightness.dark: Brightness.light,
+          statusBarIconBrightness:
+              viewModel.walletDrawerStatus == WalletDrawerStatus.close
+                  ? Brightness.dark
+                  : Brightness.light,
           // For Android (dark icons)
-          statusBarBrightness: viewModel.walletDrawerStatus == WalletDrawerStatus.close ? Brightness.light : Brightness.dark,
+          statusBarBrightness:
+              viewModel.walletDrawerStatus == WalletDrawerStatus.close
+                  ? Brightness.light
+                  : Brightness.dark,
         ),
         backgroundColor: ProtonColors.backgroundProton,
         title: Text(
@@ -217,10 +223,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           SizedBox(
                               width: 80,
                               child: GestureDetector(
-                                onTap: () {
-                                  LocalToast.showToast(context, "TODO",
-                                      icon: null);
-                                },
+                                onTap: () {},
                                 child: Text(
                                   S.of(context).buy,
                                   textAlign: TextAlign.center,

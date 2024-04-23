@@ -257,7 +257,7 @@ class BdkLibrary {
       //   final feeRate = await estimateFeeRate(25, blockchain);
       final txBuilderResult = await txBuilder
           .addRecipient(script, amount)
-          .feeRate(25)
+          .feeRate(6)
           .finish(aliceWallet);
       getInputOutPuts(txBuilderResult, blockchain);
       final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
