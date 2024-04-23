@@ -215,10 +215,6 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
 
   @override
   void move(NavigationIdentifier to) {
-    switch (to) {
-      case ViewIdentifiers.setupReady:
-        coordinator.showSetupReady();
-        break;
-    }
+
   }
 }
