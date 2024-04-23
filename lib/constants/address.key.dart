@@ -22,6 +22,6 @@ class AddressKey {
   }
 
   String decrypt(String encryptedArmor) {
-    return "";
+    return proton_crypto.decrypt(privateKey, passphrase, encryptedArmor);
   }
 }
