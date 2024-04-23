@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -37,6 +38,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 enum WalletDrawerStatus {
   close,
@@ -408,6 +410,25 @@ class HomeViewModelImpl extends HomeViewModel {
     List<TransactionDetails> newHistory = [];
     String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
     String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+
+    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    addresses = addresses.where((element) => element.status == 1).toList();
+
+    List<AddressKey> addressKeys = [];
+    for (ProtonAddress address in addresses) {
+      for (ProtonAddressKey addressKey in address.keys ?? []) {
+        String addressKeyPrivateKey = addressKey.privateKey ?? "";
+        String addressKeyToken = addressKey.token ?? "";
+        try {
+          String addressKeyPassphrase = proton_crypto.decrypt(
+              userPrivateKey, userPassphrase, addressKeyToken);
+          addressKeys.add(AddressKey(privateKey: addressKeyPrivateKey, passphrase: addressKeyPassphrase));
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+    }
+
     if (wallet != null) {
       newHistory = await _lib.getConfirmedTransactions(wallet!);
       newHistory.sort((a, b) {
@@ -428,12 +449,20 @@ class HomeViewModelImpl extends HomeViewModel {
             : "";
         String fromEmail = "";
         if (transactionModel != null) {
-          if (transactionDetail.sent - transactionDetail.received > 0) {
-            fromEmail = WalletManager.decodeBinaryToMessage(
-                userPrivateKey, userPassphrase, transactionModel.tolist);
-          } else {
-            fromEmail = WalletManager.decodeBinaryToMessage(
-                userPrivateKey, userPassphrase, transactionModel.sender);
+          bool isSend = transactionDetail.sent - transactionDetail.received > 0;
+          String encryptedBinaryMessage = isSend ? transactionModel.tolist??"" : transactionModel.sender??"";
+          if (encryptedBinaryMessage.isNotEmpty) {
+            for (AddressKey addressKey in addressKeys){
+              try {
+                fromEmail = addressKey.decryptBinary(
+                    encryptedBinaryMessage);
+                if (fromEmail.isNotEmpty) {
+                  break;
+                }
+              } catch (e) {
+                logger.e(e.toString());
+              }
+            }
           }
         }
         newFromEmails.add(fromEmail);

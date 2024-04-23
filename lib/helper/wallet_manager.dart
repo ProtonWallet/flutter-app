@@ -20,6 +20,7 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -447,67 +448,13 @@ class WalletManager {
           DBHelper.walletDao!.update(walletModel);
         }
       }
-      List<WalletTransaction> walletTransactions = await proton_api
-          .getWalletTransactions(walletId: walletModel!.serverWalletID);
-      DateTime now = DateTime.now();
-      for (WalletTransaction walletTransaction in walletTransactions) {
-        String txid = proton_crypto.decrypt(
-            userPrivateKey, userPassphrase, walletTransaction.transactionId);
-        String toList = "";
-        String sender = "";
-        if (walletTransaction.tolist != null) {
-          Uint8List bytes = proton_crypto.decryptBinary(userPrivateKey,
-              userPassphrase, base64Decode(walletTransaction.tolist ?? ""));
-          toList = utf8.decode(bytes);
-        }
-        if (walletTransaction.sender != null) {
-          Uint8List bytes = proton_crypto.decryptBinary(userPrivateKey,
-              userPassphrase, base64Decode(walletTransaction.sender ?? ""));
-          sender = utf8.decode(bytes);
-        }
-        String exchangeRateID = "";
-        if (walletTransaction.exchangeRate != null) {
-          exchangeRateID = walletTransaction.exchangeRate!.id;
-        }
-        if (sender.isNotEmpty || toList.isNotEmpty) {
-          logger.i(sender);
-          logger.i(toList);
-        }
-        TransactionModel transactionModel = TransactionModel(
-            id: null,
-            walletID: walletModel.id!,
-            label: utf8.encode(walletTransaction.label ?? ""),
-            externalTransactionID: utf8.encode(txid),
-            createTime: now.millisecondsSinceEpoch ~/ 1000,
-            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-            hashedTransactionID:
-                utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-            transactionID: walletTransaction.id,
-            transactionTime: walletTransaction.transactionTime,
-            exchangeRateID: exchangeRateID,
-            serverWalletID: walletTransaction.walletId,
-            serverAccountID: walletTransaction.walletAccountId!,
-            sender: walletTransaction.sender,
-            tolist: walletTransaction.tolist,
-            subject: walletTransaction.subject,
-            body: walletTransaction.body);
-        await DBHelper.transactionDao!.insertOrUpdate(transactionModel);
+      if (walletModel != null) {
+        List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+        addresses = addresses.where((element) => element.status == 1).toList();
+        await handleWalletTransaction(walletModel, addresses);
       }
     }
     isFetchingWallets = false;
-  }
-
-  static String decodeBinaryToMessage(String userPrivateKey, String userPassphrase, String? binaryString){
-    String decodedMessage = "";
-    if (binaryString != null) {
-      Uint8List bytes = proton_crypto.decryptBinary(userPrivateKey,
-          userPassphrase, base64Decode(binaryString));
-      decodedMessage = utf8.decode(bytes);
-      if (decodedMessage == "null"){
-        decodedMessage = "";
-      }
-    }
-    return decodedMessage;
   }
 
   static Future<void> setLatestEventId(String latestEventId) async {
@@ -520,7 +467,7 @@ class WalletManager {
     return preferences.getString("latestEventId");
   }
 
-  static Future<void> initMuon(ApiEnv apiEnv)async{
+  static Future<void> initMuon(ApiEnv apiEnv) async {
     WalletManager.apiEnv = apiEnv;
     // await proton_api.initApiService(
     //     userName: 'ProtonWallet', password: 'alicebob');
@@ -532,9 +479,9 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = "thnwyqqifdhcuxrtq22kelniqk65nxy5";
-      accessToken = "uu2gxti6obzngcvhlntqdnqxkmhvxsjf";
-      refreshToken = "zdrv3gjlqfcyudixtpmexr7qozr5wbaj";
+      uid = "on4jmp7dmvpy7n5twj5vvyh2lxdhsoyn";
+      accessToken = "zm7gtm2xh6e67s7vo7akoxqde5q7typ5";
+      refreshToken = "r56k4x2bbcxrao4at77noqes7bpwicrb";
       // //
       // // // user "qqqq"
       // uid = "x2oo7agibvr2fd4ufuen6xdcovdyts2g";
@@ -570,6 +517,120 @@ class WalletManager {
         await proton_api.lookupBitcoinAddress(email: email);
     // TODO:: check signature!
     return emailIntegrationBitcoinAddress.bitcoinAddress;
+  }
+
+  static Future<void> fetchWalletTransactions() async {
+    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    addresses = addresses.where((element) => element.status == 1).toList();
+
+    List<WalletModel> wallets =
+        (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
+    for (WalletModel walletModel in wallets) {
+      handleWalletTransaction(walletModel, addresses);
+    }
+  }
+
+  static Future<void> handleWalletTransaction(
+      WalletModel walletModel, List<ProtonAddress> addresses) async {
+    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+    String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+
+    List<String> addressKeyPrivateKeys = [];
+    List<String> addressKeyPassphrases = [];
+    for (ProtonAddress address in addresses) {
+      for (ProtonAddressKey addressKey in address.keys ?? []) {
+        String addressKeyPrivateKey = addressKey.privateKey ?? "";
+        String addressKeyToken = addressKey.token ?? "";
+        try {
+          String addressPassphrase = proton_crypto.decrypt(
+              userPrivateKey, userPassphrase, addressKeyToken);
+          addressKeyPrivateKeys.add(addressKeyPrivateKey);
+          addressKeyPassphrases.add(addressPassphrase);
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+    }
+
+    List<WalletTransaction> walletTransactions = await proton_api
+        .getWalletTransactions(walletId: walletModel.serverWalletID);
+    DateTime now = DateTime.now();
+    for (WalletTransaction walletTransaction in walletTransactions) {
+      String txid = "";
+      for (int i = 0; i < addressKeyPrivateKeys.length; i++) {
+        try {
+          txid = proton_crypto.decrypt(
+              addressKeyPrivateKeys[i],
+              addressKeyPassphrases[i], walletTransaction.transactionId);
+          if (txid.isNotEmpty){
+            break;
+          }
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+      String toList = "";
+      String sender = "";
+      if (walletTransaction.tolist != null) {
+        for (int i = 0; i < addressKeyPrivateKeys.length; i++) {
+          try {
+            Uint8List bytes = proton_crypto.decryptBinary(
+                addressKeyPrivateKeys[i],
+                addressKeyPassphrases[i],
+                base64Decode(walletTransaction.tolist ?? ""));
+            toList = utf8.decode(bytes);
+            if (toList.isNotEmpty) {
+              break;
+            }
+          } catch (e) {
+            logger.e(e.toString());
+          }
+        }
+      }
+      if (walletTransaction.sender != null) {
+        for (int i = 0; i < addressKeyPrivateKeys.length; i++) {
+          try {
+            Uint8List bytes = proton_crypto.decryptBinary(
+                addressKeyPrivateKeys[i],
+                addressKeyPassphrases[i],
+                base64Decode(walletTransaction.sender ?? ""));
+            sender = utf8.decode(bytes);
+            if (sender.isNotEmpty) {
+              break;
+            }
+          } catch (e) {
+            logger.e(e.toString());
+          }
+        }
+      }
+      String exchangeRateID = "";
+      if (walletTransaction.exchangeRate != null) {
+        exchangeRateID = walletTransaction.exchangeRate!.id;
+      }
+      if (sender.isNotEmpty || toList.isNotEmpty) {
+        logger.i(sender);
+        logger.i(toList);
+      }
+      TransactionModel transactionModel = TransactionModel(
+          id: null,
+          walletID: walletModel.id!,
+          label: utf8.encode(walletTransaction.label ?? ""),
+          externalTransactionID: utf8.encode(txid),
+          createTime: now.millisecondsSinceEpoch ~/ 1000,
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          hashedTransactionID:
+              utf8.encode(walletTransaction.hashedTransactionId ?? ""),
+          transactionID: walletTransaction.id,
+          transactionTime: walletTransaction.transactionTime,
+          exchangeRateID: exchangeRateID,
+          serverWalletID: walletTransaction.walletId,
+          serverAccountID: walletTransaction.walletAccountId!,
+          sender: walletTransaction.sender,
+          tolist: walletTransaction.tolist,
+          subject: walletTransaction.subject,
+          body: walletTransaction.body);
+      await DBHelper.transactionDao!.insertOrUpdate(transactionModel);
+    }
   }
 
   static Future<void> handleBitcoinAddressRequests(
@@ -630,21 +691,21 @@ class WalletManager {
     }
   }
 
-  static String getEmailFromWalletTransaction(String jsonString){
-    var jsonList = jsonDecode(jsonString) as List<dynamic>;
+  static String getEmailFromWalletTransaction(String jsonString) {
     try {
+      var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].values.first;
-    } catch (e){
-      logger.e(e.toString());
+    } catch (e) {
+      // logger.e(e.toString());
       return jsonString;
     }
   }
 
-  static String getBitcoinAddressFromWalletTransaction(String jsonString){
+  static String getBitcoinAddressFromWalletTransaction(String jsonString) {
     var jsonList = jsonDecode(jsonString) as List<dynamic>;
     try {
       return jsonList[0].keys.first;
-    } catch (e){
+    } catch (e) {
       logger.e(e.toString());
       return jsonString;
     }

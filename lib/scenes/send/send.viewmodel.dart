@@ -224,6 +224,8 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> sendCoin() async {
+    EasyLoading.show(
+        status: "Broadcasting transaction..", maskType: EasyLoadingMaskType.black);
     if (amountTextController.text != "") {
       bool isBitcoinBase = false;
       double amount = 0.0;
@@ -274,11 +276,13 @@ class SendViewModelImpl extends SendViewModel {
             logger.i("transaction id: $transactionID");
           }
 
-          await _lib.sendBitcoin(
-              _blockchain!, _wallet, receipinetAddress, amountInSats);
+          await WalletManager.fetchWalletTransactions(); // TODO:: only update by eventloop
+          // await _lib.sendBitcoin(
+          //     _blockchain!, _wallet, receipinetAddress, amountInSats);
         }
       }
     }
+    EasyLoading.dismiss();
   }
 
   @override
