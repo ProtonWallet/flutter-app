@@ -76,13 +76,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   ],
                 ),
                 viewModel.isSend
-                    ? Text(S
-                    .of(context)
-                    .current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8)),
+                    ? Text(
+                        S.of(context).current_balance_btc(
+                            (viewModel.amount / 100000000).toStringAsFixed(8)),
                         style: FontManager.titleHero(ProtonColors.signalError))
-                    : Text("+${S
-                    .of(context)
-                    .current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8))}",
+                    : Text(
+                        "+${S.of(context).current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8))}",
                         style:
                             FontManager.titleHero(ProtonColors.signalSuccess)),
                 Text(
@@ -178,9 +177,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         },
                         content:
                             "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
-                        memo: S
-                            .of(context)
-                            .current_balance_btc((viewModel.fee / 100000000).toStringAsFixed(8)),
+                        memo: S.of(context).current_balance_btc(
+                            (viewModel.fee / 100000000).toStringAsFixed(8)),
                       ),
                       const Divider(
                         thickness: 0.2,
@@ -192,11 +190,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}"
                             : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs() + viewModel.fee).toStringAsFixed(3)}",
                         memo: viewModel.isSend
-                            ? S
-                                .of(context)
-                                .current_balance_btc((viewModel.amount.abs() / 100000000).toStringAsFixed(8))
-                            : S.of(context).current_balance_btc(((
-                                viewModel.amount.abs() + viewModel.fee) / 100000000).toStringAsFixed(8)),
+                            ? S.of(context).current_balance_btc(
+                                (viewModel.amount.abs() / 100000000)
+                                    .toStringAsFixed(8))
+                            : S.of(context).current_balance_btc(
+                                ((viewModel.amount.abs() + viewModel.fee) /
+                                        100000000)
+                                    .toStringAsFixed(8)),
                       ),
                       const SizedBox(height: 20),
                       ButtonV5(
@@ -234,9 +234,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         ),
         TransactionHistoryItem(
           title: S.of(context).trans_to,
-          content: viewModel.toEmail.isNotEmpty ? WalletManager.getEmailFromWalletTransaction(viewModel.toEmail) : viewModel.address,
+          content: viewModel.toEmail.isNotEmpty
+              ? WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)
+              : viewModel.address,
           copyContent: true,
-          memo: viewModel.toEmail.isNotEmpty ? WalletManager.getBitcoinAddressFromWalletTransaction(viewModel.toEmail) : null,
+          memo: viewModel.toEmail.isNotEmpty
+              ? WalletManager.getBitcoinAddressFromWalletTransaction(
+                  viewModel.toEmail)
+              : null,
         ),
       ],
     );
@@ -250,9 +255,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       children: [
         TransactionHistoryItem(
           title: S.of(context).trans_from,
-          content: viewModel.address,
+          content: viewModel.fromEmail.isNotEmpty
+              ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
+              : viewModel.address,
           copyContent: true,
-          memo: viewModel.fromEmail.isNotEmpty ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail) : null,
+          memo: viewModel.fromEmail.isNotEmpty ? viewModel.address : null,
         ),
         const Divider(
           thickness: 0.2,
