@@ -57,7 +57,6 @@ class HistoryView extends ViewBase<HistoryViewModel> {
             width: MediaQuery.of(context).size.width - 80,
             address:
                 "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
-            coin: "Sat",
             amount: (viewModel.getAmount(index)).toDouble(),
             isSend: viewModel.history[index].sent >
                 viewModel.history[index].received,

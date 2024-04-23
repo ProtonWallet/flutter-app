@@ -9,6 +9,7 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 class WalletUserSetting {
   proton_user_setting.FiatCurrency fiatCurrency =
       proton_user_setting.FiatCurrency.usd;
+  CommonBitcoinUnit bitcoinUnit = CommonBitcoinUnit.btc;
   ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: CommonBitcoinUnit.btc,
@@ -21,9 +22,29 @@ class WalletUserSetting {
 class UserSettingProvider with ChangeNotifier {
   final WalletUserSetting walletUserSetting = WalletUserSetting();
 
+  void updateBitcoinUnit(CommonBitcoinUnit bitcoinUnit) {
+    walletUserSetting.bitcoinUnit = bitcoinUnit;
+    notifyListeners();
+  }
+
   void updateFiatCurrency(proton_user_setting.FiatCurrency fiatCurrency) {
     walletUserSetting.fiatCurrency = fiatCurrency;
     notifyListeners();
+  }
+
+  String getBitcoinUnitLabel(int amountInSatoshi) {
+    double amount = amountInSatoshi.toDouble();
+    switch (walletUserSetting.bitcoinUnit) {
+      case CommonBitcoinUnit.btc:
+        amount = amountInSatoshi / 100000000;
+        return "${amount.toStringAsFixed(8)} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
+      case CommonBitcoinUnit.mbtc:
+        amount = amountInSatoshi / 100000;
+        return "${amount.toStringAsFixed(5)} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
+      default:
+        break;
+    }
+    return "${amount.toInt()} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
   }
 
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {

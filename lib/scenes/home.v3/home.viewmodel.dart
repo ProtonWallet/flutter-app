@@ -77,6 +77,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isFetching = false;
   bool isShowingNoInternet = false;
   bool customFiatCurrency = false;
+  bool customBitcoinUnit = false;
   Map<int, List<AccountModel>> walletID2Accounts = {};
   Map<int, List<String>> accountID2IntegratedEmailIDs = {};
   List<ProtonAddress> protonAddresses = [];
@@ -86,7 +87,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   AccountModel? currentAccount;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-      ValueNotifier(FiatCurrency.chf);
+  ValueNotifier(FiatCurrency.chf);
+  ValueNotifier<CommonBitcoinUnit> bitcoinUnitNotifier =
+  ValueNotifier(CommonBitcoinUnit.btc);
   late ValueNotifier<ProtonAddress> emailIntegrationNotifier;
   bool emailIntegrationEnable = false;
   String transactionFilter = "";
@@ -112,7 +115,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void saveUserSettings();
 
   ApiUserSettings? userSettings;
-  late TextEditingController bitcoinUnitController;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
 
@@ -214,7 +216,6 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> loadData() async {
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
-    bitcoinUnitController = TextEditingController();
     hideEmptyUsedAddressesController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController(text: "3");
     blockchain ??= await _lib.initializeBlockchain(false);
@@ -247,7 +248,11 @@ class HomeViewModelImpl extends HomeViewModel {
     checkNetwork(); // no effect
     checkProtonAddresses();
     fiatCurrencyNotifier.addListener(() async {
-      updateUserSettingProvider(fiatCurrencyNotifier.value);
+      updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
+    });
+    bitcoinUnitNotifier.addListener(() async{
+      updateBitcoinUnit(bitcoinUnitNotifier.value);
+      userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
     });
     try {
       EasyLoading.dismiss();
@@ -528,23 +533,23 @@ class HomeViewModelImpl extends HomeViewModel {
     // });
   }
 
-  Future<void> updateUserSettingProvider(FiatCurrency fiatCurrency) async {
+  Future<void> updateFiatCurrencyInUserSettingProvider(FiatCurrency fiatCurrency) async {
     userSettingProvider.updateFiatCurrency(fiatCurrency);
     ProtonExchangeRate exchangeRate =
-        await ExchangeRateService.getExchangeRate(fiatCurrency);
+    await ExchangeRateService.getExchangeRate(fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
   }
 
   void loadUserSettings() {
     if (userSettings != null) {
-      bitcoinUnitController.text = userSettings!.bitcoinUnit.name.toUpperCase();
+      bitcoinUnitNotifier.value = userSettings!.bitcoinUnit;
       fiatCurrencyNotifier.value = userSettings!.fiatCurrency;
       hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
       int twoFactorAmountThreshold =
           userSettings!.twoFactorAmountThreshold ?? 1000;
       twoFactorAmountThresholdController.text =
           twoFactorAmountThreshold.toString();
-      updateUserSettingProvider(userSettings!.fiatCurrency);
+      updateFiatCurrencyInUserSettingProvider(userSettings!.fiatCurrency);
     }
     datasourceStreamSinkAdd();
   }
@@ -606,8 +611,7 @@ class HomeViewModelImpl extends HomeViewModel {
       hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
       int twoFactorAmountThreshold =
           int.parse(twoFactorAmountThresholdController.text);
-      CommonBitcoinUnit bitcoinUnit =
-          CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
+      CommonBitcoinUnit bitcoinUnit = bitcoinUnitNotifier.value;
       FiatCurrency fiatCurrency = fiatCurrencyNotifier.value;
 
       userSettings = await proton_api.hideEmptyUsedAddresses(

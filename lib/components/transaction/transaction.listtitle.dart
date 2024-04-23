@@ -14,7 +14,6 @@ import '../../constants/constants.dart';
 class TransactionListTitle extends StatelessWidget {
   final double width;
   final String address;
-  final String coin;
   final double amount;
   final bool isSend;
   final int? timestamp;
@@ -25,7 +24,6 @@ class TransactionListTitle extends StatelessWidget {
     super.key,
     required this.width,
     required this.address,
-    required this.coin,
     required this.amount,
     required this.isSend,
     this.timestamp,
@@ -44,8 +42,7 @@ class TransactionListTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double notional = CommonHelper.getEstimateValue(
-        amount:
-            coin.toLowerCase().contains("sat") ? amount / 100000000 : amount,
+        amount: amount / 100000000,
         isBitcoinBase: true,
         currencyExchangeRate: Provider.of<UserSettingProvider>(context)
             .walletUserSetting
@@ -87,10 +84,10 @@ class TransactionListTitle extends StatelessWidget {
                               style: FontManager.body2Regular(
                                   ProtonColors.textNorm)),
                           isSend
-                              ? Text("$amount $coin",
+                              ? Text(Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt()),
                                   style: FontManager.body2Regular(
                                       ProtonColors.signalError))
-                              : Text("+$amount $coin",
+                              : Text("+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
                                   style: FontManager.body2Regular(
                                       ProtonColors.signalSuccess)),
                         ]),

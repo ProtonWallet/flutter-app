@@ -23,6 +23,12 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.chf
 ];
 
+const List<CommonBitcoinUnit> bitcoinUnits = [
+  CommonBitcoinUnit.btc,
+  CommonBitcoinUnit.mbtc,
+  CommonBitcoinUnit.sats,
+];
+
 const Map<FiatCurrency, String> fiatCurrency2Sign = {
   FiatCurrency.usd: "\$",
   FiatCurrency.eur: "€",

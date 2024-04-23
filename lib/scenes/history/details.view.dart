@@ -77,11 +77,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 ),
                 viewModel.isSend
                     ? Text(
-                        S.of(context).current_balance_btc(
-                            (viewModel.amount / 100000000).toStringAsFixed(8)),
+                    Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt()),
                         style: FontManager.titleHero(ProtonColors.signalError))
                     : Text(
-                        "+${S.of(context).current_balance_btc((viewModel.amount / 100000000).toStringAsFixed(8))}",
+                        "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt())}",
                         style:
                             FontManager.titleHero(ProtonColors.signalSuccess)),
                 Text(
@@ -177,8 +176,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         },
                         content:
                             "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
-                        memo: S.of(context).current_balance_btc(
-                            (viewModel.fee / 100000000).toStringAsFixed(8)),
+                        memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.fee.toInt()),
                       ),
                       const Divider(
                         thickness: 0.2,
@@ -190,13 +188,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}"
                             : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs() + viewModel.fee).toStringAsFixed(3)}",
                         memo: viewModel.isSend
-                            ? S.of(context).current_balance_btc(
-                                (viewModel.amount.abs() / 100000000)
-                                    .toStringAsFixed(8))
-                            : S.of(context).current_balance_btc(
-                                ((viewModel.amount.abs() + viewModel.fee) /
-                                        100000000)
-                                    .toStringAsFixed(8)),
+                            ? Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt())
+                            : Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.abs().toInt() + viewModel.fee.toInt())
                       ),
                       const SizedBox(height: 20),
                       ButtonV5(
