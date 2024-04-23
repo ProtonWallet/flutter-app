@@ -136,12 +136,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                               Text(
                                   viewModel.customFiatCurrency
                                       ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate.exchangeRate * viewModel.balance / 100 / 100000000).toStringAsFixed(defaultDisplayDigits)}"
-                                      : "${viewModel.balance / 100000000} BTC",
+                                      : Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.balance.toInt()),
                                   style: FontManager.balanceInFiatCurrency(
                                       ProtonColors.textNorm)),
                               Text(
                                   viewModel.customFiatCurrency
-                                      ? "${viewModel.balance / 100000000} BTC"
+                                      ? Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.balance.toInt())
                                       : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate.exchangeRate * viewModel.balance / 100 / 100000000).toStringAsFixed(defaultDisplayDigits)}",
                                   style: FontManager.balanceInBTC(
                                       ProtonColors.textWeak))
@@ -337,10 +337,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 viewModel.fromEmails[index]),
                                         24)
                                     : "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
-                                coin: "BTC",
                                 amount:
-                                    (viewModel.getAmount(index)).toDouble() /
-                                        100000000,
+                                    (viewModel.getAmount(index)).toDouble(),
                                 isSend: viewModel.history[index].sent >
                                     viewModel.history[index].received,
                                 note: viewModel.userLabels[index],
@@ -964,7 +962,61 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                     horizontal: defaultPadding),
                                 child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(S.of(context).custom_bitcoin_unit,
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textNorm)),
+                                      CupertinoSwitch(
+                                        value: viewModel.customBitcoinUnit,
+                                        activeColor: ProtonColors.protonBlue,
+                                        onChanged: (bool newValue) {
+                                          setState(() {
+                                            viewModel.customBitcoinUnit =
+                                                newValue;
+                                            if (newValue == false) {
+                                              viewModel.bitcoinUnitNotifier
+                                                  .value = CommonBitcoinUnit.btc;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ])),
+                            if (viewModel.customBitcoinUnit)
+                              DropdownButtonV1(
+                                  labelText:
+                                  S.of(context).setting_bitcoin_unit_label,
+                                  width: MediaQuery.of(context).size.width -
+                                      defaultPadding * 2,
+                                  items: bitcoinUnits,
+                                  itemsText: bitcoinUnits
+                                      .map((v) => v.name.toUpperCase())
+                                      .toList(),
+                                  valueNotifier:
+                                  viewModel.bitcoinUnitNotifier),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ])),
+
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: ProtonColors.white,
+                            // border: Border.all(color: Colors.black, width: 1.0),
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Column(children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding),
+                                child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(S.of(context).custom_fiat_currency,
                                           style: FontManager.body2Regular(
@@ -987,7 +1039,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                             if (viewModel.customFiatCurrency)
                               DropdownButtonV1(
                                   labelText:
-                                      S.of(context).setting_fiat_currency_label,
+                                  S.of(context).setting_fiat_currency_label,
                                   width: MediaQuery.of(context).size.width -
                                       defaultPadding * 2,
                                   items: fiatCurrencies,
@@ -995,7 +1047,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                       .map((v) => FiatCurrencyHelper.getText(v))
                                       .toList(),
                                   valueNotifier:
-                                      viewModel.fiatCurrencyNotifier),
+                                  viewModel.fiatCurrencyNotifier),
                             const SizedBox(
                               height: 10,
                             ),
@@ -1580,12 +1632,12 @@ Widget getWalletBalanceWidget(
     Text(
         viewModel.customFiatCurrency
             ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}"
-            : "${walletModel.balance / 100000000} BTC",
+            : Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(walletModel.balance.toInt()),
         style: FontManager.captionSemiBold(AvatarColorHelper.getTextColor(
             viewModel.userWallets.indexOf(walletModel)))),
     Text(
         viewModel.customFiatCurrency
-            ? "${walletModel.balance / 100000000} BTC"
+            ? Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(walletModel.balance.toInt())
             : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
@@ -1604,11 +1656,11 @@ Widget getWalletAccountBalanceWidget(BuildContext context,
     Text(
         viewModel.customFiatCurrency
             ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}"
-            : "${accountModel.balance / 100000000} BTC",
+            : Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(accountModel.balance.toInt()),
         style: FontManager.captionSemiBold(textColor)),
     Text(
         viewModel.customFiatCurrency
-            ? "${accountModel.balance / 100000000} BTC"
+            ? Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(accountModel.balance.toInt())
             : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);

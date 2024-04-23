@@ -178,6 +178,7 @@
   "dashboard": "Dashboard",
   "exit": "Exit",
   "custom_fiat_currency": "Custom Fiat Currency",
+  "custom_bitcoin_unit": "Custom Bitcoin Unit",
 
   "confirm_to_delete": "Confirm to delete",
   "you_are_sending": "You are sending",

@@ -92,8 +92,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
     hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
     int twoFactorAmountThreshold =
         int.parse(twoFactorAmountThresholdController.text);
-    CommonBitcoinUnit bitcoinUnit =
-        CommonHelper.getBitcoinUnit(bitcoinUnitController.text);
     FiatCurrency fiatCurrency =
         CommonHelper.getFiatCurrency(faitCurrencyController.text);
 
@@ -101,7 +99,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
         hideEmptyUsedAddresses: hideEmptyUsedAddresses);
     userSettings =
         await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
-    userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
     userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
 
     loadUserSettings();
