@@ -726,4 +726,54 @@ mod test {
 
         assert!(fee_rate.as_sat_per_vb() > 0.0);
     }
+
+    #[tokio::test]
+    async fn test_wallet_import_sync_then_send() {
+        let network = Network::Testnet;
+        let mnemonic = Mnemonic::from_str(
+            "elbow guide topple state museum project goat split afraid rebuild hour destroy"
+                .to_string(),
+        )
+        .unwrap();
+        let key = DescriptorSecretKey::new(network, mnemonic, None).unwrap();
+        let descriptor = BdkDescriptor::new_bip84(key, KeychainKind::External, network);
+
+        let wallet_id = Wallet::new_wallet(
+            descriptor.as_string(),
+            None,
+            Network::Testnet,
+            super::DatabaseConfig::Memory,
+        )
+        .unwrap();
+
+        let wallet = Wallet::retrieve_wallet(wallet_id);
+
+        init_api_service("feng100".to_string(), "12345678".to_string()).await;
+
+        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let config = EsploraConfig {
+            base_url: "https://blockstream.info/testnet/api".to_string(),
+            proxy: None,
+            concurrency: Some(4),
+            stop_gap: 10,
+            timeout: None,
+        };
+        let blockchain_id = Blockchain::new_blockchain_with_api(config, proton_api).unwrap();
+        let blockchain = Blockchain::retrieve_blockchain(blockchain_id);
+
+        println!("start syncing");
+        info!("start syncing");
+        wallet.sync(blockchain.deref(), None).await;
+
+        println!("start getting banlance");
+        let balance = wallet.get_balance().unwrap();
+        println!("balance {:?}", balance.confirmed);
+        assert!(balance.confirmed != 0);
+
+        println!("check fee");
+        let fee_rate = blockchain.estimate_fee(100).await.unwrap();
+        println!("fee rate: {}", fee_rate.as_sat_per_vb());
+
+        assert!(fee_rate.as_sat_per_vb() > 0.0);
+    }
 }
