@@ -8,3 +8,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<int> addTwo({required int left, required int right, dynamic hint}) =>
     RustLib.instance.api.addTwo(left: left, right: right, hint: hint);
+
+Future<String> testOne({dynamic hint}) =>
+    RustLib.instance.api.testOne(hint: hint);

@@ -75,14 +75,6 @@ class BdkLibrary {
         config: const EsploraConfig(
             baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
     return blockchain;
-    //   final blockchain = await Blockchain.create(
-    //       config: const BlockchainConfig.electrum(
-    //           config: ElectrumConfig(
-    //               stopGap: 10,
-    //               timeout: 5,
-    //               retry: 5,
-    //               url: "ssl://electrum.blockstream.info:60002",
-    //               validateDomain: true)));
   }
 
   Future<Wallet> restoreWallet(Descriptor descriptor,
@@ -120,10 +112,11 @@ class BdkLibrary {
     return wallet;
   }
 
-  Future<void> sync(Blockchain blockchain, Wallet aliceWallet) async {
+  Future<void> syncWallet(Blockchain blockchain, Wallet aliceWallet) async {
     try {
-      await Isolate.run(() async =>
-          {await RustLib.init(), await aliceWallet.sync(blockchain)});
+      await aliceWallet.syncWallet(blockchain);
+      // await Isolate.run(() async =>
+      //     {await RustLib.init(), await aliceWallet.sync(blockchain)});
     } on FormatException catch (e) {
       logger.d(e.message);
     }

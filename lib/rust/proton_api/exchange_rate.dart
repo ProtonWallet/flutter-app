@@ -12,7 +12,7 @@ class ProtonExchangeRate {
   final String id;
 
   /// Bitcoin unit of the exchange rate
-  final CommonBitcoinUnit bitcoinUnit;
+  final BitcoinUnit bitcoinUnit;
 
   /// Fiat currency of the exchange rate
   final FiatCurrency fiatCurrency;

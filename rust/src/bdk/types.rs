@@ -1,25 +1,25 @@
 use crate::bdk::psbt::Transaction;
 use bdk::bitcoin::blockdata::transaction::TxIn as BdkTxIn;
 use bdk::bitcoin::blockdata::transaction::TxOut as BdkTxOut;
-use bdk::bitcoin::hashes::hex::ToHex;
-use bdk::bitcoin::locktime::Error;
+use bdk::bitcoin::address::WitnessVersion as BdkWitnessVersion;
 use bdk::bitcoin::psbt::Input;
-use bdk::bitcoin::util::address::{Payload as BdkPayload, WitnessVersion as BdkWitnessVersion};
 use bdk::bitcoin::{Address as BdkAddress, OutPoint as BdkOutPoint, Txid};
 use bdk::blockchain::Progress as BdkProgress;
 use bdk::{Balance as BdkBalance, Error as BdkError};
+use bitcoin::script::Error;
+use bitcoin::ScriptBuf;
 use serde::{Deserialize, Serialize};
 use std::borrow::Borrow;
 use std::fmt;
 use std::fmt::Debug;
 use std::str::FromStr;
-
+use bitcoin_internals::hex::exts::DisplayHex;
 #[derive(Debug, Clone)]
 pub struct TxIn {
     pub previous_output: OutPoint,
     pub script_sig: Script,
     pub sequence: u32,
-    pub witness: Vec<String>,
+    pub witness: Vec<Vec<u8>>,
 }
 
 impl From<&BdkTxIn> for TxIn {
@@ -28,7 +28,7 @@ impl From<&BdkTxIn> for TxIn {
             previous_output: x.previous_output.into(),
             script_sig: x.clone().script_sig.into(),
             sequence: x.clone().sequence.0,
-            witness: x.witness.to_vec().iter().map(|x| x.to_hex()).collect(),
+            witness: x.witness.iter().map(|x| x.to_lower_hex_string().into_bytes()).collect(),
         }
     }
 }
@@ -287,6 +287,7 @@ impl From<bdk::bitcoin::Network> for Network {
             bdk::bitcoin::Network::Testnet => Network::Testnet,
             bdk::bitcoin::Network::Regtest => Network::Regtest,
             bdk::bitcoin::Network::Bitcoin => Network::Bitcoin,
+            _ => todo!(),
         }
     }
 }
@@ -315,29 +316,30 @@ pub struct Address {
 impl Address {
     pub fn new(address: String) -> Result<Self, BdkError> {
         BdkAddress::from_str(address.as_str())
-            .map(|a| Address { address: a })
+            .map(|a| Address { address: a.assume_checked() })
             .map_err(|e| BdkError::Generic(e.to_string()))
     }
 
-    pub fn from_script(script: Script, network: Network) -> Result<Self, BdkError> {
-        BdkAddress::from_script(&script.into(), network.into())
+    pub fn from_script(script: ScriptBuf, network: Network) -> Result<Self, BdkError> {
+        BdkAddress::from_script(&script, network.into())
             .map(|a| Address { address: a })
             .map_err(|e| BdkError::Generic(e.to_string()))
     }
-    pub fn payload(&self) -> Payload {
-        match &self.address.payload.clone() {
-            BdkPayload::PubkeyHash(pubkey_hash) => Payload::PubkeyHash {
-                pubkey_hash: pubkey_hash.to_vec(),
-            },
-            BdkPayload::ScriptHash(script_hash) => Payload::ScriptHash {
-                script_hash: script_hash.to_vec(),
-            },
-            BdkPayload::WitnessProgram { version, program } => Payload::WitnessProgram {
-                version: version.to_owned().into(),
-                program: program.clone(),
-            },
-        }
-    }
+    // pub fn payload(&self) -> Payload {
+    //     match &self.address.payload.clone() {
+    //         BdkPayload::PubkeyHash(pubkey_hash) => Payload::PubkeyHash {
+    //             pubkey_hash: pubkey_hash.to_vec(),
+    //         },
+    //         BdkPayload::ScriptHash(script_hash) => Payload::ScriptHash {
+    //             script_hash: script_hash.to_vec(),
+    //         },
+    //         BdkPayload::WitnessProgram(witness) => Payload::WitnessProgram {
+    //             version: witness.version(),
+    //             program: witness.program().to_vec(),
+    //         },
+    //         _ => todo!(),
+    //     }
+    // }
 
     pub fn network(&self) -> Network {
         self.address.network.into()
@@ -354,25 +356,38 @@ pub struct Script {
 }
 impl Script {
     pub fn new(raw_output_script: Vec<u8>) -> Result<Script, Error> {
-        let script = bdk::bitcoin::Script::from(raw_output_script);
+        let script = bdk::bitcoin::ScriptBuf::from(raw_output_script);
         Ok(Script {
             internal: script.into_bytes(),
         })
     }
 }
 
-impl From<Script> for bdk::bitcoin::Script {
+impl From<Script> for bdk::bitcoin::ScriptBuf {
     fn from(value: Script) -> Self {
-        bdk::bitcoin::Script::from(value.internal)
+        bdk::bitcoin::ScriptBuf::from_bytes(value.internal)
     }
 }
-impl From<bdk::bitcoin::Script> for Script {
-    fn from(value: bdk::bitcoin::Script) -> Self {
+impl From<bdk::bitcoin::ScriptBuf> for Script {
+    fn from(value: bdk::bitcoin::ScriptBuf) -> Self {
         Script {
             internal: value.into_bytes(),
         }
     }
 }
+
+// impl From<Script> for bdk::bitcoin::Script {
+//     fn from(value: Script) -> Self {
+//         bdk::bitcoin::Script::from(value.internal)
+//     }
+// }
+// impl From<bdk::bitcoin::Script> for Script {
+//     fn from(value: bdk::bitcoin::Script) -> Self {
+//         Script {
+//             internal: value.into_bytes(),
+//         }
+//     }
+// }
 
 #[derive(Debug, Clone)]
 pub enum WitnessVersion {
@@ -436,6 +451,7 @@ impl From<BdkWitnessVersion> for WitnessVersion {
 }
 /// The method used to produce an address.
 #[derive(Debug)]
+#[allow(dead_code)]
 pub enum Payload {
     /// P2PKH address.
     PubkeyHash { pubkey_hash: Vec<u8> },

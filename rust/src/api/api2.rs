@@ -1,13 +1,10 @@
-
 pub fn add_one(left: usize, right: usize) -> usize {
     left + right
 }
 
-
 pub fn add_three(left: usize, right: usize) -> usize {
     left + right
 }
-
 
 #[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo
 pub fn greet(name: String) -> String {

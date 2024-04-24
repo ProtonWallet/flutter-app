@@ -68,6 +68,26 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
 
+  /// File path: assets/images/icon/discover_placeholder_0.svg
+  SvgGenImage get discoverPlaceholder0 =>
+      const SvgGenImage('assets/images/icon/discover_placeholder_0.svg');
+
+  /// File path: assets/images/icon/discover_placeholder_1.svg
+  SvgGenImage get discoverPlaceholder1 =>
+      const SvgGenImage('assets/images/icon/discover_placeholder_1.svg');
+
+  /// File path: assets/images/icon/discover_placeholder_2.svg
+  SvgGenImage get discoverPlaceholder2 =>
+      const SvgGenImage('assets/images/icon/discover_placeholder_2.svg');
+
+  /// File path: assets/images/icon/discover_placeholder_3.svg
+  SvgGenImage get discoverPlaceholder3 =>
+      const SvgGenImage('assets/images/icon/discover_placeholder_3.svg');
+
+  /// File path: assets/images/icon/discover_placeholder_4.svg
+  SvgGenImage get discoverPlaceholder4 =>
+      const SvgGenImage('assets/images/icon/discover_placeholder_4.svg');
+
   /// File path: assets/images/icon/do_transactions.svg
   SvgGenImage get doTransactions =>
       const SvgGenImage('assets/images/icon/do_transactions.svg');
@@ -116,6 +136,13 @@ class $AssetsImagesIconGen {
   SvgGenImage get icWallet =>
       const SvgGenImage('assets/images/icon/ic-wallet.svg');
 
+  /// File path: assets/images/icon/ic_message.svg
+  SvgGenImage get icMessage =>
+      const SvgGenImage('assets/images/icon/ic_message.svg');
+
+  /// File path: assets/images/icon/ic_note.svg
+  SvgGenImage get icNote => const SvgGenImage('assets/images/icon/ic_note.svg');
+
   /// File path: assets/images/icon/launch_icon.png
   AssetGenImage get launchIcon =>
       const AssetGenImage('assets/images/icon/launch_icon.png');
@@ -126,6 +153,10 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/mobile.svg
   SvgGenImage get mobile => const SvgGenImage('assets/images/icon/mobile.svg');
+
+  /// File path: assets/images/icon/no_wallet_found.svg
+  SvgGenImage get noWalletFound =>
+      const SvgGenImage('assets/images/icon/no_wallet_found.svg');
 
   /// File path: assets/images/icon/protect.svg
   SvgGenImage get protect =>
@@ -157,6 +188,11 @@ class $AssetsImagesIconGen {
   List<dynamic> get values => [
         bitcoin,
         btc,
+        discoverPlaceholder0,
+        discoverPlaceholder1,
+        discoverPlaceholder2,
+        discoverPlaceholder3,
+        discoverPlaceholder4,
         doTransactions,
         drawerMenu,
         icArrowOutFromRectanglesignout,
@@ -169,9 +205,12 @@ class $AssetsImagesIconGen {
         icMoneyBills,
         icSquaresInSquarediscover,
         icWallet,
+        icMessage,
+        icNote,
         launchIcon,
         logoText,
         mobile,
+        noWalletFound,
         protect,
         receive,
         send,

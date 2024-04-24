@@ -14,8 +14,8 @@ class CommonHelper {
     }
   }
 
-  static String getFirstNChar(String str, int n){
-    if (n >= str.length){
+  static String getFirstNChar(String str, int n) {
+    if (n >= str.length) {
       return str;
     }
     if (n > 1) {
@@ -24,7 +24,10 @@ class CommonHelper {
     return str.substring(0, n);
   }
 
-  static double getEstimateValue({required double amount, required bool isBitcoinBase, required int currencyExchangeRate}) {
+  static double getEstimateValue(
+      {required double amount,
+      required bool isBitcoinBase,
+      required int currencyExchangeRate}) {
     if (isBitcoinBase) {
       return amount * currencyExchangeRate / 100;
     } else {
@@ -32,7 +35,8 @@ class CommonHelper {
     }
   }
 
-  static bool isBitcoinAddress(String bitcoinAddress){
-    return bitcoinAddress.toLowerCase().startsWith("tb") && bitcoinAddress.length > 30;
+  static bool isBitcoinAddress(String bitcoinAddress) {
+    return bitcoinAddress.toLowerCase().startsWith("tb") &&
+        bitcoinAddress.length > 30;
   }
 }

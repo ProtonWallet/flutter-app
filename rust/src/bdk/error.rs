@@ -162,10 +162,10 @@ impl From<bdk::Error> for Error {
             bdk::Error::MissingCachedScripts(e) => {
                 Error::MissingCachedScripts(e.missing_count, e.last_count)
             }
-            bdk::Error::Electrum(e) => Error::Electrum(e.to_string()),
+            // bdk::Error::Electrum(e) => Error::Electrum(e.to_string()),
             bdk::Error::Esplora(e) => Error::Esplora(e.to_string()),
-            bdk::Error::Sled(e) => Error::Sled(e.to_string()),
-            bdk::Error::Rpc(e) => Error::Rpc(e.to_string()),
+            // bdk::Error::Sled(e) => Error::Sled(e.to_string()),
+            // bdk::Error::Rpc(e) => Error::Rpc(e.to_string()),
             bdk::Error::Rusqlite(e) => Error::Rusqlite(e.to_string()),
             _ => Error::Generic("".to_string()),
         }
@@ -182,11 +182,11 @@ impl From<DescriptorKeyParseError> for Error {
     }
 }
 
-impl From<bdk::bitcoin::locktime::Error> for Error {
-    fn from(value: bdk::bitcoin::locktime::Error) -> Self {
-        Error::Miniscript(value.to_string())
-    }
-}
+// impl From<bdk::bitcoin::locktime::Error> for Error {
+//     fn from(value: bdk::bitcoin::locktime::Error) -> Self {
+//         Error::Miniscript(value.to_string())
+//     }
+// }
 
 impl From<serde_json::Error> for Error {
     fn from(value: serde_json::Error) -> Self {

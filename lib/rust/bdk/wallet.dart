@@ -17,11 +17,6 @@ sealed class DatabaseConfig with _$DatabaseConfig {
   const factory DatabaseConfig.sqlite({
     required SqliteDbConfiguration config,
   }) = DatabaseConfig_Sqlite;
-
-  ///Sqlite embedded database using rusqlite
-  const factory DatabaseConfig.sled({
-    required SledDbConfiguration config,
-  }) = DatabaseConfig_Sled;
 }
 
 /// Unspent outputs of this wallet
@@ -149,31 +144,6 @@ class SignOptions {
           tryFinalize == other.tryFinalize &&
           signWithTapInternalKey == other.signWithTapInternalKey &&
           allowGrinding == other.allowGrinding;
-}
-
-///Configuration type for a sled Tree database
-class SledDbConfiguration {
-  ///Main directory of the db
-  final String path;
-
-  ///Name of the database tree, a separated namespace for the data
-  final String treeName;
-
-  const SledDbConfiguration({
-    required this.path,
-    required this.treeName,
-  });
-
-  @override
-  int get hashCode => path.hashCode ^ treeName.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SledDbConfiguration &&
-          runtimeType == other.runtimeType &&
-          path == other.path &&
-          treeName == other.treeName;
 }
 
 ///Configuration type for a SqliteDatabase database
