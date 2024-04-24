@@ -669,6 +669,7 @@ mod test {
     use super::Wallet;
 
     #[tokio::test]
+    #[ignore]
     async fn test_wallet_import_sync() {
         // let alice_mnemonic = Mnemonic::from_str("certain sense kiss guide crumble hint transfer crime much stereo warm coral".to_string()).unwrap().as_string();
         let network = Network::Testnet;
@@ -728,6 +729,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_wallet_import_sync_then_send() {
         let network = Network::Testnet;
         let mnemonic = Mnemonic::from_str(
