@@ -4,13 +4,12 @@ use super::types::{
     AddressIndex, AddressInfo, Balance, KeychainKind, OutPoint, Progress, ProgressHolder,
     PsbtSigHashType, TransactionDetails, TxOut,
 };
-use bdk::bitcoin::hashes::hex::ToHex;
 use bdk::bitcoin::psbt::{Input, PsbtSighashType};
-use bdk::bitcoin::Script;
 use bdk::database::{AnyDatabase, AnyDatabaseConfig, ConfigurableDatabase};
-use bdk::descriptor::KeyMap;
+use bdk::keys::KeyMap;
 use bdk::{bitcoin, Error as BdkError, SyncOptions};
 use bdk::{SignOptions as BdkSignOptions, Wallet as BdkWallet};
+use bitcoin::ScriptBuf;
 use lazy_static::lazy_static;
 use std::borrow::Borrow;
 use std::collections::hash_map::DefaultHasher;
@@ -68,7 +67,7 @@ impl Wallet {
 
         let wallet = Wallet { wallet_mutex };
 
-        let id = default_hasher(&descriptor).to_hex();
+        let id = default_hasher(&descriptor).to_string(); //.to_hex();
         persist_wallet(id.clone(), wallet);
         Ok(id)
     }
@@ -76,7 +75,7 @@ impl Wallet {
     pub(crate) fn get_wallet(&self) -> MutexGuard<BdkWallet<AnyDatabase>> {
         self.wallet_mutex.lock().expect("wallet")
     }
-    pub fn sync(&self, blockchain: &Blockchain, progress: Option<Box<dyn Progress>>) -> Result<(), BdkError> {
+    pub async fn sync(&self, blockchain: &Blockchain, progress: Option<Box<dyn Progress>>) {
         let bdk_sync_option: SyncOptions = if let Some(p) = progress {
             SyncOptions {
                 progress: Some(Box::new(ProgressHolder { progress: p })
@@ -86,17 +85,26 @@ impl Wallet {
             SyncOptions { progress: None }
         };
         let blockchain = blockchain.get_blockchain();
-        self.get_wallet()
+        let result = self
+            .get_wallet()
             .sync(blockchain.deref(), bdk_sync_option)
+            .await;
+
+        match result {
+            Ok(_) => print!("Synced"),
+            Err(error) => eprintln!("Network request failed: {:?}", error),
+        }
     }
     /// Return the balance, meaning the sum of this wallet’s unspent outputs’ values. Note that this method only operates
     /// on the internal database, which first needs to be Wallet.sync manually.
     pub fn get_balance(&self) -> Result<Balance, BdkError> {
         self.get_wallet().get_balance().map(|b| b.into())
     }
-    pub(crate) fn is_mine(&self, script: Script) -> Result<bool, BdkError> {
+
+    pub(crate) fn is_mine(&self, script: ScriptBuf) -> Result<bool, BdkError> {
         self.get_wallet().is_mine(&script)
     }
+
     // Return a derived address using the internal (change) descriptor.
     ///
     /// If the wallet doesn't have an internal descriptor it will use the external descriptor.
@@ -295,13 +303,7 @@ pub struct SqliteDbConfiguration {
     ///Main directory of the db
     pub path: String,
 }
-///Configuration type for a sled Tree database
-pub struct SledDbConfiguration {
-    ///Main directory of the db
-    pub path: String,
-    ///Name of the database tree, a separated namespace for the data
-    pub tree_name: String,
-}
+
 /// Type that can contain any of the database configurations defined by the library
 /// This allows storing a single configuration that can be loaded into an DatabaseConfig
 /// instance. Wallets that plan to offer users the ability to switch blockchain backend at runtime
@@ -312,10 +314,6 @@ pub enum DatabaseConfig {
     Sqlite {
         config: SqliteDbConfiguration,
     },
-    ///Sqlite embedded database using rusqlite
-    Sled {
-        config: SledDbConfiguration,
-    },
 }
 impl From<DatabaseConfig> for AnyDatabaseConfig {
     fn from(config: DatabaseConfig) -> Self {
@@ -324,12 +322,6 @@ impl From<DatabaseConfig> for AnyDatabaseConfig {
             DatabaseConfig::Sqlite { config } => {
                 AnyDatabaseConfig::Sqlite(bdk::database::any::SqliteDbConfiguration {
                     path: config.path,
-                })
-            }
-            DatabaseConfig::Sled { config } => {
-                AnyDatabaseConfig::Sled(bdk::database::any::SledDbConfiguration {
-                    path: config.path,
-                    tree_name: config.tree_name,
                 })
             }
         }

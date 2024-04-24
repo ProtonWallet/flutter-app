@@ -1,4 +1,3 @@
-
 // #[wasm_bindgen]
 // use std::sync::{Arc, RwLock};
 
@@ -24,14 +23,14 @@ impl RustAccount {
     //             message: Option<String>,
     //         ) -> Result<WasmPaymentLink, DetailledWasmError> {
     //             let account_inner = self.get_inner();
-        
+
     //             let payment_link: WasmPaymentLink = account_inner
     //                 .write()
     //                 .expect("lock")
     //                 .get_bitcoin_uri(index, amount, label, message)
     //                 .map_err(|e| e.into())?
     //                 .into();
-        
+
     //             Ok(payment_link)
     //         }
     // pub fn get_balance(&self) -> Result<Balance, Error> {
@@ -54,7 +53,7 @@ impl RustAccount {
 // #[wasm_bindgen]
 // impl WasmAccount {
 //     #[wasm_bindgen(js_name = getBitcoinUri)]
-//     
+//
 
 //     #[wasm_bindgen]
 //     pub fn owns(&self, address: &WasmAddress) -> Result<bool, DetailledWasmError> {
@@ -69,7 +68,6 @@ impl RustAccount {
 //     }
 
 //     #[wasm_bindgen(js_name = getBalance)]
-
 
 //     #[wasm_bindgen(js_name = getDerivationPath)]
 //     pub fn get_derivation_path(&self) -> Result<String, DetailledWasmError> {

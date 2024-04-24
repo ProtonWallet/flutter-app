@@ -6,58 +6,6 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-/// Configuration for an ElectrumBlockchain
-class ElectrumConfig {
-  ///URL of the Electrum server (such as ElectrumX, Esplora, BWT) may start with ssl:// or tcp:// and include a port
-  ///eg. ssl://electrum.blockstream.info:60002
-  final String url;
-
-  ///URL of the socks5 proxy server or a Tor service
-  final String? socks5;
-
-  ///Request retry count
-  final int retry;
-
-  ///Request timeout (seconds)
-  final int? timeout;
-
-  ///Stop searching addresses for transactions after finding an unused gap of this length
-  final int stopGap;
-
-  /// Validate the domain when using SSL
-  final bool validateDomain;
-
-  const ElectrumConfig({
-    required this.url,
-    this.socks5,
-    required this.retry,
-    this.timeout,
-    required this.stopGap,
-    required this.validateDomain,
-  });
-
-  @override
-  int get hashCode =>
-      url.hashCode ^
-      socks5.hashCode ^
-      retry.hashCode ^
-      timeout.hashCode ^
-      stopGap.hashCode ^
-      validateDomain.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ElectrumConfig &&
-          runtimeType == other.runtimeType &&
-          url == other.url &&
-          socks5 == other.socks5 &&
-          retry == other.retry &&
-          timeout == other.timeout &&
-          stopGap == other.stopGap &&
-          validateDomain == other.validateDomain;
-}
-
 ///Configuration for an EsploraBlockchain
 class EsploraConfig {
   ///Base URL of the esplora service
