@@ -470,7 +470,7 @@ class WalletManager {
   static Future<void> initMuon(ApiEnv apiEnv) async {
     WalletManager.apiEnv = apiEnv;
     // await proton_api.initApiService(
-    //     userName: 'ProtonWallet', password: 'alicebob');
+    //     userName: 'qqqq', password: 'qqqqqqqq');
     String scopes = await SecureStorageHelper.get("scopes");
     String uid = await SecureStorageHelper.get("sessionId");
     String accessToken = await SecureStorageHelper.get("accessToken");
@@ -479,20 +479,23 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = "on4jmp7dmvpy7n5twj5vvyh2lxdhsoyn";
-      accessToken = "zm7gtm2xh6e67s7vo7akoxqde5q7typ5";
-      refreshToken = "r56k4x2bbcxrao4at77noqes7bpwicrb";
+      uid = 'odmgsoybgjtsw3oyyo6righdiwznwuqo';
+      accessToken = 'njsrya5ovs7rtvcdz32mp55it3bdvnzx';
+      refreshToken = 'vv2nqdvklw2k2shtioohhw7qlgxauncp';
       // //
-      // // // user "qqqq"
-      uid = "5z5cijpdulozisq2kewuazg4fezfdw4i";
-      accessToken = "y2w3mcwmj6ljtr4hk5hiszuhusjngzrn";
-      refreshToken = "zadcnadfdjl43enonuyiqga7lpftls3a";
+      // // // // user "qqqq"
+      // uid = "5z5cijpdulozisq2kewuazg4fezfdw4i";
+      // accessToken = "y2w3mcwmj6ljtr4hk5hiszuhusjngzrn";
+      // refreshToken = "zadcnadfdjl43enonuyiqga7lpftls3a";
 
       // // user "cccc"
       // uid = "jaohw4to23x5qp4zpgj4ktucbdyg5xgf";
       // accessToken = "ubaq66ba6r4r6hjnep366peoczfmyudf";
       // refreshToken = "ubaq66ba6r4r6hjnep366peoczfmyudf";
     }
+    logger.i("uid = '$uid';");
+    logger.i("accessToken = '$accessToken';");
+    logger.i("refreshToken = '$refreshToken';");
     if (Platform.isAndroid) {
       appVersion = await SecureStorageHelper.get("appVersion");
       userAgent = await SecureStorageHelper.get("userAgent");

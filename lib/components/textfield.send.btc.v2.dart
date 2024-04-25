@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -172,9 +174,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           ),
           Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                  S.of(context).current_balance_btc(
-                      getEstimateValue().toStringAsFixed(8)),
+              child: Text(Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(getEstimateSats())
+                  ,
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],
@@ -182,16 +183,17 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     );
   }
 
-  double getEstimateValue() {
+  int getEstimateSats() {
     double amount = 0.0;
     try {
       amount = double.parse(widget.textController.text);
     } catch (e) {
       amount = 0.0;
     }
-    return CommonHelper.getEstimateValue(
+    double btcAmount = CommonHelper.getEstimateValue(
         amount: amount,
         isBitcoinBase: false,
         currencyExchangeRate: widget.currencyExchangeRate);
+    return (btcAmount * 100000000).ceil();
   }
 }

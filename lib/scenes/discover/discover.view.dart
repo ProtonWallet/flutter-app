@@ -26,7 +26,8 @@ class DiscoverView extends ViewBase<DiscoverViewModel> {
           ),
           backgroundColor: ProtonColors.white,
           title: Text(S.of(context).discover,
-              style: FontManager.titleHeadline(ProtonColors.textNorm)),
+              style: FontManager.body2Median(ProtonColors.textNorm)),
+          centerTitle: true,
           scrolledUnderElevation:
               0.0, // don't change background color when scroll down
         ),
