@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,8 +37,11 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:xml/xml.dart' as xml;
+import 'package:http/http.dart' as http;
 
 enum WalletDrawerStatus {
   close,
@@ -179,6 +183,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   List<TransactionDetails> history = [];
   List<String> userLabels = [];
   List<String> fromEmails = [];
+  List<TransactionModel> historyInProgress = [];
+  List<String> userLabelsInProgress = [];
+  List<String> fromEmailsInProgress = [];
+
+  late FocusNode newAccountNameFocusNode;
+  late FocusNode walletNameFocusNode;
+  List<ProtonFeedItem> protonFeedItems = [];
 
   int getAmount(int index);
 
@@ -218,6 +229,8 @@ class HomeViewModelImpl extends HomeViewModel {
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     hideEmptyUsedAddressesController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController(text: "3");
+    newAccountNameFocusNode = FocusNode();
+    walletNameFocusNode = FocusNode();
     blockchain ??= await _lib.initializeBlockchain(false);
     userSettingProvider = Provider.of<UserSettingProvider>(
         Coordinator.navigatorKey.currentContext!,
@@ -245,6 +258,7 @@ class HomeViewModelImpl extends HomeViewModel {
     checkNewWallet();
     checkPreference(); // no effect
     checkNetwork(); // no effect
+    loadFeed();
     checkProtonAddresses();
     fiatCurrencyNotifier.addListener(() async {
       updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
@@ -270,6 +284,49 @@ class HomeViewModelImpl extends HomeViewModel {
   void updateSelected(int index) {
     selectedPage = index;
     datasourceStreamSinkAdd();
+  }
+
+  Future<void> loadFeed() async {
+    try {
+      final response = await http.get(Uri.parse('https://proton.me/blog/feed'));
+      if (response.statusCode == 200) {
+        parseFeed(response.body);
+      } else {
+        throw Exception('Failed to load RSS feed');
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    datasourceStreamSinkAdd();
+  }
+
+  void parseFeed(String responseBody) {
+    final document = xml.XmlDocument.parse(responseBody);
+    final items = document.findAllElements('item');
+    for (var item in items) {
+      protonFeedItems.add(ProtonFeedItem(
+        title: _findElementOrDefault(item, 'title', "Default title"),
+        pubDate: _findElementOrDefault(item, 'pubDate', "Default pubDate"),
+        link: _findElementOrDefault(item, 'link', "Default link"),
+        description:
+        _findElementOrDefault(item, 'description', "Default description"),
+        category: _findElementOrDefault(item, 'category', "Default category"),
+        author: _findElementOrDefault(item, 'author', "Default author"),
+      ));
+    }
+  }
+
+  String _findElementOrDefault(
+      xml.XmlElement item, String tagName, String defaultValue) {
+    try {
+      var element = item.findElements(tagName).single;
+      return element.innerText.trim().isEmpty
+          ? defaultValue
+          : element.innerText;
+    } catch (e) {
+      logger.e(e.toString());
+      return defaultValue;
+    }
   }
 
   @override
@@ -411,6 +468,11 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> loadTransactionHistory() async {
     List<String> newUserLabels = [];
     List<String> newFromEmails = [];
+    List<String> newUserLabelsInProgress = [];
+    List<String> newFromEmailsInProgress = [];
+    List<TransactionModel> newHistoryInProgress = [];
+    Map<int, bool> transactionMap = {};
+
     List<TransactionDetails> newHistory = [];
     String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
     String userPassphrase = await SecureStorageHelper.get("userPassphrase");
@@ -455,6 +517,7 @@ class HomeViewModelImpl extends HomeViewModel {
             : "";
         String fromEmail = "";
         if (transactionModel != null) {
+          transactionMap[transactionModel.id!] = true;
           bool isSend = transactionDetail.sent - transactionDetail.received > 0;
           String encryptedBinaryMessage = isSend
               ? transactionModel.tolist ?? ""
@@ -475,11 +538,46 @@ class HomeViewModelImpl extends HomeViewModel {
         newFromEmails.add(fromEmail);
         newUserLabels.add(userLabel);
       }
+      List<TransactionModel> transactionModels = await DBHelper.transactionDao!
+          .findAllByServerAccountID(currentAccount!.serverAccountID);
+      for (TransactionModel transactionModel in transactionModels) {
+        if (transactionMap.containsKey(transactionModel.id!) == false &&
+            DateTime.now().millisecondsSinceEpoch ~/ 1000 <=
+                transactionModel.createTime + 60 * 60 * 1) {
+          String userLabel = await WalletKeyHelper.decrypt(
+              secretKey!, utf8.decode(transactionModel.label));
+
+          String email = "";
+          for (AddressKey addressKey in addressKeys) {
+            try {
+              email = addressKey.decryptBinary(transactionModel.tolist);
+              if (email.isNotEmpty) {
+                break;
+              }
+            } catch (e) {
+              logger.e(e.toString());
+            }
+          }
+
+          newFromEmailsInProgress.add(email);
+          newUserLabelsInProgress.add(userLabel);
+          newHistoryInProgress.add(transactionModel);
+        }
+      }
     }
     history = newHistory;
     userLabels = newUserLabels;
     fromEmails = newFromEmails;
     currentHistoryPage = 0;
+
+    historyInProgress = newHistoryInProgress;
+    userLabelsInProgress = newUserLabelsInProgress;
+    fromEmailsInProgress = newFromEmailsInProgress;
+
+    if (historyInProgress.isNotEmpty) {
+      logger.i(historyInProgress);
+    }
+
     datasourceStreamSinkAdd();
   }
 
@@ -866,7 +964,8 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> addWalletAccount(
       int walletID, ScriptType scriptType, String label) async {
     await WalletManager.addWalletAccount(walletID, scriptType, label);
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(
+        milliseconds: 1000)); // wait for drawer refresh, it check every second
   }
 
   @override

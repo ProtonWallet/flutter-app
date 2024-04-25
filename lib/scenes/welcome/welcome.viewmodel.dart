@@ -85,8 +85,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> mockUserSession() async {
-    // await mockUserSessionPro();
-    await mockUserSessionQQQQ();
+    await mockUserSessionPro();
+    // await mockUserSessionQQQQ();
     // await mockUserSessionCCCC();
   }
 
