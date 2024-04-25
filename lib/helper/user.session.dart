@@ -43,21 +43,21 @@ class UserSessionProvider with ChangeNotifier {
     _userSession.userKeyID = userKeyID;
     _userSession.userPrivateKey = userPrivateKey;
     _userSession.userPassphrase = userPassphrase;
-    await SecureStorageHelper.set("userId", userId);
-    await SecureStorageHelper.set("userMail", userMail);
-    await SecureStorageHelper.set("userName", userName);
-    await SecureStorageHelper.set("userDisplayName", userDisplayName);
-    await SecureStorageHelper.set("sessionId", sessionId);
-    await SecureStorageHelper.set("accessToken", accessToken);
-    await SecureStorageHelper.set("refreshToken", refreshToken);
-    await SecureStorageHelper.set("scopes", scopes);
-    await SecureStorageHelper.set("userKeyID", userKeyID);
-    await SecureStorageHelper.set("userPrivateKey", userPrivateKey);
-    await SecureStorageHelper.set("userPassphrase", userPassphrase);
+    await SecureStorageHelper.instance.set("userId", userId);
+    await SecureStorageHelper.instance.set("userMail", userMail);
+    await SecureStorageHelper.instance.set("userName", userName);
+    await SecureStorageHelper.instance.set("userDisplayName", userDisplayName);
+    await SecureStorageHelper.instance.set("sessionId", sessionId);
+    await SecureStorageHelper.instance.set("accessToken", accessToken);
+    await SecureStorageHelper.instance.set("refreshToken", refreshToken);
+    await SecureStorageHelper.instance.set("scopes", scopes);
+    await SecureStorageHelper.instance.set("userKeyID", userKeyID);
+    await SecureStorageHelper.instance.set("userPrivateKey", userPrivateKey);
+    await SecureStorageHelper.instance.set("userPassphrase", userPassphrase);
     notifyListeners();
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
     _userSession.userId = "";
     _userSession.userMail = "";
     _userSession.userName = "";
@@ -69,7 +69,7 @@ class UserSessionProvider with ChangeNotifier {
     _userSession.userKeyID = "";
     _userSession.userPrivateKey = "";
     _userSession.userPassphrase = "";
-    await SecureStorageHelper.deleteAll();
+    await SecureStorageHelper.instance.deleteAll();
     notifyListeners();
   }
 }

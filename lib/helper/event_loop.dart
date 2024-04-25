@@ -81,9 +81,9 @@ class EventLoop {
             ProtonWallet? walletData = walletEvent.wallet;
 
             String userPrivateKey =
-                await SecureStorageHelper.get("userPrivateKey");
+                await SecureStorageHelper.instance.get("userPrivateKey");
             String userPassphrase =
-                await SecureStorageHelper.get("userPassphrase");
+                await SecureStorageHelper.instance.get("userPassphrase");
 
             String encodedEncryptedEntropy = "";
             Uint8List entropy = Uint8List(0);

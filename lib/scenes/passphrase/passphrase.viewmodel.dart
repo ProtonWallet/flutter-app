@@ -150,7 +150,8 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   @override
   Future<void> updateDB() async {
     SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+    String userPrivateKey =
+        await SecureStorageHelper.instance.get("userPrivateKey");
     int passphrase = passphraseTextController.text != "" ? 1 : 0;
     String encryptedMnemonic =
         await WalletKeyHelper.encrypt(secretKey, strMnemonic);
@@ -175,8 +176,8 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
           await proton_api.createWallet(walletReq: walletReq);
       String serverWalletID = walletData.wallet.id;
       if (passphraseTextController.text != "") {
-        await SecureStorageHelper.set(
-            serverWalletID, passphraseTextController.text);
+        await SecureStorageHelper.instance
+            .set(serverWalletID, passphraseTextController.text);
       }
       CreateWalletAccountReq req = CreateWalletAccountReq(
           label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
@@ -214,7 +215,5 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {
-
-  }
+  void move(NavigationIdentifier to) {}
 }

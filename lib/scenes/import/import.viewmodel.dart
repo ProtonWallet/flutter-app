@@ -67,7 +67,8 @@ class ImportViewModelImpl extends ImportViewModel {
   @override
   Future<void> importWallet() async {
     SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+    String userPrivateKey =
+        await SecureStorageHelper.instance.get("userPrivateKey");
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     String encryptedMnemonic =
         await WalletKeyHelper.encrypt(secretKey, mnemonicTextController.text);
@@ -85,8 +86,8 @@ class ImportViewModelImpl extends ImportViewModel {
 
     String serverWalletID = walletData.wallet.id;
     if (passphraseTextController.text != "") {
-      await SecureStorageHelper.set(
-          serverWalletID, passphraseTextController.text);
+      await SecureStorageHelper.instance
+          .set(serverWalletID, passphraseTextController.text);
     }
     CreateWalletAccountReq req = CreateWalletAccountReq(
         label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
