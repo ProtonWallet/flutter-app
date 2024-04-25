@@ -28,6 +28,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -343,13 +344,25 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               viewModel
                                                   .fromEmailsInProgress[index]),
                                       24)
-                                  : base64Encode(viewModel
-                                      .historyInProgress[index]
-                                      .hashedTransactionID),
-                              amount: 0,
+                                  : "${CommonHelper.getFirstNChar(base64Encode(viewModel.historyInProgress[index].externalTransactionID), 10)}***",
+                              amount: viewModel.txid2info.containsKey(
+                                      viewModel.getTxidInProgress(index))
+                                  ? (viewModel.txid2info[
+                                                  viewModel.getTxidInProgress(
+                                                      index)]!['outputs'][0]
+                                              ['value'] +
+                                          viewModel.txid2info[
+                                              viewModel.getTxidInProgress(
+                                                  index)]!['fees'])
+                                      .toDouble()
+                                  : 0,
                               note: viewModel.userLabelsInProgress[index],
-                              onTap: () {},
-                              isSend: true,
+                              onTap: () {
+                                viewModel.selectedTXID =
+                                    viewModel.getTxidInProgress(index);
+                                viewModel.move(ViewIdentifiers.historyDetails);
+                              },
+                              isSend: viewModel.isSentInProgress[index],
                             ),
                           for (int index = 0;
                               index <
