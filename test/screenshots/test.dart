@@ -1,21 +1,32 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.interface.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 
-class MockSecureStorageHelper extends Mock implements SecureStorageHelper {
-  @override
-  Future<String?> get(String key) async {
-    // This will be configured in your tests
-  }
-}
+import 'test.mocks.dart';
 
+// class MockSecureStorageHelper extends Mock implements SecureStorageInterface {
+//   // Future<String?> get(String key) async {
+//   //   return null;
+//   //   // This will be configured in your tests
+//   // }
+// }
 
+//works with --- command: make build-runner
+@GenerateMocks([SecureStorageInterface])
 void main() {
+  late MockSecureStorageInterface mockStorage;
+  setUp(() {
+    mockStorage = MockSecureStorageInterface();
+  });
+
   testGoldens('AppCoordinator Golden Test', (WidgetTester tester) async {
+    when(mockStorage.read('sessionId')).thenAnswer((_) async => "");
+
+    SecureStorageHelper.init(mockStorage);
     final builder = DeviceBuilder()
       ..overrideDevicesForAllScenarios(devices: [
         // Add devices you want to test on.
@@ -33,6 +44,7 @@ void main() {
 
     // Here you will compare the actual rendering to the golden files
     await multiScreenGolden(tester, 'app_coordinator_start');
-    await screenMatchesGolden(tester, 'test/screenshots/flutter_demo_page_multiple_scenarios');
+    await screenMatchesGolden(
+        tester, 'test/screenshots/flutter_demo_page_multiple_scenarios');
   });
 }
