@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
@@ -14,6 +15,7 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -146,6 +148,31 @@ class EventLoop {
           ApiUserSettings _ = event.walletUserSettings!;
 
           // TODO::
+        }
+        if (event.walletTransactionEvents != null) {
+          List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
+          for (WalletTransactionEvent walletTransactionEvent
+              in event.walletTransactionEvents!) {
+            WalletTransaction? walletTransaction =
+                walletTransactionEvent.walletTransaction;
+            WalletModel? walletModel = await DBHelper.walletDao!
+                .getWalletByServerWalletID(walletTransaction!.walletId);
+            if (walletModel != null) {
+              await WalletManager.handleWalletTransaction(
+                  walletModel, addressKeys, walletTransaction);
+            }
+          }
+        }
+
+        if (event.contactEmailEvents != null) {
+          for (ContactEmailEvent contactEmailEvent
+              in event.contactEmailEvents!) {
+            ProtonContactEmails? mail = contactEmailEvent.contactEmail;
+            if (mail != null) {
+              DBHelper.contactsDao!.insertOrUpdate(mail.id, mail.name,
+                  mail.email, mail.canonicalEmail, mail.isProton);
+            }
+          }
         }
       }
       await polling();

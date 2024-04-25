@@ -93,20 +93,37 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     datasourceChangedStreamController.sink.add(this);
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
-
+    strWallet = await WalletManager.getNameWithID(walletID);
+    strAccount = await WalletManager.getAccountLabelWithID(accountID);
+    address = txid.substring(0, 32);
+    bool foundedInBDKHistory = false;
     for (var transaction in history) {
       if (transaction.txid == txid) {
-        address = transaction.txid
-            .substring(0, 32); // TODO:: use txid to get correct address
-        strWallet = await WalletManager.getNameWithID(walletID);
-        strAccount = await WalletManager.getAccountLabelWithID(accountID);
         blockConfirmTimestamp = transaction.confirmationTime?.timestamp;
         amount = transaction.received.toDouble() - transaction.sent.toDouble();
         fee = transaction.fee!.toDouble();
         notional = CurrencyHelper.sat2usdt(amount).abs();
         isSend = amount < 0;
+        foundedInBDKHistory = true;
         datasourceChangedStreamController.sink.add(this);
         break;
+      }
+    }
+    if (foundedInBDKHistory == false) {
+      try {
+        Map<String, dynamic> transactionDetail =
+            await WalletManager.getTransactionDetailsFromBlockStream(txid);
+        logger.i("Get transactionDetail from BlockStream: $transactionDetail");
+        blockConfirmTimestamp = null;
+        amount = (transactionDetail['fees'] +
+                transactionDetail['outputs'][0]['value'])
+            .toDouble();
+        fee = transactionDetail['fees'].toDouble();
+        notional = CurrencyHelper.sat2usdt(amount).abs();
+        isSend = true; // TODO:: fix this logic
+        datasourceChangedStreamController.sink.add(this);
+      } catch (e) {
+        logger.e(e.toString());
       }
     }
     logger.i("transactionModel == null ? ${transactionModel == null}");
@@ -159,26 +176,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
     memoController.text = userLabel;
 
-    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-    addresses = addresses.where((element) => element.status == 1).toList();
-
-    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-    String userPassphrase = await SecureStorageHelper.get("userPassphrase");
-
-    List<AddressKey> addressKeys = [];
-    for (ProtonAddress address in addresses) {
-      for (ProtonAddressKey addressKey in address.keys ?? []) {
-        String addressKeyPrivateKey = addressKey.privateKey ?? "";
-        String addressKeyToken = addressKey.token ?? "";
-        try {
-          String addressKeyPassphrase = proton_crypto.decrypt(
-              userPrivateKey, userPassphrase, addressKeyToken);
-          addressKeys.add(AddressKey(privateKey: addressKeyPrivateKey, passphrase: addressKeyPassphrase));
-        } catch (e) {
-          logger.e(e.toString());
-        }
-      }
-    }
+    List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
 
     for (AddressKey addressKey in addressKeys) {
       try {

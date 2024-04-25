@@ -87,6 +87,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletModel? currentWallet;
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
+  Map<String, Map<String, dynamic>> txid2info = {};
 
   AccountModel? currentAccount;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
@@ -161,6 +162,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> addBitcoinAddress();
 
+  String getTxidInProgress(int index);
+
   Future<void> addEmailAddressToWalletAccount(
       String serverWalletID, String serverAccountID, String serverAddressID);
 
@@ -168,6 +171,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       String serverWalletID, String serverAccountID, String serverAddressID);
 
   ProtonAddress? getProtonAddressByID(String addressID);
+
+  Future<void> loadTransactionHistory();
 
   void reloadPage();
 
@@ -185,6 +190,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   List<String> fromEmails = [];
   List<TransactionModel> historyInProgress = [];
   List<String> userLabelsInProgress = [];
+  List<bool> isSentInProgress = [];
   List<String> fromEmailsInProgress = [];
 
   late FocusNode newAccountNameFocusNode;
@@ -208,6 +214,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Wallet? wallet;
   final BdkLibrary _lib = BdkLibrary();
   Blockchain? blockchain;
+  bool isLoadingTransactionHistory = false;
 
   @override
   void dispose() {
@@ -272,7 +279,7 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       logger.d(e.toString());
     }
-    // syncWalletService();
+    syncWalletService();
     datasourceStreamSinkAdd();
   }
 
@@ -309,7 +316,7 @@ class HomeViewModelImpl extends HomeViewModel {
         pubDate: _findElementOrDefault(item, 'pubDate', "Default pubDate"),
         link: _findElementOrDefault(item, 'link', "Default link"),
         description:
-        _findElementOrDefault(item, 'description', "Default description"),
+            _findElementOrDefault(item, 'description', "Default description"),
         category: _findElementOrDefault(item, 'category', "Default category"),
         author: _findElementOrDefault(item, 'author', "Default author"),
       ));
@@ -335,9 +342,6 @@ class HomeViewModelImpl extends HomeViewModel {
     protonAddresses =
         addresses.where((element) => element.status == 1).toList();
     emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
-    for (ProtonAddress add in protonAddresses) {
-      logger.i("${add.id}, ${add.email}");
-    }
     datasourceStreamSinkAdd();
   }
 
@@ -449,6 +453,7 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
     Future.delayed(const Duration(milliseconds: 1000), () async {
       await checkNewWallet();
+      await loadTransactionHistory();
     });
   }
 
@@ -465,11 +470,17 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
+  @override
   Future<void> loadTransactionHistory() async {
+    if (isLoadingTransactionHistory == true) {
+      return;
+    }
+    isLoadingTransactionHistory = true;
     List<String> newUserLabels = [];
     List<String> newFromEmails = [];
     List<String> newUserLabelsInProgress = [];
     List<String> newFromEmailsInProgress = [];
+    List<bool> newIsSentInProgress = [];
     List<TransactionModel> newHistoryInProgress = [];
     Map<int, bool> transactionMap = {};
 
@@ -547,6 +558,13 @@ class HomeViewModelImpl extends HomeViewModel {
           String userLabel = await WalletKeyHelper.decrypt(
               secretKey!, utf8.decode(transactionModel.label));
 
+          String txid = utf8.decode(transactionModel.externalTransactionID);
+          if (txid.isEmpty){
+            continue;
+          }
+          Map<String, dynamic> transactionDetail =
+              await WalletManager.getTransactionDetailsFromBlockStream(txid);
+          txid2info[txid] = transactionDetail;
           String email = "";
           for (AddressKey addressKey in addressKeys) {
             try {
@@ -562,6 +580,8 @@ class HomeViewModelImpl extends HomeViewModel {
           newFromEmailsInProgress.add(email);
           newUserLabelsInProgress.add(userLabel);
           newHistoryInProgress.add(transactionModel);
+          bool isSent = true;
+          newIsSentInProgress.add(isSent);
         }
       }
     }
@@ -573,12 +593,10 @@ class HomeViewModelImpl extends HomeViewModel {
     historyInProgress = newHistoryInProgress;
     userLabelsInProgress = newUserLabelsInProgress;
     fromEmailsInProgress = newFromEmailsInProgress;
-
-    if (historyInProgress.isNotEmpty) {
-      logger.i(historyInProgress);
-    }
+    isSentInProgress = newIsSentInProgress;
 
     datasourceStreamSinkAdd();
+    isLoadingTransactionHistory = false;
   }
 
   Future<void> loadIntegratedAddresses() async {
@@ -656,7 +674,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> syncWalletService() async {
-    await Future.delayed(const Duration(seconds: 5), () async {
+    await Future.delayed(const Duration(seconds: 60), () async {
       await syncWallet();
     });
     syncWalletService();
@@ -995,5 +1013,13 @@ class HomeViewModelImpl extends HomeViewModel {
   void showMoreTransactionHistory() {
     currentHistoryPage++;
     datasourceStreamSinkAdd();
+  }
+
+  @override
+  String getTxidInProgress(int index) {
+    if (historyInProgress.length > index) {
+      return utf8.decode(historyInProgress[index].externalTransactionID);
+    }
+    return "";
   }
 }
