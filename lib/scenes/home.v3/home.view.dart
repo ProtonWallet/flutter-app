@@ -13,7 +13,6 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.discover.box.dart';
 import 'package:wallet/components/custom.expansion.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
-import 'package:wallet/components/custom.newsbox.v2.dart';
 import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
@@ -28,7 +27,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -1620,8 +1618,8 @@ Widget showUpdateWalletPassphraseDialog(
           EasyLoading.show(
               status: "saving passphrase..",
               maskType: EasyLoadingMaskType.black);
-          await SecureStorageHelper.set(
-              walletModel.serverWalletID, textEditingController.text);
+          await SecureStorageHelper.instance
+              .set(walletModel.serverWalletID, textEditingController.text);
           await Future.delayed(const Duration(seconds: 1));
           EasyLoading.dismiss();
           if (context.mounted) {
