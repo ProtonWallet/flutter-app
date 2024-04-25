@@ -14,7 +14,7 @@ class ProtonColors {
   static Color wMajor1 = const Color(0xFFDEDBD9);
   static Color nMajor1 = const Color(0xFF6243E6);
   static Color backgroundSecondary = const Color(0xFFF5F4F2);
-  static Color backgroundProton = const Color(0xFFFFFFFF);
+  static Color backgroundProton = const Color(0xFFF3F5F6);
   static Color alertWaning = const Color(0xFFF78400);
   static Color alertWaningBackground = const Color(0x19FF9900);
   static Color signalSuccess = const Color(0xFF1EA885);
@@ -27,11 +27,14 @@ class ProtonColors {
   static Color surfaceTagText = const Color(0xFFFEFEFE);
 
   static Color protonBlue = const Color(0XFF767DFF);
+  static Color protonBrandLighten30 = const Color(0XFFE0E2FF);
+  static Color protonShades20 = const Color(0XFFE6E8EC);
   static Color protonBlueAlpha20 = const Color(0X22767DFF);
   static Color protonGrey = const Color(0XFFD9DDE1);
   static Color homepageProgressBarBackground =
       const Color.fromARGB(51, 255, 255, 255);
   static Color drawerBackground = const Color(0xFF222247);
+  static Color drawerBackgroundHighlight = const Color(0x16FFFFFF);
   static Color drawerButtonTextColor = const Color(0xFF222247);
   static Color drawerButtonBackground = const Color(0xFF44448F);
   static Color drawerWalletPlus = const Color(0xFF7B57FC);

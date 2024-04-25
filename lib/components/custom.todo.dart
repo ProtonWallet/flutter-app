@@ -27,42 +27,30 @@ class CustomTodos extends StatelessWidget {
               color: ProtonColors.white,
               borderRadius: BorderRadius.circular(24.0),
             ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 6,
-                          color: checked
-                              ? ProtonColors.signalSuccess
-                              : ProtonColors.signalError,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(title,
-                                style: FontManager.body2Regular(
-                                    ProtonColors.textNorm)),
-                            Text(content,
-                                style: FontManager.body2Regular(
-                                    ProtonColors.textNorm)),
-                          ],
-                        )
-                      ]),
-                  checked
-                      ? Icon(Icons.check, color: ProtonColors.signalSuccess)
-                      : Icon(
-                          Icons.arrow_forward_ios,
-                          color: ProtonColors.textNorm,
-                          size: 20,
-                        ),
-                ])));
+            child: ListTile(
+              dense:true,
+              leading: Radio<bool>(
+                value: true,
+                groupValue: checked,
+                onChanged: (value) {},
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                activeColor: ProtonColors.protonBlue,
+                fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return ProtonColors.protonBlue;
+                  }
+                  return ProtonColors.protonBlue;
+                }),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 2),
+              title: Transform.translate(
+                  offset: const Offset(-10, -1),
+                  child: Text(
+                    title,
+                    style: checked? FontManager.body2MedianLineThrough(ProtonColors.protonBlue): FontManager.body2Median(ProtonColors.protonBlue),
+                  )),
+              trailing: checked ? null: Icon(Icons.arrow_forward_ios_rounded, color: ProtonColors.protonBlue, size: 14),
+            )));
   }
 }

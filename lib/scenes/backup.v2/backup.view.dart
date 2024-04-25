@@ -28,7 +28,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
             backgroundColor: ProtonColors.backgroundProton,
             title: Text(
               S.of(context).mnemonic_backup_page_title,
-              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              style: FontManager.body2Median(ProtonColors.textNorm),
             ),
             centerTitle: true,
             leading: IconButton(
