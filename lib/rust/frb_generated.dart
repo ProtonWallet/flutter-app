@@ -3983,6 +3983,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ProtonContactEmails dco_decode_box_autoadd_proton_contact_emails(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_proton_contact_emails(raw);
+  }
+
+  @protected
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_proton_exchange_rate(raw);
@@ -4069,9 +4076,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransaction dco_decode_box_autoadd_wallet_transaction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_wallet_transaction(raw);
+  }
+
+  @protected
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ChangeSpendPolicy.values[raw as int];
+  }
+
+  @protected
+  ContactEmailEvent dco_decode_contact_email_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return ContactEmailEvent(
+      id: dco_decode_String(arr[0]),
+      action: dco_decode_u_32(arr[1]),
+      contactEmail: dco_decode_opt_box_autoadd_proton_contact_emails(arr[2]),
+    );
   }
 
   @protected
@@ -4360,6 +4386,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<ContactEmailEvent> dco_decode_list_contact_email_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_contact_email_event).toList();
+  }
+
+  @protected
   List<EmailAddress> dco_decode_list_email_address(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_email_address).toList();
@@ -4499,6 +4531,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<WalletTransactionEvent> dco_decode_list_wallet_transaction_event(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_wallet_transaction_event)
+        .toList();
+  }
+
+  @protected
   LocalUtxo dco_decode_local_utxo(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -4563,6 +4604,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double? dco_decode_opt_box_autoadd_f_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_f_32(raw);
+  }
+
+  @protected
+  ProtonContactEmails? dco_decode_opt_box_autoadd_proton_contact_emails(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_proton_contact_emails(raw);
   }
 
   @protected
@@ -4650,9 +4700,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransaction? dco_decode_opt_box_autoadd_wallet_transaction(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_wallet_transaction(raw);
+  }
+
+  @protected
   List<String>? dco_decode_opt_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_list_String(raw);
+  }
+
+  @protected
+  List<ContactEmailEvent>? dco_decode_opt_list_contact_email_event(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_list_contact_email_event(raw);
   }
 
   @protected
@@ -4685,6 +4749,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_list_wallet_settings_event(raw);
+  }
+
+  @protected
+  List<WalletTransactionEvent>? dco_decode_opt_list_wallet_transaction_event(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_list_wallet_transaction_event(raw);
   }
 
   @protected
@@ -4756,17 +4827,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonEvent dco_decode_proton_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return ProtonEvent(
       code: dco_decode_u_16(arr[0]),
       eventId: dco_decode_String(arr[1]),
-      more: dco_decode_u_32(arr[2]),
-      walletEvents: dco_decode_opt_list_wallet_event(arr[3]),
-      walletAccountEvents: dco_decode_opt_list_wallet_account_event(arr[4]),
-      walletKeyEvents: dco_decode_opt_list_wallet_key_event(arr[5]),
-      walletSettingEvents: dco_decode_opt_list_wallet_settings_event(arr[6]),
-      walletUserSettings: dco_decode_opt_box_autoadd_api_user_settings(arr[7]),
+      refresh: dco_decode_u_32(arr[2]),
+      more: dco_decode_u_32(arr[3]),
+      contactEmailEvents: dco_decode_opt_list_contact_email_event(arr[4]),
+      walletEvents: dco_decode_opt_list_wallet_event(arr[5]),
+      walletAccountEvents: dco_decode_opt_list_wallet_account_event(arr[6]),
+      walletKeyEvents: dco_decode_opt_list_wallet_key_event(arr[7]),
+      walletSettingEvents: dco_decode_opt_list_wallet_settings_event(arr[8]),
+      walletTransactionEvents:
+          dco_decode_opt_list_wallet_transaction_event(arr[9]),
+      walletUserSettings: dco_decode_opt_box_autoadd_api_user_settings(arr[10]),
     );
   }
 
@@ -5153,6 +5228,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransactionEvent dco_decode_wallet_transaction_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return WalletTransactionEvent(
+      id: dco_decode_String(arr[0]),
+      action: dco_decode_u_32(arr[1]),
+      walletTransaction: dco_decode_opt_box_autoadd_wallet_transaction(arr[2]),
+    );
+  }
+
+  @protected
   WordCount dco_decode_word_count(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WordCount.values[raw as int];
@@ -5387,6 +5475,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ProtonContactEmails sse_decode_box_autoadd_proton_contact_emails(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_proton_contact_emails(deserializer));
+  }
+
+  @protected
   ProtonExchangeRate sse_decode_box_autoadd_proton_exchange_rate(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -5480,11 +5575,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransaction sse_decode_box_autoadd_wallet_transaction(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_wallet_transaction(deserializer));
+  }
+
+  @protected
   ChangeSpendPolicy sse_decode_change_spend_policy(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return ChangeSpendPolicy.values[inner];
+  }
+
+  @protected
+  ContactEmailEvent sse_decode_contact_email_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_action = sse_decode_u_32(deserializer);
+    var var_contactEmail =
+        sse_decode_opt_box_autoadd_proton_contact_emails(deserializer);
+    return ContactEmailEvent(
+        id: var_id, action: var_action, contactEmail: var_contactEmail);
   }
 
   @protected
@@ -5765,6 +5879,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<ContactEmailEvent> sse_decode_list_contact_email_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <ContactEmailEvent>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_contact_email_event(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<EmailAddress> sse_decode_list_email_address(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6032,6 +6159,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<WalletTransactionEvent> sse_decode_list_wallet_transaction_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <WalletTransactionEvent>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_wallet_transaction_event(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_outpoint = sse_decode_out_point(deserializer);
@@ -6113,6 +6253,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_f_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  ProtonContactEmails? sse_decode_opt_box_autoadd_proton_contact_emails(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_proton_contact_emails(deserializer));
     } else {
       return null;
     }
@@ -6272,11 +6424,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransaction? sse_decode_opt_box_autoadd_wallet_transaction(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_wallet_transaction(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   List<String>? sse_decode_opt_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_list_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  List<ContactEmailEvent>? sse_decode_opt_list_contact_email_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_list_contact_email_event(deserializer));
     } else {
       return null;
     }
@@ -6337,6 +6513,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_list_wallet_settings_event(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  List<WalletTransactionEvent>? sse_decode_opt_list_wallet_transaction_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_list_wallet_transaction_event(deserializer));
     } else {
       return null;
     }
@@ -6420,7 +6608,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_code = sse_decode_u_16(deserializer);
     var var_eventId = sse_decode_String(deserializer);
+    var var_refresh = sse_decode_u_32(deserializer);
     var var_more = sse_decode_u_32(deserializer);
+    var var_contactEmailEvents =
+        sse_decode_opt_list_contact_email_event(deserializer);
     var var_walletEvents = sse_decode_opt_list_wallet_event(deserializer);
     var var_walletAccountEvents =
         sse_decode_opt_list_wallet_account_event(deserializer);
@@ -6428,16 +6619,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_decode_opt_list_wallet_key_event(deserializer);
     var var_walletSettingEvents =
         sse_decode_opt_list_wallet_settings_event(deserializer);
+    var var_walletTransactionEvents =
+        sse_decode_opt_list_wallet_transaction_event(deserializer);
     var var_walletUserSettings =
         sse_decode_opt_box_autoadd_api_user_settings(deserializer);
     return ProtonEvent(
         code: var_code,
         eventId: var_eventId,
+        refresh: var_refresh,
         more: var_more,
+        contactEmailEvents: var_contactEmailEvents,
         walletEvents: var_walletEvents,
         walletAccountEvents: var_walletAccountEvents,
         walletKeyEvents: var_walletKeyEvents,
         walletSettingEvents: var_walletSettingEvents,
+        walletTransactionEvents: var_walletTransactionEvents,
         walletUserSettings: var_walletUserSettings);
   }
 
@@ -6815,6 +7011,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  WalletTransactionEvent sse_decode_wallet_transaction_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_action = sse_decode_u_32(deserializer);
+    var var_walletTransaction =
+        sse_decode_opt_box_autoadd_wallet_transaction(deserializer);
+    return WalletTransactionEvent(
+        id: var_id,
+        action: var_action,
+        walletTransaction: var_walletTransaction);
+  }
+
+  @protected
   WordCount sse_decode_word_count(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
@@ -7022,6 +7232,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_proton_contact_emails(
+      ProtonContactEmails self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_proton_contact_emails(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_proton_exchange_rate(
       ProtonExchangeRate self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -7116,10 +7333,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_wallet_transaction(
+      WalletTransaction self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_wallet_transaction(self, serializer);
+  }
+
+  @protected
   void sse_encode_change_spend_policy(
       ChangeSpendPolicy self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_contact_email_event(
+      ContactEmailEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_u_32(self.action, serializer);
+    sse_encode_opt_box_autoadd_proton_contact_emails(
+        self.contactEmail, serializer);
   }
 
   @protected
@@ -7365,6 +7599,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_contact_email_event(
+      List<ContactEmailEvent> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_contact_email_event(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_email_address(
       List<EmailAddress> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -7580,6 +7824,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_wallet_transaction_event(
+      List<WalletTransactionEvent> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_wallet_transaction_event(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_out_point(self.outpoint, serializer);
@@ -7647,6 +7901,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_f_32(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_contact_emails(
+      ProtonContactEmails? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_proton_contact_emails(self, serializer);
     }
   }
 
@@ -7791,6 +8056,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_wallet_transaction(
+      WalletTransaction? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_wallet_transaction(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_list_String(
       List<String>? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -7798,6 +8074,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_list_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_list_contact_email_event(
+      List<ContactEmailEvent>? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_list_contact_email_event(self, serializer);
     }
   }
 
@@ -7857,6 +8144,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_list_wallet_transaction_event(
+      List<WalletTransactionEvent>? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_list_wallet_transaction_event(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_out_point(OutPoint self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.txid, serializer);
@@ -7908,13 +8206,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_16(self.code, serializer);
     sse_encode_String(self.eventId, serializer);
+    sse_encode_u_32(self.refresh, serializer);
     sse_encode_u_32(self.more, serializer);
+    sse_encode_opt_list_contact_email_event(
+        self.contactEmailEvents, serializer);
     sse_encode_opt_list_wallet_event(self.walletEvents, serializer);
     sse_encode_opt_list_wallet_account_event(
         self.walletAccountEvents, serializer);
     sse_encode_opt_list_wallet_key_event(self.walletKeyEvents, serializer);
     sse_encode_opt_list_wallet_settings_event(
         self.walletSettingEvents, serializer);
+    sse_encode_opt_list_wallet_transaction_event(
+        self.walletTransactionEvents, serializer);
     sse_encode_opt_box_autoadd_api_user_settings(
         self.walletUserSettings, serializer);
   }
@@ -8190,6 +8493,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.body, serializer);
     sse_encode_opt_String(self.sender, serializer);
     sse_encode_opt_String(self.tolist, serializer);
+  }
+
+  @protected
+  void sse_encode_wallet_transaction_event(
+      WalletTransactionEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_u_32(self.action, serializer);
+    sse_encode_opt_box_autoadd_wallet_transaction(
+        self.walletTransaction, serializer);
   }
 
   @protected
