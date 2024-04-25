@@ -169,6 +169,8 @@ dev_dependencies:
   drift_dev: ^2.19.1
   envied_generator: ^0.5.4+1
 
+  # for ui tests
+  golden_toolkit: ^0.15.0
   mockito: ^5.4.4
 
 #flutter launcher icons configs
