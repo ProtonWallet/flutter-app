@@ -13,6 +13,8 @@ class CustomDiscoverBox extends StatelessWidget {
   final String avatarPath;
   final String category;
   final String author;
+  final double paddingSize;
+  final Color? backgroundColor;
 
   const CustomDiscoverBox({
     super.key,
@@ -23,15 +25,16 @@ class CustomDiscoverBox extends StatelessWidget {
     required this.link,
     required this.category,
     required this.author,
+    this.backgroundColor,
+    this.paddingSize = defaultPadding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin:
-            const EdgeInsets.symmetric(vertical: 4, horizontal: defaultPadding),
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: paddingSize),
         decoration: BoxDecoration(
-            color: ProtonColors.backgroundProton,
+            color: backgroundColor??ProtonColors.backgroundProton,
             borderRadius: BorderRadius.circular(16.0)),
         padding: const EdgeInsets.all(defaultPadding),
         child:

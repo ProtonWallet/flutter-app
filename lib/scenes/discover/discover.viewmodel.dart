@@ -6,7 +6,6 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart';
 
 class ProtonFeedItem {
   String title;
@@ -88,7 +87,7 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
   }
 
   String _findElementOrDefault(
-      XmlElement item, String tagName, String defaultValue) {
+      xml.XmlElement item, String tagName, String defaultValue) {
     try {
       var element = item.findElements(tagName).single;
       return element.innerText.trim().isEmpty

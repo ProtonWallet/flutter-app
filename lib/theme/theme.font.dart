@@ -104,6 +104,17 @@ class FontManager {
         color: color);
   }
 
+  static TextStyle body2MedianLineThrough(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 14,
+        height: 1.42,
+        // lineHeight = 20
+        fontWeight: FontWeight.w500,
+        decoration: TextDecoration.lineThrough,
+        color: color);
+  }
+
   static TextStyle body2Regular(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

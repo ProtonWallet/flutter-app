@@ -40,7 +40,7 @@ class SendView extends ViewBase<SendViewModel> {
             viewModel.inReview
                 ? "Review your transaction"
                 : S.of(context).send_bitcoin,
-            style: FontManager.titleSubHeadline(ProtonColors.textNorm)),
+            style: FontManager.body2Median(ProtonColors.textNorm)),
         centerTitle: true,
         leading: viewModel.inReview
             ? IconButton(

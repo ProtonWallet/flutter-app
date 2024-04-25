@@ -9,6 +9,8 @@ abstract class TransactionDao extends BaseDao {
 
   Future<void> insertOrUpdate(TransactionModel transactionModel);
 
+  Future<List<TransactionModel>> findAllByServerAccountID(String serverAccountID);
+
   Future<TransactionModel?> findByExternalTransactionID(
       Uint8List externalTransactionID);
 }
@@ -87,5 +89,15 @@ class TransactionDaoImpl extends TransactionDao {
       return TransactionModel.fromMap(maps.first);
     }
     return null;
+  }
+
+  @override
+  Future<List<TransactionModel>> findAllByServerAccountID(String serverAccountID) async{
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
+    if (maps.isNotEmpty) {
+      return maps.map((e) => TransactionModel.fromMap(e)).toList().cast<TransactionModel>();
+    }
+    return [];
   }
 }
