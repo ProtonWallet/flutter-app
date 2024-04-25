@@ -103,9 +103,8 @@ class SendView extends ViewBase<SendViewModel> {
                           },
                           content:
                               "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.feeRate).toStringAsFixed(3)}",
-                          memo: S.of(context).current_balance_btc(
-                              (viewModel.feeRate / 100000000)
-                                  .toStringAsFixed(8)),
+                          memo: Provider.of<UserSettingProvider>(context)
+                              .getBitcoinUnitLabel(viewModel.feeRate.toInt()),
                         ),
                         const Divider(
                           thickness: 0.2,
@@ -319,7 +318,9 @@ class SendView extends ViewBase<SendViewModel> {
       Text(
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.amountTextController.text}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
-      Text("${esitmateValue.toStringAsFixed(8)} BTC",
+      Text(
+          Provider.of<UserSettingProvider>(context)
+              .getBitcoinUnitLabel((esitmateValue * 100000000).toInt()),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
@@ -353,7 +354,8 @@ class SendView extends ViewBase<SendViewModel> {
       title: S.of(context).trans_total,
       content:
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${amount.toStringAsFixed(3)}",
-      memo: S.of(context).current_balance_btc(esitmateValue.toStringAsFixed(8)),
+      memo: Provider.of<UserSettingProvider>(context)
+          .getBitcoinUnitLabel((esitmateValue * 100000000).toInt()),
     );
   }
 

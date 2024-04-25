@@ -140,6 +140,9 @@ class SendViewModelImpl extends SendViewModel {
     walletModel = await DBHelper.walletDao!.findById(walletID);
     accountModel = await DBHelper.accountDao!.findById(accountID);
     updateWallet();
+    logger.i(DateTime.now().toString());
+    await WalletManager.initContacts();
+    logger.i(DateTime.now().toString());
     EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
@@ -276,7 +279,6 @@ class SendViewModelImpl extends SendViewModel {
             logger.i("transaction id: $transactionID");
           }
 
-          await WalletManager.fetchWalletTransactions(); // TODO:: only update by eventloop
           // await _lib.sendBitcoin(
           //     _blockchain!, _wallet, receipinetAddress, amountInSats);
         }

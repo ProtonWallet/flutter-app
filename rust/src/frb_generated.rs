@@ -4260,6 +4260,21 @@ impl SseDecode for crate::bdk::types::ChangeSpendPolicy {
     }
 }
 
+impl SseDecode for crate::proton_api::event_routes::ContactEmailEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_action = <u32>::sse_decode(deserializer);
+        let mut var_contactEmail =
+            <Option<crate::proton_api::contacts::ProtonContactEmails>>::sse_decode(deserializer);
+        return crate::proton_api::event_routes::ContactEmailEvent {
+            id: var_id,
+            action: var_action,
+            contact_email: var_contactEmail,
+        };
+    }
+}
+
 impl SseDecode for crate::proton_api::wallet_account::CreateWalletAccountReq {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4713,6 +4728,20 @@ impl SseDecode for Vec<crate::proton_api::wallet::BitcoinAddress> {
     }
 }
 
+impl SseDecode for Vec<crate::proton_api::event_routes::ContactEmailEvent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::proton_api::event_routes::ContactEmailEvent>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::proton_api::wallet_account::EmailAddress> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4981,6 +5010,20 @@ impl SseDecode for Vec<crate::proton_api::wallet::WalletTransaction> {
     }
 }
 
+impl SseDecode for Vec<crate::proton_api::event_routes::WalletTransactionEvent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::proton_api::event_routes::WalletTransactionEvent>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for crate::bdk::wallet::LocalUtxo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -5074,6 +5117,19 @@ impl SseDecode for Option<f32> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<f32>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::proton_api::contacts::ProtonContactEmails> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::proton_api::contacts::ProtonContactEmails>::sse_decode(deserializer),
+            );
         } else {
             return None;
         }
@@ -5237,11 +5293,37 @@ impl SseDecode for Option<crate::proton_api::wallet_settings::WalletSettings> {
     }
 }
 
+impl SseDecode for Option<crate::proton_api::wallet::WalletTransaction> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::proton_api::wallet::WalletTransaction>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<Vec<String>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<Vec<String>>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<Vec<crate::proton_api::event_routes::ContactEmailEvent>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <Vec<crate::proton_api::event_routes::ContactEmailEvent>>::sse_decode(deserializer),
+            );
         } else {
             return None;
         }
@@ -5310,6 +5392,21 @@ impl SseDecode for Option<Vec<crate::proton_api::event_routes::WalletSettingsEve
         if (<bool>::sse_decode(deserializer)) {
             return Some(
                 <Vec<crate::proton_api::event_routes::WalletSettingsEvent>>::sse_decode(
+                    deserializer,
+                ),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<Vec<crate::proton_api::event_routes::WalletTransactionEvent>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <Vec<crate::proton_api::event_routes::WalletTransactionEvent>>::sse_decode(
                     deserializer,
                 ),
             );
@@ -5409,7 +5506,11 @@ impl SseDecode for crate::proton_api::event_routes::ProtonEvent {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_code = <u16>::sse_decode(deserializer);
         let mut var_eventId = <String>::sse_decode(deserializer);
+        let mut var_refresh = <u32>::sse_decode(deserializer);
         let mut var_more = <u32>::sse_decode(deserializer);
+        let mut var_contactEmailEvents = <Option<
+            Vec<crate::proton_api::event_routes::ContactEmailEvent>,
+        >>::sse_decode(deserializer);
         let mut var_walletEvents =
             <Option<Vec<crate::proton_api::event_routes::WalletEvent>>>::sse_decode(deserializer);
         let mut var_walletAccountEvents = <Option<
@@ -5422,16 +5523,22 @@ impl SseDecode for crate::proton_api::event_routes::ProtonEvent {
         let mut var_walletSettingEvents = <Option<
             Vec<crate::proton_api::event_routes::WalletSettingsEvent>,
         >>::sse_decode(deserializer);
+        let mut var_walletTransactionEvents = <Option<
+            Vec<crate::proton_api::event_routes::WalletTransactionEvent>,
+        >>::sse_decode(deserializer);
         let mut var_walletUserSettings =
             <Option<crate::proton_api::user_settings::ApiUserSettings>>::sse_decode(deserializer);
         return crate::proton_api::event_routes::ProtonEvent {
             code: var_code,
             event_id: var_eventId,
+            refresh: var_refresh,
             more: var_more,
+            contact_email_events: var_contactEmailEvents,
             wallet_events: var_walletEvents,
             wallet_account_events: var_walletAccountEvents,
             wallet_key_events: var_walletKeyEvents,
             wallet_setting_events: var_walletSettingEvents,
+            wallet_transaction_events: var_walletTransactionEvents,
             wallet_user_settings: var_walletUserSettings,
         };
     }
@@ -5871,6 +5978,21 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
     }
 }
 
+impl SseDecode for crate::proton_api::event_routes::WalletTransactionEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_action = <u32>::sse_decode(deserializer);
+        let mut var_walletTransaction =
+            <Option<crate::proton_api::wallet::WalletTransaction>>::sse_decode(deserializer);
+        return crate::proton_api::event_routes::WalletTransactionEvent {
+            id: var_id,
+            action: var_action,
+            wallet_transaction: var_walletTransaction,
+        };
+    }
+}
+
 impl SseDecode for crate::bdk::types::WordCount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -6238,6 +6360,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::ChangeSpendPolicy>
     for crate::bdk::types::ChangeSpendPolicy
 {
     fn into_into_dart(self) -> crate::bdk::types::ChangeSpendPolicy {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::event_routes::ContactEmailEvent {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.action.into_into_dart().into_dart(),
+            self.contact_email.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::event_routes::ContactEmailEvent
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::event_routes::ContactEmailEvent>
+    for crate::proton_api::event_routes::ContactEmailEvent
+{
+    fn into_into_dart(self) -> crate::proton_api::event_routes::ContactEmailEvent {
         self
     }
 }
@@ -6821,11 +6965,14 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::event_routes::ProtonEv
         [
             self.code.into_into_dart().into_dart(),
             self.event_id.into_into_dart().into_dart(),
+            self.refresh.into_into_dart().into_dart(),
             self.more.into_into_dart().into_dart(),
+            self.contact_email_events.into_into_dart().into_dart(),
             self.wallet_events.into_into_dart().into_dart(),
             self.wallet_account_events.into_into_dart().into_dart(),
             self.wallet_key_events.into_into_dart().into_dart(),
             self.wallet_setting_events.into_into_dart().into_dart(),
+            self.wallet_transaction_events.into_into_dart().into_dart(),
             self.wallet_user_settings.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -7307,6 +7454,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::wallet::WalletTransact
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::event_routes::WalletTransactionEvent {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.action.into_into_dart().into_dart(),
+            self.wallet_transaction.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::event_routes::WalletTransactionEvent
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::event_routes::WalletTransactionEvent>
+    for crate::proton_api::event_routes::WalletTransactionEvent
+{
+    fn into_into_dart(self) -> crate::proton_api::event_routes::WalletTransactionEvent {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::bdk::types::WordCount {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -7475,6 +7644,18 @@ impl SseEncode for crate::bdk::types::ChangeSpendPolicy {
                     unimplemented!("");
                 }
             },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::proton_api::event_routes::ContactEmailEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <u32>::sse_encode(self.action, serializer);
+        <Option<crate::proton_api::contacts::ProtonContactEmails>>::sse_encode(
+            self.contact_email,
             serializer,
         );
     }
@@ -7889,6 +8070,16 @@ impl SseEncode for Vec<crate::proton_api::wallet::BitcoinAddress> {
     }
 }
 
+impl SseEncode for Vec<crate::proton_api::event_routes::ContactEmailEvent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::event_routes::ContactEmailEvent>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::proton_api::wallet_account::EmailAddress> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -8099,6 +8290,16 @@ impl SseEncode for Vec<crate::proton_api::wallet::WalletTransaction> {
     }
 }
 
+impl SseEncode for Vec<crate::proton_api::event_routes::WalletTransactionEvent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::event_routes::WalletTransactionEvent>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for crate::bdk::wallet::LocalUtxo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -8178,6 +8379,16 @@ impl SseEncode for Option<f32> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <f32>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::proton_api::contacts::ProtonContactEmails> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::contacts::ProtonContactEmails>::sse_encode(value, serializer);
         }
     }
 }
@@ -8312,12 +8523,34 @@ impl SseEncode for Option<crate::proton_api::wallet_settings::WalletSettings> {
     }
 }
 
+impl SseEncode for Option<crate::proton_api::wallet::WalletTransaction> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::wallet::WalletTransaction>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<Vec<String>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <Vec<String>>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<Vec<crate::proton_api::event_routes::ContactEmailEvent>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <Vec<crate::proton_api::event_routes::ContactEmailEvent>>::sse_encode(
+                value, serializer,
+            );
         }
     }
 }
@@ -8372,6 +8605,18 @@ impl SseEncode for Option<Vec<crate::proton_api::event_routes::WalletSettingsEve
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <Vec<crate::proton_api::event_routes::WalletSettingsEvent>>::sse_encode(
+                value, serializer,
+            );
+        }
+    }
+}
+
+impl SseEncode for Option<Vec<crate::proton_api::event_routes::WalletTransactionEvent>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <Vec<crate::proton_api::event_routes::WalletTransactionEvent>>::sse_encode(
                 value, serializer,
             );
         }
@@ -8434,7 +8679,12 @@ impl SseEncode for crate::proton_api::event_routes::ProtonEvent {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <u16>::sse_encode(self.code, serializer);
         <String>::sse_encode(self.event_id, serializer);
+        <u32>::sse_encode(self.refresh, serializer);
         <u32>::sse_encode(self.more, serializer);
+        <Option<Vec<crate::proton_api::event_routes::ContactEmailEvent>>>::sse_encode(
+            self.contact_email_events,
+            serializer,
+        );
         <Option<Vec<crate::proton_api::event_routes::WalletEvent>>>::sse_encode(
             self.wallet_events,
             serializer,
@@ -8449,6 +8699,10 @@ impl SseEncode for crate::proton_api::event_routes::ProtonEvent {
         );
         <Option<Vec<crate::proton_api::event_routes::WalletSettingsEvent>>>::sse_encode(
             self.wallet_setting_events,
+            serializer,
+        );
+        <Option<Vec<crate::proton_api::event_routes::WalletTransactionEvent>>>::sse_encode(
+            self.wallet_transaction_events,
             serializer,
         );
         <Option<crate::proton_api::user_settings::ApiUserSettings>>::sse_encode(
@@ -8768,6 +9022,18 @@ impl SseEncode for crate::proton_api::wallet::WalletTransaction {
         <Option<String>>::sse_encode(self.body, serializer);
         <Option<String>>::sse_encode(self.sender, serializer);
         <Option<String>>::sse_encode(self.tolist, serializer);
+    }
+}
+
+impl SseEncode for crate::proton_api::event_routes::WalletTransactionEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <u32>::sse_encode(self.action, serializer);
+        <Option<crate::proton_api::wallet::WalletTransaction>>::sse_encode(
+            self.wallet_transaction,
+            serializer,
+        );
     }
 }
 

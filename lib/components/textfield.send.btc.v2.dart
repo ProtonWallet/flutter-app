@@ -194,6 +194,6 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
         amount: amount,
         isBitcoinBase: false,
         currencyExchangeRate: widget.currencyExchangeRate);
-    return (btcAmount * 100000000).ceil();
+    return (btcAmount * 100000000).toInt();
   }
 }

@@ -26,10 +26,12 @@ impl From<Error> for ApiError {
             Error::MuonRequestError(mre) => {
                 ApiError::SessionError(format!("Muon request error: {}", mre))
             }
-            Error::DeserializeError => {
-                ApiError::Generic("Deserialization error occurred".to_string())
+            Error::BitcoinDeserializeError(bde) => {
+                ApiError::Generic(format!("BitcoinDeserializeError occurred: {}", bde))
             }
-            Error::SerializeError => ApiError::Generic("Serialization error occurred".to_string()),
+            Error::HexDecoding(hde) => {
+                ApiError::Generic(format!("HexDecoding error occurred: {}", hde))
+            }
             Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
             Error::ErrorCode(error) => ApiError::Generic(format!(
                 "Response Code:{} Details:{}",

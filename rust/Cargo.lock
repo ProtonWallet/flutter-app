@@ -128,6 +128,7 @@ dependencies = [
  "muon",
  "serde",
  "serde_json",
+ "thiserror",
 ]
 
 [[package]]
@@ -145,6 +146,7 @@ dependencies = [
  "miniscript",
  "querystring",
  "serde",
+ "thiserror",
  "urlencoding",
  "uuid",
  "wasm-bindgen-futures",
@@ -156,6 +158,7 @@ version = "0.1.0"
 dependencies = [
  "bitcoin",
  "serde",
+ "thiserror",
 ]
 
 [[package]]
@@ -524,7 +527,6 @@ dependencies = [
  "bech32",
  "bitcoin-private",
  "bitcoin_hashes 0.12.0",
- "core2",
  "hex_lit",
  "secp256k1",
  "serde",
@@ -555,7 +557,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d7066118b13d4b20b23645932dfb3a81ce7e29f95726c2036fa33cd7b092501"
 dependencies = [
  "bitcoin-private",
- "core2",
  "serde",
 ]
 
@@ -915,15 +916,6 @@ name = "core-foundation-sys"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06ea2b9bc92be3c2baa9334a323ebca2d6f074ff852cd1d7b11064035cd3868f"
-
-[[package]]
-name = "core2"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "239fa3ae9b63c2dc74bd3fa852d4792b8b305ae64eeede946265b6af62f1fff3"
-dependencies = [
- "memchr",
-]
 
 [[package]]
 name = "cpufeatures"
