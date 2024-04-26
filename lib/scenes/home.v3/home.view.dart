@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -312,12 +311,28 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      "Transactions",
-                                      style: FontManager.body1Median(
-                                          ProtonColors.textNorm),
-                                      textAlign: TextAlign.left,
-                                    ),
+                                    Row(children: [
+                                      Text(
+                                        S.of(context).transactions,
+                                        style: FontManager.body1Median(
+                                            ProtonColors.textNorm),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      TextFieldText(
+                                        width: 180,
+                                        height: 40,
+                                        color: ProtonColors.backgroundSecondary,
+                                        suffixIcon:
+                                            const Icon(Icons.search, size: 16),
+                                        showSuffixIcon: true,
+                                        suffixIconOnPressed: () {
+                                          viewModel.searchHistoryTransaction();
+                                        },
+                                        controller: viewModel
+                                            .transactionSearchController,
+                                      )
+                                    ]),
                                     IconButton(
                                         onPressed: () {
                                           showTransactionFilter(
@@ -330,70 +345,50 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             height: 16)),
                                   ])),
                           for (int index = 0;
-                              index < viewModel.historyInProgress.length;
-                              index++)
-                            TransactionListTitle(
-                              width: MediaQuery.of(context).size.width,
-                              address: viewModel
-                                      .fromEmailsInProgress[index].isNotEmpty
-                                  ? CommonHelper.getFirstNChar(
-                                      WalletManager
-                                          .getEmailFromWalletTransaction(
-                                              viewModel
-                                                  .fromEmailsInProgress[index]),
-                                      24)
-                                  : "${CommonHelper.getFirstNChar(base64Encode(viewModel.historyInProgress[index].externalTransactionID), 10)}***",
-                              amount: viewModel.txid2info.containsKey(
-                                      viewModel.getTxidInProgress(index))
-                                  ? (viewModel.txid2info[
-                                                  viewModel.getTxidInProgress(
-                                                      index)]!['outputs'][0]
-                                              ['value'] +
-                                          viewModel.txid2info[
-                                              viewModel.getTxidInProgress(
-                                                  index)]!['fees'])
-                                      .toDouble()
-                                  : 0,
-                              note: viewModel.userLabelsInProgress[index],
-                              onTap: () {
-                                viewModel.selectedTXID =
-                                    viewModel.getTxidInProgress(index);
-                                viewModel.move(ViewIdentifiers.historyDetails);
-                              },
-                              isSend: viewModel.isSentInProgress[index],
-                            ),
-                          for (int index = 0;
                               index <
                                   min(
-                                      viewModel.history.length,
+                                      viewModel.historyTransactions.length,
                                       defaultTransactionPerPage *
                                               viewModel.currentHistoryPage +
                                           defaultTransactionPerPage);
                               index++)
-                            if (viewModel.checkTransactionFilter(index))
-                              TransactionListTitle(
-                                width: MediaQuery.of(context).size.width,
-                                address: viewModel.fromEmails[index].isNotEmpty
-                                    ? CommonHelper.getFirstNChar(
-                                        WalletManager
-                                            .getEmailFromWalletTransaction(
-                                                viewModel.fromEmails[index]),
-                                        24)
-                                    : "${viewModel.history[index].txid.substring(0, 10)}***${viewModel.history[index].txid.substring(64 - 6)}",
-                                amount: (viewModel.getAmount(index)).toDouble(),
-                                isSend: viewModel.history[index].sent >
-                                    viewModel.history[index].received,
-                                note: viewModel.userLabels[index],
-                                timestamp: viewModel
-                                    .history[index].confirmationTime?.timestamp,
-                                onTap: () {
-                                  viewModel.selectedTXID =
-                                      viewModel.history[index].txid;
-                                  viewModel
-                                      .move(ViewIdentifiers.historyDetails);
-                                },
-                              ),
-                          if (viewModel.history.length >
+                            TransactionListTitle(
+                              width: MediaQuery.of(context).size.width,
+                              address: CommonHelper.getFirstNChar(
+                                  WalletManager.getEmailFromWalletTransaction(
+                                      viewModel.historyTransactions[index]
+                                                  .amountInSATS >
+                                              0
+                                          ? viewModel
+                                              .historyTransactions[index].sender
+                                          : viewModel.historyTransactions[index]
+                                              .toList),
+                                  24),
+                              amount: (viewModel.historyTransactions[index]
+                                              .amountInSATS >
+                                          0
+                                      ? viewModel.historyTransactions[index]
+                                          .amountInSATS
+                                      : viewModel.historyTransactions[index]
+                                              .amountInSATS -
+                                          viewModel.historyTransactions[index]
+                                              .feeInSATS)
+                                  .toDouble(),
+                              note:
+                                  viewModel.historyTransactions[index].label ??
+                                      "",
+                              onTap: () {
+                                viewModel.selectedTXID =
+                                    viewModel.historyTransactions[index].txID;
+                                viewModel.move(ViewIdentifiers.historyDetails);
+                              },
+                              timestamp: viewModel
+                                  .historyTransactions[index].createTimestamp,
+                              isSend: viewModel
+                                      .historyTransactions[index].amountInSATS <
+                                  0,
+                            ),
+                          if (viewModel.historyTransactions.length >
                               defaultTransactionPerPage *
                                       viewModel.currentHistoryPage +
                                   defaultTransactionPerPage)
@@ -406,8 +401,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     child: Text("Show more",
                                         style: FontManager.body1Regular(
                                             ProtonColors.protonBlue)))),
-                          if (viewModel.history.isEmpty &&
-                              viewModel.historyInProgress.isEmpty)
+                          if (viewModel.historyTransactions.isEmpty)
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -436,38 +430,37 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   ),
                                 ]),
                         ])),
-                    if (viewModel.history.isEmpty &&
-                        viewModel.historyInProgress.isEmpty)
-                      const SizedBox(
-                        height: 40,
-                      ),
-                    if (viewModel.history.isEmpty &&
-                        viewModel.historyInProgress.isEmpty)
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ButtonV5(
-                                onPressed: () {
-                                  viewModel.move(ViewIdentifiers.receive);
-                                },
-                                backgroundColor: ProtonColors.white,
-                                text: S.of(context).receive,
-                                width: 180,
-                                textStyle: FontManager.body1Median(
-                                    ProtonColors.protonBlue),
-                                height: 48),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ButtonV5(
-                                onPressed: () {},
-                                backgroundColor: ProtonColors.backgroundBlack,
-                                text: S.of(context).buy,
-                                width: 180,
-                                textStyle: FontManager.body1Median(
-                                    ProtonColors.backgroundSecondary),
-                                height: 48),
-                          ]),
+                    if (viewModel.historyTransactions.isEmpty)
+                      Column(children: [
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ButtonV5(
+                                  onPressed: () {
+                                    viewModel.move(ViewIdentifiers.receive);
+                                  },
+                                  backgroundColor: ProtonColors.white,
+                                  text: S.of(context).receive,
+                                  width: 180,
+                                  textStyle: FontManager.body1Median(
+                                      ProtonColors.protonBlue),
+                                  height: 48),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              ButtonV5(
+                                  onPressed: () {},
+                                  backgroundColor: ProtonColors.backgroundBlack,
+                                  text: S.of(context).buy,
+                                  width: 180,
+                                  textStyle: FontManager.body1Median(
+                                      ProtonColors.backgroundSecondary),
+                                  height: 48),
+                            ]),
+                      ]),
                     const SizedBox(height: 20),
                     if (viewModel.protonFeedItems.isNotEmpty)
                       Text(S.of(context).explore_wallet,

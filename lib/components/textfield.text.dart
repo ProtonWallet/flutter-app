@@ -60,7 +60,7 @@ class TextFieldTextState extends State<TextFieldText> {
                   child: buildTagWidget(widget.controller!.text))
               : TextField(
                   textAlignVertical: TextAlignVertical.center,
-                  style: FontManager.body2Regular(ProtonColors.textNorm),
+                  style: FontManager.captionMedian(ProtonColors.textNorm),
                   maxLines: widget.multiLine ? null : 1,
                   minLines: widget.multiLine ? 5 : 1,
                   controller: widget.controller,

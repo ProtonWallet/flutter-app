@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/crypto.price.helper.dart';
@@ -86,7 +87,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletModel? currentWallet;
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
-  Map<String, Map<String, dynamic>> txid2info = {};
 
   AccountModel? currentAccount;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
@@ -99,6 +99,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   late ValueNotifier accountValueNotifierForPreference;
 
+  TextEditingController transactionSearchController =
+      TextEditingController(text: "");
   TextEditingController walletPreferenceTextEditingController =
       TextEditingController(text: "");
 
@@ -110,6 +112,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   Map<String, bool> isSyncingMap = {};
 
   void getUserSettings();
+
+  void searchHistoryTransaction();
 
   void updateTransactionFilter(String filter);
 
@@ -161,8 +165,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> addBitcoinAddress();
 
-  String getTxidInProgress(int index);
-
   Future<void> addEmailAddressToWalletAccount(
       String serverWalletID, String serverAccountID, String serverAddressID);
 
@@ -175,7 +177,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void reloadPage();
 
-  bool checkTransactionFilter(int index);
+  List<HistoryTransaction> getHistoryTransactionWithFilter();
 
   int balance = 0;
   int totalTodoSteps = 3;
@@ -183,20 +185,12 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
   String selectedTXID = "";
-
-  List<TransactionDetails> history = [];
-  List<String> userLabels = [];
-  List<String> fromEmails = [];
-  List<TransactionModel> historyInProgress = [];
-  List<String> userLabelsInProgress = [];
-  List<bool> isSentInProgress = [];
-  List<String> fromEmailsInProgress = [];
+  List<HistoryTransaction> historyTransactions = [];
+  List<HistoryTransaction> _historyTransactions = [];
 
   late FocusNode newAccountNameFocusNode;
   late FocusNode walletNameFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
-
-  int getAmount(int index);
 
   @override
   bool get keepAlive => true;
@@ -273,12 +267,16 @@ class HomeViewModelImpl extends HomeViewModel {
       updateBitcoinUnit(bitcoinUnitNotifier.value);
       userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
     });
+    transactionSearchController.addListener(() {
+      searchTransactions();
+    });
     try {
       EasyLoading.dismiss();
     } catch (e) {
       logger.d(e.toString());
     }
     syncWalletService();
+    loadTransactionHistoryService();
     datasourceStreamSinkAdd();
   }
 
@@ -384,12 +382,6 @@ class HomeViewModelImpl extends HomeViewModel {
     });
   }
 
-  @override
-  int getAmount(int index) {
-    var amount = history[index].received - history[index].sent;
-    return amount;
-  }
-
   Future<void> refreshWalletID2Accounts(String serverWalletID) async {
     WalletModel? walletModel =
         await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
@@ -452,14 +444,14 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
     Future.delayed(const Duration(milliseconds: 1000), () async {
       await checkNewWallet();
-      await loadTransactionHistory();
     });
   }
 
   @override
   Future<void> selectAccount(AccountModel accountModel) async {
     await selectWallet(accountModel.walletID);
-    if (currentAccount != null && currentAccount!.serverAccountID != accountModel.serverAccountID){
+    if (currentAccount != null &&
+        currentAccount!.serverAccountID != accountModel.serverAccountID) {
       currentHistoryPage = 0;
     }
     currentAccount = accountModel;
@@ -478,15 +470,7 @@ class HomeViewModelImpl extends HomeViewModel {
       return;
     }
     isLoadingTransactionHistory = true;
-    List<String> newUserLabels = [];
-    List<String> newFromEmails = [];
-    List<String> newUserLabelsInProgress = [];
-    List<String> newFromEmailsInProgress = [];
-    List<bool> newIsSentInProgress = [];
-    List<TransactionModel> newHistoryInProgress = [];
-    Map<int, bool> transactionMap = {};
 
-    List<TransactionDetails> newHistory = [];
     String userPrivateKey =
         await SecureStorageHelper.instance.get("userPrivateKey");
     String userPassphrase =
@@ -511,93 +495,148 @@ class HomeViewModelImpl extends HomeViewModel {
         }
       }
     }
+    Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
 
     if (wallet != null) {
-      newHistory = await _lib.getConfirmedTransactions(wallet!);
-      newHistory.sort((a, b) {
-        return a.confirmationTime!.timestamp > b.confirmationTime!.timestamp
-            ? -1
-            : 1;
-      });
-      newHistory = await _lib.getUnConfirmedTransactions(wallet!) + newHistory;
+      List<TransactionDetails> transactionHistoryFromBDK =
+          await _lib.getAllTransactions(wallet!);
       SecretKey? secretKey =
           await WalletManager.getWalletKey(currentWallet!.serverWalletID);
 
-      for (TransactionDetails transactionDetail in newHistory) {
+      for (TransactionDetails transactionDetail in transactionHistoryFromBDK) {
+        String txID = transactionDetail.txid;
         TransactionModel? transactionModel = await DBHelper.transactionDao!
-            .findByExternalTransactionID(utf8.encode(transactionDetail.txid));
+            .findByExternalTransactionID(utf8.encode(txID));
         String userLabel = transactionModel != null
             ? await WalletKeyHelper.decrypt(
                 secretKey!, utf8.decode(transactionModel.label))
             : "";
-        String fromEmail = "";
+        String toList = "";
+        String sender = "";
         if (transactionModel != null) {
-          transactionMap[transactionModel.id!] = true;
-          bool isSend = transactionDetail.sent - transactionDetail.received > 0;
-          String encryptedBinaryMessage = isSend
-              ? transactionModel.tolist ?? ""
-              : transactionModel.sender ?? "";
-          if (encryptedBinaryMessage.isNotEmpty) {
-            for (AddressKey addressKey in addressKeys) {
-              try {
-                fromEmail = addressKey.decryptBinary(encryptedBinaryMessage);
-                if (fromEmail.isNotEmpty) {
-                  break;
-                }
-              } catch (e) {
-                logger.e(e.toString());
-              }
-            }
-          }
-        }
-        newFromEmails.add(fromEmail);
-        newUserLabels.add(userLabel);
-      }
-      List<TransactionModel> transactionModels = await DBHelper.transactionDao!
-          .findAllByServerAccountID(currentAccount!.serverAccountID);
-      for (TransactionModel transactionModel in transactionModels) {
-        if (transactionMap.containsKey(transactionModel.id!) == false &&
-            DateTime.now().millisecondsSinceEpoch ~/ 1000 <=
-                transactionModel.createTime + 60 * 60 * 1) {
-          String userLabel = await WalletKeyHelper.decrypt(
-              secretKey!, utf8.decode(transactionModel.label));
-
-          String txid = utf8.decode(transactionModel.externalTransactionID);
-          if (txid.isEmpty) {
-            continue;
-          }
-          Map<String, dynamic> transactionDetail =
-              await WalletManager.getTransactionDetailsFromBlockStream(txid);
-          txid2info[txid] = transactionDetail;
-          String email = "";
+          String encryptedToList = transactionModel.tolist ?? "";
+          String encryptedSender = transactionModel.sender ?? "";
           for (AddressKey addressKey in addressKeys) {
             try {
-              email = addressKey.decryptBinary(transactionModel.tolist);
-              if (email.isNotEmpty) {
-                break;
+              if (encryptedToList.isNotEmpty) {
+                toList = addressKey.decryptBinary(encryptedToList);
               }
             } catch (e) {
               logger.e(e.toString());
             }
+            try {
+              if (encryptedSender.isNotEmpty) {
+                sender = addressKey.decryptBinary(encryptedSender);
+              }
+            } catch (e) {
+              logger.e(e.toString());
+            }
+            if (sender.isNotEmpty || toList.isNotEmpty) {
+              break;
+            }
           }
-
-          newFromEmailsInProgress.add(email);
-          newUserLabelsInProgress.add(userLabel);
-          newHistoryInProgress.add(transactionModel);
-          bool isSent = true;
-          newIsSentInProgress.add(isSent);
         }
+        int amountInSATS = transactionDetail.received - transactionDetail.sent;
+        newHistoryTransactionsMap[txID] = HistoryTransaction(
+            txID: txID,
+            createTimestamp: transactionDetail.confirmationTime?.timestamp,
+            updateTimestamp: transactionDetail.confirmationTime?.timestamp,
+            amountInSATS: amountInSATS,
+            sender: sender.isNotEmpty ? sender : txID,
+            toList: toList.isNotEmpty ? toList : txID,
+            feeInSATS: transactionDetail.fee ?? 0,
+            label: userLabel,
+            inProgress: transactionDetail.confirmationTime == null);
+      }
+      List<TransactionModel> transactionModels = await DBHelper.transactionDao!
+          .findAllByServerAccountID(currentAccount!.serverAccountID);
+      for (TransactionModel transactionModel in transactionModels) {
+        String userLabel = await WalletKeyHelper.decrypt(
+            secretKey!, utf8.decode(transactionModel.label));
+
+        String txID = utf8.decode(transactionModel.externalTransactionID);
+        if (txID.isEmpty) {
+          continue;
+        }
+        if (newHistoryTransactionsMap.containsKey(txID)) {
+          continue;
+        }
+        String toList = "";
+        String sender = "";
+        String encryptedToList = transactionModel.tolist ?? "";
+        String encryptedSender = transactionModel.sender ?? "";
+        for (AddressKey addressKey in addressKeys) {
+          try {
+            if (encryptedToList.isNotEmpty) {
+              toList = addressKey.decryptBinary(encryptedToList);
+            }
+          } catch (e) {
+            logger.e(e.toString());
+          }
+          try {
+            if (encryptedSender.isNotEmpty) {
+              sender = addressKey.decryptBinary(encryptedSender);
+            }
+          } catch (e) {
+            logger.e(e.toString());
+          }
+          if (sender.isNotEmpty || toList.isNotEmpty) {
+            break;
+          }
+        }
+        bool isSent = true;
+        for (ProtonAddress protonAddress in protonAddresses) {
+          if (toList == protonAddress.email) {
+            isSent = false;
+            break;
+          }
+        }
+        int amountInSATS = 0;
+        int feeInSATS = 0;
+        for (int i = 0; i < 5; i++) {
+          Map<String, dynamic> transactionDetail =
+              await WalletManager.getTransactionDetailsFromBlockStream(txID);
+          try {
+            amountInSATS = transactionDetail['outputs'][0]['value'];
+            feeInSATS = transactionDetail['fees'];
+            break;
+          } catch (e) {
+            logger.i(transactionDetail);
+            logger.e(e.toString());
+          }
+          await Future.delayed(const Duration(seconds: 1));
+        }
+        if (isSent) {
+          amountInSATS = -amountInSATS;
+        }
+        newHistoryTransactionsMap[txID] = HistoryTransaction(
+            txID: txID,
+            amountInSATS: amountInSATS,
+            sender: sender.isNotEmpty ? sender : txID,
+            toList: toList.isNotEmpty ? toList : txID,
+            feeInSATS: feeInSATS,
+            label: userLabel,
+            inProgress: true);
       }
     }
-    history = newHistory;
-    userLabels = newUserLabels;
-    fromEmails = newFromEmails;
-
-    historyInProgress = newHistoryInProgress;
-    userLabelsInProgress = newUserLabelsInProgress;
-    fromEmailsInProgress = newFromEmailsInProgress;
-    isSentInProgress = newIsSentInProgress;
-
+    List<HistoryTransaction> newHistoryTransactions =
+        newHistoryTransactionsMap.values.toList();
+    newHistoryTransactions.sort((a, b) {
+      if (a.createTimestamp == null && b.createTimestamp == null) {
+        return -1;
+      }
+      if (a.createTimestamp == null) {
+        return -1;
+      }
+      if (b.createTimestamp == null) {
+        return 1;
+      }
+      return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
+    });
+    if (_historyTransactions.length != newHistoryTransactions.length) {
+      _historyTransactions = newHistoryTransactions;
+      searchTransactions();
+    }
     datasourceStreamSinkAdd();
     isLoadingTransactionHistory = false;
   }
@@ -674,6 +713,13 @@ class HomeViewModelImpl extends HomeViewModel {
       updateFiatCurrencyInUserSettingProvider(userSettings!.fiatCurrency);
     }
     datasourceStreamSinkAdd();
+  }
+
+  Future<void> loadTransactionHistoryService() async {
+    await Future.delayed(const Duration(seconds: 1), () async {
+      await loadTransactionHistory();
+    });
+    loadTransactionHistoryService();
   }
 
   Future<void> syncWalletService() async {
@@ -966,19 +1012,36 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  bool checkTransactionFilter(int index) {
-    TransactionDetails transactionDetails = history[index];
+  List<HistoryTransaction> getHistoryTransactionWithFilter() {
+    List<HistoryTransaction> newHistoryTransactions = _historyTransactions;
     if (transactionFilter.contains("send")) {
-      if (transactionDetails.sent < transactionDetails.received) {
-        return false;
-      }
+      newHistoryTransactions = newHistoryTransactions
+          .where((historyTransaction) => historyTransaction.amountInSATS < 0)
+          .toList();
     }
     if (transactionFilter.contains("receive")) {
-      if (transactionDetails.sent > transactionDetails.received) {
-        return false;
-      }
+      newHistoryTransactions = newHistoryTransactions
+          .where((historyTransaction) => historyTransaction.amountInSATS > 0)
+          .toList();
     }
-    return true;
+    return newHistoryTransactions;
+  }
+
+  void searchTransactions() {
+    List<HistoryTransaction> newHistoryTransactions =
+        getHistoryTransactionWithFilter();
+    String searchKeyword = transactionSearchController.text.toLowerCase();
+    if (searchKeyword.isNotEmpty) {
+      newHistoryTransactions =
+          newHistoryTransactions.where((historyTransaction) {
+        return (historyTransaction.label ?? "")
+                .toLowerCase()
+                .contains(searchKeyword) ||
+            historyTransaction.sender.toLowerCase().contains(searchKeyword) ||
+            historyTransaction.toList.toLowerCase().contains(searchKeyword);
+      }).toList();
+    }
+    historyTransactions = newHistoryTransactions;
   }
 
   @override
@@ -1019,10 +1082,5 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  String getTxidInProgress(int index) {
-    if (historyInProgress.length > index) {
-      return utf8.decode(historyInProgress[index].externalTransactionID);
-    }
-    return "";
-  }
+  void searchHistoryTransaction() {}
 }

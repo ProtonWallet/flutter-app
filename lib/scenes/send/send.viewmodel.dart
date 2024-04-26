@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -286,7 +287,8 @@ class SendViewModelImpl extends SendViewModel {
           } else {
             logger.i("transaction id: $transactionID");
           }
-
+          EventLoopHelper.runOnce();
+          await Future.delayed(const Duration(seconds: 2)); // wait for eventloop to finish
           // await _lib.sendBitcoin(
           //     _blockchain!, _wallet, receipinetAddress, amountInSats);
         }
