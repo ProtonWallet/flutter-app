@@ -1,74 +1,60 @@
 import 'dart:io';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.interface.dart';
 
 class SecureStorageHelper {
+  // storage interface
+  final SecureStorageInterface storage;
+  // wallet key
   static const String walletKey = "WALLET_KEY";
-  static FlutterSecureStorage? storage;
-  static bool _initialized = false;
-  static List<String> keys = [];
+  // workaround?
+  List<String> keys = [];
 
-  static AndroidOptions getAndroidOptions() => const AndroidOptions(
-        encryptedSharedPreferences: true,
-      );
+  // singleton
+  static SecureStorageHelper? _instance;
 
-  static IOSOptions getIOSOptions() => const IOSOptions();
+  SecureStorageHelper._({required this.storage});
 
-  static MacOsOptions getMacOsOptions() => const MacOsOptions();
-
-  static WindowsOptions getWindowsOptions() => const WindowsOptions();
-
-  static bool isPlatformSupported() {
-    return true;
+  static void init(SecureStorageInterface? storage) {
+    _instance ??= SecureStorageHelper._(storage: storage ?? SecureStorage());
   }
 
-  static void init() {
-    if (!isPlatformSupported()) {
-      return;
+  static SecureStorageHelper get instance {
+    if (_instance == null) {
+      throw Exception("SecureStorageHelper not initialized");
     }
-    if (!_initialized) {
-      _initialized = true;
-      if (Platform.isAndroid) {
-        storage = FlutterSecureStorage(aOptions: getAndroidOptions());
-      } else if (Platform.isIOS) {
-        storage = FlutterSecureStorage(iOptions: getIOSOptions());
-      } else if (Platform.isMacOS) {
-        storage = FlutterSecureStorage(mOptions: getMacOsOptions());
-      } else if (Platform.isWindows) {
-        storage = FlutterSecureStorage(wOptions: getWindowsOptions());
-      } else {
-        storage = const FlutterSecureStorage();
-      }
-    }
+    return _instance!;
   }
 
-  static Future<void> set(String key_, String value_) async {
+  Future<void> set(String key, String value) async {
     // TODO:: figure out why windows can not write to storage, this is current workaround
-    for (int i = 0; i< 1000; i++) {
-      await storage!.write(key: key_, value: value_);
-      bool saved = await storage!.containsKey(key: key_);
-      if (saved == true){
+    for (int i = 0; i < 1000; i++) {
+      await storage.write(key, value);
+      bool saved = await storage.containsKey(key);
+      if (saved == true) {
         break;
       }
     }
-    if (keys.contains(key_) == false) {
-      keys.add(key_);
+    if (keys.contains(key) == false) {
+      keys.add(key);
     }
   }
 
-  static Future<String> get(String key_) async {
-    return await storage!.read(key: key_) ?? "";
+  Future<String> get(String key) async {
+    return await storage.read(key);
   }
 
-  static Future<void> deleteAll() async {
+  Future<void> deleteAll() async {
     if (Platform.isWindows) {
-      logger.w("Windows not support to deleteAll secure storage, try to delete with cached keys");
-      for (String key in keys){
-        await storage!.delete(key: key);
+      logger.w(
+          "Windows not support to deleteAll secure storage, try to delete with cached keys");
+      for (String key in keys) {
+        await storage.delete(key);
       }
-      return;
+    } else {
+      await storage.deleteAll();
     }
-    await storage!.deleteAll();
   }
 }

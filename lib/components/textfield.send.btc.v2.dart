@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -174,8 +173,9 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           ),
           Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Text(Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(getEstimateSats())
-                  ,
+              child: Text(
+                  Provider.of<UserSettingProvider>(context)
+                      .getBitcoinUnitLabel(getEstimateSats()),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],

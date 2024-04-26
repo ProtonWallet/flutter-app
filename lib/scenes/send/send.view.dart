@@ -454,6 +454,7 @@ class SendView extends ViewBase<SendViewModel> {
               onPressed: () {
                 viewModel.updatePageStatus(inReview: true);
               },
+              enable: viewModel.validRecipientCount > 0,
               text: S.of(context).review_transaction,
               width: MediaQuery.of(context).size.width,
               backgroundColor: ProtonColors.protonBlue,

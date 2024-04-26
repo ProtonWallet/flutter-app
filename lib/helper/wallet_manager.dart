@@ -41,7 +41,7 @@ class WalletManager {
     late Wallet wallet;
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     String passphrase =
-        await SecureStorageHelper.get(walletModel.serverWalletID);
+        await SecureStorageHelper.instance.get(walletModel.serverWalletID);
     Mnemonic mnemonic = await Mnemonic.fromString(
         await WalletManager.getMnemonicWithID(walletID));
     final DerivationPath derivationPath = await DerivationPath.create(
@@ -271,7 +271,7 @@ class WalletManager {
   static Future<SecretKey?> getWalletKey(String serverWalletID) async {
     String keyPath = "${SecureStorageHelper.walletKey}_$serverWalletID";
     SecretKey secretKey;
-    String encodedEntropy = await SecureStorageHelper.get(keyPath);
+    String encodedEntropy = await SecureStorageHelper.instance.get(keyPath);
     if (encodedEntropy.isEmpty) {
       return null;
     }
@@ -283,10 +283,10 @@ class WalletManager {
   static Future<void> setWalletKey(
       String serverWalletID, SecretKey secretKey) async {
     String keyPath = "${SecureStorageHelper.walletKey}_$serverWalletID";
-    String encodedEntropy = await SecureStorageHelper.get(keyPath);
+    String encodedEntropy = await SecureStorageHelper.instance.get(keyPath);
     if (encodedEntropy.isEmpty) {
       encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
-      await SecureStorageHelper.set(keyPath, encodedEntropy);
+      await SecureStorageHelper.instance.set(keyPath, encodedEntropy);
     }
   }
 
@@ -360,8 +360,10 @@ class WalletManager {
     for (WalletData walletData in wallets.reversed) {
       WalletModel? walletModel = await DBHelper.walletDao!
           .getWalletByServerWalletID(walletData.wallet.id);
-      String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-      String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+      String userPrivateKey =
+          await SecureStorageHelper.instance.get("userPrivateKey");
+      String userPassphrase =
+          await SecureStorageHelper.instance.get("userPassphrase");
 
       String encodedEncryptedEntropy = "";
       Uint8List entropy = Uint8List(0);
@@ -469,10 +471,11 @@ class WalletManager {
     WalletManager.apiEnv = apiEnv;
     // await proton_api.initApiService(
     //     userName: 'qqqq', password: 'qqqqqqqq');
-    String scopes = await SecureStorageHelper.get("scopes");
-    String uid = await SecureStorageHelper.get("sessionId");
-    String accessToken = await SecureStorageHelper.get("accessToken");
-    String refreshToken = await SecureStorageHelper.get("refreshToken");
+    String scopes = await SecureStorageHelper.instance.get("scopes");
+    String uid = await SecureStorageHelper.instance.get("sessionId");
+    String accessToken = await SecureStorageHelper.instance.get("accessToken");
+    String refreshToken =
+        await SecureStorageHelper.instance.get("refreshToken");
     String appVersion = "Other";
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
@@ -495,8 +498,8 @@ class WalletManager {
     logger.i("accessToken = '$accessToken';");
     logger.i("refreshToken = '$refreshToken';");
     if (Platform.isAndroid) {
-      appVersion = await SecureStorageHelper.get("appVersion");
-      userAgent = await SecureStorageHelper.get("userAgent");
+      appVersion = await SecureStorageHelper.instance.get("appVersion");
+      userAgent = await SecureStorageHelper.instance.get("userAgent");
     }
     if (Platform.isIOS) {
       appVersion = "android-wallet@1.0.0-dev";
@@ -524,8 +527,10 @@ class WalletManager {
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
-    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-    String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+    String userPrivateKey =
+        await SecureStorageHelper.instance.get("userPrivateKey");
+    String userPassphrase =
+        await SecureStorageHelper.instance.get("userPassphrase");
     List<AddressKey> addressKeys = [];
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
@@ -534,7 +539,9 @@ class WalletManager {
         try {
           String addressKeyPassphrase = proton_crypto.decrypt(
               userPrivateKey, userPassphrase, addressKeyToken);
-          addressKeys.add(AddressKey(privateKey: addressKeyPrivateKey, passphrase: addressKeyPassphrase));
+          addressKeys.add(AddressKey(
+              privateKey: addressKeyPrivateKey,
+              passphrase: addressKeyPassphrase));
         } catch (e) {
           logger.e(e.toString());
         }
@@ -546,7 +553,7 @@ class WalletManager {
   static Future<void> fetchWalletTransactions() async {
     List<AddressKey> addressKeys = await getAddressKeys();
     List<WalletModel> wallets =
-    (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
+        (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
 
     for (WalletModel walletModel in wallets) {
       await handleWalletTransactions(walletModel, addressKeys);
@@ -555,31 +562,30 @@ class WalletManager {
 
   static Future<void> handleWalletTransactions(
       WalletModel walletModel, List<AddressKey> addressKeys) async {
-
     List<WalletTransaction> walletTransactions = await proton_api
         .getWalletTransactions(walletId: walletModel.serverWalletID);
 
     for (WalletTransaction walletTransaction in walletTransactions) {
-      await handleWalletTransaction(walletModel, addressKeys, walletTransaction);
+      await handleWalletTransaction(
+          walletModel, addressKeys, walletTransaction);
     }
   }
 
-  static Future<void> handleWalletTransaction(WalletModel walletModel, List<AddressKey> addressKeys, WalletTransaction walletTransaction) async{
+  static Future<void> handleWalletTransaction(WalletModel walletModel,
+      List<AddressKey> addressKeys, WalletTransaction walletTransaction) async {
     DateTime now = DateTime.now();
     String txid = "";
     for (AddressKey addressKey in addressKeys) {
       try {
         txid = addressKey.decrypt(walletTransaction.transactionId);
-        if (txid.isNotEmpty){
+        if (txid.isNotEmpty) {
           break;
         }
       } catch (e) {
         logger.e(e.toString());
       }
     }
-    if (txid.isEmpty){
-
-    }
+    if (txid.isEmpty) {}
     String exchangeRateID = "";
     if (walletTransaction.exchangeRate != null) {
       exchangeRateID = walletTransaction.exchangeRate!.id;
@@ -592,7 +598,7 @@ class WalletManager {
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         hashedTransactionID:
-        utf8.encode(walletTransaction.hashedTransactionId ?? ""),
+            utf8.encode(walletTransaction.hashedTransactionId ?? ""),
         transactionID: walletTransaction.id,
         transactionTime: walletTransaction.transactionTime,
         exchangeRateID: exchangeRateID,
@@ -683,7 +689,9 @@ class WalletManager {
     }
   }
 
-  static Future<Map<String, dynamic>> getTransactionDetailsFromBlockStream(String txid, {String baseUrl = "https://blockstream.info/testnet/api"}) async {
+  static Future<Map<String, dynamic>> getTransactionDetailsFromBlockStream(
+      String txid,
+      {String baseUrl = "https://blockstream.info/testnet/api"}) async {
     final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -692,10 +700,12 @@ class WalletManager {
         'transaction_id': txid,
         'block_height': data['status']['block_height'],
         'timestamp': data['status']['block_time'],
-        'outputs': data['vout'].map((output) => {
-          'address': output['scriptpubkey_address'],
-          'value': output['value']
-        }).toList(),
+        'outputs': data['vout']
+            .map((output) => {
+                  'address': output['scriptpubkey_address'],
+                  'value': output['value']
+                })
+            .toList(),
         'fees': data['fee'],
       };
     } else {
