@@ -674,18 +674,26 @@ class WalletManager {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].values.first;
     } catch (e) {
-      // logger.e(e.toString());
-      return jsonString;
+      try {
+        var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
+        return jsonList.values.toList()[0];
+      } catch(e) {
+        return jsonString;
+      }
     }
   }
 
   static String getBitcoinAddressFromWalletTransaction(String jsonString) {
-    var jsonList = jsonDecode(jsonString) as List<dynamic>;
     try {
+      var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].keys.first;
     } catch (e) {
-      logger.e(e.toString());
-      return jsonString;
+      try {
+        var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
+        return jsonList.keys.toList()[0];
+      } catch(e) {
+        return jsonString;
+      }
     }
   }
 
