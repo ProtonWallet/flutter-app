@@ -45,6 +45,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<ProtonAddress> protonAddresses = [];
   int balance = 0;
   double feeRate = 1.0;
+  int validRecipientCount = 0;
   bool inReview = false;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
   bool amountTextControllerChanged = false;
@@ -211,12 +212,19 @@ class SendViewModelImpl extends SendViewModel {
         status: "loading bitcoin address..",
         maskType: EasyLoadingMaskType.black);
     await loadBitcoinAddresses();
+    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)){
+      validRecipientCount++;
+    }
     EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
   }
 
   @override
   void removeRecipient(int index) {
+    String recipient = recipents[index];
+    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipient]!)){
+      validRecipientCount--;
+    }
     recipents.removeAt(index);
     datasourceChangedStreamController.add(this);
   }
