@@ -459,6 +459,9 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectAccount(AccountModel accountModel) async {
     await selectWallet(accountModel.walletID);
+    if (currentAccount != null && currentAccount!.serverAccountID != accountModel.serverAccountID){
+      currentHistoryPage = 0;
+    }
     currentAccount = accountModel;
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
@@ -589,7 +592,6 @@ class HomeViewModelImpl extends HomeViewModel {
     history = newHistory;
     userLabels = newUserLabels;
     fromEmails = newFromEmails;
-    currentHistoryPage = 0;
 
     historyInProgress = newHistoryInProgress;
     userLabelsInProgress = newUserLabelsInProgress;

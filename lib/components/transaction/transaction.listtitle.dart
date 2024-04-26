@@ -81,14 +81,14 @@ class TransactionListTitle extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(address,
-                              style: FontManager.body2Regular(
+                              style: FontManager.captionRegular(
                                   ProtonColors.textNorm)),
                           isSend
                               ? Text(Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt()),
-                                  style: FontManager.body2Regular(
+                                  style: FontManager.captionRegular(
                                       ProtonColors.signalError))
                               : Text("+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
-                                  style: FontManager.body2Regular(
+                                  style: FontManager.captionRegular(
                                       ProtonColors.signalSuccess)),
                         ]),
                     Row(
@@ -108,11 +108,11 @@ class TransactionListTitle extends StatelessWidget {
                           isSend
                               ? Text(
                                   "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
-                                  style: FontManager.body2Regular(
+                                  style: FontManager.captionRegular(
                                       ProtonColors.textHint))
                               : Text(
                                   "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.toStringAsFixed(defaultDisplayDigits)}",
-                                  style: FontManager.body2Regular(
+                                  style: FontManager.captionRegular(
                                       ProtonColors.textHint))
                         ]),
                     if (note != "")

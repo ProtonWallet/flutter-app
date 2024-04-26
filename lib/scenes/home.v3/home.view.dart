@@ -1668,7 +1668,7 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(CommonHelper.getFirstNChar(walletModel.name, 12),
-                    style: FontManager.body2Median(
+                    style: FontManager.captionSemiBold(
                         AvatarColorHelper.getTextColor(
                             viewModel.userWallets.indexOf(walletModel)))),
                 Text("${walletModel.accountCount} accounts",
@@ -1716,8 +1716,8 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                             children: [
                               Text(
                                   CommonHelper.getFirstNChar(
-                                      accountModel.labelDecrypt, 12),
-                                  style: FontManager.captionSemiBold(
+                                      accountModel.labelDecrypt, 20),
+                                  style: FontManager.captionMedian(
                                       ProtonColors.white)),
                             ],
                           ),
@@ -1771,7 +1771,7 @@ Widget getWalletBalanceWidget(
             ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}"
             : Provider.of<UserSettingProvider>(context)
                 .getBitcoinUnitLabel(walletModel.balance.toInt()),
-        style: FontManager.captionSemiBold(AvatarColorHelper.getTextColor(
+        style: FontManager.captionMedian(AvatarColorHelper.getTextColor(
             viewModel.userWallets.indexOf(walletModel)))),
     Text(
         viewModel.customFiatCurrency
