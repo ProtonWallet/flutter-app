@@ -17,7 +17,6 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
-import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -132,7 +131,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
       String encryptedLabel = await WalletKeyHelper.encrypt(secretKey, "");
 
-      String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
+      String userPrivateKey =
+          await SecureStorageHelper.instance.get("userPrivateKey");
       String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
       DateTime now = DateTime.now();
       WalletTransaction walletTransaction =

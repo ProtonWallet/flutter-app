@@ -40,7 +40,7 @@ void main() async {
   await FirebaseMessagingHelper.init();
   await LocalAuth.init();
   await DBHelper.init();
-  SecureStorageHelper.init();
+  SecureStorageHelper.init(null);
   await RustLib.init();
   await setupLogger();
   await test(i: 12);

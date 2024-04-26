@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -460,6 +459,9 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectAccount(AccountModel accountModel) async {
     await selectWallet(accountModel.walletID);
+    if (currentAccount != null && currentAccount!.serverAccountID != accountModel.serverAccountID){
+      currentHistoryPage = 0;
+    }
     currentAccount = accountModel;
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
@@ -485,8 +487,10 @@ class HomeViewModelImpl extends HomeViewModel {
     Map<int, bool> transactionMap = {};
 
     List<TransactionDetails> newHistory = [];
-    String userPrivateKey = await SecureStorageHelper.get("userPrivateKey");
-    String userPassphrase = await SecureStorageHelper.get("userPassphrase");
+    String userPrivateKey =
+        await SecureStorageHelper.instance.get("userPrivateKey");
+    String userPassphrase =
+        await SecureStorageHelper.instance.get("userPassphrase");
 
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
@@ -559,7 +563,7 @@ class HomeViewModelImpl extends HomeViewModel {
               secretKey!, utf8.decode(transactionModel.label));
 
           String txid = utf8.decode(transactionModel.externalTransactionID);
-          if (txid.isEmpty){
+          if (txid.isEmpty) {
             continue;
           }
           Map<String, dynamic> transactionDetail =
@@ -588,7 +592,6 @@ class HomeViewModelImpl extends HomeViewModel {
     history = newHistory;
     userLabels = newUserLabels;
     fromEmails = newFromEmails;
-    currentHistoryPage = 0;
 
     historyInProgress = newHistoryInProgress;
     userLabelsInProgress = newUserLabelsInProgress;

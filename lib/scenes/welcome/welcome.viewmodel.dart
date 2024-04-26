@@ -39,7 +39,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   Future<void> _localLogin() async {
     if (!hadLocallogin) {
       hadLocallogin = true;
-      if (await SecureStorageHelper.get("sessionId") != "") {
+      if (await SecureStorageHelper.instance.get("sessionId") != "") {
         // need also check if current session is same env with current env
 
         loginResume();
@@ -63,19 +63,22 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> loginResume() async {
-    if (await SecureStorageHelper.get("sessionId") != "") {
+    if (await SecureStorageHelper.instance.get("sessionId") != "") {
       await userSessionProvider.login(
-          userId: await SecureStorageHelper.get("userId"),
-          userMail: await SecureStorageHelper.get("userMail"),
-          userName: await SecureStorageHelper.get("userName"),
-          userDisplayName: await SecureStorageHelper.get("userDisplayName"),
-          sessionId: await SecureStorageHelper.get("sessionId"),
-          accessToken: await SecureStorageHelper.get("accessToken"),
-          refreshToken: await SecureStorageHelper.get("refreshToken"),
-          scopes: await SecureStorageHelper.get("scopes"),
-          userKeyID: await SecureStorageHelper.get("userKeyID"),
-          userPrivateKey: await SecureStorageHelper.get("userPrivateKey"),
-          userPassphrase: await SecureStorageHelper.get("userPassphrase"));
+          userId: await SecureStorageHelper.instance.get("userId"),
+          userMail: await SecureStorageHelper.instance.get("userMail"),
+          userName: await SecureStorageHelper.instance.get("userName"),
+          userDisplayName:
+              await SecureStorageHelper.instance.get("userDisplayName"),
+          sessionId: await SecureStorageHelper.instance.get("sessionId"),
+          accessToken: await SecureStorageHelper.instance.get("accessToken"),
+          refreshToken: await SecureStorageHelper.instance.get("refreshToken"),
+          scopes: await SecureStorageHelper.instance.get("scopes"),
+          userKeyID: await SecureStorageHelper.instance.get("userKeyID"),
+          userPrivateKey:
+              await SecureStorageHelper.instance.get("userPrivateKey"),
+          userPassphrase:
+              await SecureStorageHelper.instance.get("userPassphrase"));
       APIHelper.init(
           userSessionProvider.userSession.accessToken,
           userSessionProvider.userSession.sessionId,
@@ -100,9 +103,9 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         userDisplayName: userInfo["userDisplayName"] ?? "cccc",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
             "iQB00Kq8ksPAMdCj2rTtlyC8CUvNPU5agboi_RvJ2-qdBCvzmd4XiEG_GM8B0QdMxiyZ-zV6i9kGD3nRkBXg_Q==",
@@ -127,7 +130,7 @@ T6hEc59huSerA/AE
 =OS/z
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-        userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
+            userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
@@ -144,9 +147,9 @@ T6hEc59huSerA/AE
         userDisplayName: userInfo["userDisplayName"] ?? "qqqq",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
             "PgAdNsuQAuUp2i8uJbMXLTrXol5VCgml_lFqEBtjyayHScOjI6hqP_Xr5hrog6FvUsrQO1MNV0ym-e-SzAZ0jQ==",
@@ -171,7 +174,7 @@ F24EdYKKQW+rWlkP
 =8SuV
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-        userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
+            userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
@@ -293,10 +296,10 @@ ydJHDOOvI+zz/2tadhbwT6A=
               userKeyID: userInfo["userKeyID"] ?? "",
               userPrivateKey: userInfo["userPrivateKey"] ?? "",
               userPassphrase: userInfo["userPassphrase"] ?? "");
-          await SecureStorageHelper.set(
-              "appVersion", userInfo["appVersion"] ?? "");
-          await SecureStorageHelper.set(
-              "userAgent", userInfo["userAgent"] ?? "");
+          await SecureStorageHelper.instance
+              .set("appVersion", userInfo["appVersion"] ?? "");
+          await SecureStorageHelper.instance
+              .set("userAgent", userInfo["userAgent"] ?? "");
           APIHelper.init(
               userSessionProvider.userSession.accessToken,
               userSessionProvider.userSession.sessionId,
