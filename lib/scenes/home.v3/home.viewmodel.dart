@@ -636,9 +636,7 @@ class HomeViewModelImpl extends HomeViewModel {
     if (_historyTransactions.length != newHistoryTransactions.length) {
       _historyTransactions = newHistoryTransactions;
       searchTransactions();
-      logger.i("Loading new transaction!!!");
     }
-    logger.i("finish checking new transaction!!!");
     datasourceStreamSinkAdd();
     isLoadingTransactionHistory = false;
   }
