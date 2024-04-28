@@ -290,9 +290,9 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  Future<void> loadDiscoverContents() async{
+  Future<void> loadDiscoverContents() async {
     List discoverJsonContents = await ProtonFeedItem.loadJsonFromAsset();
-    for (Map<String, dynamic> discoverJsonContent in discoverJsonContents){
+    for (Map<String, dynamic> discoverJsonContent in discoverJsonContents) {
       protonFeedItems.add(ProtonFeedItem.fromJson(discoverJsonContent));
     }
   }
@@ -430,6 +430,8 @@ class HomeViewModelImpl extends HomeViewModel {
     if (currentAccount != null &&
         currentAccount!.serverAccountID != accountModel.serverAccountID) {
       currentHistoryPage = 0;
+      confirmed = 0;
+      unconfirmed = 0;
     }
     currentAccount = accountModel;
     wallet = await WalletManager.loadWalletWithID(
@@ -473,10 +475,12 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
-
+    int newConfirmed = 0;
+    int newUnconfirmed = 0;
     if (wallet != null) {
       List<TransactionDetails> transactionHistoryFromBDK =
           await _lib.getAllTransactions(wallet!);
+      newConfirmed = transactionHistoryFromBDK.length;
       SecretKey? secretKey =
           await WalletManager.getWalletKey(currentWallet!.serverWalletID);
 
@@ -562,8 +566,9 @@ class HomeViewModelImpl extends HomeViewModel {
           }
         }
         bool isSent = true;
+        String user = WalletManager.getEmailFromWalletTransaction(toList);
         for (ProtonAddress protonAddress in protonAddresses) {
-          if (toList == protonAddress.email) {
+          if (user == protonAddress.email) {
             isSent = false;
             break;
           }
@@ -586,6 +591,7 @@ class HomeViewModelImpl extends HomeViewModel {
         if (isSent) {
           amountInSATS = -amountInSATS;
         }
+        newUnconfirmed++;
         newHistoryTransactionsMap[txID] = HistoryTransaction(
             txID: txID,
             amountInSATS: amountInSATS,
@@ -610,8 +616,12 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
     });
-    if (_historyTransactions.length != newHistoryTransactions.length) {
+    if (_historyTransactions.length != newHistoryTransactions.length ||
+        newUnconfirmed != unconfirmed ||
+        newConfirmed != confirmed) {
       _historyTransactions = newHistoryTransactions;
+      confirmed = newConfirmed;
+      unconfirmed = newUnconfirmed;
       searchTransactions();
     }
     datasourceStreamSinkAdd();
@@ -736,11 +746,6 @@ class HomeViewModelImpl extends HomeViewModel {
         await _lib.syncWallet(blockchain!, wallet!);
         var walletBalance = await wallet!.getBalance();
         balance = walletBalance.total;
-        var unconfirmedList = await _lib.getUnConfirmedTransactions(wallet!);
-        unconfirmed = unconfirmedList.length;
-
-        var confirmedList = await _lib.getConfirmedTransactions(wallet!);
-        confirmed = confirmedList.length;
         datasourceStreamSinkAdd();
         isSyncingMap[serverAccountID] = false;
         logger.d(

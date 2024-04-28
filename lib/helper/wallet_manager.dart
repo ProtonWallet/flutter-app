@@ -469,8 +469,6 @@ class WalletManager {
 
   static Future<void> initMuon(ApiEnv apiEnv) async {
     WalletManager.apiEnv = apiEnv;
-    // await proton_api.initApiService(
-    //     userName: 'qqqq', password: 'qqqqqqqq');
     String scopes = await SecureStorageHelper.instance.get("scopes");
     String uid = await SecureStorageHelper.instance.get("sessionId");
     String accessToken = await SecureStorageHelper.instance.get("accessToken");
@@ -480,19 +478,14 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = "dyletbzu6tnojajgmhkhltowh2gua37g";
-      accessToken = "3baactqvp2nn5yuldphipto6locncjit";
-      refreshToken = "doj2trgsofzel4xkellzf2nh3yoiqiyh";
-      // //
-      // // // // user "qqqq"
-      uid = "gjzto3cy65qvlp72pkotadin4wryysmo";
-      accessToken = "rynnwet3ezbyqc6rnmlyjlfyj6dr27di";
-      refreshToken = "5lfmaf72gjyryeqy5e7t5jh5t2e3x2kz";
-
-      // // user "cccc"
-      // uid = "jaohw4to23x5qp4zpgj4ktucbdyg5xgf";
-      // accessToken = "ubaq66ba6r4r6hjnep366peoczfmyudf";
-      // refreshToken = "ubaq66ba6r4r6hjnep366peoczfmyudf";
+      uid = "gmvyx6fhteu4w4xgghsruafso2243mp3";
+      accessToken = "2uzaq4pxnf7qhno6hgfzo2wzbeoux4um";
+      refreshToken = "rw2mmfy4ryummav5vksvlazj5bgb2odw";
+      //
+      // user "qqqq"
+      // uid = "pb77kwsitejue43sybqwytlu7mkaaf24";
+      // accessToken = "vtwkhh75r377lnl3jphsiocvbdp5p47n";
+      // refreshToken = "chn52wqi25red7sjotxnzkkhj4em4yne";
     }
     logger.i("uid = '$uid';");
     logger.i("accessToken = '$accessToken';");
@@ -647,7 +640,7 @@ class WalletManager {
             walletAccountId: serverAccountID,
             onlyRequest: 0);
     for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
-      if (walletBitcoinAddress.fetched == 0) {
+      if (walletBitcoinAddress.fetched == 0 && walletBitcoinAddress.used == 0) {
         unFetchedBitcoinAddressCount++;
       }
     }
