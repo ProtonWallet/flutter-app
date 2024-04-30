@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:wallet/helper/bdk/mnemonic.dart';
+import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -46,9 +47,15 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
     Future.delayed(const Duration(microseconds: 100), () {
       startAnimate(true);
     });
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      coordinator.showPassphrase(strMnemonic);
-    });
+    bool hasWallet = await WalletManager.hasWallet();
+    if (hasWallet == false){
+      await WalletManager.autoCreateWallet();
+      coordinator.pop();
+    } else {
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        coordinator.showPassphrase(strMnemonic);
+      });
+    }
     return;
   }
 
