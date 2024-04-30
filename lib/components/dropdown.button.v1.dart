@@ -45,8 +45,8 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
   Widget buildWithList(BuildContext buildContext) {
     return Container(
         width: widget.width,
-        padding: EdgeInsets.symmetric(
-            horizontal: defaultPadding, vertical: widget.paddingSize ?? 12),
+        padding: EdgeInsets.only(
+            left: defaultPadding, right: 8, top: widget.paddingSize ?? 12, bottom: widget.paddingSize ?? 12),
         decoration: BoxDecoration(
           color: widget.backgroundColor??ProtonColors.white,
           // border: Border.all(color: Colors.black, width: 1.0),

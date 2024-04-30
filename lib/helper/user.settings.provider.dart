@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart'
@@ -54,13 +54,37 @@ class UserSettingProvider with ChangeNotifier {
         "Updating exchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}");
   }
 
+  double getNotionalInFiatCurrency(int amountInSATS) {
+    FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
+    if (fiatCurrency2Info.containsKey(fiatCurrency)) {
+      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      return walletUserSetting.exchangeRate.exchangeRate *
+          amountInSATS /
+          fiatCurrencyInfo.cents /
+          100000000;
+    }
+    return walletUserSetting.exchangeRate.exchangeRate *
+        amountInSATS /
+        100000000;
+  }
+
+
+  double getNotionalInBTC(double amountInFiatCurrency) {
+    FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
+    if (fiatCurrency2Info.containsKey(fiatCurrency)) {
+      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      return amountInFiatCurrency / (walletUserSetting.exchangeRate.exchangeRate / fiatCurrencyInfo.cents);
+    }
+    return amountInFiatCurrency / (walletUserSetting.exchangeRate.exchangeRate / 100);
+  }
+
   String getFiatCurrencyName() {
     return walletUserSetting.fiatCurrency.name.toString().toUpperCase();
   }
 
   String getFiatCurrencySign() {
-    return fiatCurrency2Sign.containsKey(walletUserSetting.fiatCurrency)
-        ? fiatCurrency2Sign[walletUserSetting.fiatCurrency] ?? "\$"
+    return fiatCurrency2Info.containsKey(walletUserSetting.fiatCurrency)
+        ? fiatCurrency2Info[walletUserSetting.fiatCurrency]!.sign
         : "\$";
   }
 }

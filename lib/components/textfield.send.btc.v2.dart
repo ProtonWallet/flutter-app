@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -22,6 +21,7 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final FiatCurrency currency;
   final int currencyExchangeRate;
   final double btcBalance;
+  final UserSettingProvider userSettingProvider;
 
   const TextFieldSendBTCV2(
       {super.key,
@@ -38,6 +38,7 @@ class TextFieldSendBTCV2 extends StatefulWidget {
       required this.currency,
       required this.currencyExchangeRate,
       required this.btcBalance,
+      required this.userSettingProvider,
       this.checkOfErrorOnFocusChange = true});
 
   @override
@@ -145,12 +146,11 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              widget.textController.text = ((widget.btcBalance *
-                                              widget.currencyExchangeRate *
-                                              10)
-                                          .floor() /
-                                      1000)
-                                  .toStringAsFixed(3);
+                              widget.textController.text =
+                                  widget.userSettingProvider.getNotionalInFiatCurrency(
+                                          (widget.btcBalance * 100000000)
+                                              .toInt())
+                                      .toStringAsFixed(3);
                             },
                             child: Container(
                                 padding:
@@ -174,8 +174,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                  Provider.of<UserSettingProvider>(context)
-                      .getBitcoinUnitLabel(getEstimateSats()),
+                  widget.userSettingProvider.getBitcoinUnitLabel(getEstimateSats()),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],
@@ -190,10 +189,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     } catch (e) {
       amount = 0.0;
     }
-    double btcAmount = CommonHelper.getEstimateValue(
-        amount: amount,
-        isBitcoinBase: false,
-        currencyExchangeRate: widget.currencyExchangeRate);
+    double btcAmount =
+    widget.userSettingProvider.getNotionalInBTC(amount);
     return (btcAmount * 100000000).toInt();
   }
 }

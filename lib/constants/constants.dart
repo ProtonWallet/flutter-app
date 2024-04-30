@@ -19,21 +19,9 @@ const String userSettingsShowWalletRecovery = "userSettings.showWalletRecovery";
 const String userSettingsFiatCurrency = "userSettings.fiatCurrency";
 const String userSettingsBitcoinUnit = "userSettings.bitcoinUnit";
 
-// TODO:: those 3 constants should be moved to Rust and it could be auto gen
-const List<FiatCurrency> fiatCurrencies = [
-  FiatCurrency.usd,
-  FiatCurrency.eur,
-  FiatCurrency.chf
-];
-
 const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.btc,
   BitcoinUnit.mbtc,
   BitcoinUnit.sats,
 ];
 
-const Map<FiatCurrency, String> fiatCurrency2Sign = {
-  FiatCurrency.usd: "\$",
-  FiatCurrency.eur: "€",
-  FiatCurrency.chf: "₣",
-};

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -10,6 +11,7 @@ import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -19,6 +21,7 @@ import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -54,6 +57,7 @@ abstract class HistoryDetailViewModel
   Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
   int lastExchangeRateTime = 0;
   FiatCurrency userFiatCurrency;
+  late UserSettingProvider userSettingProvider;
 
   void editMemo();
 
@@ -81,6 +85,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode.addListener(() {
       userFinishMemo();
     });
+    userSettingProvider = Provider.of<UserSettingProvider>(
+        Coordinator.navigatorKey.currentContext!,
+        listen: false);
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
     SecretKey? secretKey =
@@ -101,7 +108,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         blockConfirmTimestamp = transaction.confirmationTime?.timestamp;
         amount = transaction.received.toDouble() - transaction.sent.toDouble();
         fee = transaction.fee!.toDouble();
-        notional = CurrencyHelper.sat2usdt(amount).abs();
+        notional =
+            userSettingProvider.getNotionalInFiatCurrency(amount.toInt()).abs();
         isSend = amount < 0;
         foundedInBDKHistory = true;
         datasourceChangedStreamController.sink.add(this);
@@ -118,7 +126,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 transactionDetail['outputs'][0]['value'])
             .toDouble();
         fee = transactionDetail['fees'].toDouble();
-        notional = CurrencyHelper.sat2usdt(amount).abs();
+        notional =
+            userSettingProvider.getNotionalInFiatCurrency(amount.toInt()).abs();
         isSend = true; // TODO:: fix this logic
         datasourceChangedStreamController.sink.add(this);
       } catch (e) {
