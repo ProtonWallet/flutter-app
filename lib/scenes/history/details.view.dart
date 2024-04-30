@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -195,7 +196,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                       ButtonV5(
                           onPressed: () {
                             launchUrl(Uri.parse(
-                                "https://blockstream.info/testnet/search?q=${viewModel.txid}"));
+                                "${appConfig.esploraBaseUrl}search?q=${viewModel.txid}"));
                           },
                           text: S.of(context).view_on_blockstream,
                           width: MediaQuery.of(context).size.width,

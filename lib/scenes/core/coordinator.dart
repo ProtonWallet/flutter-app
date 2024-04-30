@@ -35,8 +35,16 @@ abstract class Coordinator implements ViewNavigator {
     );
   }
 
+  void pop() {
+    Coordinator.navigatorKey.currentState?.pop();
+  }
+
   void pushCustom(ViewBase view, {bool fullscreenDialog = false}) {
     Coordinator.navigatorKey.currentState
         ?.push(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+  }
+  void pushReplacementCustom(ViewBase view, {bool fullscreenDialog = false}) {
+    Coordinator.navigatorKey.currentState
+        ?.pushReplacement(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
   }
 }
