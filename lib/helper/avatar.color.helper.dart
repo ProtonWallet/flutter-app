@@ -14,24 +14,24 @@ class AvatarColor {
 class AvatarColorHelper {
   static List<AvatarColor> colors = [
     AvatarColor(
-      ProtonColors.orange1Text,
-      ProtonColors.orange1Background,
+      ProtonColors.yellow1Text,
+      ProtonColors.yellow1Background,
     ),
+    // AvatarColor(
+    //   ProtonColors.orange1Text,
+    //   ProtonColors.orange1Background,
+    // ),
     AvatarColor(
       ProtonColors.pink1Text,
       ProtonColors.pink1Background,
     ),
-    AvatarColor(
-      ProtonColors.purple1Text,
-      ProtonColors.purple1Background,
-    ),
+    // AvatarColor(
+    //   ProtonColors.purple1Text,
+    //   ProtonColors.purple1Background,
+    // ),
     AvatarColor(
       ProtonColors.blue1Text,
       ProtonColors.blue1Background,
-    ),
-    AvatarColor(
-      ProtonColors.yellow1Text,
-      ProtonColors.yellow1Background,
     ),
     AvatarColor(
       ProtonColors.green1Text,
@@ -40,11 +40,11 @@ class AvatarColorHelper {
   ];
 
   static Color getBackgroundColor(int index) {
-    return colors[index % 6].backgroundColor;
+    return colors[index % max(colors.length, 1)].backgroundColor;
   }
 
   static Color getTextColor(int index) {
-    return colors[index % 6].textColor;
+    return colors[index % max(colors.length, 1)].textColor;
   }
 
   static int getIndexFromString(String string) {

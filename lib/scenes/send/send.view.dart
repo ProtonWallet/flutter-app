@@ -102,9 +102,9 @@ class SendView extends ViewBase<SendViewModel> {
                             showSelectTransactionFeeMode(context, viewModel);
                           },
                           content:
-                              "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.feeRate).toStringAsFixed(3)}",
+                              "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.estimatedFeeInSAT.toDouble()).toStringAsFixed(3)}",
                           memo: Provider.of<UserSettingProvider>(context)
-                              .getBitcoinUnitLabel(viewModel.feeRate.toInt()),
+                              .getBitcoinUnitLabel(viewModel.estimatedFeeInSAT),
                         ),
                         const Divider(
                           thickness: 0.2,
@@ -446,6 +446,10 @@ class SendView extends ViewBase<SendViewModel> {
                               valueNotifier: viewModel.fiatCurrencyNotifier),
                         ]),
                         const SizedBox(height: 20),
+                        // Text(viewModel.feeRateHighPriority.toStringAsFixed(6)),
+                        // Text(
+                        //     viewModel.feeRateMedianPriority.toStringAsFixed(6)),
+                        // Text(viewModel.feeRateLowPriority.toStringAsFixed(6)),
                       ]))))),
       Container(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -476,7 +480,7 @@ void showSelectTransactionFeeMode(
       ),
       builder: (BuildContext context) {
         return Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.all(defaultPadding),
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,37 +491,63 @@ void showSelectTransactionFeeMode(
                   ListTile(
                     leading: const Icon(Icons.keyboard_double_arrow_up_rounded,
                         size: 18),
-                    title: Text("High Priority",
-                        style: FontManager.body2Regular(ProtonColors.textNorm)),
+                    title: getEstimatedFeeInfo(context, viewModel,
+                        TransactionFeeMode.highPriority),
+                    trailing: viewModel.userTransactionFeeMode ==
+                            TransactionFeeMode.highPriority
+                        ? SvgPicture.asset(
+                            "assets/images/icon/ic-checkmark.svg",
+                            fit: BoxFit.fill,
+                            width: 20,
+                            height: 20)
+                        : null,
                     onTap: () {
                       viewModel.updateTransactionFeeMode(
                           TransactionFeeMode.highPriority);
                       Navigator.of(context).pop();
                     },
                   ),
-                  const SizedBox(
-                    height: 5,
+                  const Divider(
+                    thickness: 0.2,
+                    height: 1,
                   ),
                   ListTile(
                     leading:
                         const Icon(Icons.horizontal_rule_rounded, size: 18),
-                    title: Text("Median Priority",
-                        style: FontManager.body2Regular(ProtonColors.textNorm)),
+                    title: getEstimatedFeeInfo(context, viewModel,
+                        TransactionFeeMode.medianPriority),
+                    trailing: viewModel.userTransactionFeeMode ==
+                            TransactionFeeMode.medianPriority
+                        ? SvgPicture.asset(
+                            "assets/images/icon/ic-checkmark.svg",
+                            fit: BoxFit.fill,
+                            width: 20,
+                            height: 20)
+                        : null,
                     onTap: () {
                       viewModel.updateTransactionFeeMode(
                           TransactionFeeMode.medianPriority);
                       Navigator.of(context).pop();
                     },
                   ),
-                  const SizedBox(
-                    height: 5,
+                  const Divider(
+                    thickness: 0.2,
+                    height: 1,
                   ),
                   ListTile(
                     leading: const Icon(
                         Icons.keyboard_double_arrow_down_rounded,
                         size: 18),
-                    title: Text("Low Priority",
-                        style: FontManager.body2Regular(ProtonColors.textNorm)),
+                    trailing: viewModel.userTransactionFeeMode ==
+                            TransactionFeeMode.lowPriority
+                        ? SvgPicture.asset(
+                            "assets/images/icon/ic-checkmark.svg",
+                            fit: BoxFit.fill,
+                            width: 20,
+                            height: 20)
+                        : null,
+                    title: getEstimatedFeeInfo(
+                        context, viewModel, TransactionFeeMode.lowPriority),
                     onTap: () {
                       viewModel.updateTransactionFeeMode(
                           TransactionFeeMode.lowPriority);
@@ -526,6 +556,39 @@ void showSelectTransactionFeeMode(
                   ),
                 ]));
       });
+}
+
+Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
+    TransactionFeeMode transactionFeeMode) {
+  int estimatedFee = 0;
+  String feeModeStr = "";
+  switch (transactionFeeMode) {
+    case TransactionFeeMode.highPriority:
+      feeModeStr = S.of(context).high_priority;
+      estimatedFee =
+          (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).toInt();
+      break;
+    case TransactionFeeMode.medianPriority:
+      feeModeStr = S.of(context).median_priority;
+      estimatedFee =
+          (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).toInt();
+      break;
+    case TransactionFeeMode.lowPriority:
+      feeModeStr = S.of(context).low_priority;
+      estimatedFee =
+          (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).toInt();
+      break;
+  }
+  String estimatedFeeInFiatCurrency =
+      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(estimatedFee.toDouble()).toStringAsFixed(3)}";
+  String estimatedFeeInSATS = Provider.of<UserSettingProvider>(context)
+      .getBitcoinUnitLabel(estimatedFee);
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+    Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
+    Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)", style: FontManager.captionRegular(ProtonColors.textHint)),
+  ]);
 }
 
 Widget getTransactionFeeModeWidget(
