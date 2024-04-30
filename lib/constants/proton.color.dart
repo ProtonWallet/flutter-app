@@ -34,7 +34,7 @@ class ProtonColors {
   static Color homepageProgressBarBackground =
       const Color.fromARGB(51, 255, 255, 255);
   static Color drawerBackground = const Color(0xFF222247);
-  static Color drawerBackgroundHighlight = const Color(0x16FFFFFF);
+  static Color drawerBackgroundHighlight = const Color(0x2AFFFFFF);
   static Color drawerButtonTextColor = const Color(0xFF222247);
   static Color drawerButtonBackground = const Color(0xFF44448F);
   static Color drawerWalletPlus = const Color(0xFF7B57FC);
@@ -50,8 +50,8 @@ class ProtonColors {
   static Color purple1Background = const Color(0x489c89ff);
   static Color blue1Text = const Color(0xff66b6ff);
   static Color blue1Background = const Color(0x4866b6ff);
-  static Color yellow1Text = const Color(0xffffe4c3);
-  static Color yellow1Background = const Color(0x88ffe4c3);
+  static Color yellow1Text = const Color(0xffFFC483);
+  static Color yellow1Background = const Color(0x88FFC483);
   static Color green1Text = const Color(0xff5fc88f);
   static Color green1Background = const Color(0x485fc88f);
 

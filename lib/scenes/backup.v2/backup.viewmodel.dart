@@ -15,7 +15,9 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   List<Item> itemList = [];
   int walletID;
   String strMnemonic = "";
+  bool inIntroduce = true;
   void setBackup();
+  void setIntroduce(bool introduce);
 }
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
@@ -55,4 +57,10 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   void move(NavigationIdentifier to) {}
+
+  @override
+  void setIntroduce(bool introduce) {
+    inIntroduce = introduce;
+    datasourceChangedStreamController.add(this);
+  }
 }

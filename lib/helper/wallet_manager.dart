@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -35,7 +37,7 @@ import 'bdk/helper.dart';
 class WalletManager {
   static final BdkLibrary _lib = BdkLibrary();
   static bool isFetchingWallets = false;
-  static ApiEnv apiEnv = jenner;
+  static ApiEnv apiEnv = pascal;
 
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
@@ -101,6 +103,61 @@ class WalletManager {
   static Future<void> removeEmailAddressInWalletAccount(
       EmailAddress address) async {
     await DBHelper.addressDao!.deleteByServerID(address.id);
+  }
+
+  static Future<void> autoCreateWallet() async {
+    Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
+    String strMnemonic = mnemonic.asString();
+
+    SecretKey secretKey = WalletKeyHelper.generateSecretKey();
+    String userPrivateKey =
+    await SecureStorageHelper.instance.get("userPrivateKey");
+    int passphrase = 0;
+    String encryptedMnemonic =
+    await WalletKeyHelper.encrypt(secretKey, strMnemonic);
+    String walletName = "Default Wallet";
+    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    CreateWalletReq walletReq = CreateWalletReq(
+      name: walletName,
+      isImported: WalletModel.createByProton,
+      type: WalletModel.typeOnChain,
+      hasPassphrase: passphrase,
+      userKeyId: APIHelper.userKeyID,
+      walletKey: base64Encode(
+          proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
+      fingerprint: "12345678", // TODO:: send correct fingerprint
+      mnemonic: encryptedMnemonic,
+    );
+
+    try {
+      WalletData walletData =
+      await proton_api.createWallet(walletReq: walletReq);
+      String serverWalletID = walletData.wallet.id;
+      CreateWalletAccountReq req = CreateWalletAccountReq(
+          label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
+          derivationPath: "m/84'/1'/0'",
+          scriptType: ScriptType.nativeSegWit.index);
+      WalletAccount walletAccount = await proton_api.createWalletAccount(
+        walletId: serverWalletID,
+        req: req,
+      );
+      int walletID = await WalletManager.insertOrUpdateWallet(
+          userID: 0,
+          name: walletName,
+          encryptedMnemonic: encryptedMnemonic,
+          passphrase: 0,
+          imported: WalletModel.createByProton,
+          priority: WalletModel.primary,
+          status: WalletModel.statusActive,
+          type: WalletModel.typeOnChain,
+          serverWalletID: serverWalletID);
+      await WalletManager.setWalletKey(serverWalletID,
+          secretKey); // need to set key first, so that we can decrypt for walletAccount
+      await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
+          ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,
@@ -478,9 +535,9 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = "gmvyx6fhteu4w4xgghsruafso2243mp3";
-      accessToken = "2uzaq4pxnf7qhno6hgfzo2wzbeoux4um";
-      refreshToken = "rw2mmfy4ryummav5vksvlazj5bgb2odw";
+      uid = '7uswipbkr5eeabxsnmouedtnhy4uoikk';
+      accessToken = '6i6mfmwomdo5xsx3p7epsewdrv5syrdm';
+      refreshToken = 'wwhx6vvgrwweeel7stxxtwg6oaldkksn';
       //
       // user "qqqq"
       // uid = "pb77kwsitejue43sybqwytlu7mkaaf24";
@@ -670,7 +727,7 @@ class WalletManager {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
         return jsonList.values.toList()[0];
-      } catch(e) {
+      } catch (e) {
         return jsonString;
       }
     }
@@ -684,7 +741,7 @@ class WalletManager {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
         return jsonList.keys.toList()[0];
-      } catch(e) {
+      } catch (e) {
         return jsonString;
       }
     }

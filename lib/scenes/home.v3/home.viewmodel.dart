@@ -79,8 +79,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hasMailIntegration = false;
   bool isFetching = false;
   bool isShowingNoInternet = false;
-  bool customFiatCurrency = false;
-  bool customBitcoinUnit = false;
   Map<int, List<AccountModel>> walletID2Accounts = {};
   Map<int, List<String>> accountID2IntegratedEmailIDs = {};
   List<ProtonAddress> protonAddresses = [];
@@ -121,14 +119,19 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void saveUserSettings();
 
+  void setSearchHistoryTextField(bool show);
+
   ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
 
   bool hideEmptyUsedAddresses = false;
   bool hadBackup = false;
+  bool hadBackupProtonAccount = false;
+  bool hadSetup2FA = false;
   bool hadSetupEmailIntegration = false;
   bool hadSetFiatCurrency = false;
+  bool showSearchHistoryTextField = false;
 
   void setOnBoard(BuildContext context);
 
@@ -180,7 +183,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   List<HistoryTransaction> getHistoryTransactionWithFilter();
 
   int balance = 0;
-  int totalTodoSteps = 3;
+  int totalTodoSteps = 5;
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
@@ -247,7 +250,6 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       WalletManager.initContacts();
       EventLoopHelper.start();
-      initialed = true;
     } catch (e) {
       protonApiSessionError = true;
       protonApiSessionErrorString = e.toString();
@@ -275,6 +277,7 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       logger.d(e.toString());
     }
+    initialed = true;
     syncWalletService();
     loadTransactionHistoryService();
     datasourceStreamSinkAdd();
@@ -583,6 +586,7 @@ class HomeViewModelImpl extends HomeViewModel {
             feeInSATS = transactionDetail['fees'];
             break;
           } catch (e) {
+            logger.i(txID);
             logger.i(transactionDetail);
             logger.e(e.toString());
           }
@@ -643,12 +647,12 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void setOnBoard(BuildContext context) {
+  void setOnBoard(BuildContext context) async{
     hasWallet = true;
-    Future.delayed(const Duration(milliseconds: 100), () {
-      coordinator.showSetupOnbaord();
-      datasourceStreamSinkAdd();
-    });
+    EasyLoading.show(
+        status: "creating default wallet..", maskType: EasyLoadingMaskType.black);
+    await WalletManager.autoCreateWallet();
+    EasyLoading.dismiss();
   }
 
   @override
@@ -837,6 +841,8 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     currentTodoStep = 0;
     currentTodoStep += hadBackup ? 1 : 0;
+    currentTodoStep += hadBackupProtonAccount ? 1 : 0;
+    currentTodoStep += hadSetup2FA ? 1 : 0;
     currentTodoStep += hadSetFiatCurrency ? 1 : 0;
     currentTodoStep += hadSetupEmailIntegration ? 1 : 0;
     datasourceStreamSinkAdd();
@@ -1065,4 +1071,10 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   void searchHistoryTransaction() {}
+
+  @override
+  void setSearchHistoryTextField(bool show) {
+    showSearchHistoryTextField = show;
+    datasourceStreamSinkAdd();
+  }
 }
