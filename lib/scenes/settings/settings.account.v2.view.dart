@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.session.dart';
-import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AccountInfoV2 extends StatelessWidget {

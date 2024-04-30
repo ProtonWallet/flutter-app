@@ -14,12 +14,12 @@ class SetupOnbaordCoordinator extends Coordinator {
 
   void showSetupCreate() {
     var view = SetupCreateCoordinator().start();
-    pushCustom(view);
+    pushReplacementCustom(view);
   }
 
   void showImportWallet() {
     var view = ImportCoordinator().start();
-    pushCustom(view);
+    pushReplacementCustom(view);
   }
 
   @override

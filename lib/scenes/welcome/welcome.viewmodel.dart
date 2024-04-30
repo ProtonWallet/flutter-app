@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -56,7 +57,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   @override
   Future<void> loadData() async {
-    env = pascal;
+    env = appConfig.apiEnv;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
     _localLogin();

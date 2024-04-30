@@ -18,6 +18,7 @@ import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -31,7 +32,6 @@ import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/discover/discover.viewmodel.dart';
@@ -637,7 +637,7 @@ void showAddWalletAccountGuide(
       ),
       builder: (BuildContext context) {
         ValueNotifier scriptTypeValueNotifier =
-            ValueNotifier(ScriptType.nativeSegWit);
+            ValueNotifier(appConfig.scriptType);
         TextEditingController labelController = TextEditingController(text: "");
         return Padding(
             padding: EdgeInsets.only(
@@ -1069,9 +1069,11 @@ void showAdvanceAccountSetting(BuildContext context, HomeViewModel viewModel,
                 ListTile(
                     leading: Icon(Icons.delete_rounded,
                         size: 18, color: ProtonColors.signalError),
-                    title: Text(S.of(context).delete_account,
+                    title: Transform.translate(
+                        offset: const Offset(-8, 0),
+                        child: Text(S.of(context).delete_account,
                         style:
-                            FontManager.body2Regular(ProtonColors.signalError)),
+                            FontManager.body2Regular(ProtonColors.signalError))),
                     onTap: () {
                       Navigator.of(context).pop();
                       if (canDelete) {
@@ -1126,8 +1128,10 @@ void showAdvanceWalletSetting(BuildContext context, HomeViewModel viewModel) {
                 ListTile(
                     leading: Icon(Icons.refresh_rounded,
                         size: 18, color: ProtonColors.textNorm),
-                    title: Text(S.of(context).backup_wallet,
-                        style: FontManager.body2Regular(ProtonColors.textNorm)),
+                    title: Transform.translate(
+                        offset: const Offset(-8, 0),
+                        child: Text(S.of(context).backup_wallet,
+                        style: FontManager.body2Regular(ProtonColors.textNorm))),
                     onTap: () {
                       Navigator.of(context).pop();
                       viewModel.move(ViewIdentifiers.setupBackup);
@@ -1139,9 +1143,11 @@ void showAdvanceWalletSetting(BuildContext context, HomeViewModel viewModel) {
                 ListTile(
                     leading: Icon(Icons.delete_rounded,
                         size: 18, color: ProtonColors.signalError),
-                    title: Text(S.of(context).delete_wallet,
+                    title: Transform.translate(
+                        offset: const Offset(-8, 0),
+                        child: Text(S.of(context).delete_wallet,
                         style:
-                            FontManager.body2Regular(ProtonColors.signalError)),
+                            FontManager.body2Regular(ProtonColors.signalError))),
                     onTap: () {
                       Navigator.of(context).pop();
                       viewModel.move(ViewIdentifiers.walletDeletion);

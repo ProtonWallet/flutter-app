@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/network/api.helper.dart';
@@ -37,7 +38,7 @@ import 'bdk/helper.dart';
 class WalletManager {
   static final BdkLibrary _lib = BdkLibrary();
   static bool isFetchingWallets = false;
-  static ApiEnv apiEnv = pascal;
+  static ApiEnv apiEnv = appConfig.apiEnv;
 
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
@@ -111,10 +112,10 @@ class WalletManager {
 
     SecretKey secretKey = WalletKeyHelper.generateSecretKey();
     String userPrivateKey =
-    await SecureStorageHelper.instance.get("userPrivateKey");
+        await SecureStorageHelper.instance.get("userPrivateKey");
     int passphrase = 0;
     String encryptedMnemonic =
-    await WalletKeyHelper.encrypt(secretKey, strMnemonic);
+        await WalletKeyHelper.encrypt(secretKey, strMnemonic);
     String walletName = "Default Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
     CreateWalletReq walletReq = CreateWalletReq(
@@ -125,22 +126,15 @@ class WalletManager {
       userKeyId: APIHelper.userKeyID,
       walletKey: base64Encode(
           proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
-      fingerprint: "12345678", // TODO:: send correct fingerprint
+      fingerprint: "12345678",
+      // TODO:: send correct fingerprint
       mnemonic: encryptedMnemonic,
     );
 
     try {
       WalletData walletData =
-      await proton_api.createWallet(walletReq: walletReq);
+          await proton_api.createWallet(walletReq: walletReq);
       String serverWalletID = walletData.wallet.id;
-      CreateWalletAccountReq req = CreateWalletAccountReq(
-          label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
-          derivationPath: "m/84'/1'/0'",
-          scriptType: ScriptType.nativeSegWit.index);
-      WalletAccount walletAccount = await proton_api.createWalletAccount(
-        walletId: serverWalletID,
-        req: req,
-      );
       int walletID = await WalletManager.insertOrUpdateWallet(
           userID: 0,
           name: walletName,
@@ -153,8 +147,7 @@ class WalletManager {
           serverWalletID: serverWalletID);
       await WalletManager.setWalletKey(serverWalletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
-      await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
-          ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
+      addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
     } catch (e) {
       logger.e(e);
     }
@@ -237,11 +230,6 @@ class WalletManager {
     return DBHelper.accountDao!.getAccountCount(walletID);
   }
 
-  static String getDerivationPath(
-      {int purpose = 84, int coin = 1, int accountIndex = 0}) {
-    return "m/$purpose'/$coin'/$accountIndex'/0";
-  }
-
   static Future<bool> hasWallet() async {
     return await DBHelper.walletDao!.counts() > 0;
   }
@@ -257,12 +245,12 @@ class WalletManager {
       return;
     }
     String derivationPath = await getNewDerivationPath(
-        scriptType, walletID, CoinType.bitcoinTestnet,
+        scriptType, walletID, appConfig.coinType,
         internal: internal);
     CreateWalletAccountReq req = CreateWalletAccountReq(
         label: await WalletKeyHelper.encrypt(secretKey, label),
         derivationPath: derivationPath,
-        scriptType: ScriptType.nativeSegWit.index);
+        scriptType: appConfig.scriptType.index);
     WalletAccount walletAccount = await proton_api.createWalletAccount(
       walletId: serverWalletID,
       req: req,
@@ -748,8 +736,8 @@ class WalletManager {
   }
 
   static Future<Map<String, dynamic>> getTransactionDetailsFromBlockStream(
-      String txid,
-      {String baseUrl = "https://blockstream.info/testnet/api"}) async {
+      String txid) async {
+    String baseUrl = "${appConfig.esploraBaseUrl}api";
     final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
