@@ -20,7 +20,6 @@ class FiatCurrencyHelper {
   }
 }
 
-// TODO:: those 3 constants should be moved to Rust and it could be auto gen
 const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.usd,
   FiatCurrency.eur,
@@ -116,6 +115,8 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.vnd,
 ];
 
+/// These info comes from /api/wallet/v1/fiat-currencies
+/// Since change is unlikely, there's no need to load dynamically via API.
 final Map<FiatCurrency, FiatCurrencyInfo> fiatCurrency2Info = {
   FiatCurrency.all: FiatCurrencyInfo(symbol: 'all', sign: 'L', cents: 100),
   FiatCurrency.dzd: FiatCurrencyInfo(symbol: 'dzd', sign: 'د.ج', cents: 100),
