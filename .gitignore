@@ -147,3 +147,7 @@ env.var.g.dart
 
 # tmp databases
 *.sqlite
+
+
+# ui tests
+test/golden/failures/

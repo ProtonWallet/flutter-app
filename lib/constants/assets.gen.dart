@@ -106,26 +106,6 @@ class $AssetsImagesIconGen {
   AssetGenImage get discoverWhatIsBitcoin =>
       const AssetGenImage('assets/images/icon/discover_what_is_bitcoin.png');
 
-  /// File path: assets/images/icon/discover_placeholder_0.svg
-  SvgGenImage get discoverPlaceholder0 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_0.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_1.svg
-  SvgGenImage get discoverPlaceholder1 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_1.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_2.svg
-  SvgGenImage get discoverPlaceholder2 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_2.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_3.svg
-  SvgGenImage get discoverPlaceholder3 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_3.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_4.svg
-  SvgGenImage get discoverPlaceholder4 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_4.svg');
-
   /// File path: assets/images/icon/do_transactions.svg
   SvgGenImage get doTransactions =>
       const SvgGenImage('assets/images/icon/do_transactions.svg');
@@ -218,13 +198,6 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/key.png
   AssetGenImage get key => const AssetGenImage('assets/images/icon/key.png');
-
-  /// File path: assets/images/icon/ic_message.svg
-  SvgGenImage get icMessage =>
-      const SvgGenImage('assets/images/icon/ic_message.svg');
-
-  /// File path: assets/images/icon/ic_note.svg
-  SvgGenImage get icNote => const SvgGenImage('assets/images/icon/ic_note.svg');
 
   /// File path: assets/images/icon/launch_icon.png
   AssetGenImage get launchIcon =>
