@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/protonmail.autocomplete.dart';
 import 'package:wallet/components/recipient.detail.dart';
 import 'package:wallet/components/tag.text.dart';
@@ -12,7 +12,6 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -296,7 +295,6 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionValueWidget(
       BuildContext context, SendViewModel viewModel) {
-    bool isBitcoinBase = false;
     double amount = 0.0;
     try {
       amount = double.parse(viewModel.amountTextController.text);
@@ -320,7 +318,6 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionTotalValueWidget(
       BuildContext context, SendViewModel viewModel) {
-    bool isBitcoinBase = false;
     double amount = 0.0;
     try {
       amount = double.parse(viewModel.amountTextController.text);
@@ -423,9 +420,10 @@ class SendView extends ViewBase<SendViewModel> {
                           const SizedBox(
                             width: 10,
                           ),
-                          DropdownButtonV1(
+                          DropdownButtonV2(
                               width: 90,
                               paddingSize: 2,
+                              maxSuffixIconWidth: 20,
                               backgroundColor: ProtonColors.backgroundProton,
                               items: fiatCurrencies,
                               itemsText: fiatCurrencies
