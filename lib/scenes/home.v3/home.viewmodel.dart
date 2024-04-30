@@ -259,6 +259,7 @@ class HomeViewModelImpl extends HomeViewModel {
     checkNetwork(); // no effect
     loadDiscoverContents();
     checkProtonAddresses();
+    refreshWithUserSettingProvider();
     fiatCurrencyNotifier.addListener(() async {
       updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
     });
@@ -631,7 +632,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void setOnBoard(BuildContext context) async{
+  void setOnBoard(BuildContext context) async {
     hasWallet = true;
     move(ViewIdentifiers.setupOnboard);
   }
@@ -671,6 +672,16 @@ class HomeViewModelImpl extends HomeViewModel {
     ProtonExchangeRate exchangeRate =
         await ExchangeRateService.getExchangeRate(fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
+  }
+
+  void refreshWithUserSettingProvider() async {
+    if (userSettingProvider.walletUserSetting.fiatCurrency !=
+        fiatCurrencyNotifier.value) {
+      fiatCurrencyNotifier.value =
+          userSettingProvider.walletUserSetting.fiatCurrency;
+    }
+    await Future.delayed(const Duration(seconds: 1));
+    refreshWithUserSettingProvider();
   }
 
   void loadUserSettings() {

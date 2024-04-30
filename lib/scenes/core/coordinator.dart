@@ -7,8 +7,11 @@ abstract class Coordinator implements ViewNavigator {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   Coordinator();
+
   ViewBase start();
+
   void end();
+
   List<ViewBase> starts() {
     throw UnimplementedError();
   }
@@ -43,8 +46,9 @@ abstract class Coordinator implements ViewNavigator {
     Coordinator.navigatorKey.currentState
         ?.push(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
   }
+
   void pushReplacementCustom(ViewBase view, {bool fullscreenDialog = false}) {
-    Coordinator.navigatorKey.currentState
-        ?.pushReplacement(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+    Coordinator.navigatorKey.currentState?.pushReplacement(
+        CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
   }
 }
