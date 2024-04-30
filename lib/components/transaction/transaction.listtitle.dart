@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/custom.loading.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -41,13 +40,7 @@ class TransactionListTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double notional = CommonHelper.getEstimateValue(
-        amount: amount / 100000000,
-        isBitcoinBase: true,
-        currencyExchangeRate: Provider.of<UserSettingProvider>(context)
-            .walletUserSetting
-            .exchangeRate
-            .exchangeRate);
+    double notional = Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amount.toInt());
     return GestureDetector(
         onTap: onTap,
         child: Container(

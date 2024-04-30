@@ -24,17 +24,6 @@ class CommonHelper {
     return str.substring(0, n);
   }
 
-  static double getEstimateValue(
-      {required double amount,
-      required bool isBitcoinBase,
-      required int currencyExchangeRate}) {
-    if (isBitcoinBase) {
-      return amount * currencyExchangeRate / 100;
-    } else {
-      return amount * 100 / currencyExchangeRate;
-    }
-  }
-
   static bool isBitcoinAddress(String bitcoinAddress) {
     return bitcoinAddress.toLowerCase().startsWith("tb") &&
         bitcoinAddress.length > 30;

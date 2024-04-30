@@ -266,11 +266,7 @@ class SendViewModelImpl extends SendViewModel {
       } catch (e) {
         amount = 0.0;
       }
-      double btcAmount = CommonHelper.getEstimateValue(
-          amount: amount,
-          isBitcoinBase: isBitcoinBase,
-          currencyExchangeRate:
-              userSettingProvider.walletUserSetting.exchangeRate.exchangeRate);
+      double btcAmount = userSettingProvider.getNotionalInBTC(amount);
       int amountInSATS = (btcAmount * 100000000).toInt();
       txBuilder = TxBuilder();
 
