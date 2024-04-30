@@ -77,6 +77,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
               _scrollTo(max(widget.items.indexOf(selected), 0) * 48);
             });
           },
+          style: FontManager.body1Median(ProtonColors.textNorm),
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
