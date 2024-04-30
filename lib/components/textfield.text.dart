@@ -18,6 +18,8 @@ class TextFieldText extends StatefulWidget {
   final Icon suffixIcon;
   final Color color;
   final bool showMailTag;
+  final double borderRadius;
+  final Widget? prefixIcon;
 
   const TextFieldText(
       {super.key,
@@ -27,6 +29,8 @@ class TextFieldText extends StatefulWidget {
       this.focusNode,
       this.hintText,
       this.labelText,
+      this.prefixIcon,
+      this.borderRadius = 8.0,
       this.multiLine = false,
       this.suffixIconOnPressed,
       this.showSuffixIcon = true,
@@ -43,6 +47,7 @@ class TextFieldText extends StatefulWidget {
 class TextFieldTextState extends State<TextFieldText> {
   final _decimalFormatter =
       FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'));
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +55,7 @@ class TextFieldTextState extends State<TextFieldText> {
         height: widget.height,
         decoration: BoxDecoration(
           color: widget.color,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         child: Center(
           child: (widget.controller!.text.endsWith("@proton.me") &&
@@ -72,22 +77,24 @@ class TextFieldTextState extends State<TextFieldText> {
                           : TextInputType.text,
                   inputFormatters: widget.digitOnly ? [_decimalFormatter] : [],
                   decoration: InputDecoration(
+                    prefixIcon: widget.prefixIcon,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: widget.hintText,
                     labelText: widget.labelText,
-                    labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                    labelStyle:
+                        FontManager.textFieldLabelStyle(ProtonColors.textWeak),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide: BorderSide(
                           color: widget.showEnabledBorder
-                              ? ProtonColors.textNorm
+                              ? Colors.transparent
                               : widget.color,
                           width: 1),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide: BorderSide(
-                          color: ProtonColors.interactionNorm, width: 2),
+                          color: ProtonColors.interactionNorm, width: 1),
                     ),
                     suffixIcon: widget.showSuffixIcon
                         ? IconButton(
@@ -108,7 +115,7 @@ class TextFieldTextState extends State<TextFieldText> {
           label: Text(tag,
               style: FontManager.body2Median(ProtonColors.interactionNorm)),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             side: BorderSide(color: ProtonColors.backgroundProton),
           ),
           onDeleted: () {
