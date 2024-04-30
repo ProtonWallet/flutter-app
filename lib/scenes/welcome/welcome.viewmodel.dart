@@ -56,7 +56,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   @override
   Future<void> loadData() async {
-    env = jenner;
+    env = pascal;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
     _localLogin();
@@ -98,7 +98,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     await userSessionProvider.login(
         userId: userInfo["userId"] ??
             "HB_29cAPkhaWhZsCRwCGuGP5nRajOpeP8wZK3QisI6IGODOgIuRf4-hAMEypQoorfzWw3aby3eYjeUhE2Ou6cw==",
-        userMail: userInfo["userMail"] ?? "cccc@jenner.proton.black",
+        userMail: userInfo["userMail"] ?? "cccc@pascal.proton.black",
         userName: userInfo["userName"] ?? "cccc",
         userDisplayName: userInfo["userDisplayName"] ?? "cccc",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
@@ -142,7 +142,7 @@ T6hEc59huSerA/AE
     await userSessionProvider.login(
         userId: userInfo["userId"] ??
             "G3ttUCkgf5731XGaCbugQ4e_3iDlc6oGfz5Ene78PmAf5RLQcZQ0r9BsOelSU_RIivzzpV1p5WYMgklcBdm-aA==",
-        userMail: userInfo["userMail"] ?? "qqqq@jenner.proton.black",
+        userMail: userInfo["userMail"] ?? "qqqq@pascal.proton.black",
         userName: userInfo["userName"] ?? "qqqq",
         userDisplayName: userInfo["userDisplayName"] ?? "qqqq",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
@@ -186,7 +186,7 @@ F24EdYKKQW+rWlkP
     await userSessionProvider.login(
         userId: userInfo["userId"] ??
             "ffdya2Juf_4GYwZXDpM4A7Dz9BIRTj2JzUxtli9qvIgm3cA0eOCRk9sCEGti3ReMhJ8rSgmXN7xZRa8f7V04ZQ==",
-        userMail: userInfo["userMail"] ?? "ProtonWallet@jenner.proton.black",
+        userMail: userInfo["userMail"] ?? "ProtonWallet@pascal.proton.black",
         userName: userInfo["userName"] ?? "ProtonWallet",
         userDisplayName: userInfo["userDisplayName"] ?? "ProtonWallet",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",

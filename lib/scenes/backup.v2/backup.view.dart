@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/tag.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -15,7 +16,79 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   @override
   Widget buildWithViewModel(
       BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
-    return Scaffold(body: buildMnemonicView(context, viewModel, viewSize));
+    return Scaffold(
+        body: viewModel.inIntroduce
+            ? buildIntroduceView(context, viewModel, viewSize)
+            : buildMnemonicView(context, viewModel, viewSize));
+  }
+
+  Widget buildIntroduceView(
+      BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
+    return Container(
+        color: ProtonColors.backgroundProton,
+        child: Column(children: [
+          AppBar(
+            surfaceTintColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundProton,
+            title: Text(
+              S.of(context).mnemonic_backup_page_title,
+              style: FontManager.body2Median(ProtonColors.textNorm),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Container(
+                      color: ProtonColors.backgroundProton,
+                      padding: const EdgeInsets.all(defaultPadding * 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            children: [
+                              SvgPicture.asset(
+                                  "assets/images/icon/access-key.svg",
+                                  fit: BoxFit.fill,
+                                  width: 60,
+                                  height: 60),
+                              const SizedBox(height: 30),
+                              Text(
+                                S.of(context).backup_introduce_title,
+                                style: FontManager.titleSubHero(
+                                    ProtonColors.textNorm),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20),
+                              Text(S.of(context).backup_introduce_content,
+                                  style: FontManager.body2Regular(
+                                      ProtonColors.textWeak),
+                                  textAlign: TextAlign.center),
+                            ],
+                          ),
+                        ],
+                      )))),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
+              child: ButtonV5(
+                  onPressed: () {
+                    viewModel.setIntroduce(false);
+                  },
+                  backgroundColor: ProtonColors.protonBlue,
+                  text: S.of(context).view_wallet_mnemonic,
+                  width: MediaQuery.of(context).size.width,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  radius: 40,
+                  height: 52)),
+        ]));
   }
 
   Widget buildMnemonicView(
@@ -112,7 +185,9 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
               child: ButtonV5(
                   onPressed: () {
-                    showConfirm(context, viewModel);
+                    viewModel.setBackup();
+                    Navigator.pop(context);
+                    // showConfirm(context, viewModel); disable this according to DingChao's feedback
                   },
                   backgroundColor: ProtonColors.protonBlue,
                   text: S.of(context).done,

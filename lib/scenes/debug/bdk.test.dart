@@ -178,13 +178,13 @@ class BdkLibrary {
     return res;
   }
 
-  // Future<FeeRate> estimateFeeRate(
-  //   int blocks,
-  //   Blockchain blockchain,
-  // ) async {
-  //   final feeRate = await blockchain.estimateFee(blocks);
-  //   return feeRate;
-  // }
+  Future<FeeRate> estimateFeeRate(
+    int blocks,
+    Blockchain blockchain,
+  ) async {
+    final feeRate = await blockchain.estimateFee(blocks);
+    return feeRate;
+  }
 
   getInputOutPuts(
     TxBuilderResult txBuilderResult,
@@ -236,22 +236,12 @@ class BdkLibrary {
       Wallet aliceWallet,
       String serverWalletID,
       String serverAccountID,
-      String addressStr,
-      int amount,
+      TxBuilderResult txBuilderResult,
       {String? emailAddressID,
       String? label,
       String? exchangeRateID,
       String? transactionTime}) async {
     try {
-      final txBuilder = TxBuilder();
-      final address = await Address.create(address: addressStr);
-
-      final script = await address.scriptPubKey();
-      //   final feeRate = await estimateFeeRate(25, blockchain);
-      final txBuilderResult = await txBuilder
-          .addRecipient(script, amount)
-          .feeRate(1)
-          .finish(aliceWallet);
       getInputOutPuts(txBuilderResult, blockchain);
       final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
       bdk_helper.Transaction tx = await aliceSbt.extractTx();

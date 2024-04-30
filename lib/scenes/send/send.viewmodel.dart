@@ -45,10 +45,15 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<String> recipents = [];
   List<ProtonAddress> protonAddresses = [];
   int balance = 0;
-  double feeRate = 1.0;
+  double feeRateHighPriority = 2.0;
+  double feeRateMedianPriority = 2.0;
+  double feeRateLowPriority = 2.0;
+  double feeRateSatPerVByte = 2.0;
+  int baseFeeInSAT = 0;
+  int estimatedFeeInSAT = 0;
   int validRecipientCount = 0;
   bool inReview = false;
-  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
+  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.lowPriority;
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
   WalletModel? walletModel;
@@ -66,6 +71,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late FocusNode memoFocusNode;
 
   void editEmailBody();
+
   void editMemo();
 
   Future<void> sendCoin();
@@ -81,6 +87,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
   List<ContactsModel> contactsEmail = [];
+  late TxBuilder txBuilder;
+  late TxBuilderResult txBuilderResult;
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -107,6 +115,7 @@ class SendViewModelImpl extends SendViewModel {
     emailBodyFocusNode = FocusNode();
     memoTextController = TextEditingController();
     emailBodyController = TextEditingController();
+    txBuilder = TxBuilder();
 
     memoFocusNode.addListener(() {
       if (memoFocusNode.hasFocus == false) {
@@ -162,12 +171,26 @@ class SendViewModelImpl extends SendViewModel {
   @override
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) {
     userTransactionFeeMode = transactionFeeMode;
+    switch (userTransactionFeeMode){
+      case TransactionFeeMode.highPriority:
+        feeRateSatPerVByte = feeRateHighPriority;
+        break;
+      case TransactionFeeMode.medianPriority:
+        feeRateSatPerVByte = feeRateMedianPriority;
+        break;
+      case TransactionFeeMode.lowPriority:
+        feeRateSatPerVByte = feeRateLowPriority;
+        break;
+    }
+    buildTransactionScript();
     datasourceChangedStreamController.add(this);
   }
 
   @override
   Future<void> updatePageStatus({required bool inReview}) async {
-    if (inReview == true) {}
+    if (inReview == true) {
+      await buildTransactionScript();
+    }
     this.inReview = inReview;
     datasourceChangedStreamController.add(this);
   }
@@ -213,7 +236,7 @@ class SendViewModelImpl extends SendViewModel {
         status: "loading bitcoin address..",
         maskType: EasyLoadingMaskType.black);
     await loadBitcoinAddresses();
-    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)){
+    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
       validRecipientCount++;
     }
     EasyLoading.dismiss();
@@ -223,7 +246,7 @@ class SendViewModelImpl extends SendViewModel {
   @override
   void removeRecipient(int index) {
     String recipient = recipents[index];
-    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipient]!)){
+    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipient]!)) {
       validRecipientCount--;
     }
     recipents.removeAt(index);
@@ -234,10 +257,7 @@ class SendViewModelImpl extends SendViewModel {
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
 
-  @override
-  Future<void> sendCoin() async {
-    EasyLoading.show(
-        status: "Broadcasting transaction..", maskType: EasyLoadingMaskType.black);
+  Future<void> buildTransactionScript() async {
     if (amountTextController.text != "") {
       bool isBitcoinBase = false;
       double amount = 0.0;
@@ -251,8 +271,9 @@ class SendViewModelImpl extends SendViewModel {
           isBitcoinBase: isBitcoinBase,
           currencyExchangeRate:
               userSettingProvider.walletUserSetting.exchangeRate.exchangeRate);
-      int amountInSats = (btcAmount * 100000000).round();
-      // TODO:: email integration here
+      int amountInSATS = (btcAmount * 100000000).toInt();
+      txBuilder = TxBuilder();
+
       for (String email in recipents) {
         String bitcoinAddress = "";
         if (email.contains("@")) {
@@ -260,48 +281,61 @@ class SendViewModelImpl extends SendViewModel {
         } else {
           bitcoinAddress = email;
         }
-        if (bitcoinAddress.startsWith("tb")) {
-          var receipinetAddress = bitcoinAddress;
-          logger.i("Target addr: $receipinetAddress\nAmount: $amountInSats");
-          String? emailAddressID;
-          if (protonAddresses.isNotEmpty) {
-            emailAddressID = protonAddresses.first.id;
-          }
-          String transactionID = await _lib.sendBitcoinWithAtlas(
-              _blockchain!,
-              _wallet,
-              walletModel!.serverWalletID,
-              accountModel!.serverAccountID,
-              receipinetAddress,
-              amountInSats,
-              emailAddressID: emailAddressID,
-              exchangeRateID:
-                  userSettingProvider.walletUserSetting.exchangeRate.id);
-          logger.i(walletModel!.serverWalletID);
-          logger.i(
-            accountModel!.serverAccountID,
-          );
-          logger.i(emailAddressID);
-          if (transactionID.toLowerCase().contains("error")) {
-            logger.e(transactionID);
-          } else {
-            logger.i("transaction id: $transactionID");
-          }
-          EventLoopHelper.runOnce();
-          await Future.delayed(const Duration(seconds: 2)); // wait for eventloop to finish
-          // await _lib.sendBitcoin(
-          //     _blockchain!, _wallet, receipinetAddress, amountInSats);
+        if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
+          logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
+          Address address = await Address.create(address: bitcoinAddress);
+
+          final script = await address.scriptPubKey();
+          txBuilder = txBuilder.addRecipient(script, amountInSATS);
         }
       }
+      txBuilderResult =
+          await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
+      estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
+      baseFeeInSAT = estimatedFeeInSAT ~/ feeRateSatPerVByte;
     }
+    datasourceChangedStreamController.add(this);
+  }
+
+  @override
+  Future<void> sendCoin() async {
+    EasyLoading.show(
+        status: "Broadcasting transaction..",
+        maskType: EasyLoadingMaskType.black);
+    String? emailAddressID;
+    if (protonAddresses.isNotEmpty) {
+      emailAddressID = protonAddresses.first.id;
+    }
+    String transactionID = await _lib.sendBitcoinWithAtlas(
+        _blockchain!,
+        _wallet,
+        walletModel!.serverWalletID,
+        accountModel!.serverAccountID,
+        txBuilderResult,
+        emailAddressID: emailAddressID,
+        exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id);
+
+    if (transactionID.toLowerCase().contains("error")) {
+      logger.e(transactionID);
+    } else {
+      logger.i("transaction id: $transactionID");
+    }
+    EventLoopHelper.runOnce();
+    await Future.delayed(
+        const Duration(seconds: 2)); // wait for eventloop to finish
     EasyLoading.dismiss();
   }
 
   @override
   Future<void> updateFeeRate() async {
-    // FeeRate feeRate_ = await _lib.estimateFeeRate(25, _blockchain!);
-    // feeRate = feeRate_.asSatPerVb();
-    // datasourceChangedStreamController.add(this);
+    FeeRate feeRate_ = await _lib.estimateFeeRate(1, _blockchain!);
+    feeRateHighPriority = feeRate_.asSatPerVb();
+    feeRate_ = await _lib.estimateFeeRate(5, _blockchain!);
+    feeRateMedianPriority = feeRate_.asSatPerVb();
+    // feeRate_ = await _lib.estimateFeeRate(12, _blockchain!);
+    // feeRateLowPriority = feeRate_.asSatPerVb();
+    feeRateLowPriority = 2.0;
+    datasourceChangedStreamController.add(this);
     Future.delayed(const Duration(seconds: 5), () {
       updateFeeRate();
     });

@@ -5,14 +5,12 @@ import 'package:wallet/theme/theme.font.dart';
 
 class CustomTodos extends StatelessWidget {
   final String title;
-  final String content;
   final bool checked;
   final VoidCallback? callback;
 
   const CustomTodos({
     super.key,
     required this.title,
-    required this.content,
     this.callback,
     this.checked = false,
   });
