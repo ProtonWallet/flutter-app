@@ -15,6 +15,7 @@ import 'package:wallet/components/custom.loading.with.icon.dart';
 import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
 import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
@@ -1290,7 +1291,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                             const SizedBox(
                               height: 10,
                             ),
-                            DropdownButtonV1(
+                            DropdownButtonV2(
                                 labelText:
                                     S.of(context).setting_fiat_currency_label,
                                 width: MediaQuery.of(context).size.width -

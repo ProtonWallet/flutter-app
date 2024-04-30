@@ -16,7 +16,7 @@ class FiatCurrencyHelper {
     if (fiatCurrency2Info.containsKey(apiFiatCurrency)) {
       sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
     }
-    return "$symbol ($sign)";
+    return "$symbol $sign";
   }
 }
 
