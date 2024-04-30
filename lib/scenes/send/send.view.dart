@@ -13,7 +13,6 @@ import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -102,7 +101,7 @@ class SendView extends ViewBase<SendViewModel> {
                             showSelectTransactionFeeMode(context, viewModel);
                           },
                           content:
-                              "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.estimatedFeeInSAT.toDouble()).toStringAsFixed(3)}",
+                              "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.estimatedFeeInSAT).toStringAsFixed(3)}",
                           memo: Provider.of<UserSettingProvider>(context)
                               .getBitcoinUnitLabel(viewModel.estimatedFeeInSAT),
                         ),
@@ -304,13 +303,7 @@ class SendView extends ViewBase<SendViewModel> {
     } catch (e) {
       amount = 0.0;
     }
-    double esitmateValue = CommonHelper.getEstimateValue(
-        amount: amount,
-        isBitcoinBase: isBitcoinBase,
-        currencyExchangeRate: Provider.of<UserSettingProvider>(context)
-            .walletUserSetting
-            .exchangeRate
-            .exchangeRate);
+    double esitmateValue = Provider.of<UserSettingProvider>(context).getNotionalInBTC(amount);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
@@ -334,13 +327,7 @@ class SendView extends ViewBase<SendViewModel> {
     } catch (e) {
       amount = 0.0;
     }
-    double esitmateValue = CommonHelper.getEstimateValue(
-        amount: amount,
-        isBitcoinBase: isBitcoinBase,
-        currencyExchangeRate: Provider.of<UserSettingProvider>(context)
-            .walletUserSetting
-            .exchangeRate
-            .exchangeRate);
+    double esitmateValue = Provider.of<UserSettingProvider>(context).getNotionalInBTC(amount);
     int validCount = 0;
     for (String recipent in viewModel.recipents) {
       if (viewModel.bitcoinAddresses.containsKey(recipent) &&
@@ -428,6 +415,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     .exchangeRate
                                     .exchangeRate,
                             btcBalance: viewModel.balance / 100000000,
+                            userSettingProvider: Provider.of<UserSettingProvider>(context),
                             validation: (String value) {
                               return "";
                             },
@@ -491,8 +479,8 @@ void showSelectTransactionFeeMode(
                   ListTile(
                     leading: const Icon(Icons.keyboard_double_arrow_up_rounded,
                         size: 18),
-                    title: getEstimatedFeeInfo(context, viewModel,
-                        TransactionFeeMode.highPriority),
+                    title: getEstimatedFeeInfo(
+                        context, viewModel, TransactionFeeMode.highPriority),
                     trailing: viewModel.userTransactionFeeMode ==
                             TransactionFeeMode.highPriority
                         ? SvgPicture.asset(
@@ -514,8 +502,8 @@ void showSelectTransactionFeeMode(
                   ListTile(
                     leading:
                         const Icon(Icons.horizontal_rule_rounded, size: 18),
-                    title: getEstimatedFeeInfo(context, viewModel,
-                        TransactionFeeMode.medianPriority),
+                    title: getEstimatedFeeInfo(
+                        context, viewModel, TransactionFeeMode.medianPriority),
                     trailing: viewModel.userTransactionFeeMode ==
                             TransactionFeeMode.medianPriority
                         ? SvgPicture.asset(
@@ -580,14 +568,13 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
       break;
   }
   String estimatedFeeInFiatCurrency =
-      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(estimatedFee.toDouble()).toStringAsFixed(3)}";
+      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(3)}";
   String estimatedFeeInSATS = Provider.of<UserSettingProvider>(context)
       .getBitcoinUnitLabel(estimatedFee);
-  return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
-    Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)", style: FontManager.captionRegular(ProtonColors.textHint)),
+    Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",
+        style: FontManager.captionRegular(ProtonColors.textHint)),
   ]);
 }
 

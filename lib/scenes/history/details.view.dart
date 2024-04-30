@@ -13,7 +13,6 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,7 +77,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 ),
                 viewModel.isSend
                     ? Text(
-                    Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt()),
+                        Provider.of<UserSettingProvider>(context)
+                            .getBitcoinUnitLabel(viewModel.amount.toInt()),
                         style: FontManager.titleHero(ProtonColors.signalError))
                     : Text(
                         "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt())}",
@@ -176,22 +176,26 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           showNetworkFee(context);
                         },
                         content:
-                            "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.fee).toStringAsFixed(3)}",
-                        memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.fee.toInt()),
+                            "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt()).toStringAsFixed(3)}",
+                        memo: Provider.of<UserSettingProvider>(context)
+                            .getBitcoinUnitLabel(viewModel.fee.toInt()),
                       ),
                       const Divider(
                         thickness: 0.2,
                         height: 1,
                       ),
                       TransactionHistoryItem(
-                        title: S.of(context).trans_total,
-                        content: viewModel.isSend
-                            ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs()).toStringAsFixed(3)}"
-                            : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${CurrencyHelper.sat2usdt(viewModel.amount.abs() + viewModel.fee).toStringAsFixed(3)}",
-                        memo: viewModel.isSend
-                            ? Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt())
-                            : Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.abs().toInt() + viewModel.fee.toInt())
-                      ),
+                          title: S.of(context).trans_total,
+                          content: viewModel.isSend
+                              ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.abs().toInt()).toStringAsFixed(3)}"
+                              : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.abs().toInt() + viewModel.fee.toInt()).toStringAsFixed(3)}",
+                          memo: viewModel.isSend
+                              ? Provider.of<UserSettingProvider>(context)
+                                  .getBitcoinUnitLabel(viewModel.amount.toInt())
+                              : Provider.of<UserSettingProvider>(context)
+                                  .getBitcoinUnitLabel(
+                                      viewModel.amount.abs().toInt() +
+                                          viewModel.fee.toInt())),
                       const SizedBox(height: 20),
                       ButtonV5(
                           onPressed: () {
