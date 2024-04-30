@@ -40,8 +40,6 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:xml/xml.dart' as xml;
-import 'package:http/http.dart' as http;
 
 enum WalletDrawerStatus {
   close,
@@ -67,7 +65,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       block5Fee: 1.0,
       block10Fee: 1.0,
       block20Fee: 1.0);
-  String selectedAccountDerivationPath = WalletManager.getDerivationPath();
 
   void updateSelected(int index);
 
@@ -297,19 +294,6 @@ class HomeViewModelImpl extends HomeViewModel {
     List discoverJsonContents = await ProtonFeedItem.loadJsonFromAsset();
     for (Map<String, dynamic> discoverJsonContent in discoverJsonContents) {
       protonFeedItems.add(ProtonFeedItem.fromJson(discoverJsonContent));
-    }
-  }
-
-  String _findElementOrDefault(
-      xml.XmlElement item, String tagName, String defaultValue) {
-    try {
-      var element = item.findElements(tagName).single;
-      return element.innerText.trim().isEmpty
-          ? defaultValue
-          : element.innerText;
-    } catch (e) {
-      logger.e(e.toString());
-      return defaultValue;
     }
   }
 
@@ -649,10 +633,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void setOnBoard(BuildContext context) async{
     hasWallet = true;
-    EasyLoading.show(
-        status: "creating default wallet..", maskType: EasyLoadingMaskType.black);
-    await WalletManager.autoCreateWallet();
-    EasyLoading.dismiss();
+    move(ViewIdentifiers.setupOnboard);
   }
 
   @override

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -12,7 +12,6 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/wallet.dart';
-import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
@@ -89,15 +88,6 @@ class ImportViewModelImpl extends ImportViewModel {
       await SecureStorageHelper.instance
           .set(serverWalletID, passphraseTextController.text);
     }
-    CreateWalletAccountReq req = CreateWalletAccountReq(
-        label: await WalletKeyHelper.encrypt(secretKey, "Default Account"),
-        derivationPath: "m/84'/1'/0'",
-        scriptType: ScriptType.nativeSegWit.index);
-    WalletAccount walletAccount = await proton_api.createWalletAccount(
-      walletId: serverWalletID,
-      req: req,
-    );
-
     int walletID = await WalletManager.insertOrUpdateWallet(
         userID: 0,
         name: nameTextController.text,
@@ -111,8 +101,7 @@ class ImportViewModelImpl extends ImportViewModel {
 
     await WalletManager.setWalletKey(serverWalletID,
         secretKey); // need to set key first, so that we can decrypt for walletAccount
-    await WalletManager.insertOrUpdateAccount(walletID, walletAccount.label,
-        ScriptType.nativeSegWit.index, "m/84'/1'/0'/0", walletAccount.id);
+    WalletManager.addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
   }
 
   @override

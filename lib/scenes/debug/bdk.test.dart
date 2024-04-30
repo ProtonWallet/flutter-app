@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:path/path.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/helper.dart' as bdk_helper;
 import 'package:wallet/helper/bdk/mnemonic.dart';
@@ -72,8 +73,8 @@ class BdkLibrary {
 
   Future<Blockchain> initializeBlockchain(bool isElectrumBlockchain) async {
     final blockchain = await Blockchain.create(
-        config: const EsploraConfig(
-            baseUrl: 'https://blockstream.info/testnet/api', stopGap: 10));
+        config: EsploraConfig(
+            baseUrl: '${appConfig.esploraBaseUrl}api', stopGap: 10));
     return blockchain;
   }
 
