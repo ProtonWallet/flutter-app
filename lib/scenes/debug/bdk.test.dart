@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:path/path.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/helper.dart' as bdk_helper;
 import 'package:wallet/helper/bdk/mnemonic.dart';
@@ -21,6 +22,10 @@ import 'package:wallet/rust/bdk/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class BdkLibrary {
+  CoinType coinType;
+
+  BdkLibrary({required this.coinType});
+
   Future<Mnemonic> createMnemonic() async {
     final res = await Mnemonic.create(WordCount.words12);
     return res;
@@ -28,12 +33,12 @@ class BdkLibrary {
 
   Future<Descriptor> createDescriptor(Mnemonic mnemonic) async {
     final descriptorSecretKey = await DescriptorSecretKey.create(
-      network: Network.testnet,
+      network: coinType.network,
       mnemonic: mnemonic,
     );
     final descriptor = await Descriptor.newBip84(
         secretKey: descriptorSecretKey,
-        network: Network.testnet,
+        network: coinType.network,
         keychain: KeychainKind.External);
     return descriptor;
   }
@@ -47,10 +52,10 @@ class BdkLibrary {
     DescriptorSecretKey descriptorSecretKey;
     if (passphrase != null && passphrase != "") {
       descriptorSecretKey = await DescriptorSecretKey.create(
-          network: Network.testnet, mnemonic: mnemonic, password: passphrase);
+          network: coinType.network, mnemonic: mnemonic, password: passphrase);
     } else {
       descriptorSecretKey = await DescriptorSecretKey.create(
-          network: Network.testnet, mnemonic: mnemonic);
+          network: coinType.network, mnemonic: mnemonic);
     }
 
     DescriptorSecretKey descriptorPrivateKey =
@@ -59,13 +64,13 @@ class BdkLibrary {
       // BIP-0044
       Descriptor descriptor = await Descriptor.create(
         descriptor: "pkh(${descriptorPrivateKey.toString()})",
-        network: Network.testnet,
+        network: coinType.network,
       );
       return descriptor;
     } else {
       Descriptor descriptor = await Descriptor.create(
         descriptor: "wpkh(${descriptorPrivateKey.toString()})",
-        network: Network.testnet,
+        network: coinType.network,
       );
       return descriptor;
     }
@@ -100,7 +105,7 @@ class BdkLibrary {
     }
     final wallet = await Wallet.create(
         descriptor: descriptor,
-        network: Network.testnet,
+        network: coinType.network,
         databaseConfig: config);
     return wallet;
   }
@@ -108,7 +113,7 @@ class BdkLibrary {
   Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
     final wallet = await Wallet.create(
         descriptor: descriptor,
-        network: Network.testnet,
+        network: coinType.network,
         databaseConfig: const DatabaseConfig.memory());
     return wallet;
   }

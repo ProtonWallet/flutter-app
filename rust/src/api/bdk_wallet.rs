@@ -42,20 +42,35 @@
 
 // use crate::bdk::{error::Error, network::Network};
 
-pub struct WalletManager {
-    // pub inner: RwLock<andromeda_bitcoin::wallet::Wallet<andromeda_bitcoin::BdkSqliteDatabase>>,
+use std::sync::RwLock;
+
+use andromeda_bitcoin::wallet::Wallet;
+use andromeda_bitcoin::BdkMemoryDatabase;
+
+use crate::bdk::error::Error;
+use crate::bdk::types::Network;
+
+pub struct BdkWalletManager {
+    inner: RwLock<Wallet<BdkMemoryDatabase>>,
     // pub inner: andromeda_bitcoin::wallet::Wallet<bdk::database::AnyDatabase>,
 }
 
-impl WalletManager {
-    // pub fn new(network: Network, bip39_mnemonic: String, bip38_passphrase: Option<String>) -> Result<WalletManager, Error> {
-    //     let net: andromeda_common::Network = network.into();
-    //     let result = andromeda_bitcoin::wallet::Wallet::<AnyDatabase>::new(net.into(), bip39_mnemonic, bip38_passphrase);
-    //     match result {
-    //         Ok(wallet) => Ok(WalletManager { inner: RwLock::new(wallet)}),
-    //         Err(e) => Err(e.into()),
-    //     }
-    // }
+impl BdkWalletManager {
+    pub fn new(
+        network: Network,
+        bip39_mnemonic: String,
+        bip38_passphrase: Option<String>,
+    ) -> Result<BdkWalletManager, Error> {
+        let net: andromeda_common::Network = network.into();
+        let result =
+            andromeda_bitcoin::wallet::Wallet::new(net, bip39_mnemonic, bip38_passphrase);
+        match result {
+            Ok(wallet) => Ok(BdkWalletManager {
+                inner: RwLock::new(wallet),
+            }),
+            Err(e) => Err(e.into()),
+        }
+    }
 
     //     pub fn new_with_accounts(
     //         network: Network,
@@ -169,9 +184,7 @@ impl WalletManager {
     //     pub fn get_network(&self) -> Network {
     //         self.network
     //     }
-
-    //     pub fn get_fingerprint(&self) -> String {
-    //         let secp = Secp256k1::new();
-    //         self.mprv.fingerprint(&secp).to_string()
-    //     }
+    pub fn get_fingerprint(&self) -> String {
+        self.inner.read().unwrap().get_fingerprint()
+    }
 }

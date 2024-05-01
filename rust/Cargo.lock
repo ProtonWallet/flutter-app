@@ -125,6 +125,7 @@ dependencies = [
  "base64 0.21.7",
  "bitcoin",
  "cfg-if",
+ "log",
  "muon",
  "serde",
  "serde_json",
@@ -2477,8 +2478,6 @@ dependencies = [
 [[package]]
 name = "muon"
 version = "0.1.1"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "b9f0024df40d633df947303c62cc30d3153cec961bde5709164fd1900e6af08b"
 dependencies = [
  "anyhow",
  "async-std",

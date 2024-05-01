@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -146,11 +145,11 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              widget.textController.text =
-                                  widget.userSettingProvider.getNotionalInFiatCurrency(
-                                          (widget.btcBalance * 100000000)
-                                              .toInt())
-                                      .toStringAsFixed(3);
+                              widget.textController.text = widget
+                                  .userSettingProvider
+                                  .getNotionalInFiatCurrency(
+                                      (widget.btcBalance * 100000000).toInt())
+                                  .toStringAsFixed(3);
                             },
                             child: Container(
                                 padding:
@@ -174,7 +173,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                  widget.userSettingProvider.getBitcoinUnitLabel(getEstimateSats()),
+                  widget.userSettingProvider
+                      .getBitcoinUnitLabel(getEstimateSats()),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],
@@ -189,8 +189,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     } catch (e) {
       amount = 0.0;
     }
-    double btcAmount =
-    widget.userSettingProvider.getNotionalInBTC(amount);
+    double btcAmount = widget.userSettingProvider.getNotionalInBTC(amount);
     return (btcAmount * 100000000).toInt();
   }
 }

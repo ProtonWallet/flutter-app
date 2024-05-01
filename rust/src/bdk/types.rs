@@ -1,19 +1,19 @@
 use crate::bdk::psbt::Transaction;
+use bdk::bitcoin::address::WitnessVersion as BdkWitnessVersion;
 use bdk::bitcoin::blockdata::transaction::TxIn as BdkTxIn;
 use bdk::bitcoin::blockdata::transaction::TxOut as BdkTxOut;
-use bdk::bitcoin::address::WitnessVersion as BdkWitnessVersion;
 use bdk::bitcoin::psbt::Input;
 use bdk::bitcoin::{Address as BdkAddress, OutPoint as BdkOutPoint, Txid};
 use bdk::blockchain::Progress as BdkProgress;
 use bdk::{Balance as BdkBalance, Error as BdkError};
 use bitcoin::script::Error;
 use bitcoin::ScriptBuf;
+use bitcoin_internals::hex::exts::DisplayHex;
 use serde::{Deserialize, Serialize};
 use std::borrow::Borrow;
 use std::fmt;
 use std::fmt::Debug;
 use std::str::FromStr;
-use bitcoin_internals::hex::exts::DisplayHex;
 #[derive(Debug, Clone)]
 pub struct TxIn {
     pub previous_output: OutPoint,
@@ -28,7 +28,11 @@ impl From<&BdkTxIn> for TxIn {
             previous_output: x.previous_output.into(),
             script_sig: x.clone().script_sig.into(),
             sequence: x.clone().sequence.0,
-            witness: x.witness.iter().map(|x| x.to_lower_hex_string().into_bytes()).collect(),
+            witness: x
+                .witness
+                .iter()
+                .map(|x| x.to_lower_hex_string().into_bytes())
+                .collect(),
         }
     }
 }
@@ -270,6 +274,17 @@ pub enum Network {
     Signet,
 }
 
+impl From<Network> for andromeda_common::Network {
+    fn from(network: Network) -> Self {
+        match network {
+            Network::Signet => andromeda_common::Network::Signet,
+            Network::Testnet => andromeda_common::Network::Testnet,
+            Network::Regtest => andromeda_common::Network::Regtest,
+            Network::Bitcoin => andromeda_common::Network::Bitcoin,
+        }
+    }
+}
+
 impl From<Network> for bdk::bitcoin::Network {
     fn from(network: Network) -> Self {
         match network {
@@ -316,7 +331,9 @@ pub struct Address {
 impl Address {
     pub fn new(address: String) -> Result<Self, BdkError> {
         BdkAddress::from_str(address.as_str())
-            .map(|a| Address { address: a.assume_checked() })
+            .map(|a| Address {
+                address: a.assume_checked(),
+            })
             .map_err(|e| BdkError::Generic(e.to_string()))
     }
 

@@ -32,7 +32,10 @@ class SecureStorage implements SecureStorageInterface {
         encryptedSharedPreferences: true,
       );
 
-  IOSOptions getIOSOptions() => const IOSOptions();
+  IOSOptions getIOSOptions() => const IOSOptions(
+        accessibility: KeychainAccessibility.first_unlock_this_device,
+        groupId: 'group.me.proton.wallet',
+      );
 
   MacOsOptions getMacOsOptions() => const MacOsOptions();
 

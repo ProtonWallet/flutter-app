@@ -171,6 +171,13 @@ impl From<bdk::Error> for Error {
         }
     }
 }
+
+impl From<andromeda_bitcoin::error::Error> for Error {
+    fn from(value: andromeda_bitcoin::error::Error) -> Self {
+        Error::Generic(value.to_string())
+    }
+}
+
 impl From<bdk::miniscript::Error> for Error {
     fn from(value: bdk::miniscript::Error) -> Self {
         Error::Miniscript(value.to_string())

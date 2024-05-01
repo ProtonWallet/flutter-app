@@ -32,4 +32,4 @@ final appConfigForProduction = AppConfig(
     esploraBaseUrl: "https://blockstream.info/",
     testMode: false);
 
-final appConfig = appConfigForTestNet;
+final appConfig = appConfigForProduction;

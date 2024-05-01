@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -29,7 +30,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 class ReceiveViewModelImpl extends ReceiveViewModel {
   ReceiveViewModelImpl(super.coordinator, super.walletID, super.accountID);
 
-  final BdkLibrary _lib = BdkLibrary();
+  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
   final datasourceChangedStreamController =
       StreamController<ReceiveViewModel>.broadcast();
