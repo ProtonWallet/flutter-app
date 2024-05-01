@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -52,7 +53,7 @@ class SendReviewViewModelImpl extends SendReviewViewModel {
 
   final datasourceChangedStreamController =
       StreamController<SendReviewViewModel>.broadcast();
-  final BdkLibrary _lib = BdkLibrary();
+  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
   late Blockchain? _blockchain;
 

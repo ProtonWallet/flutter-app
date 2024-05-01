@@ -17,25 +17,29 @@ abstract class Coordinator implements ViewNavigator {
   }
 
   void pushReplacement(ViewBase view, {bool fullscreenDialog = false}) {
-    Coordinator.navigatorKey.currentState?.pushReplacement(
-      MaterialPageRoute(
-          settings: RouteSettings(name: view.key.toString()),
-          builder: (context) {
-            return view;
-          },
-          fullscreenDialog: fullscreenDialog),
-    );
+    Future.delayed(Duration.zero, () {
+      Coordinator.navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(
+            settings: RouteSettings(name: view.key.toString()),
+            builder: (context) {
+              return view;
+            },
+            fullscreenDialog: fullscreenDialog),
+      );
+    });
   }
 
   void push(ViewBase view, {bool fullscreenDialog = false}) {
-    Coordinator.navigatorKey.currentState?.push(
-      MaterialPageRoute(
-          settings: RouteSettings(name: view.key.toString()),
-          builder: (context) {
-            return view;
-          },
-          fullscreenDialog: fullscreenDialog),
-    );
+    Future.delayed(Duration.zero, () {
+      Coordinator.navigatorKey.currentState?.push(
+        MaterialPageRoute(
+            settings: RouteSettings(name: view.key.toString()),
+            builder: (context) {
+              return view;
+            },
+            fullscreenDialog: fullscreenDialog),
+      );
+    });
   }
 
   void pop() {
@@ -43,12 +47,16 @@ abstract class Coordinator implements ViewNavigator {
   }
 
   void pushCustom(ViewBase view, {bool fullscreenDialog = false}) {
-    Coordinator.navigatorKey.currentState
-        ?.push(CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+    Future.delayed(Duration.zero, () {
+      Coordinator.navigatorKey.currentState?.push(
+          CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+    });
   }
 
   void pushReplacementCustom(ViewBase view, {bool fullscreenDialog = false}) {
-    Coordinator.navigatorKey.currentState?.pushReplacement(
-        CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+    Future.delayed(Duration.zero, () {
+      Coordinator.navigatorKey.currentState?.pushReplacement(
+          CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+    });
   }
 }

@@ -41,7 +41,8 @@ pub async fn init_api_service(user_name: String, password: String) {
     info!("start init_api_service");
     // create a global proton api service
     let mut api = ProtonWalletApiClient::from_version(
-        "android-wallet@1.0.0-dev".to_string(),
+        // TODO:: fix me later add -dev back in debug builds
+        "android-wallet@1.0.0".to_string(), //-dev
         "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
     );
     api.login(&user_name, &password).await.unwrap();
@@ -49,6 +50,7 @@ pub async fn init_api_service(user_name: String, password: String) {
     *api_ref = Some(Arc::new(api));
 }
 
+// initApiServiceFromAuthAndVersion
 pub fn init_api_service_from_auth_and_version(
     uid: String,
     access: String,
@@ -58,6 +60,7 @@ pub fn init_api_service_from_auth_and_version(
     user_agent: String,
     env: Option<String>,
 ) {
+    info!("start init_api_service with session");
     // create a global proton api service
     let auth = AuthData::Access(
         Uid::from(uid.clone()),
