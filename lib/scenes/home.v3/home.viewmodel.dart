@@ -83,6 +83,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
 
+  Map<int, TextEditingController> accountNameControllers = {};
+
   AccountModel? currentAccount;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
       ValueNotifier(FiatCurrency.chf);
@@ -110,6 +112,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void searchHistoryTransaction();
 
+  Map<int, TextEditingController> getAccountNameControllers(
+      List<AccountModel> userAccounts);
+
   void updateTransactionFilter(String filter);
 
   void updateBitcoinUnit(BitcoinUnit symbol);
@@ -121,6 +126,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
+  late TextEditingController walletNameController;
 
   bool hideEmptyUsedAddresses = false;
   bool hadBackup = false;
@@ -130,7 +136,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hadSetFiatCurrency = false;
   bool showSearchHistoryTextField = false;
 
-  void setOnBoard(BuildContext context);
+  void setOnBoard();
 
   void checkNewWallet();
 
@@ -228,6 +234,7 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     hideEmptyUsedAddressesController = TextEditingController();
+    walletNameController = TextEditingController(text: "");
     twoFactorAmountThresholdController = TextEditingController(text: "3");
     newAccountNameFocusNode = FocusNode();
     walletNameFocusNode = FocusNode();
@@ -276,6 +283,9 @@ class HomeViewModelImpl extends HomeViewModel {
       logger.d(e.toString());
     }
     initialed = true;
+    if (hasWallet == false) {
+      setOnBoard();
+    }
     syncWalletService();
     loadTransactionHistoryService();
     datasourceStreamSinkAdd();
@@ -407,7 +417,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     datasourceStreamSinkAdd();
-    Future.delayed(const Duration(milliseconds: 1000), () async {
+    Future.delayed(const Duration(milliseconds: 100), () async {
       await checkNewWallet();
     });
   }
@@ -628,11 +638,13 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> selectWallet(int walletID) async {
     selectedWalletID = walletID;
     currentWallet = await DBHelper.walletDao!.findById(selectedWalletID);
+    walletNameController.text = currentWallet?.name ?? "";
+
     balance = 0;
   }
 
   @override
-  void setOnBoard(BuildContext context) async {
+  void setOnBoard() async {
     hasWallet = true;
     move(ViewIdentifiers.setupOnboard);
   }
@@ -657,13 +669,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> getUserSettings() async {
-    if (initialed) {
-      userSettings = await proton_api.getUserSettings();
-      loadUserSettings();
-    }
-    // Future.delayed(const Duration(seconds: 30), () {
-    //   getUserSettings();
-    // });
+    userSettings = await proton_api.getUserSettings();
+    loadUserSettings();
   }
 
   Future<void> updateFiatCurrencyInUserSettingProvider(
@@ -1035,23 +1042,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> addEmailAddressToWalletAccount(String serverWalletID,
       String serverAccountID, String serverAddressID) async {
-    try {
-      WalletAccount walletAccount = await proton_api.addEmailAddress(
-          walletId: serverWalletID,
-          walletAccountId: serverAccountID,
-          addressId: serverAddressID);
-      AccountModel accountModel =
-          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
-      for (EmailAddress address in walletAccount.addresses) {
-        await WalletManager.addEmailAddressToWalletAccount(
-            accountModel, address);
-      }
-      accountID2IntegratedEmailIDs[accountModel.id!] =
-          await WalletManager.getAccountAddressIDs(
-              accountModel.serverAccountID);
-    } catch (e) {
-      logger.e(e.toString());
-    }
+    await WalletManager.addEmailAddress(
+        serverWalletID, serverAccountID, serverAddressID);
+    AccountModel accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+    accountID2IntegratedEmailIDs[accountModel.id!] =
+        await WalletManager.getAccountAddressIDs(accountModel.serverAccountID);
     datasourceStreamSinkAdd();
   }
 
@@ -1068,5 +1064,17 @@ class HomeViewModelImpl extends HomeViewModel {
   void setSearchHistoryTextField(bool show) {
     showSearchHistoryTextField = show;
     datasourceStreamSinkAdd();
+  }
+
+  @override
+  Map<int, TextEditingController> getAccountNameControllers(
+      List<AccountModel> userAccounts) {
+    for (AccountModel accountModel in userAccounts) {
+      if (accountNameControllers.containsKey(accountModel.id!) == false) {
+        accountNameControllers[accountModel.id!] =
+            TextEditingController(text: accountModel.labelDecrypt);
+      }
+    }
+    return accountNameControllers;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -18,6 +19,11 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
   @override
   Widget buildWithViewModel(BuildContext context,
       SetupOnboardViewModel viewModel, ViewSize viewSize) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
+    ));
+
     return Scaffold(
       body: buildNoHistory(context, viewModel, viewSize),
     );

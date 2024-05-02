@@ -61,6 +61,14 @@ class $AssetsImagesGen {
 class $AssetsImagesIconGen {
   const $AssetsImagesIconGen();
 
+  /// File path: assets/images/icon/access-key.svg
+  SvgGenImage get accessKey =>
+      const SvgGenImage('assets/images/icon/access-key.svg');
+
+  /// File path: assets/images/icon/add-account.svg
+  SvgGenImage get addAccount =>
+      const SvgGenImage('assets/images/icon/add-account.svg');
+
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
@@ -104,9 +112,17 @@ class $AssetsImagesIconGen {
   SvgGenImage get icArrowRightArrowLeft =>
       const SvgGenImage('assets/images/icon/ic-arrow-right-arrow-left.svg');
 
+  /// File path: assets/images/icon/ic-arrow-rotate-right.svg
+  SvgGenImage get icArrowRotateRight =>
+      const SvgGenImage('assets/images/icon/ic-arrow-rotate-right.svg');
+
   /// File path: assets/images/icon/ic-bugreport.svg
   SvgGenImage get icBugreport =>
       const SvgGenImage('assets/images/icon/ic-bugreport.svg');
+
+  /// File path: assets/images/icon/ic-checkmark.svg
+  SvgGenImage get icCheckmark =>
+      const SvgGenImage('assets/images/icon/ic-checkmark.svg');
 
   /// File path: assets/images/icon/ic-cog-wheel.svg
   SvgGenImage get icCogWheel =>
@@ -127,6 +143,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/ic-money-bills.svg
   SvgGenImage get icMoneyBills =>
       const SvgGenImage('assets/images/icon/ic-money-bills.svg');
+
+  /// File path: assets/images/icon/ic-shield.svg
+  SvgGenImage get icShield =>
+      const SvgGenImage('assets/images/icon/ic-shield.svg');
 
   /// File path: assets/images/icon/ic-squares-in-squarediscover.svg
   SvgGenImage get icSquaresInSquarediscover =>
@@ -177,6 +197,38 @@ class $AssetsImagesIconGen {
   SvgGenImage get transfer =>
       const SvgGenImage('assets/images/icon/transfer.svg');
 
+  /// File path: assets/images/icon/wallet-0.svg
+  SvgGenImage get wallet0 =>
+      const SvgGenImage('assets/images/icon/wallet-0.svg');
+
+  /// File path: assets/images/icon/wallet-1.svg
+  SvgGenImage get wallet1 =>
+      const SvgGenImage('assets/images/icon/wallet-1.svg');
+
+  /// File path: assets/images/icon/wallet-2.svg
+  SvgGenImage get wallet2 =>
+      const SvgGenImage('assets/images/icon/wallet-2.svg');
+
+  /// File path: assets/images/icon/wallet-3.svg
+  SvgGenImage get wallet3 =>
+      const SvgGenImage('assets/images/icon/wallet-3.svg');
+
+  /// File path: assets/images/icon/wallet-account-0.svg
+  SvgGenImage get walletAccount0 =>
+      const SvgGenImage('assets/images/icon/wallet-account-0.svg');
+
+  /// File path: assets/images/icon/wallet-account-1.svg
+  SvgGenImage get walletAccount1 =>
+      const SvgGenImage('assets/images/icon/wallet-account-1.svg');
+
+  /// File path: assets/images/icon/wallet-account-2.svg
+  SvgGenImage get walletAccount2 =>
+      const SvgGenImage('assets/images/icon/wallet-account-2.svg');
+
+  /// File path: assets/images/icon/wallet-account-3.svg
+  SvgGenImage get walletAccount3 =>
+      const SvgGenImage('assets/images/icon/wallet-account-3.svg');
+
   /// File path: assets/images/icon/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/images/icon/wallet.svg');
 
@@ -186,6 +238,8 @@ class $AssetsImagesIconGen {
 
   /// List of all assets
   List<dynamic> get values => [
+        accessKey,
+        addAccount,
         bitcoin,
         btc,
         discoverPlaceholder0,
@@ -197,12 +251,15 @@ class $AssetsImagesIconGen {
         drawerMenu,
         icArrowOutFromRectanglesignout,
         icArrowRightArrowLeft,
+        icArrowRotateRight,
         icBugreport,
+        icCheckmark,
         icCogWheel,
         icDiamondwalletPlus,
         icListBullets,
         icLock2fa,
         icMoneyBills,
+        icShield,
         icSquaresInSquarediscover,
         icWallet,
         icMessage,
@@ -216,6 +273,14 @@ class $AssetsImagesIconGen {
         send,
         setupPreference,
         transfer,
+        wallet0,
+        wallet1,
+        wallet2,
+        wallet3,
+        walletAccount0,
+        walletAccount1,
+        walletAccount2,
+        walletAccount3,
         wallet,
         walletEdit
       ];
@@ -272,7 +337,11 @@ class $AssetsImagesWalletCreationGen {
 class Assets {
   Assets._();
 
+  static const String customDiscovers = 'assets/custom_discovers.json';
   static const $AssetsImagesGen images = $AssetsImagesGen();
+
+  /// List of all assets
+  static List<String> get values => [customDiscovers];
 }
 
 class AssetGenImage {

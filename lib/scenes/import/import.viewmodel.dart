@@ -101,7 +101,9 @@ class ImportViewModelImpl extends ImportViewModel {
 
     await WalletManager.setWalletKey(serverWalletID,
         secretKey); // need to set key first, so that we can decrypt for walletAccount
-    WalletManager.addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
+    await WalletManager.addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
+    await WalletManager.autoBindEmailAddresses();
+    await Future.delayed(const Duration(seconds: 1)); // wait for account show on sidebar
   }
 
   @override

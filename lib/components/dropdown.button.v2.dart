@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
@@ -15,9 +14,10 @@ class DropdownButtonV2 extends StatefulWidget {
   final ValueNotifier? valueNotifier;
   final String? defaultOption;
   final String? labelText;
-  final double? paddingSize;
   final double? maxSuffixIconWidth;
   final Color? backgroundColor;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
 
   const DropdownButtonV2(
       {super.key,
@@ -25,9 +25,10 @@ class DropdownButtonV2 extends StatefulWidget {
       required this.items,
       required this.itemsText,
       this.labelText,
-      this.paddingSize,
       this.backgroundColor,
       this.defaultOption,
+      this.padding,
+      this.textStyle,
       this.maxSuffixIconWidth = 24,
       this.valueNotifier});
 
@@ -58,11 +59,9 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   Widget buildWithList(BuildContext buildContext) {
     return Container(
         width: widget.width,
-        padding: EdgeInsets.only(
-            left: defaultPadding,
-            right: 8,
-            top: widget.paddingSize ?? 12,
-            bottom: widget.paddingSize ?? 12),
+        padding: widget.padding ??
+            const EdgeInsets.only(
+                left: defaultPadding, right: 8, top: 12, bottom: 12),
         decoration: BoxDecoration(
           color: widget.backgroundColor ?? ProtonColors.white,
           // border: Border.all(color: Colors.black, width: 1.0),
@@ -74,10 +73,13 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
           onTap: () {
             showOptionsInBottomSheet(context);
             Future.delayed(const Duration(milliseconds: 100), () {
-              _scrollTo(max(widget.items.indexOf(selected), 0) * 48);
+              _scrollTo(widget.items.indexOf(selected) * 60 -
+                  MediaQuery.of(context).size.height / 6 +
+                  60);
             });
           },
-          style: FontManager.body1Median(ProtonColors.textNorm),
+          style: widget.textStyle ??
+              FontManager.body1Median(ProtonColors.textNorm),
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
@@ -86,7 +88,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
             suffixIconConstraints:
                 BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
             contentPadding:
-                EdgeInsets.only(top: 4, bottom: widget.paddingSize ?? 16),
+                EdgeInsets.only(top: 4, bottom: widget.padding != null ? 2: 16),
             suffixIcon: Icon(Icons.arrow_drop_down,
                 color: ProtonColors.textNorm, size: 24),
           ),
@@ -94,15 +96,16 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   }
 
   void _scrollTo(double offset) {
-    logger.i("Scroll to $offset");
-    try {
-      _scrollController.animateTo(
-        offset,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
-    } catch (e) {
-      e.toString();
+    if (offset > 0) {
+      try {
+        _scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
+      } catch (e) {
+        e.toString();
+      }
     }
   }
 
@@ -138,35 +141,38 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                         height: 5,
                       ),
                       for (int index = 0; index < widget.items.length; index++)
-                        Column(children: [
-                          ListTile(
-                            trailing: selected == widget.items[index]
-                                ? SvgPicture.asset(
-                                    "assets/images/icon/ic-checkmark.svg",
-                                    fit: BoxFit.fill,
-                                    width: 20,
-                                    height: 20)
-                                : null,
-                            title: Text(widget.itemsText[index],
-                                style: FontManager.body2Regular(
-                                    ProtonColors.textNorm)),
-                            onTap: () {
-                              setState(() {
-                                selected = widget.items[index];
-                                int selectedIndex =
-                                    max(widget.items.indexOf(selected), 0);
-                                _textEditingController.text =
-                                    widget.itemsText[selectedIndex];
-                                widget.valueNotifier?.value = selected;
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                          const Divider(
-                            thickness: 0.2,
-                            height: 1,
-                          )
-                        ]),
+                        Container(
+                            height: 60,
+                            alignment: Alignment.center,
+                            child: Column(children: [
+                              ListTile(
+                                trailing: selected == widget.items[index]
+                                    ? SvgPicture.asset(
+                                        "assets/images/icon/ic-checkmark.svg",
+                                        fit: BoxFit.fill,
+                                        width: 20,
+                                        height: 20)
+                                    : null,
+                                title: Text(widget.itemsText[index],
+                                    style: FontManager.body2Regular(
+                                        ProtonColors.textNorm)),
+                                onTap: () {
+                                  setState(() {
+                                    selected = widget.items[index];
+                                    int selectedIndex =
+                                        max(widget.items.indexOf(selected), 0);
+                                    _textEditingController.text =
+                                        widget.itemsText[selectedIndex];
+                                    widget.valueNotifier?.value = selected;
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                              ),
+                              const Divider(
+                                thickness: 0.2,
+                                height: 1,
+                              )
+                            ])),
                       // ListView.separated(
                       //     itemCount: widget.items.length,
                       //     separatorBuilder: (context, _) {

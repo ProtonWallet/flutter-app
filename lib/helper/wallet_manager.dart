@@ -70,8 +70,8 @@ class WalletManager {
   }
 
   static Future<void> deleteWallet(int walletID) async {
-    DBHelper.walletDao!.delete(walletID);
-    DBHelper.accountDao!.deleteAccountsByWalletID(walletID);
+    await DBHelper.walletDao!.delete(walletID);
+    await DBHelper.accountDao!.deleteAccountsByWalletID(walletID);
   }
 
   static Future<int> getWalletIDByServerWalletID(String serverWalletID) async {
@@ -147,7 +147,7 @@ class WalletManager {
           serverWalletID: serverWalletID);
       await WalletManager.setWalletKey(serverWalletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
-      addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
+      await addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
     } catch (e) {
       logger.e(e);
     }
@@ -167,7 +167,7 @@ class WalletManager {
             await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
         account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
         account.scriptType = scriptType;
-        DBHelper.accountDao!.update(account);
+        await DBHelper.accountDao!.update(account);
       } else {
         account = AccountModel(
             id: null,
@@ -180,7 +180,7 @@ class WalletManager {
             serverAccountID: serverAccountID);
         account.labelDecrypt =
             await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
-        DBHelper.accountDao!.insert(account);
+        await DBHelper.accountDao!.insert(account);
       }
     }
   }
@@ -256,7 +256,7 @@ class WalletManager {
       req: req,
     );
 
-    insertOrUpdateAccount(walletID, walletAccount.label, scriptType.index,
+    await insertOrUpdateAccount(walletID, walletAccount.label, scriptType.index,
         "$derivationPath/$internal", walletAccount.id);
   }
 
@@ -395,6 +395,49 @@ class WalletManager {
     await DBHelper.addressDao!.deleteByServerID(addressID);
   }
 
+  static Future<void> autoBindEmailAddresses() async {
+    int walletCounts = await DBHelper.walletDao!.counts();
+    if (walletCounts > 1) {
+      return;
+    }
+    logger.i("Auto binding email address..");
+    List<ProtonAddress> protonAddresses = await proton_api.getProtonAddress();
+    protonAddresses =
+        protonAddresses.where((element) => element.status == 1).toList();
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.getFirstPriorityWallet();
+    if (walletModel != null) {
+      List<AccountModel> accountModels =
+          (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
+              .cast<AccountModel>();
+      AccountModel? accountModel = accountModels.firstOrNull;
+      if (accountModel != null) {
+        for (ProtonAddress protonAddress in protonAddresses) {
+          await addEmailAddress(walletModel.serverWalletID,
+              accountModel.serverAccountID, protonAddress.id);
+        }
+      }
+    }
+  }
+
+  static Future<void> addEmailAddress(String serverWalletID,
+      String serverAccountID, String serverAddressID) async {
+    try {
+      WalletAccount walletAccount = await proton_api.addEmailAddress(
+          walletId: serverWalletID,
+          walletAccountId: serverAccountID,
+          addressId: serverAddressID);
+      AccountModel accountModel =
+          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+      for (EmailAddress address in walletAccount.addresses) {
+        await WalletManager.addEmailAddressToWalletAccount(
+            accountModel, address);
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
   static Future<void> fetchWalletsFromServer() async {
     if (isFetchingWallets) {
       return;
@@ -523,9 +566,9 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = '7uswipbkr5eeabxsnmouedtnhy4uoikk';
-      accessToken = '6i6mfmwomdo5xsx3p7epsewdrv5syrdm';
-      refreshToken = 'wwhx6vvgrwweeel7stxxtwg6oaldkksn';
+      uid = '4spy6qcvejmt2eca2o77kpegd4nprmzl';
+      accessToken = 'o7ktm37f52t7koidvgrnqpyek7ljfwyh';
+      refreshToken = 'rfwiho5iz6m2a6h75y63xw4yc6hvnfak';
       //
       // user "qqqq"
       // uid = "pb77kwsitejue43sybqwytlu7mkaaf24";
