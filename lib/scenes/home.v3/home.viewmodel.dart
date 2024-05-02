@@ -198,6 +198,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   late FocusNode newAccountNameFocusNode;
   late FocusNode walletNameFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
+  late TextEditingController newAccountNameController;
+  late ValueNotifier newAccountScriptTypeValueNotifier;
 
   @override
   bool get keepAlive => true;
@@ -237,6 +239,9 @@ class HomeViewModelImpl extends HomeViewModel {
     hideEmptyUsedAddressesController = TextEditingController();
     walletNameController = TextEditingController(text: "");
     twoFactorAmountThresholdController = TextEditingController(text: "3");
+    newAccountNameController = TextEditingController(text: "BTC Account");
+    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
+
     newAccountNameFocusNode = FocusNode();
     walletNameFocusNode = FocusNode();
     blockchain ??= await _lib.initializeBlockchain(false);
