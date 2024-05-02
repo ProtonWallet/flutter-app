@@ -11,6 +11,7 @@ use bdk::{bitcoin, Error as BdkError, SyncOptions};
 use bdk::{SignOptions as BdkSignOptions, Wallet as BdkWallet};
 use bitcoin::ScriptBuf;
 use lazy_static::lazy_static;
+use log::{debug, error};
 use std::borrow::Borrow;
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
@@ -91,8 +92,8 @@ impl Wallet {
             .await;
 
         match result {
-            Ok(_) => print!("Synced"),
-            Err(error) => eprintln!("Network request failed: {:?}", error),
+            Ok(_) => debug!("Synced"),
+            Err(err) => error!("Wallet Sync failed: {:?}", err),
         }
     }
     /// Return the balance, meaning the sum of this wallet’s unspent outputs’ values. Note that this method only operates

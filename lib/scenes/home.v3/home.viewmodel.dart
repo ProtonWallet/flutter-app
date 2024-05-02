@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -205,7 +206,7 @@ class HomeViewModelImpl extends HomeViewModel {
       StreamController<HomeViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
   Wallet? wallet;
-  final BdkLibrary _lib = BdkLibrary();
+  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   Blockchain? blockchain;
   bool isLoadingTransactionHistory = false;
 
@@ -706,7 +707,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> syncWalletService() async {
-    await Future.delayed(const Duration(seconds: 60), () async {
+    await Future.delayed(const Duration(seconds: 600), () async {
       await syncWallet();
     });
     syncWalletService();

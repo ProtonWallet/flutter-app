@@ -9,6 +9,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
@@ -36,7 +37,7 @@ import 'package:http/http.dart' as http;
 import 'bdk/helper.dart';
 
 class WalletManager {
-  static final BdkLibrary _lib = BdkLibrary();
+  static final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   static bool isFetchingWallets = false;
   static ApiEnv apiEnv = appConfig.apiEnv;
 
@@ -118,6 +119,12 @@ class WalletManager {
         await WalletKeyHelper.encrypt(secretKey, strMnemonic);
     String walletName = "Default Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+
+    BdkWalletManager wallet = await BdkWalletManager.newInstance(
+        network: appConfig.coinType.network, bip39Mnemonic: strMnemonic);
+
+    String fingerprint = await wallet.getFingerprint();
+
     CreateWalletReq walletReq = CreateWalletReq(
       name: walletName,
       isImported: WalletModel.createByProton,
@@ -126,8 +133,7 @@ class WalletManager {
       userKeyId: APIHelper.userKeyID,
       walletKey: base64Encode(
           proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
-      fingerprint: "12345678",
-      // TODO:: send correct fingerprint
+      fingerprint: fingerprint,
       mnemonic: encryptedMnemonic,
     );
 
@@ -540,7 +546,7 @@ class WalletManager {
       userAgent = await SecureStorageHelper.instance.get("userAgent");
     }
     if (Platform.isIOS) {
-      appVersion = "android-wallet@1.0.0-dev";
+      appVersion = "android-wallet@1.0.0";
       userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
     }
     await proton_api.initApiServiceFromAuthAndVersion(

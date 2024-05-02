@@ -10,8 +10,10 @@ class AppVersionHeader {
     }
     
     func getVersionHeader() -> String {
-        let version = readVersion() ?? getDefaultVersion()
-        return appNamePrefix + version + "-dev"
+        return "android-wallet@1.0.0"
+        
+//        let version = readVersion() ?? getDefaultVersion()
+//        return appNamePrefix + version + "-dev"
     }
     
     func getVersion() -> String? {

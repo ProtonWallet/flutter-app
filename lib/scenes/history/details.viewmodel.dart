@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/helper/currency_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -68,7 +68,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   HistoryDetailViewModelImpl(super.coordinator, super.walletID, super.accountID,
       super.txid, super.userFiatCurrency);
 
-  final BdkLibrary _lib = BdkLibrary();
+  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();

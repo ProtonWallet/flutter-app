@@ -1172,7 +1172,7 @@ class Wallet {
   ///Sync the internal database with the [Blockchain]
   Future syncWallet(Blockchain blockchain) async {
     try {
-      RustLib.instance.api.apiSyncWallet(
+      await RustLib.instance.api.apiSyncWallet(
           walletId: _wallet, blockchainId: blockchain._blockchain);
       debugPrint('sync complete');
     } on bridge.Error catch (e) {

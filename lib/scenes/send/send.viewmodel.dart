@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
@@ -96,7 +97,7 @@ class SendViewModelImpl extends SendViewModel {
 
   final datasourceChangedStreamController =
       StreamController<SendViewModel>.broadcast();
-  final BdkLibrary _lib = BdkLibrary();
+  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
   late Blockchain? _blockchain;
 
@@ -171,7 +172,7 @@ class SendViewModelImpl extends SendViewModel {
   @override
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) {
     userTransactionFeeMode = transactionFeeMode;
-    switch (userTransactionFeeMode){
+    switch (userTransactionFeeMode) {
       case TransactionFeeMode.highPriority:
         feeRateSatPerVByte = feeRateHighPriority;
         break;
@@ -259,7 +260,7 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> buildTransactionScript() async {
     if (amountTextController.text != "") {
-      bool isBitcoinBase = false;
+      // bool isBitcoinBase = false;
       double amount = 0.0;
       try {
         amount = double.parse(amountTextController.text);
