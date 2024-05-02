@@ -560,13 +560,14 @@ impl Api {
         Ok(Wallet::retrieve_wallet(wallet_id).get_internal_address(address_index)?)
     }
     pub fn sync_wallet(wallet_id: String, blockchain_id: String) {
-        info!("start syncing");
+        info!("sync_wallet: start syncing");
         RUNTIME.read().unwrap().clone().block_on(async {
             // Call your async function here.
             Wallet::retrieve_wallet(wallet_id)
                 .sync(Blockchain::retrieve_blockchain(blockchain_id).deref(), None)
                 .await;
         });
+        info!("sync_wallet: end syncing");
     }
     pub fn get_balance(wallet_id: String) -> Result<Balance, Error> {
         Ok(Wallet::retrieve_wallet(wallet_id).get_balance()?)

@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/frb_generated.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
-final BdkLibrary lib = BdkLibrary();
+final BdkLibrary lib = BdkLibrary(coinType: appConfig.coinType);
 
 Future<Wallet> prepareWallet(
     String strMnemonic, String strDerivationPath) async {
