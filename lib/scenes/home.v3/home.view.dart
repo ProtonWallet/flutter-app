@@ -1727,17 +1727,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.protonBlue),
                                 height: 48,
                                 onPressed: () {
-                                  if (appConfig.testMode) {
-                                    viewModel
-                                        .move(ViewIdentifiers.setupOnboard);
-                                  } else {
-                                    // TODO:: check user limitation for wallet
-                                    LocalToast.showErrorToast(
-                                        context,
-                                        S
-                                            .of(context)
-                                            .error_only_1_wallet_for_free_user);
-                                  }
+                                  viewModel
+                                      .move(ViewIdentifiers.setupOnboard);
                                 },
                               )
                             ])),
