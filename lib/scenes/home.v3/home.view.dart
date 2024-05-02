@@ -634,9 +634,6 @@ void showAddWalletAccountGuide(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       builder: (BuildContext context) {
-        ValueNotifier scriptTypeValueNotifier =
-            ValueNotifier(appConfig.scriptType);
-        TextEditingController labelController = TextEditingController(text: "");
         return Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -658,14 +655,14 @@ void showAddWalletAccountGuide(
                           items: ScriptType.scripts,
                           itemsText:
                               ScriptType.scripts.map((v) => v.name).toList(),
-                          valueNotifier: scriptTypeValueNotifier),
+                          valueNotifier: viewModel.newAccountScriptTypeValueNotifier),
                       const SizedBox(height: 12),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: defaultPadding),
                         child: TextFieldTextV2(
                           labelText: S.of(context).account_label,
-                          textController: labelController,
+                          textController: viewModel.newAccountNameController,
                           myFocusNode: viewModel.newAccountNameFocusNode,
                           validation: (String value) {
                             if (value.isEmpty) {
@@ -687,9 +684,9 @@ void showAddWalletAccountGuide(
                                     maskType: EasyLoadingMaskType.black);
                                 await viewModel.addWalletAccount(
                                     walletModel.id!,
-                                    scriptTypeValueNotifier.value,
-                                    labelController.text.isNotEmpty
-                                        ? labelController.text
+                                    viewModel.newAccountScriptTypeValueNotifier.value,
+                                    viewModel.newAccountNameController.text.isNotEmpty
+                                        ? viewModel.newAccountNameController.text
                                         : S.of(context).default_account);
                                 await Future.delayed(const Duration(seconds: 1)); // wait for account show on sidebar
                                 EasyLoading.dismiss();
