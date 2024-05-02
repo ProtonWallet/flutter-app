@@ -296,6 +296,7 @@
   "@end_line_ingore_translation": {
     "description": "l10n_nightly: this is the end line mark"
   },
+  "error_only_1_wallet_for_free_user": "Sorry, maximum 1 wallet for free user",
   "setting_2fa_authenticator_app": "Authenticator app",
   "setting_2fa_disable": "Disable two-factor authentication",
   "setting_2fa_code_hint": "Enter the code from your authenticator app",

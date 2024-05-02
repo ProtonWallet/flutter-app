@@ -422,8 +422,10 @@ class SendView extends ViewBase<SendViewModel> {
                           ),
                           DropdownButtonV2(
                               width: 90,
-                              paddingSize: 2,
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 2, bottom: 2),
                               maxSuffixIconWidth: 20,
+                              textStyle: FontManager.captionMedian(ProtonColors.textNorm),
                               backgroundColor: ProtonColors.backgroundProton,
                               items: fiatCurrencies,
                               itemsText: fiatCurrencies

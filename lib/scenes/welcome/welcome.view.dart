@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,10 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
   }
 
   Widget buildWelcome(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
+    ));
     return Column(
       children: <Widget>[
         Stack(children: [
