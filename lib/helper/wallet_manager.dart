@@ -590,7 +590,7 @@ class WalletManager {
     }
     if (Platform.isIOS) {
       appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
+      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
     }
     await proton_api.initApiServiceFromAuthAndVersion(
       uid: uid,
