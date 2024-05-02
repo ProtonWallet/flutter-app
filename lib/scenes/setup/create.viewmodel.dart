@@ -50,6 +50,7 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
     bool hasWallet = await WalletManager.hasWallet();
     if (hasWallet == false){
       await WalletManager.autoCreateWallet();
+      await WalletManager.autoBindEmailAddresses();
       coordinator.pop();
     } else {
       Future.delayed(const Duration(milliseconds: 1000), () {

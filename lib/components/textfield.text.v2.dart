@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldTextV2 extends StatefulWidget {
@@ -31,7 +32,7 @@ class TextFieldTextV2 extends StatefulWidget {
       this.textInputAction,
       required this.validation,
       this.isPassword = false,
-        this.paddingSize,
+      this.paddingSize,
       this.checkOfErrorOnFocusChange = true});
 
   @override
@@ -59,6 +60,14 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
               onFocusChange: (focus) {
                 setState(() {
                   getBorderColor(focus);
+                  if (focus) {
+                    // TODO:: remove this workaround, textfield will lose focus when ModalBottomSheet add padding for keyboard
+                    Future.delayed(const Duration(milliseconds: 200), () {
+                      if (widget.myFocusNode.hasFocus == false) {
+                        widget.myFocusNode.requestFocus();
+                      }
+                    });
+                  }
                   if (focus == false) {
                     if (widget.onFinish != null) {
                       widget.onFinish!();
@@ -80,8 +89,8 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                 });
               },
               child: Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 4, vertical: widget.paddingSize??12),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 4, vertical: widget.paddingSize ?? 12),
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ?? ProtonColors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(18.0)),
@@ -139,7 +148,10 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                         : FontManager.textFieldLabelStyle(
                             ProtonColors.textWeak),
                     contentPadding: EdgeInsets.only(
-                        left: 10, right: 10, top: 4, bottom: widget.paddingSize??16),
+                        left: 10,
+                        right: 10,
+                        top: 4,
+                        bottom: widget.paddingSize ?? 16),
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     border: InputBorder.none,
