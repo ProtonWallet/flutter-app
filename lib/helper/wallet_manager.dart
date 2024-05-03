@@ -672,7 +672,13 @@ class WalletManager {
         logger.e(e.toString());
       }
     }
-    if (txid.isEmpty) {}
+    if (txid.isEmpty) {
+      String userPrivateKey =
+      await SecureStorageHelper.instance.get("userPrivateKey");
+      String userPassphrase =
+      await SecureStorageHelper.instance.get("userPassphrase");
+      txid = proton_crypto.decrypt(userPrivateKey, userPassphrase, walletTransaction.transactionId);
+    }
     String exchangeRateID = "";
     if (walletTransaction.exchangeRate != null) {
       exchangeRateID = walletTransaction.exchangeRate!.id;

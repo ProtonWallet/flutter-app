@@ -297,6 +297,12 @@ ydJHDOOvI+zz/2tadhbwT6A=
               userKeyID: userInfo["userKeyID"] ?? "",
               userPrivateKey: userInfo["userPrivateKey"] ?? "",
               userPassphrase: userInfo["userPassphrase"] ?? "");
+          logger.i("accessToken = ${userSessionProvider.userSession.accessToken}");
+          logger.i("sessionId = ${userSessionProvider.userSession.sessionId}");
+          logger.i("userKeyID = ${userSessionProvider.userSession.userKeyID}");
+          logger.i("refreshToken = ${userSessionProvider.userSession.refreshToken}");
+          logger.i("userPrivateKey = ${userSessionProvider.userSession.userPrivateKey}");
+          logger.i("userPassphrase = ${userSessionProvider.userSession.userPassphrase}");
           await SecureStorageHelper.instance
               .set("appVersion", userInfo["appVersion"] ?? "");
           await SecureStorageHelper.instance

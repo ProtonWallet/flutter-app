@@ -33,7 +33,7 @@ class HomeCoordinator extends Coordinator {
 
   void showSend(int walletID, int accountID) {
     var view = SendCoordinator(walletID, accountID).start();
-    push(view, fullscreenDialog: true);
+    showInBottomSheet(view);
   }
 
   void showSetupBackup(int walletID) {
@@ -43,7 +43,7 @@ class HomeCoordinator extends Coordinator {
 
   void showReceive(int walletID, int accountID) {
     var view = ReceiveCoordinator(walletID, accountID).start();
-    push(view, fullscreenDialog: true);
+    showInBottomSheet(view);
   }
 
   void showWebSocket() {
@@ -63,7 +63,7 @@ class HomeCoordinator extends Coordinator {
 
   void showHistoryDetails(int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
     var view = HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency).start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   void showTwoFactorAuthSetup() {

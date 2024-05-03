@@ -7,6 +7,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -37,6 +38,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int accountID;
   final int maxRecipientCount = 5;
   String fromAddress = "";
+  String errorMessage = "";
   late TextEditingController recipientTextController;
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
@@ -259,37 +261,42 @@ class SendViewModelImpl extends SendViewModel {
       datasourceChangedStreamController.stream;
 
   Future<void> buildTransactionScript() async {
-    if (amountTextController.text != "") {
-      // bool isBitcoinBase = false;
-      double amount = 0.0;
-      try {
-        amount = double.parse(amountTextController.text);
-      } catch (e) {
-        amount = 0.0;
-      }
-      double btcAmount = userSettingProvider.getNotionalInBTC(amount);
-      int amountInSATS = (btcAmount * 100000000).toInt();
-      txBuilder = TxBuilder();
-
-      for (String email in recipents) {
-        String bitcoinAddress = "";
-        if (email.contains("@")) {
-          bitcoinAddress = bitcoinAddresses[email] ?? email;
-        } else {
-          bitcoinAddress = email;
+    try {
+      if (amountTextController.text != "") {
+        // bool isBitcoinBase = false;
+        double amount = 0.0;
+        try {
+          amount = double.parse(amountTextController.text);
+        } catch (e) {
+          amount = 0.0;
         }
-        if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
-          logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
-          Address address = await Address.create(address: bitcoinAddress);
+        double btcAmount = userSettingProvider.getNotionalInBTC(amount);
+        int amountInSATS = (btcAmount * 100000000).toInt();
+        txBuilder = TxBuilder();
 
-          final script = await address.scriptPubKey();
-          txBuilder = txBuilder.addRecipient(script, amountInSATS);
+        for (String email in recipents) {
+          String bitcoinAddress = "";
+          if (email.contains("@")) {
+            bitcoinAddress = bitcoinAddresses[email] ?? email;
+          } else {
+            bitcoinAddress = email;
+          }
+          if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
+            logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
+            Address address = await Address.create(address: bitcoinAddress);
+
+            final script = await address.scriptPubKey();
+            txBuilder = txBuilder.addRecipient(script, amountInSATS);
+          }
         }
+        txBuilderResult =
+        await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
+        estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
+        baseFeeInSAT = estimatedFeeInSAT ~/ feeRateSatPerVByte;
       }
-      txBuilderResult =
-          await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
-      estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
-      baseFeeInSAT = estimatedFeeInSAT ~/ feeRateSatPerVByte;
+    } catch(e){
+      errorMessage = e.toString();
+      rethrow;
     }
     datasourceChangedStreamController.add(this);
   }
