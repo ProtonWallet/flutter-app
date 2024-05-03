@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldTextV2 extends StatefulWidget {
