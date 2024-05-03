@@ -146,7 +146,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                               ProtonColors.interactionNorm))),
                   SizedBoxes.box18,
                   Container(
-                    color: ProtonColors.backgroundBlack,
+                    color: ProtonColors.white,
                     child: QrImageView(
                       size: min(MediaQuery.of(context).size.width, 200),
                       data: viewModel.otpAuthString,

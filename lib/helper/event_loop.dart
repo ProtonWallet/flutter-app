@@ -121,6 +121,7 @@ class EventLoop {
                   priority: walletData.priority,
                   status: status,
                   type: walletData.type,
+                  fingerprint: walletData.fingerprint??"",
                   serverWalletID: serverWalletID);
             }
           }

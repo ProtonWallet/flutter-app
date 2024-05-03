@@ -77,6 +77,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hasMailIntegration = false;
   bool isFetching = false;
   bool isShowingNoInternet = false;
+  Map<int, bool> passPhraseChecks = {};
   Map<int, List<AccountModel>> walletID2Accounts = {};
   Map<int, List<String>> accountID2IntegratedEmailIDs = {};
   List<ProtonAddress> protonAddresses = [];
@@ -112,6 +113,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void getUserSettings();
 
   void searchHistoryTransaction();
+
+  bool checkPassPhraseChecks(int walletID);
 
   Map<int, TextEditingController> getAccountNameControllers(
       List<AccountModel> userAccounts);
@@ -194,11 +197,14 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String selectedTXID = "";
   List<HistoryTransaction> historyTransactions = [];
   List<HistoryTransaction> _historyTransactions = [];
+  bool isWalletPassphraseMatch = true;
 
   late FocusNode newAccountNameFocusNode;
   late FocusNode walletNameFocusNode;
+  late FocusNode walletPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
   late TextEditingController newAccountNameController;
+  late TextEditingController walletPassphraseController;
   late ValueNotifier newAccountScriptTypeValueNotifier;
 
   @override
@@ -241,7 +247,9 @@ class HomeViewModelImpl extends HomeViewModel {
     twoFactorAmountThresholdController = TextEditingController(text: "3");
     newAccountNameController = TextEditingController(text: "BTC Account");
     newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
+    walletPassphraseController = TextEditingController(text: "");
 
+    walletPassphraseFocusNode = FocusNode();
     newAccountNameFocusNode = FocusNode();
     walletNameFocusNode = FocusNode();
     blockchain ??= await _lib.initializeBlockchain(false);
@@ -377,6 +385,8 @@ class HomeViewModelImpl extends HomeViewModel {
                 accountModel.serverAccountID);
       }
       walletID2Accounts[walletID] = accounts.cast<AccountModel>();
+      passPhraseChecks[walletID] =
+          (await SecureStorageHelper.instance.get(serverWalletID)).isNotEmpty;
       datasourceStreamSinkAdd();
     }
   }
@@ -404,6 +414,14 @@ class HomeViewModelImpl extends HomeViewModel {
                   accountModel.serverAccountID);
         }
         newWalletID2Accounts[walletModel.id!] = accounts.cast<AccountModel>();
+        if (walletModel.passphrase == 0) {
+          passPhraseChecks[walletModel.id!] = true;
+        } else {
+          passPhraseChecks[walletModel.id!] = (await SecureStorageHelper
+                  .instance
+                  .get(walletModel.serverWalletID))
+              .isNotEmpty;
+        }
       }
       userWallets = results;
       walletID2Accounts = newWalletID2Accounts;
@@ -621,14 +639,12 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
     });
-    if (_historyTransactions.length != newHistoryTransactions.length ||
-        newUnconfirmed != unconfirmed ||
-        newConfirmed != confirmed) {
-      _historyTransactions = newHistoryTransactions;
-      confirmed = newConfirmed;
-      unconfirmed = newUnconfirmed;
-      searchTransactions();
-    }
+
+    _historyTransactions = newHistoryTransactions;
+    confirmed = newConfirmed;
+    unconfirmed = newUnconfirmed;
+    searchTransactions();
+
     datasourceStreamSinkAdd();
     isLoadingTransactionHistory = false;
   }
@@ -871,15 +887,22 @@ class HomeViewModelImpl extends HomeViewModel {
 
     await loadIntegratedAddresses();
     datasourceStreamSinkAdd();
-    for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
-      addBitcoinAddress();
+    if (currentWallet != null && currentAccount != null) {
+      await WalletManager.syncBitcoinAddressIndex(
+          currentWallet!.serverWalletID, currentAccount!.serverAccountID);
+      for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
+        addBitcoinAddress();
+      }
     }
   }
 
   @override
   Future<void> addBitcoinAddress() async {
     if (wallet != null) {
-      var addressInfo = await _lib.getAddress(wallet!);
+      int addressIndex = await WalletManager.getBitcoinAddressIndex(
+          currentWallet!.serverWalletID, currentAccount!.serverAccountID);
+      var addressInfo =
+          await _lib.getAddress(wallet!, addressIndex: addressIndex);
       String address = addressInfo.address;
       BitcoinAddress bitcoinAddress = BitcoinAddress(
           bitcoinAddress: address,
@@ -972,6 +995,9 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case ViewIdentifiers.testWebsocket:
         coordinator.showWebSocket();
+        break;
+      case ViewIdentifiers.securitySetting:
+        coordinator.showSecuritySetting();
         break;
       case ViewIdentifiers.welcome:
         coordinator.logout();
@@ -1082,5 +1108,13 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     return accountNameControllers;
+  }
+
+  @override
+  bool checkPassPhraseChecks(int walletID) {
+    if (passPhraseChecks.containsKey(walletID)) {
+      return passPhraseChecks[walletID]!;
+    }
+    return false;
   }
 }

@@ -15,7 +15,6 @@ import 'package:wallet/components/custom.expansion.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
 import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
-import 'package:wallet/components/dropdown.button.v1.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
@@ -630,6 +629,7 @@ void showAddWalletAccountGuide(
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
       ),
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
@@ -648,7 +648,7 @@ void showAddWalletAccountGuide(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10),
-                      DropdownButtonV1(
+                      DropdownButtonV2(
                           labelText: S.of(context).script_type,
                           width: MediaQuery.of(context).size.width -
                               defaultPadding * 2,
@@ -710,6 +710,100 @@ void showAddWalletAccountGuide(
       });
 }
 
+void showConfigWalletPassphrase(
+    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+  showModalBottomSheet(
+      context: context,
+      backgroundColor: ProtonColors.white,
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width,
+      ),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                  padding: const EdgeInsets.only(
+                      bottom: defaultPadding,
+                      top: defaultPadding * 2,
+                      left: defaultPadding,
+                      right: defaultPadding),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 10),
+                        AlertWarning(
+                            content:
+                                S.of(context).config_wallet_passphrase_guide,
+                            width: MediaQuery.of(context).size.width),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: defaultPadding),
+                          child: TextFieldTextV2(
+                            labelText: S.of(context).passphrase_label,
+                            textController:
+                                viewModel.walletPassphraseController,
+                            myFocusNode: viewModel.walletPassphraseFocusNode,
+                            validation: (String value) {
+                              if (value.isEmpty) {
+                                return "Required";
+                              }
+                              return "";
+                            },
+                          ),
+                        ),
+                        if (viewModel.isWalletPassphraseMatch == false)
+                          Text(S.of(context).wrong_passphrase, style: FontManager.body2Median(ProtonColors.signalError)),
+                        const SizedBox(height: 12),
+                        Container(
+                            padding: const EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: defaultButtonPadding),
+                            child: ButtonV5(
+                                onPressed: () async {
+                                  String passphrase = viewModel.walletPassphraseController.text;
+                                  bool match =
+                                      await WalletManager.checkFingerprint(
+                                          walletModel,
+                                          passphrase);
+                                  setState(() {
+                                    viewModel.isWalletPassphraseMatch = match;
+                                  });
+                                  if (match) {
+                                    EasyLoading.show(
+                                        status: "apply passphrase to wallet",
+                                        maskType: EasyLoadingMaskType.black);
+                                    await SecureStorageHelper
+                                        .instance
+                                        .set(
+                                        walletModel.serverWalletID, passphrase);
+                                    await Future.delayed(const Duration(seconds: 2)); // await for sidebar update
+                                    EasyLoading.dismiss();
+                                  }
+                                  viewModel.walletPassphraseController.text = "";
+                                  if (context.mounted && match) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                backgroundColor: ProtonColors.protonBlue,
+                                text: S.of(context).submit,
+                                width: MediaQuery.of(context).size.width,
+                                textStyle: FontManager.body1Median(
+                                    ProtonColors.backgroundSecondary),
+                                height: 48)),
+                      ])));
+        });
+      });
+}
+
 void showFiatCurrencySettingGuide(
     BuildContext context, HomeViewModel viewModel) {
   showModalBottomSheet(
@@ -733,7 +827,7 @@ void showFiatCurrencySettingGuide(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 12),
-                  DropdownButtonV1(
+                  DropdownButtonV2(
                       labelText: S.of(context).setting_fiat_currency_label,
                       width: MediaQuery.of(context).size.width -
                           defaultPadding * 2,
@@ -906,7 +1000,7 @@ void showEmailIntegrationSettingGuide(
                           if (emailIntegrationEnable)
                             Column(children: [
                               const SizedBox(height: 10),
-                              DropdownButtonV1(
+                              DropdownButtonV2(
                                 labelText: S.of(context).add_email_to_account,
                                 items: viewModel.protonAddresses,
                                 itemsText: viewModel.protonAddresses
@@ -1466,7 +1560,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          DropdownButtonV1(
+                                          DropdownButtonV2(
                                             labelText: S
                                                 .of(context)
                                                 .add_email_to_account,
@@ -1660,7 +1754,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          viewModel.move(ViewIdentifiers.securitySetting);
+                        },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-shield.svg",
                             fit: BoxFit.fill,
@@ -1779,16 +1875,22 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                       ? ProtonColors.drawerBackgroundHighlight
                       : Colors.transparent,
               shape: const Border(),
-              initiallyExpanded: true,
+              initiallyExpanded:
+                  viewModel.checkPassPhraseChecks(walletModel.id!),
+              onExpansionChanged: (expansion) {
+                if (viewModel.checkPassPhraseChecks(walletModel.id!) == false) {
+                  showConfigWalletPassphrase(context, viewModel, walletModel);
+                }
+              },
               leading: SvgPicture.asset(
-                  "assets/images/icon/wallet-${viewModel.userWallets.indexOf(walletModel)}.svg",
+                  "assets/images/icon/wallet-${viewModel.userWallets.indexOf(walletModel) % 4}.svg",
                   fit: BoxFit.fill,
                   width: 18,
                   height: 18),
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1805,88 +1907,103 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.textHint))
                           ],
                         ),
+                        if (viewModel.checkPassPhraseChecks(walletModel.id!) ==
+                            false)
+                          GestureDetector(
+                              onTap: () {},
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Icon(
+                                    Icons.info_outline_rounded,
+                                    color: ProtonColors.signalError,
+                                    size: 24,
+                                  ))),
                         // getWalletBalanceWidget(context, viewModel, walletModel)
                       ])),
               iconColor: ProtonColors.textHint,
               collapsedIconColor: ProtonColors.textHint,
               children: [
-                for (AccountModel accountModel
-                    in viewModel.walletID2Accounts[walletModel.id] ?? [])
-                  Material(
-                      color: Colors.transparent,
-                      child: ListTile(
-                        tileColor: viewModel.currentAccount == null
-                            ? null
-                            : accountModel.serverAccountID ==
-                                    viewModel.currentAccount!.serverAccountID
-                                ? ProtonColors.drawerBackgroundHighlight
-                                : Colors.transparent,
-                        onTap: () {
-                          viewModel.selectAccount(accountModel);
-                          Navigator.of(context).pop();
-                        },
-                        leading: Container(
-                          margin: const EdgeInsets.only(left: 10),
-                          child: SvgPicture.asset(
-                              "assets/images/icon/wallet-account-${viewModel.userWallets.indexOf(walletModel)}.svg",
-                              fit: BoxFit.fill,
-                              width: 16,
-                              height: 16),
-                        ),
-                        title: Transform.translate(
-                            offset: const Offset(-4, 0),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                if (viewModel.checkPassPhraseChecks(walletModel.id!))
+                  for (AccountModel accountModel
+                      in viewModel.walletID2Accounts[walletModel.id] ?? [])
+                    Material(
+                        color: Colors.transparent,
+                        child: ListTile(
+                          tileColor: viewModel.currentAccount == null
+                              ? null
+                              : accountModel.serverAccountID ==
+                                      viewModel.currentAccount!.serverAccountID
+                                  ? ProtonColors.drawerBackgroundHighlight
+                                  : Colors.transparent,
+                          onTap: () {
+                            viewModel.selectAccount(accountModel);
+                            Navigator.of(context).pop();
+                          },
+                          leading: Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            child: SvgPicture.asset(
+                                "assets/images/icon/wallet-account-${viewModel.userWallets.indexOf(walletModel) % 4}.svg",
+                                fit: BoxFit.fill,
+                                width: 16,
+                                height: 16),
+                          ),
+                          title: Transform.translate(
+                              offset: const Offset(-4, 0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            CommonHelper.getFirstNChar(
+                                                accountModel.labelDecrypt, 20),
+                                            style: FontManager.captionMedian(
+                                                AvatarColorHelper.getTextColor(
+                                                    viewModel.userWallets
+                                                        .indexOf(
+                                                            walletModel)))),
+                                      ],
+                                    ),
+                                    getWalletAccountBalanceWidget(
+                                        context,
+                                        viewModel,
+                                        accountModel,
+                                        AvatarColorHelper.getTextColor(viewModel
+                                            .userWallets
+                                            .indexOf(walletModel))),
+                                  ])),
+                        )),
+                if (viewModel.checkPassPhraseChecks(walletModel.id!))
+                  ListTile(
+                    onTap: () {
+                      showAddWalletAccountGuide(
+                          context, viewModel, walletModel);
+                    },
+                    leading: Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: SvgPicture.asset(
+                            "assets/images/icon/add-account.svg",
+                            fit: BoxFit.fill,
+                            width: 16,
+                            height: 16)),
+                    title: Transform.translate(
+                        offset: const Offset(-4, 0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          CommonHelper.getFirstNChar(
-                                              accountModel.labelDecrypt, 20),
-                                          style: FontManager.captionMedian(
-                                              AvatarColorHelper.getTextColor(
-                                                  viewModel.userWallets
-                                                      .indexOf(walletModel)))),
-                                    ],
-                                  ),
-                                  getWalletAccountBalanceWidget(
-                                      context,
-                                      viewModel,
-                                      accountModel,
-                                      AvatarColorHelper.getTextColor(
-                                          viewModel.userWallets.indexOf(walletModel))),
-
-                                ])),
-                      )),
-                ListTile(
-                  onTap: () {
-                    showAddWalletAccountGuide(context, viewModel, walletModel);
-                  },
-                  leading: Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: SvgPicture.asset(
-                          "assets/images/icon/add-account.svg",
-                          fit: BoxFit.fill,
-                          width: 16,
-                          height: 16)),
-                  title: Transform.translate(
-                      offset: const Offset(-4, 0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(S.of(context).add_account,
-                                    style: FontManager.captionRegular(
-                                        ProtonColors.textHint)),
-                              ],
-                            )
-                          ])),
-                ),
+                                  Text(S.of(context).add_account,
+                                      style: FontManager.captionRegular(
+                                          ProtonColors.textHint)),
+                                ],
+                              )
+                            ])),
+                  ),
               ],
             ))
   ]);

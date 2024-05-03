@@ -69,8 +69,16 @@ class ImportViewModelImpl extends ImportViewModel {
     String userPrivateKey =
         await SecureStorageHelper.instance.get("userPrivateKey");
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    String strMnemonic = mnemonicTextController.text;
     String encryptedMnemonic =
-        await WalletKeyHelper.encrypt(secretKey, mnemonicTextController.text);
+        await WalletKeyHelper.encrypt(secretKey, strMnemonic);
+    String? strPassphrase = passphraseTextController.text != ""
+        ? passphraseTextController.text
+        : null;
+
+    String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
+        strMnemonic,
+        passphrase: strPassphrase);
     CreateWalletReq walletReq = CreateWalletReq(
         name: nameTextController.text,
         isImported: WalletModel.importByUser,
@@ -79,7 +87,7 @@ class ImportViewModelImpl extends ImportViewModel {
         userKeyId: APIHelper.userKeyID,
         walletKey: base64Encode(
             proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
-        fingerprint: "12345678", // TODO:: send correct fingerprint
+        fingerprint: fingerprint,
         mnemonic: encryptedMnemonic);
     WalletData walletData = await proton_api.createWallet(walletReq: walletReq);
 
@@ -92,18 +100,21 @@ class ImportViewModelImpl extends ImportViewModel {
         userID: 0,
         name: nameTextController.text,
         encryptedMnemonic: encryptedMnemonic,
-        passphrase: 0,
+        passphrase: passphraseTextController.text.isNotEmpty ? 1 : 0,
         imported: WalletModel.importByUser,
         priority: WalletModel.primary,
         status: WalletModel.statusActive,
         type: WalletModel.typeOnChain,
+        fingerprint: fingerprint,
         serverWalletID: serverWalletID);
 
     await WalletManager.setWalletKey(serverWalletID,
         secretKey); // need to set key first, so that we can decrypt for walletAccount
-    await WalletManager.addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
+    await WalletManager.addWalletAccount(
+        walletID, appConfig.scriptType, "BTC Account");
     await WalletManager.autoBindEmailAddresses();
-    await Future.delayed(const Duration(seconds: 1)); // wait for account show on sidebar
+    await Future.delayed(
+        const Duration(seconds: 1)); // wait for account show on sidebar
   }
 
   @override
