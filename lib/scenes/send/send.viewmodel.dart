@@ -7,7 +7,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -290,11 +289,11 @@ class SendViewModelImpl extends SendViewModel {
           }
         }
         txBuilderResult =
-        await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
+            await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
         estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
         baseFeeInSAT = estimatedFeeInSAT ~/ feeRateSatPerVByte;
       }
-    } catch(e){
+    } catch (e) {
       errorMessage = e.toString();
       rethrow;
     }
