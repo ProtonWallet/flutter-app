@@ -189,6 +189,9 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
 
+  /// File path: assets/images/icon/send_2.svg
+  SvgGenImage get send2 => const SvgGenImage('assets/images/icon/send_2.svg');
+
   /// File path: assets/images/icon/setup-preference.svg
   SvgGenImage get setupPreference =>
       const SvgGenImage('assets/images/icon/setup-preference.svg');
@@ -271,6 +274,7 @@ class $AssetsImagesIconGen {
         protect,
         receive,
         send,
+        send2,
         setupPreference,
         transfer,
         wallet0,
