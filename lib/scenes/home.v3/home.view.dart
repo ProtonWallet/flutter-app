@@ -20,7 +20,6 @@ import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -656,7 +655,8 @@ void showAddWalletAccountGuide(
                           items: ScriptType.scripts,
                           itemsText:
                               ScriptType.scripts.map((v) => v.name).toList(),
-                          valueNotifier: viewModel.newAccountScriptTypeValueNotifier),
+                          valueNotifier:
+                              viewModel.newAccountScriptTypeValueNotifier),
                       const SizedBox(height: 12),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -685,9 +685,12 @@ void showAddWalletAccountGuide(
                                     maskType: EasyLoadingMaskType.black);
                                 await viewModel.addWalletAccount(
                                     walletModel.id!,
-                                    viewModel.newAccountScriptTypeValueNotifier.value,
-                                    viewModel.newAccountNameController.text.isNotEmpty
-                                        ? viewModel.newAccountNameController.text
+                                    viewModel.newAccountScriptTypeValueNotifier
+                                        .value,
+                                    viewModel.newAccountNameController.text
+                                            .isNotEmpty
+                                        ? viewModel
+                                            .newAccountNameController.text
                                         : S.of(context).default_account);
                                 await Future.delayed(const Duration(
                                     seconds:
@@ -1716,8 +1719,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.protonBlue),
                                 height: 48,
                                 onPressed: () {
-                                  viewModel
-                                      .move(ViewIdentifiers.setupOnboard);
+                                  viewModel.move(ViewIdentifiers.setupOnboard);
                                 },
                               )
                             ])),
