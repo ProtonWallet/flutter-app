@@ -11,6 +11,7 @@ import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
+import 'package:wallet/scenes/security-setting/security.setting.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
@@ -53,6 +54,11 @@ class HomeCoordinator extends Coordinator {
 
   void showDiscover() {
     var view = DiscoverCoordinator().start();
+    push(view);
+  }
+
+  void showSecuritySetting() {
+    var view = SecuritySettingCoordinator().start();
     push(view);
   }
 

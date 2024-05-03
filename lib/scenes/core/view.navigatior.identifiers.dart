@@ -29,6 +29,7 @@ abstract class ViewIdentifiers extends NavigationIdentifiers {
   static const NavigationIdentifier signin = 22;
   static const NavigationIdentifier signup = 23;
   static const NavigationIdentifier discover = 24;
+  static const NavigationIdentifier securitySetting = 25;
   static const NavigationIdentifier testWallet = 100;
   static const NavigationIdentifier testWebsocket = 101;
   static const NavigationIdentifier newuser = 200;

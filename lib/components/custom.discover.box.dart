@@ -32,11 +32,9 @@ class CustomDiscoverBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: paddingSize),
-        decoration: BoxDecoration(
-            color: backgroundColor??ProtonColors.backgroundProton,
-            borderRadius: BorderRadius.circular(16.0)),
-        padding: const EdgeInsets.all(defaultPadding),
+        margin: EdgeInsets.symmetric(vertical: 6, horizontal: paddingSize),
+
+        padding: EdgeInsets.all(paddingSize),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           SizedBox(
