@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomExpansion extends StatefulWidget {
@@ -76,7 +77,7 @@ class CustomExpansionState extends State<CustomExpansion>
                           const SizedBox(
                             width: 20,
                           ),
-                          Text("Get start with wallet\nFinish account set up",
+                          Text(S.of(context).secure_your_wallet,
                               style:
                                   FontManager.body2Regular(ProtonColors.white)),
                         ]),

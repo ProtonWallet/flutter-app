@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -18,11 +18,9 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   int accountID;
 
   String address = "";
-  List userWallets = [];
-  List userAccounts = [];
   var selectedWallet = 1;
-  late ValueNotifier valueNotifier;
-  late ValueNotifier valueNotifierForAccount;
+
+  WalletModel? walletModel;
   bool hasEmailIntegration = false;
   AccountModel? accountModel;
 
@@ -44,50 +42,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> loadData() async {
+    EasyLoading.show(
+        status: "syncing bitcoin address index..", maskType: EasyLoadingMaskType.black);
     if (walletID == 0) {
-      WalletModel? walletModel =
-          await DBHelper.walletDao!.getFirstPriorityWallet();
-      if (walletModel != null) {
-        walletID = walletModel.id!;
-      } else {
-        return;
-      }
+      walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
+    } else {
+      walletModel = await DBHelper.walletDao!.findById(walletID);
     }
-    await DBHelper.walletDao!.findAll().then((results) async {
-      if (results.length != userWallets.length) {
-        userWallets = results;
-      }
-    });
-    for (var element in userWallets) {
-      if (element.id == walletID) {
-        valueNotifier = ValueNotifier(element);
-        valueNotifier.addListener(() {
-          updateAccountList();
-        });
-      }
-    }
-    await updateAccountList();
-    datasourceChangedStreamController.add(this);
-  }
-
-  Future<void> updateAccountList() async {
-    userAccounts =
-        await DBHelper.accountDao!.findAllByWalletID(valueNotifier.value.id);
-    if (userAccounts.isEmpty) {
-      return;
-    }
-    AccountModel selectedAccount = userAccounts.first;
-    for (AccountModel accountModel in userAccounts) {
-      if (accountModel.id == accountID) {
-        selectedAccount = accountModel;
-        break;
-      }
-    }
-    valueNotifierForAccount = ValueNotifier(selectedAccount);
-    valueNotifierForAccount.addListener(() {
-      getAddress();
-    });
+    accountModel = await DBHelper.accountDao!.findById(accountID);
+    await WalletManager.syncBitcoinAddressIndex(walletModel!.serverWalletID, accountModel!.serverAccountID);
     await getAddress(init: true);
+    EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
   }
 
@@ -97,22 +62,22 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> getAddress({bool init = false}) async {
-    if (init ||
-        walletID != valueNotifier.value.id ||
-        accountID != valueNotifierForAccount.value.id) {
-      walletID = valueNotifier.value.id;
-      accountID = valueNotifierForAccount.value.id;
-      _wallet = await WalletManager.loadWalletWithID(
-          valueNotifier.value.id, valueNotifierForAccount.value.id);
-      accountModel = await DBHelper.accountDao!.findById(accountID);
-      List<String> emailIntegrationAddresses =
-          await WalletManager.getAccountAddressIDs(
-              accountModel?.serverAccountID ?? "");
-      hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
+    if (walletModel != null && accountModel != null) {
+      if (init) {
+        _wallet = await WalletManager.loadWalletWithID(
+            walletModel!.id!, accountModel!.id!);
+        List<String> emailIntegrationAddresses =
+            await WalletManager.getAccountAddressIDs(
+                accountModel?.serverAccountID ?? "");
+        hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
+      }
+      int addressIndex = await WalletManager.getBitcoinAddressIndex(
+          walletModel!.serverWalletID, accountModel!.serverAccountID);
+      var addressInfo =
+          await _lib.getAddress(_wallet, addressIndex: addressIndex);
+      address = addressInfo.address;
+      datasourceChangedStreamController.add(this);
     }
-    var addressInfo = await _lib.getAddress(_wallet);
-    address = addressInfo.address;
-    datasourceChangedStreamController.add(this);
   }
 
   @override

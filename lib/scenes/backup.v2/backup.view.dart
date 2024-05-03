@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/tag.v2.dart';
@@ -8,6 +9,8 @@ import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+
+import '../../helper/local_toast.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   SetupBackupView(SetupBackupViewModel viewModel)
@@ -70,6 +73,19 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                                   style: FontManager.body2Regular(
                                       ProtonColors.textWeak),
                                   textAlign: TextAlign.center),
+                              const SizedBox(height: 20),
+                              Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: ProtonColors.textNorm,
+                                        width: 0.3,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(S.of(context).learn_more,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.brandLighten20))),
                             ],
                           ),
                         ],
@@ -149,24 +165,25 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                                   Column(
                                     children: [
                                       for (int i = 0;
-                                          i < viewModel.itemList.length;
-                                          i += 2)
+                                          i < viewModel.itemList.length ~/ 2;
+                                          i++)
                                         TagV2(
                                           width: 164,
                                           text: viewModel.itemList[i].title!,
-                                          index: i,
+                                          index: i + 1,
                                         ),
                                     ],
                                   ),
                                   Column(
                                     children: [
-                                      for (int i = 1;
+                                      for (int i =
+                                              viewModel.itemList.length ~/ 2;
                                           i < viewModel.itemList.length;
-                                          i += 2)
+                                          i++)
                                         TagV2(
                                           width: 164,
                                           text: viewModel.itemList[i].title!,
-                                          index: i,
+                                          index: i + 1,
                                         ),
                                     ],
                                   ),
@@ -175,6 +192,10 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                               const SizedBox(
                                 height: 22,
                               ),
+                              IconButton(onPressed: (){
+                                Clipboard.setData(ClipboardData(text: viewModel.strMnemonic)).then(
+                                        (v) => {LocalToast.showToast(context, S.of(context).copied)});
+                              }, icon: const Icon(Icons.copy_rounded))
                             ],
                           ),
                         ],
