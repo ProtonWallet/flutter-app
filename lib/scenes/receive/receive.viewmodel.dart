@@ -23,6 +23,8 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   var selectedWallet = 1;
   late ValueNotifier valueNotifier;
   late ValueNotifier valueNotifierForAccount;
+  bool hasEmailIntegration = false;
+  AccountModel? accountModel;
 
   void getAddress();
 }
@@ -102,6 +104,11 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       accountID = valueNotifierForAccount.value.id;
       _wallet = await WalletManager.loadWalletWithID(
           valueNotifier.value.id, valueNotifierForAccount.value.id);
+      accountModel = await DBHelper.accountDao!.findById(accountID);
+      List<String> emailIntegrationAddresses =
+          await WalletManager.getAccountAddressIDs(
+              accountModel?.serverAccountID ?? "");
+      hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
     }
     var addressInfo = await _lib.getAddress(_wallet);
     address = addressInfo.address;

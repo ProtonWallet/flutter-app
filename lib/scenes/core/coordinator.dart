@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/page_route.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 
@@ -14,6 +15,33 @@ abstract class Coordinator implements ViewNavigator {
 
   List<ViewBase> starts() {
     throw UnimplementedError();
+  }
+
+  void showInBottomSheet(ViewBase view) {
+    Future.delayed(Duration.zero, () {
+      showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          constraints:
+              BoxConstraints(
+                minWidth:
+                    MediaQuery.of(Coordinator.navigatorKey.currentContext!)
+                        .size
+                        .width,
+                maxHeight:
+                    MediaQuery.of(Coordinator.navigatorKey.currentContext!)
+                            .size
+                            .height -
+                        60,
+              ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+          ),
+          isScrollControlled: true,
+          context: Coordinator.navigatorKey.currentContext!,
+          builder: (context) {
+            return view;
+          });
+    });
   }
 
   void pushReplacement(ViewBase view, {bool fullscreenDialog = false}) {
