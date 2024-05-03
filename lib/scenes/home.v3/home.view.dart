@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/custom.discover.box.dart';
 import 'package:wallet/components/custom.expansion.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
@@ -688,7 +689,9 @@ void showAddWalletAccountGuide(
                                     viewModel.newAccountNameController.text.isNotEmpty
                                         ? viewModel.newAccountNameController.text
                                         : S.of(context).default_account);
-                                await Future.delayed(const Duration(seconds: 1)); // wait for account show on sidebar
+                                await Future.delayed(const Duration(
+                                    seconds:
+                                        1)); // wait for account show on sidebar
                                 EasyLoading.dismiss();
                                 if (context.mounted) {
                                   Navigator.of(context).pop();
@@ -870,32 +873,31 @@ void showEmailIntegrationSettingGuide(
                                     [])
                               Container(
                                   margin: const EdgeInsets.only(bottom: 5),
-                                  child: TextFieldText(
-                                    width:
-                                        MediaQuery.of(context).size.width - 60,
-                                    height: 50,
-                                    color: ProtonColors.backgroundSecondary,
-                                    suffixIcon: const Icon(Icons.close),
-                                    showSuffixIcon: true,
-                                    showEnabledBorder: false,
-                                    suffixIconOnPressed: () async {
-                                      EasyLoading.show(
-                                          status: "removing email..",
-                                          maskType: EasyLoadingMaskType.black);
-                                      await viewModel.removeEmailAddress(
-                                          viewModel
-                                              .currentWallet!.serverWalletID,
-                                          userAccount.serverAccountID,
-                                          addressID);
-                                      EasyLoading.dismiss();
-                                      setState(() {
-                                        viewModel.reloadPage();
-                                      });
-                                    },
-                                    controller: TextEditingController(
-                                        text: viewModel
+                                  child: ListTile(
+                                    title: Text(
+                                        viewModel
                                             .getProtonAddressByID(addressID)!
-                                            .email),
+                                            .email,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textNorm)),
+                                    trailing: IconButton(
+                                      onPressed: () async {
+                                        EasyLoading.show(
+                                            status: "removing email..",
+                                            maskType:
+                                                EasyLoadingMaskType.black);
+                                        await viewModel.removeEmailAddress(
+                                            viewModel
+                                                .currentWallet!.serverWalletID,
+                                            userAccount.serverAccountID,
+                                            addressID);
+                                        EasyLoading.dismiss();
+                                        setState(() {
+                                          viewModel.reloadPage();
+                                        });
+                                      },
+                                      icon: const Icon(Icons.close),
+                                    ),
                                   )),
                           const SizedBox(height: 10),
                           if (emailIntegrationEnable)
@@ -1179,7 +1181,8 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
         List<AccountModel> userAccounts =
             viewModel.walletID2Accounts[viewModel.currentWallet!.id] ?? [];
 
-        Map<int, TextEditingController> accountNameControllers = viewModel.getAccountNameControllers(userAccounts);
+        Map<int, TextEditingController> accountNameControllers =
+            viewModel.getAccountNameControllers(userAccounts);
 
         ScrollController scrollController = ScrollController();
         Map<int, FocusNode> accountNameFocusNodes = {
@@ -1215,16 +1218,9 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                          radius: 18,
-                          backgroundColor: ProtonColors.white,
-                          child: IconButton(
-                            icon: Icon(Icons.close_rounded,
-                                color: ProtonColors.textNorm, size: 16),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          )),
+                      CloseButtonV1(onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1432,39 +1428,35 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                       Container(
                                           margin:
                                               const EdgeInsets.only(bottom: 5),
-                                          child: TextFieldText(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                60,
-                                            height: 50,
-                                            color: ProtonColors
-                                                .backgroundSecondary,
-                                            suffixIcon: const Icon(Icons.close),
-                                            showSuffixIcon: true,
-                                            showEnabledBorder: false,
-                                            suffixIconOnPressed: () async {
-                                              EasyLoading.show(
-                                                  status: "removing email..",
-                                                  maskType: EasyLoadingMaskType
-                                                      .black);
-                                              await viewModel
-                                                  .removeEmailAddress(
-                                                      viewModel.currentWallet!
-                                                          .serverWalletID,
-                                                      userAccount
-                                                          .serverAccountID,
-                                                      addressID);
-                                              EasyLoading.dismiss();
-                                              setState(() {
-                                                viewModel.reloadPage();
-                                              });
-                                            },
-                                            controller: TextEditingController(
-                                                text: viewModel
+                                          child: ListTile(
+                                            title: Text(
+                                                viewModel
                                                     .getProtonAddressByID(
                                                         addressID)!
-                                                    .email),
+                                                    .email,
+                                                style: FontManager.body2Regular(
+                                                    ProtonColors.textNorm)),
+                                            trailing: IconButton(
+                                              onPressed: () async {
+                                                EasyLoading.show(
+                                                    status: "removing email..",
+                                                    maskType:
+                                                        EasyLoadingMaskType
+                                                            .black);
+                                                await viewModel
+                                                    .removeEmailAddress(
+                                                        viewModel.currentWallet!
+                                                            .serverWalletID,
+                                                        userAccount
+                                                            .serverAccountID,
+                                                        addressID);
+                                                EasyLoading.dismiss();
+                                                setState(() {
+                                                  viewModel.reloadPage();
+                                                });
+                                              },
+                                              icon: const Icon(Icons.close),
+                                            ),
                                           )),
                                   if (emailIntegrationEnables[userAccount.id!]!)
                                     Row(
@@ -1784,13 +1776,6 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                           viewModel.currentWallet!.serverWalletID
                       ? ProtonColors.drawerBackgroundHighlight
                       : Colors.transparent,
-              onExpansionChanged: (bool isExpanded) {
-                List<AccountModel>? accounts =
-                    viewModel.walletID2Accounts[walletModel.id];
-                if (accounts != null && accounts.isNotEmpty) {
-                  viewModel.selectAccount(accounts.first);
-                }
-              },
               shape: const Border(),
               initiallyExpanded: true,
               leading: SvgPicture.asset(
@@ -1818,7 +1803,7 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.textHint))
                           ],
                         ),
-                        getWalletBalanceWidget(context, viewModel, walletModel)
+                        // getWalletBalanceWidget(context, viewModel, walletModel)
                       ])),
               iconColor: ProtonColors.textHint,
               collapsedIconColor: ProtonColors.textHint,
@@ -1836,6 +1821,7 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                 : Colors.transparent,
                         onTap: () {
                           viewModel.selectAccount(accountModel);
+                          Navigator.of(context).pop();
                         },
                         leading: Container(
                           margin: const EdgeInsets.only(left: 10),
@@ -1864,6 +1850,13 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                                       .indexOf(walletModel)))),
                                     ],
                                   ),
+                                  getWalletAccountBalanceWidget(
+                                      context,
+                                      viewModel,
+                                      accountModel,
+                                      AvatarColorHelper.getTextColor(
+                                          viewModel.userWallets.indexOf(walletModel))),
+
                                 ])),
                       )),
                 ListTile(
@@ -1910,6 +1903,21 @@ Widget getWalletBalanceWidget(
     Text(
         Provider.of<UserSettingProvider>(context)
             .getBitcoinUnitLabel(walletModel.balance.toInt()),
+        style: FontManager.overlineRegular(ProtonColors.textHint))
+  ]);
+}
+
+Widget getWalletAccountBalanceWidget(BuildContext context,
+    HomeViewModel viewModel, AccountModel accountModel, Color textColor) {
+  double esitmateValue = Provider.of<UserSettingProvider>(context)
+      .getNotionalInFiatCurrency(accountModel.balance.toInt());
+  return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+    Text(
+        "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+        style: FontManager.captionSemiBold(textColor)),
+    Text(
+        Provider.of<UserSettingProvider>(context)
+            .getBitcoinUnitLabel(accountModel.balance.toInt()),
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
 }

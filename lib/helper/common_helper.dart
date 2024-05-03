@@ -25,7 +25,9 @@ class CommonHelper {
   }
 
   static bool isBitcoinAddress(String bitcoinAddress) {
-    return bitcoinAddress.toLowerCase().startsWith("tb") &&
-        bitcoinAddress.length > 30;
+    return (bitcoinAddress.toLowerCase().startsWith("tb") ||
+            bitcoinAddress.toLowerCase().startsWith("bc") ||
+            bitcoinAddress.toLowerCase().startsWith("1")) &&
+        bitcoinAddress.length > 24;
   }
 }
