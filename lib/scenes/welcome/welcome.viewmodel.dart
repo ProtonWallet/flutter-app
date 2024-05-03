@@ -90,18 +90,17 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   Future<void> mockUserSession() async {
     await mockUserSessionPro();
-    // await mockUserSessionQQQQ();
-    // await mockUserSessionCCCC();
+    // await mockUserSessionProductionDCL();
   }
 
-  Future<void> mockUserSessionCCCC() async {
+  Future<void> mockUserSessionProductionDCL() async {
     Map userInfo = {};
     await userSessionProvider.login(
         userId: userInfo["userId"] ??
-            "HB_29cAPkhaWhZsCRwCGuGP5nRajOpeP8wZK3QisI6IGODOgIuRf4-hAMEypQoorfzWw3aby3eYjeUhE2Ou6cw==",
-        userMail: userInfo["userMail"] ?? "cccc@pascal.proton.black",
-        userName: userInfo["userName"] ?? "cccc",
-        userDisplayName: userInfo["userDisplayName"] ?? "cccc",
+            "oJtWNgP6nIlAljulmLnDmakfi8wVuiusZ41fyb1z-FtMODhhFaBTmcfN4P3BgRt1fNclNzfwSrke739AOGlj_w==",
+        userMail: userInfo["userMail"] ?? "dclbitcoin@proton.me",
+        userName: userInfo["userName"] ?? "dclbitcoin",
+        userDisplayName: userInfo["userDisplayName"] ?? "dclbitcoin",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
             userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
@@ -109,29 +108,29 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
             userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
-            "iQB00Kq8ksPAMdCj2rTtlyC8CUvNPU5agboi_RvJ2-qdBCvzmd4XiEG_GM8B0QdMxiyZ-zV6i9kGD3nRkBXg_Q==",
+            "NM5gtbN7KjTDkV2H-nJqyHAlxVn6AccMZ7YxQrHuyBHap2BQwbqCtw19pRxH38YT08lEYTR189yAI0whk6ZbHQ==",
         userPrivateKey: userInfo["userPrivateKey"] ??
             '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: ProtonMail
 
-xYYEZh8vLBYJKwYBBAHaRw8BAQdAb8nsiRniLK9rBRXyNmNDmpwJvWrtKHUy
-MJM6g9pjy4L+CQMIzgH1JpmKeEJguTP8ESYuiGx5FuPPAXrDVYXAFMc0vP+2
-DtLGJ8SyZa7MPY1zJcHKoMVusdcZCRZzXwOnN1ls6Q1x0Ojez8nl/ZHE//Ww
-tM0zY2NjY0BoaXJhc2UucHJvdG9uLmJsYWNrIDxjY2NjQGhpcmFzZS5wcm90
-b24uYmxhY2s+wo8EExYIAEEFAmYfLywJENTN8DLoTpYIFiEESV6CU97te5IU
-3Ill1M3wMuhOlggCGwMCHgECGQEDCwkHAhUIAxYAAgUnCQIHAgAAdkcBALbd
-xZJ8Y2H+dZJPbTS76OhwvSIEgKU1rbCWGq0NaDgfAQCLRht9mnaf9rDEkLAR
-Ov0wXNgxB7Rz7qFJt269y6AKAseLBGYfLywSCisGAQQBl1UBBQEBB0DwnBIr
-Ubjckd87OZBDchvHqI0lkEHcp+ZHyoRsV4ojJQMBCgn+CQMImIHnTPe3LOVg
-dpsEAs7us1DMEKW6gYgjC5ea9UJHXRL8PYHJ9LLPNuLCFkBReUw18ukEcBm1
-RIk7y3YZ48CxQDVkxs2L7w3/K7E7ucn/X8J4BBgWCAAqBQJmHy8sCRDUzfAy
-6E6WCBYhBEleglPe7XuSFNyJZdTN8DLoTpYIAhsMAAAItgEAm92peQYizaA1
-g9/DR6nEUw4EcGUk0g5IgZlmw/6xiW4A/3O4VTY3MfMZQEXzu69P7bJ/sT0C
-T6hEc59huSerA/AE
-=OS/z
+xYYEZjMbLhYJKwYBBAHaRw8BAQdAEQ7lBGCmLh6SYA0/Zds8f2Bo22IBySLo
+TwlsXZ2cY7f+CQMIZMzBJNKOJ1NgqOdsBM7wPzW4KpUAaoFlxN5a166pYZ2x
+uxqR5F4vN4jSZHWxXNara5TE2RCa1NGl6lPDtnCelZG1TbMGY9jv6B4Eb5g5
+g80rZGNsYml0Y29pbkBwcm90b24ubWUgPGRjbGJpdGNvaW5AcHJvdG9uLm1l
+PsKPBBMWCABBBQJmMxsuCRC7tb1Qp5cslRYhBKlPvneK7qtN6aOvKLu1vVCn
+lyyVAhsDAh4BAhkBAwsJBwIVCAMWAAIFJwkCBwIAALwaAP4+rWnM6LjsOvT3
+3XLtiXK6XPQgkWA8xgPMwDiqgcHMDAEA7d8sDOp6txw8PM+9VbJXV6qmlobA
+3yoeQeosJK078ArHiwRmMxsuEgorBgEEAZdVAQUBAQdAdozoH77hKSswMFCO
++z0wHK5sLHmI88LVJOm+VkFUgUIDAQoJ/gkDCPRn5yE7ursMYHILeT+n3YT3
+p4JYTfSaB+e52UHOcjfK61aLNPWzD35XsQrloLMl3ak78EzSWjrmbNLuQ7id
+Myw4grTvs0KSg25s7QsvXTPCeAQYFggAKgUCZjMbLgkQu7W9UKeXLJUWIQSp
+T753iu6rTemjryi7tb1Qp5cslQIbDAAASmMBAJ3Y4Arw6VZubfCJiGnGh4Dy
+xtp6110/HCfs9wYjuxaBAQD7N8P+Jr/Jj1NdFdmypQcTyi5fwFmh5O/GF9Qc
+5PasCw==
+=VgPU
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-            userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
+            userInfo["userPassphrase"] ?? "grvpr6u1ZWTGbByrpFoPgSaCmoCKPfS");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,

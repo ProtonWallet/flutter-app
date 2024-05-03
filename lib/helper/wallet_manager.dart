@@ -107,6 +107,17 @@ class WalletManager {
     await DBHelper.addressDao!.deleteByServerID(address.id);
   }
 
+  static Future<String> getFingerPrintFromMnemonic(String strMnemonic,
+      {String? passphrase}) async {
+    BdkWalletManager wallet = await BdkWalletManager.newInstance(
+        network: appConfig.coinType.network,
+        bip39Mnemonic: strMnemonic,
+        bip38Passphrase: passphrase);
+    String fingerprint = await wallet.getFingerprint();
+    logger.i("fingerprint = $fingerprint");
+    return fingerprint;
+  }
+
   static Future<void> autoCreateWallet() async {
     Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
     String strMnemonic = mnemonic.asString();
@@ -119,11 +130,7 @@ class WalletManager {
         await WalletKeyHelper.encrypt(secretKey, strMnemonic);
     String walletName = "Default Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-
-    BdkWalletManager wallet = await BdkWalletManager.newInstance(
-        network: appConfig.coinType.network, bip39Mnemonic: strMnemonic);
-
-    String fingerprint = await wallet.getFingerprint();
+    String fingerprint = await getFingerPrintFromMnemonic(strMnemonic);
 
     CreateWalletReq walletReq = CreateWalletReq(
       name: walletName,
@@ -145,11 +152,12 @@ class WalletManager {
           userID: 0,
           name: walletName,
           encryptedMnemonic: encryptedMnemonic,
-          passphrase: 0,
+          passphrase: passphrase,
           imported: WalletModel.createByProton,
           priority: WalletModel.primary,
           status: WalletModel.statusActive,
           type: WalletModel.typeOnChain,
+          fingerprint: fingerprint,
           serverWalletID: serverWalletID);
       await WalletManager.setWalletKey(serverWalletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
@@ -200,7 +208,8 @@ class WalletManager {
       required int priority,
       required int status,
       required int type,
-      required String serverWalletID}) async {
+      required String serverWalletID,
+      required String fingerprint}) async {
     WalletModel? wallet =
         await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
 
@@ -217,7 +226,7 @@ class WalletManager {
           priority: priority,
           status: status,
           type: type,
-          fingerprint: "12345678",
+          fingerprint: fingerprint,
           // TODO:: send correct fingerprint
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
@@ -485,6 +494,7 @@ class WalletManager {
             priority: walletData.wallet.priority,
             status: status,
             type: walletData.wallet.type,
+            fingerprint: walletData.wallet.fingerprint ?? "",
             serverWalletID: serverWalletID);
         walletModel = await DBHelper.walletDao!
             .getWalletByServerWalletID(walletData.wallet.id);
@@ -572,14 +582,14 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = '4spy6qcvejmt2eca2o77kpegd4nprmzl';
-      accessToken = 'o7ktm37f52t7koidvgrnqpyek7ljfwyh';
-      refreshToken = 'rfwiho5iz6m2a6h75y63xw4yc6hvnfak';
+      uid = 'gusrkvzjpekg5usbarwfzghlkisehjub';
+      accessToken = 'o4wxrgjxj7rafyjmll6lovtvxojhxq2s';
+      refreshToken = '42jktg6gr3tqcatwigbrbpov5ug4fgk4';
       //
-      // user "qqqq"
-      // uid = "pb77kwsitejue43sybqwytlu7mkaaf24";
-      // accessToken = "vtwkhh75r377lnl3jphsiocvbdp5p47n";
-      // refreshToken = "chn52wqi25red7sjotxnzkkhj4em4yne";
+      // // user "dclbitcoin@proton.me"
+      // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
+      // accessToken = 'pn2yq4owbrcrhlkywwrrenfexl45nznm';
+      // refreshToken = 'ke2h3ubw4mlpsnydo3qjwxgrrqyi2ewm';
     }
     logger.i("uid = '$uid';");
     logger.i("accessToken = '$accessToken';");
@@ -674,10 +684,11 @@ class WalletManager {
     }
     if (txid.isEmpty) {
       String userPrivateKey =
-      await SecureStorageHelper.instance.get("userPrivateKey");
+          await SecureStorageHelper.instance.get("userPrivateKey");
       String userPassphrase =
-      await SecureStorageHelper.instance.get("userPassphrase");
-      txid = proton_crypto.decrypt(userPrivateKey, userPassphrase, walletTransaction.transactionId);
+          await SecureStorageHelper.instance.get("userPassphrase");
+      txid = proton_crypto.decrypt(
+          userPrivateKey, userPassphrase, walletTransaction.transactionId);
     }
     String exchangeRateID = "";
     if (walletTransaction.exchangeRate != null) {
@@ -704,6 +715,15 @@ class WalletManager {
     await DBHelper.transactionDao!.insertOrUpdate(transactionModel);
   }
 
+  static Future<bool> checkFingerprint(
+      WalletModel walletModel, String passphrase) async {
+    String strMnemonic = await WalletManager.getMnemonicWithID(walletModel.id!);
+    String fingerprint =
+        await getFingerPrintFromMnemonic(strMnemonic, passphrase: passphrase);
+    logger.i("$fingerprint == ${walletModel.fingerprint}");
+    return walletModel.fingerprint == fingerprint;
+  }
+
   static Future<void> handleBitcoinAddressRequests(
       Wallet wallet, String serverWalletID, String serverAccountID) async {
     // TODO:: compute signature!
@@ -712,9 +732,17 @@ class WalletManager {
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 1);
+    bool hasSyncedBitcoinAddressIndex = false;
     for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
       if (walletBitcoinAddress.bitcoinAddress == null) {
-        var addressInfo = await _lib.getAddress(wallet);
+        if (hasSyncedBitcoinAddressIndex == false) {
+          hasSyncedBitcoinAddressIndex = true;
+          await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
+        }
+        int addressIndex =
+            await getBitcoinAddressIndex(serverWalletID, serverAccountID);
+        var addressInfo =
+            await _lib.getAddress(wallet, addressIndex: addressIndex);
         String address = addressInfo.address;
         BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
@@ -730,9 +758,36 @@ class WalletManager {
     }
   }
 
+  static Future<void> syncBitcoinAddressIndex(
+      String serverWalletID, String serverAccountID) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String key = "$latestAddressIndex.$serverAccountID";
+    int latestIndex = preferences.getInt(key) ?? 0;
+    int latestIndexFromAPI = 0;
+    try {
+      latestIndexFromAPI = await proton_api.getBitcoinAddressLatestIndex(
+          walletId: serverWalletID, walletAccountId: serverAccountID);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    logger.i(
+        "serverAccountID = $serverAccountID \nlatestIndex = $latestIndex, latestIndexFromAPI = $latestIndexFromAPI");
+    int finalIndex = max(latestIndex, latestIndexFromAPI);
+    await preferences.setInt(key, finalIndex);
+  }
+
+  static Future<int> getBitcoinAddressIndex(
+      String serverWalletID, String serverAccountID) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String key = "$latestAddressIndex.$serverAccountID";
+    int finalIndex = preferences.getInt(key) ?? 0;
+    await preferences.setInt(key, finalIndex + 1);
+    return finalIndex + 1;
+  }
+
   static Future<void> bitcoinAddressPoolHealthCheck(
       Wallet wallet, String serverWalletID, String serverAccountID) async {
-    // TODO:: compute signature!
+// TODO:: compute signature!
     int unFetchedBitcoinAddressCount = 0;
     List<WalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
@@ -746,9 +801,15 @@ class WalletManager {
     }
     int addingCount = max(0,
         defaultBitcoinAddressCountForOneEmail - unFetchedBitcoinAddressCount);
-    // let pool remain `defaultBitcoinAddressCountForOneEmail` unfetched(also unused) bitcoinAddresses
+
+    if (addingCount > 0) {
+      await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
+    }
     for (int _ = 0; _ < addingCount; _++) {
-      var addressInfo = await _lib.getAddress(wallet);
+      int addressIndex =
+          await getBitcoinAddressIndex(serverWalletID, serverAccountID);
+      var addressInfo =
+          await _lib.getAddress(wallet, addressIndex: addressIndex);
       String address = addressInfo.address;
       BitcoinAddress bitcoinAddress = BitcoinAddress(
           bitcoinAddress: address,

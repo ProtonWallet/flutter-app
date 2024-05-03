@@ -22,6 +22,7 @@ class ProtonColors {
   static Color accentSlateblue = const Color(0xFF415DF0);
   static Color mailIntegrationBox = const Color(0xFFEDEAFB);
   static Color transactionNoteBackground = const Color(0x44D0D7E4);
+  static Color brandLighten20 = const Color(0XFF9F9DF3);
 
   static Color surfaceLight = const Color(0xFFFBFBFB);
   static Color surfaceTagText = const Color(0xFFFEFEFE);
@@ -30,6 +31,7 @@ class ProtonColors {
   static Color protonBrandLighten30 = const Color(0XFFE0E2FF);
   static Color protonShades20 = const Color(0XFFE6E8EC);
   static Color protonBlueAlpha20 = const Color(0X22767DFF);
+  static Color protonBlueAlpha60 = const Color(0X90767DFF);
   static Color protonGrey = const Color(0XFFD9DDE1);
   static Color homepageProgressBarBackground =
       const Color.fromARGB(51, 255, 255, 255);

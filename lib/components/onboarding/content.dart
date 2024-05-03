@@ -29,7 +29,7 @@ class OnboardingContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-        child: ListView(children: [
+        child: Column(children: [
           SizedBoxes.box20,
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             for (int i = 0; i < totalPages; i++)

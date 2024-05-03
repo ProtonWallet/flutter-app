@@ -158,6 +158,13 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         ? nameTextController.text
         : "New Wallet";
     Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+
+    String? strPassphrase = passphraseTextController.text != ""
+        ? passphraseTextController.text
+        : null;
+    String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
+        strMnemonic,
+        passphrase: strPassphrase);
     CreateWalletReq walletReq = CreateWalletReq(
       name: walletName,
       isImported: WalletModel.createByProton,
@@ -166,7 +173,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       userKeyId: APIHelper.userKeyID,
       walletKey: base64Encode(
           proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
-      fingerprint: "12345678", // TODO:: send correct fingerprint
+      fingerprint: fingerprint,
       mnemonic: encryptedMnemonic,
     );
 
@@ -182,16 +189,19 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
           userID: 0,
           name: walletName,
           encryptedMnemonic: encryptedMnemonic,
-          passphrase: 0,
+          passphrase: passphraseTextController.text.isNotEmpty ? 1 : 0,
           imported: WalletModel.createByProton,
           priority: WalletModel.primary,
           status: WalletModel.statusActive,
           type: WalletModel.typeOnChain,
+          fingerprint: fingerprint,
           serverWalletID: serverWalletID);
       await WalletManager.setWalletKey(serverWalletID,
           secretKey); // need to set key first, so that we can decrypt for walletAccount
-      await WalletManager.addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
-      await Future.delayed(const Duration(seconds: 1)); // wait for account show on sidebar
+      await WalletManager.addWalletAccount(
+          walletID, appConfig.scriptType, "BTC Account");
+      await Future.delayed(
+          const Duration(seconds: 1)); // wait for account show on sidebar
     } catch (e) {
       logger.e(e);
     }
