@@ -309,10 +309,13 @@ class SendView extends ViewBase<SendViewModel> {
             child: ButtonV5(
                 onPressed: () async {
                   // TODO:: Send bitcoin with Esplora client
-                  await viewModel.sendCoin();
-                  if (context.mounted) {
+                  bool success = await viewModel.sendCoin();
+                  if (context.mounted && success) {
                     viewModel.coordinator.end();
                     Navigator.of(context).pop();
+                  } else if (context.mounted && success == false) {
+                    LocalToast.showErrorToast(context, viewModel.errorMessage);
+                    viewModel.errorMessage = "";
                   }
                 },
                 backgroundColor: ProtonColors.protonBlue,
@@ -403,7 +406,11 @@ class SendView extends ViewBase<SendViewModel> {
                                     if (viewModel.balance > 0) {
                                       viewModel.addRecipient();
                                     } else {
-                                      LocalToast.showErrorToast(context, S.of(context).error_you_dont_have_sufficient_balance);
+                                      LocalToast.showErrorToast(
+                                          context,
+                                          S
+                                              .of(context)
+                                              .error_you_dont_have_sufficient_balance);
                                     }
                                   }),
                               const SizedBox(height: 5),
@@ -480,7 +487,11 @@ class SendView extends ViewBase<SendViewModel> {
                             ]),
                             const SizedBox(height: 20),
                             if (viewModel.errorMessage.isNotEmpty)
-                              Text(viewModel.errorMessage, style: FontManager.body2Median(ProtonColors.signalError),),
+                              Text(
+                                viewModel.errorMessage,
+                                style: FontManager.body2Median(
+                                    ProtonColors.signalError),
+                              ),
                             // Text(viewModel.feeRateHighPriority.toStringAsFixed(6)),
                             // Text(
                             //     viewModel.feeRateMedianPriority.toStringAsFixed(6)),

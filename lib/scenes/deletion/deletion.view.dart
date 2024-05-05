@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/constants.dart';
@@ -88,11 +87,7 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                   if (viewModel.walletModel == null) {
                     return;
                   }
-                  EasyLoading.show(
-                      status: "deleting wallet..",
-                      maskType: EasyLoadingMaskType.black);
                   await viewModel.deleteWallet();
-                  EasyLoading.dismiss();
                   viewModel.coordinator.end();
                   if (context.mounted) {
                     Navigator.of(context).popUntil((route) {

@@ -55,7 +55,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int estimatedFeeInSAT = 0;
   int validRecipientCount = 0;
   bool inReview = false;
-  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.lowPriority;
+  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
   WalletModel? walletModel;
@@ -76,7 +76,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   void editMemo();
 
-  Future<void> sendCoin();
+  Future<bool> sendCoin();
 
   Future<void> updateFeeRate();
 
@@ -111,51 +111,55 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> loadData() async {
     EasyLoading.show(
         status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
-    addressFocusNode = FocusNode();
-    amountFocusNode = FocusNode();
-    memoFocusNode = FocusNode();
-    emailBodyFocusNode = FocusNode();
-    memoTextController = TextEditingController();
-    emailBodyController = TextEditingController();
-    txBuilder = TxBuilder();
+    try {
+      addressFocusNode = FocusNode();
+      amountFocusNode = FocusNode();
+      memoFocusNode = FocusNode();
+      emailBodyFocusNode = FocusNode();
+      memoTextController = TextEditingController();
+      emailBodyController = TextEditingController();
+      txBuilder = TxBuilder();
 
-    memoFocusNode.addListener(() {
-      if (memoFocusNode.hasFocus == false) {
-        userFinishMemo();
-      }
-    });
+      memoFocusNode.addListener(() {
+        if (memoFocusNode.hasFocus == false) {
+          userFinishMemo();
+        }
+      });
 
-    emailBodyFocusNode.addListener(() {
-      if (emailBodyFocusNode.hasFocus == false) {
-        userFinishEmailBody();
-      }
-    });
+      emailBodyFocusNode.addListener(() {
+        if (emailBodyFocusNode.hasFocus == false) {
+          userFinishEmailBody();
+        }
+      });
 
-    userSettingProvider = Provider.of<UserSettingProvider>(
-        Coordinator.navigatorKey.currentContext!,
-        listen: false);
-    fiatCurrencyNotifier.value =
-        userSettingProvider.walletUserSetting.fiatCurrency;
-    fiatCurrencyNotifier.addListener(() async {
-      updateUserSettingProvider(fiatCurrencyNotifier.value);
-    });
-    recipientTextController = TextEditingController(text: "");
-    memoTextController = TextEditingController();
-    amountTextController = TextEditingController();
-    amountTextController.addListener(() {
+      userSettingProvider = Provider.of<UserSettingProvider>(
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
+      fiatCurrencyNotifier.value =
+          userSettingProvider.walletUserSetting.fiatCurrency;
+      fiatCurrencyNotifier.addListener(() async {
+        updateUserSettingProvider(fiatCurrencyNotifier.value);
+      });
+      recipientTextController = TextEditingController(text: "");
+      memoTextController = TextEditingController();
+      amountTextController = TextEditingController();
+      amountTextController.addListener(() {
+        datasourceChangedStreamController.add(this);
+      });
+
       datasourceChangedStreamController.add(this);
-    });
-
-    datasourceChangedStreamController.add(this);
-    _blockchain = await _lib.initializeBlockchain(false);
-    updateFeeRate();
-    contactsEmail = await WalletManager.getContacts();
-    walletModel = await DBHelper.walletDao!.findById(walletID);
-    accountModel = await DBHelper.accountDao!.findById(accountID);
-    updateWallet();
-    logger.i(DateTime.now().toString());
-    await WalletManager.initContacts();
-    logger.i(DateTime.now().toString());
+      _blockchain = await _lib.initializeBlockchain(false);
+      updateFeeRate();
+      contactsEmail = await WalletManager.getContacts();
+      walletModel = await DBHelper.walletDao!.findById(walletID);
+      accountModel = await DBHelper.accountDao!.findById(accountID);
+      updateWallet();
+      logger.i(DateTime.now().toString());
+      await WalletManager.initContacts();
+      logger.i(DateTime.now().toString());
+    } catch (e) {
+      errorMessage = e.toString();
+    }
     EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
@@ -237,9 +241,13 @@ class SendViewModelImpl extends SendViewModel {
     EasyLoading.show(
         status: "loading bitcoin address..",
         maskType: EasyLoadingMaskType.black);
-    await loadBitcoinAddresses();
-    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
-      validRecipientCount++;
+    try {
+      await loadBitcoinAddresses();
+      if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
+        validRecipientCount++;
+      }
+    } catch (e) {
+      errorMessage = e.toString();
     }
     EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
@@ -301,39 +309,42 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  Future<void> sendCoin() async {
+  Future<bool> sendCoin() async {
     EasyLoading.show(
         status: "Broadcasting transaction..",
         maskType: EasyLoadingMaskType.black);
-    String? emailAddressID;
-    if (protonAddresses.isNotEmpty) {
-      emailAddressID = protonAddresses.first.id;
+    try {
+      String? emailAddressID;
+      if (protonAddresses.isNotEmpty) {
+        emailAddressID = protonAddresses.first.id;
+      }
+      String _ = await _lib.sendBitcoinWithAtlas(
+          _blockchain!,
+          _wallet,
+          walletModel!.serverWalletID,
+          accountModel!.serverAccountID,
+          txBuilderResult,
+          emailAddressID: emailAddressID,
+          exchangeRateID:
+              userSettingProvider.walletUserSetting.exchangeRate.id);
+      EventLoopHelper.runOnce();
+      await Future.delayed(
+          const Duration(seconds: 2)); // wait for eventloop to finish
+    } catch (e) {
+      errorMessage = e.toString();
     }
-    String transactionID = await _lib.sendBitcoinWithAtlas(
-        _blockchain!,
-        _wallet,
-        walletModel!.serverWalletID,
-        accountModel!.serverAccountID,
-        txBuilderResult,
-        emailAddressID: emailAddressID,
-        exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id);
-
-    if (transactionID.toLowerCase().contains("error")) {
-      logger.e(transactionID);
-    } else {
-      logger.i("transaction id: $transactionID");
-    }
-    EventLoopHelper.runOnce();
-    await Future.delayed(
-        const Duration(seconds: 2)); // wait for eventloop to finish
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty) {
+      return false;
+    }
+    return true;
   }
 
   @override
   Future<void> updateFeeRate() async {
     FeeRate feeRate_ = await _lib.estimateFeeRate(1, _blockchain!);
     feeRateHighPriority = feeRate_.asSatPerVb();
-    feeRate_ = await _lib.estimateFeeRate(5, _blockchain!);
+    feeRate_ = await _lib.estimateFeeRate(6, _blockchain!);
     feeRateMedianPriority = feeRate_.asSatPerVb();
     // feeRate_ = await _lib.estimateFeeRate(12, _blockchain!);
     // feeRateLowPriority = feeRate_.asSatPerVb();

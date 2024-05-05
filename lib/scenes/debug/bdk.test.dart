@@ -247,22 +247,17 @@ class BdkLibrary {
       String? label,
       String? exchangeRateID,
       String? transactionTime}) async {
-    try {
-      getInputOutPuts(txBuilderResult, blockchain);
-      final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
-      bdk_helper.Transaction tx = await aliceSbt.extractTx();
-      String transactionID = await proton_api.broadcastRawTransaction(
-          signedTransactionHex: tx.toString(),
-          walletId: serverWalletID,
-          walletAccountId: serverAccountID,
-          label: label,
-          addressId: emailAddressID,
-          exchangeRateId: exchangeRateID,
-          transactionTime: transactionTime);
-      return transactionID;
-    } on Exception catch (e) {
-      e.toString();
-      return "Error: ${e.toString()}";
-    }
+    getInputOutPuts(txBuilderResult, blockchain);
+    final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
+    bdk_helper.Transaction tx = await aliceSbt.extractTx();
+    String transactionID = await proton_api.broadcastRawTransaction(
+        signedTransactionHex: tx.toString(),
+        walletId: serverWalletID,
+        walletAccountId: serverAccountID,
+        label: label,
+        addressId: emailAddressID,
+        exchangeRateId: exchangeRateID,
+        transactionTime: transactionTime);
+    return transactionID;
   }
 }

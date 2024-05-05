@@ -104,8 +104,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       TextEditingController(text: "");
 
   bool initialed = false;
-  bool protonApiSessionError = false;
-  String protonApiSessionErrorString = "";
+  String errorMessage = "";
   int unconfirmed = 0;
   int confirmed = 0;
   Map<String, bool> isSyncingMap = {};
@@ -242,21 +241,21 @@ class HomeViewModelImpl extends HomeViewModel {
     await WalletManager.initMuon(apiEnv);
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
-    hideEmptyUsedAddressesController = TextEditingController();
-    walletNameController = TextEditingController(text: "");
-    twoFactorAmountThresholdController = TextEditingController(text: "3");
-    newAccountNameController = TextEditingController(text: "BTC Account");
-    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
-    walletPassphraseController = TextEditingController(text: "");
-
-    walletPassphraseFocusNode = FocusNode();
-    newAccountNameFocusNode = FocusNode();
-    walletNameFocusNode = FocusNode();
-    blockchain ??= await _lib.initializeBlockchain(false);
-    userSettingProvider = Provider.of<UserSettingProvider>(
-        Coordinator.navigatorKey.currentContext!,
-        listen: false);
     try {
+      hideEmptyUsedAddressesController = TextEditingController();
+      walletNameController = TextEditingController(text: "");
+      twoFactorAmountThresholdController = TextEditingController(text: "3");
+      newAccountNameController = TextEditingController(text: "BTC Account");
+      newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
+      walletPassphraseController = TextEditingController(text: "");
+
+      walletPassphraseFocusNode = FocusNode();
+      newAccountNameFocusNode = FocusNode();
+      walletNameFocusNode = FocusNode();
+      blockchain ??= await _lib.initializeBlockchain(false);
+      userSettingProvider = Provider.of<UserSettingProvider>(
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
       await Future.delayed(const Duration(
           seconds:
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
@@ -269,33 +268,32 @@ class HomeViewModelImpl extends HomeViewModel {
       WalletManager.initContacts();
       EventLoopHelper.start();
     } catch (e) {
-      protonApiSessionError = true;
-      protonApiSessionErrorString = e.toString();
+      errorMessage = e.toString();
     }
-    getUserSettings();
-    updateBtcPrice();
-    updateTransactionFee();
-    checkNewWallet();
-    checkPreference(); // no effect
-    checkNetwork(); // no effect
-    loadDiscoverContents();
-    checkProtonAddresses();
-    refreshWithUserSettingProvider();
-    fiatCurrencyNotifier.addListener(() async {
-      updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
-    });
-    bitcoinUnitNotifier.addListener(() async {
-      updateBitcoinUnit(bitcoinUnitNotifier.value);
-      userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
-    });
-    transactionSearchController.addListener(() {
-      searchTransactions();
-    });
     try {
-      EasyLoading.dismiss();
+      getUserSettings();
+      updateBtcPrice();
+      updateTransactionFee();
+      checkNewWallet();
+      checkPreference(); // no effect
+      checkNetwork(); // no effect
+      loadDiscoverContents();
+      checkProtonAddresses();
+      refreshWithUserSettingProvider();
+      fiatCurrencyNotifier.addListener(() async {
+        updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
+      });
+      bitcoinUnitNotifier.addListener(() async {
+        updateBitcoinUnit(bitcoinUnitNotifier.value);
+        userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
+      });
+      transactionSearchController.addListener(() {
+        searchTransactions();
+      });
     } catch (e) {
-      logger.d(e.toString());
+      errorMessage = e.toString();
     }
+    EasyLoading.dismiss();
     initialed = true;
     if (hasWallet == false) {
       setOnBoard();
@@ -429,6 +427,7 @@ class HomeViewModelImpl extends HomeViewModel {
     if (currentWalletExist == false) {
       currentWallet = null;
       balance = 0;
+      selectedWalletID = -1;
     }
     if (selectedWalletID == -1) {
       if (userWallets.isNotEmpty) {
@@ -459,6 +458,7 @@ class HomeViewModelImpl extends HomeViewModel {
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
     await loadIntegratedAddresses();
+    cleanHistoryTransactions();
     await loadTransactionHistory();
     checkPreference(runOnce: true);
     syncWallet();
@@ -649,10 +649,22 @@ class HomeViewModelImpl extends HomeViewModel {
     isLoadingTransactionHistory = false;
   }
 
+  void cleanHistoryTransactions(){
+    confirmed = 0;
+    unconfirmed = 0;
+    _historyTransactions = [];
+    searchTransactions();
+    datasourceStreamSinkAdd();
+  }
+
   Future<void> loadIntegratedAddresses() async {
-    List<String> integratedEmailIDs =
-        accountID2IntegratedEmailIDs[currentAccount!.id]!;
-    emailIntegrationEnable = integratedEmailIDs.isNotEmpty;
+    try {
+      List<String> integratedEmailIDs =
+          accountID2IntegratedEmailIDs[currentAccount!.id]!;
+      emailIntegrationEnable = integratedEmailIDs.isNotEmpty;
+    } catch (e) {
+      errorMessage = e.toString();
+    }
     datasourceStreamSinkAdd();
   }
 
@@ -728,9 +740,8 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> loadTransactionHistoryService() async {
-    await Future.delayed(const Duration(seconds: 1), () async {
-      await loadTransactionHistory();
-    });
+    await Future.delayed(const Duration(seconds: 1));
+    await loadTransactionHistory();
     loadTransactionHistoryService();
   }
 
@@ -833,14 +844,17 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> deleteAccount(
       String serverWalletID, String serverAccountID) async {
     if (initialed) {
+      EasyLoading.show(
+          status: "deleting account..", maskType: EasyLoadingMaskType.black);
       try {
         await proton_api.deleteWalletAccount(
             walletId: serverWalletID, walletAccountId: serverAccountID);
         await DBHelper.accountDao!.deleteByServerAccountID(serverAccountID);
         await refreshWalletID2Accounts(serverWalletID);
       } catch (e) {
-        logger.e(e);
+        errorMessage = e.toString();
       }
+      EasyLoading.dismiss();
     }
     datasourceStreamSinkAdd();
   }
@@ -881,41 +895,50 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateEmailIntegration() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool(
-        "todo_hadSetEmailIntegration_${currentAccount!.serverAccountID}", true);
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool(
+          "todo_hadSetEmailIntegration_${currentAccount!.serverAccountID}",
+          true);
 
-    await loadIntegratedAddresses();
-    datasourceStreamSinkAdd();
-    if (currentWallet != null && currentAccount != null) {
-      await WalletManager.syncBitcoinAddressIndex(
-          currentWallet!.serverWalletID, currentAccount!.serverAccountID);
-      for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
-        addBitcoinAddress();
+      await loadIntegratedAddresses();
+      datasourceStreamSinkAdd();
+      if (currentWallet != null && currentAccount != null) {
+        await WalletManager.syncBitcoinAddressIndex(
+            currentWallet!.serverWalletID, currentAccount!.serverAccountID);
+        for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
+          addBitcoinAddress();
+        }
       }
+    } catch (e) {
+      errorMessage = e.toString();
     }
   }
 
   @override
   Future<void> addBitcoinAddress() async {
-    if (wallet != null) {
-      int addressIndex = await WalletManager.getBitcoinAddressIndex(
-          currentWallet!.serverWalletID, currentAccount!.serverAccountID);
-      var addressInfo =
-          await _lib.getAddress(wallet!, addressIndex: addressIndex);
-      String address = addressInfo.address;
-      BitcoinAddress bitcoinAddress = BitcoinAddress(
-          bitcoinAddress: address,
-          bitcoinAddressSignature:
-              "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
-          bitcoinAddressIndex: addressInfo.index);
-      var results = await proton_api.addBitcoinAddresses(
-          walletId: currentWallet!.serverWalletID,
-          walletAccountId: currentAccount!.serverAccountID,
-          bitcoinAddresses: [bitcoinAddress]);
-      for (var result in results) {
-        logger.d(result.bitcoinAddress);
+    try {
+      if (wallet != null) {
+        int addressIndex = await WalletManager.getBitcoinAddressIndex(
+            currentWallet!.serverWalletID, currentAccount!.serverAccountID);
+        var addressInfo =
+            await _lib.getAddress(wallet!, addressIndex: addressIndex);
+        String address = addressInfo.address;
+        BitcoinAddress bitcoinAddress = BitcoinAddress(
+            bitcoinAddress: address,
+            bitcoinAddressSignature:
+                "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
+            bitcoinAddressIndex: addressInfo.index);
+        var results = await proton_api.addBitcoinAddresses(
+            walletId: currentWallet!.serverWalletID,
+            walletAccountId: currentAccount!.serverAccountID,
+            bitcoinAddresses: [bitcoinAddress]);
+        for (var result in results) {
+          logger.d(result.bitcoinAddress);
+        }
       }
+    } catch (e) {
+      errorMessage = e.toString();
     }
   }
 
@@ -948,6 +971,8 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> removeEmailAddress(String serverWalletID, String serverAccountID,
       String serverAddressID) async {
+    EasyLoading.show(
+        status: "removing email..", maskType: EasyLoadingMaskType.black);
     try {
       WalletAccount walletAccount = await proton_api.removeEmailAddress(
           walletId: serverWalletID,
@@ -962,21 +987,33 @@ class HomeViewModelImpl extends HomeViewModel {
       if (deleted) {
         WalletManager.deleteAddress(serverAddressID);
       }
+      AccountModel accountModel =
+          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+      accountID2IntegratedEmailIDs[accountModel.id!] =
+          await WalletManager.getAccountAddressIDs(
+              accountModel.serverAccountID);
+      await loadIntegratedAddresses();
     } catch (e) {
-      logger.e(e.toString());
+      errorMessage = e.toString();
     }
-    AccountModel accountModel =
-        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
-    accountID2IntegratedEmailIDs[accountModel.id!] =
-        await WalletManager.getAccountAddressIDs(accountModel.serverAccountID);
-    await loadIntegratedAddresses();
+    EasyLoading.dismiss();
     datasourceStreamSinkAdd();
   }
 
   @override
   Future<void> logout() async {
-    await UserSessionProvider().logout();
-    await DBHelper.reset();
+    EasyLoading.show(
+        status: "log out, cleaning cache..",
+        maskType: EasyLoadingMaskType.black);
+    try {
+      await UserSessionProvider().logout();
+      await DBHelper.reset();
+      await Future.delayed(
+          const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
     coordinator.logout();
   }
 
@@ -1066,20 +1103,36 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> addWalletAccount(
       int walletID, ScriptType scriptType, String label) async {
-    await WalletManager.addWalletAccount(walletID, scriptType, label);
-    await Future.delayed(const Duration(
-        milliseconds: 1000)); // wait for drawer refresh, it check every second
+    EasyLoading.show(
+        status: "Adding account..", maskType: EasyLoadingMaskType.black);
+    try {
+      await WalletManager.addWalletAccount(walletID, scriptType, label);
+      await Future.delayed(const Duration(
+          milliseconds:
+              1500)); // wait for drawer refresh, it check every second
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
   }
 
   @override
   Future<void> addEmailAddressToWalletAccount(String serverWalletID,
       String serverAccountID, String serverAddressID) async {
-    await WalletManager.addEmailAddress(
-        serverWalletID, serverAccountID, serverAddressID);
-    AccountModel accountModel =
-        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
-    accountID2IntegratedEmailIDs[accountModel.id!] =
-        await WalletManager.getAccountAddressIDs(accountModel.serverAccountID);
+    EasyLoading.show(
+        status: "adding email..", maskType: EasyLoadingMaskType.black);
+    try {
+      await WalletManager.addEmailAddress(
+          serverWalletID, serverAccountID, serverAddressID);
+      AccountModel accountModel =
+          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+      accountID2IntegratedEmailIDs[accountModel.id!] =
+          await WalletManager.getAccountAddressIDs(
+              accountModel.serverAccountID);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
     datasourceStreamSinkAdd();
   }
 
