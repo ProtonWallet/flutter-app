@@ -192,10 +192,10 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                               const SizedBox(
                                 height: 22,
                               ),
-                              IconButton(onPressed: (){
-                                Clipboard.setData(ClipboardData(text: viewModel.strMnemonic)).then(
-                                        (v) => {LocalToast.showToast(context, S.of(context).copied)});
-                              }, icon: const Icon(Icons.copy_rounded))
+                              // IconButton(onPressed: (){
+                              //   Clipboard.setData(ClipboardData(text: viewModel.strMnemonic)).then(
+                              //           (v) => {LocalToast.showToast(context, S.of(context).copied)});
+                              // }, icon: const Icon(Icons.copy_rounded))
                             ],
                           ),
                         ],

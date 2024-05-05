@@ -680,9 +680,6 @@ void showAddWalletAccountGuide(
                               horizontal: defaultButtonPadding),
                           child: ButtonV5(
                               onPressed: () async {
-                                EasyLoading.show(
-                                    status: "Adding account..",
-                                    maskType: EasyLoadingMaskType.black);
                                 await viewModel.addWalletAccount(
                                     walletModel.id!,
                                     viewModel.newAccountScriptTypeValueNotifier
@@ -692,10 +689,6 @@ void showAddWalletAccountGuide(
                                         ? viewModel
                                             .newAccountNameController.text
                                         : S.of(context).default_account);
-                                await Future.delayed(const Duration(
-                                    seconds:
-                                        1)); // wait for account show on sidebar
-                                EasyLoading.dismiss();
                                 if (context.mounted) {
                                   Navigator.of(context).pop();
                                 }
@@ -761,7 +754,9 @@ void showConfigWalletPassphrase(
                           ),
                         ),
                         if (viewModel.isWalletPassphraseMatch == false)
-                          Text(S.of(context).wrong_passphrase, style: FontManager.body2Median(ProtonColors.signalError)),
+                          Text(S.of(context).wrong_passphrase,
+                              style: FontManager.body2Median(
+                                  ProtonColors.signalError)),
                         const SizedBox(height: 12),
                         Container(
                             padding: const EdgeInsets.only(top: 20),
@@ -769,11 +764,11 @@ void showConfigWalletPassphrase(
                                 horizontal: defaultButtonPadding),
                             child: ButtonV5(
                                 onPressed: () async {
-                                  String passphrase = viewModel.walletPassphraseController.text;
+                                  String passphrase =
+                                      viewModel.walletPassphraseController.text;
                                   bool match =
                                       await WalletManager.checkFingerprint(
-                                          walletModel,
-                                          passphrase);
+                                          walletModel, passphrase);
                                   setState(() {
                                     viewModel.isWalletPassphraseMatch = match;
                                   });
@@ -781,14 +776,20 @@ void showConfigWalletPassphrase(
                                     EasyLoading.show(
                                         status: "apply passphrase to wallet",
                                         maskType: EasyLoadingMaskType.black);
-                                    await SecureStorageHelper
-                                        .instance
-                                        .set(
-                                        walletModel.serverWalletID, passphrase);
-                                    await Future.delayed(const Duration(seconds: 2)); // await for sidebar update
+                                    try {
+                                      await SecureStorageHelper.instance.set(
+                                          walletModel.serverWalletID,
+                                          passphrase);
+                                      await Future.delayed(const Duration(
+                                          seconds:
+                                              2)); // await for sidebar update
+                                    } catch (e) {
+                                      viewModel.errorMessage = e.toString();
+                                    }
                                     EasyLoading.dismiss();
                                   }
-                                  viewModel.walletPassphraseController.text = "";
+                                  viewModel.walletPassphraseController.text =
+                                      "";
                                   if (context.mounted && match) {
                                     Navigator.of(context).pop();
                                   }
@@ -892,13 +893,9 @@ void showDeleteAccountGuide(
                         child: ButtonV5(
                             onPressed: () async {
                               Navigator.of(context).pop();
-                              EasyLoading.show(
-                                  status: "deleting account..",
-                                  maskType: EasyLoadingMaskType.black);
                               await viewModel.deleteAccount(
                                   viewModel.currentWallet!.serverWalletID,
                                   userAccount.serverAccountID);
-                              EasyLoading.dismiss();
                               setState(() {
                                 viewModel.reloadPage();
                               });
@@ -979,16 +976,11 @@ void showEmailIntegrationSettingGuide(
                                             ProtonColors.textNorm)),
                                     trailing: IconButton(
                                       onPressed: () async {
-                                        EasyLoading.show(
-                                            status: "removing email..",
-                                            maskType:
-                                                EasyLoadingMaskType.black);
                                         await viewModel.removeEmailAddress(
                                             viewModel
                                                 .currentWallet!.serverWalletID,
                                             userAccount.serverAccountID,
                                             addressID);
-                                        EasyLoading.dismiss();
                                         setState(() {
                                           viewModel.reloadPage();
                                         });
@@ -1012,16 +1004,12 @@ void showEmailIntegrationSettingGuide(
                               const SizedBox(height: 10),
                               ButtonV5(
                                   onPressed: () async {
-                                    EasyLoading.show(
-                                        status: "adding email..",
-                                        maskType: EasyLoadingMaskType.black);
                                     await viewModel
                                         .addEmailAddressToWalletAccount(
                                             viewModel
                                                 .currentWallet!.serverWalletID,
                                             userAccount.serverAccountID,
                                             emailIntegrationNotifier.value.id);
-                                    EasyLoading.dismiss();
                                     setState(() {
                                       viewModel.reloadPage();
                                     });
@@ -1535,11 +1523,6 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                     ProtonColors.textNorm)),
                                             trailing: IconButton(
                                               onPressed: () async {
-                                                EasyLoading.show(
-                                                    status: "removing email..",
-                                                    maskType:
-                                                        EasyLoadingMaskType
-                                                            .black);
                                                 await viewModel
                                                     .removeEmailAddress(
                                                         viewModel.currentWallet!
@@ -1547,7 +1530,6 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                         userAccount
                                                             .serverAccountID,
                                                         addressID);
-                                                EasyLoading.dismiss();
                                                 setState(() {
                                                   viewModel.reloadPage();
                                                 });
@@ -1578,11 +1560,6 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                           ),
                                           GestureDetector(
                                               onTap: () async {
-                                                EasyLoading.show(
-                                                    status: "adding email..",
-                                                    maskType:
-                                                        EasyLoadingMaskType
-                                                            .black);
                                                 await viewModel
                                                     .addEmailAddressToWalletAccount(
                                                         viewModel.currentWallet!
@@ -1594,7 +1571,6 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                                     .id!]!
                                                             .value
                                                             .id);
-                                                EasyLoading.dismiss();
                                                 setState(() {
                                                   viewModel.reloadPage();
                                                 });
@@ -1781,11 +1757,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.textHint)))),
                     ListTile(
                         onTap: () async {
-                          EasyLoading.show(
-                              status: "log out..",
-                              maskType: EasyLoadingMaskType.black);
                           await viewModel.logout();
-                          EasyLoading.dismiss();
                         },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
@@ -1846,9 +1818,13 @@ Widget showUpdateWalletPassphraseDialog(
           EasyLoading.show(
               status: "saving passphrase..",
               maskType: EasyLoadingMaskType.black);
-          await SecureStorageHelper.instance
-              .set(walletModel.serverWalletID, textEditingController.text);
-          await Future.delayed(const Duration(seconds: 1));
+          try {
+            await SecureStorageHelper.instance
+                .set(walletModel.serverWalletID, textEditingController.text);
+            await Future.delayed(const Duration(seconds: 1));
+          } catch (e) {
+            viewModel.errorMessage = e.toString();
+          }
           EasyLoading.dismiss();
           if (context.mounted) {
             Navigator.of(context).pop(); // pop current dialog
@@ -1910,7 +1886,10 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                         if (viewModel.checkPassPhraseChecks(walletModel.id!) ==
                             false)
                           GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                showConfigWalletPassphrase(
+                                    context, viewModel, walletModel);
+                              },
                               child: Padding(
                                   padding: const EdgeInsets.only(left: 4),
                                   child: Icon(

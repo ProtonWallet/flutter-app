@@ -58,6 +58,7 @@ abstract class HistoryDetailViewModel
   int lastExchangeRateTime = 0;
   FiatCurrency userFiatCurrency;
   late UserSettingProvider userSettingProvider;
+  String errorMessage = "";
 
   void editMemo();
 
@@ -213,24 +214,28 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
   Future<void> userFinishMemo() async {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    SecretKey? secretKey =
-        await WalletManager.getWalletKey(walletModel.serverWalletID);
-    if (!memoFocusNode.hasFocus) {
-      if (userLabel != memoController.text) {
-        userLabel = memoController.text;
-        String encryptedLabel =
-            await WalletKeyHelper.encrypt(secretKey!, userLabel);
-        transactionModel!.label = utf8.encode(encryptedLabel);
-        DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
-        await proton_api.updateWalletTransactionLabel(
-          walletId: transactionModel!.serverWalletID,
-          walletAccountId: transactionModel!.serverAccountID,
-          walletTransactionId: transactionModel!.transactionID,
-          label: encryptedLabel,
-        );
+    try {
+      WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+      SecretKey? secretKey =
+      await WalletManager.getWalletKey(walletModel.serverWalletID);
+      if (!memoFocusNode.hasFocus) {
+        if (userLabel != memoController.text) {
+          userLabel = memoController.text;
+          String encryptedLabel =
+          await WalletKeyHelper.encrypt(secretKey!, userLabel);
+          transactionModel!.label = utf8.encode(encryptedLabel);
+          DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
+          await proton_api.updateWalletTransactionLabel(
+            walletId: transactionModel!.serverWalletID,
+            walletAccountId: transactionModel!.serverAccountID,
+            walletTransactionId: transactionModel!.transactionID,
+            label: encryptedLabel,
+          );
+        }
+        isEditing = false;
       }
-      isEditing = false;
+    } catch(e){
+      errorMessage = e.toString();
     }
     datasourceChangedStreamController.add(this);
     EasyLoading.dismiss();

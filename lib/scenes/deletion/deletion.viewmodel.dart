@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -18,8 +19,10 @@ abstract class WalletDeletionViewModel
   int walletID;
   WalletModel? walletModel;
   bool hasSaveMnemonic = false;
+  String errorMessage = "";
 
   void copyMnemonic(BuildContext context);
+
   Future<void> deleteWallet();
 }
 
@@ -53,9 +56,17 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
 
   @override
   Future<void> deleteWallet() async {
-    await proton_api.deleteWallet(walletId: walletModel!.serverWalletID);
-    await WalletManager.deleteWallet(walletModel!.id!);
-    await Future.delayed(const Duration(seconds: 2)); // wait for wallet/account remove on sidebar
+    EasyLoading.show(
+        status: "deleting wallet..", maskType: EasyLoadingMaskType.black);
+    try {
+      await proton_api.deleteWallet(walletId: walletModel!.serverWalletID);
+      await WalletManager.deleteWallet(walletModel!.id!);
+      await Future.delayed(const Duration(
+          seconds: 2)); // wait for wallet/account remove on sidebar
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
   }
 
   @override
