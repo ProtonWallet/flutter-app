@@ -296,6 +296,7 @@
   "setting_2fa_amount_threshold_label": "2FA Amount Threshold",
   "setting_option_on": "On",
   "setting_option_off": "Off",
+  "something_went_wrong": "Something went wrong",
   "setting_2fa_setup": "Set up 2FA",
   "unlock_with": "Unlock with",
   "wallet_recover_with_old_password": "Decrypt with your old password",

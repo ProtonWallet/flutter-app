@@ -8,6 +8,7 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
@@ -239,6 +240,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
     datasourceChangedStreamController.add(this);
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
   }
 
   @override

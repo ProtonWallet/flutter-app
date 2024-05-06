@@ -161,6 +161,10 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     datasourceChangedStreamController.add(this);
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     protonAddresses =
@@ -250,6 +254,10 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     datasourceChangedStreamController.add(this);
   }
 
@@ -303,6 +311,10 @@ class SendViewModelImpl extends SendViewModel {
       }
     } catch (e) {
       errorMessage = e.toString();
+      if (errorMessage.isNotEmpty){
+        CommonHelper.showErrorDialog(errorMessage);
+        errorMessage = "";
+      }
       rethrow;
     }
     datasourceChangedStreamController.add(this);
@@ -335,6 +347,8 @@ class SendViewModelImpl extends SendViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
       return false;
     }
     return true;
