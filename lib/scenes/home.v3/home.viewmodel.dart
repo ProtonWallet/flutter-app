@@ -13,6 +13,7 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -294,6 +295,10 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     initialed = true;
     if (hasWallet == false) {
       setOnBoard();
@@ -665,6 +670,10 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     datasourceStreamSinkAdd();
   }
 
@@ -855,6 +864,10 @@ class HomeViewModelImpl extends HomeViewModel {
         errorMessage = e.toString();
       }
       EasyLoading.dismiss();
+      if (errorMessage.isNotEmpty){
+        CommonHelper.showErrorDialog(errorMessage);
+        errorMessage = "";
+      }
     }
     datasourceStreamSinkAdd();
   }
@@ -913,6 +926,10 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
   }
 
   @override
@@ -939,6 +956,10 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     } catch (e) {
       errorMessage = e.toString();
+    }
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
     }
   }
 
@@ -997,6 +1018,10 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     datasourceStreamSinkAdd();
   }
 
@@ -1014,6 +1039,10 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     coordinator.logout();
   }
 
@@ -1113,6 +1142,10 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     EasyLoading.dismiss();
   }
 
@@ -1133,6 +1166,10 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     datasourceStreamSinkAdd();
   }
 
