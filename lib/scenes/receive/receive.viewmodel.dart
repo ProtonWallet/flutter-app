@@ -18,6 +18,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   int accountID;
 
   String address = "";
+  String errorMessage = "";
   var selectedWallet = 1;
 
   WalletModel? walletModel;
@@ -43,15 +44,21 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> loadData() async {
     EasyLoading.show(
-        status: "syncing bitcoin address index..", maskType: EasyLoadingMaskType.black);
-    if (walletID == 0) {
-      walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
-    } else {
-      walletModel = await DBHelper.walletDao!.findById(walletID);
+        status: "syncing bitcoin address index..",
+        maskType: EasyLoadingMaskType.black);
+    try {
+      if (walletID == 0) {
+        walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
+      } else {
+        walletModel = await DBHelper.walletDao!.findById(walletID);
+      }
+      accountModel = await DBHelper.accountDao!.findById(accountID);
+      await WalletManager.syncBitcoinAddressIndex(
+          walletModel!.serverWalletID, accountModel!.serverAccountID);
+      await getAddress(init: true);
+    } catch (e) {
+      errorMessage = e.toString();
     }
-    accountModel = await DBHelper.accountDao!.findById(accountID);
-    await WalletManager.syncBitcoinAddressIndex(walletModel!.serverWalletID, accountModel!.serverAccountID);
-    await getAddress(init: true);
     EasyLoading.dismiss();
     datasourceChangedStreamController.add(this);
   }

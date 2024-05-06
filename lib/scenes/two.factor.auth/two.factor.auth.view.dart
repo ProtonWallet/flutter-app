@@ -7,6 +7,7 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/components/textfield.2fa.dart';
 import 'package:wallet/components/textfield.password.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -43,59 +44,65 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Stack(children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            color: ProtonColors.backgroundSecondary,
-            child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 20,
-                    bottom: MediaQuery.of(context).size.height / 20),
-                child: Container(
-                  constraints: const BoxConstraints(
-                    maxWidth: 100.0,
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
-                  ),
-                )),
-          ),
-        ]),
         Container(
-          alignment: Alignment.topCenter,
           width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 4,
+          color: ProtonColors.backgroundSecondary,
+          child: Stack(children: [
+            Center(
+                child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 100.0,
+              ),
+              child: SvgPicture.asset(
+                'assets/images/wallet_creation/passphrase_icon.svg',
+                fit: BoxFit.contain,
+              ),
+            )),
+            AppBar(
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: ProtonColors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ]),
+        ),
+        Expanded(
           child: OnboardingContent(
               totalPages: 4,
               currentPage: 1,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 4 * 3,
               title: S.of(context).setting_2fa_setup,
-              content: S.of(context).setting_2fa_guide_step1,
-              children: [
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updatePage(1);
-                    },
-                    text: S.of(context).next,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    text: S.of(context).cancel,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.interactionNorm,
-                    textStyle:
-                        FontManager.body1Median(ProtonColors.interactionNorm),
-                    height: 48),
-              ]),
+              content: S.of(context).setting_2fa_guide_step1),
         ),
+        Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(children: [
+              ButtonV5(
+                  onPressed: () {
+                    viewModel.updatePage(1);
+                  },
+                  text: S.of(context).next,
+                  width: MediaQuery.of(context).size.width,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  height: 48),
+              SizedBoxes.box12,
+              ButtonV5(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: S.of(context).cancel,
+                  width: MediaQuery.of(context).size.width,
+                  backgroundColor: ProtonColors.white,
+                  borderColor: ProtonColors.interactionNorm,
+                  textStyle:
+                      FontManager.body1Median(ProtonColors.interactionNorm),
+                  height: 48),
+            ])),
       ],
     );
   }
@@ -372,7 +379,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                   Container(
                       alignment: Alignment.centerLeft,
                       child: Text("Password",
-                          style: FontManager.body1Median(ProtonColors.textHint))),
+                          style:
+                              FontManager.body1Median(ProtonColors.textHint))),
                   TextFieldPassword(
                       width: MediaQuery.of(context).size.width,
                       controller: viewModel.passwordController),
@@ -385,7 +393,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                         if (result) {
                           viewModel.updatePage(4);
                         } else {
-                          LocalToast.showErrorToast(context, "Something error!");
+                          LocalToast.showErrorToast(
+                              context, "Something error!");
                         }
                       }
                     },

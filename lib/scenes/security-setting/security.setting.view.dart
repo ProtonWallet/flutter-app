@@ -24,7 +24,7 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
         children: [
           const SizedBox(height: defaultPadding),
           GestureDetector(onTap: (){
-            viewModel.move(ViewIdentifiers.twoFactorAuthSetup);
+            // viewModel.move(ViewIdentifiers.twoFactorAuthSetup); // TODO:: add back after fix ui
           }, child:
           Container(
             padding: const EdgeInsets.all(defaultPadding),
