@@ -266,14 +266,18 @@ class HomeViewModelImpl extends HomeViewModel {
         await WalletManager.fetchWalletsFromServer();
         hasWallet = await WalletManager.hasWallet();
       }
-      WalletManager.initContacts();
+      await WalletManager.initContacts();
       EventLoopHelper.start();
     } catch (e) {
       errorMessage = e.toString();
     }
+    if (errorMessage.isNotEmpty){
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     try {
-      getUserSettings();
-      updateBtcPrice();
+      await getUserSettings();
+      await updateBtcPrice();
       updateTransactionFee();
       checkNewWallet();
       checkPreference(); // no effect
