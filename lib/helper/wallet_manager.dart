@@ -150,7 +150,8 @@ class WalletManager {
           secretKey, walletName.isNotEmpty ? walletName : "Default Wallet");
       String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
           mnemonicStr,
-          passphrase: passphrase);
+          passphrase:
+              passphrase != null && passphrase.isNotEmpty ? passphrase : null);
       CreateWalletReq walletReq = buildWalletRequest(
           encryptedWalletName,
           walletType,
@@ -158,7 +159,7 @@ class WalletManager {
           fingerprint,
           userPrivateKey,
           entropy,
-          passphrase != null);
+          passphrase != null && passphrase.isNotEmpty);
 
       WalletData walletData =
           await proton_api.createWallet(walletReq: walletReq);
@@ -194,17 +195,17 @@ class WalletManager {
     );
   }
 
-  static Future<int> processWalletData(WalletData data, String name,
-      String mnemonic, String fingerprint, int type) async {
+  static Future<int> processWalletData(WalletData data, String walletName,
+      String encMnemonic, String fingerprint, int type) async {
     return await WalletManager.insertOrUpdateWallet(
         userID: 0,
-        name: name,
-        encryptedMnemonic: mnemonic,
-        passphrase: type == WalletModel.createByProton ? 0 : 1,
-        imported: type,
-        priority: WalletModel.primary,
-        status: WalletModel.statusActive,
-        type: WalletModel.typeOnChain,
+        name: walletName,
+        encryptedMnemonic: encMnemonic,
+        passphrase: data.wallet.hasPassphrase,
+        imported: data.wallet.isImported,
+        priority: data.wallet.priority,
+        status: data.wallet.status,
+        type: data.wallet.type,
         fingerprint: fingerprint,
         serverWalletID: data.wallet.id);
   }
