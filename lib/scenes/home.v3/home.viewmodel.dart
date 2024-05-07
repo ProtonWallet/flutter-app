@@ -219,11 +219,11 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await WalletManager.initContacts();
       EventLoopHelper.start();
-      await protonWalletProvider.init();
-      await protonWalletProvider.setDefaultWalletAccount();
       protonWalletProvider.addListener(() {
         walletNameController.text = protonWalletProvider.protonWallet.currentWallet?.name ?? "";
       });
+      await protonWalletProvider.init();
+      await protonWalletProvider.setDefaultWalletAccount();
     } catch (e) {
       errorMessage = e.toString();
     }
