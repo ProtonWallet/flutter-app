@@ -17,6 +17,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 
   int walletID;
   int accountID;
+  int addressIndex = -1;
 
   String address = "";
   String errorMessage = "";
@@ -83,7 +84,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
                 accountModel?.serverAccountID ?? "");
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
       }
-      int addressIndex = await WalletManager.getBitcoinAddressIndex(
+      addressIndex = await WalletManager.getBitcoinAddressIndex(
           walletModel!.serverWalletID, accountModel!.serverAccountID);
       var addressInfo =
           await _lib.getAddress(_wallet, addressIndex: addressIndex);

@@ -14,6 +14,8 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart'
+    as proton_wallet_provider;
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
@@ -30,6 +32,7 @@ class EventLoop {
   bool _isRunning = false;
   String latestEventId = "";
   late UserSettingProvider userSettingProvider;
+  late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
 
   Future<void> start() async {
     if (!_isRunning) {
@@ -37,6 +40,10 @@ class EventLoop {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.navigatorKey.currentContext!,
           listen: false);
+      protonWalletProvider =
+          Provider.of<proton_wallet_provider.ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false);
       String? savedLatestEventId = await WalletManager.getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
       await _run();
@@ -121,7 +128,7 @@ class EventLoop {
                   priority: walletData.priority,
                   status: status,
                   type: walletData.type,
-                  fingerprint: walletData.fingerprint??"",
+                  fingerprint: walletData.fingerprint ?? "",
                   serverWalletID: serverWalletID);
             }
           }
@@ -161,6 +168,13 @@ class EventLoop {
             if (walletModel != null) {
               await WalletManager.handleWalletTransaction(
                   walletModel, addressKeys, walletTransaction);
+
+              AccountModel? accountModel = await DBHelper.accountDao!
+                  .findByServerAccountID(
+                      walletTransaction.walletAccountId ?? "");
+              if (accountModel != null) {
+                protonWalletProvider.setCurrentTransactions(accountModel);
+              }
             }
           }
         }
@@ -203,13 +217,13 @@ class EventLoop {
         Wallet wallet = await WalletManager.loadWalletWithID(
             walletModel.id!, accountModel.id!);
         try {
-          WalletManager.handleBitcoinAddressRequests(
+          await WalletManager.handleBitcoinAddressRequests(
               wallet, walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("handleBitcoinAddressRequests error: ${e.toString()}");
         }
         try {
-          WalletManager.bitcoinAddressPoolHealthCheck(
+          await WalletManager.bitcoinAddressPoolHealthCheck(
               wallet, walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("bitcoinAddressPoolHealthCheck error: ${e.toString()}");

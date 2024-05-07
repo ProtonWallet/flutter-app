@@ -179,7 +179,7 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) {
+  Future<void> updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) async {
     userTransactionFeeMode = transactionFeeMode;
     switch (userTransactionFeeMode) {
       case TransactionFeeMode.highPriority:
@@ -192,14 +192,14 @@ class SendViewModelImpl extends SendViewModel {
         feeRateSatPerVByte = feeRateLowPriority;
         break;
     }
-    buildTransactionScript();
+    await buildTransactionScript();
     datasourceChangedStreamController.add(this);
   }
 
   @override
   Future<void> updatePageStatus({required bool inReview}) async {
     if (inReview == true) {
-      await buildTransactionScript();
+      await updateTransactionFeeMode(userTransactionFeeMode);
     }
     this.inReview = inReview;
     datasourceChangedStreamController.add(this);
@@ -360,9 +360,9 @@ class SendViewModelImpl extends SendViewModel {
     feeRateHighPriority = feeRate_.asSatPerVb();
     feeRate_ = await _lib.estimateFeeRate(6, _blockchain!);
     feeRateMedianPriority = feeRate_.asSatPerVb();
-    // feeRate_ = await _lib.estimateFeeRate(12, _blockchain!);
-    // feeRateLowPriority = feeRate_.asSatPerVb();
-    feeRateLowPriority = 2.0;
+    feeRate_ = await _lib.estimateFeeRate(15, _blockchain!);
+    feeRateLowPriority = feeRate_.asSatPerVb();
+    // feeRateLowPriority = 2.0;
     datasourceChangedStreamController.add(this);
     Future.delayed(const Duration(seconds: 5), () {
       updateFeeRate();
