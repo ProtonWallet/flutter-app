@@ -28,19 +28,22 @@ class WalletKeyHelper {
     return SecretKey(entropy);
   }
 
-  static Future<String> encrypt(SecretKey secretKey, String plaintext, {List<int>? initIV}) async {
+  static Future<String> encrypt(SecretKey secretKey, String plaintext,
+      {List<int>? initIV}) async {
     Uint8List bytes = utf8.encode(plaintext); // for UTF-8 Strings
     List<int> iv = AesGcm.with256bits().newNonce();
-    if (initIV != null){
+    if (initIV != null) {
       iv = initIV;
     }
     SecretBox secretBox = await AesGcm.with256bits()
         .encrypt(bytes, nonce: iv, secretKey: secretKey);
-    String encryptText = base64Encode(secretBox.concatenation()); // Base64 encoding of: IV | ciphertext | MAC
+    String encryptText = base64Encode(
+        secretBox.concatenation()); // Base64 encoding of: IV | ciphertext | MAC
     return encryptText;
   }
 
-  static Future<String> getHmacHashedString(SecretKey secretKey, String message) async{
+  static Future<String> getHmacHashedString(
+      SecretKey secretKey, String message) async {
     var key = await secretKey.extractBytes();
     var bytes = utf8.encode(message);
 
@@ -50,7 +53,7 @@ class WalletKeyHelper {
   }
 
   static Future<String> decrypt(SecretKey secretKey, String encryptText) async {
-    if (encryptText.isEmpty){
+    if (encryptText.isEmpty) {
       return "";
     }
     Uint8List bytes = base64Decode(encryptText);
