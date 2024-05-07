@@ -72,15 +72,15 @@ class SendView extends ViewBase<SendViewModel> {
     switch (viewModel.userTransactionFeeMode) {
       case TransactionFeeMode.lowPriority:
         estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).toInt();
+            (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).ceil();
         break;
       case TransactionFeeMode.medianPriority:
         estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).toInt();
+            (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).ceil();
         break;
       case TransactionFeeMode.highPriority:
         estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).toInt();
+            (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).ceil();
         break;
     }
     return Container(
@@ -361,7 +361,7 @@ class SendView extends ViewBase<SendViewModel> {
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel((esitmateValue * 100000000).toInt()),
+              .getBitcoinUnitLabel((esitmateValue * 100000000).ceil()),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
@@ -392,7 +392,7 @@ class SendView extends ViewBase<SendViewModel> {
       content:
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + amount).toStringAsFixed(3)}",
       memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(
-          (esitmateValue * 100000000).toInt() + estimatedFee),
+          (esitmateValue * 100000000).ceil() + estimatedFee),
     );
   }
 
