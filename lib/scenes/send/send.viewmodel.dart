@@ -364,9 +364,10 @@ class SendViewModelImpl extends SendViewModel {
     feeRateLowPriority = feeRate_.asSatPerVb();
     // feeRateLowPriority = 2.0;
     datasourceChangedStreamController.add(this);
-    Future.delayed(const Duration(seconds: 5), () {
-      updateFeeRate();
-    });
+    // TODO:: fixme to avoid crash after coordinate pop
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   updateFeeRate();
+    // });
   }
 
   Future<void> userFinishEmailBody() async {
