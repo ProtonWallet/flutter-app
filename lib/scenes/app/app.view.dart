@@ -6,6 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/provider/locale.provider.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -29,6 +30,9 @@ class AppView extends ViewBase<AppViewModel> {
         ),
         ChangeNotifierProvider<UserSettingProvider>(
           create: (context) => UserSettingProvider(),
+        ),
+        ChangeNotifierProvider<ProtonWalletProvider>(
+          create: (context) => ProtonWalletProvider(),
         ),
         ChangeNotifierProvider<ThemeProvider>(
             create: (context) => ThemeProvider()),

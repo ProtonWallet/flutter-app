@@ -20,6 +20,7 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -82,131 +83,169 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
   @override
   Future<void> loadData() async {
-    memoController = TextEditingController();
-    memoFocusNode = FocusNode();
-    memoFocusNode.addListener(() {
-      userFinishMemo();
-    });
-    userSettingProvider = Provider.of<UserSettingProvider>(
-        Coordinator.navigatorKey.currentContext!,
-        listen: false);
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
-    SecretKey? secretKey =
-        await WalletManager.getWalletKey(walletModel.serverWalletID);
+    EasyLoading.show(
+        status: "decrypting detail..", maskType: EasyLoadingMaskType.black);
+    try {
+      memoController = TextEditingController();
+      memoFocusNode = FocusNode();
+      memoFocusNode.addListener(() {
+        userFinishMemo();
+      });
+      userSettingProvider = Provider.of<UserSettingProvider>(
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
+      WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+      AccountModel accountModel =
+          await DBHelper.accountDao!.findById(accountID);
+      SecretKey? secretKey =
+          await WalletManager.getWalletKey(walletModel.serverWalletID);
 
-    transactionModel = await DBHelper.transactionDao!
-        .findByExternalTransactionID(utf8.encode(txid));
+      transactionModel = await DBHelper.transactionDao!
+          .findByExternalTransactionID(utf8.encode(txid));
 
-    datasourceChangedStreamController.sink.add(this);
-    _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
-    List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
-    strWallet = await WalletManager.getNameWithID(walletID);
-    strAccount = await WalletManager.getAccountLabelWithID(accountID);
-    address = txid.substring(0, 32);
-    bool foundedInBDKHistory = false;
-    for (var transaction in history) {
-      if (transaction.txid == txid) {
-        blockConfirmTimestamp = transaction.confirmationTime?.timestamp;
-        amount = transaction.received.toDouble() - transaction.sent.toDouble();
-        fee = transaction.fee!.toDouble();
-        notional =
-            userSettingProvider.getNotionalInFiatCurrency(amount.toInt()).abs();
-        isSend = amount < 0;
-        foundedInBDKHistory = true;
-        datasourceChangedStreamController.sink.add(this);
-        break;
-      }
-    }
-    if (foundedInBDKHistory == false) {
-      try {
-        Map<String, dynamic> transactionDetail =
-            await WalletManager.getTransactionDetailsFromBlockStream(txid);
-        logger.i("Get transactionDetail from BlockStream: $transactionDetail");
-        blockConfirmTimestamp = null;
-        amount = (transactionDetail['fees'] +
-                transactionDetail['outputs'][0]['value'])
-            .toDouble();
-        fee = transactionDetail['fees'].toDouble();
-        notional =
-            userSettingProvider.getNotionalInFiatCurrency(amount.toInt()).abs();
-        isSend = true; // TODO:: fix this logic
-        datasourceChangedStreamController.sink.add(this);
-      } catch (e) {
-        logger.e(e.toString());
-      }
-    }
-    logger.i("transactionModel == null ? ${transactionModel == null}");
-    if (transactionModel == null) {
-      String hashedTransactionID =
-          await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
-      String encryptedLabel = await WalletKeyHelper.encrypt(secretKey, "");
-
-      String userPrivateKey =
-          await SecureStorageHelper.instance.get("userPrivateKey");
-      String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
-      DateTime now = DateTime.now();
-      WalletTransaction walletTransaction =
-          await proton_api.createWalletTransactions(
-        walletId: walletModel.serverWalletID,
-        walletAccountId: accountModel.serverAccountID,
-        transactionId: transactionId,
-        hashedTransactionId: hashedTransactionID,
-        label: encryptedLabel,
-        transactionTime: blockConfirmTimestamp != null
-            ? blockConfirmTimestamp.toString()
-            : (now.millisecondsSinceEpoch ~/ 1000).toString(),
-      );
-      String exchangeRateID = "";
-      if (walletTransaction.exchangeRate != null) {
-        exchangeRateID = walletTransaction.exchangeRate!.id;
-      }
-      transactionModel = TransactionModel(
-          id: null,
-          walletID: walletID,
-          label: utf8.encode(walletTransaction.label ?? ""),
-          externalTransactionID: utf8.encode(txid),
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          hashedTransactionID:
-              utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-          transactionID: walletTransaction.id,
-          transactionTime: walletTransaction.transactionTime,
-          exchangeRateID: exchangeRateID,
-          serverWalletID: walletTransaction.walletId,
-          serverAccountID: walletTransaction.walletAccountId!,
-          sender: walletTransaction.sender,
-          tolist: walletTransaction.tolist,
-          subject: walletTransaction.subject,
-          body: walletTransaction.body);
-      await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
-    }
-    if (transactionModel!.label.isNotEmpty) {
-      userLabel = await WalletKeyHelper.decrypt(
-          secretKey!, utf8.decode(transactionModel!.label));
-    }
-    memoController.text = userLabel;
-
-    List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
-
-    for (AddressKey addressKey in addressKeys) {
-      try {
-        toEmail = addressKey.decryptBinary(transactionModel!.tolist);
-        fromEmail = addressKey.decryptBinary(transactionModel!.sender);
-        if (toEmail.isNotEmpty) {
+      datasourceChangedStreamController.sink.add(this);
+      _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
+      List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
+      strWallet = await WalletManager.getNameWithID(walletID);
+      strAccount = await WalletManager.getAccountLabelWithID(accountID);
+      address = txid.substring(0, 32);
+      bool foundedInBDKHistory = false;
+      for (var transaction in history) {
+        if (transaction.txid == txid) {
+          blockConfirmTimestamp = transaction.confirmationTime?.timestamp;
+          amount =
+              transaction.received.toDouble() - transaction.sent.toDouble();
+          fee = transaction.fee!.toDouble();
+          notional = userSettingProvider
+              .getNotionalInFiatCurrency(amount.toInt())
+              .abs();
+          isSend = amount < 0;
+          foundedInBDKHistory = true;
+          datasourceChangedStreamController.sink.add(this);
           break;
         }
-      } catch (e) {
-        logger.e(e.toString());
       }
-    }
+      logger.i("transactionModel == null ? ${transactionModel == null}");
+      if (transactionModel == null) {
+        String hashedTransactionID =
+            await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
+        String encryptedLabel = await WalletKeyHelper.encrypt(secretKey, "");
 
+        String userPrivateKey =
+            await SecureStorageHelper.instance.get("userPrivateKey");
+        String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
+        DateTime now = DateTime.now();
+        WalletTransaction walletTransaction =
+            await proton_api.createWalletTransactions(
+          walletId: walletModel.serverWalletID,
+          walletAccountId: accountModel.serverAccountID,
+          transactionId: transactionId,
+          hashedTransactionId: hashedTransactionID,
+          label: encryptedLabel,
+          transactionTime: blockConfirmTimestamp != null
+              ? blockConfirmTimestamp.toString()
+              : (now.millisecondsSinceEpoch ~/ 1000).toString(),
+        );
+        String exchangeRateID = "";
+        if (walletTransaction.exchangeRate != null) {
+          exchangeRateID = walletTransaction.exchangeRate!.id;
+        }
+        transactionModel = TransactionModel(
+            id: null,
+            walletID: walletID,
+            label: utf8.encode(walletTransaction.label ?? ""),
+            externalTransactionID: utf8.encode(txid),
+            createTime: now.millisecondsSinceEpoch ~/ 1000,
+            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+            hashedTransactionID:
+                utf8.encode(walletTransaction.hashedTransactionId ?? ""),
+            transactionID: walletTransaction.id,
+            transactionTime: walletTransaction.transactionTime,
+            exchangeRateID: exchangeRateID,
+            serverWalletID: walletTransaction.walletId,
+            serverAccountID: walletTransaction.walletAccountId!,
+            sender: walletTransaction.sender,
+            tolist: walletTransaction.tolist,
+            subject: walletTransaction.subject,
+            body: walletTransaction.body);
+        await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
+      }
+      if (transactionModel!.label.isNotEmpty) {
+        userLabel = await WalletKeyHelper.decrypt(
+            secretKey!, utf8.decode(transactionModel!.label));
+      }
+      memoController.text = userLabel;
+
+      List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
+
+      for (AddressKey addressKey in addressKeys) {
+        try {
+          toEmail = addressKey.decrypt(transactionModel!.tolist ?? "");
+          fromEmail = addressKey.decrypt(transactionModel!.sender ?? "");
+          if (toEmail.isNotEmpty) {
+            break;
+          }
+        } catch (e) {
+          logger.e(e.toString());
+        }
+        try {
+          toEmail = addressKey.decryptBinary(transactionModel!.tolist ?? "");
+          fromEmail = addressKey.decryptBinary(transactionModel!.sender ?? "");
+          if (toEmail.isNotEmpty) {
+            break;
+          }
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+
+      if (foundedInBDKHistory == false) {
+        try {
+          Map<String, dynamic> transactionDetail =
+              await WalletManager.getTransactionDetailsFromBlockStream(txid);
+          logger
+              .i("Get transactionDetail from BlockStream: $transactionDetail");
+          blockConfirmTimestamp = null;
+          fee = transactionDetail['fees'].toDouble();
+          List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+          addresses =
+              addresses.where((element) => element.status == 1).toList();
+          String user = WalletManager.getEmailFromWalletTransaction(fromEmail);
+          for (ProtonAddress protonAddress in addresses) {
+            if (user == protonAddress.email) {
+              isSend = true;
+              break;
+            }
+          }
+          if (isSend) {
+            amount = transactionDetail['outputs'][0]['value'].toDouble();
+            notional = userSettingProvider
+                .getNotionalInFiatCurrency(amount.toInt())
+                .abs();
+          } else {
+            amount = transactionDetail['outputs'][0]['value'].toDouble();
+            notional = userSettingProvider
+                .getNotionalInFiatCurrency(amount.toInt())
+                .abs();
+          }
+          datasourceChangedStreamController.sink.add(this);
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
     logger.i("txid: $txid");
     logger.i("toEmail: $toEmail, ${transactionModel!.tolist}");
     logger.i("fromEmail: $fromEmail, ${transactionModel!.sender}");
     datasourceChangedStreamController.add(this);
     initialized = true;
-    return;
   }
 
   @override
@@ -218,12 +257,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     try {
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       SecretKey? secretKey =
-      await WalletManager.getWalletKey(walletModel.serverWalletID);
+          await WalletManager.getWalletKey(walletModel.serverWalletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text) {
           userLabel = memoController.text;
           String encryptedLabel =
-          await WalletKeyHelper.encrypt(secretKey!, userLabel);
+              await WalletKeyHelper.encrypt(secretKey!, userLabel);
           transactionModel!.label = utf8.encode(encryptedLabel);
           DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
           await proton_api.updateWalletTransactionLabel(
@@ -235,12 +274,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
         isEditing = false;
       }
-    } catch(e){
+    } catch (e) {
       errorMessage = e.toString();
     }
     datasourceChangedStreamController.add(this);
     EasyLoading.dismiss();
-    if (errorMessage.isNotEmpty){
+    if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }

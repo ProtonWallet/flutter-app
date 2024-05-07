@@ -8,7 +8,7 @@ const double defaultPadding = 16.0;
 const double defaultButtonPadding = 26.0;
 const int exchangeRateRefreshThreshold = 10;
 const int defaultBitcoinAddressCountForOneEmail = 10;
-const int defaultTransactionPerPage = 3;
+const int defaultTransactionPerPage = 5;
 const int defaultDisplayDigits = 4;
 
 const String userSettingsHideEmptyUsedAddresses =
