@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -37,7 +36,7 @@ class CommonHelper {
   }
 
   static void showErrorDialog(String errorMessage) {
-    if (Coordinator.navigatorKey.currentContext != null){
+    if (Coordinator.navigatorKey.currentContext != null) {
       BuildContext context = Coordinator.navigatorKey.currentContext!;
 
       showDialog(

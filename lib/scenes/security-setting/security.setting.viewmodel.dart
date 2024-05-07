@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/api/proton_api.dart';
-import 'package:wallet/rust/api/rust_objects.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/security-setting/security.setting.coordinator.dart';
 
-abstract class SecuritySettingViewModel extends ViewModel<SecuritySettingCoordinator> {
+abstract class SecuritySettingViewModel
+    extends ViewModel<SecuritySettingCoordinator> {
   SecuritySettingViewModel(super.coordinator);
-
 }
 
 class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
@@ -22,7 +19,6 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
   @override
   Future<void> loadData() async {
-
     datasourceChangedStreamController.sink.add(this);
   }
 
@@ -32,7 +28,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
   @override
   void move(NavigationIdentifier to) {
-    switch(to){
+    switch (to) {
       case ViewIdentifiers.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
         break;

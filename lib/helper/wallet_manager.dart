@@ -8,6 +8,7 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
@@ -119,52 +120,83 @@ class WalletManager {
   }
 
   static Future<void> autoCreateWallet() async {
-    Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
-    String strMnemonic = mnemonic.asString();
-
-    SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    String userPrivateKey =
-        await SecureStorageHelper.instance.get("userPrivateKey");
-    int passphrase = 0;
-    String encryptedMnemonic =
-        await WalletKeyHelper.encrypt(secretKey, strMnemonic);
     String walletName = "Default Wallet";
-    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-    String fingerprint = await getFingerPrintFromMnemonic(strMnemonic);
+    Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
+    await createWallet(
+        walletName, mnemonic.asString(), WalletModel.createByProton);
+  }
 
-    CreateWalletReq walletReq = CreateWalletReq(
-      name: walletName,
-      isImported: WalletModel.createByProton,
-      type: WalletModel.typeOnChain,
-      hasPassphrase: passphrase,
-      userKeyId: APIHelper.userKeyID,
-      walletKey: base64Encode(
-          proton_crypto.encryptBinaryArmor(userPrivateKey, entropy)),
-      fingerprint: fingerprint,
-      mnemonic: encryptedMnemonic,
-    );
-
+  static Future<void> createWallet(
+      String walletName, String mnemonicStr, int walletType,
+      [String? passphrase]) async {
     try {
+      SecretKey secretKey = WalletKeyHelper.generateSecretKey();
+      String userPrivateKey = await SecureStorageHelper.instance
+          .get("userPrivateKey"); // TODO:: move to parameter
+      Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+      String encryptedMnemonic =
+          await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
+      String encryptedWalletName = await WalletKeyHelper.encrypt(
+          secretKey, walletName.isNotEmpty ? walletName : "Default Wallet");
+      String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
+          mnemonicStr,
+          passphrase: passphrase);
+      CreateWalletReq walletReq = buildWalletRequest(
+          encryptedWalletName,
+          walletType,
+          encryptedMnemonic,
+          fingerprint,
+          userPrivateKey,
+          entropy,
+          passphrase != null);
+
       WalletData walletData =
           await proton_api.createWallet(walletReq: walletReq);
-      String serverWalletID = walletData.wallet.id;
-      int walletID = await WalletManager.insertOrUpdateWallet(
-          userID: 0,
-          name: walletName,
-          encryptedMnemonic: encryptedMnemonic,
-          passphrase: passphrase,
-          imported: WalletModel.createByProton,
-          priority: WalletModel.primary,
-          status: WalletModel.statusActive,
-          type: WalletModel.typeOnChain,
-          fingerprint: fingerprint,
-          serverWalletID: serverWalletID);
-      await WalletManager.setWalletKey(serverWalletID,
-          secretKey); // need to set key first, so that we can decrypt for walletAccount
-      await addWalletAccount(walletID, appConfig.scriptType, "BTC Account");
+      int walletID = await processWalletData(
+          walletData, walletName, encryptedMnemonic, fingerprint, walletType);
+
+      await WalletManager.setWalletKey(walletData.wallet.id, secretKey);
+      await WalletManager.addWalletAccount(
+          walletID, appConfig.scriptType, "BTC Account");
     } catch (e) {
       logger.e(e);
     }
+  }
+
+  static CreateWalletReq buildWalletRequest(
+      String encryptedName,
+      int type,
+      String mnemonic,
+      String fingerprint,
+      String userKey,
+      Uint8List entropy,
+      bool hasPassphrase) {
+    return CreateWalletReq(
+      name: encryptedName,
+      isImported: type,
+      type: WalletModel.typeOnChain,
+      hasPassphrase: hasPassphrase ? 1 : 0,
+      userKeyId: APIHelper.userKeyID,
+      walletKey:
+          proton_crypto.encryptBinaryArmor(userKey, entropy).base64encode(),
+      fingerprint: fingerprint,
+      mnemonic: mnemonic,
+    );
+  }
+
+  static Future<int> processWalletData(WalletData data, String name,
+      String mnemonic, String fingerprint, int type) async {
+    return await WalletManager.insertOrUpdateWallet(
+        userID: 0,
+        name: name,
+        encryptedMnemonic: mnemonic,
+        passphrase: type == WalletModel.createByProton ? 0 : 1,
+        imported: type,
+        priority: WalletModel.primary,
+        status: WalletModel.statusActive,
+        type: WalletModel.typeOnChain,
+        fingerprint: fingerprint,
+        serverWalletID: data.wallet.id);
   }
 
   static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,

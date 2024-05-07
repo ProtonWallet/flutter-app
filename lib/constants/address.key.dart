@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:wallet/helper/extension/data.dart';
+import 'package:wallet/helper/extension/strings.dart';
 
 class AddressKey {
   final String privateKey;
@@ -12,7 +14,7 @@ class AddressKey {
   String decryptBinary(String? binaryEncryptedString) {
     if (binaryEncryptedString != null) {
       Uint8List bytes = proton_crypto.decryptBinary(
-          privateKey, passphrase, base64Decode(binaryEncryptedString));
+          privateKey, passphrase, binaryEncryptedString.base64decode());
       String? decryptedMessage = utf8.decode(bytes);
       if (decryptedMessage != "null") {
         return decryptedMessage;
@@ -30,6 +32,6 @@ class AddressKey {
   }
 
   String encryptBinary(Uint8List data) {
-    return base64Encode(proton_crypto.encryptBinary(privateKey, data));
+    return proton_crypto.encryptBinary(privateKey, data).base64encode();
   }
 }
