@@ -135,10 +135,13 @@ class ProtonWallet {
 
     currentWallet = walletModel;
     currentAccount = accountModel;
-    currentBalance = accountModel.balance.toInt();
     await getCurrentWalletAccounts();
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
+    currentBalance = 0;
+    if (wallet != null) {
+      currentBalance = (await wallet!.getBalance()).total;
+    }
     await setCurrentTransactions(accountModel);
     syncWallet();
   }
