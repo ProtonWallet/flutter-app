@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -10,6 +11,7 @@ import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/network/api.helper.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -30,6 +32,7 @@ import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
@@ -72,8 +75,15 @@ class WalletManager {
   }
 
   static Future<void> deleteWallet(int walletID) async {
+    WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
     await DBHelper.walletDao!.delete(walletID);
     await DBHelper.accountDao!.deleteAccountsByWalletID(walletID);
+    if (walletModel != null) {
+      await Provider.of<ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false)
+          .deleteWallet(walletModel);
+    }
   }
 
   static Future<int> getWalletIDByServerWalletID(String serverWalletID) async {
@@ -226,7 +236,14 @@ class WalletManager {
             serverAccountID: serverAccountID);
         account.labelDecrypt =
             await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
-        await DBHelper.accountDao!.insert(account);
+        int accountID = await DBHelper.accountDao!.insert(account);
+        account.id = accountID;
+      }
+      if (Coordinator.navigatorKey.currentContext != null) {
+        await Provider.of<ProtonWalletProvider>(
+                Coordinator.navigatorKey.currentContext!,
+                listen: false)
+            .insertOrUpdateWalletAccount(account);
       }
     }
   }
@@ -264,13 +281,19 @@ class WalletManager {
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverWalletID: serverWalletID);
       int walletID = await DBHelper.walletDao!.insert(wallet);
-      return walletID;
+      wallet.id = walletID;
     } else {
       wallet.name = name;
       wallet.status = status;
       await DBHelper.walletDao!.update(wallet);
-      return wallet.id!;
     }
+    if (Coordinator.navigatorKey.currentContext != null) {
+      await Provider.of<ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false)
+          .insertOrUpdateWallet(wallet);
+    }
+    return wallet.id!;
   }
 
   static Future<int> getAccountCount(int walletID) async {
@@ -346,9 +369,14 @@ class WalletManager {
 
   static Future<double> getWalletAccountBalance(
       int walletID, int walletAccountID) async {
-    Wallet wallet =
-        await WalletManager.loadWalletWithID(walletID, walletAccountID);
-    return (await wallet.getBalance()).total.toDouble();
+    try {
+      Wallet wallet =
+          await WalletManager.loadWalletWithID(walletID, walletAccountID);
+      return (await wallet.getBalance()).total.toDouble();
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return 0.0;
   }
 
   static Future<double> getWalletBalance(int walletID) async {
@@ -614,11 +642,16 @@ class WalletManager {
     String userAgent = "None";
     if (Platform.isWindows || Platform.isLinux) {
       // user "pro"
-      uid = 'gusrkvzjpekg5usbarwfzghlkisehjub';
-      accessToken = 'o4wxrgjxj7rafyjmll6lovtvxojhxq2s';
-      refreshToken = '42jktg6gr3tqcatwigbrbpov5ug4fgk4';
-      //
-      // // user "dclbitcoin@proton.me"
+      uid = 'mxfzss4oixwzwctdeape2xm2vjgkaum6';
+      accessToken = 'vsi6fwenslo7nhk7zcm5dctkynh2u7h6';
+      refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
+
+      // user proton.wallet.test@proton.me
+      uid = 'gxm2prryar376uyp7vxdklbyjtvarnjs';
+      accessToken = 'bnupptfwrtxyuu447e27q32weef7xwlz';
+      refreshToken = 'mf72uieekh5jobeue5w5q7cu7a42377u';
+
+      // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
       // accessToken = 'pn2yq4owbrcrhlkywwrrenfexl45nznm';
       // refreshToken = 'ke2h3ubw4mlpsnydo3qjwxgrrqyi2ewm';
@@ -661,6 +694,11 @@ class WalletManager {
     String userPassphrase =
         await SecureStorageHelper.instance.get("userPassphrase");
     List<AddressKey> addressKeys = [];
+
+    // TODO:: remove this, use old version decrypt method to get addresskeys' passphrase
+    addressKeys.add(
+        AddressKey(privateKey: userPrivateKey, passphrase: userPassphrase));
+
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
         String addressKeyPrivateKey = addressKey.privateKey ?? "";
@@ -905,5 +943,38 @@ class WalletManager {
     } else {
       return {};
     }
+  }
+
+  static Future<void> addBitcoinAddress(
+      Wallet wallet, WalletModel walletModel, AccountModel accountModel) async {
+    int addressIndex = await WalletManager.getBitcoinAddressIndex(
+        walletModel.serverWalletID, accountModel.serverAccountID);
+    var addressInfo = await _lib.getAddress(wallet, addressIndex: addressIndex);
+    String address = addressInfo.address;
+    BitcoinAddress bitcoinAddress = BitcoinAddress(
+        bitcoinAddress: address,
+        bitcoinAddressSignature:
+            "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
+        bitcoinAddressIndex: addressInfo.index);
+    var results = await proton_api.addBitcoinAddresses(
+        walletId: walletModel.serverWalletID,
+        walletAccountId: accountModel.serverAccountID,
+        bitcoinAddresses: [bitcoinAddress]);
+    for (var result in results) {
+      logger.d(result.bitcoinAddress);
+    }
+  }
+
+  static Future<void> deleteWalletAccount(
+      WalletModel walletModel, AccountModel accountModel) async {
+    await proton_api.deleteWalletAccount(
+        walletId: walletModel.serverWalletID,
+        walletAccountId: accountModel.serverAccountID);
+    await DBHelper.accountDao!
+        .deleteByServerAccountID(accountModel.serverAccountID);
+    await Provider.of<ProtonWalletProvider>(
+            Coordinator.navigatorKey.currentContext!,
+            listen: false)
+        .deleteWalletAccount(accountModel);
   }
 }

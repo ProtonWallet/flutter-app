@@ -73,10 +73,10 @@ class TransactionDaoImpl extends TransactionDao {
     //DateTime now = DateTime.now();
     if (transactionModelExists != null) {
       // data exist, need update db
-      update(transactionModel);
+      await update(transactionModel);
     } else {
       // data not exist, insert data
-      insert(transactionModel);
+      await insert(transactionModel);
     }
   }
 

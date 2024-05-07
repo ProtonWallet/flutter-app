@@ -89,8 +89,9 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> mockUserSession() async {
-    await mockUserSessionPro();
+    // await mockUserSessionPro();
     // await mockUserSessionProductionDCL();
+    await mockUserSessionProductionTest();
   }
 
   Future<void> mockUserSessionProductionDCL() async {
@@ -103,9 +104,9 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         userDisplayName: userInfo["userDisplayName"] ?? "dclbitcoin",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
             "NM5gtbN7KjTDkV2H-nJqyHAlxVn6AccMZ7YxQrHuyBHap2BQwbqCtw19pRxH38YT08lEYTR189yAI0whk6ZbHQ==",
@@ -130,51 +131,52 @@ xtp6110/HCfs9wYjuxaBAQD7N8P+Jr/Jj1NdFdmypQcTyi5fwFmh5O/GF9Qc
 =VgPU
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-            userInfo["userPassphrase"] ?? "grvpr6u1ZWTGbByrpFoPgSaCmoCKPfS");
+        userInfo["userPassphrase"] ?? "grvpr6u1ZWTGbByrpFoPgSaCmoCKPfS");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
         userSessionProvider.userSession.userKeyID);
   }
 
-  Future<void> mockUserSessionQQQQ() async {
+
+  Future<void> mockUserSessionProductionTest() async {
     Map userInfo = {};
     await userSessionProvider.login(
         userId: userInfo["userId"] ??
-            "G3ttUCkgf5731XGaCbugQ4e_3iDlc6oGfz5Ene78PmAf5RLQcZQ0r9BsOelSU_RIivzzpV1p5WYMgklcBdm-aA==",
-        userMail: userInfo["userMail"] ?? "qqqq@pascal.proton.black",
-        userName: userInfo["userName"] ?? "qqqq",
-        userDisplayName: userInfo["userDisplayName"] ?? "qqqq",
+            "vJxErOgAzrqjwPfvjlhAoDVPoXbDl2URUzd15JcQNwggW6bkwd70KNWozrMpV_d21FITkNqnMAY5WRxwAGclng==",
+        userMail: userInfo["userMail"] ?? "proton.wallet.test@proton.me",
+        userName: userInfo["userName"] ?? "proton.wallet.test",
+        userDisplayName: userInfo["userDisplayName"] ?? "proton.wallet.test",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
-            "PgAdNsuQAuUp2i8uJbMXLTrXol5VCgml_lFqEBtjyayHScOjI6hqP_Xr5hrog6FvUsrQO1MNV0ym-e-SzAZ0jQ==",
+            "54DY3FZ-inMbCA6beQINReu6ziXMErdTiKgmCvATLXJtNGQx9BNo8Iggbgk5IKAXhBOrEWWeq5YcJA6pCvOTDQ==",
         userPrivateKey: userInfo["userPrivateKey"] ??
             '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: ProtonMail
 
-xYYEZhzI3hYJKwYBBAHaRw8BAQdAkUyUhAs+tlJ1LBxFMv/aQKRzUddHr45M
-21O/MUiXTXv+CQMIQCmstOCpoh9g9xO1fbetUjBgH/aO7CPhyGFr81Aw3ivg
-YMcvylJg6Xkjq/X1Y1yJ0n+zy48Z146GZouk6dprku2ayd7cyEyaN4WFHTuK
-uM0zcXFxcUBqZW5uZXIucHJvdG9uLmJsYWNrIDxxcXFxQGplbm5lci5wcm90
-b24uYmxhY2s+wo8EExYIAEEFAmYcyN4JEDR0JLtF/00cFiEEjyTjumBSE+mp
-iFR2NHQku0X/TRwCGwMCHgECGQEDCwkHAhUIAxYAAgUnCQIHAgAAQn8A/12i
-9Sx5D3AFgznEc1E2tPf0RytBht9qMcuyPjK4GJZZAQCi7+pSvvXoaeMP5CE0
-jfYyk6VF/LtYYYwCRmBV5gcUBMeLBGYcyN4SCisGAQQBl1UBBQEBB0C8ccC+
-9BBauDcW2/g8/2CMsXSINn66Ut6BdXeX3jWDSwMBCgn+CQMIHnvBYbVKQN9g
-ljaAoaotsrftCCUIpe0nTdHSlEDZpnL0pJcrnp7YR4WNnaoZAuh8F+7mhJLx
-ITyYDemUV+miag9KBFAfoSYIlNIx5ik6T8J4BBgWCAAqBQJmHMjeCRA0dCS7
-Rf9NHBYhBI8k47pgUhPpqYhUdjR0JLtF/00cAhsMAADC0wEAub+gjx6+h05s
-+MiG8742805q061G7RGxW++x28OeZL4BAMPo1tshEAbK7h4kfy+c7gnTVmP7
-F24EdYKKQW+rWlkP
-=8SuV
+xYYEZjhFYhYJKwYBBAHaRw8BAQdAKOpjdQebm9WlooZt2G9JKNlG5P5PPUaq
+REgwU+CCVun+CQMIoFofa5ScVDpgYsI1CvjZgu+c3flIRbhJarhtCh54CgIb
+pwRh5nwFXNU5EgZxjvLcVXA4rqPdOlelzr3kJSED8c8EwmR7LsiW6OOm6QJW
+is07cHJvdG9uLndhbGxldC50ZXN0QHByb3Rvbi5tZSA8cHJvdG9uLndhbGxl
+dC50ZXN0QHByb3Rvbi5tZT7CjwQTFggAQQUCZjhFYgkQzqILddLh6gEWIQRN
+uUuhzHdGsokjULHOogt10uHqAQIbAwIeAQIZAQMLCQcCFQgDFgACBScJAgcC
+AAC+iAD/dd+IhJUoYXQw/aX6BjUtpuxmI0f7kdffcGkGUhVcmiUA/2+O530i
+G2n6+xWEfRZzL8hzMu5b5G55qF9WAz3zit4Ox4sEZjhFYhIKKwYBBAGXVQEF
+AQEHQHJgB/lGIegRyHjT4OmAImgNcthZc25E56E+kLMj6BBjAwEKCf4JAwiP
+0WVmGj71iGDiW0v+ZLFBxUX/8FPLJARdpt3FyEp4QNA7r8by+lNSMVXvnyF0
+1VzY972K3H8mnTJPxRageYVMKzjDz9gnrZ0gNZ+6vas/wngEGBYIACoFAmY4
+RWIJEM6iC3XS4eoBFiEETblLocx3RrKJI1CxzqILddLh6gECGwwAADXoAP92
+fL7PqtDaE/W5tPRukb6NCYRbj2XnPVOs4tRQLUpsRQEA/Lk7PN4BuBvmoUuy
+KLmodk0w/yzCywNMXBerDlzf4Qk=
+=uf/1
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-            userInfo["userPassphrase"] ?? "8kfjLdo84fFCg94AhrnZbMzsHn1SL/S");
+        userInfo["userPassphrase"] ?? "2aEvGTaaoCTk0C7DTgRyFHmfx9t6l62");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
