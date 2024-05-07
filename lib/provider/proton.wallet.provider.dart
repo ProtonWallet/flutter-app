@@ -120,6 +120,10 @@ class ProtonWallet {
     historyTransactions.clear();
     _hasPassphrase.clear();
     isWalletSyncing.clear();
+    currentBalance = 0;
+    wallet = null;
+    _accountID2IntegratedEmailIDs.clear();
+    historyTransactionsAfterFilter.clear();
   }
 
   Future<void> updateCurrentWalletName(String newName) async {
