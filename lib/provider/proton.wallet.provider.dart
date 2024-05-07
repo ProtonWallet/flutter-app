@@ -27,10 +27,10 @@ class ProtonWallet {
   List<AccountModel> currentAccounts = [];
   List<HistoryTransaction> historyTransactions = [];
   List<HistoryTransaction> historyTransactionsAfterFilter = [];
+  Map<String, bool> isWalletSyncing = {};
   final Map<int, bool> _hasPassphrase = {};
   final Map<int, List<String>> _accountID2IntegratedEmailIDs = {};
   Wallet? wallet;
-  bool isSyncing = false;
   int currentBalance = 0;
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   Blockchain? blockchain;
@@ -51,24 +51,35 @@ class ProtonWallet {
     }
   }
 
+  bool isSyncing(){
+    if (currentAccount != null){
+      return isWalletSyncing[currentAccount!.serverAccountID] ?? false;
+    }
+    return false;
+  }
+
   Future<void> syncWallet() async {
-    if (wallet != null && currentAccount != null) {
-      AccountModel accountModel = currentAccount!;
-      isSyncing = true;
-      var walletBalance = await wallet!.getBalance();
-      accountModel.balance = (walletBalance.total).toDouble();
-      logger.d(
-          "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
-      await _lib.syncWallet(blockchain!, wallet!);
-      walletBalance = await wallet!.getBalance();
-      accountModel.balance = (walletBalance.total).toDouble();
-      if (currentAccount?.serverAccountID == accountModel.serverAccountID) {
-        currentBalance = walletBalance.total;
+    AccountModel? accountModel = currentAccount;
+    if (wallet != null && accountModel != null) {
+      if ((isWalletSyncing[accountModel.serverAccountID] ?? false) ==
+          false) {
+        isWalletSyncing[accountModel.serverAccountID] = true;
+        var walletBalance = await wallet!.getBalance();
+        accountModel.balance = (walletBalance.total).toDouble();
+        logger.d(
+            "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
+        await _lib.syncWallet(blockchain!, wallet!);
+        walletBalance = await wallet!.getBalance();
+        accountModel.balance = (walletBalance.total).toDouble();
+        if (accountModel.serverAccountID == accountModel.serverAccountID) {
+          currentBalance = walletBalance.total;
+        }
+        logger.d(
+            "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
+        await insertOrUpdateWalletAccount(accountModel);
+        isWalletSyncing[accountModel.serverAccountID] = false;
+        await setCurrentTransactions(accountModel);
       }
-      logger.d(
-          "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
-      await insertOrUpdateWalletAccount(accountModel);
-      isSyncing = false;
     }
   }
 
@@ -109,6 +120,7 @@ class ProtonWallet {
     currentAccounts.clear();
     historyTransactions.clear();
     _hasPassphrase.clear();
+    isWalletSyncing.clear();
   }
 
   Future<void> updateCurrentWalletName(String newName) async {
@@ -129,6 +141,7 @@ class ProtonWallet {
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
     await setCurrentTransactions(accountModel);
+    syncWallet();
   }
 
   Future<void> getCurrentWalletAccounts() async {
@@ -177,7 +190,8 @@ class ProtonWallet {
     } else {
       wallets.add(newWalletModel);
     }
-    if (newWalletModel.serverWalletID == (currentWallet?.serverWalletID??"")){
+    if (newWalletModel.serverWalletID ==
+        (currentWallet?.serverWalletID ?? "")) {
       currentWallet = newWalletModel;
     }
     await checkPassphrase(newWalletModel);
@@ -229,7 +243,8 @@ class ProtonWallet {
     } else {
       accounts.add(newAccountModel);
     }
-    if (newAccountModel.serverAccountID == (currentAccount?.serverAccountID??"")){
+    if (newAccountModel.serverAccountID ==
+        (currentAccount?.serverAccountID ?? "")) {
       currentAccount = newAccountModel;
     }
     await setIntegratedEmailIDs(newAccountModel);

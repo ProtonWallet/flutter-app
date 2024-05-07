@@ -164,7 +164,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                           const SizedBox(width: 4),
                           Provider.of<ProtonWalletProvider>(context)
                                   .protonWallet
-                                  .isSyncing
+                                  .isSyncing()
                               ? CustomLoadingWithIcon(
                                   icon: Icon(
                                     Icons.refresh_rounded,

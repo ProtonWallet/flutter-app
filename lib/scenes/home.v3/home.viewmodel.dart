@@ -212,8 +212,6 @@ class HomeViewModelImpl extends HomeViewModel {
           seconds:
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
 
-      await protonWalletProvider.init();
-      await protonWalletProvider.setDefaultWalletAccount();
       hasWallet = await WalletManager.hasWallet();
       if (hasWallet == false) {
         await WalletManager.fetchWalletsFromServer();
@@ -221,12 +219,14 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await WalletManager.initContacts();
       EventLoopHelper.start();
+      await protonWalletProvider.init();
+      await protonWalletProvider.setDefaultWalletAccount();
+      protonWalletProvider.addListener(() {
+        walletNameController.text = protonWalletProvider.protonWallet.currentWallet?.name ?? "";
+      });
     } catch (e) {
       errorMessage = e.toString();
     }
-    protonWalletProvider.addListener(() {
-      walletNameController.text = protonWalletProvider.protonWallet.currentWallet?.name ?? "";
-    });
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog("loadData() 1: $errorMessage");
       errorMessage = "";
