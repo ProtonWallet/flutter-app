@@ -1674,7 +1674,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                               icon: const Icon(Icons.close),
                                             ),
                                           )),
-                                  if (emailIntegrationEnables[userAccount.id!]!)
+                                  if (emailIntegrationEnables[userAccount.id!]! && viewModel.protonAddresses.isNotEmpty)
                                     Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
