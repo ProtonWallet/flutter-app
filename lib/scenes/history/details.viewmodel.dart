@@ -63,8 +63,6 @@ abstract class HistoryDetailViewModel
   String errorMessage = "";
 
   void editMemo();
-
-  Future<void> updateExchangeRate();
 }
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
@@ -283,21 +281,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-  }
-
-  @override
-  Future<void> updateExchangeRate() async {
-    if (WalletManager.getCurrentTime() >
-        lastExchangeRateTime + exchangeRateRefreshThreshold) {
-      lastExchangeRateTime = WalletManager.getCurrentTime();
-      fiatCurrency2exchangeRate[userFiatCurrency] =
-          await WalletManager.getExchangeRate(userFiatCurrency);
-      datasourceChangedStreamController.add(this);
-    }
-    Future.delayed(const Duration(seconds: exchangeRateRefreshThreshold + 1),
-        () {
-      updateExchangeRate();
-    });
   }
 
   @override
