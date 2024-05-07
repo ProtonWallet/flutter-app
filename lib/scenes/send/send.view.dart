@@ -68,6 +68,21 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildReviewContent(
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+    int estimatedFee = 0;
+    switch (viewModel.userTransactionFeeMode) {
+      case TransactionFeeMode.lowPriority:
+        estimatedFee =
+            (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).toInt();
+        break;
+      case TransactionFeeMode.medianPriority:
+        estimatedFee =
+            (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).toInt();
+        break;
+      case TransactionFeeMode.highPriority:
+        estimatedFee =
+            (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).toInt();
+        break;
+    }
     return Container(
         color: ProtonColors.white,
         child: Column(children: [
@@ -107,16 +122,16 @@ class SendView extends ViewBase<SendViewModel> {
                                     context, viewModel);
                               },
                               content:
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.estimatedFeeInSAT).toStringAsFixed(3)}",
+                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(3)}",
                               memo: Provider.of<UserSettingProvider>(context)
-                                  .getBitcoinUnitLabel(
-                                      viewModel.estimatedFeeInSAT),
+                                  .getBitcoinUnitLabel(estimatedFee),
                             ),
                             const Divider(
                               thickness: 0.2,
                               height: 1,
                             ),
-                            getTransactionTotalValueWidget(context, viewModel),
+                            getTransactionTotalValueWidget(
+                                context, viewModel, estimatedFee),
                             const Divider(
                               thickness: 0.2,
                               height: 1,
@@ -352,7 +367,7 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget getTransactionTotalValueWidget(
-      BuildContext context, SendViewModel viewModel) {
+      BuildContext context, SendViewModel viewModel, int estimatedFee) {
     double amount = 0.0;
     try {
       amount = double.parse(viewModel.amountTextController.text);
@@ -370,12 +385,14 @@ class SendView extends ViewBase<SendViewModel> {
     }
     amount *= validCount;
     esitmateValue *= validCount;
+    double estimatedFeeInNotional = Provider.of<UserSettingProvider>(context)
+        .getNotionalInFiatCurrency(estimatedFee);
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${amount.toStringAsFixed(3)}",
-      memo: Provider.of<UserSettingProvider>(context)
-          .getBitcoinUnitLabel((esitmateValue * 100000000).toInt()),
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + amount).toStringAsFixed(3)}",
+      memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(
+          (esitmateValue * 100000000).toInt() + estimatedFee),
     );
   }
 

@@ -61,8 +61,6 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
     try {
       await proton_api.deleteWallet(walletId: walletModel!.serverWalletID);
       await WalletManager.deleteWallet(walletModel!.id!);
-      await Future.delayed(const Duration(
-          seconds: 2)); // wait for wallet/account remove on sidebar
     } catch (e) {
       errorMessage = e.toString();
     }

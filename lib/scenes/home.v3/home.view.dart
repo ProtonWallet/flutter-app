@@ -32,6 +32,7 @@ import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/discover/discover.viewmodel.dart';
@@ -67,13 +68,24 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
         backgroundColor: ProtonColors.backgroundProton,
         title: Text(
-          viewModel.currentWallet != null
-              ? (viewModel.walletID2Accounts.isNotEmpty &&
-                      viewModel.walletID2Accounts[viewModel.currentWallet!.id]!
+          Provider.of<ProtonWalletProvider>(context)
+                      .protonWallet
+                      .currentWallet !=
+                  null
+              ? (Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .currentAccounts
+                          .isNotEmpty &&
+                      Provider.of<ProtonWalletProvider>(context)
+                              .protonWallet
+                              .currentAccounts
                               .length >
                           1)
-                  ? "${viewModel.currentWallet!.name} - ${viewModel.currentAccount!.labelDecrypt}"
-                  : viewModel.currentWallet!.name
+                  ? "${Provider.of<ProtonWalletProvider>(context).protonWallet.currentWallet!.name} - ${Provider.of<ProtonWalletProvider>(context).protonWallet.currentAccount!.labelDecrypt}"
+                  : Provider.of<ProtonWalletProvider>(context)
+                      .protonWallet
+                      .currentWallet!
+                      .name
               : S.of(context).proton_wallet,
           style: FontManager.body2Median(ProtonColors.textNorm),
         ),
@@ -134,40 +146,44 @@ class HomeView extends ViewBase<HomeViewModel> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)}",
+                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(Provider.of<ProtonWalletProvider>(context).protonWallet.currentBalance).toStringAsFixed(defaultDisplayDigits)}",
                                   style: FontManager.balanceInFiatCurrency(
                                       ProtonColors.textNorm)),
                               Text(
                                   Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
-                                          viewModel.balance.toInt()),
+                                          Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .currentBalance
+                                              .toInt()),
                                   style: FontManager.balanceInBTC(
                                       ProtonColors.textWeak))
                             ],
                           ),
                           const SizedBox(width: 4),
-                          viewModel.currentAccount != null
-                              ? viewModel.isSyncingMap[viewModel
-                                          .currentAccount!.serverAccountID] ??
-                                      false
-                                  ? CustomLoadingWithIcon(
-                                      icon: Icon(
-                                        Icons.refresh_rounded,
-                                        size: 22,
-                                        color: ProtonColors.textWeak,
-                                      ),
-                                      durationInMilliSeconds: 800,
-                                    )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        viewModel.syncWallet();
-                                      },
-                                      child: Icon(
-                                        Icons.refresh_rounded,
-                                        size: 22,
-                                        color: ProtonColors.textWeak,
-                                      ))
-                              : const Icon(null),
+                          Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .isSyncing
+                              ? CustomLoadingWithIcon(
+                                  icon: Icon(
+                                    Icons.refresh_rounded,
+                                    size: 22,
+                                    color: ProtonColors.textWeak,
+                                  ),
+                                  durationInMilliSeconds: 800,
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    Provider.of<ProtonWalletProvider>(context,
+                                            listen: false)
+                                        .syncWallet();
+                                  },
+                                  child: Icon(
+                                    Icons.refresh_rounded,
+                                    size: 22,
+                                    color: ProtonColors.textWeak,
+                                  ))
                         ]),
                     const SizedBox(
                       height: 20,
@@ -184,7 +200,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                               width: 80,
                               child: GestureDetector(
                                 onTap: () {
-                                  if (viewModel.currentWallet == null) {
+                                  if (Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .currentWallet ==
+                                      null) {
                                     LocalToast.showToast(context,
                                         "Please select your wallet first",
                                         icon: null);
@@ -203,7 +223,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                               width: 80,
                               child: GestureDetector(
                                 onTap: () {
-                                  if (viewModel.currentWallet == null) {
+                                  if (Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .currentWallet ==
+                                      null) {
                                     LocalToast.showToast(context,
                                         "Please select your wallet first",
                                         icon: null);
@@ -254,7 +278,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     S.of(context).todos_backup_wallet_mnemonic,
                                 checked: viewModel.hadBackup,
                                 callback: () {
-                                  if (viewModel.currentWallet == null) {
+                                  if (Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .currentWallet ==
+                                      null) {
                                     LocalToast.showToast(context,
                                         "Please select your wallet first",
                                         icon: null);
@@ -369,7 +397,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                           for (int index = 0;
                               index <
                                   min(
-                                      viewModel.historyTransactions.length,
+                                      Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .historyTransactionsAfterFilter
+                                          .length,
                                       defaultTransactionPerPage *
                                               viewModel.currentHistoryPage +
                                           defaultTransactionPerPage);
@@ -378,39 +409,78 @@ class HomeView extends ViewBase<HomeViewModel> {
                               width: MediaQuery.of(context).size.width,
                               address: CommonHelper.getFirstNChar(
                                   WalletManager.getEmailFromWalletTransaction(
-                                      viewModel.historyTransactions[index]
+                                      Provider.of<ProtonWalletProvider>(context)
+                                                  .protonWallet
+                                                  .historyTransactionsAfterFilter[
+                                                      index]
                                                   .amountInSATS >
                                               0
-                                          ? viewModel
-                                              .historyTransactions[index].sender
-                                          : viewModel.historyTransactions[index]
+                                          ? Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .historyTransactionsAfterFilter[
+                                                  index]
+                                              .sender
+                                          : Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .historyTransactionsAfterFilter[
+                                                  index]
                                               .toList),
                                   24),
-                              amount: (viewModel.historyTransactions[index]
+                              amount: (Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .historyTransactionsAfterFilter[
+                                                  index]
                                               .amountInSATS >
                                           0
-                                      ? viewModel.historyTransactions[index]
+                                      ? Provider.of<ProtonWalletProvider>(
+                                              context)
+                                          .protonWallet
+                                          .historyTransactionsAfterFilter[index]
                                           .amountInSATS
-                                      : viewModel.historyTransactions[index]
+                                      : Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .historyTransactionsAfterFilter[
+                                                  index]
                                               .amountInSATS -
-                                          viewModel.historyTransactions[index]
+                                          Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .historyTransactionsAfterFilter[
+                                                  index]
                                               .feeInSATS)
                                   .toDouble(),
-                              note:
-                                  viewModel.historyTransactions[index].label ??
-                                      "",
+                              note: Provider.of<ProtonWalletProvider>(context)
+                                      .protonWallet
+                                      .historyTransactionsAfterFilter[index]
+                                      .label ??
+                                  "",
                               onTap: () {
                                 viewModel.selectedTXID =
-                                    viewModel.historyTransactions[index].txID;
+                                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                                        .protonWallet
+                                        .historyTransactionsAfterFilter[index]
+                                        .txID;
                                 viewModel.move(ViewIdentifiers.historyDetails);
                               },
-                              timestamp: viewModel
-                                  .historyTransactions[index].createTimestamp,
-                              isSend: viewModel
-                                      .historyTransactions[index].amountInSATS <
+                              timestamp:
+                                  Provider.of<ProtonWalletProvider>(context)
+                                      .protonWallet
+                                      .historyTransactionsAfterFilter[index]
+                                      .createTimestamp,
+                              isSend: Provider.of<ProtonWalletProvider>(context)
+                                      .protonWallet
+                                      .historyTransactionsAfterFilter[index]
+                                      .amountInSATS <
                                   0,
                             ),
-                          if (viewModel.historyTransactions.length >
+                          if (Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .historyTransactionsAfterFilter
+                                  .length >
                               defaultTransactionPerPage *
                                       viewModel.currentHistoryPage +
                                   defaultTransactionPerPage)
@@ -423,7 +493,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     child: Text("Show more",
                                         style: FontManager.body1Regular(
                                             ProtonColors.protonBlue)))),
-                          if (viewModel.historyTransactions.isEmpty)
+                          if (Provider.of<ProtonWalletProvider>(context)
+                              .protonWallet
+                              .historyTransactionsAfterFilter
+                              .isEmpty)
                             Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -452,7 +525,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   ),
                                 ]),
                         ])),
-                    if (viewModel.historyTransactions.isEmpty)
+                    if (Provider.of<ProtonWalletProvider>(context)
+                        .protonWallet
+                        .historyTransactionsAfterFilter
+                        .isEmpty)
                       Column(children: [
                         const SizedBox(
                           height: 40,
@@ -777,14 +853,23 @@ void showConfigWalletPassphrase(
                                         status: "apply passphrase to wallet",
                                         maskType: EasyLoadingMaskType.black);
                                     try {
-                                      await SecureStorageHelper.instance.set(
-                                          walletModel.serverWalletID,
-                                          passphrase);
-                                      await Future.delayed(const Duration(
-                                          seconds:
-                                              2)); // await for sidebar update
+                                      if (context.mounted) {
+                                        Provider.of<ProtonWalletProvider>(
+                                                context,
+                                                listen: false)
+                                            .setPassphrase(
+                                                walletModel, passphrase);
+                                      } else {
+                                        viewModel.errorMessage =
+                                            "setPassphrase(): context.mounted == false";
+                                      }
                                     } catch (e) {
                                       viewModel.errorMessage = e.toString();
+                                    }
+                                    if (viewModel.errorMessage.isNotEmpty) {
+                                      CommonHelper.showErrorDialog(
+                                          viewModel.errorMessage);
+                                      viewModel.errorMessage = "";
                                     }
                                     EasyLoading.dismiss();
                                   }
@@ -893,12 +978,13 @@ void showDeleteAccountGuide(
                         child: ButtonV5(
                             onPressed: () async {
                               Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                               await viewModel.deleteAccount(
-                                  viewModel.currentWallet!.serverWalletID,
-                                  userAccount.serverAccountID);
-                              setState(() {
-                                viewModel.reloadPage();
-                              });
+                                  Provider.of<ProtonWalletProvider>(context,
+                                          listen: false)
+                                      .protonWallet
+                                      .currentWallet!,
+                                  userAccount);
                             },
                             backgroundColor: ProtonColors.signalError,
                             text: S.of(context).delete_account,
@@ -913,9 +999,13 @@ void showDeleteAccountGuide(
 
 void showEmailIntegrationSettingGuide(
     BuildContext context, HomeViewModel viewModel) {
-  AccountModel userAccount = viewModel.currentAccount!;
+  AccountModel userAccount = Provider.of<ProtonWalletProvider>(context, listen: false)
+      .protonWallet.currentAccount!;
   bool emailIntegrationEnable =
-      viewModel.accountID2IntegratedEmailIDs[userAccount.id]!.isNotEmpty;
+      Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .getIntegratedEmailIDs(userAccount)
+          .isNotEmpty;
   ValueNotifier emailIntegrationNotifier =
       ValueNotifier(viewModel.protonAddresses.firstOrNull);
   showModalBottomSheet(
@@ -962,9 +1052,9 @@ void showEmailIntegrationSettingGuide(
                           const SizedBox(height: 10),
                           if (emailIntegrationEnable)
                             for (String addressID
-                                in viewModel.accountID2IntegratedEmailIDs[
-                                        userAccount.id] ??
-                                    [])
+                                in Provider.of<ProtonWalletProvider>(context)
+                                    .protonWallet
+                                    .getIntegratedEmailIDs(userAccount))
                               Container(
                                   margin: const EdgeInsets.only(bottom: 5),
                                   child: ListTile(
@@ -977,13 +1067,12 @@ void showEmailIntegrationSettingGuide(
                                     trailing: IconButton(
                                       onPressed: () async {
                                         await viewModel.removeEmailAddress(
-                                            viewModel
+                                            Provider.of<ProtonWalletProvider>(context,
+                                                listen: false)
+                                                .protonWallet
                                                 .currentWallet!.serverWalletID,
                                             userAccount.serverAccountID,
                                             addressID);
-                                        setState(() {
-                                          viewModel.reloadPage();
-                                        });
                                       },
                                       icon: const Icon(Icons.close),
                                     ),
@@ -1006,13 +1095,12 @@ void showEmailIntegrationSettingGuide(
                                   onPressed: () async {
                                     await viewModel
                                         .addEmailAddressToWalletAccount(
-                                            viewModel
-                                                .currentWallet!.serverWalletID,
+                                        Provider.of<ProtonWalletProvider>(context,
+                                            listen: false)
+                                            .protonWallet
+                                            .currentWallet!.serverWalletID,
                                             userAccount.serverAccountID,
                                             emailIntegrationNotifier.value.id);
-                                    setState(() {
-                                      viewModel.reloadPage();
-                                    });
                                   },
                                   backgroundColor: ProtonColors.protonBlue,
                                   text: S.of(context).add,
@@ -1030,7 +1118,10 @@ void showEmailIntegrationSettingGuide(
 }
 
 void showTransactionFilter(BuildContext context, HomeViewModel viewModel) {
-  if (viewModel.currentWallet == null) {
+  if (Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentWallet ==
+      null) {
     LocalToast.showToast(context, "Please select your wallet first",
         icon: null);
     return;
@@ -1063,14 +1154,19 @@ void showTransactionFilter(BuildContext context, HomeViewModel viewModel) {
                   height: 5,
                 ),
                 ListTile(
-                  trailing: viewModel.transactionFilter.isEmpty
+                  trailing: Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .transactionFilter
+                          .isEmpty
                       ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                           fit: BoxFit.fill, width: 20, height: 20)
                       : null,
                   title: Text(S.of(context).transaction_filter_all_transactions,
                       style: FontManager.body2Regular(ProtonColors.textNorm)),
                   onTap: () {
-                    viewModel.updateTransactionFilter("");
+                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                        .applyHistoryTransactionFilterAndKeyword(
+                            "", viewModel.transactionSearchController.text);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -1079,14 +1175,19 @@ void showTransactionFilter(BuildContext context, HomeViewModel viewModel) {
                   height: 1,
                 ),
                 ListTile(
-                  trailing: viewModel.transactionFilter.contains("send")
+                  trailing: Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .transactionFilter
+                          .contains("send")
                       ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                           fit: BoxFit.fill, width: 20, height: 20)
                       : null,
                   title: Text(S.of(context).transaction_filter_sent,
                       style: FontManager.body2Regular(ProtonColors.textNorm)),
                   onTap: () {
-                    viewModel.updateTransactionFilter("send");
+                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                        .applyHistoryTransactionFilterAndKeyword(
+                            "send", viewModel.transactionSearchController.text);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -1095,14 +1196,19 @@ void showTransactionFilter(BuildContext context, HomeViewModel viewModel) {
                   height: 1,
                 ),
                 ListTile(
-                  trailing: viewModel.transactionFilter.contains("receive")
+                  trailing: Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .transactionFilter
+                          .contains("receive")
                       ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                           fit: BoxFit.fill, width: 20, height: 20)
                       : null,
                   title: Text(S.of(context).transaction_filter_received,
                       style: FontManager.body2Regular(ProtonColors.textNorm)),
                   onTap: () {
-                    viewModel.updateTransactionFilter("receive");
+                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                        .applyHistoryTransactionFilterAndKeyword("receive",
+                            viewModel.transactionSearchController.text);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -1117,7 +1223,10 @@ void showTransactionFilter(BuildContext context, HomeViewModel viewModel) {
 
 void showAdvanceAccountSetting(BuildContext context, HomeViewModel viewModel,
     AccountModel userAccount, bool canDelete) {
-  if (viewModel.currentWallet == null) {
+  if (Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentWallet ==
+      null) {
     LocalToast.showToast(context, "Please select your wallet first",
         icon: null);
     return;
@@ -1176,7 +1285,10 @@ void showAdvanceAccountSetting(BuildContext context, HomeViewModel viewModel,
 }
 
 void showAdvanceWalletSetting(BuildContext context, HomeViewModel viewModel) {
-  if (viewModel.currentWallet == null) {
+  if (Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentWallet ==
+      null) {
     LocalToast.showToast(context, "Please select your wallet first",
         icon: null);
     return;
@@ -1246,7 +1358,10 @@ void showAdvanceWalletSetting(BuildContext context, HomeViewModel viewModel) {
 }
 
 void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
-  if (viewModel.currentWallet == null) {
+  if (Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentWallet ==
+      null) {
     LocalToast.showToast(context, "Please select your wallet first",
         icon: null);
     return;
@@ -1264,7 +1379,9 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
       ),
       builder: (BuildContext context) {
         List<AccountModel> userAccounts =
-            viewModel.walletID2Accounts[viewModel.currentWallet!.id] ?? [];
+            Provider.of<ProtonWalletProvider>(context)
+                .protonWallet
+                .currentAccounts;
 
         Map<int, TextEditingController> accountNameControllers =
             viewModel.getAccountNameControllers(userAccounts);
@@ -1282,9 +1399,11 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
           });
         }
         Map<int, bool> emailIntegrationEnables = {
-          for (var item in userAccounts)
-            item.id!:
-                viewModel.accountID2IntegratedEmailIDs[item.id]!.isNotEmpty
+          for (var accountModel in userAccounts)
+            accountModel.id!: Provider.of<ProtonWalletProvider>(context)
+                .protonWallet
+                .getIntegratedEmailIDs(accountModel)
+                .isNotEmpty
         };
         Map<int, ValueNotifier> emailIntegrationNotifiers = {
           for (var item in userAccounts)
@@ -1319,13 +1438,24 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                             myFocusNode: viewModel.walletNameFocusNode,
                             onFinish: () async {
                               await proton_api.updateWalletName(
-                                  walletId:
-                                      viewModel.currentWallet!.serverWalletID,
+                                  walletId: Provider.of<ProtonWalletProvider>(
+                                          context,
+                                          listen: false)
+                                      .protonWallet
+                                      .currentWallet!
+                                      .serverWalletID,
                                   newName: viewModel.walletNameController.text);
-                              viewModel.currentWallet!.name =
-                                  viewModel.walletNameController.text;
-                              await DBHelper.walletDao!
-                                  .update(viewModel.currentWallet!);
+                              if (context.mounted) {
+                                Provider.of<ProtonWalletProvider>(context,
+                                        listen: false)
+                                    .updateCurrentWalletName(
+                                        viewModel.walletNameController.text);
+                                await DBHelper.walletDao!.update(
+                                    Provider.of<ProtonWalletProvider>(context,
+                                            listen: false)
+                                        .protonWallet
+                                        .currentWallet!);
+                              }
                             },
                             validation: (String value) {
                               if (value.isEmpty) {
@@ -1404,9 +1534,9 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                             height: defaultPadding,
                           ),
                           for (AccountModel userAccount
-                              in viewModel.walletID2Accounts[
-                                      viewModel.currentWallet!.id] ??
-                                  [])
+                              in Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .currentAccounts)
                             Container(
                                 width: MediaQuery.of(context).size.width,
                                 margin: const EdgeInsets.only(bottom: 10),
@@ -1506,10 +1636,11 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                           ])),
                                   const SizedBox(height: 10),
                                   if (emailIntegrationEnables[userAccount.id!]!)
-                                    for (String addressID in viewModel
-                                                .accountID2IntegratedEmailIDs[
-                                            userAccount.id] ??
-                                        [])
+                                    for (String addressID
+                                        in Provider.of<ProtonWalletProvider>(
+                                                context)
+                                            .protonWallet
+                                            .getIntegratedEmailIDs(userAccount))
                                       Container(
                                           margin:
                                               const EdgeInsets.only(bottom: 5),
@@ -1523,16 +1654,14 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                     ProtonColors.textNorm)),
                                             trailing: IconButton(
                                               onPressed: () async {
-                                                await viewModel
-                                                    .removeEmailAddress(
-                                                        viewModel.currentWallet!
-                                                            .serverWalletID,
-                                                        userAccount
-                                                            .serverAccountID,
-                                                        addressID);
-                                                setState(() {
-                                                  viewModel.reloadPage();
-                                                });
+                                                await viewModel.removeEmailAddress(
+                                                    Provider.of<ProtonWalletProvider>(
+                                                            context, listen: false)
+                                                        .protonWallet
+                                                        .currentWallet!
+                                                        .serverWalletID,
+                                                    userAccount.serverAccountID,
+                                                    addressID);
                                               },
                                               icon: const Icon(Icons.close),
                                             ),
@@ -1562,7 +1691,10 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                               onTap: () async {
                                                 await viewModel
                                                     .addEmailAddressToWalletAccount(
-                                                        viewModel.currentWallet!
+                                                        Provider.of<ProtonWalletProvider>(
+                                                                context, listen: false)
+                                                            .protonWallet
+                                                            .currentWallet!
                                                             .serverWalletID,
                                                         userAccount
                                                             .serverAccountID,
@@ -1571,9 +1703,6 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                                     .id!]!
                                                             .value
                                                             .id);
-                                                setState(() {
-                                                  viewModel.reloadPage();
-                                                });
                                               },
                                               child: Padding(
                                                   padding:
@@ -1839,33 +1968,39 @@ Widget showUpdateWalletPassphraseDialog(
 Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
   return Column(children: [
     if (viewModel.initialed)
-      for (WalletModel walletModel in viewModel.userWallets)
+      for (WalletModel walletModel
+          in Provider.of<ProtonWalletProvider>(context).protonWallet.wallets)
         ListTileTheme(
             contentPadding:
                 const EdgeInsets.only(left: defaultPadding, right: 10),
             child: ExpansionTile(
-              collapsedBackgroundColor: viewModel.currentWallet == null
-                  ? null
-                  : walletModel.serverWalletID ==
-                          viewModel.currentWallet!.serverWalletID
-                      ? ProtonColors.drawerBackgroundHighlight
-                      : Colors.transparent,
+              collapsedBackgroundColor:
+                  Provider.of<ProtonWalletProvider>(context)
+                              .protonWallet
+                              .currentWallet ==
+                          null
+                      ? null
+                      : walletModel.serverWalletID ==
+                              Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .currentWallet!
+                                  .serverWalletID
+                          ? ProtonColors.drawerBackgroundHighlight
+                          : Colors.transparent,
               shape: const Border(),
-              initiallyExpanded:
-                  viewModel.checkPassPhraseChecks(walletModel.id!),
-              onExpansionChanged: (expansion) {
-                if (viewModel.checkPassPhraseChecks(walletModel.id!) == false) {
-                  showConfigWalletPassphrase(context, viewModel, walletModel);
-                }
-              },
+              initiallyExpanded: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .hasPassphrase(walletModel),
               leading: SvgPicture.asset(
-                  "assets/images/icon/wallet-${viewModel.userWallets.indexOf(walletModel) % 4}.svg",
+                  "assets/images/icon/wallet-${Provider.of<ProtonWalletProvider>(context).protonWallet.wallets.indexOf(walletModel) % 4}.svg",
                   fit: BoxFit.fill,
                   width: 18,
                   height: 18),
               title: Transform.translate(
                   offset: const Offset(-8, 0),
-                  child: Row(
+                  child: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .hasPassphrase(walletModel) ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
@@ -1875,53 +2010,81 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                 CommonHelper.getFirstNChar(
                                     walletModel.name, 12),
                                 style: FontManager.captionSemiBold(
-                                    AvatarColorHelper.getTextColor(viewModel
-                                        .userWallets
-                                        .indexOf(walletModel)))),
-                            Text("${walletModel.accountCount} accounts",
+                                    AvatarColorHelper.getTextColor(
+                                        Provider.of<ProtonWalletProvider>(
+                                            context)
+                                            .protonWallet
+                                            .wallets
+                                            .indexOf(walletModel)))),
+                            Text(
+                                "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
+                                style: FontManager.captionRegular(
+                                    ProtonColors.textHint))
+                          ],
+                        )
+                      ]) : GestureDetector(
+                      onTap: () {
+                        showConfigWalletPassphrase(
+                            context, viewModel, walletModel);
+                      }, child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                CommonHelper.getFirstNChar(
+                                    walletModel.name, 12),
+                                style: FontManager.captionSemiBold(
+                                    AvatarColorHelper.getTextColor(
+                                        Provider.of<ProtonWalletProvider>(
+                                            context)
+                                            .protonWallet
+                                            .wallets
+                                            .indexOf(walletModel)))),
+                            Text(
+                                "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                           ],
                         ),
-                        if (viewModel.checkPassPhraseChecks(walletModel.id!) ==
-                            false)
-                          GestureDetector(
-                              onTap: () {
-                                showConfigWalletPassphrase(
-                                    context, viewModel, walletModel);
-                              },
-                              child: Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Icon(
-                                    Icons.info_outline_rounded,
-                                    color: ProtonColors.signalError,
-                                    size: 24,
-                                  ))),
-                        // getWalletBalanceWidget(context, viewModel, walletModel)
-                      ])),
+                        Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  color: ProtonColors.signalError,
+                                  size: 24,
+                                )),
+                      ]))),
               iconColor: ProtonColors.textHint,
               collapsedIconColor: ProtonColors.textHint,
               children: [
-                if (viewModel.checkPassPhraseChecks(walletModel.id!))
+                if (Provider.of<ProtonWalletProvider>(context)
+                    .protonWallet
+                    .hasPassphrase(walletModel))
                   for (AccountModel accountModel
-                      in viewModel.walletID2Accounts[walletModel.id] ?? [])
+                      in Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .getAccounts(walletModel))
                     Material(
                         color: Colors.transparent,
                         child: ListTile(
-                          tileColor: viewModel.currentAccount == null
+                          tileColor: Provider.of<ProtonWalletProvider>(context)
+                              .protonWallet.currentAccount == null
                               ? null
                               : accountModel.serverAccountID ==
-                                      viewModel.currentAccount!.serverAccountID
+                              Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet.currentAccount!.serverAccountID
                                   ? ProtonColors.drawerBackgroundHighlight
                                   : Colors.transparent,
                           onTap: () {
-                            viewModel.selectAccount(accountModel);
+                            viewModel.selectAccount(walletModel, accountModel);
                             Navigator.of(context).pop();
                           },
                           leading: Container(
                             margin: const EdgeInsets.only(left: 10),
                             child: SvgPicture.asset(
-                                "assets/images/icon/wallet-account-${viewModel.userWallets.indexOf(walletModel) % 4}.svg",
+                                "assets/images/icon/wallet-account-${Provider.of<ProtonWalletProvider>(context).protonWallet.wallets.indexOf(walletModel) % 4}.svg",
                                 fit: BoxFit.fill,
                                 width: 16,
                                 height: 16),
@@ -1941,7 +2104,10 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                                 accountModel.labelDecrypt, 20),
                                             style: FontManager.captionMedian(
                                                 AvatarColorHelper.getTextColor(
-                                                    viewModel.userWallets
+                                                    Provider.of<ProtonWalletProvider>(
+                                                            context)
+                                                        .protonWallet
+                                                        .wallets
                                                         .indexOf(
                                                             walletModel)))),
                                       ],
@@ -1950,12 +2116,17 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                         context,
                                         viewModel,
                                         accountModel,
-                                        AvatarColorHelper.getTextColor(viewModel
-                                            .userWallets
-                                            .indexOf(walletModel))),
+                                        AvatarColorHelper.getTextColor(
+                                            Provider.of<ProtonWalletProvider>(
+                                                    context)
+                                                .protonWallet
+                                                .wallets
+                                                .indexOf(walletModel))),
                                   ])),
                         )),
-                if (viewModel.checkPassPhraseChecks(walletModel.id!))
+                if (Provider.of<ProtonWalletProvider>(context)
+                    .protonWallet
+                    .hasPassphrase(walletModel))
                   ListTile(
                     onTap: () {
                       showAddWalletAccountGuide(
@@ -1985,23 +2156,6 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                   ),
               ],
             ))
-  ]);
-}
-
-Widget getWalletBalanceWidget(
-    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
-  double esitmateValue = Provider.of<UserSettingProvider>(context)
-      .getNotionalInFiatCurrency(walletModel.balance.toInt());
-
-  return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-    Text(
-        "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
-        style: FontManager.captionMedian(AvatarColorHelper.getTextColor(
-            viewModel.userWallets.indexOf(walletModel)))),
-    Text(
-        Provider.of<UserSettingProvider>(context)
-            .getBitcoinUnitLabel(walletModel.balance.toInt()),
-        style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
 }
 
