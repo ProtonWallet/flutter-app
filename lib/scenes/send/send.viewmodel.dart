@@ -51,7 +51,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   double feeRateMedianPriority = 2.0;
   double feeRateLowPriority = 2.0;
   double feeRateSatPerVByte = 2.0;
-  int baseFeeInSAT = 0;
+  double baseFeeInSAT = 0;
   int estimatedFeeInSAT = 0;
   int validRecipientCount = 0;
   bool inReview = false;
@@ -307,7 +307,7 @@ class SendViewModelImpl extends SendViewModel {
         txBuilderResult =
             await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
         estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
-        baseFeeInSAT = estimatedFeeInSAT ~/ feeRateSatPerVByte;
+        baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
       }
     } catch (e) {
       errorMessage = e.toString();
