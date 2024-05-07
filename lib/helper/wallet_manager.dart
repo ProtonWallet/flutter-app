@@ -498,19 +498,14 @@ class WalletManager {
 
   static Future<void> addEmailAddress(String serverWalletID,
       String serverAccountID, String serverAddressID) async {
-    try {
-      WalletAccount walletAccount = await proton_api.addEmailAddress(
-          walletId: serverWalletID,
-          walletAccountId: serverAccountID,
-          addressId: serverAddressID);
-      AccountModel accountModel =
-          await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
-      for (EmailAddress address in walletAccount.addresses) {
-        await WalletManager.addEmailAddressToWalletAccount(
-            accountModel, address);
-      }
-    } catch (e) {
-      logger.e(e.toString());
+    WalletAccount walletAccount = await proton_api.addEmailAddress(
+        walletId: serverWalletID,
+        walletAccountId: serverAccountID,
+        addressId: serverAddressID);
+    AccountModel accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+    for (EmailAddress address in walletAccount.addresses) {
+      await WalletManager.addEmailAddressToWalletAccount(accountModel, address);
     }
   }
 
