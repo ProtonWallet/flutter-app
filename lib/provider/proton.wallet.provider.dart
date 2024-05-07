@@ -51,8 +51,8 @@ class ProtonWallet {
     }
   }
 
-  bool isSyncing(){
-    if (currentAccount != null){
+  bool isSyncing() {
+    if (currentAccount != null) {
       return isWalletSyncing[currentAccount!.serverAccountID] ?? false;
     }
     return false;
@@ -61,8 +61,7 @@ class ProtonWallet {
   Future<void> syncWallet() async {
     AccountModel? accountModel = currentAccount;
     if (wallet != null && accountModel != null) {
-      if ((isWalletSyncing[accountModel.serverAccountID] ?? false) ==
-          false) {
+      if ((isWalletSyncing[accountModel.serverAccountID] ?? false) == false) {
         isWalletSyncing[accountModel.serverAccountID] = true;
         var walletBalance = await wallet!.getBalance();
         accountModel.balance = (walletBalance.total).toDouble();
@@ -121,6 +120,10 @@ class ProtonWallet {
     historyTransactions.clear();
     _hasPassphrase.clear();
     isWalletSyncing.clear();
+    currentBalance = 0;
+    wallet = null;
+    _accountID2IntegratedEmailIDs.clear();
+    historyTransactionsAfterFilter.clear();
   }
 
   Future<void> updateCurrentWalletName(String newName) async {
@@ -136,10 +139,13 @@ class ProtonWallet {
 
     currentWallet = walletModel;
     currentAccount = accountModel;
-    currentBalance = accountModel.balance.toInt();
     await getCurrentWalletAccounts();
     wallet = await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
+    currentBalance = 0;
+    if (wallet != null) {
+      currentBalance = (await wallet!.getBalance()).total;
+    }
     await setCurrentTransactions(accountModel);
     syncWallet();
   }
@@ -208,6 +214,9 @@ class ProtonWallet {
       if (accountModel != null) {
         await setWalletAccount(walletModel, accountModel);
       }
+    } else {
+      // clear all data since there is no wallet in local tables
+      destroy();
     }
   }
 

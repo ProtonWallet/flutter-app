@@ -630,17 +630,17 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
     case TransactionFeeMode.highPriority:
       feeModeStr = S.of(context).high_priority;
       estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).toInt();
+          (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).ceil();
       break;
     case TransactionFeeMode.medianPriority:
       feeModeStr = S.of(context).median_priority;
       estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).toInt();
+          (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).ceil();
       break;
     case TransactionFeeMode.lowPriority:
       feeModeStr = S.of(context).low_priority;
       estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).toInt();
+          (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).ceil();
       break;
   }
   String estimatedFeeInFiatCurrency =

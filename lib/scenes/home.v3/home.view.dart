@@ -460,7 +460,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   "",
                               onTap: () {
                                 viewModel.selectedTXID =
-                                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                                    Provider.of<ProtonWalletProvider>(context,
+                                            listen: false)
                                         .protonWallet
                                         .historyTransactionsAfterFilter[index]
                                         .txID;
@@ -999,8 +1000,10 @@ void showDeleteAccountGuide(
 
 void showEmailIntegrationSettingGuide(
     BuildContext context, HomeViewModel viewModel) {
-  AccountModel userAccount = Provider.of<ProtonWalletProvider>(context, listen: false)
-      .protonWallet.currentAccount!;
+  AccountModel userAccount =
+      Provider.of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentAccount!;
   bool emailIntegrationEnable =
       Provider.of<ProtonWalletProvider>(context, listen: false)
           .protonWallet
@@ -1067,10 +1070,12 @@ void showEmailIntegrationSettingGuide(
                                     trailing: IconButton(
                                       onPressed: () async {
                                         await viewModel.removeEmailAddress(
-                                            Provider.of<ProtonWalletProvider>(context,
-                                                listen: false)
+                                            Provider.of<ProtonWalletProvider>(
+                                                    context,
+                                                    listen: false)
                                                 .protonWallet
-                                                .currentWallet!.serverWalletID,
+                                                .currentWallet!
+                                                .serverWalletID,
                                             userAccount.serverAccountID,
                                             addressID);
                                       },
@@ -1095,10 +1100,12 @@ void showEmailIntegrationSettingGuide(
                                   onPressed: () async {
                                     await viewModel
                                         .addEmailAddressToWalletAccount(
-                                        Provider.of<ProtonWalletProvider>(context,
-                                            listen: false)
-                                            .protonWallet
-                                            .currentWallet!.serverWalletID,
+                                            Provider.of<ProtonWalletProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .protonWallet
+                                                .currentWallet!
+                                                .serverWalletID,
                                             userAccount.serverAccountID,
                                             emailIntegrationNotifier.value.id);
                                   },
@@ -1656,7 +1663,8 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                               onPressed: () async {
                                                 await viewModel.removeEmailAddress(
                                                     Provider.of<ProtonWalletProvider>(
-                                                            context, listen: false)
+                                                            context,
+                                                            listen: false)
                                                         .protonWallet
                                                         .currentWallet!
                                                         .serverWalletID,
@@ -1666,7 +1674,7 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                               icon: const Icon(Icons.close),
                                             ),
                                           )),
-                                  if (emailIntegrationEnables[userAccount.id!]!)
+                                  if (emailIntegrationEnables[userAccount.id!]! && viewModel.protonAddresses.isNotEmpty)
                                     Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -1692,7 +1700,8 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                                 await viewModel
                                                     .addEmailAddressToWalletAccount(
                                                         Provider.of<ProtonWalletProvider>(
-                                                                context, listen: false)
+                                                                context,
+                                                                listen: false)
                                                             .protonWallet
                                                             .currentWallet!
                                                             .serverWalletID,
@@ -1999,63 +2008,83 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .hasPassphrase(walletModel) ? Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          .protonWallet
+                          .hasPassphrase(walletModel)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                                CommonHelper.getFirstNChar(
-                                    walletModel.name, 12),
-                                style: FontManager.captionSemiBold(
-                                    AvatarColorHelper.getTextColor(
-                                        Provider.of<ProtonWalletProvider>(
-                                            context)
-                                            .protonWallet
-                                            .wallets
-                                            .indexOf(walletModel)))),
-                            Text(
-                                "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
-                          ],
-                        )
-                      ]) : GestureDetector(
-                      onTap: () {
-                        showConfigWalletPassphrase(
-                            context, viewModel, walletModel);
-                      }, child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                CommonHelper.getFirstNChar(
-                                    walletModel.name, 12),
-                                style: FontManager.captionSemiBold(
-                                    AvatarColorHelper.getTextColor(
-                                        Provider.of<ProtonWalletProvider>(
-                                            context)
-                                            .protonWallet
-                                            .wallets
-                                            .indexOf(walletModel)))),
-                            Text(
-                                "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
-                          ],
-                        ),
-                        Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: Icon(
-                                  Icons.info_outline_rounded,
-                                  color: ProtonColors.signalError,
-                                  size: 24,
-                                )),
-                      ]))),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      CommonHelper.getFirstNChar(
+                                          walletModel.name, 12),
+                                      style: FontManager.captionSemiBold(
+                                          AvatarColorHelper.getTextColor(
+                                              Provider.of<ProtonWalletProvider>(
+                                                      context)
+                                                  .protonWallet
+                                                  .wallets
+                                                  .indexOf(walletModel)))),
+                                  Text(
+                                      "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
+                                      style: FontManager.captionRegular(
+                                          ProtonColors.textHint))
+                                ],
+                              )
+                            ])
+                      : Row(children: [
+                          GestureDetector(
+                              onTap: () {
+                                showConfigWalletPassphrase(
+                                    context, viewModel, walletModel);
+                              },
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            CommonHelper.getFirstNChar(
+                                                walletModel.name, 12),
+                                            style: FontManager.captionSemiBold(
+                                                AvatarColorHelper.getTextColor(
+                                                    Provider.of<ProtonWalletProvider>(
+                                                            context)
+                                                        .protonWallet
+                                                        .wallets
+                                                        .indexOf(
+                                                            walletModel)))),
+                                        Text(
+                                            "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
+                                            style: FontManager.captionRegular(
+                                                ProtonColors.textHint))
+                                      ],
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.only(left: 4),
+                                        child: Icon(
+                                          Icons.info_outline_rounded,
+                                          color: ProtonColors.signalError,
+                                          size: 24,
+                                        )),
+                                  ])),
+                          GestureDetector(
+                              onTap: () {
+                                viewModel.coordinator
+                                    .showWalletDeletion(walletModel.id ?? 0);
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Icon(
+                                    Icons.delete_outline_rounded,
+                                    color: ProtonColors.signalError,
+                                    size: 24,
+                                  ))),
+                        ])),
               iconColor: ProtonColors.textHint,
               collapsedIconColor: ProtonColors.textHint,
               children: [
@@ -2070,11 +2099,15 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                         color: Colors.transparent,
                         child: ListTile(
                           tileColor: Provider.of<ProtonWalletProvider>(context)
-                              .protonWallet.currentAccount == null
+                                      .protonWallet
+                                      .currentAccount ==
+                                  null
                               ? null
                               : accountModel.serverAccountID ==
-                              Provider.of<ProtonWalletProvider>(context)
-                                  .protonWallet.currentAccount!.serverAccountID
+                                      Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .currentAccount!
+                                          .serverAccountID
                                   ? ProtonColors.drawerBackgroundHighlight
                                   : Colors.transparent,
                           onTap: () {
