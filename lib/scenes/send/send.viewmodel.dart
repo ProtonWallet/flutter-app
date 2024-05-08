@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +12,10 @@ import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
+import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
@@ -53,6 +57,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   double feeRateSatPerVByte = 2.0;
   double baseFeeInSAT = 0;
   int estimatedFeeInSAT = 0;
+  int sendAmountInSAT = 0;
   int validRecipientCount = 0;
   bool inReview = false;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
@@ -71,6 +76,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController memoController;
   late FocusNode emailBodyFocusNode;
   late FocusNode memoFocusNode;
+  String txid = "";
 
   void editEmailBody();
 
@@ -161,7 +167,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
-    if (errorMessage.isNotEmpty){
+    if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
@@ -179,7 +185,8 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  Future<void> updateTransactionFeeMode(TransactionFeeMode transactionFeeMode) async {
+  Future<void> updateTransactionFeeMode(
+      TransactionFeeMode transactionFeeMode) async {
     userTransactionFeeMode = transactionFeeMode;
     switch (userTransactionFeeMode) {
       case TransactionFeeMode.highPriority:
@@ -254,7 +261,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
-    if (errorMessage.isNotEmpty){
+    if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
@@ -286,7 +293,7 @@ class SendViewModelImpl extends SendViewModel {
           amount = 0.0;
         }
         double btcAmount = userSettingProvider.getNotionalInBTC(amount);
-        int amountInSATS = (btcAmount * 100000000).toInt();
+        int amountInSATS = (btcAmount * 100000000).ceil();
         txBuilder = TxBuilder();
 
         for (String email in recipents) {
@@ -307,11 +314,14 @@ class SendViewModelImpl extends SendViewModel {
         txBuilderResult =
             await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
         estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
+        sendAmountInSAT = txBuilderResult.txDetails.sent -
+            (txBuilderResult.txDetails.fee ?? 0) -
+            txBuilderResult.txDetails.received;
         baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
       }
     } catch (e) {
       errorMessage = e.toString();
-      if (errorMessage.isNotEmpty){
+      if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog(errorMessage);
         errorMessage = "";
       }
@@ -330,18 +340,23 @@ class SendViewModelImpl extends SendViewModel {
       if (protonAddresses.isNotEmpty) {
         emailAddressID = protonAddresses.first.id;
       }
-      String _ = await _lib.sendBitcoinWithAtlas(
+      String? encryptedLabel;
+      SecretKey? secretKey =
+          await WalletManager.getWalletKey(walletModel!.serverWalletID);
+      if (secretKey != null) {
+        encryptedLabel =
+            await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
+      }
+      txid = await _lib.sendBitcoinWithAPI(
           _blockchain!,
           _wallet,
           walletModel!.serverWalletID,
           accountModel!.serverAccountID,
           txBuilderResult,
           emailAddressID: emailAddressID,
-          exchangeRateID:
-              userSettingProvider.walletUserSetting.exchangeRate.id);
-      EventLoopHelper.runOnce();
-      await Future.delayed(
-          const Duration(seconds: 2)); // wait for eventloop to finish
+          exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id,
+          encryptedLabel: encryptedLabel,
+          encryptedMessage: null);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -350,6 +365,24 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
       return false;
+    }
+    try {
+      await EventLoopHelper.runOnce();
+    } catch (e) {
+      e.toString();
+    }
+    try {
+      if (txid.isNotEmpty) {
+        await DBHelper.transactionInfoDao!.insertOrUpdate(
+            externalTransactionID: utf8.encode(txid),
+            amountInSATS: sendAmountInSAT,
+            feeInSATS: estimatedFeeInSAT,
+            isSend: 1,
+            transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            feeMode: userTransactionFeeMode.index);
+      }
+    } catch (e) {
+      logger.e(e.toString());
     }
     return true;
   }

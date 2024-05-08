@@ -93,8 +93,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 ProtonColors.signalSuccess)),
                     Text(
                         viewModel.isSend
-                            ? "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.notional}"
-                            : "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.notional}",
+                            ? "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs()}"
+                            : "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs()}",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.textHint)),
                     const SizedBox(height: 20),
@@ -201,15 +201,16 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                               title: S.of(context).trans_total,
                               content: viewModel.isSend
-                                  ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.abs().toInt()).toStringAsFixed(3)}"
-                                  : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.abs().toInt() + viewModel.fee.toInt()).toStringAsFixed(3)}",
+                                  ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs().toStringAsFixed(3)}"
+                                  : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt()).toStringAsFixed(3)}",
                               memo: viewModel.isSend
                                   ? Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
-                                          viewModel.amount.toInt())
+                                          (viewModel.amount.toInt())
+                                              .abs())
                                   : Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
-                                          viewModel.amount.abs().toInt() +
+                                          viewModel.amount.toInt() +
                                               viewModel.fee.toInt())),
                           const SizedBox(height: 20),
                           ButtonV5(
@@ -272,7 +273,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
               : viewModel.address,
           copyContent: true,
-          memo: viewModel.fromEmail.isNotEmpty ? viewModel.address : null,
         ),
         const Divider(
           thickness: 0.2,

@@ -54,7 +54,7 @@ class ContactsDaoImpl extends ContactsDao {
       String email, String canonicalEmail, int isProton) async {
     ContactsModel? contactsModel = await findByServerContactID(serverContactID);
     if (contactsModel != null) {
-      update({
+      await update({
         "id": contactsModel.id,
         "name": name,
         "email": email,
@@ -62,7 +62,7 @@ class ContactsDaoImpl extends ContactsDao {
         "isProton": isProton,
       });
     } else {
-      insert({
+      await insert({
         "serverContactID": serverContactID,
         "name": name,
         "email": email,

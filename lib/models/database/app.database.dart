@@ -5,14 +5,18 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/account.dao.impl.dart';
+import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
 import 'package:wallet/models/database/address.database.dart';
+import 'package:wallet/models/database/bitcoin.address.database.dart';
 import 'package:wallet/models/database/contacts.database.dart';
 import 'package:wallet/models/database/transaction.database.dart';
+import 'package:wallet/models/database/transaction.info.database.dart';
 import 'package:wallet/models/database/wallet.database.dart';
 import 'package:wallet/models/database/account.database.dart';
 import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
+import 'package:wallet/models/transaction.info.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 
 import 'migration.dart';
@@ -22,7 +26,7 @@ class AppDatabase
     implements AccountDatabase, TransactionDatabase, WalletDatabase {
   static String dbFolder = "databases";
   static String dbName = "proton_wallet_db";
-  int version = 9;
+  int version = 10;
   late Database db;
   late MigrationContainer migrationContainer;
 
@@ -31,6 +35,8 @@ class AppDatabase
   late TransactionDao transactionDao;
   late ContactsDao contactsDao;
   late AddressDao addressDao;
+  late BitcoinAddressDao bitcoinAddressDao;
+  late TransactionInfoDao transactionInfoDao;
 
   List<Migration> migrations = [
     Migration(1, 2, (Database db) async {
@@ -58,6 +64,10 @@ class AppDatabase
     Migration(8, 9, (Database db) async {
       TransactionDatabase.migration_2.migrate(db);
     }),
+    Migration(9, 10, (Database db) async {
+      TransactionInfoDatabase.migration_0.migrate(db);
+      BitcoinAddressDatabase.migration_0.migrate(db);
+    }),
   ];
 
   AppDatabase() {
@@ -84,6 +94,8 @@ class AppDatabase
     transactionDao = TransactionDaoImpl(db);
     contactsDao = ContactsDaoImpl(db);
     addressDao = AddressDaoImpl(db);
+    bitcoinAddressDao = BitcoinAddressDaoImpl(db);
+    transactionInfoDao = TransactionInfoDaoImpl(db);
   }
 
   Future<void> init(Database database) async {

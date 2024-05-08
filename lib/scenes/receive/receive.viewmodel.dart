@@ -4,6 +4,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -62,7 +63,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
-    if (errorMessage.isNotEmpty){
+    if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
@@ -89,6 +90,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       var addressInfo =
           await _lib.getAddress(_wallet, addressIndex: addressIndex);
       address = addressInfo.address;
+      try {
+        await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+            walletID: walletID,
+            accountID: accountID,
+            bitcoinAddress: address,
+            bitcoinAddressIndex: addressIndex,
+            inEmailIntegrationPool: 0,
+            used: 0);
+      } catch (e) {
+        logger.e(e.toString());
+      }
       datasourceChangedStreamController.add(this);
     }
   }

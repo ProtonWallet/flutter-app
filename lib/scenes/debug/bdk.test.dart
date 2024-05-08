@@ -237,27 +237,31 @@ class BdkLibrary {
     }
   }
 
-  Future<String> sendBitcoinWithAtlas(
-      Blockchain blockchain,
-      Wallet aliceWallet,
-      String serverWalletID,
-      String serverAccountID,
-      TxBuilderResult txBuilderResult,
-      {String? emailAddressID,
-      String? label,
-      String? exchangeRateID,
-      String? transactionTime}) async {
+  Future<String> sendBitcoinWithAPI(
+    Blockchain blockchain,
+    Wallet aliceWallet,
+    String serverWalletID,
+    String serverAccountID,
+    TxBuilderResult txBuilderResult, {
+    String? emailAddressID,
+    String? encryptedLabel,
+    String? exchangeRateID,
+    String? transactionTime,
+    String? encryptedMessage,
+  }) async {
     getInputOutPuts(txBuilderResult, blockchain);
     final aliceSbt = await aliceWallet.sign(psbt: txBuilderResult.psbt);
     bdk_helper.Transaction tx = await aliceSbt.extractTx();
     String transactionID = await proton_api.broadcastRawTransaction(
-        signedTransactionHex: tx.toString(),
-        walletId: serverWalletID,
-        walletAccountId: serverAccountID,
-        label: label,
-        addressId: emailAddressID,
-        exchangeRateId: exchangeRateID,
-        transactionTime: transactionTime);
+      signedTransactionHex: tx.toString(),
+      walletId: serverWalletID,
+      walletAccountId: serverAccountID,
+      label: encryptedLabel,
+      addressId: emailAddressID,
+      exchangeRateId: exchangeRateID,
+      transactionTime: transactionTime,
+      body: encryptedMessage,
+    );
     return transactionID;
   }
 }
