@@ -360,10 +360,10 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
+      EasyLoading.dismiss();
       return false;
     }
     try {
@@ -384,6 +384,7 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       logger.e(e.toString());
     }
+    EasyLoading.dismiss();
     return true;
   }
 

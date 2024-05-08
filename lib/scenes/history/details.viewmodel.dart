@@ -106,7 +106,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
       strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
-      address = txid.substring(0, 32);
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
         if (transaction.txid == txid) {
@@ -193,7 +192,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           logger.e(e.toString());
         }
       }
-
+      if (toEmail == "null") {
+        toEmail = "";
+      }
+      if (fromEmail == "null") {
+        fromEmail = "";
+      }
       if (foundedInBDKHistory == false) {
         blockConfirmTimestamp = null;
         try {
@@ -236,6 +240,21 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         } catch (e) {
           logger.e(e.toString());
         }
+      }
+      // load address
+      if (isSend) {
+        TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+            await WalletManager.getTransactionDetailsFromBlockStream(txid);
+        if (transactionDetailFromBlockChain != null){
+          for (Recipient recipient in transactionDetailFromBlockChain.recipients){
+            if (recipient.amountInSATS.abs() == amount.abs() - fee.abs()){
+              address = recipient.bitcoinAddress;
+              break;
+            }
+          }
+        }
+      } else {
+        address = txid;
       }
       datasourceChangedStreamController.sink.add(this);
     } catch (e) {
