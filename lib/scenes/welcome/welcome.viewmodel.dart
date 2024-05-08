@@ -55,8 +55,23 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     }
   }
 
+  Future<void> setRustCallback() async {
+    // callback(String message) async {
+    //   print("Received message from Rust: $message");
+    //   return "Reply from Dart";
+    // }
+
+    // await setDartCallback(ArcDartCallback.sseDecode(callback));
+  }
+
   @override
   Future<void> loadData() async {
+    // var wallet = WalletAuthStore.newInstance();
+    // setGlobalCallback(dartCallback: (dartCallback) => 'Hello, $dartCallback!');
+    // WalletAuthStore.rustFunction(
+    //     dartCallback: (dartCallback) => 'Hello, $dartCallback!');
+    // await rustFunction(dartCallback: (name) => 'Hello, $name!');
+
     env = appConfig.apiEnv;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
@@ -104,9 +119,9 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         userDisplayName: userInfo["userDisplayName"] ?? "dclbitcoin",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
             "NM5gtbN7KjTDkV2H-nJqyHAlxVn6AccMZ7YxQrHuyBHap2BQwbqCtw19pRxH38YT08lEYTR189yAI0whk6ZbHQ==",
@@ -131,13 +146,12 @@ xtp6110/HCfs9wYjuxaBAQD7N8P+Jr/Jj1NdFdmypQcTyi5fwFmh5O/GF9Qc
 =VgPU
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-        userInfo["userPassphrase"] ?? "grvpr6u1ZWTGbByrpFoPgSaCmoCKPfS");
+            userInfo["userPassphrase"] ?? "grvpr6u1ZWTGbByrpFoPgSaCmoCKPfS");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
         userSessionProvider.userSession.userKeyID);
   }
-
 
   Future<void> mockUserSessionProductionTest() async {
     Map userInfo = {};
@@ -149,9 +163,9 @@ xtp6110/HCfs9wYjuxaBAQD7N8P+Jr/Jj1NdFdmypQcTyi5fwFmh5O/GF9Qc
         userDisplayName: userInfo["userDisplayName"] ?? "proton.wallet.test",
         sessionId: userInfo["sessionId"] ?? "q6kuz2imdqjvfpmxdhzgslo6qxmkbgeu",
         accessToken:
-        userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
+            userInfo["accessToken"] ?? "3232uoliqe4dm3itautb2rikqvudcalx",
         refreshToken:
-        userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
+            userInfo["refreshToken"] ?? "yt7eq6cuy6rmbaspbwy6ip4gkltxkeo5",
         scopes: userInfo["scopes"] ?? "full",
         userKeyID: userInfo["userKeyID"] ??
             "54DY3FZ-inMbCA6beQINReu6ziXMErdTiKgmCvATLXJtNGQx9BNo8Iggbgk5IKAXhBOrEWWeq5YcJA6pCvOTDQ==",
@@ -176,7 +190,7 @@ KLmodk0w/yzCywNMXBerDlzf4Qk=
 =uf/1
 -----END PGP PRIVATE KEY BLOCK-----''',
         userPassphrase:
-        userInfo["userPassphrase"] ?? "2aEvGTaaoCTk0C7DTgRyFHmfx9t6l62");
+            userInfo["userPassphrase"] ?? "2aEvGTaaoCTk0C7DTgRyFHmfx9t6l62");
     APIHelper.init(
         userSessionProvider.userSession.accessToken,
         userSessionProvider.userSession.sessionId,
@@ -298,12 +312,16 @@ ydJHDOOvI+zz/2tadhbwT6A=
               userKeyID: userInfo["userKeyID"] ?? "",
               userPrivateKey: userInfo["userPrivateKey"] ?? "",
               userPassphrase: userInfo["userPassphrase"] ?? "");
-          logger.i("accessToken = ${userSessionProvider.userSession.accessToken}");
+          logger.i(
+              "accessToken = ${userSessionProvider.userSession.accessToken}");
           logger.i("sessionId = ${userSessionProvider.userSession.sessionId}");
           logger.i("userKeyID = ${userSessionProvider.userSession.userKeyID}");
-          logger.i("refreshToken = ${userSessionProvider.userSession.refreshToken}");
-          logger.i("userPrivateKey = ${userSessionProvider.userSession.userPrivateKey}");
-          logger.i("userPassphrase = ${userSessionProvider.userSession.userPassphrase}");
+          logger.i(
+              "refreshToken = ${userSessionProvider.userSession.refreshToken}");
+          logger.i(
+              "userPrivateKey = ${userSessionProvider.userSession.userPrivateKey}");
+          logger.i(
+              "userPassphrase = ${userSessionProvider.userSession.userPassphrase}");
           await SecureStorageHelper.instance
               .set("appVersion", userInfo["appVersion"] ?? "");
           await SecureStorageHelper.instance
