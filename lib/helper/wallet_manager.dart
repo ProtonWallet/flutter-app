@@ -876,7 +876,26 @@ class WalletManager {
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 0);
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
     for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
+      try {
+        String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
+        int addressIndex = walletBitcoinAddress.bitcoinAddressIndex ?? -1;
+        if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
+          await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+              walletID: walletModel!.id!,
+              accountID: accountModel!.id!,
+              bitcoinAddress: walletBitcoinAddress.bitcoinAddress ?? "",
+              bitcoinAddressIndex: addressIndex,
+              inEmailIntegrationPool: 1,
+              used: walletBitcoinAddress.used);
+        }
+      } catch (e) {
+        logger.e(e.toString());
+      }
       if (walletBitcoinAddress.fetched == 0 && walletBitcoinAddress.used == 0) {
         unFetchedBitcoinAddressCount++;
       }
@@ -958,8 +977,8 @@ class WalletManager {
           TransactionDetailFromBlockChain(
               txid: txid,
               feeInSATS: data['fee'],
-              block_height: data['status']['block_height']??0,
-              timestamp: data['status']['block_time']??0);
+              block_height: data['status']['block_height'] ?? 0,
+              timestamp: data['status']['block_time'] ?? 0);
       List<dynamic> recipientMapList = data['vout']
           .map((output) => {
                 'address': output['scriptpubkey_address'],
