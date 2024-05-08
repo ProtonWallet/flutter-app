@@ -561,33 +561,41 @@ class HomeView extends ViewBase<HomeViewModel> {
                             ]),
                       ]),
                     const SizedBox(height: 20),
-                    if (viewModel.protonFeedItems.isNotEmpty)
+                    if (viewModel.protonFeedItems.isNotEmpty &&
+                        Provider.of<ProtonWalletProvider>(context)
+                            .protonWallet
+                            .historyTransactionsAfterFilter
+                            .isEmpty)
                       Text(S.of(context).explore_wallet,
                           style:
                               FontManager.body1Median(ProtonColors.textNorm)),
                     const SizedBox(height: 10),
-                    Column(
-                      children: [
-                        for (ProtonFeedItem protonFeedItem
-                            in viewModel.protonFeedItems)
-                          GestureDetector(
-                              onTap: () {
-                                launchUrl(Uri.parse(protonFeedItem.link));
-                              },
-                              child: CustomDiscoverBox(
-                                title: protonFeedItem.title,
-                                description: protonFeedItem.description,
-                                link: protonFeedItem.link,
-                                pubDate: protonFeedItem.pubDate,
-                                paddingSize: 0,
-                                backgroundColor: ProtonColors.white,
-                                avatarPath:
-                                    "assets/images/icon/discover_placeholder_${viewModel.protonFeedItems.indexOf(protonFeedItem) % 5}.svg",
-                                author: protonFeedItem.author,
-                                category: protonFeedItem.category,
-                              ))
-                      ],
-                    ),
+                    if (Provider.of<ProtonWalletProvider>(context)
+                        .protonWallet
+                        .historyTransactionsAfterFilter
+                        .isEmpty)
+                      Column(
+                        children: [
+                          for (ProtonFeedItem protonFeedItem
+                              in viewModel.protonFeedItems)
+                            GestureDetector(
+                                onTap: () {
+                                  launchUrl(Uri.parse(protonFeedItem.link));
+                                },
+                                child: CustomDiscoverBox(
+                                  title: protonFeedItem.title,
+                                  description: protonFeedItem.description,
+                                  link: protonFeedItem.link,
+                                  pubDate: protonFeedItem.pubDate,
+                                  paddingSize: 0,
+                                  backgroundColor: ProtonColors.white,
+                                  avatarPath:
+                                      "assets/images/icon/discover_placeholder_${viewModel.protonFeedItems.indexOf(protonFeedItem) % 5}.svg",
+                                  author: protonFeedItem.author,
+                                  category: protonFeedItem.category,
+                                ))
+                        ],
+                      ),
                     // SizedBox(
                     //     width: MediaQuery.of(context).size.width,
                     //     height: 200,
@@ -1674,7 +1682,9 @@ void showWalletSetting(BuildContext context, HomeViewModel viewModel) {
                                               icon: const Icon(Icons.close),
                                             ),
                                           )),
-                                  if (emailIntegrationEnables[userAccount.id!]! && viewModel.protonAddresses.isNotEmpty)
+                                  if (emailIntegrationEnables[
+                                          userAccount.id!]! &&
+                                      viewModel.protonAddresses.isNotEmpty)
                                     Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
