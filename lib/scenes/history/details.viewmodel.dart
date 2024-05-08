@@ -20,6 +20,7 @@ import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -245,9 +246,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       if (isSend) {
         TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
             await WalletManager.getTransactionDetailsFromBlockStream(txid);
-        if (transactionDetailFromBlockChain != null){
-          for (Recipient recipient in transactionDetailFromBlockChain.recipients){
-            if (recipient.amountInSATS.abs() == amount.abs() - fee.abs()){
+        if (transactionDetailFromBlockChain != null) {
+          for (Recipient recipient
+              in transactionDetailFromBlockChain.recipients) {
+            if (recipient.amountInSATS.abs() == amount.abs() - fee.abs()) {
               address = recipient.bitcoinAddress;
               break;
             }
@@ -293,6 +295,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             walletTransactionId: transactionModel!.transactionID,
             label: encryptedLabel,
           );
+          AccountModel accountModel = await DBHelper.accountDao!
+              .findByServerAccountID(transactionModel!.serverAccountID);
+          await Provider.of<ProtonWalletProvider>(
+                  Coordinator.navigatorKey.currentContext!,
+                  listen: false)
+              .setCurrentTransactions(accountModel);
         }
         isEditing = false;
       }

@@ -327,7 +327,8 @@ class SendView extends ViewBase<SendViewModel> {
                   // TODO:: Send bitcoin with Esplora client
                   bool success = await viewModel.sendCoin();
                   if (context.mounted && success) {
-                    Provider.of<ProtonWalletProvider>(context, listen: false).syncWallet();
+                    Provider.of<ProtonWalletProvider>(context, listen: false)
+                        .syncWallet();
                     viewModel.coordinator.end();
                     Navigator.of(context).pop();
                   } else if (context.mounted && success == false) {
