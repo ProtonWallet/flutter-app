@@ -28,6 +28,8 @@ use bdk::bitcoin::consensus::serialize;
 use bdk::bitcoin::Transaction as bdkTransaction;
 use bitcoin_internals::hex::display::DisplayHex;
 
+use super::api_service::wallet_auth_store::call_dart_callback;
+
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonWalletApiClient>>> = RwLock::new(None);
 }
@@ -236,6 +238,7 @@ pub async fn get_exchange_rate(
     fiat_currency: FiatCurrency,
     time: Option<u64>,
 ) -> Result<ProtonExchangeRate, ApiError> {
+    // call_dart_callback("geting_exchange_rate".to_string()).await;
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .exchange_rate

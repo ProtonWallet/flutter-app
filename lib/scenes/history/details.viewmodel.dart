@@ -225,10 +225,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
                     .findByBitcoinAddress(recipient.bitcoinAddress);
-                if (bitcoinAddressModel != null) {
-                  me = recipient;
-                  break;
-                }
+                me = recipient;
+                break;
               }
               if (me != null) {
                 isSend = false;

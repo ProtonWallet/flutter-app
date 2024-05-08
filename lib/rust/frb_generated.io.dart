@@ -4,11 +4,12 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/api2.dart';
+import 'api/api_service/proton_api_service.dart';
+import 'api/api_service/wallet_auth_store.dart';
 import 'api/bdk_wallet.dart';
 import 'api/flutter_logger.dart';
 import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
-import 'api/proton_api_service.dart';
 import 'api/rust_api.dart';
 import 'api/rust_objects.dart';
 import 'bdk/blockchain.dart';
@@ -65,6 +66,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonApiService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockProtonAPIService(
           dynamic raw);
+
+  @protected
+  FutureOr<String> Function(String)
+      dco_decode_DartFn_Inputs_String_Output_String(dynamic raw);
+
+  @protected
+  Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
   BdkWalletManager
@@ -549,6 +557,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonApiService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockProtonAPIService(
           SseDeserializer deserializer);
+
+  @protected
+  Object sse_decode_DartOpaque(SseDeserializer deserializer);
 
   @protected
   BdkWalletManager
@@ -1089,6 +1100,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockProtonAPIService(
           ProtonApiService self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_DartFn_Inputs_String_Output_String(
+      FutureOr<String> Function(String) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_DartOpaque(Object self, SseSerializer serializer);
 
   @protected
   void
