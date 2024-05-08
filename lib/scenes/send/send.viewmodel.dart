@@ -357,6 +357,20 @@ class SendViewModelImpl extends SendViewModel {
           exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id,
           encryptedLabel: encryptedLabel,
           encryptedMessage: null);
+      try {
+        if (txid.isNotEmpty) {
+          logger.i("txid = $txid");
+          await DBHelper.transactionInfoDao!.insertOrUpdate(
+              externalTransactionID: utf8.encode(txid),
+              amountInSATS: sendAmountInSAT,
+              feeInSATS: estimatedFeeInSAT,
+              isSend: 1,
+              transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+              feeMode: userTransactionFeeMode.index);
+        }
+      } catch (e) {
+        logger.e(e.toString());
+      }
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -370,19 +384,6 @@ class SendViewModelImpl extends SendViewModel {
       await EventLoopHelper.runOnce();
     } catch (e) {
       e.toString();
-    }
-    try {
-      if (txid.isNotEmpty) {
-        await DBHelper.transactionInfoDao!.insertOrUpdate(
-            externalTransactionID: utf8.encode(txid),
-            amountInSATS: sendAmountInSAT,
-            feeInSATS: estimatedFeeInSAT,
-            isSend: 1,
-            transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-            feeMode: userTransactionFeeMode.index);
-      }
-    } catch (e) {
-      logger.e(e.toString());
     }
     EasyLoading.dismiss();
     return true;
