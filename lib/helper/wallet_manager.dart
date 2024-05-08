@@ -9,6 +9,7 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
@@ -643,9 +644,9 @@ class WalletManager {
       refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
 
       // user proton.wallet.test@proton.me
-      uid = 'gxm2prryar376uyp7vxdklbyjtvarnjs';
-      accessToken = 'bnupptfwrtxyuu447e27q32weef7xwlz';
-      refreshToken = 'mf72uieekh5jobeue5w5q7cu7a42377u';
+      uid = '2t3memuak3gv56qo7bmxglr5cmbsxusi';
+      accessToken = '7bfejax5l6n2cd2djnqcbv44gfupoqmh';
+      refreshToken = 'z4nzrcj42vkhpdr7frdbjvisoukm3swj';
 
       // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
@@ -820,6 +821,21 @@ class WalletManager {
             walletAccountId: serverAccountID,
             walletAccountBitcoinAddressId: walletBitcoinAddress.id,
             bitcoinAddress: bitcoinAddress);
+        try {
+          WalletModel? walletModel = await DBHelper.walletDao!
+              .getWalletByServerWalletID(serverWalletID);
+          AccountModel? accountModel =
+              await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+          await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+              walletID: walletModel!.id!,
+              accountID: accountModel!.id!,
+              bitcoinAddress: address,
+              bitcoinAddressIndex: addressIndex,
+              inEmailIntegrationPool: 1,
+              used: 0);
+        } catch (e) {
+          logger.e(e.toString());
+        }
       }
     }
   }
@@ -860,7 +876,26 @@ class WalletManager {
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 0);
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+    AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
     for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
+      try {
+        String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
+        int addressIndex = walletBitcoinAddress.bitcoinAddressIndex ?? -1;
+        if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
+          await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+              walletID: walletModel!.id!,
+              accountID: accountModel!.id!,
+              bitcoinAddress: walletBitcoinAddress.bitcoinAddress ?? "",
+              bitcoinAddressIndex: addressIndex,
+              inEmailIntegrationPool: 1,
+              used: walletBitcoinAddress.used);
+        }
+      } catch (e) {
+        logger.e(e.toString());
+      }
       if (walletBitcoinAddress.fetched == 0 && walletBitcoinAddress.used == 0) {
         unFetchedBitcoinAddressCount++;
       }
@@ -886,6 +921,21 @@ class WalletManager {
           walletId: serverWalletID,
           walletAccountId: serverAccountID,
           bitcoinAddresses: [bitcoinAddress]);
+      try {
+        WalletModel? walletModel =
+            await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+        AccountModel? accountModel =
+            await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+        await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+            walletID: walletModel!.id!,
+            accountID: accountModel!.id!,
+            bitcoinAddress: address,
+            bitcoinAddressIndex: addressIndex,
+            inEmailIntegrationPool: 1,
+            used: 0);
+      } catch (e) {
+        logger.e(e.toString());
+      }
     }
   }
 
@@ -917,28 +967,32 @@ class WalletManager {
     }
   }
 
-  static Future<Map<String, dynamic>> getTransactionDetailsFromBlockStream(
-      String txid) async {
+  static Future<TransactionDetailFromBlockChain?>
+      getTransactionDetailsFromBlockStream(String txid) async {
     String baseUrl = "${appConfig.esploraBaseUrl}api";
     final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
-      return {
-        'transaction_id': txid,
-        'block_height': data['status']['block_height'],
-        'timestamp': data['status']['block_time'],
-        'outputs': data['vout']
-            .map((output) => {
-                  'address': output['scriptpubkey_address'],
-                  'value': output['value']
-                })
-            .toList(),
-        'fees': data['fee'],
-      };
-    } else {
-      return {};
+      TransactionDetailFromBlockChain transactionDetailFromBlockChain =
+          TransactionDetailFromBlockChain(
+              txid: txid,
+              feeInSATS: data['fee'],
+              block_height: data['status']['block_height'] ?? 0,
+              timestamp: data['status']['block_time'] ?? 0);
+      List<dynamic> recipientMapList = data['vout']
+          .map((output) => {
+                'address': output['scriptpubkey_address'],
+                'value': output['value']
+              })
+          .toList();
+      for (var recipientMap in recipientMapList) {
+        transactionDetailFromBlockChain.addRecipient(Recipient(
+            bitcoinAddress: recipientMap["address"],
+            amountInSATS: recipientMap["value"]));
+      }
+      return transactionDetailFromBlockChain;
     }
+    return null;
   }
 
   static Future<void> addBitcoinAddress(
@@ -952,12 +1006,20 @@ class WalletManager {
         bitcoinAddressSignature:
             "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
         bitcoinAddressIndex: addressInfo.index);
-    var results = await proton_api.addBitcoinAddresses(
+    await proton_api.addBitcoinAddresses(
         walletId: walletModel.serverWalletID,
         walletAccountId: accountModel.serverAccountID,
         bitcoinAddresses: [bitcoinAddress]);
-    for (var result in results) {
-      logger.d(result.bitcoinAddress);
+    try {
+      await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+          walletID: walletModel.id!,
+          accountID: accountModel.id!,
+          bitcoinAddress: address,
+          bitcoinAddressIndex: addressIndex,
+          inEmailIntegrationPool: 1,
+          used: 0);
+    } catch (e) {
+      logger.e(e.toString());
     }
   }
 

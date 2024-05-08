@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -112,18 +115,26 @@ class ProtonWallet {
   }
 
   void destroy() {
+    clearAll();
+  }
+
+  void clearCurrent() {
     currentWallet = null;
     currentAccount = null;
+    wallet = null;
+    currentBalance = 0;
+    currentAccounts.clear();
+    historyTransactionsAfterFilter.clear();
+  }
+
+  void clearAll() {
+    clearCurrent();
     wallets.clear();
     accounts.clear();
-    currentAccounts.clear();
-    historyTransactions.clear();
-    _hasPassphrase.clear();
     isWalletSyncing.clear();
-    currentBalance = 0;
-    wallet = null;
+    _hasPassphrase.clear();
+    historyTransactions.clear();
     _accountID2IntegratedEmailIDs.clear();
-    historyTransactionsAfterFilter.clear();
   }
 
   Future<void> updateCurrentWalletName(String newName) async {
@@ -207,12 +218,16 @@ class ProtonWallet {
     WalletModel? walletModel =
         await DBHelper.walletDao!.getFirstPriorityWallet();
     if (walletModel != null) {
-      List<AccountModel> accountModels =
-          (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
-              .cast<AccountModel>();
-      AccountModel? accountModel = accountModels.firstOrNull;
-      if (accountModel != null) {
-        await setWalletAccount(walletModel, accountModel);
+      if (hasPassphrase(walletModel) == false) {
+        clearCurrent();
+      } else {
+        List<AccountModel> accountModels =
+            (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
+                .cast<AccountModel>();
+        AccountModel? accountModel = accountModels.firstOrNull;
+        if (accountModel != null) {
+          await setWalletAccount(walletModel, accountModel);
+        }
       }
     } else {
       // clear all data since there is no wallet in local tables
@@ -286,6 +301,7 @@ class ProtonWallet {
   }
 
   Future<void> setCurrentTransactions(AccountModel accountModel) async {
+    bool bdkSynced = false;
     if (accountModel.serverAccountID ==
         (currentAccount?.serverAccountID ?? "")) {
       Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
@@ -299,6 +315,7 @@ class ProtonWallet {
       if (wallet != null) {
         List<TransactionDetails> transactionHistoryFromBDK =
             await _lib.getAllTransactions(wallet!);
+        bdkSynced = transactionHistoryFromBDK.isNotEmpty;
         SecretKey? secretKey =
             await WalletManager.getWalletKey(currentWallet!.serverWalletID);
 
@@ -352,6 +369,12 @@ class ProtonWallet {
                 break;
               }
             }
+          }
+          if (sender == "null") {
+            sender = "";
+          }
+          if (toList == "null") {
+            toList = "";
           }
           int amountInSATS =
               transactionDetail.received - transactionDetail.sent;
@@ -422,41 +445,78 @@ class ProtonWallet {
               break;
             }
           }
-          bool isSent = false;
-          String user = WalletManager.getEmailFromWalletTransaction(sender);
-          for (ProtonAddress protonAddress in addresses) {
-            if (user == protonAddress.email) {
-              isSent = true;
-              break;
-            }
+          if (sender == "null") {
+            sender = "";
           }
-          int amountInSATS = 0;
-          int feeInSATS = 0;
-          for (int i = 0; i < 5; i++) {
-            Map<String, dynamic> transactionDetail =
-                await WalletManager.getTransactionDetailsFromBlockStream(txID);
+          if (toList == "null") {
+            toList = "";
+          }
+          TransactionInfoModel? transactionInfoModel;
+          try {
+            transactionInfoModel = await DBHelper.transactionInfoDao!
+                .findByExternalTransactionID(utf8.encode(txID));
+          } catch (e) {
+            logger.e(e.toString());
+          }
+          if (transactionInfoModel != null) {
+            // get transaction info locally, for sender
+            newHistoryTransactionsMap[txID] = HistoryTransaction(
+                txID: txID,
+                amountInSATS: transactionInfoModel.isSend == 1
+                    ? -transactionInfoModel.amountInSATS -
+                        transactionInfoModel.feeInSATS
+                    : transactionInfoModel.amountInSATS,
+                sender: sender.isNotEmpty ? sender : txID,
+                toList: toList.isNotEmpty ? toList : txID,
+                feeInSATS: transactionInfoModel.feeInSATS,
+                label: userLabel,
+                inProgress: true);
+          } else {
+            // get transaction info from blockstream or esplora, for recipients
             try {
-              amountInSATS = transactionDetail['outputs'][0]['value'];
-              feeInSATS = transactionDetail['fees'];
-              break;
+              TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
+              for (int i = 0; i < 5; i++) {
+                transactionDetailFromBlockChain =
+                    await WalletManager.getTransactionDetailsFromBlockStream(
+                        txID);
+                try {
+                  if (transactionDetailFromBlockChain != null) {
+                    break;
+                  }
+                } catch (e) {
+                  logger.e(e.toString());
+                }
+                await Future.delayed(const Duration(seconds: 1));
+              }
+              if (transactionDetailFromBlockChain != null) {
+                Recipient? me;
+                for (Recipient recipient
+                    in transactionDetailFromBlockChain.recipients) {
+                  BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+                      .bitcoinAddressDao!
+                      .findByBitcoinAddress(recipient.bitcoinAddress);
+                  if (bitcoinAddressModel != null) {
+                    me = recipient;
+                    break;
+                  }
+                }
+                if (me != null) {
+                  newHistoryTransactionsMap[txID] = HistoryTransaction(
+                      txID: txID,
+                      amountInSATS: me.amountInSATS,
+                      sender: sender.isNotEmpty ? sender : txID,
+                      toList: toList.isNotEmpty ? toList : txID,
+                      feeInSATS: transactionDetailFromBlockChain.feeInSATS,
+                      label: userLabel,
+                      inProgress: true);
+                } else {
+                  logger.i("Cannot find this tx, $txID");
+                }
+              }
             } catch (e) {
-              logger.i(txID);
-              logger.i(transactionDetail);
               logger.e(e.toString());
             }
-            await Future.delayed(const Duration(seconds: 1));
           }
-          if (isSent) {
-            amountInSATS = -amountInSATS;
-          }
-          newHistoryTransactionsMap[txID] = HistoryTransaction(
-              txID: txID,
-              amountInSATS: amountInSATS,
-              sender: sender.isNotEmpty ? sender : txID,
-              toList: toList.isNotEmpty ? toList : txID,
-              feeInSATS: feeInSATS,
-              label: userLabel,
-              inProgress: true);
         }
       }
       List<HistoryTransaction> newHistoryTransactions =
@@ -473,7 +533,11 @@ class ProtonWallet {
         }
         return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
       });
-      historyTransactions = newHistoryTransactions;
+      if (bdkSynced) {
+        historyTransactions = newHistoryTransactions;
+      } else {
+        historyTransactions.clear();
+      }
     }
     applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
   }

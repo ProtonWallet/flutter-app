@@ -190,6 +190,6 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
       amount = 0.0;
     }
     double btcAmount = widget.userSettingProvider.getNotionalInBTC(amount);
-    return (btcAmount * 100000000).toInt();
+    return (btcAmount * 100000000).ceil();
   }
 }

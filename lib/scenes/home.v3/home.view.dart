@@ -428,30 +428,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   index]
                                               .toList),
                                   24),
-                              amount: (Provider.of<ProtonWalletProvider>(
-                                                  context)
-                                              .protonWallet
-                                              .historyTransactionsAfterFilter[
-                                                  index]
-                                              .amountInSATS >
-                                          0
-                                      ? Provider.of<ProtonWalletProvider>(
-                                              context)
-                                          .protonWallet
-                                          .historyTransactionsAfterFilter[index]
-                                          .amountInSATS
-                                      : Provider.of<ProtonWalletProvider>(
-                                                  context)
-                                              .protonWallet
-                                              .historyTransactionsAfterFilter[
-                                                  index]
-                                              .amountInSATS -
-                                          Provider.of<ProtonWalletProvider>(
-                                                  context)
-                                              .protonWallet
-                                              .historyTransactionsAfterFilter[
-                                                  index]
-                                              .feeInSATS)
+                              amount: Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .historyTransactionsAfterFilter[index]
+                                  .amountInSATS
                                   .toDouble(),
                               note: Provider.of<ProtonWalletProvider>(context)
                                       .protonWallet
