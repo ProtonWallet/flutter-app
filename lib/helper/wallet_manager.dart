@@ -958,9 +958,9 @@ class WalletManager {
           TransactionDetailFromBlockChain(
               txid: txid,
               feeInSATS: data['fee'],
-              block_height: data['status']['block_height'],
-              timestamp: data['status']['block_time']);
-      List<Map> recipientMapList = data['vout']
+              block_height: data['status']['block_height']??0,
+              timestamp: data['status']['block_time']??0);
+      List<dynamic> recipientMapList = data['vout']
           .map((output) => {
                 'address': output['scriptpubkey_address'],
                 'value': output['value']

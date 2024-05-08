@@ -61,10 +61,11 @@ class TransactionHistoryItem extends StatelessWidget {
                           ProtonColors.textWeak)))
               ]),
           Row(children: [
+            SizedBox(width: MediaQuery.of(context).size.width - 110, child:
             Text(content,
                 style: FontManager.body2Median(contentColor != null
                     ? contentColor!
-                    : ProtonColors.textNorm)),
+                    : ProtonColors.textNorm), maxLines: 3, softWrap: true)),
             const SizedBox(width: 2),
             if (copyContent)
               GestureDetector(

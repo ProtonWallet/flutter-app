@@ -370,6 +370,12 @@ class ProtonWallet {
               }
             }
           }
+          if (sender == "null") {
+            sender = "";
+          }
+          if (toList == "null") {
+            toList = "";
+          }
           int amountInSATS =
               transactionDetail.received - transactionDetail.sent;
           newHistoryTransactionsMap[txID] = HistoryTransaction(
@@ -438,6 +444,12 @@ class ProtonWallet {
             if (sender.isNotEmpty || toList.isNotEmpty) {
               break;
             }
+          }
+          if (sender == "null") {
+            sender = "";
+          }
+          if (toList == "null") {
+            toList = "";
           }
           TransactionInfoModel? transactionInfoModel;
           try {
