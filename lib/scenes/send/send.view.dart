@@ -15,6 +15,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -326,6 +327,7 @@ class SendView extends ViewBase<SendViewModel> {
                   // TODO:: Send bitcoin with Esplora client
                   bool success = await viewModel.sendCoin();
                   if (context.mounted && success) {
+                    Provider.of<ProtonWalletProvider>(context, listen: false).syncWallet();
                     viewModel.coordinator.end();
                     Navigator.of(context).pop();
                   } else if (context.mounted && success == false) {
@@ -350,8 +352,6 @@ class SendView extends ViewBase<SendViewModel> {
     } catch (e) {
       amount = 0.0;
     }
-    double esitmateValue =
-        Provider.of<UserSettingProvider>(context).getNotionalInBTC(amount);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
@@ -361,7 +361,7 @@ class SendView extends ViewBase<SendViewModel> {
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel((esitmateValue * 100000000).ceil()),
+              .getBitcoinUnitLabel(viewModel.sendAmountInSAT),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }

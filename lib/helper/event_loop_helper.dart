@@ -7,8 +7,8 @@ class EventLoopHelper {
     eventLoop.start();
   }
 
-  static void runOnce() {
-    eventLoop.runOnce();
+  static Future<void> runOnce() async {
+    await eventLoop.runOnce();
   }
 
   static void stop() {
