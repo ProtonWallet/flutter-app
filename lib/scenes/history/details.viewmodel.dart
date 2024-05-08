@@ -6,7 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -16,11 +16,13 @@ import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
-import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -46,7 +48,6 @@ abstract class HistoryDetailViewModel
   String address = "";
   int? blockConfirmTimestamp;
   double amount = 0.0;
-  double notional = 0.0;
   double fee = 0.0;
   bool isSend = false;
   bool initialized = false;
@@ -106,7 +107,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
       strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
-      address = txid.substring(0, 32);
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
         if (transaction.txid == txid) {
@@ -114,9 +114,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           amount =
               transaction.received.toDouble() - transaction.sent.toDouble();
           fee = transaction.fee!.toDouble();
-          notional = userSettingProvider
-              .getNotionalInFiatCurrency(amount.toInt())
-              .abs();
           isSend = amount < 0;
           foundedInBDKHistory = true;
           datasourceChangedStreamController.sink.add(this);
@@ -196,52 +193,81 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           logger.e(e.toString());
         }
       }
-
+      if (toEmail == "null") {
+        toEmail = "";
+      }
+      if (fromEmail == "null") {
+        fromEmail = "";
+      }
       if (foundedInBDKHistory == false) {
+        blockConfirmTimestamp = null;
         try {
-          Map<String, dynamic> transactionDetail =
-              await WalletManager.getTransactionDetailsFromBlockStream(txid);
-          logger
-              .i("Get transactionDetail from BlockStream: $transactionDetail");
-          blockConfirmTimestamp = null;
-          fee = transactionDetail['fees'].toDouble();
-          List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-          addresses =
-              addresses.where((element) => element.status == 1).toList();
-          String user = WalletManager.getEmailFromWalletTransaction(fromEmail);
-          for (ProtonAddress protonAddress in addresses) {
-            if (user == protonAddress.email) {
-              isSend = true;
-              break;
+          TransactionInfoModel? transactionInfoModel;
+          try {
+            transactionInfoModel = await DBHelper.transactionInfoDao!
+                .findByExternalTransactionID(utf8.encode(txid));
+          } catch (e) {
+            logger.e(e.toString());
+          }
+          if (transactionInfoModel != null) {
+            // get transaction info locally, for sender
+            fee = transactionInfoModel.feeInSATS.toDouble();
+            isSend = true;
+            amount = -transactionInfoModel.amountInSATS.toDouble() - fee;
+          } else {
+            TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+                await WalletManager.getTransactionDetailsFromBlockStream(txid);
+            if (transactionDetailFromBlockChain != null) {
+              fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
+              Recipient? me;
+              for (Recipient recipient
+                  in transactionDetailFromBlockChain.recipients) {
+                BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+                    .bitcoinAddressDao!
+                    .findByBitcoinAddress(recipient.bitcoinAddress);
+                if (bitcoinAddressModel != null) {
+                  me = recipient;
+                  break;
+                }
+              }
+              if (me != null) {
+                isSend = false;
+                amount = me.amountInSATS.toDouble();
+              } else {
+                errorMessage = "Can not find this transaction from blockchain";
+              }
             }
           }
-          if (isSend) {
-            amount = transactionDetail['outputs'][0]['value'].toDouble();
-            notional = userSettingProvider
-                .getNotionalInFiatCurrency(amount.toInt())
-                .abs();
-          } else {
-            amount = transactionDetail['outputs'][0]['value'].toDouble();
-            notional = userSettingProvider
-                .getNotionalInFiatCurrency(amount.toInt())
-                .abs();
-          }
-          datasourceChangedStreamController.sink.add(this);
         } catch (e) {
           logger.e(e.toString());
         }
       }
+      // load address
+      if (isSend) {
+        TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+            await WalletManager.getTransactionDetailsFromBlockStream(txid);
+        if (transactionDetailFromBlockChain != null) {
+          for (Recipient recipient
+              in transactionDetailFromBlockChain.recipients) {
+            if (recipient.amountInSATS.abs() == amount.abs() - fee.abs()) {
+              address = recipient.bitcoinAddress;
+              break;
+            }
+          }
+        }
+      } else {
+        address = txid;
+      }
+      datasourceChangedStreamController.sink.add(this);
     } catch (e) {
       errorMessage = e.toString();
     }
+
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    logger.i("txid: $txid");
-    logger.i("toEmail: $toEmail, ${transactionModel!.tolist}");
-    logger.i("fromEmail: $fromEmail, ${transactionModel!.sender}");
     datasourceChangedStreamController.add(this);
     initialized = true;
   }
@@ -269,6 +295,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             walletTransactionId: transactionModel!.transactionID,
             label: encryptedLabel,
           );
+          AccountModel accountModel = await DBHelper.accountDao!
+              .findByServerAccountID(transactionModel!.serverAccountID);
+          await Provider.of<ProtonWalletProvider>(
+                  Coordinator.navigatorKey.currentContext!,
+                  listen: false)
+              .setCurrentTransactions(accountModel);
         }
         isEditing = false;
       }

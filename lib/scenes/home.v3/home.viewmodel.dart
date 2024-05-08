@@ -217,13 +217,13 @@ class HomeViewModelImpl extends HomeViewModel {
         await WalletManager.fetchWalletsFromServer();
         hasWallet = await WalletManager.hasWallet();
       }
-      await WalletManager.initContacts();
+      WalletManager.initContacts();
       EventLoopHelper.start();
       protonWalletProvider.addListener(() {
         walletNameController.text = protonWalletProvider.protonWallet.currentWallet?.name ?? "";
       });
       await protonWalletProvider.init();
-      await protonWalletProvider.setDefaultWalletAccount();
+      protonWalletProvider.setDefaultWalletAccount();
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -232,8 +232,8 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = "";
     }
     try {
-      await getUserSettings();
-      await updateBtcPrice();
+      getUserSettings();
+      updateBtcPrice();
       checkPreference(); // no effect
       checkNetwork(); // no effect
       loadDiscoverContents();

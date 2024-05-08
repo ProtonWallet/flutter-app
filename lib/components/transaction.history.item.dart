@@ -44,34 +44,47 @@ class TransactionHistoryItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                Text(title,
-                    style: FontManager.body2Median(ProtonColors.textWeak)),
-                const SizedBox(width: 2),
-                if (titleCallback != null)
-                  GestureDetector(
-                      onTap: titleCallback,
-                      child: Icon(Icons.info_rounded,
-                          color: ProtonColors.textHint, size: 14))]),
+                      Text(title,
+                          style:
+                              FontManager.body2Median(ProtonColors.textWeak)),
+                      const SizedBox(width: 2),
+                      if (titleCallback != null)
+                        GestureDetector(
+                            onTap: titleCallback,
+                            child: Icon(Icons.info_rounded,
+                                color: ProtonColors.textHint, size: 14))
+                    ]),
                 if (titleOptionsCallback != null)
                   GestureDetector(
                       onTap: titleOptionsCallback,
-                      child: Text(S
-                          .of(context)
-                          .advanced_options, style: FontManager.body2Median(
-                          ProtonColors.textWeak)))
+                      child: Text(S.of(context).advanced_options,
+                          style:
+                              FontManager.body2Median(ProtonColors.textWeak)))
               ]),
           Row(children: [
-            Text(content,
-                style: FontManager.body2Median(contentColor != null
-                    ? contentColor!
-                    : ProtonColors.textNorm)),
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 110,
+                child: Text(content,
+                    style: FontManager.body2Median(contentColor != null
+                        ? contentColor!
+                        : ProtonColors.textNorm),
+                    maxLines: 3,
+                    softWrap: true)),
             const SizedBox(width: 2),
             if (copyContent)
               GestureDetector(
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: content)).then((_) {
-                    LocalToast.showToast(context, S.of(context).copied);
-                  });
+                  // TODO:: fix me
+                  String bitcoinAddress = content;
+                  if (bitcoinAddress.contains("@")) {
+                    bitcoinAddress = memo ?? "";
+                  }
+                  if (bitcoinAddress.isNotEmpty) {
+                    Clipboard.setData(ClipboardData(text: bitcoinAddress))
+                        .then((_) {
+                      LocalToast.showToast(context, S.of(context).copied);
+                    });
+                  }
                 },
                 child: Icon(Icons.copy_rounded,
                     size: 16,

@@ -1,10 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/models/address.dao.impl.dart';
+import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
 import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
+import 'package:wallet/models/transaction.info.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 
 class DBHelper {
@@ -49,6 +51,20 @@ class DBHelper {
   static ContactsDao? get contactsDao {
     if (_appDatabase != null) {
       return _appDatabase!.contactsDao;
+    }
+    return null;
+  }
+
+  static TransactionInfoDao? get transactionInfoDao {
+    if (_appDatabase != null) {
+      return _appDatabase!.transactionInfoDao;
+    }
+    return null;
+  }
+
+  static BitcoinAddressDao? get bitcoinAddressDao {
+    if (_appDatabase != null) {
+      return _appDatabase!.bitcoinAddressDao;
     }
     return null;
   }
