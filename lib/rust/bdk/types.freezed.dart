@@ -104,8 +104,8 @@ class __$$AddressIndex_NewImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AddressIndex_NewImpl implements AddressIndex_New {
-  const _$AddressIndex_NewImpl();
+class _$AddressIndex_NewImpl extends AddressIndex_New {
+  const _$AddressIndex_NewImpl() : super._();
 
   @override
   String toString() {
@@ -196,8 +196,9 @@ class _$AddressIndex_NewImpl implements AddressIndex_New {
   }
 }
 
-abstract class AddressIndex_New implements AddressIndex {
+abstract class AddressIndex_New extends AddressIndex {
   const factory AddressIndex_New() = _$AddressIndex_NewImpl;
+  const AddressIndex_New._() : super._();
 }
 
 /// @nodoc
@@ -220,8 +221,8 @@ class __$$AddressIndex_LastUnusedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AddressIndex_LastUnusedImpl implements AddressIndex_LastUnused {
-  const _$AddressIndex_LastUnusedImpl();
+class _$AddressIndex_LastUnusedImpl extends AddressIndex_LastUnused {
+  const _$AddressIndex_LastUnusedImpl() : super._();
 
   @override
   String toString() {
@@ -313,8 +314,9 @@ class _$AddressIndex_LastUnusedImpl implements AddressIndex_LastUnused {
   }
 }
 
-abstract class AddressIndex_LastUnused implements AddressIndex {
+abstract class AddressIndex_LastUnused extends AddressIndex {
   const factory AddressIndex_LastUnused() = _$AddressIndex_LastUnusedImpl;
+  const AddressIndex_LastUnused._() : super._();
 }
 
 /// @nodoc
@@ -350,8 +352,8 @@ class __$$AddressIndex_PeekImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AddressIndex_PeekImpl implements AddressIndex_Peek {
-  const _$AddressIndex_PeekImpl({required this.index});
+class _$AddressIndex_PeekImpl extends AddressIndex_Peek {
+  const _$AddressIndex_PeekImpl({required this.index}) : super._();
 
   @override
   final int index;
@@ -454,9 +456,10 @@ class _$AddressIndex_PeekImpl implements AddressIndex_Peek {
   }
 }
 
-abstract class AddressIndex_Peek implements AddressIndex {
+abstract class AddressIndex_Peek extends AddressIndex {
   const factory AddressIndex_Peek({required final int index}) =
       _$AddressIndex_PeekImpl;
+  const AddressIndex_Peek._() : super._();
 
   int get index;
   @JsonKey(ignore: true)
@@ -497,8 +500,8 @@ class __$$AddressIndex_ResetImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AddressIndex_ResetImpl implements AddressIndex_Reset {
-  const _$AddressIndex_ResetImpl({required this.index});
+class _$AddressIndex_ResetImpl extends AddressIndex_Reset {
+  const _$AddressIndex_ResetImpl({required this.index}) : super._();
 
   @override
   final int index;
@@ -601,9 +604,10 @@ class _$AddressIndex_ResetImpl implements AddressIndex_Reset {
   }
 }
 
-abstract class AddressIndex_Reset implements AddressIndex {
+abstract class AddressIndex_Reset extends AddressIndex {
   const factory AddressIndex_Reset({required final int index}) =
       _$AddressIndex_ResetImpl;
+  const AddressIndex_Reset._() : super._();
 
   int get index;
   @JsonKey(ignore: true)
@@ -688,8 +692,8 @@ class __$$RbfValue_RbfDefaultImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RbfValue_RbfDefaultImpl implements RbfValue_RbfDefault {
-  const _$RbfValue_RbfDefaultImpl();
+class _$RbfValue_RbfDefaultImpl extends RbfValue_RbfDefault {
+  const _$RbfValue_RbfDefaultImpl() : super._();
 
   @override
   String toString() {
@@ -769,8 +773,9 @@ class _$RbfValue_RbfDefaultImpl implements RbfValue_RbfDefault {
   }
 }
 
-abstract class RbfValue_RbfDefault implements RbfValue {
+abstract class RbfValue_RbfDefault extends RbfValue {
   const factory RbfValue_RbfDefault() = _$RbfValue_RbfDefaultImpl;
+  const RbfValue_RbfDefault._() : super._();
 }
 
 /// @nodoc
@@ -806,8 +811,8 @@ class __$$RbfValue_ValueImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RbfValue_ValueImpl implements RbfValue_Value {
-  const _$RbfValue_ValueImpl(this.field0);
+class _$RbfValue_ValueImpl extends RbfValue_Value {
+  const _$RbfValue_ValueImpl(this.field0) : super._();
 
   @override
   final int field0;
@@ -898,8 +903,9 @@ class _$RbfValue_ValueImpl implements RbfValue_Value {
   }
 }
 
-abstract class RbfValue_Value implements RbfValue {
+abstract class RbfValue_Value extends RbfValue {
   const factory RbfValue_Value(final int field0) = _$RbfValue_ValueImpl;
+  const RbfValue_Value._() : super._();
 
   int get field0;
   @JsonKey(ignore: true)
