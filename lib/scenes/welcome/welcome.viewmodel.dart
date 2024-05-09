@@ -55,23 +55,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     }
   }
 
-  Future<void> setRustCallback() async {
-    // callback(String message) async {
-    //   print("Received message from Rust: $message");
-    //   return "Reply from Dart";
-    // }
-
-    // await setDartCallback(ArcDartCallback.sseDecode(callback));
-  }
-
   @override
   Future<void> loadData() async {
-    // var wallet = WalletAuthStore.newInstance();
-    // setGlobalCallback(dartCallback: (dartCallback) => 'Hello, $dartCallback!');
-    // WalletAuthStore.rustFunction(
-    //     dartCallback: (dartCallback) => 'Hello, $dartCallback!');
-    // await rustFunction(dartCallback: (name) => 'Hello, $name!');
-
     env = appConfig.apiEnv;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
