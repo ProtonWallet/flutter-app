@@ -353,8 +353,8 @@ class __$$Error_InvalidU32BytesImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
-  const _$Error_InvalidU32BytesImpl(this.field0);
+class _$Error_InvalidU32BytesImpl extends Error_InvalidU32Bytes {
+  const _$Error_InvalidU32BytesImpl(this.field0) : super._();
 
   @override
   final Uint8List field0;
@@ -692,9 +692,10 @@ class _$Error_InvalidU32BytesImpl implements Error_InvalidU32Bytes {
   }
 }
 
-abstract class Error_InvalidU32Bytes implements Error {
+abstract class Error_InvalidU32Bytes extends Error {
   const factory Error_InvalidU32Bytes(final Uint8List field0) =
       _$Error_InvalidU32BytesImpl;
+  const Error_InvalidU32Bytes._() : super._();
 
   Uint8List get field0;
   @JsonKey(ignore: true)
@@ -735,8 +736,8 @@ class __$$Error_GenericImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_GenericImpl implements Error_Generic {
-  const _$Error_GenericImpl(this.field0);
+class _$Error_GenericImpl extends Error_Generic {
+  const _$Error_GenericImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -1072,8 +1073,9 @@ class _$Error_GenericImpl implements Error_Generic {
   }
 }
 
-abstract class Error_Generic implements Error {
+abstract class Error_Generic extends Error {
   const factory Error_Generic(final String field0) = _$Error_GenericImpl;
+  const Error_Generic._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -1102,8 +1104,8 @@ class __$$Error_ScriptDoesntHaveAddressFormImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$Error_ScriptDoesntHaveAddressFormImpl
-    implements Error_ScriptDoesntHaveAddressForm {
-  const _$Error_ScriptDoesntHaveAddressFormImpl();
+    extends Error_ScriptDoesntHaveAddressForm {
+  const _$Error_ScriptDoesntHaveAddressFormImpl() : super._();
 
   @override
   String toString() {
@@ -1429,9 +1431,10 @@ class _$Error_ScriptDoesntHaveAddressFormImpl
   }
 }
 
-abstract class Error_ScriptDoesntHaveAddressForm implements Error {
+abstract class Error_ScriptDoesntHaveAddressForm extends Error {
   const factory Error_ScriptDoesntHaveAddressForm() =
       _$Error_ScriptDoesntHaveAddressFormImpl;
+  const Error_ScriptDoesntHaveAddressForm._() : super._();
 }
 
 /// @nodoc
@@ -1452,8 +1455,8 @@ class __$$Error_NoRecipientsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_NoRecipientsImpl implements Error_NoRecipients {
-  const _$Error_NoRecipientsImpl();
+class _$Error_NoRecipientsImpl extends Error_NoRecipients {
+  const _$Error_NoRecipientsImpl() : super._();
 
   @override
   String toString() {
@@ -1778,8 +1781,9 @@ class _$Error_NoRecipientsImpl implements Error_NoRecipients {
   }
 }
 
-abstract class Error_NoRecipients implements Error {
+abstract class Error_NoRecipients extends Error {
   const factory Error_NoRecipients() = _$Error_NoRecipientsImpl;
+  const Error_NoRecipients._() : super._();
 }
 
 /// @nodoc
@@ -1801,8 +1805,8 @@ class __$$Error_NoUtxosSelectedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
-  const _$Error_NoUtxosSelectedImpl();
+class _$Error_NoUtxosSelectedImpl extends Error_NoUtxosSelected {
+  const _$Error_NoUtxosSelectedImpl() : super._();
 
   @override
   String toString() {
@@ -2128,8 +2132,9 @@ class _$Error_NoUtxosSelectedImpl implements Error_NoUtxosSelected {
   }
 }
 
-abstract class Error_NoUtxosSelected implements Error {
+abstract class Error_NoUtxosSelected extends Error {
   const factory Error_NoUtxosSelected() = _$Error_NoUtxosSelectedImpl;
+  const Error_NoUtxosSelected._() : super._();
 }
 
 /// @nodoc
@@ -2167,8 +2172,8 @@ class __$$Error_OutputBelowDustLimitImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
-  const _$Error_OutputBelowDustLimitImpl(this.field0);
+class _$Error_OutputBelowDustLimitImpl extends Error_OutputBelowDustLimit {
+  const _$Error_OutputBelowDustLimitImpl(this.field0) : super._();
 
   @override
   final int field0;
@@ -2505,9 +2510,10 @@ class _$Error_OutputBelowDustLimitImpl implements Error_OutputBelowDustLimit {
   }
 }
 
-abstract class Error_OutputBelowDustLimit implements Error {
+abstract class Error_OutputBelowDustLimit extends Error {
   const factory Error_OutputBelowDustLimit(final int field0) =
       _$Error_OutputBelowDustLimitImpl;
+  const Error_OutputBelowDustLimit._() : super._();
 
   int get field0;
   @JsonKey(ignore: true)
@@ -2555,9 +2561,10 @@ class __$$Error_InsufficientFundsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
+class _$Error_InsufficientFundsImpl extends Error_InsufficientFunds {
   const _$Error_InsufficientFundsImpl(
-      {required this.needed, required this.available});
+      {required this.needed, required this.available})
+      : super._();
 
   /// Sats needed for some transaction
   @override
@@ -2901,10 +2908,11 @@ class _$Error_InsufficientFundsImpl implements Error_InsufficientFunds {
   }
 }
 
-abstract class Error_InsufficientFunds implements Error {
+abstract class Error_InsufficientFunds extends Error {
   const factory Error_InsufficientFunds(
       {required final int needed,
       required final int available}) = _$Error_InsufficientFundsImpl;
+  const Error_InsufficientFunds._() : super._();
 
   /// Sats needed for some transaction
   int get needed;
@@ -2936,8 +2944,8 @@ class __$$Error_BnBTotalTriesExceededImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
-  const _$Error_BnBTotalTriesExceededImpl();
+class _$Error_BnBTotalTriesExceededImpl extends Error_BnBTotalTriesExceeded {
+  const _$Error_BnBTotalTriesExceededImpl() : super._();
 
   @override
   String toString() {
@@ -3263,9 +3271,10 @@ class _$Error_BnBTotalTriesExceededImpl implements Error_BnBTotalTriesExceeded {
   }
 }
 
-abstract class Error_BnBTotalTriesExceeded implements Error {
+abstract class Error_BnBTotalTriesExceeded extends Error {
   const factory Error_BnBTotalTriesExceeded() =
       _$Error_BnBTotalTriesExceededImpl;
+  const Error_BnBTotalTriesExceeded._() : super._();
 }
 
 /// @nodoc
@@ -3287,8 +3296,8 @@ class __$$Error_BnBNoExactMatchImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
-  const _$Error_BnBNoExactMatchImpl();
+class _$Error_BnBNoExactMatchImpl extends Error_BnBNoExactMatch {
+  const _$Error_BnBNoExactMatchImpl() : super._();
 
   @override
   String toString() {
@@ -3614,8 +3623,9 @@ class _$Error_BnBNoExactMatchImpl implements Error_BnBNoExactMatch {
   }
 }
 
-abstract class Error_BnBNoExactMatch implements Error {
+abstract class Error_BnBNoExactMatch extends Error {
   const factory Error_BnBNoExactMatch() = _$Error_BnBNoExactMatchImpl;
+  const Error_BnBNoExactMatch._() : super._();
 }
 
 /// @nodoc
@@ -3636,8 +3646,8 @@ class __$$Error_UnknownUtxoImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
-  const _$Error_UnknownUtxoImpl();
+class _$Error_UnknownUtxoImpl extends Error_UnknownUtxo {
+  const _$Error_UnknownUtxoImpl() : super._();
 
   @override
   String toString() {
@@ -3962,8 +3972,9 @@ class _$Error_UnknownUtxoImpl implements Error_UnknownUtxo {
   }
 }
 
-abstract class Error_UnknownUtxo implements Error {
+abstract class Error_UnknownUtxo extends Error {
   const factory Error_UnknownUtxo() = _$Error_UnknownUtxoImpl;
+  const Error_UnknownUtxo._() : super._();
 }
 
 /// @nodoc
@@ -3986,8 +3997,8 @@ class __$$Error_TransactionNotFoundImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
-  const _$Error_TransactionNotFoundImpl();
+class _$Error_TransactionNotFoundImpl extends Error_TransactionNotFound {
+  const _$Error_TransactionNotFoundImpl() : super._();
 
   @override
   String toString() {
@@ -4313,8 +4324,9 @@ class _$Error_TransactionNotFoundImpl implements Error_TransactionNotFound {
   }
 }
 
-abstract class Error_TransactionNotFound implements Error {
+abstract class Error_TransactionNotFound extends Error {
   const factory Error_TransactionNotFound() = _$Error_TransactionNotFoundImpl;
+  const Error_TransactionNotFound._() : super._();
 }
 
 /// @nodoc
@@ -4337,8 +4349,8 @@ class __$$Error_TransactionConfirmedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
-  const _$Error_TransactionConfirmedImpl();
+class _$Error_TransactionConfirmedImpl extends Error_TransactionConfirmed {
+  const _$Error_TransactionConfirmedImpl() : super._();
 
   @override
   String toString() {
@@ -4664,8 +4676,9 @@ class _$Error_TransactionConfirmedImpl implements Error_TransactionConfirmed {
   }
 }
 
-abstract class Error_TransactionConfirmed implements Error {
+abstract class Error_TransactionConfirmed extends Error {
   const factory Error_TransactionConfirmed() = _$Error_TransactionConfirmedImpl;
+  const Error_TransactionConfirmed._() : super._();
 }
 
 /// @nodoc
@@ -4689,8 +4702,8 @@ class __$$Error_IrreplaceableTransactionImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$Error_IrreplaceableTransactionImpl
-    implements Error_IrreplaceableTransaction {
-  const _$Error_IrreplaceableTransactionImpl();
+    extends Error_IrreplaceableTransaction {
+  const _$Error_IrreplaceableTransactionImpl() : super._();
 
   @override
   String toString() {
@@ -5016,9 +5029,10 @@ class _$Error_IrreplaceableTransactionImpl
   }
 }
 
-abstract class Error_IrreplaceableTransaction implements Error {
+abstract class Error_IrreplaceableTransaction extends Error {
   const factory Error_IrreplaceableTransaction() =
       _$Error_IrreplaceableTransactionImpl;
+  const Error_IrreplaceableTransaction._() : super._();
 }
 
 /// @nodoc
@@ -5054,8 +5068,8 @@ class __$$Error_FeeRateTooLowImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
-  const _$Error_FeeRateTooLowImpl({required this.required});
+class _$Error_FeeRateTooLowImpl extends Error_FeeRateTooLow {
+  const _$Error_FeeRateTooLowImpl({required this.required}) : super._();
 
   /// Required fee rate (satoshi/vbyte)
   @override
@@ -5394,9 +5408,10 @@ class _$Error_FeeRateTooLowImpl implements Error_FeeRateTooLow {
   }
 }
 
-abstract class Error_FeeRateTooLow implements Error {
+abstract class Error_FeeRateTooLow extends Error {
   const factory Error_FeeRateTooLow({required final double required}) =
       _$Error_FeeRateTooLowImpl;
+  const Error_FeeRateTooLow._() : super._();
 
   /// Required fee rate (satoshi/vbyte)
   double get required;
@@ -5438,8 +5453,8 @@ class __$$Error_FeeTooLowImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
-  const _$Error_FeeTooLowImpl({required this.required});
+class _$Error_FeeTooLowImpl extends Error_FeeTooLow {
+  const _$Error_FeeTooLowImpl({required this.required}) : super._();
 
   /// Required fee absolute value (satoshi)
   @override
@@ -5778,9 +5793,10 @@ class _$Error_FeeTooLowImpl implements Error_FeeTooLow {
   }
 }
 
-abstract class Error_FeeTooLow implements Error {
+abstract class Error_FeeTooLow extends Error {
   const factory Error_FeeTooLow({required final int required}) =
       _$Error_FeeTooLowImpl;
+  const Error_FeeTooLow._() : super._();
 
   /// Required fee absolute value (satoshi)
   int get required;
@@ -5809,8 +5825,8 @@ class __$$Error_FeeRateUnavailableImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
-  const _$Error_FeeRateUnavailableImpl();
+class _$Error_FeeRateUnavailableImpl extends Error_FeeRateUnavailable {
+  const _$Error_FeeRateUnavailableImpl() : super._();
 
   @override
   String toString() {
@@ -6136,8 +6152,9 @@ class _$Error_FeeRateUnavailableImpl implements Error_FeeRateUnavailable {
   }
 }
 
-abstract class Error_FeeRateUnavailable implements Error {
+abstract class Error_FeeRateUnavailable extends Error {
   const factory Error_FeeRateUnavailable() = _$Error_FeeRateUnavailableImpl;
+  const Error_FeeRateUnavailable._() : super._();
 }
 
 /// @nodoc
@@ -6175,8 +6192,8 @@ class __$$Error_MissingKeyOriginImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
-  const _$Error_MissingKeyOriginImpl(this.field0);
+class _$Error_MissingKeyOriginImpl extends Error_MissingKeyOrigin {
+  const _$Error_MissingKeyOriginImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -6513,9 +6530,10 @@ class _$Error_MissingKeyOriginImpl implements Error_MissingKeyOrigin {
   }
 }
 
-abstract class Error_MissingKeyOrigin implements Error {
+abstract class Error_MissingKeyOrigin extends Error {
   const factory Error_MissingKeyOrigin(final String field0) =
       _$Error_MissingKeyOriginImpl;
+  const Error_MissingKeyOrigin._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -6556,8 +6574,8 @@ class __$$Error_KeyImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_KeyImpl implements Error_Key {
-  const _$Error_KeyImpl(this.field0);
+class _$Error_KeyImpl extends Error_Key {
+  const _$Error_KeyImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -6893,8 +6911,9 @@ class _$Error_KeyImpl implements Error_Key {
   }
 }
 
-abstract class Error_Key implements Error {
+abstract class Error_Key extends Error {
   const factory Error_Key(final String field0) = _$Error_KeyImpl;
+  const Error_Key._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -6922,8 +6941,8 @@ class __$$Error_ChecksumMismatchImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
-  const _$Error_ChecksumMismatchImpl();
+class _$Error_ChecksumMismatchImpl extends Error_ChecksumMismatch {
+  const _$Error_ChecksumMismatchImpl() : super._();
 
   @override
   String toString() {
@@ -7249,8 +7268,9 @@ class _$Error_ChecksumMismatchImpl implements Error_ChecksumMismatch {
   }
 }
 
-abstract class Error_ChecksumMismatch implements Error {
+abstract class Error_ChecksumMismatch extends Error {
   const factory Error_ChecksumMismatch() = _$Error_ChecksumMismatchImpl;
+  const Error_ChecksumMismatch._() : super._();
 }
 
 /// @nodoc
@@ -7288,9 +7308,8 @@ class __$$Error_SpendingPolicyRequiredImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_SpendingPolicyRequiredImpl
-    implements Error_SpendingPolicyRequired {
-  const _$Error_SpendingPolicyRequiredImpl(this.field0);
+class _$Error_SpendingPolicyRequiredImpl extends Error_SpendingPolicyRequired {
+  const _$Error_SpendingPolicyRequiredImpl(this.field0) : super._();
 
   @override
   final KeychainKind field0;
@@ -7628,9 +7647,10 @@ class _$Error_SpendingPolicyRequiredImpl
   }
 }
 
-abstract class Error_SpendingPolicyRequired implements Error {
+abstract class Error_SpendingPolicyRequired extends Error {
   const factory Error_SpendingPolicyRequired(final KeychainKind field0) =
       _$Error_SpendingPolicyRequiredImpl;
+  const Error_SpendingPolicyRequired._() : super._();
 
   KeychainKind get field0;
   @JsonKey(ignore: true)
@@ -7674,9 +7694,8 @@ class __$$Error_InvalidPolicyPathErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_InvalidPolicyPathErrorImpl
-    implements Error_InvalidPolicyPathError {
-  const _$Error_InvalidPolicyPathErrorImpl(this.field0);
+class _$Error_InvalidPolicyPathErrorImpl extends Error_InvalidPolicyPathError {
+  const _$Error_InvalidPolicyPathErrorImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -8014,9 +8033,10 @@ class _$Error_InvalidPolicyPathErrorImpl
   }
 }
 
-abstract class Error_InvalidPolicyPathError implements Error {
+abstract class Error_InvalidPolicyPathError extends Error {
   const factory Error_InvalidPolicyPathError(final String field0) =
       _$Error_InvalidPolicyPathErrorImpl;
+  const Error_InvalidPolicyPathError._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -8058,8 +8078,8 @@ class __$$Error_SignerImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_SignerImpl implements Error_Signer {
-  const _$Error_SignerImpl(this.field0);
+class _$Error_SignerImpl extends Error_Signer {
+  const _$Error_SignerImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -8395,8 +8415,9 @@ class _$Error_SignerImpl implements Error_Signer {
   }
 }
 
-abstract class Error_Signer implements Error {
+abstract class Error_Signer extends Error {
   const factory Error_Signer(final String field0) = _$Error_SignerImpl;
+  const Error_Signer._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -8442,9 +8463,10 @@ class __$$Error_InvalidNetworkImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
+class _$Error_InvalidNetworkImpl extends Error_InvalidNetwork {
   const _$Error_InvalidNetworkImpl(
-      {required this.requested, required this.found});
+      {required this.requested, required this.found})
+      : super._();
 
   /// requested network, for example what is given as bdk-cli option
   @override
@@ -8789,10 +8811,11 @@ class _$Error_InvalidNetworkImpl implements Error_InvalidNetwork {
   }
 }
 
-abstract class Error_InvalidNetwork implements Error {
+abstract class Error_InvalidNetwork extends Error {
   const factory Error_InvalidNetwork(
       {required final Network requested,
       required final Network found}) = _$Error_InvalidNetworkImpl;
+  const Error_InvalidNetwork._() : super._();
 
   /// requested network, for example what is given as bdk-cli option
   Network get requested;
@@ -8838,8 +8861,8 @@ class __$$Error_InvalidOutpointImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
-  const _$Error_InvalidOutpointImpl(this.field0);
+class _$Error_InvalidOutpointImpl extends Error_InvalidOutpoint {
+  const _$Error_InvalidOutpointImpl(this.field0) : super._();
 
   @override
   final OutPoint field0;
@@ -9176,9 +9199,10 @@ class _$Error_InvalidOutpointImpl implements Error_InvalidOutpoint {
   }
 }
 
-abstract class Error_InvalidOutpoint implements Error {
+abstract class Error_InvalidOutpoint extends Error {
   const factory Error_InvalidOutpoint(final OutPoint field0) =
       _$Error_InvalidOutpointImpl;
+  const Error_InvalidOutpoint._() : super._();
 
   OutPoint get field0;
   @JsonKey(ignore: true)
@@ -9219,8 +9243,8 @@ class __$$Error_DescriptorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_DescriptorImpl implements Error_Descriptor {
-  const _$Error_DescriptorImpl(this.field0);
+class _$Error_DescriptorImpl extends Error_Descriptor {
+  const _$Error_DescriptorImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -9557,8 +9581,9 @@ class _$Error_DescriptorImpl implements Error_Descriptor {
   }
 }
 
-abstract class Error_Descriptor implements Error {
+abstract class Error_Descriptor extends Error {
   const factory Error_Descriptor(final String field0) = _$Error_DescriptorImpl;
+  const Error_Descriptor._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -9599,8 +9624,8 @@ class __$$Error_EncodeImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_EncodeImpl implements Error_Encode {
-  const _$Error_EncodeImpl(this.field0);
+class _$Error_EncodeImpl extends Error_Encode {
+  const _$Error_EncodeImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -9936,8 +9961,9 @@ class _$Error_EncodeImpl implements Error_Encode {
   }
 }
 
-abstract class Error_Encode implements Error {
+abstract class Error_Encode extends Error {
   const factory Error_Encode(final String field0) = _$Error_EncodeImpl;
+  const Error_Encode._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -9978,8 +10004,8 @@ class __$$Error_MiniscriptImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_MiniscriptImpl implements Error_Miniscript {
-  const _$Error_MiniscriptImpl(this.field0);
+class _$Error_MiniscriptImpl extends Error_Miniscript {
+  const _$Error_MiniscriptImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -10316,8 +10342,9 @@ class _$Error_MiniscriptImpl implements Error_Miniscript {
   }
 }
 
-abstract class Error_Miniscript implements Error {
+abstract class Error_Miniscript extends Error {
   const factory Error_Miniscript(final String field0) = _$Error_MiniscriptImpl;
+  const Error_Miniscript._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -10358,8 +10385,8 @@ class __$$Error_MiniscriptPsbtImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
-  const _$Error_MiniscriptPsbtImpl(this.field0);
+class _$Error_MiniscriptPsbtImpl extends Error_MiniscriptPsbt {
+  const _$Error_MiniscriptPsbtImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -10697,9 +10724,10 @@ class _$Error_MiniscriptPsbtImpl implements Error_MiniscriptPsbt {
   }
 }
 
-abstract class Error_MiniscriptPsbt implements Error {
+abstract class Error_MiniscriptPsbt extends Error {
   const factory Error_MiniscriptPsbt(final String field0) =
       _$Error_MiniscriptPsbtImpl;
+  const Error_MiniscriptPsbt._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -10740,8 +10768,8 @@ class __$$Error_Bip32ImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_Bip32Impl implements Error_Bip32 {
-  const _$Error_Bip32Impl(this.field0);
+class _$Error_Bip32Impl extends Error_Bip32 {
+  const _$Error_Bip32Impl(this.field0) : super._();
 
   @override
   final String field0;
@@ -11077,8 +11105,9 @@ class _$Error_Bip32Impl implements Error_Bip32 {
   }
 }
 
-abstract class Error_Bip32 implements Error {
+abstract class Error_Bip32 extends Error {
   const factory Error_Bip32(final String field0) = _$Error_Bip32Impl;
+  const Error_Bip32._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -11119,8 +11148,8 @@ class __$$Error_Secp256k1ImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_Secp256k1Impl implements Error_Secp256k1 {
-  const _$Error_Secp256k1Impl(this.field0);
+class _$Error_Secp256k1Impl extends Error_Secp256k1 {
+  const _$Error_Secp256k1Impl(this.field0) : super._();
 
   @override
   final String field0;
@@ -11457,8 +11486,9 @@ class _$Error_Secp256k1Impl implements Error_Secp256k1 {
   }
 }
 
-abstract class Error_Secp256k1 implements Error {
+abstract class Error_Secp256k1 extends Error {
   const factory Error_Secp256k1(final String field0) = _$Error_Secp256k1Impl;
+  const Error_Secp256k1._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -11499,8 +11529,8 @@ class __$$Error_JsonImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_JsonImpl implements Error_Json {
-  const _$Error_JsonImpl(this.field0);
+class _$Error_JsonImpl extends Error_Json {
+  const _$Error_JsonImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -11836,8 +11866,9 @@ class _$Error_JsonImpl implements Error_Json {
   }
 }
 
-abstract class Error_Json implements Error {
+abstract class Error_Json extends Error {
   const factory Error_Json(final String field0) = _$Error_JsonImpl;
+  const Error_Json._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -11878,8 +11909,8 @@ class __$$Error_HexImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_HexImpl implements Error_Hex {
-  const _$Error_HexImpl(this.field0);
+class _$Error_HexImpl extends Error_Hex {
+  const _$Error_HexImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -12215,8 +12246,9 @@ class _$Error_HexImpl implements Error_Hex {
   }
 }
 
-abstract class Error_Hex implements Error {
+abstract class Error_Hex extends Error {
   const factory Error_Hex(final String field0) = _$Error_HexImpl;
+  const Error_Hex._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -12257,8 +12289,8 @@ class __$$Error_PsbtImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_PsbtImpl implements Error_Psbt {
-  const _$Error_PsbtImpl(this.field0);
+class _$Error_PsbtImpl extends Error_Psbt {
+  const _$Error_PsbtImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -12594,8 +12626,9 @@ class _$Error_PsbtImpl implements Error_Psbt {
   }
 }
 
-abstract class Error_Psbt implements Error {
+abstract class Error_Psbt extends Error {
   const factory Error_Psbt(final String field0) = _$Error_PsbtImpl;
+  const Error_Psbt._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -12636,8 +12669,8 @@ class __$$Error_PsbtParseImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_PsbtParseImpl implements Error_PsbtParse {
-  const _$Error_PsbtParseImpl(this.field0);
+class _$Error_PsbtParseImpl extends Error_PsbtParse {
+  const _$Error_PsbtParseImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -12974,8 +13007,9 @@ class _$Error_PsbtParseImpl implements Error_PsbtParse {
   }
 }
 
-abstract class Error_PsbtParse implements Error {
+abstract class Error_PsbtParse extends Error {
   const factory Error_PsbtParse(final String field0) = _$Error_PsbtParseImpl;
+  const Error_PsbtParse._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -13023,8 +13057,8 @@ class __$$Error_MissingCachedScriptsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
-  const _$Error_MissingCachedScriptsImpl(this.field0, this.field1);
+class _$Error_MissingCachedScriptsImpl extends Error_MissingCachedScripts {
+  const _$Error_MissingCachedScriptsImpl(this.field0, this.field1) : super._();
 
   @override
   final int field0;
@@ -13364,9 +13398,10 @@ class _$Error_MissingCachedScriptsImpl implements Error_MissingCachedScripts {
   }
 }
 
-abstract class Error_MissingCachedScripts implements Error {
+abstract class Error_MissingCachedScripts extends Error {
   const factory Error_MissingCachedScripts(final int field0, final int field1) =
       _$Error_MissingCachedScriptsImpl;
+  const Error_MissingCachedScripts._() : super._();
 
   int get field0;
   int get field1;
@@ -13408,8 +13443,8 @@ class __$$Error_ElectrumImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_ElectrumImpl implements Error_Electrum {
-  const _$Error_ElectrumImpl(this.field0);
+class _$Error_ElectrumImpl extends Error_Electrum {
+  const _$Error_ElectrumImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -13746,8 +13781,9 @@ class _$Error_ElectrumImpl implements Error_Electrum {
   }
 }
 
-abstract class Error_Electrum implements Error {
+abstract class Error_Electrum extends Error {
   const factory Error_Electrum(final String field0) = _$Error_ElectrumImpl;
+  const Error_Electrum._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -13788,8 +13824,8 @@ class __$$Error_EsploraImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_EsploraImpl implements Error_Esplora {
-  const _$Error_EsploraImpl(this.field0);
+class _$Error_EsploraImpl extends Error_Esplora {
+  const _$Error_EsploraImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -14125,8 +14161,9 @@ class _$Error_EsploraImpl implements Error_Esplora {
   }
 }
 
-abstract class Error_Esplora implements Error {
+abstract class Error_Esplora extends Error {
   const factory Error_Esplora(final String field0) = _$Error_EsploraImpl;
+  const Error_Esplora._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -14167,8 +14204,8 @@ class __$$Error_SledImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_SledImpl implements Error_Sled {
-  const _$Error_SledImpl(this.field0);
+class _$Error_SledImpl extends Error_Sled {
+  const _$Error_SledImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -14504,8 +14541,9 @@ class _$Error_SledImpl implements Error_Sled {
   }
 }
 
-abstract class Error_Sled implements Error {
+abstract class Error_Sled extends Error {
   const factory Error_Sled(final String field0) = _$Error_SledImpl;
+  const Error_Sled._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -14546,8 +14584,8 @@ class __$$Error_RpcImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_RpcImpl implements Error_Rpc {
-  const _$Error_RpcImpl(this.field0);
+class _$Error_RpcImpl extends Error_Rpc {
+  const _$Error_RpcImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -14883,8 +14921,9 @@ class _$Error_RpcImpl implements Error_Rpc {
   }
 }
 
-abstract class Error_Rpc implements Error {
+abstract class Error_Rpc extends Error {
   const factory Error_Rpc(final String field0) = _$Error_RpcImpl;
+  const Error_Rpc._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -14925,8 +14964,8 @@ class __$$Error_RusqliteImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Error_RusqliteImpl implements Error_Rusqlite {
-  const _$Error_RusqliteImpl(this.field0);
+class _$Error_RusqliteImpl extends Error_Rusqlite {
+  const _$Error_RusqliteImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -15263,8 +15302,9 @@ class _$Error_RusqliteImpl implements Error_Rusqlite {
   }
 }
 
-abstract class Error_Rusqlite implements Error {
+abstract class Error_Rusqlite extends Error {
   const factory Error_Rusqlite(final String field0) = _$Error_RusqliteImpl;
+  const Error_Rusqlite._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)

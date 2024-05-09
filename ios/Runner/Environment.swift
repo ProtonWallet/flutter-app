@@ -29,15 +29,13 @@ struct Environment {
     }
     
     func toCoreEnv() -> ProtonCoreEnvironment.Environment {
-        // TODO:: fix me later
-//        return .custom("wallet-api.protontech.ch")
-//        switch type {
-//        case .prod:
+       switch type {
+       case .prod:
         return .mailProd
-//        case .atlasCustom(let custom):
-//            return .custom("\(custom).proton.black")
-//        default:
-//            return .black
-//        }
+       case .atlasCustom(let custom):
+           return .custom("\(custom).proton.black")
+       default:
+           return .black
+       }
     }
 }

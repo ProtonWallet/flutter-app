@@ -3,6 +3,7 @@ import 'package:wallet/helper/firebase_messaging_helper.dart';
 import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/rust/api/api_service/wallet_auth_store.dart';
 import 'package:wallet/rust/api/flutter_logger.dart';
 import 'package:wallet/rust/frb_generated.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
@@ -20,7 +21,7 @@ Future setupLogger() async {
         logger.w("${msg.lbl.padRight(8)}: ${msg.msg}");
         break;
       case Level.info:
-        // logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
+        logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
         break;
       case Level.debug:
         logger.d("${msg.lbl.padRight(8)}: ${msg.msg}");
@@ -34,6 +35,17 @@ Future setupLogger() async {
   });
 }
 
+// TODO:: need move this to a correct place
+Future testCallbackfunction() async {
+  ProtonWalletAuthStore.setDartCallback(callback: (message) {
+    logger.d("Received message from Rust: $message");
+    // if we have session then update auth data
+
+    return "Reply from Dart";
+  });
+  logger.d("testCallbackfunction --- setup");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalNotification.init();
@@ -44,5 +56,6 @@ void main() async {
   await RustLib.init();
   await setupLogger();
   await test(i: 12);
+  await testCallbackfunction();
   runApp(AppCoordinator().start());
 }

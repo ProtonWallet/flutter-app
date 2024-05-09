@@ -1,3 +1,5 @@
+pub mod auth_credential;
+pub mod auth_store;
 pub mod contacts;
 pub mod errors;
 pub mod event_routes;

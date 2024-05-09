@@ -93,8 +93,8 @@ class __$$DatabaseConfig_MemoryImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DatabaseConfig_MemoryImpl implements DatabaseConfig_Memory {
-  const _$DatabaseConfig_MemoryImpl();
+class _$DatabaseConfig_MemoryImpl extends DatabaseConfig_Memory {
+  const _$DatabaseConfig_MemoryImpl() : super._();
 
   @override
   String toString() {
@@ -174,8 +174,9 @@ class _$DatabaseConfig_MemoryImpl implements DatabaseConfig_Memory {
   }
 }
 
-abstract class DatabaseConfig_Memory implements DatabaseConfig {
+abstract class DatabaseConfig_Memory extends DatabaseConfig {
   const factory DatabaseConfig_Memory() = _$DatabaseConfig_MemoryImpl;
+  const DatabaseConfig_Memory._() : super._();
 }
 
 /// @nodoc
@@ -212,8 +213,8 @@ class __$$DatabaseConfig_SqliteImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DatabaseConfig_SqliteImpl implements DatabaseConfig_Sqlite {
-  const _$DatabaseConfig_SqliteImpl({required this.config});
+class _$DatabaseConfig_SqliteImpl extends DatabaseConfig_Sqlite {
+  const _$DatabaseConfig_SqliteImpl({required this.config}) : super._();
 
   @override
   final SqliteDbConfiguration config;
@@ -304,10 +305,11 @@ class _$DatabaseConfig_SqliteImpl implements DatabaseConfig_Sqlite {
   }
 }
 
-abstract class DatabaseConfig_Sqlite implements DatabaseConfig {
+abstract class DatabaseConfig_Sqlite extends DatabaseConfig {
   const factory DatabaseConfig_Sqlite(
           {required final SqliteDbConfiguration config}) =
       _$DatabaseConfig_SqliteImpl;
+  const DatabaseConfig_Sqlite._() : super._();
 
   SqliteDbConfiguration get config;
   @JsonKey(ignore: true)
