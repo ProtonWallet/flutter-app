@@ -37,6 +37,7 @@ impl From<Error> for ApiError {
                 "Response Code:{} Details:{}",
                 error.code, error.details
             )),
+            Error::DeserializeErr(err) => ApiError::Generic(err),
         }
     }
 }

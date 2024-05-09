@@ -233,8 +233,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               if (me != null) {
                 isSend = false;
                 amount = me.amountInSATS.toDouble();
-              } else {
-                errorMessage = "Can not find this transaction from blockchain";
               }
             }
           }

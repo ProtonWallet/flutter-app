@@ -15,7 +15,6 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
-import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
