@@ -1,4 +1,3 @@
-use super::api_service::wallet_auth_store::call_dart_callback;
 use super::proton_api::retrieve_proton_api;
 pub use crate::bdk::blockchain::Blockchain;
 use crate::bdk::blockchain::EsploraConfig;
@@ -71,7 +70,6 @@ impl Api {
 
     pub fn estimate_fee(target: u64, blockchain_id: String) -> Result<f32, Error> {
         RUNTIME.read().unwrap().clone().block_on(async {
-            call_dart_callback("estimate_fee 111111222".to_string()).await;
             match Blockchain::retrieve_blockchain(blockchain_id)
                 .estimate_fee(target)
                 .await

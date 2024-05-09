@@ -1,34 +1,37 @@
 pub use andromeda_api::settings::FiatCurrency;
 use andromeda_api::{
     transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
-    AccessToken, AuthData, ProtonWalletApiClient, RefreshToken, Scope, Uid,
+    AccessToken, AppSpec, AuthData, Product, ProtonWalletApiClient, RefreshToken,
+    ReqwestTransportFactory, Scope, Session, Uid,
 };
 use andromeda_common::BitcoinUnit;
 use chrono::Utc;
 use lazy_static::lazy_static;
-use log::info;
+use log::{debug, info};
 use std::sync::{Arc, RwLock};
 
-use crate::proton_api::{
-    contacts::ProtonContactEmails,
-    errors::ApiError,
-    event_routes::ProtonEvent,
-    exchange_rate::ProtonExchangeRate,
-    proton_address::ProtonAddress,
-    user_settings::ApiUserSettings,
-    wallet::{
-        BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
-        WalletBitcoinAddress, WalletData, WalletTransaction,
+use crate::{
+    auth_credential::ProtonAuthData,
+    auth_store::WalletAuthStore,
+    proton_api::{
+        contacts::ProtonContactEmails,
+        errors::ApiError,
+        event_routes::ProtonEvent,
+        exchange_rate::ProtonExchangeRate,
+        proton_address::ProtonAddress,
+        user_settings::ApiUserSettings,
+        wallet::{
+            BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
+            WalletBitcoinAddress, WalletData, WalletTransaction,
+        },
+        wallet_account::{CreateWalletAccountReq, WalletAccount},
     },
-    wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
 
 use crate::bdk::psbt::Transaction;
 use bdk::bitcoin::consensus::serialize;
 use bdk::bitcoin::Transaction as bdkTransaction;
 use bitcoin_internals::hex::display::DisplayHex;
-
-use super::api_service::wallet_auth_store::call_dart_callback;
 
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonWalletApiClient>>> = RwLock::new(None);
@@ -48,6 +51,34 @@ pub async fn init_api_service(user_name: String, password: String) {
         "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
     );
     api.login(&user_name, &password).await.unwrap();
+    let mut api_ref = PROTON_API.write().unwrap();
+    *api_ref = Some(Arc::new(api));
+}
+
+// initapiserviceauthstore
+pub fn init_api_service_auth_store(
+    uid: String,
+    access: String,
+    refresh: String,
+    scopes: Vec<String>,
+    app_version: String,
+    user_agent: String,
+    env: Option<String>,
+) {
+    info!("start init_api_service");
+    debug!(
+        "uid: {}, access: {}, refresh: {}, scopes: {:?}",
+        uid, access, refresh, scopes
+    );
+    let auth_data = Arc::new(RwLock::new(ProtonAuthData::new(
+        uid, refresh, access, scopes,
+    )));
+    let app_spec = AppSpec::new(Product::Wallet, app_version, user_agent);
+    let auth_store_env = env.unwrap_or("atlas".to_string());
+    let auth_store = WalletAuthStore::new(auth_store_env, auth_data.clone());
+    let transport = ReqwestTransportFactory::new();
+    let session = Session::new_with_transport(auth_store, app_spec, transport).unwrap();
+    let api = ProtonWalletApiClient::from_session(session);
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(Arc::new(api));
 }

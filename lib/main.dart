@@ -21,7 +21,7 @@ Future setupLogger() async {
         logger.w("${msg.lbl.padRight(8)}: ${msg.msg}");
         break;
       case Level.info:
-        // logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
+        logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
         break;
       case Level.debug:
         logger.d("${msg.lbl.padRight(8)}: ${msg.msg}");
@@ -37,8 +37,10 @@ Future setupLogger() async {
 
 // TODO:: need move this to a correct place
 Future testCallbackfunction() async {
-  await setDartCallback(callback: (message) {
+  ProtonWalletAuthStore.setDartCallback(callback: (message) {
     logger.d("Received message from Rust: $message");
+    // if we have session then update auth data
+
     return "Reply from Dart";
   });
   logger.d("testCallbackfunction --- setup");

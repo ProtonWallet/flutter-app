@@ -128,8 +128,8 @@ class __$$ApiError_GenericImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ApiError_GenericImpl implements ApiError_Generic {
-  const _$ApiError_GenericImpl(this.field0);
+class _$ApiError_GenericImpl extends ApiError_Generic {
+  const _$ApiError_GenericImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -220,8 +220,9 @@ class _$ApiError_GenericImpl implements ApiError_Generic {
   }
 }
 
-abstract class ApiError_Generic implements ApiError {
+abstract class ApiError_Generic extends ApiError {
   const factory ApiError_Generic(final String field0) = _$ApiError_GenericImpl;
+  const ApiError_Generic._() : super._();
 
   @override
   String get field0;
@@ -267,8 +268,8 @@ class __$$ApiError_SessionErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ApiError_SessionErrorImpl implements ApiError_SessionError {
-  const _$ApiError_SessionErrorImpl(this.field0);
+class _$ApiError_SessionErrorImpl extends ApiError_SessionError {
+  const _$ApiError_SessionErrorImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -359,9 +360,10 @@ class _$ApiError_SessionErrorImpl implements ApiError_SessionError {
   }
 }
 
-abstract class ApiError_SessionError implements ApiError {
+abstract class ApiError_SessionError extends ApiError {
   const factory ApiError_SessionError(final String field0) =
       _$ApiError_SessionErrorImpl;
+  const ApiError_SessionError._() : super._();
 
   @override
   String get field0;

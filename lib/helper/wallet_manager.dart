@@ -664,7 +664,8 @@ class WalletManager {
       appVersion = "android-wallet@1.0.0";
       userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
     }
-    await proton_api.initApiServiceFromAuthAndVersion(
+
+    await proton_api.initApiServiceAuthStore(
       uid: uid,
       access: accessToken,
       refresh: refreshToken,
@@ -673,6 +674,17 @@ class WalletManager {
       userAgent: userAgent,
       env: apiEnv.toString(),
     );
+
+    // deprecated
+    // await proton_api.initApiServiceFromAuthAndVersion(
+    //   uid: uid,
+    //   access: accessToken,
+    //   refresh: refreshToken,
+    //   scopes: scopes.split(","),
+    //   appVersion: appVersion,
+    //   userAgent: userAgent,
+    //   env: apiEnv.toString(),
+    // );
   }
 
   static Future<String?> lookupBitcoinAddress(String email) async {
