@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -68,8 +70,23 @@ class RecipientDetail extends StatelessWidget {
                 style: FontManager.captionMedian(ProtonColors.textNorm)),
           if (!isBitcoinAddress)
             bitcoinAddress.isNotEmpty
-                ? Text(bitcoinAddress,
-                    style: FontManager.overlineRegular(ProtonColors.textWeak))
+                ? GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: bitcoinAddress))
+                          .then((_) {
+                        LocalToast.showToast(context, S.of(context).copied_address);
+                      });
+                    },
+                    child: Row(children: [
+                      SizedBox(
+                          width: 150,
+                          child: Text(bitcoinAddress,
+                              overflow: TextOverflow.ellipsis,
+                              style: FontManager.overlineRegular(
+                                  ProtonColors.textWeak))),
+                      Icon(Icons.copy_rounded,
+                          color: ProtonColors.textWeak, size: 14)
+                    ]))
                 : GestureDetector(
                     onTap: () {
                       showInvite(context, email ?? "");

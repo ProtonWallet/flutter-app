@@ -9,10 +9,11 @@ abstract class TransactionDao extends BaseDao {
 
   Future<void> insertOrUpdate(TransactionModel transactionModel);
 
-  Future<List<TransactionModel>> findAllByServerAccountID(String serverAccountID);
+  Future<List<TransactionModel>> findAllByServerAccountID(
+      String serverAccountID);
 
-  Future<TransactionModel?> findByExternalTransactionID(
-      Uint8List externalTransactionID);
+  Future<TransactionModel?> find(Uint8List externalTransactionID,
+      String serverWalletID, String serverAccountID);
 }
 
 class TransactionDaoImpl extends TransactionDao {
@@ -67,9 +68,10 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<void> insertOrUpdate(TransactionModel transactionModel) async {
-    TransactionModel? transactionModelExists =
-        await findByExternalTransactionID(
-            transactionModel.externalTransactionID);
+    TransactionModel? transactionModelExists = await find(
+        transactionModel.externalTransactionID,
+        transactionModel.serverWalletID,
+        transactionModel.serverAccountID);
     //DateTime now = DateTime.now();
     if (transactionModelExists != null) {
       // data exist, need update db
@@ -81,10 +83,12 @@ class TransactionDaoImpl extends TransactionDao {
   }
 
   @override
-  Future<TransactionModel?> findByExternalTransactionID(
-      Uint8List externalTransactionID) async {
+  Future<TransactionModel?> find(Uint8List externalTransactionID,
+      String serverWalletID, String serverAccountID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'externalTransactionID = ?', whereArgs: [externalTransactionID]);
+        where:
+            'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
+        whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
     if (maps.isNotEmpty) {
       return TransactionModel.fromMap(maps.first);
     }
@@ -92,11 +96,15 @@ class TransactionDaoImpl extends TransactionDao {
   }
 
   @override
-  Future<List<TransactionModel>> findAllByServerAccountID(String serverAccountID) async{
+  Future<List<TransactionModel>> findAllByServerAccountID(
+      String serverAccountID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
     if (maps.isNotEmpty) {
-      return maps.map((e) => TransactionModel.fromMap(e)).toList().cast<TransactionModel>();
+      return maps
+          .map((e) => TransactionModel.fromMap(e))
+          .toList()
+          .cast<TransactionModel>();
     }
     return [];
   }

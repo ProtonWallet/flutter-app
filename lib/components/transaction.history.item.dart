@@ -82,7 +82,7 @@ class TransactionHistoryItem extends StatelessWidget {
                   if (bitcoinAddress.isNotEmpty) {
                     Clipboard.setData(ClipboardData(text: bitcoinAddress))
                         .then((_) {
-                      LocalToast.showToast(context, S.of(context).copied);
+                      LocalToast.showToast(context, S.of(context).copied_address);
                     });
                   }
                 },

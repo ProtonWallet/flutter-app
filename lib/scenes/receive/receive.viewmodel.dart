@@ -7,6 +7,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -84,9 +85,19 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
             await WalletManager.getAccountAddressIDs(
                 accountModel?.serverAccountID ?? "");
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
+        BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+            .bitcoinAddressDao!
+            .findLatestUnusedLocalBitcoinAddress(walletID, accountID);
+        if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
+          addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
+        } else {
+          addressIndex = await WalletManager.getBitcoinAddressIndex(
+              walletModel!.serverWalletID, accountModel!.serverAccountID);
+        }
+      } else {
+        addressIndex = await WalletManager.getBitcoinAddressIndex(
+            walletModel!.serverWalletID, accountModel!.serverAccountID);
       }
-      addressIndex = await WalletManager.getBitcoinAddressIndex(
-          walletModel!.serverWalletID, accountModel!.serverAccountID);
       var addressInfo =
           await _lib.getAddress(_wallet, addressIndex: addressIndex);
       address = addressInfo.address;

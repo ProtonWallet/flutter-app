@@ -7,7 +7,6 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -239,7 +238,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         TransactionHistoryItem(
           title: S.of(context).trans_from,
           content:
-              "${Provider.of<UserSessionProvider>(context).userSession.userMail} (You)",
+              "${WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)} (You)",
           memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
         ),
         const Divider(
@@ -272,7 +271,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           content: viewModel.fromEmail.isNotEmpty
               ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
               : viewModel.address,
-          copyContent: true,
         ),
         const Divider(
           thickness: 0.2,
@@ -281,7 +279,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         TransactionHistoryItem(
           title: S.of(context).trans_to,
           content:
-              "${Provider.of<UserSessionProvider>(context).userSession.userMail} (You)",
+              "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)",
           memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
         ),
       ],

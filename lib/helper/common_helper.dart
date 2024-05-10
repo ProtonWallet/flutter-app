@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
@@ -64,5 +67,21 @@ class CommonHelper {
         },
       );
     }
+  }
+
+  static bool checkSelectWallet(BuildContext context) {
+    if (context.mounted) {
+      if (Provider
+          .of<ProtonWalletProvider>(context, listen: false)
+          .protonWallet
+          .currentWallet ==
+          null) {
+        LocalToast.showToast(context, "Please select your wallet first",
+            icon: null);
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/tag.v2.dart';
+import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
@@ -71,15 +73,11 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                                       ProtonColors.textWeak),
                                   textAlign: TextAlign.center),
                               const SizedBox(height: 20),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: ProtonColors.textNorm,
-                                        width: 0.3,
-                                      ),
-                                    ),
-                                  ),
+                              Underline(
+                                  onTap: () {
+                                    CustomPlaceholder.show(context);
+                                  },
+                                  color: ProtonColors.brandLighten20,
                                   child: Text(S.of(context).learn_more,
                                       style: FontManager.body2Median(
                                           ProtonColors.brandLighten20))),
@@ -97,6 +95,115 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   },
                   backgroundColor: ProtonColors.protonBlue,
                   text: S.of(context).view_wallet_mnemonic,
+                  width: MediaQuery.of(context).size.width,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  radius: 40,
+                  height: 52)),
+        ]));
+  }
+
+  Widget buildMnemonicViewV2(
+      BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
+    return Container(
+        color: ProtonColors.backgroundProton,
+        child: Column(children: [
+          AppBar(
+            surfaceTintColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundProton,
+            title: Text(
+              S.of(context).mnemonic_backup_page_title,
+              style: FontManager.body2Median(ProtonColors.textNorm),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Container(
+                      color: ProtonColors.backgroundProton,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: Text(
+                                    S
+                                        .of(context)
+                                        .mnemonic_backup_content_subtitle,
+                                    style: FontManager.body1Regular(
+                                        ProtonColors.textWeak),
+                                    textAlign: TextAlign.center),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: viewModel.itemList.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: defaultPadding),
+                                          child: SizedBox(
+                                              height: 36,
+                                              child: ListTile(
+                                                leading: Text(
+                                                    (index + 1).toString(),
+                                                    style: FontManager
+                                                        .body2Regular(
+                                                            ProtonColors
+                                                                .textNorm)),
+                                                title: Text(
+                                                    viewModel.itemList[index]
+                                                            .title ??
+                                                        "",
+                                                    style: FontManager
+                                                        .body2Regular(
+                                                            ProtonColors
+                                                                .textNorm)),
+                                              ))),
+                                      const Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: defaultPadding),
+                                          child: Divider(
+                                            height: 0.5,
+                                            thickness: 0.3,
+                                          ))
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 22,
+                              ),
+                            ],
+                          ),
+                        ],
+                      )))),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
+              child: ButtonV5(
+                  onPressed: () {
+                    viewModel.setBackup();
+                    Navigator.pop(context);
+                  },
+                  backgroundColor: ProtonColors.protonBlue,
+                  text: S.of(context).done,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   radius: 40,
@@ -205,7 +312,6 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   onPressed: () {
                     viewModel.setBackup();
                     Navigator.pop(context);
-                    // showConfirm(context, viewModel); disable this according to DingChao's feedback
                   },
                   backgroundColor: ProtonColors.protonBlue,
                   text: S.of(context).done,

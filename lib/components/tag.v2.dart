@@ -7,9 +7,11 @@ class TagV2 extends StatelessWidget {
   final int index;
   final String text;
   final double width;
+  final EdgeInsetsGeometry? padding;
 
   const TagV2({
     super.key,
+    this.padding,
     this.text = "",
     this.index = 1,
     this.width = 100,
@@ -20,7 +22,7 @@ class TagV2 extends StatelessWidget {
     return Container(
         width: width,
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-        padding: const EdgeInsets.only(
+        padding: padding ?? const EdgeInsets.only(
             left: 20.0, right: 20.0, top: 12.0, bottom: 12.0),
         decoration: BoxDecoration(
             color: ProtonColors.white,
