@@ -100,7 +100,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           await WalletManager.getWalletKey(walletModel.serverWalletID);
 
       transactionModel = await DBHelper.transactionDao!
-          .findByExternalTransactionID(utf8.encode(txid));
+          .find(utf8.encode(txid), walletModel.serverWalletID, accountModel.serverAccountID);
 
       datasourceChangedStreamController.sink.add(this);
       _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
@@ -205,7 +205,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           TransactionInfoModel? transactionInfoModel;
           try {
             transactionInfoModel = await DBHelper.transactionInfoDao!
-                .findByExternalTransactionID(utf8.encode(txid));
+                .find(utf8.encode(txid), walletModel.serverWalletID, accountModel.serverAccountID);
           } catch (e) {
             logger.e(e.toString());
           }

@@ -8,6 +8,8 @@ class TransactionInfoModel {
   int isSend;
   int transactionTime;
   int feeMode;
+  String serverWalletID;
+  String serverAccountID;
 
   TransactionInfoModel({
     required this.id,
@@ -17,6 +19,8 @@ class TransactionInfoModel {
     required this.isSend,
     required this.transactionTime,
     required this.feeMode,
+    required this.serverWalletID,
+    required this.serverAccountID,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +32,8 @@ class TransactionInfoModel {
       'isSend': isSend,
       'transactionTime': transactionTime,
       'feeMode': feeMode,
+      'serverWalletID': serverWalletID,
+      'serverAccountID': serverAccountID,
     };
   }
 
@@ -40,6 +46,8 @@ class TransactionInfoModel {
       isSend: map['isSend'],
       transactionTime: map['transactionTime'],
       feeMode: map['feeMode'],
+      serverWalletID: map['serverWalletID'],
+      serverAccountID: map['serverAccountID'],
     );
   }
 }
