@@ -56,6 +56,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hasWallet = true;
   bool hasMailIntegration = false;
   bool isFetching = false;
+  bool isLogout = false;
   int currentHistoryPage = 0;
   bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
@@ -142,6 +143,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   Future<void> removeEmailAddress(
       String serverWalletID, String serverAccountID, String serverAddressID);
 
+  Future<void> updateWalletName(String serverWalletID, String newName);
+
   ProtonAddress? getProtonAddressByID(String addressID);
 
   int totalTodoSteps = 5;
@@ -205,9 +208,6 @@ class HomeViewModelImpl extends HomeViewModel {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.navigatorKey.currentContext!,
           listen: false);
-      protonWalletProvider = Provider.of<ProtonWalletProvider>(
-          Coordinator.navigatorKey.currentContext!,
-          listen: false);
       await Future.delayed(const Duration(
           seconds:
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
@@ -219,11 +219,6 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       WalletManager.initContacts();
       EventLoopHelper.start();
-      protonWalletProvider.addListener(() {
-        walletNameController.text = protonWalletProvider.protonWallet.currentWallet?.name ?? "";
-      });
-      await protonWalletProvider.init();
-      protonWalletProvider.setDefaultWalletAccount();
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -234,8 +229,7 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       getUserSettings();
       updateBtcPrice();
-      checkPreference(); // no effect
-      checkNetwork(); // no effect
+      checkNetwork();
       loadDiscoverContents();
       checkProtonAddresses();
       refreshWithUserSettingProvider();
@@ -246,11 +240,22 @@ class HomeViewModelImpl extends HomeViewModel {
         updateBitcoinUnit(bitcoinUnitNotifier.value);
         userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
       });
+
+      protonWalletProvider = Provider.of<ProtonWalletProvider>(
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
+      protonWalletProvider.addListener(() async {
+        walletNameController.text =
+            protonWalletProvider.protonWallet.currentWallet?.name ?? "";
+      });
+      await protonWalletProvider.init();
+      protonWalletProvider.setDefaultWalletAccount();
       transactionSearchController.addListener(() {
         protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
             protonWalletProvider.protonWallet.transactionFilter,
             transactionSearchController.text);
       });
+      checkPreference();
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -338,9 +343,10 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> updateBtcPrice() async {
     btcPriceInfo = await CryptoPriceHelper.getPriceInfo("BTCUSDT");
     datasourceStreamSinkAdd();
-    Future.delayed(const Duration(seconds: 10), () {
+    await Future.delayed(const Duration(seconds: 10));
+    if (isLogout == false) {
       updateBtcPrice();
-    });
+    }
   }
 
   @override
@@ -364,7 +370,9 @@ class HomeViewModelImpl extends HomeViewModel {
           userSettingProvider.walletUserSetting.fiatCurrency;
     }
     await Future.delayed(const Duration(seconds: 1));
-    refreshWithUserSettingProvider();
+    if (isLogout == false) {
+      refreshWithUserSettingProvider();
+    }
   }
 
   void loadUserSettings() {
@@ -415,6 +423,7 @@ class HomeViewModelImpl extends HomeViewModel {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
     if (currentWallet != null) {
+      logger.i("currentWallet.name = ${currentWallet.name}");
       try {
         SecretKey? secretKey =
             await WalletManager.getWalletKey(currentWallet.serverWalletID);
@@ -479,9 +488,10 @@ class HomeViewModelImpl extends HomeViewModel {
     currentTodoStep += hadSetupEmailIntegration ? 1 : 0;
     datasourceStreamSinkAdd();
     if (runOnce == false) {
-      Future.delayed(const Duration(seconds: 1), () async {
-        await checkPreference();
-      });
+      await Future.delayed(const Duration(seconds: 1));
+      if (isLogout == false) {
+        checkPreference();
+      }
     }
   }
 
@@ -523,7 +533,9 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       if (protonWalletProvider.protonWallet.wallet != null) {
         await WalletManager.addBitcoinAddress(
-            protonWalletProvider.protonWallet.wallet!, currentWallet!, currentAccount!);
+            protonWalletProvider.protonWallet.wallet!,
+            currentWallet!,
+            currentAccount!);
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -561,10 +573,16 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> removeEmailAddress(String serverWalletID, String serverAccountID,
-      String serverAddressID) async {
-    EasyLoading.show(
-        status: "removing email..", maskType: EasyLoadingMaskType.black);
+  Future<void> removeEmailAddress(
+      String serverWalletID, String serverAccountID, String serverAddressID,
+      {bool isTriedRemove = false}) async {
+    if (isTriedRemove == false) {
+      EasyLoading.show(
+          status: "removing email..", maskType: EasyLoadingMaskType.black);
+    } else {
+      EasyLoading.show(
+          status: "email already in used, try removing previous email binding..", maskType: EasyLoadingMaskType.black);
+    }
     try {
       WalletAccount walletAccount = await proton_api.removeEmailAddress(
           walletId: serverWalletID,
@@ -595,10 +613,12 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> logout() async {
+    isLogout = true;
     EasyLoading.show(
         status: "log out, cleaning cache..",
         maskType: EasyLoadingMaskType.black);
     try {
+      EventLoopHelper.stop();
       await UserSessionProvider().logout();
       await DBHelper.reset();
       await Future.delayed(
@@ -680,8 +700,9 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> addEmailAddressToWalletAccount(String serverWalletID,
-      String serverAccountID, String serverAddressID) async {
+  Future<void> addEmailAddressToWalletAccount(
+      String serverWalletID, String serverAccountID, String serverAddressID,
+      {isReloaded = false}) async {
     EasyLoading.show(
         status: "adding email..", maskType: EasyLoadingMaskType.black);
     try {
@@ -695,9 +716,20 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(
-          "addEmailAddressToWalletAccount(): $errorMessage");
-      errorMessage = "";
+      if (isReloaded) {
+        CommonHelper.showErrorDialog(
+            "addEmailAddressToWalletAccount(): $errorMessage");
+        errorMessage = "";
+      } else {
+        // try remove first then add again
+        errorMessage = "";
+        await removeEmailAddress(
+            serverWalletID, serverAccountID, serverAddressID,
+            isTriedRemove: true);
+        addEmailAddressToWalletAccount(
+            serverWalletID, serverAccountID, serverAddressID,
+            isReloaded: true);
+      }
     }
     datasourceStreamSinkAdd();
   }
@@ -736,8 +768,30 @@ class HomeViewModelImpl extends HomeViewModel {
         EasyLoading.dismiss();
       }
     }
-    Future.delayed(const Duration(seconds: 1), () {
+    await Future.delayed(const Duration(seconds: 1));
+    if (isLogout == false) {
       checkNetwork();
-    });
+    }
+  }
+
+  @override
+  Future<void> updateWalletName(String serverWalletID, String newName) async {
+    SecretKey? secretKey = await WalletManager.getWalletKey(
+        protonWalletProvider.protonWallet.currentWallet!.serverWalletID);
+    if (secretKey != null) {
+      try {
+        String encryptedName =
+            await WalletKeyHelper.encrypt(secretKey, newName);
+        await proton_api.updateWalletName(
+            walletId: serverWalletID, newName: encryptedName);
+        protonWalletProvider.updateCurrentWalletName(newName);
+      } catch (e) {
+        errorMessage = e.toString();
+      }
+      if (errorMessage.isNotEmpty) {
+        CommonHelper.showErrorDialog("loadData() 1: $errorMessage");
+        errorMessage = "";
+      }
+    }
   }
 }

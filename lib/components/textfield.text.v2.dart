@@ -17,6 +17,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final Color? backgroundColor;
   final bool isPassword;
   final double? paddingSize;
+  final int? maxLines;
 
   const TextFieldTextV2(
       {super.key,
@@ -32,6 +33,7 @@ class TextFieldTextV2 extends StatefulWidget {
       required this.validation,
       this.isPassword = false,
       this.paddingSize,
+      this.maxLines,
       this.checkOfErrorOnFocusChange = true});
 
   @override
@@ -109,6 +111,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   keyboardType: widget.keyboardType,
                   textInputAction: widget.textInputAction,
                   inputFormatters: widget.inputFormatters,
+                  maxLines: widget.maxLines ?? 1,
                   validator: (string) {
                     if (widget
                         .validation(widget.textController.text)

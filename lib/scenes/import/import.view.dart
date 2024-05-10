@@ -38,15 +38,16 @@ class ImportView extends ViewBase<ImportViewModel> {
             child: Center(
                 child: Stack(children: [
           Container(
-              alignment: Alignment.center,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height -
                   56 -
                   MediaQuery.of(context).padding.top,
               margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    SizedBoxes.box18,
+                    Text(S.of(context).import_wallet_header, style: FontManager.body2Regular(ProtonColors.textWeak)),
+                    SizedBoxes.box18,
                     TextFieldTextV2(
                       labelText: S.of(context).wallet_name,
                       textController: viewModel.nameTextController,
@@ -55,26 +56,37 @@ class ImportView extends ViewBase<ImportViewModel> {
                         return "";
                       },
                     ),
-                    SizedBoxes.box24,
+                    SizedBoxes.box12,
                     TextFieldTextV2(
                       labelText: S.of(context).your_mnemonic,
                       textController: viewModel.mnemonicTextController,
                       myFocusNode: viewModel.mnemonicFocusNode,
+                      maxLines: 6,
                       validation: (String _) {
                         return "";
                       },
-                      isPassword: true,
+                      isPassword: false,
                     ),
                     SizedBoxes.box24,
-                    TextFieldTextV2(
-                      labelText: S.of(context).your_passphrase_optional,
-                      textController: viewModel.passphraseTextController,
-                      myFocusNode: viewModel.passphraseFocusNode,
-                      validation: (String _) {
-                        return "";
-                      },
-                      isPassword: true,
-                    )
+                    ExpansionTile(
+                        shape: const Border(),
+                        initiallyExpanded: false,
+                        title: Text(S.of(context).advanced_options,
+                            style:
+                                FontManager.body2Median(ProtonColors.textWeak)),
+                        iconColor: ProtonColors.textHint,
+                        collapsedIconColor: ProtonColors.textHint,
+                        children: [
+                          TextFieldTextV2(
+                            labelText: S.of(context).your_passphrase_optional,
+                            textController: viewModel.passphraseTextController,
+                            myFocusNode: viewModel.passphraseFocusNode,
+                            validation: (String _) {
+                              return "";
+                            },
+                            isPassword: true,
+                          )
+                        ])
                   ])),
           Container(
               padding: const EdgeInsets.only(bottom: defaultPadding),

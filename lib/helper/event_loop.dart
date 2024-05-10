@@ -110,18 +110,29 @@ class EventLoop {
                   }
                 }
               }
+              SecretKey? secretKey;
               if (entropy.isNotEmpty) {
-                SecretKey secretKey =
+                secretKey =
                     WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
-                await WalletManager.setWalletKey(serverWalletID, secretKey);
+                if (secretKey != null) {
+                  await WalletManager.setWalletKey(serverWalletID, secretKey);
+                }
               }
               // int status = entropy.isNotEmpty
               //     ? WalletModel.statusActive
               //     : WalletModel.statusDisabled;
               int status = WalletModel.statusActive;
+              String decryptedWalletName = walletData.name;
+              try {
+                secretKey ??= await WalletManager.getWalletKey(serverWalletID);
+                decryptedWalletName = await WalletKeyHelper.decrypt(
+                    secretKey!, decryptedWalletName);
+              } catch (e) {
+                logger.e(e.toString());
+              }
               await WalletManager.insertOrUpdateWallet(
                   userID: 0,
-                  name: walletData.name,
+                  name: decryptedWalletName,
                   encryptedMnemonic: walletData.mnemonic!,
                   passphrase: walletData.hasPassphrase,
                   imported: walletData.isImported,
@@ -193,7 +204,9 @@ class EventLoop {
       await polling();
     } catch (e) {
       logger.e("Event Loop error: ${e.toString()}");
-      await WalletManager.initMuon(WalletManager.apiEnv);
+      if (_isRunning) {
+        await WalletManager.initMuon(WalletManager.apiEnv);
+      }
     }
   }
 

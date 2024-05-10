@@ -365,7 +365,9 @@ class SendViewModelImpl extends SendViewModel {
               feeInSATS: estimatedFeeInSAT,
               isSend: 1,
               transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              feeMode: userTransactionFeeMode.index);
+              feeMode: userTransactionFeeMode.index,
+              serverWalletID: walletModel!.serverWalletID,
+              serverAccountID: accountModel!.serverAccountID);
         }
       } catch (e) {
         logger.e(e.toString());
@@ -397,7 +399,11 @@ class SendViewModelImpl extends SendViewModel {
     feeRate_ = await _lib.estimateFeeRate(15, _blockchain!);
     feeRateLowPriority = feeRate_.asSatPerVb();
     // feeRateLowPriority = 2.0;
-    datasourceChangedStreamController.add(this);
+    try {
+      datasourceChangedStreamController.add(this);
+    } catch (e) {
+      logger.e(e.toString());
+    }
     // TODO:: fixme to avoid crash after coordinate pop
     // Future.delayed(const Duration(seconds: 5), () {
     //   updateFeeRate();
