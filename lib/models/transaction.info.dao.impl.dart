@@ -7,16 +7,19 @@ import 'package:wallet/models/transaction.info.model.dart';
 abstract class TransactionInfoDao extends BaseDao {
   TransactionInfoDao(super.db, super.tableName);
 
-  Future<void> insertOrUpdate(
-      {required Uint8List externalTransactionID,
-      required int amountInSATS,
-      required int feeInSATS,
-      required int isSend,
-      required int transactionTime,
-      required int feeMode});
+  Future<void> insertOrUpdate({
+    required Uint8List externalTransactionID,
+    required int amountInSATS,
+    required int feeInSATS,
+    required int isSend,
+    required int transactionTime,
+    required int feeMode,
+    required String serverWalletID,
+    required String serverAccountID,
+  });
 
-  Future<TransactionInfoModel?> findByExternalTransactionID(
-      Uint8List externalTransactionID);
+  Future<TransactionInfoModel?> find(Uint8List externalTransactionID,
+      String serverWalletID, String serverAccountID);
 }
 
 class TransactionInfoDaoImpl extends TransactionInfoDao {
@@ -59,15 +62,18 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
   }
 
   @override
-  Future<void> insertOrUpdate(
-      {required Uint8List externalTransactionID,
-        required int amountInSATS,
-        required int feeInSATS,
-        required int isSend,
-        required int transactionTime,
-        required int feeMode}) async {
+  Future<void> insertOrUpdate({
+    required Uint8List externalTransactionID,
+    required int amountInSATS,
+    required int feeInSATS,
+    required int isSend,
+    required int transactionTime,
+    required int feeMode,
+    required String serverWalletID,
+    required String serverAccountID,
+  }) async {
     TransactionInfoModel? transactionInfoModel =
-        await findByExternalTransactionID(externalTransactionID);
+        await find(externalTransactionID, serverWalletID, serverAccountID);
     if (transactionInfoModel != null) {
       await update({
         "id": transactionInfoModel.id,
@@ -77,6 +83,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
         "isSend": isSend,
         "transactionTime": transactionTime,
         "feeMode": feeMode,
+        "serverWalletID": serverWalletID,
+        "serverAccountID": serverAccountID,
       });
     } else {
       await insert({
@@ -86,6 +94,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
         "isSend": isSend,
         "transactionTime": transactionTime,
         "feeMode": feeMode,
+        "serverWalletID": serverWalletID,
+        "serverAccountID": serverAccountID,
       });
     }
   }
@@ -96,10 +106,12 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
   }
 
   @override
-  Future<TransactionInfoModel?> findByExternalTransactionID(
-      Uint8List externalTransactionID) async {
+  Future<TransactionInfoModel?> find(Uint8List externalTransactionID,
+      String serverWalletID, String serverAccountID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'externalTransactionID = ?', whereArgs: [externalTransactionID]);
+        where:
+            'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
+        whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
     if (maps.isNotEmpty) {
       return TransactionInfoModel.fromMap(maps.first);
     }

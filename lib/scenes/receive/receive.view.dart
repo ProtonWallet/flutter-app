@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/components/alert.custom.dart';
+import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
+import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -65,8 +67,11 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               content: S
                                   .of(context)
                                   .receive_email_integration_alert_content,
-                              learnMore: GestureDetector(
-                                  onTap: () {},
+                              learnMore: Underline(
+                                  onTap: () {
+                                    CustomPlaceholder.show(context);
+                                  },
+                                  color: ProtonColors.purple1Text,
                                   child: Text(S.of(context).learn_more,
                                       style: FontManager.body2Median(
                                           ProtonColors.purple1Text))),
@@ -178,7 +183,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                           viewModel.getAddress();
                         },
                         child: Container(
-                          margin: const EdgeInsets.only(top: 5),
+                            margin: const EdgeInsets.only(top: 5),
                             width: MediaQuery.of(context).size.width,
                             height: 48,
                             child: Text(

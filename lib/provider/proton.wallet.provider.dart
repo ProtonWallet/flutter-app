@@ -62,26 +62,33 @@ class ProtonWallet {
   }
 
   Future<void> syncWallet() async {
-    AccountModel? accountModel = currentAccount;
-    if (wallet != null && accountModel != null) {
-      if ((isWalletSyncing[accountModel.serverAccountID] ?? false) == false) {
-        isWalletSyncing[accountModel.serverAccountID] = true;
-        var walletBalance = await wallet!.getBalance();
-        accountModel.balance = (walletBalance.total).toDouble();
-        logger.d(
-            "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
-        await _lib.syncWallet(blockchain!, wallet!);
-        walletBalance = await wallet!.getBalance();
-        accountModel.balance = (walletBalance.total).toDouble();
-        if (accountModel.serverAccountID == accountModel.serverAccountID) {
-          currentBalance = walletBalance.total;
+    try {
+      AccountModel? accountModel = currentAccount;
+      if (wallet != null && accountModel != null) {
+        if ((isWalletSyncing[accountModel.serverAccountID] ?? false) == false) {
+          isWalletSyncing[accountModel.serverAccountID] = true;
+          logger
+              .i("set isWalletSyncing[${accountModel.serverAccountID}] = true");
+          var walletBalance = await wallet!.getBalance();
+          accountModel.balance = (walletBalance.total).toDouble();
+          logger.d(
+              "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
+          await _lib.syncWallet(blockchain!, wallet!);
+          walletBalance = await wallet!.getBalance();
+          accountModel.balance = (walletBalance.total).toDouble();
+          if (accountModel.serverAccountID == accountModel.serverAccountID) {
+            currentBalance = walletBalance.total;
+          }
+          logger.d(
+              "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
+          await insertOrUpdateWalletAccount(accountModel);
+          isWalletSyncing[accountModel.serverAccountID] = false;
+
+          await setCurrentTransactions(accountModel);
         }
-        logger.d(
-            "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
-        await insertOrUpdateWalletAccount(accountModel);
-        isWalletSyncing[accountModel.serverAccountID] = false;
-        await setCurrentTransactions(accountModel);
       }
+    } catch (e) {
+      logger.e(e.toString());
     }
   }
 
@@ -109,9 +116,13 @@ class ProtonWallet {
   }
 
   Future<void> setPassphrase(WalletModel walletModel, String passphrase) async {
-    await SecureStorageHelper.instance
-        .set(walletModel.serverWalletID, passphrase);
-    await checkPassphrase(walletModel);
+    try {
+      await SecureStorageHelper.instance
+          .set(walletModel.serverWalletID, passphrase);
+      await checkPassphrase(walletModel);
+    } catch (e) {
+      logger.e(e.toString());
+    }
   }
 
   void destroy() {
@@ -146,19 +157,24 @@ class ProtonWallet {
 
   Future<void> setWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
-    historyTransactions.clear();
+    try {
+      historyTransactions.clear();
 
-    currentWallet = walletModel;
-    currentAccount = accountModel;
-    await getCurrentWalletAccounts();
-    wallet = await WalletManager.loadWalletWithID(
-        currentWallet!.id!, currentAccount!.id!);
-    currentBalance = 0;
-    if (wallet != null) {
-      currentBalance = (await wallet!.getBalance()).total;
+      currentWallet = walletModel;
+      currentAccount = accountModel;
+      await getCurrentWalletAccounts();
+      wallet = await WalletManager.loadWalletWithID(
+          currentWallet!.id!, currentAccount!.id!);
+      syncWallet();
+      currentBalance = 0;
+      if (wallet != null) {
+        currentBalance = (await wallet!.getBalance()).total;
+      }
+      await setCurrentTransactions(accountModel);
+      logger.i("setWalletAccount() finish!");
+    } catch (e) {
+      logger.e(e.toString());
     }
-    await setCurrentTransactions(accountModel);
-    syncWallet();
   }
 
   Future<void> getCurrentWalletAccounts() async {
@@ -171,6 +187,7 @@ class ProtonWallet {
         }
       }
     }
+    logger.i("getCurrentWalletAccounts finish!");
   }
 
   List<AccountModel> getAccounts(WalletModel walletModel) {
@@ -192,6 +209,14 @@ class ProtonWallet {
   List<String> getIntegratedEmailIDs(AccountModel accountModel) {
     int id = accountModel.id!;
     return _accountID2IntegratedEmailIDs[id] ?? [];
+  }
+
+  List<String> getAllIntegratedEmailIDs() {
+    List<String> results = [];
+    for (List<String> list in _accountID2IntegratedEmailIDs.values) {
+      results.addAll(list);
+    }
+    return results;
   }
 
   Future<void> insertOrUpdateWallet(WalletModel newWalletModel) async {
@@ -220,6 +245,7 @@ class ProtonWallet {
     if (walletModel != null) {
       if (hasPassphrase(walletModel) == false) {
         clearCurrent();
+        logger.i("no passphrase for default wallet");
       } else {
         List<AccountModel> accountModels =
             (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
@@ -323,7 +349,8 @@ class ProtonWallet {
             in transactionHistoryFromBDK) {
           String txID = transactionDetail.txid;
           TransactionModel? transactionModel = await DBHelper.transactionDao!
-              .findByExternalTransactionID(utf8.encode(txID));
+              .find(utf8.encode(txID), currentWallet!.serverWalletID,
+                  currentAccount!.serverAccountID);
           String userLabel = transactionModel != null
               ? await WalletKeyHelper.decrypt(
                   secretKey!, utf8.decode(transactionModel.label))
@@ -339,14 +366,14 @@ class ProtonWallet {
                   toList = addressKey.decrypt(encryptedToList);
                 }
               } catch (e) {
-                logger.e(e.toString());
+                // logger.e(e.toString());
               }
               try {
                 if (encryptedSender.isNotEmpty) {
                   sender = addressKey.decrypt(encryptedSender);
                 }
               } catch (e) {
-                logger.e(e.toString());
+                // logger.e(e.toString());
               }
               if (sender.isNotEmpty || toList.isNotEmpty) {
                 break;
@@ -356,14 +383,14 @@ class ProtonWallet {
                   toList = addressKey.decryptBinary(encryptedToList);
                 }
               } catch (e) {
-                logger.e(e.toString());
+                // logger.e(e.toString());
               }
               try {
                 if (encryptedSender.isNotEmpty) {
                   sender = addressKey.decryptBinary(encryptedSender);
                 }
               } catch (e) {
-                logger.e(e.toString());
+                // logger.e(e.toString());
               }
               if (sender.isNotEmpty || toList.isNotEmpty) {
                 break;
@@ -415,14 +442,14 @@ class ProtonWallet {
                 toList = addressKey.decrypt(encryptedToList);
               }
             } catch (e) {
-              logger.e(e.toString());
+              // logger.e(e.toString());
             }
             try {
               if (encryptedSender.isNotEmpty) {
                 sender = addressKey.decrypt(encryptedSender);
               }
             } catch (e) {
-              logger.e(e.toString());
+              // logger.e(e.toString());
             }
             if (sender.isNotEmpty || toList.isNotEmpty) {
               break;
@@ -432,14 +459,14 @@ class ProtonWallet {
                 toList = addressKey.decryptBinary(encryptedToList);
               }
             } catch (e) {
-              logger.e(e.toString());
+              // logger.e(e.toString());
             }
             try {
               if (encryptedSender.isNotEmpty) {
                 sender = addressKey.decryptBinary(encryptedSender);
               }
             } catch (e) {
-              logger.e(e.toString());
+              // logger.e(e.toString());
             }
             if (sender.isNotEmpty || toList.isNotEmpty) {
               break;
@@ -453,8 +480,10 @@ class ProtonWallet {
           }
           TransactionInfoModel? transactionInfoModel;
           try {
-            transactionInfoModel = await DBHelper.transactionInfoDao!
-                .findByExternalTransactionID(utf8.encode(txID));
+            transactionInfoModel = await DBHelper.transactionInfoDao!.find(
+                utf8.encode(txID),
+                currentWallet?.serverWalletID ?? "",
+                accountModel.serverAccountID);
           } catch (e) {
             logger.e(e.toString());
           }
@@ -510,7 +539,7 @@ class ProtonWallet {
                       label: userLabel,
                       inProgress: true);
                 } else {
-                  logger.i("Cannot find this tx, $txID");
+                  // logger.i("Cannot find this tx, $txID");
                 }
               }
             } catch (e) {
@@ -533,13 +562,13 @@ class ProtonWallet {
         }
         return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
       });
-      if (bdkSynced) {
+      if (bdkSynced &&
+          currentAccount!.serverAccountID == accountModel.serverAccountID) {
         historyTransactions = newHistoryTransactions;
-      } else {
-        historyTransactions.clear();
+        applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
+        logger.i("setCurrentTransactions finish()!");
       }
     }
-    applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
   }
 
   int getAccountCounts(WalletModel walletModel) {
@@ -589,7 +618,11 @@ class ProtonWalletProvider with ChangeNotifier {
   final ProtonWallet protonWallet = ProtonWallet();
 
   Future<void> init() async {
-    await protonWallet.init();
+    try {
+      await protonWallet.init();
+    } catch (e) {
+      logger.e(e.toString());
+    }
   }
 
   void destroy() {
@@ -606,6 +639,9 @@ class ProtonWalletProvider with ChangeNotifier {
     await protonWallet.setWalletAccount(walletModel, accountModel);
     await setCurrentTransactions(accountModel);
     syncWallet();
+    await Future.delayed(const Duration(
+        milliseconds: 100)); // wait for wallet sync refresh button
+    logger.i("going to notifyListeners in setWalletAccount();");
     notifyListeners();
   }
 
