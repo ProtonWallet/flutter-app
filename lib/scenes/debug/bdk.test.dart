@@ -111,6 +111,21 @@ class BdkLibrary {
     return wallet;
   }
 
+  Future<void> clearLocalCache() async {
+    DatabaseConfig config;
+    String? path;
+    if (Platform.isWindows || Platform.isLinux) {
+      final Directory appDocumentsDir =
+          await getApplicationDocumentsDirectory();
+      path = join(appDocumentsDir.path, "databases");
+    } else {
+      path = await getDatabasesPath();
+    }
+    logger.i("Going to clear local db folder at $path");
+    final dir = Directory(path);
+    dir.deleteSync(recursive: true);
+  }
+
   Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
     final wallet = await Wallet.create(
         descriptor: descriptor,

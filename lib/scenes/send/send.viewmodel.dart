@@ -360,15 +360,27 @@ class SendViewModelImpl extends SendViewModel {
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
-          await DBHelper.transactionInfoDao!.insertOrUpdate(
-              externalTransactionID: utf8.encode(txid),
-              amountInSATS: sendAmountInSAT,
-              feeInSATS: estimatedFeeInSAT,
-              isSend: 1,
-              transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              feeMode: userTransactionFeeMode.index,
-              serverWalletID: walletModel!.serverWalletID,
-              serverAccountID: accountModel!.serverAccountID);
+
+          // for multi-recipients
+          for (String email in recipents) {
+            String bitcoinAddress = "";
+            if (email.contains("@")) {
+              bitcoinAddress = bitcoinAddresses[email] ?? email;
+            } else {
+              bitcoinAddress = email;
+            }
+            await DBHelper.transactionInfoDao!.insertOrUpdate(
+                externalTransactionID: utf8.encode(txid),
+                amountInSATS: sendAmountInSAT,
+                feeInSATS: estimatedFeeInSAT,
+                isSend: 1,
+                transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                feeMode: userTransactionFeeMode.index,
+                serverWalletID: walletModel!.serverWalletID,
+                serverAccountID: accountModel!.serverAccountID,
+                toEmail: email.contains("@") ? email : "",
+                toBitcoinAddress: bitcoinAddress);
+          }
         }
       } catch (e) {
         logger.e(e.toString());

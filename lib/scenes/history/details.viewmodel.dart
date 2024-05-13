@@ -208,7 +208,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             transactionInfoModel = await DBHelper.transactionInfoDao!.find(
                 utf8.encode(txid),
                 walletModel.serverWalletID,
-                accountModel.serverAccountID);
+                accountModel.serverAccountID,
+                WalletManager.getBitcoinAddressFromWalletTransaction(toEmail));
           } catch (e) {
             logger.e(e.toString());
           }
@@ -296,12 +297,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             walletTransactionId: transactionModel!.transactionID,
             label: encryptedLabel,
           );
-          AccountModel accountModel = await DBHelper.accountDao!
-              .findByServerAccountID(transactionModel!.serverAccountID);
           await Provider.of<ProtonWalletProvider>(
                   Coordinator.navigatorKey.currentContext!,
                   listen: false)
-              .setCurrentTransactions(accountModel);
+              .setCurrentTransactions();
         }
         isEditing = false;
       }

@@ -179,13 +179,7 @@ class EventLoop {
             if (walletModel != null) {
               await WalletManager.handleWalletTransaction(
                   walletModel, addressKeys, walletTransaction);
-
-              AccountModel? accountModel = await DBHelper.accountDao!
-                  .findByServerAccountID(
-                      walletTransaction.walletAccountId ?? "");
-              if (accountModel != null) {
-                protonWalletProvider.setCurrentTransactions(accountModel);
-              }
+              protonWalletProvider.setCurrentTransactions();
             }
           }
         }

@@ -46,6 +46,15 @@ class WalletManager {
   static bool isFetchingWallets = false;
   static ApiEnv apiEnv = appConfig.apiEnv;
 
+  static Future<void> cleanBDKCache() async {
+    _lib.clearLocalCache();
+  }
+
+  static Future<void> cleanSharedPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+  }
+
   // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
@@ -367,6 +376,7 @@ class WalletManager {
 
   static Future<String> getDerivationPathWithID(int accountID) async {
     AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
+    logger.w("$accountID: ${accountModel.derivationPath}");
     return accountModel.derivationPath;
   }
 
@@ -700,9 +710,9 @@ class WalletManager {
       refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
 
       // user proton.wallet.test@proton.me
-      uid = 'ahfw5525ptdgp6brzf3kbttndydv43nu';
-      accessToken = 'hehrufnaylvofuut2l4vvwoje52hap4z';
-      refreshToken = '5sx2txu6nodbjsfibf2mgfcc7otdimwr';
+      uid = 'ujqddudewwoc4onvdfqxcj4xgf3evvtt';
+      accessToken = 'uoyzftbck3yp4u3ubznn5ikwfq75yjla';
+      refreshToken = 'fo6drtjavos5z7dl46ahgrelox7b7cor';
 
       // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
