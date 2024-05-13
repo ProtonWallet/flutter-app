@@ -1,8 +1,6 @@
-import 'package:sqflite/sqflite.dart';
-
-class Migration{
+class Migration {
   int startVersion;
   int endVersion;
-  late void Function(Database db) migrate;
+  final Future<void> Function() migrate;
   Migration(this.startVersion, this.endVersion, this.migrate);
 }

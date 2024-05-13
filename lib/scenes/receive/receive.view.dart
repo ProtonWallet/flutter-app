@@ -19,7 +19,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class ReceiveView extends ViewBase<ReceiveViewModel> {
-  ReceiveView(ReceiveViewModel viewModel)
+  const ReceiveView(ReceiveViewModel viewModel)
       : super(viewModel, const Key("ReceiveView"));
 
   @override

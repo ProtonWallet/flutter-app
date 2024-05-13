@@ -6,7 +6,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'transfer.viewmodel.dart';
 
 class TransferView extends ViewBase<TransferViewModel> {
-  TransferView(TransferViewModel viewModel)
+  const TransferView(TransferViewModel viewModel)
       : super(viewModel, const Key("TransferView"));
 
   @override

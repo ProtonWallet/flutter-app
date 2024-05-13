@@ -23,7 +23,8 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
-  SendView(SendViewModel viewModel) : super(viewModel, const Key("SendView"));
+  const SendView(SendViewModel viewModel)
+      : super(viewModel, const Key("SendView"));
 
   @override
   Widget buildWithViewModel(

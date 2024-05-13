@@ -1,12 +1,13 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/contacts.model.dart';
+import 'package:wallet/models/database/contacts.database.dart';
 
-abstract class ContactsDao extends BaseDao {
+abstract class ContactsDao extends ContactsDatabase implements BaseDao {
   ContactsDao(super.db, super.tableName);
 
-  Future<void> insertOrUpdate(String serverContactID, String name,
-      String email, String canonicalEmail, int isProton);
+  Future<void> insertOrUpdate(String serverContactID, String name, String email,
+      String canonicalEmail, int isProton);
   Future<ContactsModel?> findByServerContactID(String serverContactID);
 }
 
@@ -50,8 +51,8 @@ class ContactsDaoImpl extends ContactsDao {
   }
 
   @override
-  Future<void> insertOrUpdate(String serverContactID, String name,
-      String email, String canonicalEmail, int isProton) async {
+  Future<void> insertOrUpdate(String serverContactID, String name, String email,
+      String canonicalEmail, int isProton) async {
     ContactsModel? contactsModel = await findByServerContactID(serverContactID);
     if (contactsModel != null) {
       await update({

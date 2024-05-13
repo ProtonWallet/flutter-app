@@ -14,18 +14,17 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'two.factor.auth.disable.viewmodel.dart';
 
 class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
-  TwoFactorAuthDisableView(TwoFactorAuthDisableViewModel viewModel)
+  const TwoFactorAuthDisableView(TwoFactorAuthDisableViewModel viewModel)
       : super(viewModel, const Key("TwoFactorAuthDisableView"));
 
   @override
   Widget buildWithViewModel(BuildContext context,
       TwoFactorAuthDisableViewModel viewModel, ViewSize viewSize) {
-
-      return Scaffold(body: build2FAConfirm(context, viewModel, viewSize));
+    return Scaffold(body: build2FAConfirm(context, viewModel, viewSize));
   }
 
-  Widget build2FAConfirm(BuildContext context, TwoFactorAuthDisableViewModel viewModel,
-      ViewSize viewSize) {
+  Widget build2FAConfirm(BuildContext context,
+      TwoFactorAuthDisableViewModel viewModel, ViewSize viewSize) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -86,14 +85,17 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                                   }
                                 }
                               },
-                              textInputAction: i == 5 ? TextInputAction.done : TextInputAction.next,
+                              textInputAction: i == 5
+                                  ? TextInputAction.done
+                                  : TextInputAction.next,
                               digitOnly: true),
                       ]),
                   SizedBoxes.box18,
                   Container(
                       alignment: Alignment.centerLeft,
                       child: Text("Password",
-                          style: FontManager.body1Median(ProtonColors.textHint))),
+                          style:
+                              FontManager.body1Median(ProtonColors.textHint))),
                   TextFieldPassword(
                       width: MediaQuery.of(context).size.width,
                       controller: viewModel.passwordController),
@@ -102,10 +104,11 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                     onPressed: () async {
                       bool result = await viewModel.disable2FA();
                       if (context.mounted) {
-                        if (result){
+                        if (result) {
                           Navigator.pop(context);
                         } else {
-                          LocalToast.showErrorToast(context, "Something error!");
+                          LocalToast.showErrorToast(
+                              context, "Something error!");
                         }
                       }
                     },

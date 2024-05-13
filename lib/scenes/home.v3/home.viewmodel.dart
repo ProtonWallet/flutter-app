@@ -13,7 +13,6 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/crypto.price.helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
@@ -36,6 +35,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
+import 'package:wallet/managers/services/crypto.price.service.dart';
 
 enum WalletDrawerStatus {
   close,
@@ -48,9 +48,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   ApiEnv apiEnv;
 
+  CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
+
   int selectedPage = 0;
-  CryptoPriceInfo btcPriceInfo =
-      CryptoPriceInfo(symbol: "BTCUSDT", price: 0.0, priceChange24h: 0.0);
 
   late UserSettingProvider userSettingProvider;
   late ProtonWalletProvider protonWalletProvider;
@@ -111,8 +111,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setOnBoard();
 
   void selectAccount(WalletModel walletModel, AccountModel accountModel);
-
-  void updateBtcPrice();
 
   void showMoreTransactionHistory();
 
@@ -176,20 +174,40 @@ class HomeViewModelImpl extends HomeViewModel {
       StreamController<HomeViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
+  CryptoPriceDataService cryptoPriceDataService =
+      CryptoPriceDataService(duration: const Duration(seconds: 10));
+  late StreamSubscription _subscription;
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
     selectedSectionChangedController.close();
     //clean up wallet ....
+    disposeServices();
   }
 
   void datasourceStreamSinkAdd() {
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
+  Future<void> initServices() async {
+    // crypto price listener
+    _subscription =
+        cryptoPriceDataService.dataStream.listen((CryptoPriceInfo event) {
+      btcPriceInfo = event;
+      datasourceStreamSinkAdd();
+    });
+  }
+
+  void disposeServices() {
+    _subscription.cancel();
+    cryptoPriceDataService.dispose();
+  }
+
   @override
   Future<void> loadData() async {
     await WalletManager.initMuon(apiEnv);
+    initServices();
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     try {
@@ -227,7 +245,7 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     try {
       getUserSettings();
-      updateBtcPrice();
+      cryptoPriceDataService.start(); //start service
       checkNetwork();
       loadDiscoverContents();
       checkProtonAddresses();
@@ -335,15 +353,7 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  @override
-  Future<void> updateBtcPrice() async {
-    btcPriceInfo = await CryptoPriceHelper.getPriceInfo("BTCUSDT");
-    datasourceStreamSinkAdd();
-    await Future.delayed(const Duration(seconds: 10));
-    if (isLogout == false) {
-      updateBtcPrice();
-    }
-  }
+  Future<void> updateBtcPrice() async {}
 
   @override
   Future<void> getUserSettings() async {
@@ -626,6 +636,8 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
+      assert(false, " logout() error:  $errorMessage");
+      logger.d(" logout() error:  $errorMessage");
       CommonHelper.showErrorDialog("logout(): $errorMessage");
       errorMessage = "";
     }

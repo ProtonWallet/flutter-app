@@ -1,8 +1,10 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/database/bitcoin.address.database.dart';
 
-abstract class BitcoinAddressDao extends BaseDao {
+abstract class BitcoinAddressDao extends BitcoinAddressDatabase
+    implements BaseDao {
   BitcoinAddressDao(super.db, super.tableName);
 
   Future<void> insertOrUpdate(
@@ -14,7 +16,8 @@ abstract class BitcoinAddressDao extends BaseDao {
       required int used});
 
   Future<BitcoinAddressModel?> findByBitcoinAddress(String bitcoinAddress);
-  Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(int walletID, int accountID);
+  Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
+      int walletID, int accountID);
   Future<int> getUnusedPoolCount(int walletID, int accountID);
 }
 
@@ -106,9 +109,12 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(int walletID, int accountID) async {
+  Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
+      int walletID, int accountID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?', whereArgs: [walletID, accountID, 0], orderBy: 'bitcoinAddressIndex desc');
+        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?',
+        whereArgs: [walletID, accountID, 0],
+        orderBy: 'bitcoinAddressIndex desc');
     if (maps.isNotEmpty) {
       return BitcoinAddressModel.fromMap(maps.first);
     }
@@ -116,9 +122,11 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<int> getUnusedPoolCount(int walletID, int accountID) async{
+  Future<int> getUnusedPoolCount(int walletID, int accountID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?', whereArgs: [walletID, accountID, 1], orderBy: 'bitcoinAddressIndex desc');
+        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?',
+        whereArgs: [walletID, accountID, 1],
+        orderBy: 'bitcoinAddressIndex desc');
     if (maps.isNotEmpty) {
       return maps.length;
     }

@@ -8,7 +8,6 @@ enum ViewSize { mobile, desktop, tablet }
 
 abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   final V viewModel;
-  late final ViewState<V> _state;
   @protected
   Widget buildWithViewModel(
     BuildContext context,
@@ -16,14 +15,11 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     ViewSize viewSize,
   );
 
-  ViewBase(this.viewModel, Key key) : super(key: key) {
-    _state = ViewState<V>();
-  }
+  const ViewBase(this.viewModel, Key key) : super(key: key);
 
   @override
   State<ViewBase> createState() {
-    // ignore: no_logic_in_create_state
-    return _state;
+    return ViewState<V>();
   }
 
   Future<void> handleRefresh() async {
@@ -33,16 +29,10 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   void dispose() {
     logger.d("dispose is called");
   }
-
-  // avoid to use this. just a workaround for platform channels
-  // to tigger switch views
-  BuildContext get context {
-    return _state.context;
-  }
 }
 
 class ViewState<V extends ViewModel> extends State<ViewBase>
-    with AutomaticKeepAliveClientMixin<ViewBase> {
+    with AutomaticKeepAliveClientMixin<ViewBase>, WidgetsBindingObserver {
   late V viewModel;
   List<StreamSubscription> subscriptions = [];
 
@@ -56,10 +46,13 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
     subscriptions.add(streamDatasourceChanged);
     viewModel.loadData();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+
     for (var subscription in subscriptions) {
       subscription.cancel();
     }
@@ -83,5 +76,12 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
   @override
   bool get wantKeepAlive {
     return viewModel.keepAlive;
+  }
+
+  @override
+  void reassemble() {
+    // add your logic
+    super.reassemble();
+    logger.i('Hot reload occurred : in $this');
   }
 }

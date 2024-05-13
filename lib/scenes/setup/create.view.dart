@@ -13,7 +13,7 @@ import 'package:wallet/scenes/setup/create.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SetupCreateView extends ViewBase<SetupCreateViewModel> {
-  SetupCreateView(SetupCreateViewModel viewModel)
+  const SetupCreateView(SetupCreateViewModel viewModel)
       : super(viewModel, const Key("SetupCreateView"));
 
   @override
