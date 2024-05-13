@@ -639,9 +639,9 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       EventLoopHelper.stop();
       await UserSessionProvider().logout();
+      await WalletManager.cleanBDKCache();
       await DBHelper.reset();
       await WalletManager.cleanSharedPreference();
-      await WalletManager.cleanBDKCache();
       await Future.delayed(
           const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
     } catch (e) {
@@ -687,8 +687,11 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showWalletDeletion(currentWallet?.id ?? 0);
         break;
       case NavID.historyDetails:
-        coordinator.showHistoryDetails(currentWallet?.id ?? 0,
-            historyAccountModel?.id ?? 0, selectedTXID, fiatCurrencyNotifier.value);
+        coordinator.showHistoryDetails(
+            currentWallet?.id ?? 0,
+            historyAccountModel?.id ?? 0,
+            selectedTXID,
+            fiatCurrencyNotifier.value);
         break;
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();

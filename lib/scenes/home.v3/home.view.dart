@@ -174,37 +174,39 @@ class HomeView extends ViewBase<HomeViewModel> {
                         priceChange: viewModel.btcPriceInfo.priceChange24h,
                         onSend: () {
                           if (Provider.of<ProtonWalletProvider>(context,
-                                              listen: false)
-                                          .protonWallet
-                                          .currentAccount !=
-                                      null) {
-                          viewModel.move(NavID.send);
-                                      } else{
-                                        LocalToast.showErrorToast(context,
-                                        "Will add it after add wallet account switch");
-                                      }
+                                      listen: false)
+                                  .protonWallet
+                                  .currentAccount !=
+                              null) {
+                            viewModel.move(NavID.send);
+                          } else {
+                            LocalToast.showErrorToast(context,
+                                "Will add it after add wallet account switch");
+                          }
                         },
                         onBuy: () {
                           if (Provider.of<ProtonWalletProvider>(context,
-                                              listen: false)
-                                          .protonWallet
-                                          .currentAccount !=
-                                      null) {
-                          viewModel.move(NavID.buy);
-                                      } else{
-                                        LocalToast.showErrorToast(context,
-                                        "Will add it after add wallet account switch");
-                                      }
+                                      listen: false)
+                                  .protonWallet
+                                  .currentAccount !=
+                              null) {
+                            viewModel.move(NavID.buy);
+                          } else {
+                            LocalToast.showErrorToast(context,
+                                "Will add it after add wallet account switch");
+                          }
                         },
-                        onReceive: () {if (Provider.of<ProtonWalletProvider>(context,
-                                              listen: false)
-                                          .protonWallet
-                                          .currentAccount !=
-                                      null) {
-                          move(context, viewModel, NavID.receive);} else{
-                                        LocalToast.showErrorToast(context,
-                                        "Will add it after add wallet account switch");
-                                      }
+                        onReceive: () {
+                          if (Provider.of<ProtonWalletProvider>(context,
+                                      listen: false)
+                                  .protonWallet
+                                  .currentAccount !=
+                              null) {
+                            move(context, viewModel, NavID.receive);
+                          } else {
+                            LocalToast.showErrorToast(context,
+                                "Will add it after add wallet account switch");
+                          }
                         }),
                     const SizedBox(
                       height: 10,
