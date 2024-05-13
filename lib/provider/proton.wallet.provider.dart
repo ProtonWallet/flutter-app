@@ -24,7 +24,7 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 
 class ProtonWallet {
   WalletModel? currentWallet;
-  AccountModel? currentAccount; // show Wallet View when now account pick
+  AccountModel? currentAccount; // show Wallet View when no account pick
   List<WalletModel> wallets = [];
   List<AccountModel> accounts = [];
   List<AccountModel> currentAccounts = [];
