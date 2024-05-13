@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -70,7 +71,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         .toList();
     itemListShuffled.shuffle();
     userPhraseList = List<String>.filled(itemList.length, "");
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   void updateEditIndex() {
@@ -103,7 +104,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       }
     }
     updateEditIndex();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -118,7 +119,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         break;
       }
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -133,7 +134,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   @override
   void updateState(bool isAddingPassPhrase) {
     this.isAddingPassPhrase = isAddingPassPhrase;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -161,5 +162,5 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

@@ -337,7 +337,9 @@ class SendView extends ViewBase<SendViewModel> {
                     viewModel.errorMessage = "";
                   }
                 },
-                enable: (viewModel.isEditingEmailBody | viewModel.isEditingMemo) == false,
+                enable:
+                    (viewModel.isEditingEmailBody | viewModel.isEditingMemo) ==
+                        false,
                 backgroundColor: ProtonColors.protonBlue,
                 text: S.of(context).submit,
                 width: MediaQuery.of(context).size.width,

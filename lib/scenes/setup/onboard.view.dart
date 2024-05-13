@@ -83,7 +83,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
             child: Column(children: [
               ButtonV5(
                   onPressed: () {
-                    viewModel.move(ViewIdentifiers.setupCreate);
+                    viewModel.move(NavID.setupCreate);
                   },
                   text: S.of(context).create_new_wallet,
                   width: MediaQuery.of(context).size.width,
@@ -93,7 +93,7 @@ class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
               SizedBoxes.box12,
               ButtonV5(
                   onPressed: () {
-                    viewModel.move(ViewIdentifiers.importWallet);
+                    viewModel.move(NavID.importWallet);
                   },
                   text: S.of(context).import_your_wallet,
                   width: MediaQuery.of(context).size.width,

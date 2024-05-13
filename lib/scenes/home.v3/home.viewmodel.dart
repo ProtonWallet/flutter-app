@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
@@ -17,6 +18,7 @@ import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -33,7 +35,6 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 enum WalletDrawerStatus {
@@ -183,9 +184,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   void datasourceStreamSinkAdd() {
-    if (datasourceChangedStreamController.isClosed == false) {
-      datasourceChangedStreamController.sink.add(this);
-    }
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -276,10 +275,7 @@ class HomeViewModelImpl extends HomeViewModel {
       datasourceChangedStreamController.stream;
 
   Future<void> loadDiscoverContents() async {
-    List discoverJsonContents = await ProtonFeedItem.loadJsonFromAsset();
-    for (Map<String, dynamic> discoverJsonContent in discoverJsonContents) {
-      protonFeedItems.add(ProtonFeedItem.fromJson(discoverJsonContent));
-    }
+    protonFeedItems = await ProtonFeedItem.loadJsonFromAsset();
   }
 
   @override
@@ -330,7 +326,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void setOnBoard() async {
     hasWallet = true;
-    move(ViewIdentifiers.setupOnboard);
+    move(NavID.setupOnboard);
   }
 
   @override
@@ -581,7 +577,9 @@ class HomeViewModelImpl extends HomeViewModel {
           status: "removing email..", maskType: EasyLoadingMaskType.black);
     } else {
       EasyLoading.show(
-          status: "email already in used, try removing previous email binding..", maskType: EasyLoadingMaskType.black);
+          status:
+              "email already in used, try removing previous email binding..",
+          maskType: EasyLoadingMaskType.black);
     }
     try {
       WalletAccount walletAccount = await proton_api.removeEmailAddress(
@@ -635,49 +633,54 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
     AccountModel? currentAccount =
         protonWalletProvider.protonWallet.currentAccount;
     switch (to) {
-      case ViewIdentifiers.setupOnboard:
+      case NavID.setupOnboard:
         coordinator.showSetupOnbaord();
         break;
-      case ViewIdentifiers.send:
+      case NavID.send:
         coordinator.showSend(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
         break;
-      case ViewIdentifiers.receive:
+      case NavID.receive:
         coordinator.showReceive(
             currentWallet?.id ?? 0, currentAccount?.id ?? 0);
         break;
-      case ViewIdentifiers.testWebsocket:
+      case NavID.testWebsocket:
         coordinator.showWebSocket();
         break;
-      case ViewIdentifiers.securitySetting:
+      case NavID.securitySetting:
         coordinator.showSecuritySetting();
         break;
-      case ViewIdentifiers.welcome:
+      case NavID.welcome:
         coordinator.logout();
         break;
-      case ViewIdentifiers.walletDeletion:
+      case NavID.walletDeletion:
         coordinator.showWalletDeletion(currentWallet?.id ?? 0);
         break;
-      case ViewIdentifiers.historyDetails:
+      case NavID.historyDetails:
         coordinator.showHistoryDetails(currentWallet?.id ?? 0,
             currentAccount?.id ?? 0, selectedTXID, fiatCurrencyNotifier.value);
         break;
-      case ViewIdentifiers.twoFactorAuthSetup:
+      case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
         break;
-      case ViewIdentifiers.twoFactorAuthDisable:
+      case NavID.twoFactorAuthDisable:
         coordinator.showTwoFactorAuthDisable();
         break;
-      case ViewIdentifiers.setupBackup:
+      case NavID.setupBackup:
         coordinator.showSetupBackup(currentWallet?.id ?? 0);
         break;
-      case ViewIdentifiers.discover:
+      case NavID.discover:
         coordinator.showDiscover();
+        break;
+      case NavID.buy:
+        coordinator.showBuy(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        break;
+      default:
         break;
     }
   }

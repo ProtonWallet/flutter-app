@@ -4,6 +4,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
@@ -68,7 +69,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -112,12 +113,12 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       } catch (e) {
         logger.e(e.toString());
       }
-      datasourceChangedStreamController.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
     }
   }
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     // TODO: implement move
   }
 }

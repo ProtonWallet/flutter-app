@@ -37,7 +37,7 @@ class SecureYourWalletSheet {
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {
                   if (CommonHelper.checkSelectWallet(context)) {
-                    viewModel.move(ViewIdentifiers.setupBackup);
+                    viewModel.move(NavID.setupBackup);
                   }
                 },
               ),

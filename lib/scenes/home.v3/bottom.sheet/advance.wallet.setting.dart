@@ -23,11 +23,10 @@ class AdvanceWalletSettingSheet {
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Text(S.of(context).backup_wallet,
-                      style: FontManager.body2Regular(
-                          ProtonColors.textNorm))),
+                      style: FontManager.body2Regular(ProtonColors.textNorm))),
               onTap: () {
                 Navigator.of(context).pop();
-                viewModel.move(ViewIdentifiers.setupBackup);
+                viewModel.move(NavID.setupBackup);
               }),
           const Divider(
             thickness: 0.2,
@@ -39,11 +38,11 @@ class AdvanceWalletSettingSheet {
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Text(S.of(context).delete_wallet,
-                      style: FontManager.body2Regular(
-                          ProtonColors.signalError))),
+                      style:
+                          FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 Navigator.of(context).pop();
-                viewModel.move(ViewIdentifiers.walletDeletion);
+                viewModel.move(NavID.walletDeletion);
               }),
         ],
       );

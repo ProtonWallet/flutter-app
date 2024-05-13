@@ -46,6 +46,7 @@ class WalletManager {
   static bool isFetchingWallets = false;
   static ApiEnv apiEnv = appConfig.apiEnv;
 
+  // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);

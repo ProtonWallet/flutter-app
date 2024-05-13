@@ -8,12 +8,17 @@ import 'buybitcoin.viewmodel.dart';
 class BuyBitcoinCoordinator extends Coordinator {
   late ViewBase widget;
 
+  final int walletID;
+  final int accountID;
+
+  BuyBitcoinCoordinator(this.walletID, this.accountID);
+
   @override
   void end() {}
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = BuyBitcoinViewModelImpl(this);
+    var viewModel = BuyBitcoinViewModelImpl(this, walletID, accountID);
     widget = BuyBitcoinView(
       viewModel,
     );
