@@ -24,7 +24,7 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 
 class ProtonWallet {
   WalletModel? currentWallet;
-  AccountModel? currentAccount;
+  AccountModel? currentAccount; // show Wallet View when now account pick
   List<WalletModel> wallets = [];
   List<AccountModel> accounts = [];
   List<AccountModel> currentAccounts = [];
@@ -33,7 +33,6 @@ class ProtonWallet {
   Map<String, bool> isWalletSyncing = {};
   final Map<int, bool> _hasPassphrase = {};
   final Map<int, List<String>> _accountID2IntegratedEmailIDs = {};
-  Wallet? wallet;
   int currentBalance = 0;
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   Blockchain? blockchain;
@@ -58,33 +57,40 @@ class ProtonWallet {
     if (currentAccount != null) {
       return isWalletSyncing[currentAccount!.serverAccountID] ?? false;
     }
+    if (currentWallet != null) {
+      // for wallet view
+      for (AccountModel accountModel in accounts) {
+        if (isWalletSyncing.containsKey(accountModel.serverAccountID)) {
+          if (isWalletSyncing[accountModel.serverAccountID] == true) {
+            return true;
+          }
+        }
+      }
+    }
     return false;
   }
 
-  Future<void> syncWallet() async {
+  Future<void> syncWallet(Wallet? wallet, AccountModel? accountModel) async {
+    wallet ??= await WalletManager.loadWalletWithID(
+        currentWallet!.id!, currentAccount!.id!);
     try {
-      AccountModel? accountModel = currentAccount;
-      if (wallet != null && accountModel != null) {
+      if (accountModel != null) {
         if ((isWalletSyncing[accountModel.serverAccountID] ?? false) == false) {
           isWalletSyncing[accountModel.serverAccountID] = true;
           logger
               .i("set isWalletSyncing[${accountModel.serverAccountID}] = true");
-          var walletBalance = await wallet!.getBalance();
+          var walletBalance = await wallet.getBalance();
           accountModel.balance = (walletBalance.total).toDouble();
           logger.d(
               "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
-          await _lib.syncWallet(blockchain!, wallet!);
-          walletBalance = await wallet!.getBalance();
+          await _lib.syncWallet(blockchain!, wallet);
+          walletBalance = await wallet.getBalance();
           accountModel.balance = (walletBalance.total).toDouble();
-          if (accountModel.serverAccountID == accountModel.serverAccountID) {
-            currentBalance = walletBalance.total;
-          }
+          setBalance();
           logger.d(
               "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
           await insertOrUpdateWalletAccount(accountModel);
           isWalletSyncing[accountModel.serverAccountID] = false;
-
-          await setCurrentTransactions(accountModel);
         }
       }
     } catch (e) {
@@ -132,7 +138,6 @@ class ProtonWallet {
   void clearCurrent() {
     currentWallet = null;
     currentAccount = null;
-    wallet = null;
     currentBalance = 0;
     currentAccounts.clear();
     historyTransactionsAfterFilter.clear();
@@ -155,6 +160,43 @@ class ProtonWallet {
     }
   }
 
+  Future<void> setWallet(WalletModel walletModel) async {
+    try {
+      historyTransactions.clear();
+
+      currentWallet = walletModel;
+      currentAccount = null;
+      await getCurrentWalletAccounts();
+      for (AccountModel accountModel in currentAccounts) {
+        Wallet wallet = await WalletManager.loadWalletWithID(
+            currentWallet!.id!, accountModel.id!);
+        syncWallet(wallet, accountModel);
+      }
+      await setBalance();
+      await setCurrentTransactions();
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> setBalance() async {
+    int newBalance = 0;
+    if (currentWallet != null) {
+      if (currentAccount == null) {
+        for (AccountModel accountModel in currentAccounts) {
+          Wallet wallet = await WalletManager.loadWalletWithID(
+              currentWallet!.id!, accountModel.id!);
+          newBalance += (await wallet.getBalance()).total;
+        }
+      } else {
+        Wallet wallet = await WalletManager.loadWalletWithID(
+            currentWallet!.id!, currentAccount!.id!);
+        newBalance += (await wallet.getBalance()).total;
+      }
+    }
+    currentBalance = newBalance;
+  }
+
   Future<void> setWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
     try {
@@ -163,14 +205,11 @@ class ProtonWallet {
       currentWallet = walletModel;
       currentAccount = accountModel;
       await getCurrentWalletAccounts();
-      wallet = await WalletManager.loadWalletWithID(
+      Wallet wallet = await WalletManager.loadWalletWithID(
           currentWallet!.id!, currentAccount!.id!);
-      syncWallet();
-      currentBalance = 0;
-      if (wallet != null) {
-        currentBalance = (await wallet!.getBalance()).total;
-      }
-      await setCurrentTransactions(accountModel);
+      syncWallet(wallet, accountModel);
+      await setBalance();
+      await setCurrentTransactions();
       logger.i("setWalletAccount() finish!");
     } catch (e) {
       logger.e(e.toString());
@@ -321,15 +360,24 @@ class ProtonWallet {
         await setDefaultWalletAccount();
       }
     }
-    if (currentAccount != null) {
-      await setCurrentTransactions(currentAccount!);
-    }
   }
 
-  Future<void> setCurrentTransactions(AccountModel accountModel) async {
+  Future<void> setCurrentTransactions() async {
     bool bdkSynced = false;
-    if (accountModel.serverAccountID ==
-        (currentAccount?.serverAccountID ?? "")) {
+    Wallet wallet;
+    List<AccountModel> accountsToCheckTransaction = [];
+    WalletModel? oldWalletModel = currentWallet;
+    AccountModel? oldAccountModel = currentAccount;
+    if (oldWalletModel != null && currentAccount != null) {
+      // wallet account view
+      accountsToCheckTransaction.add(currentAccount!);
+    } else if (oldWalletModel != null) {
+      // wallet view
+      await getCurrentWalletAccounts();
+      accountsToCheckTransaction = currentAccounts;
+    }
+    List<HistoryTransaction> newHistoryTransactions = [];
+    for (AccountModel accountModel in accountsToCheckTransaction) {
       Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
 
       List<ProtonAddress> addresses = await proton_api.getProtonAddress();
@@ -337,103 +385,29 @@ class ProtonWallet {
 
       List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
 
+      wallet = await WalletManager.loadWalletWithID(
+          oldWalletModel!.id!, accountModel.id!);
+
       // get transactions from bdk
-      if (wallet != null) {
-        List<TransactionDetails> transactionHistoryFromBDK =
-            await _lib.getAllTransactions(wallet!);
-        bdkSynced = transactionHistoryFromBDK.isNotEmpty;
-        SecretKey? secretKey =
-            await WalletManager.getWalletKey(currentWallet!.serverWalletID);
+      List<TransactionDetails> transactionHistoryFromBDK =
+          await _lib.getAllTransactions(wallet);
+      bdkSynced =
+          bdkSynced | transactionHistoryFromBDK.isNotEmpty; // for wallet view
+      SecretKey? secretKey =
+          await WalletManager.getWalletKey(oldWalletModel.serverWalletID);
 
-        for (TransactionDetails transactionDetail
-            in transactionHistoryFromBDK) {
-          String txID = transactionDetail.txid;
-          TransactionModel? transactionModel = await DBHelper.transactionDao!
-              .find(utf8.encode(txID), currentWallet!.serverWalletID,
-                  currentAccount!.serverAccountID);
-          String userLabel = transactionModel != null
-              ? await WalletKeyHelper.decrypt(
-                  secretKey!, utf8.decode(transactionModel.label))
-              : "";
-          String toList = "";
-          String sender = "";
-          if (transactionModel != null) {
-            String encryptedToList = transactionModel.tolist ?? "";
-            String encryptedSender = transactionModel.sender ?? "";
-            for (AddressKey addressKey in addressKeys) {
-              try {
-                if (encryptedToList.isNotEmpty) {
-                  toList = addressKey.decrypt(encryptedToList);
-                }
-              } catch (e) {
-                // logger.e(e.toString());
-              }
-              try {
-                if (encryptedSender.isNotEmpty) {
-                  sender = addressKey.decrypt(encryptedSender);
-                }
-              } catch (e) {
-                // logger.e(e.toString());
-              }
-              if (sender.isNotEmpty || toList.isNotEmpty) {
-                break;
-              }
-              try {
-                if (encryptedToList.isNotEmpty) {
-                  toList = addressKey.decryptBinary(encryptedToList);
-                }
-              } catch (e) {
-                // logger.e(e.toString());
-              }
-              try {
-                if (encryptedSender.isNotEmpty) {
-                  sender = addressKey.decryptBinary(encryptedSender);
-                }
-              } catch (e) {
-                // logger.e(e.toString());
-              }
-              if (sender.isNotEmpty || toList.isNotEmpty) {
-                break;
-              }
-            }
-          }
-          if (sender == "null") {
-            sender = "";
-          }
-          if (toList == "null") {
-            toList = "";
-          }
-          int amountInSATS =
-              transactionDetail.received - transactionDetail.sent;
-          newHistoryTransactionsMap[txID] = HistoryTransaction(
-              txID: txID,
-              createTimestamp: transactionDetail.confirmationTime?.timestamp,
-              updateTimestamp: transactionDetail.confirmationTime?.timestamp,
-              amountInSATS: amountInSATS,
-              sender: sender.isNotEmpty ? sender : txID,
-              toList: toList.isNotEmpty ? toList : txID,
-              feeInSATS: transactionDetail.fee ?? 0,
-              label: userLabel,
-              inProgress: transactionDetail.confirmationTime == null);
-        }
-
-        // get transactions from local db (transactions in progress, and not in synced bdk transactions)
-        List<TransactionModel> transactionModels = await DBHelper
-            .transactionDao!
-            .findAllByServerAccountID(currentAccount!.serverAccountID);
-        for (TransactionModel transactionModel in transactionModels) {
-          String userLabel = await WalletKeyHelper.decrypt(
-              secretKey!, utf8.decode(transactionModel.label));
-
-          String txID = utf8.decode(transactionModel.externalTransactionID);
-          if (txID.isEmpty) {
-            continue;
-          }
-          if (newHistoryTransactionsMap.containsKey(txID)) {
-            continue;
-          }
-          String toList = "";
-          String sender = "";
+      for (TransactionDetails transactionDetail in transactionHistoryFromBDK) {
+        String txID = transactionDetail.txid;
+        TransactionModel? transactionModel = await DBHelper.transactionDao!
+            .find(utf8.encode(txID), oldWalletModel.serverWalletID,
+                accountModel.serverAccountID);
+        String userLabel = transactionModel != null
+            ? await WalletKeyHelper.decrypt(
+                secretKey!, utf8.decode(transactionModel.label))
+            : "";
+        String toList = "";
+        String sender = "";
+        if (transactionModel != null) {
           String encryptedToList = transactionModel.tolist ?? "";
           String encryptedSender = transactionModel.sender ?? "";
           for (AddressKey addressKey in addressKeys) {
@@ -472,102 +446,190 @@ class ProtonWallet {
               break;
             }
           }
-          if (sender == "null") {
-            sender = "";
-          }
-          if (toList == "null") {
-            toList = "";
-          }
-          TransactionInfoModel? transactionInfoModel;
+        }
+        if (sender == "null") {
+          sender = "";
+        }
+        if (toList == "null") {
+          toList = "";
+        }
+        int amountInSATS = transactionDetail.received - transactionDetail.sent;
+        String key = "$txID-${accountModel.serverAccountID}";
+        newHistoryTransactionsMap[key] = HistoryTransaction(
+          txID: txID,
+          createTimestamp: transactionDetail.confirmationTime?.timestamp,
+          updateTimestamp: transactionDetail.confirmationTime?.timestamp,
+          amountInSATS: amountInSATS,
+          sender: sender.isNotEmpty ? sender : txID,
+          toList: toList.isNotEmpty ? toList : txID,
+          feeInSATS: transactionDetail.fee ?? 0,
+          label: userLabel,
+          inProgress: transactionDetail.confirmationTime == null,
+          accountModel: accountModel,
+        );
+        updateBitcoinAddressUsed(
+            txID); // update local bitcoin address to set used, TODO:: fix performance here
+      }
+
+      // get transactions from local db (transactions in progress, and not in synced bdk transactions)
+      List<TransactionModel> transactionModels = await DBHelper.transactionDao!
+          .findAllByServerAccountID(accountModel.serverAccountID);
+      for (TransactionModel transactionModel in transactionModels) {
+        String userLabel = await WalletKeyHelper.decrypt(
+            secretKey!, utf8.decode(transactionModel.label));
+
+        String txID = utf8.decode(transactionModel.externalTransactionID);
+        String key = "$txID-${accountModel.serverAccountID}";
+        if (txID.isEmpty) {
+          continue;
+        }
+        if (newHistoryTransactionsMap.containsKey(key)) {
+          continue;
+        }
+        String toList = "";
+        String sender = "";
+        String encryptedToList = transactionModel.tolist ?? "";
+        String encryptedSender = transactionModel.sender ?? "";
+        for (AddressKey addressKey in addressKeys) {
           try {
-            transactionInfoModel = await DBHelper.transactionInfoDao!.find(
-                utf8.encode(txID),
-                currentWallet?.serverWalletID ?? "",
-                accountModel.serverAccountID);
+            if (encryptedToList.isNotEmpty) {
+              toList = addressKey.decrypt(encryptedToList);
+            }
+          } catch (e) {
+            // logger.e(e.toString());
+          }
+          try {
+            if (encryptedSender.isNotEmpty) {
+              sender = addressKey.decrypt(encryptedSender);
+            }
+          } catch (e) {
+            // logger.e(e.toString());
+          }
+          if (sender.isNotEmpty || toList.isNotEmpty) {
+            break;
+          }
+          try {
+            if (encryptedToList.isNotEmpty) {
+              toList = addressKey.decryptBinary(encryptedToList);
+            }
+          } catch (e) {
+            // logger.e(e.toString());
+          }
+          try {
+            if (encryptedSender.isNotEmpty) {
+              sender = addressKey.decryptBinary(encryptedSender);
+            }
+          } catch (e) {
+            // logger.e(e.toString());
+          }
+          if (sender.isNotEmpty || toList.isNotEmpty) {
+            break;
+          }
+        }
+        if (sender == "null") {
+          sender = "";
+        }
+        if (toList == "null") {
+          toList = "";
+        }
+        TransactionInfoModel? transactionInfoModel;
+        try {
+          transactionInfoModel = await DBHelper.transactionInfoDao!.find(
+              utf8.encode(txID),
+              oldWalletModel.serverWalletID,
+              accountModel.serverAccountID,
+              WalletManager.getBitcoinAddressFromWalletTransaction(toList));
+        } catch (e) {
+          logger.e(e.toString());
+        }
+        if (transactionInfoModel != null) {
+          // get transaction info locally, for sender
+          newHistoryTransactionsMap[key] = HistoryTransaction(
+            txID: txID,
+            amountInSATS: transactionInfoModel.isSend == 1
+                ? -transactionInfoModel.amountInSATS -
+                    transactionInfoModel.feeInSATS
+                : transactionInfoModel.amountInSATS,
+            sender: sender.isNotEmpty ? sender : txID,
+            toList: toList.isNotEmpty ? toList : txID,
+            feeInSATS: transactionInfoModel.feeInSATS,
+            label: userLabel,
+            inProgress: true,
+            accountModel: accountModel,
+          );
+        } else {
+          // get transaction info from blockstream or esplora, for recipients
+          try {
+            TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
+            for (int i = 0; i < 5; i++) {
+              transactionDetailFromBlockChain =
+                  await WalletManager.getTransactionDetailsFromBlockStream(
+                      txID);
+              try {
+                if (transactionDetailFromBlockChain != null) {
+                  break;
+                }
+              } catch (e) {
+                logger.e(e.toString());
+              }
+              await Future.delayed(const Duration(seconds: 1));
+            }
+            if (transactionDetailFromBlockChain != null) {
+              Recipient? me;
+              for (Recipient recipient
+                  in transactionDetailFromBlockChain.recipients) {
+                BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+                    .bitcoinAddressDao!
+                    .findByBitcoinAddress(recipient.bitcoinAddress);
+                if (bitcoinAddressModel != null) {
+                  bitcoinAddressModel.used = 1;
+                  await DBHelper.bitcoinAddressDao!.update(bitcoinAddressModel);
+                  me = recipient;
+                  break;
+                }
+              }
+              if (me != null) {
+                newHistoryTransactionsMap[key] = HistoryTransaction(
+                  txID: txID,
+                  amountInSATS: me.amountInSATS,
+                  sender: sender.isNotEmpty ? sender : txID,
+                  toList: toList.isNotEmpty ? toList : txID,
+                  feeInSATS: transactionDetailFromBlockChain.feeInSATS,
+                  label: userLabel,
+                  inProgress: true,
+                  accountModel: accountModel,
+                );
+              } else {
+                // logger.i("Cannot find this tx, $txID");
+              }
+            }
           } catch (e) {
             logger.e(e.toString());
           }
-          if (transactionInfoModel != null) {
-            // get transaction info locally, for sender
-            newHistoryTransactionsMap[txID] = HistoryTransaction(
-                txID: txID,
-                amountInSATS: transactionInfoModel.isSend == 1
-                    ? -transactionInfoModel.amountInSATS -
-                        transactionInfoModel.feeInSATS
-                    : transactionInfoModel.amountInSATS,
-                sender: sender.isNotEmpty ? sender : txID,
-                toList: toList.isNotEmpty ? toList : txID,
-                feeInSATS: transactionInfoModel.feeInSATS,
-                label: userLabel,
-                inProgress: true);
-          } else {
-            // get transaction info from blockstream or esplora, for recipients
-            try {
-              TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-              for (int i = 0; i < 5; i++) {
-                transactionDetailFromBlockChain =
-                    await WalletManager.getTransactionDetailsFromBlockStream(
-                        txID);
-                try {
-                  if (transactionDetailFromBlockChain != null) {
-                    break;
-                  }
-                } catch (e) {
-                  logger.e(e.toString());
-                }
-                await Future.delayed(const Duration(seconds: 1));
-              }
-              if (transactionDetailFromBlockChain != null) {
-                Recipient? me;
-                for (Recipient recipient
-                    in transactionDetailFromBlockChain.recipients) {
-                  BitcoinAddressModel? bitcoinAddressModel = await DBHelper
-                      .bitcoinAddressDao!
-                      .findByBitcoinAddress(recipient.bitcoinAddress);
-                  if (bitcoinAddressModel != null) {
-                    me = recipient;
-                    break;
-                  }
-                }
-                if (me != null) {
-                  newHistoryTransactionsMap[txID] = HistoryTransaction(
-                      txID: txID,
-                      amountInSATS: me.amountInSATS,
-                      sender: sender.isNotEmpty ? sender : txID,
-                      toList: toList.isNotEmpty ? toList : txID,
-                      feeInSATS: transactionDetailFromBlockChain.feeInSATS,
-                      label: userLabel,
-                      inProgress: true);
-                } else {
-                  // logger.i("Cannot find this tx, $txID");
-                }
-              }
-            } catch (e) {
-              logger.e(e.toString());
-            }
-          }
         }
       }
-      List<HistoryTransaction> newHistoryTransactions =
-          newHistoryTransactionsMap.values.toList();
-      newHistoryTransactions.sort((a, b) {
-        if (a.createTimestamp == null && b.createTimestamp == null) {
-          return -1;
-        }
-        if (a.createTimestamp == null) {
-          return -1;
-        }
-        if (b.createTimestamp == null) {
-          return 1;
-        }
-        return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
-      });
-      if (bdkSynced &&
-          currentAccount!.serverAccountID == accountModel.serverAccountID) {
-        historyTransactions = newHistoryTransactions;
-        applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
-        logger.i("setCurrentTransactions finish()!");
+      newHistoryTransactions += newHistoryTransactionsMap.values.toList();
+    }
+    newHistoryTransactions.sort((a, b) {
+      if (a.createTimestamp == null && b.createTimestamp == null) {
+        return -1;
       }
+      if (a.createTimestamp == null) {
+        return -1;
+      }
+      if (b.createTimestamp == null) {
+        return 1;
+      }
+      return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
+    });
+    if (bdkSynced &&
+        (oldWalletModel?.serverWalletID ?? "") ==
+            (currentWallet?.serverWalletID ?? "") &&
+        (oldAccountModel?.serverAccountID ?? "") ==
+            (currentAccount?.serverAccountID ?? "")) {
+      historyTransactions = newHistoryTransactions;
+      applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
+      logger.i("setCurrentTransactions finish()!");
     }
   }
 
@@ -612,6 +674,34 @@ class ProtonWallet {
     }
     historyTransactionsAfterFilter = newHistoryTransactions;
   }
+
+  Future<void> updateBitcoinAddressUsed(String txID) async {
+    TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
+    for (int i = 0; i < 5; i++) {
+      transactionDetailFromBlockChain =
+          await WalletManager.getTransactionDetailsFromBlockStream(txID);
+      try {
+        if (transactionDetailFromBlockChain != null) {
+          break;
+        }
+      } catch (e) {
+        logger.e(e.toString());
+      }
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    if (transactionDetailFromBlockChain != null) {
+      for (Recipient recipient in transactionDetailFromBlockChain.recipients) {
+        BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+            .bitcoinAddressDao!
+            .findByBitcoinAddress(recipient.bitcoinAddress);
+        if (bitcoinAddressModel != null) {
+          bitcoinAddressModel.used = 1;
+          await DBHelper.bitcoinAddressDao!.update(bitcoinAddressModel);
+          break;
+        }
+      }
+    }
+  }
 }
 
 class ProtonWalletProvider with ChangeNotifier {
@@ -634,10 +724,20 @@ class ProtonWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setWallet(WalletModel walletModel) async {
+    await protonWallet.setWallet(walletModel);
+    await setCurrentTransactions();
+    syncWallet();
+    await Future.delayed(const Duration(
+        milliseconds: 100)); // wait for wallet sync refresh button
+    logger.i("going to notifyListeners in setWallet();");
+    notifyListeners();
+  }
+
   Future<void> setWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
     await protonWallet.setWalletAccount(walletModel, accountModel);
-    await setCurrentTransactions(accountModel);
+    await setCurrentTransactions();
     syncWallet();
     await Future.delayed(const Duration(
         milliseconds: 100)); // wait for wallet sync refresh button
@@ -646,7 +746,21 @@ class ProtonWalletProvider with ChangeNotifier {
   }
 
   Future<void> syncWallet() async {
-    await protonWallet.syncWallet();
+    List<AccountModel> accountsToCheckTransaction = [];
+    WalletModel? walletModel = protonWallet.currentWallet;
+    if (walletModel != null && protonWallet.currentAccount != null) {
+      // wallet account view
+      accountsToCheckTransaction.add(protonWallet.currentAccount!);
+    } else if (walletModel != null) {
+      // wallet view
+      await protonWallet.getCurrentWalletAccounts();
+      accountsToCheckTransaction = protonWallet.currentAccounts;
+    }
+    for (AccountModel accountModel in accountsToCheckTransaction) {
+      Wallet wallet = await WalletManager.loadWalletWithID(
+          walletModel!.id!, accountModel.id!);
+      protonWallet.syncWallet(wallet, accountModel);
+    }
     notifyListeners();
   }
 
@@ -670,8 +784,8 @@ class ProtonWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setCurrentTransactions(AccountModel accountModel) async {
-    await protonWallet.setCurrentTransactions(accountModel);
+  Future<void> setCurrentTransactions() async {
+    await protonWallet.setCurrentTransactions();
     notifyListeners();
   }
 
@@ -693,5 +807,18 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> setDefaultWalletAccount() async {
     await protonWallet.setDefaultWalletAccount();
     notifyListeners();
+  }
+
+  String? getDisplayName() {
+    String? name;
+    if (protonWallet.currentWallet != null) {
+      if (protonWallet.currentAccounts.length > 1 &&
+          protonWallet.currentAccount != null) {
+        return "${protonWallet.currentWallet!.name} - ${protonWallet.currentAccount!.labelDecrypt}";
+      } else {
+        return protonWallet.currentWallet!.name;
+      }
+    }
+    return name;
   }
 }

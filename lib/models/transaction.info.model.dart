@@ -10,6 +10,8 @@ class TransactionInfoModel {
   int feeMode;
   String serverWalletID;
   String serverAccountID;
+  String toEmail;
+  String toBitcoinAddress;
 
   TransactionInfoModel({
     required this.id,
@@ -21,6 +23,8 @@ class TransactionInfoModel {
     required this.feeMode,
     required this.serverWalletID,
     required this.serverAccountID,
+    required this.toEmail,
+    required this.toBitcoinAddress,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +38,8 @@ class TransactionInfoModel {
       'feeMode': feeMode,
       'serverWalletID': serverWalletID,
       'serverAccountID': serverAccountID,
+      'toEmail': toEmail,
+      'toBitcoinAddress': toBitcoinAddress,
     };
   }
 
@@ -48,6 +54,8 @@ class TransactionInfoModel {
       feeMode: map['feeMode'],
       serverWalletID: map['serverWalletID'],
       serverAccountID: map['serverAccountID'],
+      toEmail: map['toEmail'],
+      toBitcoinAddress: map['toBitcoinAddress'],
     );
   }
 }

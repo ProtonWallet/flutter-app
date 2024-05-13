@@ -12,6 +12,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -63,6 +64,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
+  AccountModel? historyAccountModel;
 
   Map<int, TextEditingController> accountNameControllers = {};
 
@@ -110,13 +112,16 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void setOnBoard();
 
+  void selectWallet(WalletModel walletModel);
+
   void selectAccount(WalletModel walletModel, AccountModel accountModel);
 
   void showMoreTransactionHistory();
 
   void updateFiatCurrency(FiatCurrency fiatCurrency);
 
-  Future<void> updateEmailIntegration();
+  Future<void> updateEmailIntegration(
+      WalletModel walletModel, AccountModel accountModel);
 
   Future<void> addWalletAccount(
       int walletID, ScriptType scriptType, String label);
@@ -134,7 +139,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   Future<void> deleteAccount(
       WalletModel walletModel, AccountModel accountModel);
 
-  Future<void> addBitcoinAddress();
+  Future<void> addBitcoinAddress(
+      Wallet wallet, WalletModel walletModel, AccountModel accountModel);
 
   Future<void> addEmailAddressToWalletAccount(
       String serverWalletID, String serverAccountID, String serverAddressID);
@@ -325,6 +331,23 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
+  Future<void> selectWallet(WalletModel walletModel) async {
+    if ((protonWalletProvider.protonWallet.currentWallet != null &&
+            protonWalletProvider.protonWallet.currentWallet!.serverWalletID !=
+                walletModel.serverWalletID) ||
+        protonWalletProvider.protonWallet.currentWallet == null ||
+        protonWalletProvider.protonWallet.currentAccount != null) {
+      transactionSearchController.text = "";
+      currentHistoryPage = 0;
+      await protonWalletProvider.setWallet(walletModel);
+      walletNameController.text =
+          protonWalletProvider.protonWallet.currentWallet?.name ?? "";
+      checkPreference(runOnce: true);
+      datasourceStreamSinkAdd();
+    }
+  }
+
+  @override
   Future<void> selectAccount(
       WalletModel walletModel, AccountModel accountModel) async {
     if ((protonWalletProvider.protonWallet.currentAccount != null &&
@@ -502,24 +525,20 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> updateEmailIntegration() async {
-    WalletModel? currentWallet =
-        protonWalletProvider.protonWallet.currentWallet;
-    AccountModel? currentAccount =
-        protonWalletProvider.protonWallet.currentAccount;
+  Future<void> updateEmailIntegration(
+      WalletModel walletModel, AccountModel accountModel) async {
     try {
-      if (currentWallet != null && currentAccount != null) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        preferences.setBool(
-            "todo_hadSetEmailIntegration_${currentAccount.serverAccountID}",
-            true);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool(
+          "todo_hadSetEmailIntegration_${accountModel.serverAccountID}", true);
 
-        datasourceStreamSinkAdd();
-        await WalletManager.syncBitcoinAddressIndex(
-            currentWallet.serverWalletID, currentAccount.serverAccountID);
-        for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
-          addBitcoinAddress();
-        }
+      datasourceStreamSinkAdd();
+      await WalletManager.syncBitcoinAddressIndex(
+          walletModel.serverWalletID, accountModel.serverAccountID);
+      Wallet wallet = await WalletManager.loadWalletWithID(
+          walletModel.id!, accountModel.id!);
+      for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
+        addBitcoinAddress(wallet, walletModel, accountModel);
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -531,18 +550,10 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> addBitcoinAddress() async {
-    WalletModel? currentWallet =
-        protonWalletProvider.protonWallet.currentWallet;
-    AccountModel? currentAccount =
-        protonWalletProvider.protonWallet.currentAccount;
+  Future<void> addBitcoinAddress(
+      Wallet wallet, WalletModel walletModel, AccountModel accountModel) async {
     try {
-      if (protonWalletProvider.protonWallet.wallet != null) {
-        await WalletManager.addBitcoinAddress(
-            protonWalletProvider.protonWallet.wallet!,
-            currentWallet!,
-            currentAccount!);
-      }
+      await WalletManager.addBitcoinAddress(wallet, walletModel, accountModel);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -629,6 +640,8 @@ class HomeViewModelImpl extends HomeViewModel {
       EventLoopHelper.stop();
       await UserSessionProvider().logout();
       await DBHelper.reset();
+      await WalletManager.cleanSharedPreference();
+      await WalletManager.cleanBDKCache();
       await Future.delayed(
           const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
     } catch (e) {
@@ -675,7 +688,7 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.historyDetails:
         coordinator.showHistoryDetails(currentWallet?.id ?? 0,
-            currentAccount?.id ?? 0, selectedTXID, fiatCurrencyNotifier.value);
+            historyAccountModel?.id ?? 0, selectedTXID, fiatCurrencyNotifier.value);
         break;
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();

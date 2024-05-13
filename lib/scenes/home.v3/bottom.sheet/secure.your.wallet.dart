@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
@@ -63,7 +67,18 @@ class SecureYourWalletSheet {
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {
                   if (CommonHelper.checkSelectWallet(context)) {
-                    viewModel.updateEmailIntegration();
+                    WalletModel? walletModel =
+                        Provider.of<ProtonWalletProvider>(context)
+                            .protonWallet
+                            .currentWallet;
+                    AccountModel? accountModel =
+                        Provider.of<ProtonWalletProvider>(context)
+                            .protonWallet
+                            .currentAccount;
+                    if (walletModel != null && accountModel != null) {
+                      viewModel.updateEmailIntegration(
+                          walletModel, accountModel);
+                    }
                     EmailIntegrationSheet.show(context, viewModel);
                   }
                 },

@@ -18,10 +18,12 @@ abstract class TransactionInfoDao extends TransactionInfoDatabase
     required int feeMode,
     required String serverWalletID,
     required String serverAccountID,
+    required String toEmail,
+    required String toBitcoinAddress,
   });
 
   Future<TransactionInfoModel?> find(Uint8List externalTransactionID,
-      String serverWalletID, String serverAccountID);
+      String serverWalletID, String serverAccountID, String toBitcoinAddress);
 }
 
 class TransactionInfoDaoImpl extends TransactionInfoDao {
@@ -73,9 +75,11 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
     required int feeMode,
     required String serverWalletID,
     required String serverAccountID,
+    required String toEmail,
+    required String toBitcoinAddress,
   }) async {
     TransactionInfoModel? transactionInfoModel =
-        await find(externalTransactionID, serverWalletID, serverAccountID);
+        await find(externalTransactionID, serverWalletID, serverAccountID, toBitcoinAddress);
     if (transactionInfoModel != null) {
       await update({
         "id": transactionInfoModel.id,
@@ -87,6 +91,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
         "feeMode": feeMode,
         "serverWalletID": serverWalletID,
         "serverAccountID": serverAccountID,
+        "toEmail": toEmail,
+        "toBitcoinAddress": toBitcoinAddress,
       });
     } else {
       await insert({
@@ -98,6 +104,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
         "feeMode": feeMode,
         "serverWalletID": serverWalletID,
         "serverAccountID": serverAccountID,
+        "toEmail": toEmail,
+        "toBitcoinAddress": toBitcoinAddress,
       });
     }
   }
@@ -109,8 +117,17 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
 
   @override
   Future<TransactionInfoModel?> find(Uint8List externalTransactionID,
-      String serverWalletID, String serverAccountID) async {
+      String serverWalletID, String serverAccountID, String toBitcoinAddress) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
+        where:
+        'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ? and toBitcoinAddress = ?',
+        whereArgs: [externalTransactionID, serverWalletID, serverAccountID, toBitcoinAddress]);
+    if (maps.isNotEmpty) {
+      return TransactionInfoModel.fromMap(maps.first);
+    }
+
+    // TODO:: deprecated it for old version
+    maps = await db.query(tableName,
         where:
             'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
         whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
