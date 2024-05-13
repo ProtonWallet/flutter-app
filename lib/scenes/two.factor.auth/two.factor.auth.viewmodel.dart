@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/two_factor_auth_helper.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -49,7 +50,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   @override
   void updatePage(int newPage) {
     page = newPage;
-    datasourceChangedStreamController.sink.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -66,5 +67,5 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

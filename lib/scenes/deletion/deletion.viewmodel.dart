@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -40,7 +41,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
   @override
   Future<void> loadData() async {
     walletModel = await DBHelper.walletDao!.findById(walletID);
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -49,7 +50,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
             text: await WalletManager.getMnemonicWithID(walletID)))
         .then((_) {
       hasSaveMnemonic = true;
-      datasourceChangedStreamController.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
       LocalToast.showToast(context, S.of(context).copied_mnemonic);
     });
   }
@@ -72,5 +73,5 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

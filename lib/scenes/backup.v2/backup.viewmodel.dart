@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
@@ -40,7 +41,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
         index: index,
       ));
     });
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -56,11 +57,11 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 
   @override
   void setIntroduce(bool introduce) {
     inIntroduce = introduce;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

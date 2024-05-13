@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -76,7 +77,7 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
   @override
   void startAnimate(bool start) {
     isAnimationStart = start;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   void initSquares() {
@@ -94,10 +95,12 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     switch (to) {
-      case ViewIdentifiers.passphrase:
+      case NavID.passphrase:
         coordinator.showPassphrase(strMnemonic);
+        break;
+      default:
         break;
     }
   }

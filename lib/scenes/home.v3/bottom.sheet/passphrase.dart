@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -16,7 +15,8 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class PassphraseSheet {
-  static void show(BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+  static void show(
+      BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
     HomeModalBottomSheet.show(context, viewModel, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -31,12 +31,10 @@ class PassphraseSheet {
             //     width: MediaQuery.of(context).size.width),
             // const SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: defaultPadding),
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: TextFieldTextV2(
                 labelText: S.of(context).passphrase_label,
-                textController:
-                viewModel.walletPassphraseController,
+                textController: viewModel.walletPassphraseController,
                 myFocusNode: viewModel.walletPassphraseFocusNode,
                 validation: (String value) {
                   if (value.isEmpty) {
@@ -48,8 +46,7 @@ class PassphraseSheet {
             ),
             if (viewModel.isWalletPassphraseMatch == false)
               Text(S.of(context).wrong_passphrase,
-                  style: FontManager.body2Median(
-                      ProtonColors.signalError)),
+                  style: FontManager.body2Median(ProtonColors.signalError)),
             const SizedBox(height: 12),
             Container(
                 padding: const EdgeInsets.only(top: 20),
@@ -59,8 +56,7 @@ class PassphraseSheet {
                     onPressed: () async {
                       String passphrase =
                           viewModel.walletPassphraseController.text;
-                      bool match =
-                      await WalletManager.checkFingerprint(
+                      bool match = await WalletManager.checkFingerprint(
                           walletModel, passphrase);
                       setState(() {
                         viewModel.isWalletPassphraseMatch = match;
@@ -71,27 +67,23 @@ class PassphraseSheet {
                             maskType: EasyLoadingMaskType.black);
                         try {
                           if (context.mounted) {
-                            Provider.of<ProtonWalletProvider>(
-                                context,
-                                listen: false)
-                                .setPassphrase(
-                                walletModel, passphrase);
+                            Provider.of<ProtonWalletProvider>(context,
+                                    listen: false)
+                                .setPassphrase(walletModel, passphrase);
                           } else {
                             viewModel.errorMessage =
-                            "setPassphrase(): context.mounted == false";
+                                "setPassphrase(): context.mounted == false";
                           }
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }
                         if (viewModel.errorMessage.isNotEmpty) {
-                          CommonHelper.showErrorDialog(
-                              viewModel.errorMessage);
+                          CommonHelper.showErrorDialog(viewModel.errorMessage);
                           viewModel.errorMessage = "";
                         }
                         EasyLoading.dismiss();
                       }
-                      viewModel.walletPassphraseController.text =
-                      "";
+                      viewModel.walletPassphraseController.text = "";
                       if (context.mounted && match) {
                         Navigator.of(context).pop();
                       }

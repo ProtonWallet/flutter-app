@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/security-setting/security.setting.coordinator.dart';
+import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
 
 abstract class SecuritySettingViewModel
     extends ViewModel<SecuritySettingCoordinator> {
@@ -19,7 +20,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
   @override
   Future<void> loadData() async {
-    datasourceChangedStreamController.sink.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -27,13 +28,15 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     switch (to) {
-      case ViewIdentifiers.twoFactorAuthSetup:
+      case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
         break;
-      case ViewIdentifiers.twoFactorAuthDisable:
+      case NavID.twoFactorAuthDisable:
         coordinator.showTwoFactorAuthDisable();
+        break;
+      default:
         break;
     }
   }

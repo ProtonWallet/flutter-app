@@ -19,6 +19,8 @@ buildscript {
 
 allprojects {
     repositories {
+        // Ramp
+        maven { url 'https://jitpack.io' }
         google()
         mavenCentral()
     }
