@@ -1,10 +1,11 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/database/base.database.dart';
-import 'package:wallet/models/database/database.migration.dart';
+import 'dart:async';
 
-abstract class TransactionInfoDatabase extends BaseDatabase {
-  static DatabaseMigration migration_0 = DatabaseMigration((Database db) async {
-    await db.execute('''
+import 'package:wallet/models/database/base.database.dart';
+
+class TransactionInfoDatabase extends BaseDatabase {
+  @override
+  Future<void> migration_0() async {
+    return await createTable('''
         CREATE TABLE IF NOT EXISTS `transactionInfo` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           externalTransactionID BLOB,
@@ -15,16 +16,12 @@ abstract class TransactionInfoDatabase extends BaseDatabase {
           feeMode INTEGER
         )
     ''');
-  });
+  }
 
-  static DatabaseMigration migration_1 = DatabaseMigration((Database db) async {
-    await db.execute('ALTER TABLE transactionInfo ADD COLUMN serverWalletID TEXT;');
-    await db.execute('ALTER TABLE transactionInfo ADD COLUMN serverAccountID TEXT;');
-  });
+  Future<void> migration_1() async {
+    await addColumn('serverWalletID', 'TEXT');
+    await addColumn('serverAccountID', 'TEXT');
+  }
 
-  static void Function(Database db) dropTables = (Database db) {
-    db.execute('''
-      DROP TABLE IF EXISTS `transactionInfo`
-    ''');
-  };
+  TransactionInfoDatabase(super.db, super.tableName);
 }

@@ -55,7 +55,7 @@ void main() async {
   SecureStorageHelper.init(null);
   await RustLib.init();
   await setupLogger();
-  await test(i: 12);
   await testCallbackfunction();
+
   runApp(AppCoordinator().start());
 }

@@ -83,7 +83,7 @@ class DBHelper {
   static Future<void> reset() async {
     // Notice! this method will clean all data in appDatabase, then rebuild tables
     if (_appDatabase != null) {
-      _appDatabase!.reset();
+      await _appDatabase!.reset();
     }
   }
 }

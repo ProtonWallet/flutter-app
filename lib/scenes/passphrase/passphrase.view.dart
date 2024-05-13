@@ -15,7 +15,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
-  SetupPassPhraseView(SetupPassPhraseViewModel viewModel)
+  const SetupPassPhraseView(SetupPassPhraseViewModel viewModel)
       : super(viewModel, const Key("SetupPassPhraseView"));
 
   @override

@@ -1,10 +1,11 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:wallet/models/database/base.database.dart';
-import 'package:wallet/models/database/database.migration.dart';
 
-abstract class TransactionDatabase extends BaseDatabase {
-  static DatabaseMigration migration_0 = DatabaseMigration((Database db) async {
-    await db.execute('''
+class TransactionDatabase extends BaseDatabase {
+  TransactionDatabase(super.db, super.tableName);
+
+  @override
+  Future<void> migration_0() async {
+    return await createTable('''
         CREATE TABLE IF NOT EXISTS `walletTransaction` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           walletID INTEGER,
@@ -14,27 +15,21 @@ abstract class TransactionDatabase extends BaseDatabase {
           modifyTime INTEGER
         )
     ''');
-  });
+  }
 
-  static DatabaseMigration migration_1 = DatabaseMigration((Database db) async {
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN hashedTransactionID BLOB;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN transactionID TEXT;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN transactionTime TEXT null;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN exchangeRateID TEXT null;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN serverWalletID TEXT;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN serverAccountID TEXT;');
-  });
+  Future<void> migration_1() async {
+    await addColumn('hashedTransactionID', 'BLOB');
+    await addColumn('transactionID', 'TEXT');
+    await addColumn('transactionTime', 'BLTEXT NULL');
+    await addColumn('exchangeRateID', 'TEXT NULL');
+    await addColumn('serverWalletID', 'TEXT');
+    await addColumn('serverAccountID', 'TEXT');
+  }
 
-  static DatabaseMigration migration_2 = DatabaseMigration((Database db) async {
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN sender TEXT null;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN tolist TEXT null;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN subject TEXT null;');
-    await db.execute('ALTER TABLE walletTransaction ADD COLUMN body TEXT null;');
-  });
-
-  static void Function(Database db) dropTables = (Database db) {
-    db.execute('''
-      DROP TABLE IF EXISTS `walletTransaction`
-    ''');
-  };
+  Future<void> migration_2() async {
+    await addColumn('sender', 'TEXT NULL');
+    await addColumn('tolist', 'TEXT NULL');
+    await addColumn('subject', 'TEXT NULL');
+    await addColumn('body', 'TEXT NULL');
+  }
 }

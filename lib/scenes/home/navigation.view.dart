@@ -6,7 +6,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
 
 class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
-  HomeNavigationView(HomeNavigationViewModel viewModel)
+  const HomeNavigationView(HomeNavigationViewModel viewModel)
       : super(viewModel, const Key("HomeNavigationView"));
 
   @override

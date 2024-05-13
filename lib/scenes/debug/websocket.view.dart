@@ -4,7 +4,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/debug/websocket.viewmodel.dart';
 
 class WebSocketView extends ViewBase<WebSocketViewModel> {
-  WebSocketView(WebSocketViewModel viewModel)
+  const WebSocketView(WebSocketViewModel viewModel)
       : super(viewModel, const Key("WebSocketView"));
 
   @override

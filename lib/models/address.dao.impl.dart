@@ -1,8 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:wallet/models/address.model.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/address.database.dart';
+import 'package:wallet/models/database/base.dao.dart';
 
-abstract class AddressDao extends BaseDao {
+abstract class AddressDao extends AddressDatabase implements BaseDao {
   AddressDao(super.db, super.tableName);
 
   Future<List<AddressModel>> findByServerAccountID(String serverAccountID);
@@ -73,8 +74,8 @@ class AddressDaoImpl extends AddressDao {
 
   @override
   Future<AddressModel?> findByServerID(String serverID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'serverID = ?', whereArgs: [serverID]);
+    List<Map<String, dynamic>> maps =
+        await db.query(tableName, where: 'serverID = ?', whereArgs: [serverID]);
     if (maps.isNotEmpty) {
       return AddressModel.fromMap(maps.first);
     }

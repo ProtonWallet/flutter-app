@@ -1,8 +1,9 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/account.database.dart';
+import 'package:wallet/models/database/base.dao.dart';
 import 'account.model.dart';
 
-abstract class AccountDao extends BaseDao {
+abstract class AccountDao extends AccountDatabase implements BaseDao {
   AccountDao(super.db, super.tableName);
 
   Future findByDerivationPath(int walletID, String derivationPath);

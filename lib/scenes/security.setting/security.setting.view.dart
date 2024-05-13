@@ -10,7 +10,7 @@ import 'package:wallet/scenes/security.setting/security.setting.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
-  SecuritySettingView(SecuritySettingViewModel viewModel)
+  const SecuritySettingView(SecuritySettingViewModel viewModel)
       : super(viewModel, const Key("SecuritySettingView"));
 
   @override
