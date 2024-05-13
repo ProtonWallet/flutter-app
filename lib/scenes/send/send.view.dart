@@ -352,53 +352,30 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionValueWidget(
       BuildContext context, SendViewModel viewModel) {
-    double amount = 0.0;
-    try {
-      amount = double.parse(viewModel.amountTextController.text);
-    } catch (e) {
-      amount = 0.0;
-    }
-
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${viewModel.amountTextController.text}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel(viewModel.sendAmountInSAT),
+              .getBitcoinUnitLabel(viewModel.totalAmountInSAT),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
 
   Widget getTransactionTotalValueWidget(
       BuildContext context, SendViewModel viewModel, int estimatedFee) {
-    double amount = 0.0;
-    try {
-      amount = double.parse(viewModel.amountTextController.text);
-    } catch (e) {
-      amount = 0.0;
-    }
-    double esitmateValue =
-        Provider.of<UserSettingProvider>(context).getNotionalInBTC(amount);
-    int validCount = 0;
-    for (String recipent in viewModel.recipents) {
-      if (viewModel.bitcoinAddresses.containsKey(recipent) &&
-          viewModel.bitcoinAddresses[recipent]! != "") {
-        validCount++;
-      }
-    }
-    amount *= validCount;
-    esitmateValue *= validCount;
     double estimatedFeeInNotional = Provider.of<UserSettingProvider>(context)
         .getNotionalInFiatCurrency(estimatedFee);
+    double estimatedTotalValueInNotional = Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT);
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + amount).toStringAsFixed(3)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(3)}",
       memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(
-          (esitmateValue * 100000000).ceil() + estimatedFee),
+          (viewModel.totalAmountInSAT + estimatedFee)),
     );
   }
 

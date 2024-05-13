@@ -46,7 +46,8 @@ abstract class HistoryDetailViewModel
 
   String strWallet = "";
   String strAccount = "";
-  String address = "";
+  List<String> addresses = [];
+  List<TransactionInfoModel> recipients = [];
   int? blockConfirmTimestamp;
   double amount = 0.0;
   double fee = 0.0;
@@ -108,6 +109,16 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
       strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
+
+      try {
+        recipients = await DBHelper.transactionInfoDao!.findAllRecipients(
+            utf8.encode(txid),
+            walletModel.serverWalletID,
+            accountModel.serverAccountID);
+      } catch (e) {
+        logger.e(e.toString());
+      }
+
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
         if (transaction.txid == txid) {
@@ -117,6 +128,26 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           fee = transaction.fee!.toDouble();
           isSend = amount < 0;
           foundedInBDKHistory = true;
+
+          if (isSend) {
+            if (recipients.isEmpty) {
+              TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+                  await WalletManager.getTransactionDetailsFromBlockStream(
+                      txid);
+              if (transactionDetailFromBlockChain != null) {
+                for (Recipient recipient
+                    in transactionDetailFromBlockChain.recipients) {
+                  if (recipient.amountInSATS.abs() ==
+                      amount.abs() - fee.abs()) {
+                    addresses.add(recipient.bitcoinAddress);
+                    break;
+                  }
+                }
+              }
+            }
+          } else {
+            addresses.add(txid);
+          }
           datasourceChangedStreamController.sinkAddSafe(this);
           break;
         }
@@ -203,20 +234,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       if (foundedInBDKHistory == false) {
         blockConfirmTimestamp = null;
         try {
-          TransactionInfoModel? transactionInfoModel;
-          try {
-            transactionInfoModel = await DBHelper.transactionInfoDao!.find(
-                utf8.encode(txid),
-                walletModel.serverWalletID,
-                accountModel.serverAccountID);
-          } catch (e) {
-            logger.e(e.toString());
-          }
-          if (transactionInfoModel != null) {
+          if (recipients.isNotEmpty) {
             // get transaction info locally, for sender
-            fee = transactionInfoModel.feeInSATS.toDouble();
+            fee = recipients.first.feeInSATS.toDouble();
             isSend = true;
-            amount = -transactionInfoModel.amountInSATS.toDouble() - fee;
+            amount = 0;
+            for (TransactionInfoModel recipient in recipients) {
+              amount -= recipient.amountInSATS.toDouble();
+            }
+            amount -= fee;
           } else {
             TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
                 await WalletManager.getTransactionDetailsFromBlockStream(txid);
@@ -242,22 +268,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         } catch (e) {
           logger.e(e.toString());
         }
-      }
-      // load address
-      if (isSend) {
-        TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-            await WalletManager.getTransactionDetailsFromBlockStream(txid);
-        if (transactionDetailFromBlockChain != null) {
-          for (Recipient recipient
-              in transactionDetailFromBlockChain.recipients) {
-            if (recipient.amountInSATS.abs() == amount.abs() - fee.abs()) {
-              address = recipient.bitcoinAddress;
-              break;
-            }
-          }
-        }
-      } else {
-        address = txid;
       }
       datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
@@ -296,12 +306,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             walletTransactionId: transactionModel!.transactionID,
             label: encryptedLabel,
           );
-          AccountModel accountModel = await DBHelper.accountDao!
-              .findByServerAccountID(transactionModel!.serverAccountID);
           await Provider.of<ProtonWalletProvider>(
                   Coordinator.navigatorKey.currentContext!,
                   listen: false)
-              .setCurrentTransactions(accountModel);
+              .setCurrentTransactions();
         }
         isEditing = false;
       }

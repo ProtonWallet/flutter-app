@@ -16,6 +16,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
+import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
@@ -57,7 +58,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   double feeRateSatPerVByte = 2.0;
   double baseFeeInSAT = 0;
   int estimatedFeeInSAT = 0;
-  int sendAmountInSAT = 0;
+  int amountInSATS = 0; // per recipient
+  int totalAmountInSAT = 0; // total value
   int validRecipientCount = 0;
   bool inReview = false;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
@@ -293,7 +295,7 @@ class SendViewModelImpl extends SendViewModel {
           amount = 0.0;
         }
         double btcAmount = userSettingProvider.getNotionalInBTC(amount);
-        int amountInSATS = (btcAmount * 100000000).ceil();
+        amountInSATS = (btcAmount * 100000000).ceil();
         txBuilder = TxBuilder();
 
         for (String email in recipents) {
@@ -314,7 +316,7 @@ class SendViewModelImpl extends SendViewModel {
         txBuilderResult =
             await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
         estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
-        sendAmountInSAT = txBuilderResult.txDetails.sent -
+        totalAmountInSAT = txBuilderResult.txDetails.sent -
             (txBuilderResult.txDetails.fee ?? 0) -
             txBuilderResult.txDetails.received;
         baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
@@ -360,15 +362,28 @@ class SendViewModelImpl extends SendViewModel {
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
-          await DBHelper.transactionInfoDao!.insertOrUpdate(
-              externalTransactionID: utf8.encode(txid),
-              amountInSATS: sendAmountInSAT,
-              feeInSATS: estimatedFeeInSAT,
-              isSend: 1,
-              transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-              feeMode: userTransactionFeeMode.index,
-              serverWalletID: walletModel!.serverWalletID,
-              serverAccountID: accountModel!.serverAccountID);
+
+          // for multi-recipients
+          for (String email in recipents) {
+            String bitcoinAddress = "";
+            if (email.contains("@")) {
+              bitcoinAddress = bitcoinAddresses[email] ?? email;
+            } else {
+              bitcoinAddress = email;
+            }
+            await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
+                id: null,
+                externalTransactionID: utf8.encode(txid),
+                amountInSATS: amountInSATS,
+                feeInSATS: estimatedFeeInSAT,
+                isSend: 1,
+                transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                feeMode: userTransactionFeeMode.index,
+                serverWalletID: walletModel!.serverWalletID,
+                serverAccountID: accountModel!.serverAccountID,
+                toEmail: email.contains("@") ? email : "",
+                toBitcoinAddress: bitcoinAddress));
+          }
         }
       } catch (e) {
         logger.e(e.toString());

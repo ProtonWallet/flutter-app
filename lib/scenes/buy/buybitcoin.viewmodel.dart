@@ -16,6 +16,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -178,13 +179,18 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       if (init) {
         wallet = await WalletManager.loadWalletWithID(
             walletModel.id!, accountModel.id!);
-        List<String> emailIntegrationAddresses =
-            await WalletManager.getAccountAddressIDs(
-                accountModel.serverAccountID ?? "");
-        // hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
       }
-      int addressIndex = await WalletManager.getBitcoinAddressIndex(
-          walletModel.serverWalletID, accountModel.serverAccountID);
+
+      int addressIndex = 0;
+      BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+          .bitcoinAddressDao!
+          .findLatestUnusedLocalBitcoinAddress(walletID, accountID);
+      if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
+        addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
+      } else {
+        addressIndex = await WalletManager.getBitcoinAddressIndex(
+            walletModel.serverWalletID, accountModel.serverAccountID);
+      }
       var addressInfo =
           await _lib.getAddress(wallet!, addressIndex: addressIndex);
       receiveAddress = addressInfo.address;
