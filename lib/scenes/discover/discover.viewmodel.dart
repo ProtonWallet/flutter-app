@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/components/discover/proton.feeditem.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -9,59 +9,9 @@ import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:http/http.dart' as http;
 
-class ProtonFeedItem {
-  String title;
-  String pubDate;
-  String link;
-  String description;
-  String category;
-  String author;
-  String coverImage;
-
-  ProtonFeedItem({
-    required this.title,
-    required this.pubDate,
-    required this.link,
-    required this.description,
-    required this.category,
-    required this.author,
-    this.coverImage = "",
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'link': link,
-      'description': description,
-      'pubDate': pubDate,
-      'author': author,
-      'coverImage': coverImage,
-      'category': category,
-    };
-  }
-
-  factory ProtonFeedItem.fromJson(Map<String, dynamic> json) {
-    return ProtonFeedItem(
-      title: json['title'],
-      link: json['link'],
-      description: json['description'],
-      pubDate: json['pubDate'],
-      author: json['author'],
-      coverImage: json['coverImage'],
-      category: json['category'],
-    );
-  }
-
-  static Future<List> loadJsonFromAsset() async {
-    String jsonString = await rootBundle.loadString('assets/custom_discovers.json');
-    return jsonDecode(jsonString);
-  }
-}
-
 abstract class DiscoverViewModel extends ViewModel<DiscoverCoordinator> {
   DiscoverViewModel(super.coordinator);
-
-  List<ProtonFeedItem> protonFeedItems = [];
+  late List<ProtonFeedItem> protonFeedItems = [];
 }
 
 class DiscoverViewModelImpl extends DiscoverViewModel {
@@ -79,12 +29,10 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
   Future<void> loadData() async {
     EasyLoading.show(
         status: "loading content..", maskType: EasyLoadingMaskType.black);
-    List discoverJsonContents = await ProtonFeedItem.loadJsonFromAsset();
-    for (Map<String, dynamic> discoverJsonContent in discoverJsonContents){
-      protonFeedItems.add(ProtonFeedItem.fromJson(discoverJsonContent));
-    }
+    protonFeedItems = await ProtonFeedItem.loadJsonFromAsset();
+
     EasyLoading.dismiss();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.addSafe(this);
   }
 
   @override
@@ -92,7 +40,7 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 
   Future<void> loadFeed() async {
     try {

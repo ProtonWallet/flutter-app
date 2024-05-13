@@ -50,5 +50,5 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

@@ -1,6 +1,7 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
+import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -11,7 +12,7 @@ import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
-import 'package:wallet/scenes/security-setting/security.setting.coordinator.dart';
+import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
@@ -57,6 +58,11 @@ class HomeCoordinator extends Coordinator {
     push(view);
   }
 
+  void showBuy(int walletID, int accountID) {
+    var view = BuyBitcoinCoordinator(walletID, accountID).start();
+    push(view);
+  }
+
   void showSecuritySetting() {
     var view = SecuritySettingCoordinator().start();
     push(view);
@@ -67,8 +73,11 @@ class HomeCoordinator extends Coordinator {
     push(view, fullscreenDialog: true);
   }
 
-  void showHistoryDetails(int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
-    var view = HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency).start();
+  void showHistoryDetails(
+      int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
+    var view =
+        HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency)
+            .start();
     showInBottomSheet(view);
   }
 

@@ -83,6 +83,7 @@ class BdkLibrary {
     return blockchain;
   }
 
+  // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   Future<Wallet> restoreWallet(Descriptor descriptor,
       {String databaseName = "test_database"}) async {
     DatabaseConfig config;

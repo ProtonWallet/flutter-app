@@ -57,7 +57,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                       horizontal: defaultButtonPadding * 2),
                   child: ButtonV5(
                       onPressed: () async {
-                        viewModel.move(ViewIdentifiers.nativeSignup);
+                        viewModel.move(NavID.nativeSignup);
                       },
                       text: S.of(context).signup,
                       width: MediaQuery.of(context).size.width,
@@ -72,7 +72,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                       horizontal: defaultButtonPadding * 2),
                   child: ButtonV5(
                       onPressed: () async {
-                        viewModel.move(ViewIdentifiers.nativeSignin);
+                        viewModel.move(NavID.nativeSignin);
                       },
                       text: S.of(context).login,
                       width: MediaQuery.of(context).size.width,

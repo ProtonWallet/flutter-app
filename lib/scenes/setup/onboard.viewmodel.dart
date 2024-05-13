@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -23,7 +24,7 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
   @override
   Future<void> loadData() async {
     hasAccount = await WalletManager.hasWallet();
-    datasourceChangedStreamController.sink.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
     return;
   }
 
@@ -32,13 +33,15 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     switch (to) {
-      case ViewIdentifiers.setupCreate:
+      case NavID.setupCreate:
         coordinator.showSetupCreate();
         break;
-      case ViewIdentifiers.importWallet:
+      case NavID.importWallet:
         coordinator.showImportWallet();
+        break;
+      default:
         break;
     }
   }

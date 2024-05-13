@@ -10,6 +10,7 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -99,10 +100,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       SecretKey? secretKey =
           await WalletManager.getWalletKey(walletModel.serverWalletID);
 
-      transactionModel = await DBHelper.transactionDao!
-          .find(utf8.encode(txid), walletModel.serverWalletID, accountModel.serverAccountID);
+      transactionModel = await DBHelper.transactionDao!.find(utf8.encode(txid),
+          walletModel.serverWalletID, accountModel.serverAccountID);
 
-      datasourceChangedStreamController.sink.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
       _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
       strWallet = await WalletManager.getNameWithID(walletID);
@@ -116,7 +117,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           fee = transaction.fee!.toDouble();
           isSend = amount < 0;
           foundedInBDKHistory = true;
-          datasourceChangedStreamController.sink.add(this);
+          datasourceChangedStreamController.sinkAddSafe(this);
           break;
         }
       }
@@ -204,8 +205,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         try {
           TransactionInfoModel? transactionInfoModel;
           try {
-            transactionInfoModel = await DBHelper.transactionInfoDao!
-                .find(utf8.encode(txid), walletModel.serverWalletID, accountModel.serverAccountID);
+            transactionInfoModel = await DBHelper.transactionInfoDao!.find(
+                utf8.encode(txid),
+                walletModel.serverWalletID,
+                accountModel.serverAccountID);
           } catch (e) {
             logger.e(e.toString());
           }
@@ -256,7 +259,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       } else {
         address = txid;
       }
-      datasourceChangedStreamController.sink.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -266,7 +269,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
     initialized = true;
   }
 
@@ -305,7 +308,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
@@ -314,12 +317,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 
   @override
   void editMemo() {
     isEditing = true;
     memoFocusNode.requestFocus();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

@@ -6,7 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.dart';
 
-import 'package:wallet/scenes/security-setting/security.setting.viewmodel.dart';
+import 'package:wallet/scenes/security.setting/security.setting.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
@@ -23,7 +23,7 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
           const SizedBox(height: defaultPadding),
           GestureDetector(
               onTap: () {
-                // viewModel.move(ViewIdentifiers.twoFactorAuthSetup); // TODO:: add back after fix ui
+                // viewModel.move(NavID.twoFactorAuthSetup); // TODO:: add back after fix ui
               },
               child: Container(
                 padding: const EdgeInsets.all(defaultPadding),
