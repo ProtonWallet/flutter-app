@@ -12,6 +12,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -240,23 +241,46 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               "${WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)} (You)",
           memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
         ),
-        const Divider(
-          thickness: 0.2,
-          height: 1,
-        ),
-        TransactionHistoryItem(
-          title: S.of(context).trans_to,
-          content: viewModel.toEmail.isNotEmpty
-              ? WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)
-              : viewModel.address,
-          copyContent: true,
-          memo: viewModel.toEmail.isNotEmpty
-              ? WalletManager.getBitcoinAddressFromWalletTransaction(
-                  viewModel.toEmail)
-              : null,
-        ),
+        viewModel.recipients.isEmpty
+            ? buildTransToInfo(
+                context,
+                viewModel,
+                viewSize,
+                viewModel.toEmail.isNotEmpty
+                    ? WalletManager.getEmailFromWalletTransaction(
+                        viewModel.toEmail)
+                    : viewModel.addresses.firstOrNull ?? "",
+                viewModel.toEmail.isNotEmpty
+                    ? WalletManager.getBitcoinAddressFromWalletTransaction(
+                        viewModel.toEmail)
+                    : null)
+            : Column(children: [
+                for (TransactionInfoModel info in viewModel.recipients)
+                  buildTransToInfo(context, viewModel, viewSize, info.toEmail,
+                      info.toBitcoinAddress)
+              ])
       ],
     );
+  }
+
+  Widget buildTransToInfo(
+      BuildContext context,
+      HistoryDetailViewModel viewModel,
+      ViewSize viewSize,
+      String content,
+      String? memo) {
+    return Column(children: [
+      const Divider(
+        thickness: 0.2,
+        height: 1,
+      ),
+      TransactionHistoryItem(
+        title: S.of(context).trans_to,
+        content: content,
+        copyContent: true,
+        memo: memo,
+      )
+    ]);
   }
 
   Widget buildReceiveInfo(BuildContext context,
@@ -269,7 +293,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           title: S.of(context).trans_from,
           content: viewModel.fromEmail.isNotEmpty
               ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
-              : viewModel.address,
+              : viewModel.addresses.firstOrNull ?? "",
         ),
         const Divider(
           thickness: 0.2,
