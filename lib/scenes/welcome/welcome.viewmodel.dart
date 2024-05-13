@@ -336,9 +336,9 @@ ydJHDOOvI+zz/2tadhbwT6A=
   }
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     switch (to) {
-      case ViewIdentifiers.nativeSignin:
+      case NavID.nativeSignin:
         if (_isMobile()) {
           coordinator.showNativeSignin(env);
         } else {
@@ -346,13 +346,15 @@ ydJHDOOvI+zz/2tadhbwT6A=
           coordinator.showHome(env);
         }
         break;
-      case ViewIdentifiers.nativeSignup:
+      case NavID.nativeSignup:
         if (_isMobile()) {
           coordinator.showNativeSignup(env);
         } else {
           mockUserSession();
           coordinator.showHome(env);
         }
+        break;
+      default:
         break;
     }
   }

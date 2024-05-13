@@ -55,15 +55,16 @@ impl Wallet {
         wallet_lock.get(id.as_str()).unwrap().clone()
     }
 
+    // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
     pub fn new_wallet(
         descriptor: String,
         change_descriptor: Option<String>,
         network: bitcoin::Network,
         database_config: DatabaseConfig,
     ) -> Result<String, BdkError> {
-        let database: AnyDatabase = AnyDatabase::from_config(&database_config.into()).unwrap();
+        let database: AnyDatabase = AnyDatabase::from_config(&database_config.into())?;
         let bdk_wallet =
-            BdkWallet::new(&descriptor, change_descriptor.as_ref(), network, database).unwrap();
+            BdkWallet::new(&descriptor, change_descriptor.as_ref(), network, database)?;
         let wallet_mutex = Mutex::new(bdk_wallet);
 
         let wallet = Wallet { wallet_mutex };

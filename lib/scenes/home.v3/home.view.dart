@@ -6,11 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/custom.discover.box.dart';
 import 'package:wallet/components/custom.expansion.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
 import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
+import 'package:wallet/components/discover/discover.feeds.view.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/components/underline.dart';
@@ -27,7 +27,6 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/fiat.currency.setting.dart';
@@ -198,7 +197,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               width: 80,
                               child: GestureDetector(
                                 onTap: () {
-                                  move(context, viewModel, ViewIdentifiers.send);
+                                  move(context, viewModel, NavID.send);
                                 },
                                 child: Text(
                                   S.of(context).send_button,
@@ -211,7 +210,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               width: 80,
                               child: GestureDetector(
                                 onTap: () {
-                                  move(context, viewModel, ViewIdentifiers.receive);
+                                  move(context, viewModel, NavID.receive);
                                 },
                                 child: Text(
                                   S.of(context).receive,
@@ -223,7 +222,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                           SizedBox(
                               width: 80,
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  viewModel.move(NavID.buy);
+                                },
                                 child: Text(
                                   S.of(context).buy,
                                   textAlign: TextAlign.center,
@@ -282,7 +283,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     S.of(context).todos_backup_wallet_mnemonic,
                                 checked: viewModel.hadBackup,
                                 callback: () {
-                                  move(context, viewModel, ViewIdentifiers.setupBackup);
+                                  move(context, viewModel, NavID.setupBackup);
                                 }),
                             const SizedBox(
                               height: 5,
@@ -439,7 +440,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         .protonWallet
                                         .historyTransactionsAfterFilter[index]
                                         .txID;
-                                viewModel.move(ViewIdentifiers.historyDetails);
+                                viewModel.move(NavID.historyDetails);
                               },
                               timestamp:
                                   Provider.of<ProtonWalletProvider>(context)
@@ -513,7 +514,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             children: [
                               ButtonV5(
                                   onPressed: () {
-                                    viewModel.move(ViewIdentifiers.receive);
+                                    viewModel.move(NavID.receive);
                                   },
                                   backgroundColor: ProtonColors.white,
                                   text: S.of(context).receive,
@@ -548,109 +549,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                         .protonWallet
                         .historyTransactionsAfterFilter
                         .isEmpty)
-                      Column(
-                        children: [
-                          for (ProtonFeedItem protonFeedItem
-                              in viewModel.protonFeedItems)
-                            GestureDetector(
-                                onTap: () {
-                                  launchUrl(Uri.parse(protonFeedItem.link));
-                                },
-                                child: CustomDiscoverBox(
-                                  title: protonFeedItem.title,
-                                  description: protonFeedItem.description,
-                                  link: protonFeedItem.link,
-                                  pubDate: protonFeedItem.pubDate,
-                                  paddingSize: 0,
-                                  backgroundColor: ProtonColors.white,
-                                  avatarPath:
-                                      "assets/images/icon/discover_placeholder_${viewModel.protonFeedItems.indexOf(protonFeedItem) % 5}.svg",
-                                  author: protonFeedItem.author,
-                                  category: protonFeedItem.category,
-                                ))
-                        ],
+                      DiscoverFeedsView(
+                        onTap: (String link) {
+                          launchUrl(Uri.parse(link));
+                        },
+                        protonFeedItems: viewModel.protonFeedItems,
                       ),
-                    // SizedBox(
-                    //     width: MediaQuery.of(context).size.width,
-                    //     height: 200,
-                    //     child: ListView(
-                    //         scrollDirection: Axis.horizontal,
-                    //         shrinkWrap: true,
-                    //         physics: const ClampingScrollPhysics(),
-                    //         children: [
-                    //           CustomNewsBoxV2(
-                    //               title: S.of(context).security_n_proton_wallet,
-                    //               content: S
-                    //                   .of(context)
-                    //                   .how_to_stay_safe_and_protect_your_assets,
-                    //               iconPath: "assets/images/icon/protect.svg",
-                    //               headerBackground: const Color(0x668B93FF),
-                    //               width: 160),
-                    //           const SizedBox(width: 10),
-                    //           CustomNewsBoxV2(
-                    //               title: S.of(context).wallets_n_accounts,
-                    //               content: S
-                    //                   .of(context)
-                    //                   .whats_the_different_and_how_to_use_them,
-                    //               iconPath: "assets/images/icon/wallet.svg",
-                    //               headerBackground: const Color(0x66FE7A36),
-                    //               width: 160),
-                    //           const SizedBox(width: 10),
-                    //           CustomNewsBoxV2(
-                    //               title: S.of(context).transfer_bitcoin,
-                    //               content: S
-                    //                   .of(context)
-                    //                   .how_to_send_and_receive_bitcoin_with_proton,
-                    //               iconPath: "assets/images/icon/transfer.svg",
-                    //               headerBackground: const Color(0x660D9276),
-                    //               width: 160),
-                    //           const SizedBox(width: 10),
-                    //           CustomNewsBoxV2(
-                    //               title: S.of(context).mobile_apps,
-                    //               content: S
-                    //                   .of(context)
-                    //                   .start_using_proton_wallet_on_your_phone,
-                    //               iconPath: "assets/images/icon/mobile.svg",
-                    //               headerBackground: const Color(0x66FF6868),
-                    //               width: 160),
-                    //           const SizedBox(width: 10),
-                    //         ])),
-                    // const SizedBox(height: 20),
-                    // Text("Transaction Fees",
-                    //     style: FontManager.body1Median(ProtonColors.textNorm)),
-                    // const SizedBox(height: 10),
-                    // Container(
-                    //     width: MediaQuery.of(context).size.width,
-                    //     height: 110,
-                    //     child: ListView(
-                    //         scrollDirection: Axis.horizontal,
-                    //         shrinkWrap: true,
-                    //         physics: const ClampingScrollPhysics(),
-                    //         children: [
-                    //           TransactionFeeBox(
-                    //             priorityText: "High Priority",
-                    //             timeEstimate: "In ~10 minutes",
-                    //             fee: viewModel.bitcoinTransactionFee.block1Fee,
-                    //           ),
-                    //           const SizedBox(width: 10),
-                    //           TransactionFeeBox(
-                    //             priorityText: "Median Priority",
-                    //             timeEstimate: "In ~30 minutes",
-                    //             fee: viewModel.bitcoinTransactionFee.block3Fee,
-                    //           ),
-                    //           const SizedBox(width: 10),
-                    //           TransactionFeeBox(
-                    //             priorityText: "Low Priority",
-                    //             timeEstimate: "In ~50 minutes",
-                    //             fee: viewModel.bitcoinTransactionFee.block5Fee,
-                    //           ),
-                    //           const SizedBox(width: 10),
-                    //           TransactionFeeBox(
-                    //             priorityText: "No Priority",
-                    //             timeEstimate: "In ~3.5 hours",
-                    //             fee: viewModel.bitcoinTransactionFee.block20Fee,
-                    //           ),
-                    //         ])),
                     const SizedBox(height: 40),
                   ])),
         ]),
@@ -658,7 +562,7 @@ class HomeView extends ViewBase<HomeViewModel> {
     );
   }
 
-  void move(BuildContext context, HomeViewModel viewModel, int identifier) {
+  void move(BuildContext context, HomeViewModel viewModel, NavID identifier) {
     if (context.mounted) {
       if (CommonHelper.checkSelectWallet(context)) {
         viewModel.move(identifier);
@@ -761,7 +665,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.drawerWalletPlus)))),
                     ListTile(
                         onTap: () {
-                          viewModel.move(ViewIdentifiers.discover);
+                          Navigator.of(context).pop();
+                          viewModel.move(NavID.discover);
                         },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-squares-in-squarediscover.svg",
@@ -787,7 +692,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.textHint)))),
                     ListTile(
                         onTap: () {
-                          viewModel.move(ViewIdentifiers.securitySetting);
+                          viewModel.move(NavID.securitySetting);
                         },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-shield.svg",
@@ -843,7 +748,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.protonBlue),
                                 height: 48,
                                 onPressed: () {
-                                  viewModel.move(ViewIdentifiers.setupOnboard);
+                                  viewModel.move(NavID.setupOnboard);
                                 },
                               )
                             ])),

@@ -29,5 +29,5 @@ class AppViewModelImpl extends AppViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

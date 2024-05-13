@@ -9,6 +9,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -149,10 +150,10 @@ class SendViewModelImpl extends SendViewModel {
       memoTextController = TextEditingController();
       amountTextController = TextEditingController();
       amountTextController.addListener(() {
-        datasourceChangedStreamController.add(this);
+        datasourceChangedStreamController.sinkAddSafe(this);
       });
 
-      datasourceChangedStreamController.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
       _blockchain = await _lib.initializeBlockchain(false);
       updateFeeRate();
       contactsEmail = await WalletManager.getContacts();
@@ -170,7 +171,7 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     protonAddresses =
         addresses.where((element) => element.status == 1).toList();
@@ -180,7 +181,7 @@ class SendViewModelImpl extends SendViewModel {
     _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
     var walletBalance = await _wallet.getBalance();
     balance = walletBalance.total;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -199,7 +200,7 @@ class SendViewModelImpl extends SendViewModel {
         break;
     }
     await buildTransactionScript();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -208,7 +209,7 @@ class SendViewModelImpl extends SendViewModel {
       await updateTransactionFeeMode(userTransactionFeeMode);
     }
     this.inReview = inReview;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   Future<void> updateUserSettingProvider(FiatCurrency fiatCurrency) async {
@@ -264,7 +265,7 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -274,7 +275,7 @@ class SendViewModelImpl extends SendViewModel {
       validRecipientCount--;
     }
     recipents.removeAt(index);
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -326,7 +327,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       rethrow;
     }
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -400,7 +401,7 @@ class SendViewModelImpl extends SendViewModel {
     feeRateLowPriority = feeRate_.asSatPerVb();
     // feeRateLowPriority = 2.0;
     try {
-      datasourceChangedStreamController.add(this);
+      datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
       logger.e(e.toString());
     }
@@ -412,30 +413,30 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> userFinishEmailBody() async {
     isEditingEmailBody = false;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   Future<void> userFinishMemo() async {
     isEditingMemo = false;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
   void editEmailBody() {
     isEditingEmailBody = true;
     emailBodyFocusNode.requestFocus();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
   void editMemo() {
     isEditingMemo = true;
     memoFocusNode.requestFocus();
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
-  void move(NavigationIdentifier to) {
+  void move(NavID to) {
     // TODO: implement move
   }
 }

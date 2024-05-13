@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/proton_api.dart';
 import 'package:wallet/rust/api/rust_objects.dart';
@@ -31,7 +32,7 @@ class TransferViewModelImpl extends TransferViewModel {
 
     var walletResponse = await getWallets();
     logger.i("walletResponse:${walletResponse.length}");
-    datasourceChangedStreamController.sink.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -39,5 +40,5 @@ class TransferViewModelImpl extends TransferViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

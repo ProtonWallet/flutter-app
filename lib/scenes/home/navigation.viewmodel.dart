@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home/navigation.coordinator.dart';
@@ -74,9 +75,9 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
   void updateSelected(int index) {
     selectedPage = index;
     pageController.jumpToPage(index);
-    datasourceChangedStreamController.sink.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }

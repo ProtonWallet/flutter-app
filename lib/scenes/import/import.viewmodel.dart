@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
@@ -50,7 +48,7 @@ class ImportViewModelImpl extends ImportViewModel {
   @override
   void updateMnemonic(int length) {
     mnemonicLength = length;
-    datasourceChangedStreamController.add(this);
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   @override
@@ -77,5 +75,5 @@ class ImportViewModelImpl extends ImportViewModel {
   }
 
   @override
-  void move(NavigationIdentifier to) {}
+  void move(NavID to) {}
 }
