@@ -1,3 +1,4 @@
+import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 
 class HistoryTransaction {
@@ -11,6 +12,7 @@ class HistoryTransaction {
   final String sender;
   final String toList;
   final bool inProgress;
+  final AccountModel accountModel;
 
   HistoryTransaction(
       {required this.txID,
@@ -22,5 +24,6 @@ class HistoryTransaction {
       this.label,
       required this.sender,
       required this.toList,
-      this.inProgress = false});
+      this.inProgress = false,
+      required this.accountModel});
 }

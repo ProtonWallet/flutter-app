@@ -23,5 +23,10 @@ class TransactionInfoDatabase extends BaseDatabase {
     await addColumn('serverAccountID', 'TEXT');
   }
 
+  Future<void> migration_2() async {
+    await addColumn('toEmail', 'TEXT');
+    await addColumn('toBitcoinAddress', 'TEXT');
+  }
+
   TransactionInfoDatabase(super.db, super.tableName);
 }

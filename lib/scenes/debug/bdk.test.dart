@@ -12,6 +12,7 @@ import 'package:wallet/helper/logger.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/rust/bdk/blockchain.dart';
 import 'package:wallet/rust/frb_generated.dart';
 
@@ -109,6 +110,30 @@ class BdkLibrary {
         network: coinType.network,
         databaseConfig: config);
     return wallet;
+  }
+
+  Future<void> clearLocalCache() async {
+    String? path;
+    if (Platform.isWindows || Platform.isLinux) {
+      final Directory appDocumentsDir =
+          await getApplicationDocumentsDirectory();
+      path = join(appDocumentsDir.path, "databases");
+    } else {
+      path = await getDatabasesPath();
+    }
+
+    final dir = Directory(path);
+    if (await dir.exists()) {
+      List<FileSystemEntity> entities = dir.listSync();
+      for (FileSystemEntity entity in entities) {
+        if (entity is File) {
+          if (basename(entity.path).contains(AppDatabase.dbName) == false) {
+            logger.i("removing bdk db: ${entity.path}");
+            entity.deleteSync();
+          }
+        }
+      }
+    }
   }
 
   Future<Wallet> restoreWalletInMemory(Descriptor descriptor) async {
