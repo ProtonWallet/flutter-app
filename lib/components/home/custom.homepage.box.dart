@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomHomePageBox extends StatelessWidget {
   final String title;
-  final String iconPath;
+  final SvgGenImage icon;
   final double width;
   final double price;
   final double priceChange;
@@ -14,7 +14,7 @@ class CustomHomePageBox extends StatelessWidget {
   const CustomHomePageBox({
     super.key,
     required this.title,
-    required this.iconPath,
+    required this.icon,
     this.width = 440,
     this.price = 0,
     this.children = const [],
@@ -28,14 +28,13 @@ class CustomHomePageBox extends StatelessWidget {
           width: width,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-              color: ProtonColors.surfaceLight,
-              borderRadius: BorderRadius.circular(24.0),
-              ),
+            color: ProtonColors.surfaceLight,
+            borderRadius: BorderRadius.circular(24.0),
+          ),
           child: Column(
             children: [
               Row(children: [
-                SvgPicture.asset(iconPath,
-                    fit: BoxFit.fill, width: 44, height: 44),
+                icon.svg(fit: BoxFit.fill, width: 44, height: 44),
                 const SizedBox(
                   width: 12,
                 ),

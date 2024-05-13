@@ -12,7 +12,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
-  ImportView(ImportViewModel viewModel)
+  const ImportView(ImportViewModel viewModel)
       : super(viewModel, const Key("ImportView"));
 
   @override
@@ -43,51 +43,50 @@ class ImportView extends ViewBase<ImportViewModel> {
                   56 -
                   MediaQuery.of(context).padding.top,
               margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Column(
-                  children: <Widget>[
-                    SizedBoxes.box18,
-                    Text(S.of(context).import_wallet_header, style: FontManager.body2Regular(ProtonColors.textWeak)),
-                    SizedBoxes.box18,
-                    TextFieldTextV2(
-                      labelText: S.of(context).wallet_name,
-                      textController: viewModel.nameTextController,
-                      myFocusNode: viewModel.nameFocusNode,
-                      validation: (String _) {
-                        return "";
-                      },
-                    ),
-                    SizedBoxes.box12,
-                    TextFieldTextV2(
-                      labelText: S.of(context).your_mnemonic,
-                      textController: viewModel.mnemonicTextController,
-                      myFocusNode: viewModel.mnemonicFocusNode,
-                      maxLines: 6,
-                      validation: (String _) {
-                        return "";
-                      },
-                      isPassword: false,
-                    ),
-                    SizedBoxes.box24,
-                    ExpansionTile(
-                        shape: const Border(),
-                        initiallyExpanded: false,
-                        title: Text(S.of(context).advanced_options,
-                            style:
-                                FontManager.body2Median(ProtonColors.textWeak)),
-                        iconColor: ProtonColors.textHint,
-                        collapsedIconColor: ProtonColors.textHint,
-                        children: [
-                          TextFieldTextV2(
-                            labelText: S.of(context).your_passphrase_optional,
-                            textController: viewModel.passphraseTextController,
-                            myFocusNode: viewModel.passphraseFocusNode,
-                            validation: (String _) {
-                              return "";
-                            },
-                            isPassword: true,
-                          )
-                        ])
-                  ])),
+              child: Column(children: <Widget>[
+                SizedBoxes.box18,
+                Text(S.of(context).import_wallet_header,
+                    style: FontManager.body2Regular(ProtonColors.textWeak)),
+                SizedBoxes.box18,
+                TextFieldTextV2(
+                  labelText: S.of(context).wallet_name,
+                  textController: viewModel.nameTextController,
+                  myFocusNode: viewModel.nameFocusNode,
+                  validation: (String _) {
+                    return "";
+                  },
+                ),
+                SizedBoxes.box12,
+                TextFieldTextV2(
+                  labelText: S.of(context).your_mnemonic,
+                  textController: viewModel.mnemonicTextController,
+                  myFocusNode: viewModel.mnemonicFocusNode,
+                  maxLines: 6,
+                  validation: (String _) {
+                    return "";
+                  },
+                  isPassword: false,
+                ),
+                SizedBoxes.box24,
+                ExpansionTile(
+                    shape: const Border(),
+                    initiallyExpanded: false,
+                    title: Text(S.of(context).advanced_options,
+                        style: FontManager.body2Median(ProtonColors.textWeak)),
+                    iconColor: ProtonColors.textHint,
+                    collapsedIconColor: ProtonColors.textHint,
+                    children: [
+                      TextFieldTextV2(
+                        labelText: S.of(context).your_passphrase_optional,
+                        textController: viewModel.passphraseTextController,
+                        myFocusNode: viewModel.passphraseFocusNode,
+                        validation: (String _) {
+                          return "";
+                        },
+                        isPassword: true,
+                      )
+                    ])
+              ])),
           Container(
               padding: const EdgeInsets.only(bottom: defaultPadding),
               width: MediaQuery.of(context).size.width,

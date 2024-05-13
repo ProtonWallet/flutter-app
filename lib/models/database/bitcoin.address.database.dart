@@ -1,10 +1,9 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:wallet/models/database/base.database.dart';
-import 'package:wallet/models/database/database.migration.dart';
 
-abstract class BitcoinAddressDatabase extends BaseDatabase {
-  static DatabaseMigration migration_0 = DatabaseMigration((Database db) async {
-    await db.execute('''
+class BitcoinAddressDatabase extends BaseDatabase {
+  @override
+  Future<void> migration_0() {
+    return createTable('''
         CREATE TABLE IF NOT EXISTS `bitcoinAddress` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           walletID INTEGER,
@@ -15,11 +14,7 @@ abstract class BitcoinAddressDatabase extends BaseDatabase {
           used INTEGER
         )
     ''');
-  });
+  }
 
-  static void Function(Database db) dropTables = (Database db) {
-    db.execute('''
-      DROP TABLE IF EXISTS `bitcoinAddress`
-    ''');
-  };
+  BitcoinAddressDatabase(super.db, super.tableName);
 }

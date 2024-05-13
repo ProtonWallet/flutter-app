@@ -4,9 +4,9 @@ class CryptoPriceInfo {
   final double priceChange24h;
 
   CryptoPriceInfo({
-    required this.symbol,
-    required this.price,
-    required this.priceChange24h,
+    this.symbol = "BTCUSDT",
+    this.price = 0.0,
+    this.priceChange24h = 0.0,
   });
 }
 

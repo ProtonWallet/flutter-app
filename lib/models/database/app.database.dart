@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -7,13 +8,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
-import 'package:wallet/models/database/address.database.dart';
-import 'package:wallet/models/database/bitcoin.address.database.dart';
-import 'package:wallet/models/database/contacts.database.dart';
-import 'package:wallet/models/database/transaction.database.dart';
-import 'package:wallet/models/database/transaction.info.database.dart';
-import 'package:wallet/models/database/wallet.database.dart';
-import 'package:wallet/models/database/account.database.dart';
 import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/transaction.info.dao.impl.dart';
@@ -22,14 +16,19 @@ import 'package:wallet/models/wallet.dao.impl.dart';
 import 'migration.dart';
 import 'migration.container.dart';
 
-class AppDatabase
-    implements AccountDatabase, TransactionDatabase, WalletDatabase {
+class AppDatabase {
   static String dbFolder = "databases";
   static String dbName = "proton_wallet_db";
+  static String versionKey = "db_version";
+  // current version of the database
   int version = 11;
-  late Database db;
-  late MigrationContainer migrationContainer;
+  // future: if the database cached version < resetVersion. rebuild the cache with latest schema. we can clean up migrations.
+  int resetVersion = 1;
+  bool dbReset = false;
 
+  late Database db;
+
+  late MigrationContainer migrationContainer;
   late AccountDao accountDao;
   late WalletDao walletDao;
   late TransactionDao transactionDao;
@@ -38,62 +37,28 @@ class AppDatabase
   late BitcoinAddressDao bitcoinAddressDao;
   late TransactionInfoDao transactionInfoDao;
 
-  List<Migration> migrations = [
-    Migration(1, 2, (Database db) async {
-      WalletDatabase.migration_0.migrate(db);
-      AccountDatabase.migration_0.migrate(db);
-    }),
-    Migration(2, 3, (Database db) async {
-      TransactionDatabase.migration_0.migrate(db);
-    }),
-    Migration(3, 4, (Database db) async {
-      WalletDatabase.migration_1.migrate(db);
-    }),
-    Migration(4, 5, (Database db) async {
-      WalletDatabase.migration_2.migrate(db);
-    }),
-    Migration(5, 6, (Database db) async {
-      ContactsDatabase.migration_0.migrate(db);
-    }),
-    Migration(6, 7, (Database db) async {
-      AddressDatabase.migration_0.migrate(db);
-    }),
-    Migration(7, 8, (Database db) async {
-      TransactionDatabase.migration_1.migrate(db);
-    }),
-    Migration(8, 9, (Database db) async {
-      TransactionDatabase.migration_2.migrate(db);
-    }),
-    Migration(9, 10, (Database db) async {
-      TransactionInfoDatabase.migration_0.migrate(db);
-      BitcoinAddressDatabase.migration_0.migrate(db);
-    }),
-    Migration(10, 11, (Database db) async {
-      TransactionInfoDatabase.migration_1.migrate(db);
-    }),
-  ];
-
   AppDatabase() {
     migrationContainer = MigrationContainer();
-    migrationContainer.addMigrations(migrations);
   }
 
-  void reset() {
-    dropAllTables();
-    buildDatabase();
+  Future<void> reset() async {
+    await dropAllTables();
+    await buildDatabase();
   }
 
-  void dropAllTables() {
-    WalletDatabase.dropTables(db);
-    AccountDatabase.dropTables(db);
-    TransactionDatabase.dropTables(db);
-    ContactsDatabase.dropTables(db);
-    AddressDatabase.dropTables(db);
+  Future<void> dropAllTables() async {
+    await walletDao.dropTable();
+    await accountDao.dropTable();
+    await transactionDao.dropTable();
+    await contactsDao.dropTable();
+    await addressDao.dropTable();
+    await bitcoinAddressDao.dropTable();
+    await transactionInfoDao.dropTable();
   }
 
   void initDAO() {
-    accountDao = AccountDaoImpl(db);
     walletDao = WalletDaoImpl(db);
+    accountDao = AccountDaoImpl(db);
     transactionDao = TransactionDaoImpl(db);
     contactsDao = ContactsDaoImpl(db);
     addressDao = AddressDaoImpl(db);
@@ -101,8 +66,49 @@ class AppDatabase
     transactionInfoDao = TransactionInfoDaoImpl(db);
   }
 
+  void buildMigration() {
+    List<Migration> migrations = [
+      Migration(1, 2, () async {
+        await walletDao.migration_0();
+        await accountDao.migration_0();
+      }),
+      Migration(2, 3, () async {
+        await transactionDao.migration_0();
+      }),
+      Migration(3, 4, () async {
+        await walletDao.migration_1();
+      }),
+      Migration(4, 5, () async {
+        await walletDao.migration_2();
+      }),
+      Migration(5, 6, () async {
+        await contactsDao.migration_0();
+      }),
+      Migration(6, 7, () async {
+        await addressDao.migration_0();
+      }),
+      Migration(7, 8, () async {
+        await transactionDao.migration_1();
+      }),
+      Migration(8, 9, () async {
+        await transactionDao.migration_2();
+      }),
+      Migration(9, 10, () async {
+        await transactionInfoDao.migration_0();
+        await bitcoinAddressDao.migration_0();
+      }),
+      Migration(10, 11, () async {
+        await transactionInfoDao.migration_1();
+      }),
+      Migration(11, 12, () async {}),
+    ];
+
+    migrationContainer.addMigrations(migrations);
+  }
+
   Future<void> init(Database database) async {
     await initDatabase(database);
+    buildMigration();
     initDAO();
   }
 
@@ -152,7 +158,7 @@ class AppDatabase
         return;
       }
     } catch (e) {
-      // db is not initialed;
+      logger.e(e);
     }
     db = database;
   }
@@ -164,10 +170,32 @@ class AppDatabase
     logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");
     if (upgradeMigrations != null) {
       for (Migration migration in upgradeMigrations) {
-        migration.migrate(db);
+        await migration.migrate();
       }
     } else {
       logger.w("nothing to migrate");
     }
+
+    await checkAndUpdateVersion();
+  }
+
+  /// Mark future
+
+  // when db rebuild but table need to resync. this could be in eatch db table
+  bool needsResync() {
+    return dbReset;
+  }
+
+  // not inused for future use
+  Future<void> checkAndUpdateVersion() async {
+    // Get the current version from the database
+    int currentVersion =
+        (await db.rawQuery('PRAGMA user_version')).first.values.first as int;
+    if (currentVersion < version) {
+      // If current version is less than the required version
+      logger.i(
+          "Current version ($currentVersion) is less than required version ($version)");
+    }
+    await db.execute('PRAGMA user_version = $version');
   }
 }

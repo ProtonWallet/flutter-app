@@ -18,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
-  HistoryDetailView(HistoryDetailViewModel viewModel)
+  const HistoryDetailView(HistoryDetailViewModel viewModel)
       : super(viewModel, const Key("HistoryDetailView"));
 
   @override
@@ -205,8 +205,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               memo: viewModel.isSend
                                   ? Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
-                                          (viewModel.amount.toInt())
-                                              .abs())
+                                          (viewModel.amount.toInt()).abs())
                                   : Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
                                           viewModel.amount.toInt() +

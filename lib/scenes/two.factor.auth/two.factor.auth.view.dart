@@ -18,7 +18,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'two.factor.auth.viewmodel.dart';
 
 class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
-  TwoFactorAuthView(TwoFactorAuthViewModel viewModel)
+  const TwoFactorAuthView(TwoFactorAuthViewModel viewModel)
       : super(viewModel, const Key("TwoFactorAuthView"));
 
   @override
