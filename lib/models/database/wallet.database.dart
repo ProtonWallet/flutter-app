@@ -1,10 +1,13 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/database/base.database.dart';
-import 'package:wallet/models/database/database.migration.dart';
+import 'dart:async';
 
-abstract class WalletDatabase extends BaseDatabase {
-  static DatabaseMigration migration_0 = DatabaseMigration((Database db) async {
-    await db.execute('''
+import 'package:wallet/models/database/base.database.dart';
+
+class WalletDatabase extends BaseDatabase {
+  WalletDatabase(super.db, super.tableName);
+
+  @override
+  Future<void> migration_0() {
+    return createTable('''
         CREATE TABLE IF NOT EXISTS `wallet` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           userID INTEGER,
@@ -22,11 +25,11 @@ abstract class WalletDatabase extends BaseDatabase {
           serverWalletID TEXT
         )
     ''');
-  });
+  }
 
-  static DatabaseMigration migration_1 = DatabaseMigration((Database db) async {
+  Future<void> migration_1() {
     // Drop column `localDBName`
-    await db.execute('''
+    return createTable('''
         CREATE TABLE IF NOT EXISTS `tmp_wallet` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           userID INTEGER,
@@ -42,27 +45,19 @@ abstract class WalletDatabase extends BaseDatabase {
           modifyTime INTEGER,
           serverWalletID TEXT
         );
-        
-        INSERT INTO `tmp_wallet` 
+
+        INSERT INTO `tmp_wallet`
         SELECT id, userID, name, mnemonic, passphrase, publicKey, imported, priority, status, type, createTime, modifyTime, serverWalletID
         FROM `wallet`;
-        
+
         DROP TABLE wallet;
-        
+
         ALTER TABLE tmp_wallet RENAME TO wallet;
     ''');
-  });
+  }
 
-  static DatabaseMigration migration_2 = DatabaseMigration((Database db) async {
+  Future<void> migration_2() {
     // Add column `fingerprint`
-    await db.execute('''
-        ALTER TABLE wallet ADD COLUMN fingerprint TEXT NULL;
-    ''');
-  });
-
-  static void Function(Database db) dropTables = (Database db) {
-    db.execute('''
-      DROP TABLE IF EXISTS `wallet`
-    ''');
-  };
+    return addColumn("fingerprint", "TEXT NULL");
+  }
 }

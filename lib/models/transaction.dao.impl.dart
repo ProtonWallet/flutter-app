@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/base.dao.dart';
+import 'package:wallet/models/database/transaction.database.dart';
 import 'package:wallet/models/transaction.model.dart';
 
-abstract class TransactionDao extends BaseDao {
+abstract class TransactionDao extends TransactionDatabase implements BaseDao {
   TransactionDao(super.db, super.tableName);
 
   Future<void> insertOrUpdate(TransactionModel transactionModel);

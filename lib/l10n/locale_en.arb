@@ -110,7 +110,7 @@
   "backup_your_wallet": "Backup your wallet",
   "proton_wallet": "Proton Wallet",
   "copied_mnemonic": "Copied Mnemonic!",
-  "copied": "Copied",
+  "current_btc_price" : "Current BTC price",
   "placeholder": "Placeholder",
   "view_more": "View more",
   "cancel": "Cancel",

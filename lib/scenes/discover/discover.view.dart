@@ -8,7 +8,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 
 class DiscoverView extends ViewBase<DiscoverViewModel> {
-  DiscoverView(DiscoverViewModel viewModel)
+  const DiscoverView(DiscoverViewModel viewModel)
       : super(viewModel, const Key("DiscoverView"));
 
   @override

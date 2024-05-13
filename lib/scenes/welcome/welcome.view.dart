@@ -12,7 +12,7 @@ import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class WelcomeView extends ViewBase<WelcomeViewModel> {
-  WelcomeView(WelcomeViewModel viewModel)
+  const WelcomeView(WelcomeViewModel viewModel)
       : super(viewModel, const Key("WelcomeView"));
 
   @override

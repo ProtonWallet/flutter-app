@@ -8,9 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/custom.expansion.dart';
 import 'package:wallet/components/custom.loading.with.icon.dart';
-import 'package:wallet/components/custom.homepage.box.dart';
 import 'package:wallet/components/custom.todo.dart';
 import 'package:wallet/components/discover/discover.feeds.view.dart';
+import 'package:wallet/components/home/btc.actions.view.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/components/underline.dart';
@@ -42,7 +42,8 @@ import 'package:wallet/l10n/generated/locale.dart';
 const double drawerMaxWidth = 400;
 
 class HomeView extends ViewBase<HomeViewModel> {
-  HomeView(HomeViewModel viewModel) : super(viewModel, const Key("HomeView"));
+  const HomeView(HomeViewModel viewModel)
+      : super(viewModel, const Key("HomeView"));
 
   @override
   Widget buildWithViewModel(
@@ -185,54 +186,18 @@ class HomeView extends ViewBase<HomeViewModel> {
                     const SizedBox(
                       height: 20,
                     ),
-                    CustomHomePageBox(
-                        title: "Current BTC price",
-                        iconPath: "assets/images/icon/bitcoin.svg",
-                        width: MediaQuery.of(context).size.width -
-                            defaultPadding * 2,
+                    BtcTitleActionsView(
                         price: viewModel.btcPriceInfo.price,
                         priceChange: viewModel.btcPriceInfo.priceChange24h,
-                        children: [
-                          SizedBox(
-                              width: 80,
-                              child: GestureDetector(
-                                onTap: () {
-                                  move(context, viewModel, NavID.send);
-                                },
-                                child: Text(
-                                  S.of(context).send_button,
-                                  textAlign: TextAlign.center,
-                                  style: FontManager.body1Regular(
-                                      ProtonColors.textWeak),
-                                ),
-                              )),
-                          SizedBox(
-                              width: 80,
-                              child: GestureDetector(
-                                onTap: () {
-                                  move(context, viewModel, NavID.receive);
-                                },
-                                child: Text(
-                                  S.of(context).receive,
-                                  textAlign: TextAlign.center,
-                                  style: FontManager.body1Regular(
-                                      ProtonColors.textWeak),
-                                ),
-                              )),
-                          SizedBox(
-                              width: 80,
-                              child: GestureDetector(
-                                onTap: () {
-                                  viewModel.move(NavID.buy);
-                                },
-                                child: Text(
-                                  S.of(context).buy,
-                                  textAlign: TextAlign.center,
-                                  style: FontManager.body1Regular(
-                                      ProtonColors.textWeak),
-                                ),
-                              )),
-                        ]),
+                        onSend: () {
+                          viewModel.move(NavID.send);
+                        },
+                        onBuy: () {
+                          viewModel.move(NavID.buy);
+                        },
+                        onReceive: () {
+                          move(context, viewModel, NavID.receive);
+                        }),
                     const SizedBox(
                       height: 10,
                     ),
@@ -549,6 +514,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                         .protonWallet
                         .historyTransactionsAfterFilter
                         .isEmpty)
+                      //Discover feeds
                       DiscoverFeedsView(
                         onTap: (String link) {
                           launchUrl(Uri.parse(link));

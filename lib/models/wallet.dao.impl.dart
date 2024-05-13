@@ -1,8 +1,9 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/base.dao.dart';
+import 'package:wallet/models/database/base.dao.dart';
+import 'package:wallet/models/database/wallet.database.dart';
 import 'wallet.model.dart';
 
-abstract class WalletDao extends BaseDao {
+abstract class WalletDao extends WalletDatabase implements BaseDao {
   WalletDao(super.db, super.tableName);
 
   Future<int> counts();
@@ -21,7 +22,8 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName, orderBy: 'priority asc');
+    List<Map<String, dynamic>> maps =
+        await db.query(tableName, orderBy: 'priority asc');
     return List.generate(
         maps.length, (index) => WalletModel.fromMap(maps[index]));
   }
@@ -29,7 +31,7 @@ class WalletDaoImpl extends WalletDao {
   @override
   Future findById(int id) async {
     List<Map<String, dynamic>> maps =
-    await db.query(tableName, where: 'id = ?', whereArgs: [id]);
+        await db.query(tableName, where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return WalletModel.fromMap(maps.first);
     } else {
@@ -37,11 +39,10 @@ class WalletDaoImpl extends WalletDao {
     }
   }
 
-
   @override
   Future<WalletModel?> getWalletByServerWalletID(String serverWalletID) async {
-    List<Map<String, dynamic>> maps =
-    await db.query(tableName, where: 'serverWalletID = ?', whereArgs: [serverWalletID]);
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'serverWalletID = ?', whereArgs: [serverWalletID]);
     if (maps.isNotEmpty) {
       return WalletModel.fromMap(maps.first);
     } else {
@@ -51,8 +52,11 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<WalletModel?> getFirstPriorityWallet() async {
-    List<Map<String, dynamic>> maps =
-    await db.query(tableName, where: 'status = ?', whereArgs: [WalletModel.statusActive], orderBy: 'priority asc', limit: 1);
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'status = ?',
+        whereArgs: [WalletModel.statusActive],
+        orderBy: 'priority asc',
+        limit: 1);
     if (maps.isNotEmpty) {
       return WalletModel.fromMap(maps.first);
     } else {

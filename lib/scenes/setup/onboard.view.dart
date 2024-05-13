@@ -13,7 +13,7 @@ import 'package:wallet/scenes/setup/onboard.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SetupOnboardView extends ViewBase<SetupOnboardViewModel> {
-  SetupOnboardView(SetupOnboardViewModel viewModel)
+  const SetupOnboardView(SetupOnboardViewModel viewModel)
       : super(viewModel, const Key("SetupOnboardView"));
 
   @override

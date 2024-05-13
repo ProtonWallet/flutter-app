@@ -10,7 +10,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
-  WalletDeletionView(WalletDeletionViewModel viewModel)
+  const WalletDeletionView(WalletDeletionViewModel viewModel)
       : super(viewModel, const Key("WalletDeletionView"));
 
   @override
