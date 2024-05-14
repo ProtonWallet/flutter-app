@@ -7564,6 +7564,24 @@ class NativeLibrary {
   late final __FCmulcr =
       __FCmulcrPtr.asFunction<_Fcomplex Function(_Fcomplex, double)>();
 
+  ffi.Pointer<ffi.Char> encryptWithKeyRing(
+    ffi.Pointer<ffi.Char> userPublicKeysSepInComma,
+    ffi.Pointer<ffi.Char> message,
+  ) {
+    return _encryptWithKeyRing(
+      userPublicKeysSepInComma,
+      message,
+    );
+  }
+
+  late final _encryptWithKeyRingPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('encryptWithKeyRing');
+  late final _encryptWithKeyRing = _encryptWithKeyRingPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
   ffi.Pointer<ffi.Char> encrypt(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> message,

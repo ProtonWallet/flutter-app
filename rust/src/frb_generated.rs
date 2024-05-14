@@ -33,7 +33,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1524251228;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1233340014;
 
 // Section: executor
 
@@ -1050,6 +1050,43 @@ fn wire_fiat_currency_impl(
                 transform_result_sse((move || async move {
                          crate::api::proton_api::fiat_currency(api_symbol).await
                     })().await)
+            }
+        },
+    )
+}
+fn wire_get_all_public_keys_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_all_public_keys",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_email = <String>::sse_decode(&mut deserializer);
+            let api_internal_only = <u8>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        crate::api::proton_api::get_all_public_keys(api_email, api_internal_only)
+                            .await
+                    })()
+                    .await,
+                )
             }
         },
     )
@@ -4316,6 +4353,20 @@ impl SseDecode for crate::bdk::types::AddressInfo {
     }
 }
 
+impl SseDecode for crate::proton_api::proton_address::AllKeyAddressKey {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_flags = <u32>::sse_decode(deserializer);
+        let mut var_publicKey = <String>::sse_decode(deserializer);
+        let mut var_source = <u32>::sse_decode(deserializer);
+        return crate::proton_api::proton_address::AllKeyAddressKey {
+            flags: var_flags,
+            public_key: var_publicKey,
+            source: var_source,
+        };
+    }
+}
+
 impl SseDecode for crate::api::rust_api::Api {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4891,6 +4942,20 @@ impl SseDecode for Vec<String> {
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
             ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::proton_address::AllKeyAddressKey> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::proton_api::proton_address::AllKeyAddressKey>::sse_decode(deserializer),
+            );
         }
         return ans_;
     }
@@ -6230,6 +6295,7 @@ fn pde_ffi_dispatcher_primary_impl(
         28 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
         49 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
         31 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        51 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
         45 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
         37 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
         34 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
@@ -6251,73 +6317,73 @@ fn pde_ffi_dispatcher_primary_impl(
         27 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
         23 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
         48 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-        97 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
-        55 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        73 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
-        96 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
-        93 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        77 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        95 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        51 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-        56 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
-        100 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
-        84 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
-        94 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
-        92 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
-        91 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
-        54 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
-        89 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        70 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
-        115 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
-        114 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-        113 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-        101 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
-        105 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        53 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
-        112 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
-        52 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
-        103 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
-        111 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
-        107 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        66 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
-        61 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
-        62 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
-        63 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
-        102 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
-        74 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
-        110 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
-        106 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
-        86 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
-        78 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        79 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
-        80 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        83 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
-        67 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
-        72 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
-        71 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-        69 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
-        68 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
-        108 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
-        59 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
-        104 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        57 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
-        64 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
-        60 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
-        109 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
-        58 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
-        116 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
-        117 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
+        98 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+        100 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
+        56 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
+        77 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        74 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
+        97 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        78 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        96 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        52 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
+        101 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        91 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
+        95 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
+        93 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
+        92 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
+        89 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
+        55 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
+        90 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        71 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
+        116 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
+        115 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+        114 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+        102 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        54 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
+        113 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
+        53 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
+        112 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        67 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
+        62 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
+        63 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
+        64 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
+        75 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
+        111 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
+        66 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
+        87 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
+        79 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
+        81 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
+        68 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
+        73 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
+        72 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+        70 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
+        69 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
+        109 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
+        105 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
+        76 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
+        65 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
+        61 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
+        110 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
+        117 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
+        118 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6413,6 +6479,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::AddressInfo>
     for crate::bdk::types::AddressInfo
 {
     fn into_into_dart(self) -> crate::bdk::types::AddressInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::proton_address::AllKeyAddressKey {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.flags.into_into_dart().into_dart(),
+            self.public_key.into_into_dart().into_dart(),
+            self.source.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::proton_address::AllKeyAddressKey
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::proton_address::AllKeyAddressKey>
+    for crate::proton_api::proton_address::AllKeyAddressKey
+{
+    fn into_into_dart(self) -> crate::proton_api::proton_address::AllKeyAddressKey {
         self
     }
 }
@@ -7837,6 +7925,15 @@ impl SseEncode for crate::bdk::types::AddressInfo {
     }
 }
 
+impl SseEncode for crate::proton_api::proton_address::AllKeyAddressKey {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u32>::sse_encode(self.flags, serializer);
+        <String>::sse_encode(self.public_key, serializer);
+        <u32>::sse_encode(self.source, serializer);
+    }
+}
+
 impl SseEncode for crate::api::rust_api::Api {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
@@ -8349,6 +8446,16 @@ impl SseEncode for Vec<String> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::proton_address::AllKeyAddressKey> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::proton_address::AllKeyAddressKey>::sse_encode(item, serializer);
         }
     }
 }

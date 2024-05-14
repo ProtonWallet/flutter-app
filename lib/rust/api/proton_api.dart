@@ -286,3 +286,8 @@ Future<String> broadcastRawTransaction(
         subject: subject,
         body: body,
         hint: hint);
+
+Future<List<AllKeyAddressKey>> getAllPublicKeys(
+        {required String email, required int internalOnly, dynamic hint}) =>
+    RustLib.instance.api
+        .getAllPublicKeys(email: email, internalOnly: internalOnly, hint: hint);

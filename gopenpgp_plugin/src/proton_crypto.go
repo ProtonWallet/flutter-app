@@ -12,11 +12,47 @@ import "C"
 import (
 	"unsafe"
 	"fmt"
+    "strings"
     "github.com/ProtonMail/gopenpgp/v2/crypto"
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 	armor_helper "github.com/ProtonMail/gopenpgp/v2/armor"
 	"github.com/pkg/errors"
 )
+
+type KeyArray []*crypto.Key
+
+//export encryptWithKeyRing
+func encryptWithKeyRing(userPublicKeysSepInComma *C.char, message *C.char) *C.char {
+    keyString := C.GoString(userPublicKeysSepInComma)
+    arr := strings.Split(keyString, ",")
+	keys := make(KeyArray, len(arr))
+	for i, keyStr := range arr {
+		key, err := crypto.NewKeyFromArmored(keyStr)
+		if err != nil {
+			fmt.Println("Error parsing key:", err)
+			return nil
+		}
+		keys[i] = key
+	}
+    keyRing, err := keys.ToKeyRing()
+    if err != nil {
+		fmt.Println("ToKeyRing error:", err)
+		return nil
+	}
+
+    pgpMessage, err  := keyRing.Encrypt(crypto.NewPlainMessageFromString(C.GoString(message)), nil)
+    if err != nil {
+		fmt.Println("Encryption error:", err)
+		return nil
+	}
+
+    armor, err := pgpMessage.GetArmored()
+    if err != nil {
+		fmt.Println("GetArmored error:", err)
+		return nil
+	}
+    return C.CString(armor)
+}
 
 //export encrypt
 func encrypt(userPrivateKey *C.char, message *C.char) *C.char {
@@ -110,3 +146,13 @@ func GoBytes2CBytes(bytes []byte) *C.char {
 }
 
 func main() {}
+
+func (keyArray KeyArray) ToKeyRing() (*crypto.KeyRing, error) {
+	kr, _ := crypto.NewKeyRing(nil) // create empty KeyRing
+	for _, key := range keyArray {
+		if err := kr.AddKey(key); err != nil {
+			return nil, err
+		}
+	}
+	return kr, nil
+}
