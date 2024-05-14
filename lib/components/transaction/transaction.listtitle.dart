@@ -144,9 +144,10 @@ class TransactionListTitle extends StatelessWidget {
                                 padding: const EdgeInsets.all(2.0),
                                 child: Icon(Icons.edit_outlined,
                                     size: 10, color: ProtonColors.textHint)),
+                            SizedBox(width: MediaQuery.of(context).size.width - 150, child:
                             Text(S.of(context).trans_body(body ?? ""),
                                 style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
+                                    ProtonColors.textHint), overflow: TextOverflow.ellipsis,))
                           ]),
                   ],
                 )),
