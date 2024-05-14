@@ -84,6 +84,7 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
+extern __declspec(dllexport) char* encryptWithKeyRing(char* userPublicKeysSepInComma, char* message);
 extern __declspec(dllexport) char* encrypt(char* userPrivateKey, char* message);
 extern __declspec(dllexport) char* decrypt(char* userPrivateKey, char* passphrase, char* armor);
 extern __declspec(dllexport) struct BinaryResult encryptBinary(char* userPrivateKey, char* binaryMessage, int length);

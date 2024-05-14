@@ -11,6 +11,12 @@ String encrypt(String userPrivateKey, String message) {
       .toDartString();
 }
 
+String encryptWithKeyRing(String userPublicKeysSepInComma, String message) {
+  return (_bindings.encryptWithKeyRing(userPublicKeysSepInComma.toNativeUtf8() as Pointer<Char>,
+      message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
+      .toDartString();
+}
+
 String decrypt(String userPrivateKey, String passphrase, String armor) {
   return (_bindings.decrypt(
           userPrivateKey.toNativeUtf8() as Pointer<Char>,

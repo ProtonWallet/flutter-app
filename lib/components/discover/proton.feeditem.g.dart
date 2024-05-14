@@ -14,7 +14,7 @@ ProtonFeedItem _$ProtonFeedItemFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       category: json['category'] as String,
       author: json['author'] as String,
-      coverImage: json['coverImage'] as String,
+      coverImage: json['coverImage'] as String? ?? "",
     );
 
 Map<String, dynamic> _$ProtonFeedItemToJson(ProtonFeedItem instance) =>

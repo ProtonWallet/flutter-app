@@ -73,6 +73,9 @@ class ProtonWallet {
   Future<void> syncWallet(Wallet? wallet, AccountModel? accountModel) async {
     wallet ??= await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
+    if (hasPassphrase(currentWallet!) == false) {
+      return;
+    }
     try {
       if (accountModel != null) {
         if ((isWalletSyncing[accountModel.serverAccountID] ?? false) == false) {
@@ -407,9 +410,11 @@ class ProtonWallet {
             : "";
         String toList = "";
         String sender = "";
+        String body = "";
         if (transactionModel != null) {
           String encryptedToList = transactionModel.tolist ?? "";
           String encryptedSender = transactionModel.sender ?? "";
+          String encryptedBody = transactionModel.body ?? "";
           for (AddressKey addressKey in addressKeys) {
             try {
               if (encryptedToList.isNotEmpty) {
@@ -421,6 +426,13 @@ class ProtonWallet {
             try {
               if (encryptedSender.isNotEmpty) {
                 sender = addressKey.decrypt(encryptedSender);
+              }
+            } catch (e) {
+              // logger.e(e.toString());
+            }
+            try {
+              if (encryptedBody.isNotEmpty) {
+                body = addressKey.decrypt(encryptedBody);
               }
             } catch (e) {
               // logger.e(e.toString());
@@ -466,6 +478,7 @@ class ProtonWallet {
           label: userLabel,
           inProgress: transactionDetail.confirmationTime == null,
           accountModel: accountModel,
+          body: body.isNotEmpty ? body : null,
         );
         updateBitcoinAddressUsed(
             txID); // update local bitcoin address to set used, TODO:: fix performance here
@@ -488,8 +501,10 @@ class ProtonWallet {
         }
         String toList = "";
         String sender = "";
+        String body = "";
         String encryptedToList = transactionModel.tolist ?? "";
         String encryptedSender = transactionModel.sender ?? "";
+        String encryptedBody = transactionModel.body ?? "";
         for (AddressKey addressKey in addressKeys) {
           try {
             if (encryptedToList.isNotEmpty) {
@@ -501,6 +516,13 @@ class ProtonWallet {
           try {
             if (encryptedSender.isNotEmpty) {
               sender = addressKey.decrypt(encryptedSender);
+            }
+          } catch (e) {
+            // logger.e(e.toString());
+          }
+          try {
+            if (encryptedBody.isNotEmpty) {
+              body = addressKey.decrypt(encryptedBody);
             }
           } catch (e) {
             // logger.e(e.toString());
@@ -556,6 +578,7 @@ class ProtonWallet {
             label: userLabel,
             inProgress: true,
             accountModel: accountModel,
+            body: body.isNotEmpty ? body : null,
           );
         } else {
           // get transaction info from blockstream or esplora, for recipients
@@ -598,6 +621,7 @@ class ProtonWallet {
                   label: userLabel,
                   inProgress: true,
                   accountModel: accountModel,
+                  body: body.isNotEmpty ? body : null,
                 );
               } else {
                 // logger.i("Cannot find this tx, $txID");

@@ -148,6 +148,16 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               },
                             ),
                           ),
+                    if (viewModel.body.isNotEmpty)
+                      Column(children: [
+                        TransactionHistoryItem(
+                            title: S.of(context).trans_message,
+                            content: viewModel.body),
+                        const Divider(
+                          thickness: 0.2,
+                          height: 1,
+                        ),
+                      ]),
                     viewModel.isSend
                         ? buildSendInfo(context, viewModel, viewSize)
                         : buildReceiveInfo(context, viewModel, viewSize),
@@ -257,7 +267,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             : Column(children: [
                 for (TransactionInfoModel info in viewModel.recipients)
                   buildTransToInfo(context, viewModel, viewSize, info.toEmail,
-                      info.toBitcoinAddress)
+                      info.toBitcoinAddress,
+                      amountInSATS: info.amountInSATS)
               ])
       ],
     );
@@ -268,7 +279,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       HistoryDetailViewModel viewModel,
       ViewSize viewSize,
       String content,
-      String? memo) {
+      String? memo,
+      {int? amountInSATS}) {
     return Column(children: [
       const Divider(
         thickness: 0.2,
@@ -279,6 +291,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         content: content,
         copyContent: true,
         memo: memo,
+        amountInSATS: amountInSATS,
       )
     ]);
   }

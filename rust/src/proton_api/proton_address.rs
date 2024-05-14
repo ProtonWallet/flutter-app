@@ -1,4 +1,23 @@
-use andromeda_api::proton_email_address::{ApiProtonAddress, ApiProtonAddressKey};
+use andromeda_api::proton_email_address::{
+    ApiAllKeyAddressKey, ApiProtonAddress, ApiProtonAddressKey,
+};
+
+#[derive(Debug)]
+pub struct AllKeyAddressKey {
+    pub flags: u32,
+    pub public_key: String,
+    pub source: u32,
+}
+
+impl From<ApiAllKeyAddressKey> for AllKeyAddressKey {
+    fn from(all_key_address_key: ApiAllKeyAddressKey) -> Self {
+        AllKeyAddressKey {
+            flags: all_key_address_key.Flags,
+            public_key: all_key_address_key.PublicKey,
+            source: all_key_address_key.Source,
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct ProtonAddress {

@@ -18,7 +18,7 @@ use crate::{
         errors::ApiError,
         event_routes::ProtonEvent,
         exchange_rate::ProtonExchangeRate,
-        proton_address::ProtonAddress,
+        proton_address::{AllKeyAddressKey, ProtonAddress},
         user_settings::ApiUserSettings,
         wallet::{
             BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
@@ -561,6 +561,21 @@ pub async fn broadcast_raw_transaction(
         .await;
     match result {
         Ok(response) => Ok(response),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub async fn get_all_public_keys(
+    email: String,
+    internal_only: u8,
+) -> Result<Vec<AllKeyAddressKey>, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .proton_email_address
+        .get_all_public_keys(email, Some(internal_only))
+        .await;
+    match result {
+        Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
         Err(err) => Err(err.into()),
     }
 }

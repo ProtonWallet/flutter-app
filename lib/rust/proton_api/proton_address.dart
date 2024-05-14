@@ -6,6 +6,30 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class AllKeyAddressKey {
+  final int flags;
+  final String publicKey;
+  final int source;
+
+  const AllKeyAddressKey({
+    required this.flags,
+    required this.publicKey,
+    required this.source,
+  });
+
+  @override
+  int get hashCode => flags.hashCode ^ publicKey.hashCode ^ source.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AllKeyAddressKey &&
+          runtimeType == other.runtimeType &&
+          flags == other.flags &&
+          publicKey == other.publicKey &&
+          source == other.source;
+}
+
 class ProtonAddress {
   final String id;
   final String domainId;

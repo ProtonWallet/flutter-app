@@ -4,6 +4,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -48,6 +49,9 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController amountTextController;
   Map<String, String> bitcoinAddresses = {};
   late UserSettingProvider userSettingProvider;
+
+  Map<String, AddressPublicKey> email2AddressKey = {};
+  List<AddressPublicKey> addressPublicKeys = [];
 
   List<String> recipents = [];
   List<ProtonAddress> protonAddresses = [];
@@ -257,6 +261,16 @@ class SendViewModelImpl extends SendViewModel {
     try {
       await loadBitcoinAddresses();
       if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
+        if (recipent.contains("@")){
+          List<AllKeyAddressKey> recipientAddressKeys = await proton_api.getAllPublicKeys(email: recipent, internalOnly: 0);
+          if (recipientAddressKeys.isNotEmpty){
+            for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
+              // TODO:: use default key
+              email2AddressKey[recipent] = AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
+              break;
+            }
+          }
+        }
         validRecipientCount++;
       }
     } catch (e) {
@@ -341,6 +355,18 @@ class SendViewModelImpl extends SendViewModel {
       String? emailAddressID;
       if (protonAddresses.isNotEmpty) {
         emailAddressID = protonAddresses.first.id;
+        try{
+          List<AllKeyAddressKey> recipientAddressKeys = await proton_api.getAllPublicKeys(email: protonAddresses.first.email, internalOnly: 0);
+          if (recipientAddressKeys.isNotEmpty){
+            for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
+              // TODO:: use default key
+              addressPublicKeys.add(AddressPublicKey(publicKey: allKeyAddressKey.publicKey));
+              break;
+            }
+          }
+        } catch (e){
+          logger.e(e.toString());
+        }
       }
       String? encryptedLabel;
       SecretKey? secretKey =
@@ -349,6 +375,16 @@ class SendViewModelImpl extends SendViewModel {
         encryptedLabel =
             await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
       }
+
+      String? encryptedMessage;
+      for (String email in recipents) {
+        if (email2AddressKey.containsKey(email)){
+          addressPublicKeys.add(email2AddressKey[email]!);
+        }
+      }
+
+      encryptedMessage = AddressPublicKey.encryptWithKeys(addressPublicKeys, emailBodyController.text);
+
       txid = await _lib.sendBitcoinWithAPI(
           _blockchain!,
           _wallet,
@@ -358,7 +394,7 @@ class SendViewModelImpl extends SendViewModel {
           emailAddressID: emailAddressID,
           exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id,
           encryptedLabel: encryptedLabel,
-          encryptedMessage: null);
+          encryptedMessage: encryptedMessage);
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
