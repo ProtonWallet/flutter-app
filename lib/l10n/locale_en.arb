@@ -22,6 +22,7 @@
   "import_existing_wallet": "Import an existing wallet",
   "no_data": "No data",
   "trans_note": "Note: {note}",
+  "trans_body": "Message from sender: {message}",
   "@trans_note": {
     "description": "notes user set on a transaction",
     "placeholders": {
@@ -41,6 +42,7 @@
   "trans_edit_note": "Edit note",
   "trans_submitted": "Submitted",
   "trans_status": "Status",
+  "trans_message": "Message from sender",
   "trans_date": "Date",
   "trans_completed": "Completed",
   "trans_metworkFee": "Network fee",

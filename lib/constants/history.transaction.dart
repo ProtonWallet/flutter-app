@@ -12,6 +12,7 @@ class HistoryTransaction {
   final String sender;
   final String toList;
   final bool inProgress;
+  final String? body;
   final AccountModel accountModel;
 
   HistoryTransaction(
@@ -25,5 +26,6 @@ class HistoryTransaction {
       required this.sender,
       required this.toList,
       this.inProgress = false,
+      this.body,
       required this.accountModel});
 }

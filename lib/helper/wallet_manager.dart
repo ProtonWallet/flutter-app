@@ -710,9 +710,9 @@ class WalletManager {
       refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
 
       // user proton.wallet.test@proton.me
-      uid = 'ujqddudewwoc4onvdfqxcj4xgf3evvtt';
-      accessToken = 'uoyzftbck3yp4u3ubznn5ikwfq75yjla';
-      refreshToken = 'fo6drtjavos5z7dl46ahgrelox7b7cor';
+      uid = 'iklqr3i5ym3wgap6gfbvbir5tgu5toel';
+      accessToken = 'kwnuga2mlik5e3om7wwr3vek56rgsphc';
+      refreshToken = '5kkgx5j6cbledsd4wqcgpyivkktnwnus';
 
       // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
@@ -983,8 +983,8 @@ class WalletManager {
     if (walletBitcoinAddresses.isEmpty) {
       int localUnusedPoolCount = await DBHelper.bitcoinAddressDao!
           .getUnusedPoolCount(walletModel?.id ?? 0, accountModel?.id ?? 0);
-      addingCount = min(addingCount,
-          defaultBitcoinAddressCountForOneEmail - localUnusedPoolCount);
+      // addingCount = min(addingCount,
+      //     defaultBitcoinAddressCountForOneEmail - localUnusedPoolCount);
       logger.i(
           "update with local pool count\nwalletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount");
     }
@@ -1059,29 +1059,45 @@ class WalletManager {
   static Future<TransactionDetailFromBlockChain?>
       getTransactionDetailsFromBlockStream(String txid) async {
     String baseUrl = "${appConfig.esploraBaseUrl}api";
-    final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      TransactionDetailFromBlockChain transactionDetailFromBlockChain =
-          TransactionDetailFromBlockChain(
-              txid: txid,
-              feeInSATS: data['fee'],
-              block_height: data['status']['block_height'] ?? 0,
-              timestamp: data['status']['block_time'] ?? 0);
-      List<dynamic> recipientMapList = data['vout']
-          .map((output) => {
-                'address': output['scriptpubkey_address'],
-                'value': output['value']
-              })
-          .toList();
-      for (var recipientMap in recipientMapList) {
-        transactionDetailFromBlockChain.addRecipient(Recipient(
-            bitcoinAddress: recipientMap["address"],
-            amountInSATS: recipientMap["value"]));
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        TransactionDetailFromBlockChain transactionDetailFromBlockChain =
+        TransactionDetailFromBlockChain(
+            txid: txid,
+            feeInSATS: data['fee'],
+            block_height: data['status']['block_height'] ?? 0,
+            timestamp: data['status']['block_time'] ?? 0);
+        List<dynamic> recipientMapList = data['vout']
+            .map((output) =>
+        {
+          'address': output['scriptpubkey_address'],
+          'value': output['value']
+        })
+            .toList();
+        for (var recipientMap in recipientMapList) {
+          transactionDetailFromBlockChain.addRecipient(Recipient(
+              bitcoinAddress: recipientMap["address"],
+              amountInSATS: recipientMap["value"]));
+        }
+        return transactionDetailFromBlockChain;
       }
-      return transactionDetailFromBlockChain;
+    } catch(e){
+      logger.e(e.toString());
     }
     return null;
+  }
+
+  static Future<bool> isMineBitcoinAddress(Wallet wallet, String bitcoinAddress, {int maxIter = 1000}) async{
+    // TODO:: use bdk to check bitcoin address is mine
+    for (int addressIndex = 0; addressIndex< maxIter;addressIndex++){
+      var addressInfo = await _lib.getAddress(wallet, addressIndex: addressIndex);
+      if (addressInfo.address == bitcoinAddress){
+        return true;
+      }
+    }
+    return false;
   }
 
   static Future<void> addBitcoinAddress(
