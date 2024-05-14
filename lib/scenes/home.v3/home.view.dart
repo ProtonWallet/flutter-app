@@ -416,9 +416,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   .amountInSATS
                                   .toDouble(),
                               note: Provider.of<ProtonWalletProvider>(context)
-                                      .protonWallet
-                                      .historyTransactionsAfterFilter[index]
-                                      .label ??
+                                  .protonWallet
+                                  .historyTransactionsAfterFilter[index]
+                                  .label ??
+                                  "",
+                              body: Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .historyTransactionsAfterFilter[index]
+                                  .body ??
                                   "",
                               onTap: () {
                                 viewModel.selectedTXID =

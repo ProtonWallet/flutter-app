@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -14,6 +17,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final VoidCallback? titleOptionsCallback; // display at far right of title
   final Color? contentColor;
   final bool copyContent;
+  final int? amountInSATS;
 
   const TransactionHistoryItem({
     super.key,
@@ -24,6 +28,7 @@ class TransactionHistoryItem extends StatelessWidget {
     this.titleCallback,
     this.contentColor,
     this.copyContent = false,
+    this.amountInSATS,
   });
 
   @override
@@ -64,7 +69,7 @@ class TransactionHistoryItem extends StatelessWidget {
           Row(children: [
             SizedBox(
                 width: MediaQuery.of(context).size.width - 110,
-                child: Text(content,
+                child: Text(content.isNotEmpty ? content : memo ?? "",
                     style: FontManager.body2Median(contentColor != null
                         ? contentColor!
                         : ProtonColors.textNorm),
@@ -75,14 +80,19 @@ class TransactionHistoryItem extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO:: fix me
-                  String bitcoinAddress = content;
-                  if (bitcoinAddress.contains("@")) {
+                  String bitcoinAddress = "";
+                  if (CommonHelper.isBitcoinAddress(content)) {
+                    bitcoinAddress = content;
+                  } else if (CommonHelper.isBitcoinAddress(memo ?? "")) {
                     bitcoinAddress = memo ?? "";
                   }
                   if (bitcoinAddress.isNotEmpty) {
                     Clipboard.setData(ClipboardData(text: bitcoinAddress))
                         .then((_) {
-                      LocalToast.showToast(context, S.of(context).copied_address);
+                      if (context.mounted) {
+                        LocalToast.showToast(
+                            context, S.of(context).copied_address);
+                      }
                     });
                   }
                 },
@@ -93,8 +103,20 @@ class TransactionHistoryItem extends StatelessWidget {
                         : ProtonColors.textHint),
               )
           ]),
-          if (memo != null)
-            Text(memo!, style: FontManager.body2Regular(ProtonColors.textHint))
+          if (memo != null && content.isNotEmpty)
+            Text(memo!, style: FontManager.body2Regular(ProtonColors.textHint)),
+          if (amountInSATS != null)
+            Row(
+              children: [
+                Text(
+                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amountInSATS!).abs().toStringAsFixed(defaultDisplayDigits)}",
+                    style: FontManager.body2Regular(ProtonColors.textHint)),
+                const SizedBox(width: 5),
+                Text(
+                    "(${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amountInSATS!)})",
+                    style: FontManager.body2Regular(ProtonColors.textHint)),
+              ],
+            )
         ],
       ),
     );

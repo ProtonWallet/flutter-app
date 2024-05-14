@@ -18,6 +18,7 @@ class TransactionListTitle extends StatelessWidget {
   final int? timestamp;
   final VoidCallback? onTap;
   final String note;
+  final String? body;
 
   const TransactionListTitle({
     super.key,
@@ -28,6 +29,7 @@ class TransactionListTitle extends StatelessWidget {
     this.timestamp,
     this.note = "",
     this.onTap,
+    this.body,
   });
 
   String parsetime(int timestemp) {
@@ -40,7 +42,8 @@ class TransactionListTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double notional = Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amount.toInt());
+    double notional = Provider.of<UserSettingProvider>(context)
+        .getNotionalInFiatCurrency(amount.toInt());
     return GestureDetector(
         onTap: onTap,
         child: Container(
@@ -77,10 +80,13 @@ class TransactionListTitle extends StatelessWidget {
                               style: FontManager.captionRegular(
                                   ProtonColors.textNorm)),
                           isSend
-                              ? Text(Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt()),
+                              ? Text(
+                                  Provider.of<UserSettingProvider>(context)
+                                      .getBitcoinUnitLabel(amount.toInt()),
                                   style: FontManager.captionRegular(
                                       ProtonColors.signalError))
-                              : Text("+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
+                              : Text(
+                                  "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
                                   style: FontManager.captionRegular(
                                       ProtonColors.signalSuccess)),
                         ]),
@@ -122,6 +128,23 @@ class TransactionListTitle extends StatelessWidget {
                                 child: Icon(Icons.edit_outlined,
                                     size: 10, color: ProtonColors.textHint)),
                             Text(S.of(context).trans_note(note),
+                                style: FontManager.captionRegular(
+                                    ProtonColors.textHint))
+                          ]),
+                    if ((body ?? "").isNotEmpty)
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ProtonColors.wMajor1,
+                                ),
+                                margin: const EdgeInsets.only(right: 4, top: 2),
+                                padding: const EdgeInsets.all(2.0),
+                                child: Icon(Icons.edit_outlined,
+                                    size: 10, color: ProtonColors.textHint)),
+                            Text(S.of(context).trans_body(body ?? ""),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                           ]),

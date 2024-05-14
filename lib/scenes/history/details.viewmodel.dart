@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -59,11 +60,13 @@ abstract class HistoryDetailViewModel
   late TransactionModel? transactionModel;
   String fromEmail = "";
   String toEmail = "";
+  String body = "";
   Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
   int lastExchangeRateTime = 0;
   FiatCurrency userFiatCurrency;
   late UserSettingProvider userSettingProvider;
   String errorMessage = "";
+  bool isRecipientsFromBlockChain = false;
 
   void editMemo();
 }
@@ -135,13 +138,29 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                   await WalletManager.getTransactionDetailsFromBlockStream(
                       txid);
               if (transactionDetailFromBlockChain != null) {
+                isRecipientsFromBlockChain = true;
+                bool hasFindMineBitcoinAddress = false;
                 for (Recipient recipient
                     in transactionDetailFromBlockChain.recipients) {
-                  if (recipient.amountInSATS.abs() ==
-                      amount.abs() - fee.abs()) {
-                    addresses.add(recipient.bitcoinAddress);
-                    break;
+                  if (hasFindMineBitcoinAddress == false) {
+                    if (await WalletManager.isMineBitcoinAddress(
+                        _wallet, recipient.bitcoinAddress)) {
+                      hasFindMineBitcoinAddress = true;
+                      continue;
+                    }
                   }
+                  recipients.add(TransactionInfoModel(
+                      id: null,
+                      externalTransactionID: Uint8List(0),
+                      amountInSATS: recipient.amountInSATS.abs(),
+                      feeInSATS: fee.abs().toInt(),
+                      isSend: 1,
+                      transactionTime: 0,
+                      feeMode: 0,
+                      serverWalletID: walletModel.serverWalletID,
+                      serverAccountID: accountModel.serverAccountID,
+                      toEmail: "",
+                      toBitcoinAddress: recipient.bitcoinAddress));
                 }
               }
             }
@@ -207,17 +226,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       for (AddressKey addressKey in addressKeys) {
         try {
-          toEmail = addressKey.decrypt(transactionModel!.tolist ?? "");
-          fromEmail = addressKey.decrypt(transactionModel!.sender ?? "");
-          if (toEmail.isNotEmpty) {
-            break;
-          }
+          toEmail = toEmail.isNotEmpty ? toEmail: addressKey.decrypt(transactionModel!.tolist ?? "");
+          fromEmail = fromEmail.isNotEmpty ? fromEmail: addressKey.decrypt(transactionModel!.sender ?? "");
+          body = body.isNotEmpty ? body: addressKey.decrypt(transactionModel!.body ?? "");
         } catch (e) {
           logger.e(e.toString());
         }
         try {
-          toEmail = addressKey.decryptBinary(transactionModel!.tolist ?? "");
-          fromEmail = addressKey.decryptBinary(transactionModel!.sender ?? "");
+          toEmail = toEmail.isNotEmpty ? toEmail: addressKey.decryptBinary(transactionModel!.tolist ?? "");
+          fromEmail = fromEmail.isNotEmpty ? fromEmail: addressKey.decryptBinary(transactionModel!.sender ?? "");
           if (toEmail.isNotEmpty) {
             break;
           }
@@ -269,6 +286,41 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           logger.e(e.toString());
         }
       }
+
+      if (recipients.isNotEmpty && isRecipientsFromBlockChain) {
+        // TODO:: clean logic here and make sure toEmail structure in backend,
+        // It can be [{}, {}], or {"key": "value", "key2": "value2"}...
+        try {
+          var jsonList = jsonDecode(toEmail) as Map<String, dynamic>;
+          for (String bitcoinAddress in jsonList.keys) {
+            String email = jsonList[bitcoinAddress];
+            for (TransactionInfoModel recipient in recipients) {
+              if (recipient.toBitcoinAddress == bitcoinAddress) {
+                recipient.toEmail = email;
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          logger.e(e.toString());
+          try {
+            var jsonList = jsonDecode(toEmail) as List<dynamic>;
+            for (dynamic map in jsonList) {
+              String bitcoinAddress = map.keys.first;
+              String email = map.values.first;
+              for (TransactionInfoModel recipient in recipients) {
+                if (recipient.toBitcoinAddress == bitcoinAddress) {
+                  recipient.toEmail = email;
+                  break;
+                }
+              }
+            }
+          } catch (e) {
+            logger.e(e.toString());
+          }
+        }
+      }
+
       datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
       errorMessage = e.toString();

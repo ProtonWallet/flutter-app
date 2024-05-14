@@ -97,6 +97,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AddressInfo dco_decode_address_info(dynamic raw);
 
   @protected
+  AllKeyAddressKey dco_decode_all_key_address_key(dynamic raw);
+
+  @protected
   Api dco_decode_api(dynamic raw);
 
   @protected
@@ -255,6 +258,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<AllKeyAddressKey> dco_decode_list_all_key_address_key(dynamic raw);
 
   @protected
   List<BitcoinAddress> dco_decode_list_bitcoin_address(dynamic raw);
@@ -594,6 +600,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AddressInfo sse_decode_address_info(SseDeserializer deserializer);
 
   @protected
+  AllKeyAddressKey sse_decode_all_key_address_key(SseDeserializer deserializer);
+
+  @protected
   Api sse_decode_api(SseDeserializer deserializer);
 
   @protected
@@ -770,6 +779,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<AllKeyAddressKey> sse_decode_list_all_key_address_key(
+      SseDeserializer deserializer);
 
   @protected
   List<BitcoinAddress> sse_decode_list_bitcoin_address(
@@ -1152,6 +1165,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_address_info(AddressInfo self, SseSerializer serializer);
 
   @protected
+  void sse_encode_all_key_address_key(
+      AllKeyAddressKey self, SseSerializer serializer);
+
+  @protected
   void sse_encode_api(Api self, SseSerializer serializer);
 
   @protected
@@ -1337,6 +1354,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_all_key_address_key(
+      List<AllKeyAddressKey> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_bitcoin_address(
