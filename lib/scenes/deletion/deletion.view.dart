@@ -90,12 +90,7 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                   await viewModel.deleteWallet();
                   viewModel.coordinator.end();
                   if (context.mounted) {
-                    Navigator.of(context).popUntil((route) {
-                      if (route.settings.name == null) {
-                        return false;
-                      }
-                      return route.settings.name == "[<'HomeNavigationView'>]";
-                    });
+                    Navigator.of(context).pop();
                   }
                 },
                 text: S.of(context).delete_this_wallet,

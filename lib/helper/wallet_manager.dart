@@ -110,17 +110,23 @@ class WalletManager {
       AccountModel accountModel, EmailAddress address) async {
     WalletModel walletModel =
         await DBHelper.walletDao!.findById(accountModel.walletID);
-    AddressModel? addressModelExisted =
+    AddressModel? addressModel =
         await DBHelper.addressDao!.findByServerID(address.id);
-    AddressModel addressModel = AddressModel(
-      id: null,
-      email: address.email,
-      serverID: address.id,
-      serverWalletID: walletModel.serverWalletID,
-      serverAccountID: accountModel.serverAccountID,
-    );
-    if (addressModelExisted == null) {
+    if (addressModel == null) {
+      addressModel = AddressModel(
+        id: null,
+        email: address.email,
+        serverID: address.id,
+        serverWalletID: walletModel.serverWalletID,
+        serverAccountID: accountModel.serverAccountID,
+      );
       await DBHelper.addressDao!.insert(addressModel);
+    } else {
+      addressModel.email = address.email;
+      addressModel.serverID = address.id;
+      addressModel.serverWalletID = walletModel.serverWalletID;
+      addressModel.serverAccountID = accountModel.serverAccountID;
+      await DBHelper.addressDao!.update(addressModel);
     }
   }
 
@@ -215,8 +221,7 @@ class WalletManager {
       type: WalletModel.typeOnChain,
       hasPassphrase: hasPassphrase ? 1 : 0,
       userKeyId: APIHelper.userKeyID,
-      walletKey:
-          proton_crypto.encryptBinaryArmor(userKey, entropy).base64encode(),
+      walletKey: proton_crypto.encryptBinaryArmor(userKey, entropy),
       fingerprint: fingerprint,
       mnemonic: mnemonic,
     );
@@ -433,11 +438,8 @@ class WalletManager {
   static Future<void> setWalletKey(
       String serverWalletID, SecretKey secretKey) async {
     String keyPath = "${SecureStorageHelper.walletKey}_$serverWalletID";
-    String encodedEntropy = await SecureStorageHelper.instance.get(keyPath);
-    if (encodedEntropy.isEmpty) {
-      encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
-      await SecureStorageHelper.instance.set(keyPath, encodedEntropy);
-    }
+    String encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
+    await SecureStorageHelper.instance.set(keyPath, encodedEntropy);
   }
 
   static Future<String> getMnemonicWithID(int walletID) async {
@@ -521,6 +523,10 @@ class WalletManager {
           await addEmailAddress(walletModel.serverWalletID,
               accountModel.serverAccountID, protonAddress.id);
         }
+        await Provider.of<ProtonWalletProvider>(
+                Coordinator.navigatorKey.currentContext!,
+                listen: false)
+            .setIntegratedEmailIDs(accountModel);
       }
     }
   }
@@ -584,12 +590,12 @@ class WalletManager {
       String userPassphrase =
           await SecureStorageHelper.instance.get("userPassphrase");
 
-      String encodedEncryptedEntropy = "";
+      String pgpBinaryMessage = "";
       Uint8List entropy = Uint8List(0);
       try {
-        encodedEncryptedEntropy = walletData.walletKey.walletKey;
-        entropy = proton_crypto.decryptBinary(userPrivateKey, userPassphrase,
-            base64Decode(encodedEncryptedEntropy));
+        pgpBinaryMessage = walletData.walletKey.walletKey;
+        entropy = proton_crypto.decryptBinaryPGP(
+            userPrivateKey, userPassphrase, pgpBinaryMessage);
       } catch (e) {
         logger.e(e.toString());
       }
@@ -710,9 +716,9 @@ class WalletManager {
       refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
 
       // user proton.wallet.test@proton.me
-      uid = 'iklqr3i5ym3wgap6gfbvbir5tgu5toel';
-      accessToken = 'kwnuga2mlik5e3om7wwr3vek56rgsphc';
-      refreshToken = '5kkgx5j6cbledsd4wqcgpyivkktnwnus';
+      uid = 'bu2jrybdlcr6tdfx2547jdwxogfnkqrm';
+      accessToken = 'g5ubzsnloc74xcyjycqp5y6sz2nf5ss2';
+      refreshToken = 'mtwgbdwuezjjduk6oi74ftcrbi2k2irk';
 
       // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
@@ -1064,17 +1070,16 @@ class WalletManager {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         TransactionDetailFromBlockChain transactionDetailFromBlockChain =
-        TransactionDetailFromBlockChain(
-            txid: txid,
-            feeInSATS: data['fee'],
-            block_height: data['status']['block_height'] ?? 0,
-            timestamp: data['status']['block_time'] ?? 0);
+            TransactionDetailFromBlockChain(
+                txid: txid,
+                feeInSATS: data['fee'],
+                block_height: data['status']['block_height'] ?? 0,
+                timestamp: data['status']['block_time'] ?? 0);
         List<dynamic> recipientMapList = data['vout']
-            .map((output) =>
-        {
-          'address': output['scriptpubkey_address'],
-          'value': output['value']
-        })
+            .map((output) => {
+                  'address': output['scriptpubkey_address'],
+                  'value': output['value']
+                })
             .toList();
         for (var recipientMap in recipientMapList) {
           transactionDetailFromBlockChain.addRecipient(Recipient(
@@ -1083,17 +1088,19 @@ class WalletManager {
         }
         return transactionDetailFromBlockChain;
       }
-    } catch(e){
+    } catch (e) {
       logger.e(e.toString());
     }
     return null;
   }
 
-  static Future<bool> isMineBitcoinAddress(Wallet wallet, String bitcoinAddress, {int maxIter = 1000}) async{
+  static Future<bool> isMineBitcoinAddress(Wallet wallet, String bitcoinAddress,
+      {int maxIter = 1000}) async {
     // TODO:: use bdk to check bitcoin address is mine
-    for (int addressIndex = 0; addressIndex< maxIter;addressIndex++){
-      var addressInfo = await _lib.getAddress(wallet, addressIndex: addressIndex);
-      if (addressInfo.address == bitcoinAddress){
+    for (int addressIndex = 0; addressIndex < maxIter; addressIndex++) {
+      var addressInfo =
+          await _lib.getAddress(wallet, addressIndex: addressIndex);
+      if (addressInfo.address == bitcoinAddress) {
         return true;
       }
     }

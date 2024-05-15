@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.session.dart';
@@ -17,6 +18,7 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
   WelcomeViewModel(super.coordinator);
+  bool initialized = false;
 }
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
@@ -43,7 +45,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
       if (await SecureStorageHelper.instance.get("sessionId") != "") {
         // need also check if current session is same env with current env
 
-        loginResume();
+        await loginResume();
         // LocalAuth.authenticate("Authenticate to login").then((auth) {
         //   if (auth) {
         //     ((coordinator).widget as WelcomeView).loginResume();
@@ -60,7 +62,9 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     env = appConfig.apiEnv;
     userSessionProvider = Provider.of<UserSessionProvider>(
         Coordinator.navigatorKey.currentContext!);
-    _localLogin();
+    await _localLogin();
+    initialized = true;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   Future<void> loginResume() async {
