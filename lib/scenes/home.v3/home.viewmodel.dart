@@ -271,8 +271,7 @@ class HomeViewModelImpl extends HomeViewModel {
         walletNameController.text =
             protonWalletProvider.protonWallet.currentWallet?.name ?? "";
       });
-      await protonWalletProvider.init();
-      protonWalletProvider.setDefaultWalletAccount();
+      protonWalletProvider.init();
       transactionSearchController.addListener(() {
         protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
             protonWalletProvider.protonWallet.transactionFilter,

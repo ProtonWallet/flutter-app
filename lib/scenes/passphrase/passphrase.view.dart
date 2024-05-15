@@ -122,13 +122,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         await viewModel.updateDB();
                         EasyLoading.dismiss();
                         if (context.mounted) {
-                          Navigator.of(context).popUntil((route) {
-                            if (route.settings.name == null) {
-                              return false;
-                            }
-                            return route.settings.name ==
-                                "[<'HomeNavigationView'>]";
-                          });
+                          Navigator.of(context).pop();
                         }
                       } else {
                         var snackBar = SnackBar(
@@ -206,13 +200,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     await this.viewModel.updateDB();
                     EasyLoading.dismiss();
                     if (context.mounted) {
-                      Navigator.of(context).popUntil((route) {
-                        if (route.settings.name == null) {
-                          return false;
-                        }
-                        return route.settings.name ==
-                            "[<'HomeNavigationView'>]";
-                      });
+                      Navigator.of(context).pop();
                     }
                   },
                   text: S.of(context).continue_without_passphrase_button,

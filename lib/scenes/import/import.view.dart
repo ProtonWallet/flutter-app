@@ -108,13 +108,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                           viewModel.coordinator.end();
                           EasyLoading.dismiss();
                           if (context.mounted) {
-                            Navigator.of(context).popUntil((route) {
-                              if (route.settings.name == null) {
-                                return false;
-                              }
-                              return route.settings.name ==
-                                  "[<'HomeNavigationView'>]";
-                            });
+                            Navigator.of(context).pop();
                           }
                         },
                         text: S.of(context).import_button,
