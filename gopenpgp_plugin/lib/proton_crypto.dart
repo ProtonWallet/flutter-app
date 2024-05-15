@@ -25,6 +25,12 @@ String decrypt(String userPrivateKey, String passphrase, String armor) {
       .toDartString();
 }
 
+Uint8List decryptBinaryPGP(String userPrivateKey, String passphrase, String armor) {
+  Uint8List unArmored = unArmor(armor);
+  return decryptBinary(userPrivateKey, passphrase, unArmored);
+}
+
+
 Uint8List encryptBinary(String userPrivateKey, Uint8List data) {
   Uint8List result = Uint8List(0);
   using((alloc) {
@@ -40,7 +46,7 @@ Uint8List encryptBinary(String userPrivateKey, Uint8List data) {
   return result;
 }
 
-Uint8List encryptBinaryArmor(String userPrivateKey, Uint8List data) {
+String encryptBinaryArmor(String userPrivateKey, Uint8List data) {
   String result = "";
   using((alloc) {
     final Pointer<Uint8> pData = alloc(data.length);
@@ -52,7 +58,7 @@ Uint8List encryptBinaryArmor(String userPrivateKey, Uint8List data) {
     result = String.fromCharCodes(pointerToUint8List(goResult as Pointer<Uint8>,
         getPointerLength(goResult as Pointer<Uint8>)));
   });
-  return unArmor(result);
+  return result;
 }
 
 Uint8List decryptBinary(

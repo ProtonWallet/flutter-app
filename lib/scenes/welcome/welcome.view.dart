@@ -32,7 +32,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
           Container(
               alignment: Alignment.topCenter,
               child: Container(
-                color: Colors.red,
+                color: Colors.black,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Assets.images.walletCreation.bg.svg(fit: BoxFit.fill),
@@ -59,6 +59,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                       onPressed: () async {
                         viewModel.move(NavID.nativeSignup);
                       },
+                      enable: viewModel.initialized,
                       text: S.of(context).signup,
                       width: MediaQuery.of(context).size.width,
                       backgroundColor: ProtonColors.white,
@@ -74,6 +75,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                       onPressed: () async {
                         viewModel.move(NavID.nativeSignin);
                       },
+                      enable: viewModel.initialized,
                       text: S.of(context).login,
                       width: MediaQuery.of(context).size.width,
                       backgroundColor: ProtonColors.white,

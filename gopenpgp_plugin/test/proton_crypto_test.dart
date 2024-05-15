@@ -188,9 +188,9 @@ void main() {
         146,
         218
       ]);
-      Uint8List encryptBinaryArmor =
+      String encryptBinaryArmor =
           proton_crypto.encryptBinaryArmor(protonWallet.privateKey, origin);
-      Uint8List result = proton_crypto.decryptBinary(
+      Uint8List result = proton_crypto.decryptBinaryPGP(
           protonWallet.privateKey, protonWallet.passphrase, encryptBinaryArmor);
       expect(result, equals(origin));
     });

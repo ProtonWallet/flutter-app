@@ -11,10 +11,12 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
@@ -69,6 +71,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
+  bool hasEmailIntegrationRecipient = false;
   WalletModel? walletModel;
   AccountModel? accountModel;
   late FocusNode addressFocusNode;
@@ -82,6 +85,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController memoController;
   late FocusNode emailBodyFocusNode;
   late FocusNode memoFocusNode;
+  FiatCurrency originFiatCurrency = FiatCurrency.usd;
+
   String txid = "";
 
   void editEmailBody();
@@ -97,6 +102,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   void removeRecipient(int index);
 
   void updatePageStatus({required bool inReview});
+
+  void addressAutoCompleteCallback();
 
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
@@ -115,7 +122,13 @@ class SendViewModelImpl extends SendViewModel {
   late Blockchain? _blockchain;
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
+    if (userSettingProvider.walletUserSetting.fiatCurrency.name !=
+        originFiatCurrency.name) {
+      Future.delayed(Duration.zero, () {
+        updateUserSettingProvider(originFiatCurrency);
+      });
+    }
     datasourceChangedStreamController.close();
   }
 
@@ -131,6 +144,14 @@ class SendViewModelImpl extends SendViewModel {
       memoTextController = TextEditingController();
       emailBodyController = TextEditingController();
       txBuilder = TxBuilder();
+
+      addressFocusNode.addListener(() {
+        if (addressFocusNode.hasFocus == false) {
+          if (recipientTextController.text.isNotEmpty) {
+            addressAutoCompleteCallback();
+          }
+        }
+      });
 
       memoFocusNode.addListener(() {
         if (memoFocusNode.hasFocus == false) {
@@ -149,6 +170,7 @@ class SendViewModelImpl extends SendViewModel {
           listen: false);
       fiatCurrencyNotifier.value =
           userSettingProvider.walletUserSetting.fiatCurrency;
+      originFiatCurrency = userSettingProvider.walletUserSetting.fiatCurrency;
       fiatCurrencyNotifier.addListener(() async {
         updateUserSettingProvider(fiatCurrencyNotifier.value);
       });
@@ -212,6 +234,12 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<void> updatePageStatus({required bool inReview}) async {
     if (inReview == true) {
+      hasEmailIntegrationRecipient = false;
+      for (String email in recipents) {
+        if (email2AddressKey.containsKey(email)) {
+          hasEmailIntegrationRecipient = true;
+        }
+      }
       await updateTransactionFeeMode(userTransactionFeeMode);
     }
     this.inReview = inReview;
@@ -261,12 +289,14 @@ class SendViewModelImpl extends SendViewModel {
     try {
       await loadBitcoinAddresses();
       if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
-        if (recipent.contains("@")){
-          List<AllKeyAddressKey> recipientAddressKeys = await proton_api.getAllPublicKeys(email: recipent, internalOnly: 0);
-          if (recipientAddressKeys.isNotEmpty){
+        if (recipent.contains("@")) {
+          List<AllKeyAddressKey> recipientAddressKeys = await proton_api
+              .getAllPublicKeys(email: recipent, internalOnly: 0);
+          if (recipientAddressKeys.isNotEmpty) {
             for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
               // TODO:: use default key
-              email2AddressKey[recipent] = AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
+              email2AddressKey[recipent] =
+                  AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
               break;
             }
           }
@@ -355,16 +385,19 @@ class SendViewModelImpl extends SendViewModel {
       String? emailAddressID;
       if (protonAddresses.isNotEmpty) {
         emailAddressID = protonAddresses.first.id;
-        try{
-          List<AllKeyAddressKey> recipientAddressKeys = await proton_api.getAllPublicKeys(email: protonAddresses.first.email, internalOnly: 0);
-          if (recipientAddressKeys.isNotEmpty){
+        try {
+          List<AllKeyAddressKey> recipientAddressKeys =
+              await proton_api.getAllPublicKeys(
+                  email: protonAddresses.first.email, internalOnly: 0);
+          if (recipientAddressKeys.isNotEmpty) {
             for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
               // TODO:: use default key
-              addressPublicKeys.add(AddressPublicKey(publicKey: allKeyAddressKey.publicKey));
+              addressPublicKeys
+                  .add(AddressPublicKey(publicKey: allKeyAddressKey.publicKey));
               break;
             }
           }
-        } catch (e){
+        } catch (e) {
           logger.e(e.toString());
         }
       }
@@ -378,12 +411,13 @@ class SendViewModelImpl extends SendViewModel {
 
       String? encryptedMessage;
       for (String email in recipents) {
-        if (email2AddressKey.containsKey(email)){
+        if (email2AddressKey.containsKey(email)) {
           addressPublicKeys.add(email2AddressKey[email]!);
         }
       }
 
-      encryptedMessage = AddressPublicKey.encryptWithKeys(addressPublicKeys, emailBodyController.text);
+      encryptedMessage = AddressPublicKey.encryptWithKeys(
+          addressPublicKeys, emailBodyController.text);
 
       txid = await _lib.sendBitcoinWithAPI(
           _blockchain!,
@@ -489,5 +523,18 @@ class SendViewModelImpl extends SendViewModel {
   @override
   void move(NavID to) {
     // TODO: implement move
+  }
+
+  @override
+  void addressAutoCompleteCallback() {
+    if (balance > 0) {
+      addRecipient();
+    } else {
+      if (Coordinator.navigatorKey.currentContext != null) {
+        BuildContext context = Coordinator.navigatorKey.currentContext!;
+        LocalToast.showErrorToast(
+            context, S.of(context).error_you_dont_have_sufficient_balance);
+      }
+    }
   }
 }

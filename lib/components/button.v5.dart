@@ -52,7 +52,10 @@ class ButtonV5 extends StatelessWidget {
         Container(
           width: width,
           height: height,
-          color: Colors.white.withOpacity(0.5),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(radius),
+          ),
         ),
     ]));
   }
