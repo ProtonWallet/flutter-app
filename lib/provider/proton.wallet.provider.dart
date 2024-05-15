@@ -6,7 +6,6 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -19,7 +18,6 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
-import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 class ProtonWallet {
@@ -37,6 +35,7 @@ class ProtonWallet {
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   Blockchain? blockchain;
   String transactionFilter = "";
+  List<AddressKey> addressKeys = [];
 
   Future<void> init() async {
     blockchain ??= await _lib.initializeBlockchain(false);
@@ -94,6 +93,7 @@ class ProtonWallet {
               "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
           await insertOrUpdateWalletAccount(accountModel);
           isWalletSyncing[accountModel.serverAccountID] = false;
+          setCurrentTransactions();
         }
       }
     } catch (e) {
@@ -281,7 +281,7 @@ class ProtonWallet {
     await checkPassphrase(newWalletModel);
   }
 
-  Future<void> setDefaultWalletAccount() async {
+  Future<void> setDefaultWallet() async {
     WalletModel? walletModel =
         await DBHelper.walletDao!.getFirstPriorityWallet();
     if (walletModel != null) {
@@ -289,13 +289,7 @@ class ProtonWallet {
         clearCurrent();
         logger.i("no passphrase for default wallet");
       } else {
-        List<AccountModel> accountModels =
-            (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
-                .cast<AccountModel>();
-        AccountModel? accountModel = accountModels.firstOrNull;
-        if (accountModel != null) {
-          await setWalletAccount(walletModel, accountModel);
-        }
+        await setWallet(walletModel);
       }
     } else {
       // clear all data since there is no wallet in local tables
@@ -316,7 +310,7 @@ class ProtonWallet {
     }
     if ((currentWallet?.serverWalletID ?? "") ==
         deletedWalletModel.serverWalletID) {
-      await setDefaultWalletAccount();
+      await setDefaultWallet();
     }
   }
 
@@ -360,7 +354,7 @@ class ProtonWallet {
       if (currentAccounts.isNotEmpty && currentWallet != null) {
         await setWalletAccount(currentWallet!, currentAccounts.first);
       } else {
-        await setDefaultWalletAccount();
+        await setDefaultWallet();
       }
     }
   }
@@ -371,6 +365,9 @@ class ProtonWallet {
     List<AccountModel> accountsToCheckTransaction = [];
     WalletModel? oldWalletModel = currentWallet;
     AccountModel? oldAccountModel = currentAccount;
+    if (addressKeys.isEmpty){
+      addressKeys = await WalletManager.getAddressKeys();
+    }
     if (oldWalletModel != null && currentAccount != null) {
       // wallet account view
       accountsToCheckTransaction.add(currentAccount!);
@@ -382,11 +379,6 @@ class ProtonWallet {
     List<HistoryTransaction> newHistoryTransactions = [];
     for (AccountModel accountModel in accountsToCheckTransaction) {
       Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
-
-      List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-      addresses = addresses.where((element) => element.status == 1).toList();
-
-      List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
 
       wallet = await WalletManager.loadWalletWithID(
           oldWalletModel!.id!, accountModel.id!);
@@ -734,6 +726,7 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> init() async {
     try {
       await protonWallet.init();
+      await setDefaultWallet();
     } catch (e) {
       logger.e(e.toString());
     }
@@ -828,8 +821,8 @@ class ProtonWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setDefaultWalletAccount() async {
-    await protonWallet.setDefaultWalletAccount();
+  Future<void> setDefaultWallet() async {
+    await protonWallet.setDefaultWallet();
     notifyListeners();
   }
 

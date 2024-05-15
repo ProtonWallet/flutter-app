@@ -24,7 +24,7 @@ class FiatCurrencySettingSheet {
                     defaultPadding * 2,
                 items: fiatCurrencies,
                 itemsText: fiatCurrencies
-                    .map((v) => FiatCurrencyHelper.getText(v))
+                    .map((v) => FiatCurrencyHelper.getName(v))
                     .toList(),
                 valueNotifier: viewModel.fiatCurrencyNotifier),
             Container(

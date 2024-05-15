@@ -109,6 +109,9 @@ class SendView extends ViewBase<SendViewModel> {
                                     title: S.of(context).trans_to,
                                     content: recipent,
                                     memo: viewModel.bitcoinAddresses[recipent],
+                                    amountInSATS: viewModel.recipents.length > 1
+                                        ? viewModel.amountInSATS
+                                        : null,
                                   ),
                                   const Divider(
                                     thickness: 0.2,
@@ -125,7 +128,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     context, viewModel);
                               },
                               content:
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(3)}",
+                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
                               memo: Provider.of<UserSettingProvider>(context)
                                   .getBitcoinUnitLabel(estimatedFee),
                             ),
@@ -140,76 +143,79 @@ class SendView extends ViewBase<SendViewModel> {
                               height: 1,
                             ),
                             const SizedBox(height: 10),
-                            viewModel.isEditingEmailBody == false
-                                ? Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    padding:
-                                        const EdgeInsets.all(defaultPadding),
-                                    decoration: BoxDecoration(
-                                        color: ProtonColors
-                                            .transactionNoteBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(40.0)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                            "assets/images/icon/ic_message.svg",
-                                            fit: BoxFit.fill,
-                                            width: 32,
-                                            height: 32),
-                                        const SizedBox(width: 10),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            if (viewModel.emailBodyController
-                                                .text.isNotEmpty)
-                                              Text(
-                                                  viewModel
-                                                      .emailBodyController.text,
-                                                  style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
-                                                              .textNorm)),
-                                            GestureDetector(
-                                                onTap: () {
-                                                  viewModel.editEmailBody();
-                                                },
-                                                child: Text(
-                                                    S
-                                                        .of(context)
-                                                        .message_to_recipient_optional,
+                            if (viewModel.hasEmailIntegrationRecipient)
+                              viewModel.isEditingEmailBody == false
+                                  ? Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      padding:
+                                          const EdgeInsets.all(defaultPadding),
+                                      decoration: BoxDecoration(
+                                          color: ProtonColors
+                                              .transactionNoteBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(40.0)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                              "assets/images/icon/ic_message.svg",
+                                              fit: BoxFit.fill,
+                                              width: 32,
+                                              height: 32),
+                                          const SizedBox(width: 10),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (viewModel.emailBodyController
+                                                  .text.isNotEmpty)
+                                                Text(
+                                                    viewModel
+                                                        .emailBodyController
+                                                        .text,
                                                     style:
                                                         FontManager.body2Median(
                                                             ProtonColors
-                                                                .protonBlue))),
-                                          ],
-                                        )
-                                      ],
-                                    ))
-                                : Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: TextFieldTextV2(
-                                      labelText: S
-                                          .of(context)
-                                          .message_to_recipient_optional,
-                                      textController:
-                                          viewModel.emailBodyController,
-                                      myFocusNode: viewModel.emailBodyFocusNode,
-                                      paddingSize: 7,
-                                      validation: (String value) {
-                                        return "";
-                                      },
+                                                                .textNorm)),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    viewModel.editEmailBody();
+                                                  },
+                                                  child: Text(
+                                                      S
+                                                          .of(context)
+                                                          .message_to_recipient_optional,
+                                                      style: FontManager
+                                                          .body2Median(
+                                                              ProtonColors
+                                                                  .protonBlue))),
+                                            ],
+                                          )
+                                        ],
+                                      ))
+                                  : Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      child: TextFieldTextV2(
+                                        labelText: S
+                                            .of(context)
+                                            .message_to_recipient_optional,
+                                        textController:
+                                            viewModel.emailBodyController,
+                                        myFocusNode:
+                                            viewModel.emailBodyFocusNode,
+                                        paddingSize: 7,
+                                        validation: (String value) {
+                                          return "";
+                                        },
+                                      ),
                                     ),
-                                  ),
                             viewModel.isEditingMemo == false
                                 ? Container(
                                     margin: const EdgeInsets.symmetric(
@@ -356,7 +362,7 @@ class SendView extends ViewBase<SendViewModel> {
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT).toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
@@ -369,13 +375,15 @@ class SendView extends ViewBase<SendViewModel> {
       BuildContext context, SendViewModel viewModel, int estimatedFee) {
     double estimatedFeeInNotional = Provider.of<UserSettingProvider>(context)
         .getNotionalInFiatCurrency(estimatedFee);
-    double estimatedTotalValueInNotional = Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT);
+    double estimatedTotalValueInNotional =
+        Provider.of<UserSettingProvider>(context)
+            .getNotionalInFiatCurrency(viewModel.totalAmountInSAT);
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(3)}",
-      memo: Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(
-          (viewModel.totalAmountInSAT + estimatedFee)),
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
+      memo: Provider.of<UserSettingProvider>(context)
+          .getBitcoinUnitLabel((viewModel.totalAmountInSAT + estimatedFee)),
     );
   }
 
@@ -403,15 +411,7 @@ class SendView extends ViewBase<SendViewModel> {
                                   textEditingController:
                                       viewModel.recipientTextController,
                                   callback: () {
-                                    if (viewModel.balance > 0) {
-                                      viewModel.addRecipient();
-                                    } else {
-                                      LocalToast.showErrorToast(
-                                          context,
-                                          S
-                                              .of(context)
-                                              .error_you_dont_have_sufficient_balance);
-                                    }
+                                    viewModel.addressAutoCompleteCallback();
                                   }),
                               const SizedBox(height: 5),
                             ]),
@@ -480,7 +480,7 @@ class SendView extends ViewBase<SendViewModel> {
                                       ProtonColors.backgroundProton,
                                   items: fiatCurrencies,
                                   itemsText: fiatCurrencies
-                                      .map((v) => FiatCurrencyHelper.getText(v))
+                                      .map((v) => FiatCurrencyHelper.getName(v))
                                       .toList(),
                                   valueNotifier:
                                       viewModel.fiatCurrencyNotifier),
@@ -627,7 +627,7 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
       break;
   }
   String estimatedFeeInFiatCurrency =
-      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(3)}";
+      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
   String estimatedFeeInSATS = Provider.of<UserSettingProvider>(context)
       .getBitcoinUnitLabel(estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

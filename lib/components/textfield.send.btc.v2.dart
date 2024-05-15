@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -149,7 +150,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                                   .userSettingProvider
                                   .getNotionalInFiatCurrency(
                                       (widget.btcBalance * 100000000).toInt())
-                                  .toStringAsFixed(3);
+                                  .toStringAsFixed(defaultDisplayDigits);
                             },
                             child: Container(
                                 padding:

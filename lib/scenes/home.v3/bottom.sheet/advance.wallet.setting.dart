@@ -42,6 +42,7 @@ class AdvanceWalletSettingSheet {
                           FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
                 viewModel.move(NavID.walletDeletion);
               }),
         ],

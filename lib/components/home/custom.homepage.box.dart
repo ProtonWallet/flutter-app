@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -50,7 +51,7 @@ class CustomHomePageBox extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Row(children: [
-                        Text("\$${price.toStringAsFixed(5)}",
+                        Text("\$${price.toStringAsFixed(defaultDisplayDigits)}",
                             style:
                                 FontManager.body1Median(ProtonColors.textNorm)),
                         const SizedBox(
