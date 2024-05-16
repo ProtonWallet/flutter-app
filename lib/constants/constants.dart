@@ -10,6 +10,8 @@ const int exchangeRateRefreshThreshold = 10;
 const int defaultBitcoinAddressCountForOneEmail = 10;
 const int defaultTransactionPerPage = 5;
 const int defaultDisplayDigits = 2;
+const int freeUserWalletLimit = 2; // TODO:: get from api to avoid abuse
+const int freeUserWalletAccountLimit = 5; // TODO:: get from api to avoid abuse
 
 const String userSettingsHideEmptyUsedAddresses =
     "userSettings.hideEmptyUsedAddresses";

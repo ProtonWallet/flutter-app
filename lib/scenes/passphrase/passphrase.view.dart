@@ -9,6 +9,7 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -123,12 +124,12 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         EasyLoading.dismiss();
                         if (context.mounted) {
                           Navigator.of(context).pop();
+                          CommonHelper.showSnackbar(
+                              context, S.of(context).wallet_created);
                         }
                       } else {
-                        var snackBar = SnackBar(
-                          content: Text(S.of(context).passphrase_are_not_match),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        CommonHelper.showSnackbar(
+                            context, S.of(context).passphrase_are_not_match);
                       }
                     },
                     text: S.of(context).save_passphrase_button,
@@ -201,6 +202,8 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     EasyLoading.dismiss();
                     if (context.mounted) {
                       Navigator.of(context).pop();
+                      CommonHelper.showSnackbar(
+                          context, S.of(context).wallet_created);
                     }
                   },
                   text: S.of(context).continue_without_passphrase_button,

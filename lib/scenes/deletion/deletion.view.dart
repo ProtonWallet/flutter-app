@@ -4,6 +4,7 @@ import 'package:wallet/components/onboarding/content.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/scenes/deletion/deletion.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -91,6 +92,8 @@ class WalletDeletionView extends ViewBase<WalletDeletionViewModel> {
                   viewModel.coordinator.end();
                   if (context.mounted) {
                     Navigator.of(context).pop();
+                    CommonHelper.showSnackbar(
+                        context, S.of(context).wallet_deleted);
                   }
                 },
                 text: S.of(context).delete_this_wallet,
