@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -91,8 +90,7 @@ class CommonHelper {
           .protonWallet
           .currentWallet ==
           null) {
-        LocalToast.showToast(context, "Please select your wallet first",
-            icon: null);
+        CommonHelper.showSnackbar(context, "Please select your wallet first");
         return false;
       }
       return true;
