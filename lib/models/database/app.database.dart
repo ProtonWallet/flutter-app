@@ -166,6 +166,8 @@ class AppDatabase {
     db = database;
   }
 
+  // TODO:: fix me. the oldversion somehow is not correct. we should try to use the version from the database `user_version`.
+  // TODO:: future we also need to check the db schema is correct or not. then decide to rebuild it or not.
   Future<void> buildDatabase(
       {bool isTesting = false, int oldVersion = 1}) async {
     List<Migration>? upgradeMigrations =

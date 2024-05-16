@@ -1,14 +1,14 @@
 class TransactionDetailFromBlockChain {
   int feeInSATS;
   String txid;
-  int block_height;
+  int blockHeight;
   int timestamp;
   List<Recipient> recipients = [];
 
   TransactionDetailFromBlockChain(
       {required this.txid,
       required this.feeInSATS,
-      required this.block_height,
+      required this.blockHeight,
       required this.timestamp});
 
   void addRecipient(Recipient recipient) {
