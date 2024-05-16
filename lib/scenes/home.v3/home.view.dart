@@ -126,6 +126,13 @@ class HomeView extends ViewBase<HomeViewModel> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              if (Provider.of<ProtonWalletProvider>(context)
+                                      .protonWallet
+                                      .currentAccount ==
+                                  null)
+                                Text(S.of(context).total_accounts,
+                                    style: FontManager.captionSemiBold(
+                                        ProtonColors.textNorm)),
                               Text(
                                   "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(Provider.of<ProtonWalletProvider>(context).protonWallet.currentBalance).toStringAsFixed(defaultDisplayDigits)}",
                                   style: FontManager.balanceInFiatCurrency(
@@ -732,7 +739,19 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.protonBlue),
                                 height: 48,
                                 onPressed: () {
-                                  viewModel.move(NavID.setupOnboard);
+                                  if (Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .wallets
+                                          .length <
+                                      freeUserWalletLimit) {
+                                    viewModel.move(NavID.setupOnboard);
+                                  } else {
+                                    CommonHelper.showSnackbar(
+                                        context,
+                                        S.of(context).freeuser_wallet_limit(
+                                            freeUserWalletLimit));
+                                  }
                                 },
                               )
                             ])),
@@ -791,6 +810,22 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                 const EdgeInsets.only(left: defaultPadding, right: 10),
             child: ExpansionTile(
               shape: const Border(),
+              collapsedBackgroundColor:
+                  (Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .currentWallet !=
+                              null &&
+                          Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .currentAccount ==
+                              null &&
+                          Provider.of<ProtonWalletProvider>(context)
+                                  .protonWallet
+                                  .currentWallet!
+                                  .serverWalletID ==
+                              walletModel.serverWalletID)
+                      ? ProtonColors.drawerBackgroundHighlight
+                      : Colors.transparent,
               backgroundColor: (Provider.of<ProtonWalletProvider>(context)
                               .protonWallet
                               .currentWallet !=
@@ -816,7 +851,6 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                   height: 18),
               onExpansionChanged: (expanded) {
                 viewModel.selectWallet(walletModel);
-                Navigator.of(context).pop();
               },
               title: Transform.translate(
                   offset: const Offset(-8, 0),
@@ -977,8 +1011,20 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                       color: ProtonColors.drawerBackground,
                       child: ListTile(
                         onTap: () {
-                          AddWalletAccountSheet.show(
-                              context, viewModel, walletModel);
+                          if (Provider.of<ProtonWalletProvider>(context,
+                                      listen: false)
+                                  .protonWallet
+                                  .getAccounts(walletModel)
+                                  .length <
+                              freeUserWalletAccountLimit) {
+                            AddWalletAccountSheet.show(
+                                context, viewModel, walletModel);
+                          } else {
+                            CommonHelper.showSnackbar(
+                                context,
+                                S.of(context).freeuser_wallet_account_limit(
+                                    freeUserWalletAccountLimit));
+                          }
                         },
                         tileColor: ProtonColors.drawerBackground,
                         leading: Container(

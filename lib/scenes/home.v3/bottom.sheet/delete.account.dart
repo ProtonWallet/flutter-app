@@ -4,6 +4,7 @@ import 'package:wallet/components/alert.warning.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
@@ -12,7 +13,8 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class DeleteAccountSheet {
-  static void show(BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
+  static void show(
+      BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -33,10 +35,14 @@ class DeleteAccountSheet {
                       Navigator.of(context).pop();
                       await viewModel.deleteAccount(
                           Provider.of<ProtonWalletProvider>(context,
-                              listen: false)
+                                  listen: false)
                               .protonWallet
                               .currentWallet!,
                           userAccount);
+                      if (context.mounted) {
+                        CommonHelper.showSnackbar(
+                            context, S.of(context).account_deleted);
+                      }
                     },
                     backgroundColor: ProtonColors.signalError,
                     text: S.of(context).delete_account,
