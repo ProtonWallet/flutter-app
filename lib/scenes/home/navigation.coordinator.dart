@@ -29,8 +29,9 @@ class HomeNavigationCoordinator extends Coordinator {
 
   @override
   List<ViewBase<ViewModel>> starts() {
+    var channel = Coordinator.platformChannelManager.nativeViewChannel;
     return [
-      HomeCoordinator(apiEnv).start(),
+      HomeCoordinator(apiEnv, channel).start(),
       // HistoryCoordinator().start(),
       // BuyBitcoinCoordinator().start(),
       // TransferCoordinator().start(),

@@ -8,12 +8,22 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 class AppCoordinator extends Coordinator {
   late ViewBase widget;
 
+  AppCoordinator();
+
+  Future<void> init() async {
+    //TODO:: temp fix later
+    Coordinator.platformChannelManager.init();
+  }
+
   @override
   void end() {}
 
   @override
   ViewBase<ViewModel> start() {
-    ViewBase view = WelcomeCoordinator().start();
+    ViewBase view = WelcomeCoordinator(
+            nativeViewChannel:
+                Coordinator.platformChannelManager.nativeViewChannel)
+        .start();
     var viewModel = AppViewModelImpl(
       this,
     );

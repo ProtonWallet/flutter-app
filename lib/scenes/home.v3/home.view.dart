@@ -398,14 +398,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   .amountInSATS
                                   .toDouble(),
                               note: Provider.of<ProtonWalletProvider>(context)
-                                  .protonWallet
-                                  .historyTransactionsAfterFilter[index]
-                                  .label ??
+                                      .protonWallet
+                                      .historyTransactionsAfterFilter[index]
+                                      .label ??
                                   "",
                               body: Provider.of<ProtonWalletProvider>(context)
-                                  .protonWallet
-                                  .historyTransactionsAfterFilter[index]
-                                  .body ??
+                                      .protonWallet
+                                      .historyTransactionsAfterFilter[index]
+                                      .body ??
                                   "",
                               onTap: () {
                                 viewModel.selectedTXID =
@@ -633,7 +633,10 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                       ProtonColors.textHint)),
                             ])),
                     ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          viewModel.move(NavID.nativeUpgrade);
+                        },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-diamondwallet_plus.svg",
                             fit: BoxFit.fill,

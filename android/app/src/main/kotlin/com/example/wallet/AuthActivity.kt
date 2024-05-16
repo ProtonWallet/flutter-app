@@ -64,7 +64,7 @@ class AuthActivity : FragmentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         fun callback(result: MutableMap<String, String>){
-            MethodChannel(MainActivity.flutterEngineInstance?.dartExecutor!!.binaryMessenger, "com.example.wallet/app.view")
+            MethodChannel(MainActivity.flutterEngineInstance?.dartExecutor!!.binaryMessenger, "me.proton.wallet/app.view")
                 .invokeMethod("flutter.navigation.to.home", Json.encodeToString(result))
             this.finish()
         }

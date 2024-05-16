@@ -33,7 +33,7 @@ class MainActivity : FlutterFragmentActivity() {
         flutterEngineInstance = flutterEngine
         GeneratedPluginRegistrant.registerWith(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.wallet/native.views")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "me.proton.wallet/native.views")
             .setMethodCallHandler { call: MethodCall, result ->
                 when (call.method) {
                     "native.navigation.login" -> {
@@ -54,6 +54,10 @@ class MainActivity : FlutterFragmentActivity() {
                             context.startActivity(it)
                         }
                         Runtime.getRuntime().exit(0)
+                    }
+                    "native.navigation.plan.upgrade" -> {
+                        val arguments = call.arguments
+                        println("Upgrade Plan called with arguments: $arguments")
                     }
                 }
             }
