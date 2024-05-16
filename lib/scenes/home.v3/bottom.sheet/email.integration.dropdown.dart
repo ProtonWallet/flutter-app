@@ -8,7 +8,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
+import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -19,7 +19,7 @@ class EmailIntegrationDropdownSheet {
         Provider.of<ProtonWalletProvider>(context, listen: false)
             .protonWallet
             .getAllIntegratedEmailIDs();
-    HomeModalBottomSheet.show(context, viewModel, child:
+    HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
         mainAxisSize: MainAxisSize.min,

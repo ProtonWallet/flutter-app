@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 
 class HomeModalBottomSheet {
-  static void show(BuildContext context, HomeViewModel homeViewModel,
+  static void show(BuildContext context,
       {Widget? child, ScrollController? scrollController}) {
     showModalBottomSheet(
         context: context,

@@ -324,6 +324,7 @@ class ProtonWallet {
         break;
       }
     }
+    await newAccountModel.decrypt();
     if (indexToUpdate > -1) {
       accounts[indexToUpdate] = newAccountModel;
     } else {

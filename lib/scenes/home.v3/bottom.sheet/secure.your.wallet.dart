@@ -7,7 +7,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
+import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/fiat.currency.setting.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -15,7 +15,7 @@ import 'package:wallet/theme/theme.font.dart';
 
 class SecureYourWalletSheet {
   static void show(BuildContext context, HomeViewModel viewModel) {
-    HomeModalBottomSheet.show(context, viewModel,
+    HomeModalBottomSheet.show(context,
         child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

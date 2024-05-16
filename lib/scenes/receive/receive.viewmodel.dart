@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -10,6 +11,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -25,12 +27,17 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   String address = "";
   String errorMessage = "";
   var selectedWallet = 1;
+  bool initialized = false;
 
   WalletModel? walletModel;
   bool hasEmailIntegration = false;
   AccountModel? accountModel;
+  late ProtonWalletProvider protonWalletProvider;
+  late ValueNotifier accountValueNotifier;
 
   void getAddress();
+
+  void changeAccount(AccountModel newAccountModel);
 }
 
 class ReceiveViewModelImpl extends ReceiveViewModel {
@@ -57,10 +64,21 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       } else {
         walletModel = await DBHelper.walletDao!.findById(walletID);
       }
-      accountModel = await DBHelper.accountDao!.findById(accountID);
-      await WalletManager.syncBitcoinAddressIndex(
-          walletModel!.serverWalletID, accountModel!.serverAccountID);
-      await getAddress(init: true);
+      if (accountID == 0) {
+        accountModel = await DBHelper.accountDao!
+            .findDefaultAccountByWalletID(walletModel?.id ?? 0);
+      } else {
+        accountModel = await DBHelper.accountDao!.findById(accountID);
+      }
+      if (walletModel == null || accountModel == null) {
+        errorMessage = "[Error-404] Can not load wallet or walletAccount";
+      } else {
+        accountValueNotifier = ValueNotifier(accountModel);
+        accountValueNotifier.addListener(() {
+          changeAccount(accountValueNotifier.value);
+        });
+        await changeAccount(accountModel!);
+      }
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -69,6 +87,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
+    initialized = true;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -88,7 +107,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
         BitcoinAddressModel? bitcoinAddressModel = await DBHelper
             .bitcoinAddressDao!
-            .findLatestUnusedLocalBitcoinAddress(walletID, accountID);
+            .findLatestUnusedLocalBitcoinAddress(walletID, accountModel!.id ?? 0);
         if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
           addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
         } else {
@@ -105,7 +124,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
             walletID: walletID,
-            accountID: accountID,
+            accountID: accountModel!.id ?? 0,
             bitcoinAddress: address,
             bitcoinAddressIndex: addressIndex,
             inEmailIntegrationPool: 0,
@@ -120,5 +139,22 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   void move(NavID to) {
     // TODO: implement move
+  }
+
+  @override
+  Future<void> changeAccount(AccountModel newAccountModel) async {
+    EasyLoading.show(
+        status: "syncing bitcoin address index..",
+        maskType: EasyLoadingMaskType.black);
+    try {
+      accountModel = newAccountModel;
+      await WalletManager.syncBitcoinAddressIndex(
+          walletModel!.serverWalletID, accountModel!.serverAccountID);
+      await getAddress(init: true);
+    } catch (e){
+      logger.e(e.toString());
+    }
+    EasyLoading.dismiss();
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }
