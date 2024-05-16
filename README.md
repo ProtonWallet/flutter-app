@@ -25,6 +25,21 @@ Follow the docker image scripts.
 
 [Windows](docker/win/install-deps.sh)
 
+### Trouble-shooting
+
+#### Windows
+
+- If you faced issue when cargo build in windows:
+    `
+    error: failed to run custom build command for `openssl-sys x.x.x`
+    `
+  - Install Strawberry Perl
+  - Rerun cargo build
+    Reference from: [this thread](https://github.com/sfackler/rust-openssl/issues/1086#issuecomment-846160769)
+
+- cargo build stuck when building openssl
+    Run `cargo build -vv` to check if it really stuck. It may take more than 5+ minutes in windows build.
+
 ## Dependancies
 
 lefthook: [installation](https://github.com/evilmartians/lefthook/blob/master/docs/install.md)
@@ -57,27 +72,12 @@ or: ~/.cargo/config.toml
 proton_internal = { index = "sparse+https://protonvpn.gitlab-pages.protontech.ch/rust/registry/index/" }
 ```
 
-### Trouble-shooting
-
-#### Windows
-
-- If you faced issue when cargo build in windows:
-    `
-    error: failed to run custom build command for `openssl-sys x.x.x`
-    `
-  - Install Strawberry Perl
-  - Rerun cargo build
-    Reference from: [this thread](https://github.com/sfackler/rust-openssl/issues/1086#issuecomment-846160769)
-
-- cargo build stuck when building openssl
-    Run `cargo build -vv` to check if it really stuck. It may take more than 5+ minutes in windows build.
-
 ## Assets generation
 
 - make make build-runner
   if you see conflits errors. select `Delete` then everything should be good.
 
-## how to switch env
+## How to switch env
 
 [Flutter env config file](lib/constants/app.config.dart)
 
@@ -86,6 +86,8 @@ For ios: you can change flutter side. it will sync to ios native automitically
 For android: you need to change flutter side and also the android native:
 
 - we use atlas: `pascal` for test.  `wallet-api` for production
+
+Both production and development environments require a developer VPN. Additionally, the production environment needs login accounts to be whitelisted.
 
 ## Commands
 
@@ -110,3 +112,11 @@ build-gopenpgp-ios             Auto build the pgp library for ios
 build-gopenpgp-android         Auto build the pgp library for android
 help                           Display this help screen
 ```
+
+## Known issues and workaround
+
+### iOS: mobile_scanner
+
+this dependcy doesnt work on ios simulator. the workaround is to disable this plugin in file [pubspec.yaml](pubspec.yaml#L88) then disable the imports in [file import line](lib/components/protonmail.autocomplete.dart#L4) and code block [code block 173-187](lib/components/protonmail.autocomplete.dart#L173-L187)
+
+Optional: Try pod install or flutter clean if you see strange errors
