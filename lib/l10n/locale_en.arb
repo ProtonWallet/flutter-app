@@ -132,7 +132,7 @@
   "rename_account": "Rename Account",
   "update_account": "Update Account",
   "delete_account": "Delete Account",
-  "account_deleted": "Account deleted!",
+  "account_deleted": "Account deleted",
   "account_label": "Account Name",
   "accounts": "Accounts",
   "delete": "Delete",

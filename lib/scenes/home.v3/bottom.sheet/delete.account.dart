@@ -31,8 +31,6 @@ class DeleteAccountSheet {
                     horizontal: defaultButtonPadding),
                 child: ButtonV5(
                     onPressed: () async {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
                       await viewModel.deleteAccount(
                           Provider.of<ProtonWalletProvider>(context,
                                   listen: false)
@@ -40,6 +38,8 @@ class DeleteAccountSheet {
                               .currentWallet!,
                           userAccount);
                       if (context.mounted) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                         CommonHelper.showSnackbar(
                             context, S.of(context).account_deleted);
                       }

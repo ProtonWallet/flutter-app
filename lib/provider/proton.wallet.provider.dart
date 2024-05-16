@@ -187,14 +187,22 @@ class ProtonWallet {
     if (currentWallet != null) {
       if (currentAccount == null) {
         for (AccountModel accountModel in currentAccounts) {
-          Wallet wallet = await WalletManager.loadWalletWithID(
-              currentWallet!.id!, accountModel.id!);
-          newBalance += (await wallet.getBalance()).total;
+          try {
+            Wallet wallet = await WalletManager.loadWalletWithID(
+                currentWallet!.id!, accountModel.id!);
+            newBalance += (await wallet.getBalance()).total;
+          } catch (e) {
+            logger.e(e.toString());
+          }
         }
       } else {
-        Wallet wallet = await WalletManager.loadWalletWithID(
-            currentWallet!.id!, currentAccount!.id!);
-        newBalance += (await wallet.getBalance()).total;
+        try {
+          Wallet wallet = await WalletManager.loadWalletWithID(
+              currentWallet!.id!, currentAccount!.id!);
+          newBalance += (await wallet.getBalance()).total;
+        } catch (e) {
+          logger.e(e.toString());
+        }
       }
     }
     currentBalance = newBalance;
@@ -366,7 +374,7 @@ class ProtonWallet {
     List<AccountModel> accountsToCheckTransaction = [];
     WalletModel? oldWalletModel = currentWallet;
     AccountModel? oldAccountModel = currentAccount;
-    if (addressKeys.isEmpty){
+    if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();
     }
     if (oldWalletModel != null && currentAccount != null) {
@@ -380,10 +388,13 @@ class ProtonWallet {
     List<HistoryTransaction> newHistoryTransactions = [];
     for (AccountModel accountModel in accountsToCheckTransaction) {
       Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
-
-      wallet = await WalletManager.loadWalletWithID(
-          oldWalletModel!.id!, accountModel.id!);
-
+      try {
+        wallet = await WalletManager.loadWalletWithID(
+            oldWalletModel!.id!, accountModel.id!);
+      } catch (e) {
+        logger.e(e.toString());
+        continue;
+      }
       // get transactions from bdk
       List<TransactionDetails> transactionHistoryFromBDK =
           await _lib.getAllTransactions(wallet);
@@ -775,9 +786,13 @@ class ProtonWalletProvider with ChangeNotifier {
       accountsToCheckTransaction = protonWallet.currentAccounts;
     }
     for (AccountModel accountModel in accountsToCheckTransaction) {
-      Wallet wallet = await WalletManager.loadWalletWithID(
-          walletModel!.id!, accountModel.id!);
-      protonWallet.syncWallet(wallet, accountModel);
+      try {
+        Wallet wallet = await WalletManager.loadWalletWithID(
+            walletModel!.id!, accountModel.id!);
+        protonWallet.syncWallet(wallet, accountModel);
+      } catch (e) {
+        logger.e(e.toString());
+      }
     }
     notifyListeners();
   }
