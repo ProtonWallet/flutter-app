@@ -11,7 +11,6 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/wallet_manager.dart';
@@ -546,7 +545,7 @@ class SendViewModelImpl extends SendViewModel {
     } else {
       if (Coordinator.navigatorKey.currentContext != null) {
         BuildContext context = Coordinator.navigatorKey.currentContext!;
-        LocalToast.showErrorToast(
+        CommonHelper.showSnackbar(
             context, S.of(context).error_you_dont_have_sufficient_balance);
       }
     }

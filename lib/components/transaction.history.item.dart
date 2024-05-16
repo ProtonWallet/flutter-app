@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -90,7 +89,7 @@ class TransactionHistoryItem extends StatelessWidget {
                     Clipboard.setData(ClipboardData(text: bitcoinAddress))
                         .then((_) {
                       if (context.mounted) {
-                        LocalToast.showToast(
+                        CommonHelper.showSnackbar(
                             context, S.of(context).copied_address);
                       }
                     });

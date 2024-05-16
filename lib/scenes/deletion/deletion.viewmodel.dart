@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -51,7 +51,7 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
         .then((_) {
       hasSaveMnemonic = true;
       datasourceChangedStreamController.sinkAddSafe(this);
-      LocalToast.showToast(context, S.of(context).copied_mnemonic);
+      CommonHelper.showSnackbar(context, S.of(context).copied_mnemonic);
     });
   }
 
