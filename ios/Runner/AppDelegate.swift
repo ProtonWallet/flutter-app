@@ -29,7 +29,6 @@ import CryptoKit
     private var login: LoginAndSignup?
     private var navigationChannel: FlutterMethodChannel?
     private var humanVerificationDelegate: HumanVerifyDelegate?
-    // private var missingScopesDelegate: MissingScopesDelegate?
     var authManager: AuthHelper?
     private let serviceDelegate = WalletApiServiceManager()
     
@@ -43,7 +42,7 @@ import CryptoKit
     ) -> Bool {
         // Set up the Flutter window
         self.flutterWindow = self.window
-        // crash without this line. Inject crypto with the default implementation.
+        // Inject crypto with the default implementation.
         injectDefaultCryptoImplementation()
         let controller = self.flutterWindow?.rootViewController as! FlutterViewController
         let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views", binaryMessenger: controller.binaryMessenger)
@@ -216,7 +215,6 @@ import CryptoKit
             "userPrivateKey": loginData.credential.privateKey,
             "userPassphraseSalt": loginData.salts[0].keySalt,
             "userPassphrase": loginData.passphrases[loginData.salts[0].ID],
-            //
             "mailboxpasswordKeySalt": loginData.credential.passwordKeySalt,
             "mailboxpassword": loginData.credential.mailboxpassword,
         ]
