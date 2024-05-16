@@ -15,6 +15,16 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## App IDs
+
+```txt
+me.proton.wallet.ios
+me.proton.wallet.macos
+me.proton.wallet.android
+me.proton.wallet.linux
+me.proton.wallet.win
+```
+
 ## Setup development env
 
 Follow the docker image scripts.

@@ -1,4 +1,6 @@
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/channels/native.view.channel.dart';
+import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
@@ -21,12 +23,17 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 class HomeCoordinator extends Coordinator {
   late ViewBase widget;
+  final NativeViewChannel nativeViewChannel;
   ApiEnv apiEnv;
 
-  HomeCoordinator(this.apiEnv);
+  HomeCoordinator(this.apiEnv, this.nativeViewChannel);
 
   @override
   void end() {}
+
+  void showNativeUpgrade(NativeSession session) {
+    nativeViewChannel.switchToUpgrade(session);
+  }
 
   void showSetupOnbaord() {
     var view = SetupOnbaordCoordinator().start();
@@ -92,7 +99,7 @@ class HomeCoordinator extends Coordinator {
   }
 
   void logout() {
-    var view = WelcomeCoordinator().start();
+    var view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
   }
 

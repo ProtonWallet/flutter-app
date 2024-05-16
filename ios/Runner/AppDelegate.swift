@@ -46,7 +46,7 @@ import CryptoKit
         // crash without this line. Inject crypto with the default implementation.
         injectDefaultCryptoImplementation()
         let controller = self.flutterWindow?.rootViewController as! FlutterViewController
-        let nativeViewChannel = FlutterMethodChannel(name: "com.example.wallet/native.views", binaryMessenger: controller.binaryMessenger)
+        let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views", binaryMessenger: controller.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             guard let self = self else { return }
             switch call.method {
@@ -68,12 +68,14 @@ import CryptoKit
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS", message: "Can't parse arguments", details: nil))
                 }
+            case "native.navigation.plan.upgrade":
+                print("native.navigation.plan.upgrade:", call.arguments ?? "")
             default:
                 result(FlutterMethodNotImplemented)
             }
         }
         
-        navigationChannel = FlutterMethodChannel(name: "com.example.wallet/app.view", binaryMessenger: controller.binaryMessenger)
+        navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", binaryMessenger: controller.binaryMessenger)
         PMLog.setEnvironment(environment: "wallet-test")
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/page_route.dart';
+import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 
 abstract class Coordinator implements ViewNavigator {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  // create base class for manager and implement it
+  // create a list of managers. reflection by class name. T etc
+  static PlatformChannelManager platformChannelManager =
+      PlatformChannelManagerImpl();
 
   Coordinator();
 

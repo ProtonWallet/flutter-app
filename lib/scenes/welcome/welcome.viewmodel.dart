@@ -23,7 +23,7 @@ abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
   WelcomeViewModelImpl(super.coordinator);
-  static const _appChannel = MethodChannel('com.example.wallet/app.view');
+  static const _appChannel = MethodChannel('me.proton.wallet/app.view');
 
   late UserSessionProvider userSessionProvider;
 
