@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/managers/secure.storage/secure.storage.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.interface.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.dart';
 
 class SecureStorageHelper {
   // storage interface
@@ -17,8 +18,18 @@ class SecureStorageHelper {
 
   SecureStorageHelper._({required this.storage});
 
-  static void init(SecureStorageInterface? storage) {
-    _instance ??= SecureStorageHelper._(storage: storage ?? SecureStorage());
+  static Future<void> init(SecureStorageInterface? storage) async {
+    if (storage != null) {
+      _instance ??= SecureStorageHelper._(storage: storage);
+    } else {
+      _instance ??= SecureStorageHelper._(storage: SecureStorage());
+      // clear all data if first run
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('firstTimeEntry') ?? true) {
+        await _instance?.deleteAll();
+        prefs.setBool('firstTimeEntry', false);
+      }
+    }
   }
 
   static SecureStorageHelper get instance {

@@ -53,7 +53,7 @@ void main() async {
   await LocalAuth.init();
   await DBHelper
       .init(); // TODO:: this need move to correct place after app started
-  SecureStorageHelper.init(null);
+  await SecureStorageHelper.init(null);
   await RustLib.init();
   await setupLogger();
   await testCallbackfunction();
