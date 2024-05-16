@@ -559,27 +559,6 @@ class HomeView extends ViewBase<HomeViewModel> {
   }
 }
 
-void showMyAlertDialog(BuildContext context, String content) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Secure Storage Info"),
-        content: Text(content),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: content)).then(
-                  (v) => {LocalToast.showToast(context, S.of(context).copied)});
-            },
-            child: Text(S.of(context).copy_button),
-          )
-        ],
-      );
-    },
-  );
-}
-
 Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
   return SafeArea(
       child: SingleChildScrollView(

@@ -298,7 +298,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                               ),
                               // IconButton(onPressed: (){
                               //   Clipboard.setData(ClipboardData(text: viewModel.strMnemonic)).then(
-                              //           (v) => {LocalToast.showToast(context, S.of(context).copied)});
+                              //           (v) => {CommonHelper.showSnackbar(context, S.of(context).copied)});
                               // }, icon: const Icon(Icons.copy_rounded))
                             ],
                           ),

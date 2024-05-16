@@ -12,7 +12,7 @@ import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter/services.dart';
@@ -174,7 +174,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                             onTap: () {
                                               Clipboard.setData(ClipboardData(
                                                   text: viewModel.address));
-                                              LocalToast.showToast(context,
+                                              CommonHelper.showSnackbar(context,
                                                   S.of(context).copied_address);
                                             },
                                             child: Icon(

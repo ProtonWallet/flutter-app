@@ -6,7 +6,6 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -74,7 +73,7 @@ class RecipientDetail extends StatelessWidget {
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: bitcoinAddress))
                           .then((_) {
-                        LocalToast.showToast(context, S.of(context).copied_address);
+                        CommonHelper.showSnackbar(context, S.of(context).copied_address);
                       });
                     },
                     child: Row(children: [

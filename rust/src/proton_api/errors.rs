@@ -34,8 +34,8 @@ impl From<Error> for ApiError {
             }
             Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
             Error::ErrorCode(error) => ApiError::Generic(format!(
-                "Response Code:{} Details:{}",
-                error.code, error.details
+                "Response Code:{}\nErrorMessage: {}\nDetails:{}",
+                error.code, error.message, error.details
             )),
             Error::DeserializeErr(err) => ApiError::Generic(err),
         }
