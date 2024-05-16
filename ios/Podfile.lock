@@ -265,7 +265,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   proton_crypto: 69238ad48734e5d5dca3ac19b965cf682c5e5bcf
   Ramp: fb07b544581cc9ad0eb8b56b43c9d59ef6204ca2
-  ramp_flutter: 412e68fa0ee3196fc043f83555534574796edf2f
+  ramp_flutter: aac85dee8bc93b5f7563c909ba15a37727fe3fe8
   ReachabilitySwift: 2128f3a8c9107e1ad33574c6e58e8285d460b149
   rust_builder: 2ab4ea7827686210bc4c5dc71783b90d02faffae
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5

@@ -53,7 +53,7 @@ class WalletSettingSheet {
                 .getIntegratedEmailIDs(accountModel)
                 .isNotEmpty
     };
-    Map<int, ValueNotifier> emailIntegrationNotifiers = {
+    Map<int, ValueNotifier> _ = {
       for (var item in userAccounts)
         item.id!: ValueNotifier(viewModel.protonAddresses.firstOrNull)
     };

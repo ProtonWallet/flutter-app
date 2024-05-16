@@ -84,6 +84,7 @@ import CryptoKit
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
         }
 
+        // disable 
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

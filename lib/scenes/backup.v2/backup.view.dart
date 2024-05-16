@@ -12,7 +12,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
-  SetupBackupView(SetupBackupViewModel viewModel)
+  const SetupBackupView(SetupBackupViewModel viewModel)
       : super(viewModel, const Key("SetupBackupView"));
 
   @override
@@ -176,7 +176,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                                                                 .textNorm)),
                                               ))),
                                       const Padding(
-                                          padding: const EdgeInsets.symmetric(
+                                          padding: EdgeInsets.symmetric(
                                               horizontal: defaultPadding),
                                           child: Divider(
                                             height: 0.5,

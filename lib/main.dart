@@ -51,7 +51,8 @@ void main() async {
   await LocalNotification.init();
   await FirebaseMessagingHelper.init();
   await LocalAuth.init();
-  await DBHelper.init();
+  await DBHelper
+      .init(); // TODO:: this need move to correct place after app started
   SecureStorageHelper.init(null);
   await RustLib.init();
   await setupLogger();
