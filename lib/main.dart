@@ -57,6 +57,7 @@ void main() async {
   await RustLib.init();
   await setupLogger();
   await testCallbackfunction();
-
-  runApp(AppCoordinator().start());
+  var app = AppCoordinator();
+  await app.init();
+  runApp(app.start());
 }

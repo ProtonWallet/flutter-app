@@ -20,10 +20,12 @@ import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -184,6 +186,19 @@ class HomeViewModelImpl extends HomeViewModel {
       CryptoPriceDataService(duration: const Duration(seconds: 10));
   late StreamSubscription _subscription;
 
+  /// TODO:: fix me temp
+  late NativeSession session;
+
+  Future<void> buildTempSession() async {
+    session = NativeSession(
+        UserId: await SecureStorageHelper.instance.get("userId"),
+        Username: await SecureStorageHelper.instance.get("userName"),
+        SessionId: await SecureStorageHelper.instance.get("sessionId"),
+        AccessToken: await SecureStorageHelper.instance.get("accessToken"),
+        RefreshToken: await SecureStorageHelper.instance.get("refreshToken"),
+        Passphrase: "");
+  }
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
@@ -250,6 +265,7 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = "";
     }
     try {
+      buildTempSession();
       getUserSettings();
       cryptoPriceDataService.start(); //start service
       checkNetwork();
@@ -706,6 +722,9 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.buy:
         coordinator.showBuy(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        break;
+      case NavID.nativeUpgrade:
+        coordinator.showNativeUpgrade(session);
         break;
       default:
         break;

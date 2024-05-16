@@ -30,6 +30,8 @@ enum NavID {
   // buy
   buy,
   rampExternal,
+  // upgrade
+  nativeUpgrade,
 
   // Security
   passphrase,
