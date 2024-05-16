@@ -16,13 +16,11 @@ import flutter_local_notifications
 import ProtonCoreLog
 import ProtonCoreCryptoGoInterface
 import ProtonCoreCryptoGoImplementation
-import SwiftUI // If using SwiftUI
 import CommonCrypto
 import CryptoKit
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SimpleViewDelegate {
-    var flutterWindow: UIWindow?
 
     /// native code and this need to be refactored later
     private var apiService: PMAPIService?
@@ -40,12 +38,12 @@ import CryptoKit
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Set up the Flutter window
-        self.flutterWindow = self.window
         // Inject crypto with the default implementation.
         injectDefaultCryptoImplementation()
-        let controller = self.flutterWindow?.rootViewController as! FlutterViewController
-        let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views", binaryMessenger: controller.binaryMessenger)
+        let rootViewController = self.window?.rootViewController as! FlutterViewController
+
+        let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views", 
+                                                     binaryMessenger: rootViewController.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             guard let self = self else { return }
             switch call.method {
@@ -62,10 +60,14 @@ import CryptoKit
                             self.switchToSignup(env: environment)
                         }
                     default:
-                        result(FlutterError(code: "INVALID_ENVIRONMENT", message: "Environment unknown", details: nil))
+                        result(FlutterError(code: "INVALID_ENVIRONMENT", 
+                                            message: "Environment unknown",
+                                            details: nil))
                     }
                 } else {
-                    result(FlutterError(code: "INVALID_ARGUMENTS", message: "Can't parse arguments", details: nil))
+                    result(FlutterError(code: "INVALID_ARGUMENTS", 
+                                        message: "Can't parse arguments",
+                                        details: nil))
                 }
             case "native.navigation.plan.upgrade":
                 print("native.navigation.plan.upgrade:", call.arguments ?? "")
@@ -74,7 +76,8 @@ import CryptoKit
             }
         }
         
-        navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", binaryMessenger: controller.binaryMessenger)
+        navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", 
+                                                 binaryMessenger: rootViewController.binaryMessenger)
         PMLog.setEnvironment(environment: "wallet-test")
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
@@ -118,7 +121,7 @@ import CryptoKit
     
     private var getSignupAvailability: SignupAvailability {
         let signupAvailability: SignupAvailability
-        let summaryScreenVariant: SummaryScreenVariant = .noSummaryScreen //showSignupSummaryScreenSwitch.isOn ? signupSummaryScreenVariant : .noSummaryScreen
+        let summaryScreenVariant: SummaryScreenVariant = .noSummaryScreen
         signupAvailability = .available(parameters: SignupParameters(separateDomainsButton: false,
                                                                      passwordRestrictions: .default,
                                                                      summaryScreenVariant: summaryScreenVariant))
@@ -226,9 +229,14 @@ import CryptoKit
     }
 
     func switchToSignIn(env: Environment) {
-        print("Showing login view")
+        guard let rootViewController = self.window.rootViewController else {
+            PMLog.error("rootViewController must be set before calling \(#function)")
+            return
+        }
+
+        print("Showing sign-in view")
         self.initSignupLogin(env: env)
-        login?.presentLoginFlow(over: flutterWindow?.rootViewController as! UIViewController,
+        login?.presentLoginFlow(over: rootViewController,
                                 customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
                                     customErrorPresenter: getCustomErrorPresenter,
@@ -239,9 +247,14 @@ import CryptoKit
     }
 
     func switchToSignup(env: Environment) {
-        print("Showing login view")
+        guard let rootViewController = self.window.rootViewController else {
+            PMLog.error("rootViewController must be set before calling \(#function)")
+            return
+        }
+
+        print("Showing sign-up view")
         self.initSignupLogin(env: env)
-        login?.presentSignupFlow(over: flutterWindow?.rootViewController as! UIViewController,
+        login?.presentSignupFlow(over: rootViewController,
                                  customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
                                     customErrorPresenter: getCustomErrorPresenter,
