@@ -18,7 +18,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
+import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -57,7 +57,7 @@ class WalletSettingSheet {
       for (var item in userAccounts)
         item.id!: ValueNotifier(viewModel.protonAddresses.firstOrNull)
     };
-    HomeModalBottomSheet.show(context, viewModel,
+    HomeModalBottomSheet.show(context,
         scrollController: scrollController, child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return Column(

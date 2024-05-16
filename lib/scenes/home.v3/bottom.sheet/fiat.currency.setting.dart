@@ -5,13 +5,13 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
+import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class FiatCurrencySettingSheet {
   static void show(BuildContext context, HomeViewModel viewModel) {
-    HomeModalBottomSheet.show(context, viewModel, child:
+    HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
           mainAxisSize: MainAxisSize.min,

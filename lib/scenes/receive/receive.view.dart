@@ -1,16 +1,19 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/underline.dart';
+import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
@@ -103,6 +106,37 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: 10),
+                                  if (Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .currentAccount ==
+                                      null)
+                                    Column(children: [
+                                      WalletAccountDropdown(
+                                          labelText: S
+                                              .of(context)
+                                              .receive_to,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              defaultPadding * 2,
+                                          accounts:
+                                              Provider.of<ProtonWalletProvider>(
+                                                      context)
+                                                  .protonWallet
+                                                  .currentAccounts,
+                                          valueNotifier: viewModel.initialized
+                                              ? viewModel.accountValueNotifier
+                                              : ValueNotifier(Provider.of<
+                                                          ProtonWalletProvider>(
+                                                      context)
+                                                  .protonWallet
+                                                  .currentAccounts
+                                                  .first)),
+                                      const Divider(
+                                        thickness: 0.2,
+                                        height: 1,
+                                      ),
+                                    ]),
                                   Container(
                                     color: ProtonColors.white,
                                     padding: const EdgeInsets.all(10),
