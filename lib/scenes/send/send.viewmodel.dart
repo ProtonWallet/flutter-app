@@ -110,6 +110,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<ContactsModel> contactsEmail = [];
   late TxBuilder txBuilder;
   late TxBuilderResult txBuilderResult;
+  late ValueNotifier accountValueNotifier;
+  bool initialized = false;
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -186,7 +188,17 @@ class SendViewModelImpl extends SendViewModel {
       updateFeeRate();
       contactsEmail = await WalletManager.getContacts();
       walletModel = await DBHelper.walletDao!.findById(walletID);
-      accountModel = await DBHelper.accountDao!.findById(accountID);
+      if (accountID == 0) {
+        accountModel = await DBHelper.accountDao!
+            .findDefaultAccountByWalletID(walletModel?.id ?? 0);
+      } else {
+        accountModel = await DBHelper.accountDao!.findById(accountID);
+      }
+      accountValueNotifier = ValueNotifier(accountModel);
+      accountValueNotifier.addListener(() async {
+        accountModel = accountValueNotifier.value;
+        await updateWallet();
+      });
       updateWallet();
       logger.i(DateTime.now().toString());
       await WalletManager.initContacts();
@@ -194,6 +206,7 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
+    initialized = true;
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
@@ -206,7 +219,8 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> updateWallet() async {
-    _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
+    _wallet =
+        await WalletManager.loadWalletWithID(walletID, accountModel?.id ?? 0);
     var walletBalance = await _wallet.getBalance();
     balance = walletBalance.total;
     datasourceChangedStreamController.sinkAddSafe(this);

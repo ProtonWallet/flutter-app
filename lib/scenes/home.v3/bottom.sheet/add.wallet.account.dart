@@ -7,14 +7,14 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/base.dart';
+import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AddWalletAccountSheet {
   static void show(
       BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
-    HomeModalBottomSheet.show(context, viewModel,
+    HomeModalBottomSheet.show(context,
         child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
