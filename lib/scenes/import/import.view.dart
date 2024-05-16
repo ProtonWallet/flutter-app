@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/components/button.v5.dart';
@@ -109,6 +110,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                           EasyLoading.dismiss();
                           if (context.mounted) {
                             Navigator.of(context).pop();
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).wallet_imported);
                           }
                         },
                         text: S.of(context).import_button,
