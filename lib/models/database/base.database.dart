@@ -12,13 +12,26 @@ abstract class BaseDatabase {
     await db.execute(createTableQuery);
   }
 
+  Future<void> _addColumnIfNotExists(
+      String columnName, String columnType) async {
+    // Query to check if the column exists
+    final result = await db.rawQuery('PRAGMA table_info($tableName)');
+
+    // Check if column already exists
+    bool columnExists = result.any((column) => column['name'] == columnName);
+    // Add column if it doesn't exist
+    if (!columnExists) {
+      await db.execute(
+          'ALTER TABLE $tableName ADD COLUMN $columnName $columnType;');
+    }
+  }
+
   // unsafe. injection possible. but its hardcode in code. so its ok.
   Future<void> addColumn(String columnName, String columnType) async {
     if (!_isValidTableName(tableName)) {
       throw getException();
     }
-    await db
-        .execute('ALTER TABLE $tableName ADD COLUMN $columnName $columnType;');
+    await _addColumnIfNotExists(columnName, columnType);
   }
 
   Future<void> dropColumn(String columnName) async {

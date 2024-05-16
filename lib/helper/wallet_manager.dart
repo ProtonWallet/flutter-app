@@ -10,7 +10,6 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
-import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
@@ -987,7 +986,7 @@ class WalletManager {
     int addingCount = max(0,
         defaultBitcoinAddressCountForOneEmail - unFetchedBitcoinAddressCount);
     if (walletBitcoinAddresses.isEmpty) {
-      int localUnusedPoolCount = await DBHelper.bitcoinAddressDao!
+      int _ = await DBHelper.bitcoinAddressDao!
           .getUnusedPoolCount(walletModel?.id ?? 0, accountModel?.id ?? 0);
       // addingCount = min(addingCount,
       //     defaultBitcoinAddressCountForOneEmail - localUnusedPoolCount);
@@ -1073,7 +1072,7 @@ class WalletManager {
             TransactionDetailFromBlockChain(
                 txid: txid,
                 feeInSATS: data['fee'],
-                block_height: data['status']['block_height'] ?? 0,
+                blockHeight: data['status']['block_height'] ?? 0,
                 timestamp: data['status']['block_time'] ?? 0);
         List<dynamic> recipientMapList = data['vout']
             .map((output) => {

@@ -16,7 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 class AppView extends ViewBase<AppViewModel> {
-  AppView(AppViewModel viewModel, this.rootView)
+  const AppView(AppViewModel viewModel, this.rootView)
       : super(viewModel, const Key("AppView"));
   final Widget rootView;
 

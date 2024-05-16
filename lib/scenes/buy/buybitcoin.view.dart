@@ -7,7 +7,7 @@ import 'package:wallet/theme/theme.font.dart';
 import 'buybitcoin.viewmodel.dart';
 
 class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
-  BuyBitcoinView(BuyBitcoinViewModel viewModel)
+  const BuyBitcoinView(BuyBitcoinViewModel viewModel)
       : super(viewModel, const Key("BuyBitcoinView"));
 
   @override

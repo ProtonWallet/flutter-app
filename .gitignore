@@ -137,3 +137,6 @@ fastlane/*.env
 iOSInjectionProject/
 
 untranslated_strings.txt
+
+# DevTools options
+devtools_options.yaml
