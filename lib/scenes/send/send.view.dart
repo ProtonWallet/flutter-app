@@ -11,6 +11,7 @@ import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/textfield.send.btc.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
+import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
@@ -443,6 +444,33 @@ class SendView extends ViewBase<SendViewModel> {
                                 },
                               ),
                             const SizedBox(height: 20),
+                            if (Provider.of<ProtonWalletProvider>(context)
+                                    .protonWallet
+                                    .currentAccount ==
+                                null)
+                              Column(children: [
+                                WalletAccountDropdown(
+                                    labelText: S.of(context).trans_from,
+                                    backgroundColor:
+                                        ProtonColors.backgroundProton,
+                                    width: MediaQuery.of(context).size.width -
+                                        defaultPadding * 2,
+                                    accounts: Provider.of<ProtonWalletProvider>(
+                                            context)
+                                        .protonWallet
+                                        .currentAccounts,
+                                    valueNotifier: viewModel.initialized
+                                        ? viewModel.accountValueNotifier
+                                        : ValueNotifier(Provider.of<
+                                        ProtonWalletProvider>(
+                                        context)
+                                        .protonWallet
+                                        .currentAccounts
+                                        .first)),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ]),
                             Row(children: [
                               Expanded(
                                   child: TextFieldSendBTCV2(

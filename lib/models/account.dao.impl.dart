@@ -20,6 +20,8 @@ abstract class AccountDao extends AccountDatabase implements BaseDao {
       int walletID, List<String> serverAccountIDs);
 
   Future deleteAccountsByWalletID(int walletID);
+
+  Future<AccountModel?> findDefaultAccountByWalletID(int walletID);
 }
 
 class AccountDaoImpl extends AccountDao {
@@ -112,6 +114,20 @@ class AccountDaoImpl extends AccountDao {
       await account.decrypt();
     }
     return accounts;
+  }
+
+  @override
+  Future<AccountModel?> findDefaultAccountByWalletID(int walletID) async {
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'walletID = ?',
+        whereArgs: [walletID],
+        orderBy: 'derivationPath asc');
+    AccountModel? accountModel;
+    if (maps.isNotEmpty) {
+      accountModel = AccountModel.fromMap(maps.first);
+      await accountModel.decrypt();
+    }
+    return accountModel;
   }
 
   @override
