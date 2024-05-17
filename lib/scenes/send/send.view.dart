@@ -196,15 +196,19 @@ class SendView extends ViewBase<SendViewModel> {
                                                                 .width -
                                                             defaultPadding * 6 -
                                                             10,
-                                                        child: Flexible(
-                                                            child: Text(
-                                                                viewModel
-                                                                    .emailBodyController
-                                                                    .text,
-                                                                style: FontManager
-                                                                    .body2Median(
-                                                                        ProtonColors
-                                                                            .textNorm)))),
+                                                        child: Flex(
+                                                            direction:
+                                                                Axis.horizontal,
+                                                            children: [
+                                                              Flexible(
+                                                                  child: Text(
+                                                                      viewModel
+                                                                          .emailBodyController
+                                                                          .text,
+                                                                      style: FontManager.body2Median(
+                                                                          ProtonColors
+                                                                              .textNorm)))
+                                                            ])),
                                                   Text(
                                                       S
                                                           .of(context)
@@ -230,6 +234,11 @@ class SendView extends ViewBase<SendViewModel> {
                                             viewModel.emailBodyFocusNode,
                                         paddingSize: 7,
                                         maxLines: 3,
+                                        scrollPadding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom +
+                                                100),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(
                                               maxMemoTextCharSize)
@@ -282,15 +291,19 @@ class SendView extends ViewBase<SendViewModel> {
                                                               defaultPadding *
                                                                   6 -
                                                               10,
-                                                      child: Flexible(
-                                                          child: Text(
-                                                              viewModel
-                                                                  .memoTextController
-                                                                  .text,
-                                                              style: FontManager
-                                                                  .body2Median(
-                                                                      ProtonColors
-                                                                          .textNorm)))),
+                                                      child: Flex(
+                                                          direction:
+                                                              Axis.horizontal,
+                                                          children: [
+                                                            Flexible(
+                                                                child: Text(
+                                                                    viewModel
+                                                                        .memoTextController
+                                                                        .text,
+                                                                    style: FontManager.body2Median(
+                                                                        ProtonColors
+                                                                            .textNorm)))
+                                                          ])),
                                                 Text(
                                                     S
                                                         .of(context)
@@ -314,6 +327,11 @@ class SendView extends ViewBase<SendViewModel> {
                                       myFocusNode: viewModel.memoFocusNode,
                                       paddingSize: 7,
                                       maxLines: 3,
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              100),
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(
                                             maxMemoTextCharSize)
@@ -325,33 +343,32 @@ class SendView extends ViewBase<SendViewModel> {
                                   ),
                             const SizedBox(height: 10),
                           ])))),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            margin:
-                const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
-            child: ButtonV5(
-                onPressed: () async {
-                  // TODO:: Send bitcoin with Esplora client
-                  bool success = await viewModel.sendCoin();
-                  if (context.mounted && success) {
-                    Provider.of<ProtonWalletProvider>(context, listen: false)
-                        .syncWallet();
-                    viewModel.coordinator.end();
-                    Navigator.of(context).pop();
-                  } else if (context.mounted && success == false) {
-                    LocalToast.showErrorToast(context, viewModel.errorMessage);
-                    viewModel.errorMessage = "";
-                  }
-                },
-                enable:
-                    (viewModel.isEditingEmailBody | viewModel.isEditingMemo) ==
-                        false,
-                backgroundColor: ProtonColors.protonBlue,
-                text: S.of(context).submit,
-                width: MediaQuery.of(context).size.width,
-                textStyle: FontManager.body1Median(ProtonColors.white),
-                height: 48),
-          ),
+          if (MediaQuery.of(context).viewInsets.bottom < 80)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
+              child: ButtonV5(
+                  onPressed: () async {
+                    // TODO:: Send bitcoin with Esplora client
+                    bool success = await viewModel.sendCoin();
+                    if (context.mounted && success) {
+                      Provider.of<ProtonWalletProvider>(context, listen: false)
+                          .syncWallet();
+                      viewModel.coordinator.end();
+                      Navigator.of(context).pop();
+                    } else if (context.mounted && success == false) {
+                      LocalToast.showErrorToast(
+                          context, viewModel.errorMessage);
+                      viewModel.errorMessage = "";
+                    }
+                  },
+                  backgroundColor: ProtonColors.protonBlue,
+                  text: S.of(context).submit,
+                  width: MediaQuery.of(context).size.width,
+                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  height: 48),
+            ),
         ]));
   }
 
@@ -501,21 +518,27 @@ class SendView extends ViewBase<SendViewModel> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              DropdownButtonV2(
-                                  width: 90,
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 2, bottom: 2),
-                                  maxSuffixIconWidth: 20,
-                                  textStyle: FontManager.captionMedian(
-                                      ProtonColors.textNorm),
-                                  backgroundColor:
-                                      ProtonColors.backgroundProton,
-                                  items: fiatCurrencies,
-                                  itemsText: fiatCurrencies
-                                      .map((v) => FiatCurrencyHelper.getName(v))
-                                      .toList(),
-                                  valueNotifier:
-                                      viewModel.fiatCurrencyNotifier),
+                              Container(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: DropdownButtonV2(
+                                      width: 90,
+                                      padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 2,
+                                          bottom: 2),
+                                      maxSuffixIconWidth: 20,
+                                      textStyle: FontManager.captionMedian(
+                                          ProtonColors.textNorm),
+                                      backgroundColor:
+                                          ProtonColors.backgroundProton,
+                                      items: fiatCurrencies,
+                                      itemsText: fiatCurrencies
+                                          .map((v) =>
+                                              FiatCurrencyHelper.getName(v))
+                                          .toList(),
+                                      valueNotifier:
+                                          viewModel.fiatCurrencyNotifier)),
                             ]),
                             const SizedBox(height: 20),
                             if (viewModel.errorMessage.isNotEmpty)
@@ -529,20 +552,21 @@ class SendView extends ViewBase<SendViewModel> {
                             //     viewModel.feeRateMedianPriority.toStringAsFixed(6)),
                             // Text(viewModel.feeRateLowPriority.toStringAsFixed(6)),
                           ]))))),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              margin:
-                  const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
-              child: ButtonV5(
-                  onPressed: () {
-                    viewModel.updatePageStatus(inReview: true);
-                  },
-                  enable: viewModel.validRecipientCount() > 0,
-                  text: S.of(context).review_transaction,
-                  width: MediaQuery.of(context).size.width,
-                  backgroundColor: ProtonColors.protonBlue,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
-                  height: 48)),
+          if (MediaQuery.of(context).viewInsets.bottom < 80)
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: defaultButtonPadding),
+                child: ButtonV5(
+                    onPressed: () {
+                      viewModel.updatePageStatus(inReview: true);
+                    },
+                    enable: viewModel.validRecipientCount() > 0,
+                    text: S.of(context).review_transaction,
+                    width: MediaQuery.of(context).size.width,
+                    backgroundColor: ProtonColors.protonBlue,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    height: 48)),
         ]));
   }
 }

@@ -19,6 +19,7 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
   WelcomeViewModel(super.coordinator);
+
   bool initialized = false;
 }
 
@@ -26,11 +27,10 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   final NativeViewChannel nativeChannel;
 
   WelcomeViewModelImpl(super.coordinator, this.nativeChannel);
+
   static const _appChannel = MethodChannel('me.proton.wallet/app.view');
 
   late UserSessionProvider userSessionProvider;
-
-  bool hadLocallogin = false;
   final datasourceChangedStreamController =
       StreamController<WelcomeViewModel>.broadcast();
 
@@ -44,18 +44,15 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   Future<void> _localLogin() async {
     nativeChannel.initalNativeApiEnv(appConfig.apiEnv);
-    if (!hadLocallogin) {
-      hadLocallogin = true;
-      if (await SecureStorageHelper.instance.get("sessionId") != "") {
-        await loginResume();
-        // LocalAuth.authenticate("Authenticate to login").then((auth) {
-        //   if (auth) {
-        //     ((coordinator).widget as WelcomeView).loginResume();
-        //   }
-        // });
-      } else {
-        _appChannel.setMethodCallHandler(_handleMethodCall);
-      }
+    if (await SecureStorageHelper.instance.get("sessionId") != "") {
+      await loginResume();
+      // LocalAuth.authenticate("Authenticate to login").then((auth) {
+      //   if (auth) {
+      //     ((coordinator).widget as WelcomeView).loginResume();
+      //   }
+      // });
+    } else {
+      _appChannel.setMethodCallHandler(_handleMethodCall);
     }
   }
 

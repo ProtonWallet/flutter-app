@@ -18,6 +18,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final bool isPassword;
   final double? paddingSize;
   final int? maxLines;
+  final EdgeInsets? scrollPadding;
 
   const TextFieldTextV2(
       {super.key,
@@ -34,7 +35,8 @@ class TextFieldTextV2 extends StatefulWidget {
       this.isPassword = false,
       this.paddingSize,
       this.maxLines,
-      this.checkOfErrorOnFocusChange = true});
+      this.checkOfErrorOnFocusChange = true,
+      this.scrollPadding});
 
   @override
   State<StatefulWidget> createState() => TextFieldTextV2State();
@@ -103,6 +105,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
+                  scrollPadding: widget.scrollPadding ?? const EdgeInsets.all(20),
                   obscureText: widget.isPassword ? isObscureText : false,
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,

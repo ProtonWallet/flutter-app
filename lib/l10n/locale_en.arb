@@ -217,6 +217,7 @@
   "you_are_sending": "You are sending",
   "receive_desc": "Below is the last generated Bitcoin address.\nFor better privacy, use a different address for each transaction.",
   "your_bitcoin_address": "Your BTC address",
+  "please_select_wallet_first": "Please select wallet first",
   "please_backup_mnemonic_before_delete_": "Please backup your secret recovery phrase before you delete your wallet. This mnemonic can help you to restore your wallet next time.",
   "save_mnemonic": "Save Mnemonic",
   "wallet_deleted": "Wallet deleted",

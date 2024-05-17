@@ -180,7 +180,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                         price: viewModel.btcPriceInfo.price,
                         priceChange: viewModel.btcPriceInfo.priceChange24h,
                         onSend: () {
-                          viewModel.move(NavID.send);
+                          if (Provider.of<ProtonWalletProvider>(context,
+                                      listen: false)
+                                  .protonWallet
+                                  .currentWallet !=
+                              null) {
+                            viewModel.move(NavID.send);
+                          } else {
+                            CommonHelper.showSnackbar(context, S.of(context).please_select_wallet_first);
+                          }
                         },
                         onBuy: () {
                           if (Provider.of<ProtonWalletProvider>(context,
@@ -195,7 +203,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                           }
                         },
                         onReceive: () {
-                          move(context, viewModel, NavID.receive);
+                          if (Provider.of<ProtonWalletProvider>(context,
+                                      listen: false)
+                                  .protonWallet
+                                  .currentWallet !=
+                              null) {
+                            move(context, viewModel, NavID.receive);
+                          } else {
+                            CommonHelper.showSnackbar(context, S.of(context).please_select_wallet_first);
+                          }
                         }),
                     const SizedBox(
                       height: 10,
@@ -691,7 +707,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                           .length <
                                       freeUserWalletLimit) {
                                     Navigator.pop(context);
-                                    OnboardingGuideSheet.show(context, viewModel);
+                                    OnboardingGuideSheet.show(
+                                        context, viewModel);
                                   } else {
                                     CommonHelper.showSnackbar(
                                         context,
