@@ -347,36 +347,42 @@ void showNetworkFee(BuildContext context) {
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          return SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
-                          fit: BoxFit.fill, width: 86, height: 87),
-                      const SizedBox(height: 10),
-                      Text(S.of(context).placeholder,
-                          style:
-                              FontManager.body1Median(ProtonColors.textNorm)),
-                      const SizedBox(height: 5),
-                      Text(S.of(context).placeholder,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textWeak)),
-                      const SizedBox(height: 20),
-                      ButtonV5(
-                        text: S.of(context).ok,
-                        width: MediaQuery.of(context).size.width,
-                        backgroundColor: ProtonColors.protonBlue,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
-                        height: 48,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  )));
+          return SafeArea(
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(defaultPadding),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                            "assets/images/icon/no_wallet_found.svg",
+                            fit: BoxFit.fill,
+                            width: 86,
+                            height: 87),
+                        const SizedBox(height: 10),
+                        Text(S.of(context).placeholder,
+                            style:
+                                FontManager.body1Median(ProtonColors.textNorm)),
+                        const SizedBox(height: 5),
+                        Text(S.of(context).placeholder,
+                            style: FontManager.body2Regular(
+                                ProtonColors.textWeak)),
+                        const SizedBox(height: 20),
+                        ButtonV5(
+                          text: S.of(context).ok,
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: ProtonColors.protonBlue,
+                          textStyle:
+                              FontManager.body1Median(ProtonColors.white),
+                          height: 48,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ))),
+          );
         });
       });
 }

@@ -1,4 +1,3 @@
-
 #[derive(Debug)]
 pub enum Error {
     AccountNotFound,
@@ -33,13 +32,23 @@ impl From<andromeda_bitcoin::error::Error> for Error {
             andromeda_bitcoin::error::Error::BdkError(e) => Error::BdkError(e.to_string()),
             andromeda_bitcoin::error::Error::Bip32Error(e) => Error::Bip32Error(e.to_string()),
             andromeda_bitcoin::error::Error::Bip39Error(_) => Error::Bip39Error("".to_string()),
-            andromeda_bitcoin::error::Error::CannotBroadcastTransaction => Error::CannotBroadcastTransaction,
+            andromeda_bitcoin::error::Error::CannotBroadcastTransaction => {
+                Error::CannotBroadcastTransaction
+            }
             andromeda_bitcoin::error::Error::CannotComputeTxFees => Error::CannotComputeTxFees,
-            andromeda_bitcoin::error::Error::CannotGetFeeEstimation => Error::CannotGetFeeEstimation,
-            andromeda_bitcoin::error::Error::CannotCreateAddressFromScript => Error::CannotCreateAddressFromScript,
-            andromeda_bitcoin::error::Error::CannotGetAddressFromScript => Error::CannotGetAddressFromScript,
+            andromeda_bitcoin::error::Error::CannotGetFeeEstimation => {
+                Error::CannotGetFeeEstimation
+            }
+            andromeda_bitcoin::error::Error::CannotCreateAddressFromScript => {
+                Error::CannotCreateAddressFromScript
+            }
+            andromeda_bitcoin::error::Error::CannotGetAddressFromScript => {
+                Error::CannotGetAddressFromScript
+            }
             andromeda_bitcoin::error::Error::DerivationError => Error::DerivationError,
-            andromeda_bitcoin::error::Error::DescriptorError(e) => Error::DescriptorError(e.to_string()),
+            andromeda_bitcoin::error::Error::DescriptorError(e) => {
+                Error::DescriptorError(e.to_string())
+            }
             andromeda_bitcoin::error::Error::InvalidAccountIndex => Error::InvalidAccountIndex,
             andromeda_bitcoin::error::Error::InvalidAddress => Error::InvalidAddress,
             andromeda_bitcoin::error::Error::InvalidData => Error::InvalidData,
@@ -59,29 +68,6 @@ impl From<andromeda_bitcoin::error::Error> for Error {
 
 impl From<bdk::Error> for Error {
     fn from(value: bdk::Error) -> Self {
-       Error::BdkError(value.to_string())
+        Error::BdkError(value.to_string())
     }
 }
-
-// impl From<bdk::miniscript::Error> for Error {
-//     fn from(value: bdk::miniscript::Error) -> Self {
-//         Error::Miniscript(value.to_string())
-//     }
-// }
-// impl From<DescriptorKeyParseError> for Error {
-//     fn from(value: DescriptorKeyParseError) -> Self {
-//         Error::Descriptor(value.to_string())
-//     }
-// }
-
-// impl From<bdk::bitcoin::locktime::Error> for Error {
-//     fn from(value: bdk::bitcoin::locktime::Error) -> Self {
-//         Error::Miniscript(value.to_string())
-//     }
-// }
-
-// impl From<serde_json::Error> for Error {
-//     fn from(value: serde_json::Error) -> Self {
-//         Error::Json(value.to_string())
-//     }
-// }

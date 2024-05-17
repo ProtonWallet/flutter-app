@@ -141,7 +141,7 @@ class WalletManager {
         network: appConfig.coinType.network,
         bip39Mnemonic: strMnemonic,
         bip38Passphrase: passphrase);
-    String fingerprint = await wallet.getFingerprint();
+    String fingerprint = wallet.fingerprint;
     logger.i("fingerprint = $fingerprint");
     return fingerprint;
   }

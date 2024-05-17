@@ -16,50 +16,56 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
   @override
   Widget buildWithViewModel(BuildContext context,
       SecuritySettingViewModel viewModel, ViewSize viewSize) {
-    return PageLayoutV1(
-      title: S.of(context).security,
-      child: Column(
-        children: [
-          const SizedBox(height: defaultPadding),
-          GestureDetector(
-              onTap: () {
-                // viewModel.move(NavID.twoFactorAuthSetup); // TODO:: add back after fix ui
-              },
-              child: Container(
-                padding: const EdgeInsets.all(defaultPadding),
-                decoration: BoxDecoration(
-                  color: ProtonColors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(18.0)),
-                ),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            S.of(context).setting_2fa_setup,
-                            style:
-                                FontManager.body2Regular(ProtonColors.textNorm),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 12,
-                            color: ProtonColors.textHint,
-                          )
-                        ]),
-                  ],
-                ),
-              )),
-          const SizedBox(height: 10),
-          DropdownButtonV2(
-              labelText: S.of(context).unlock_with,
-              width: MediaQuery.of(context).size.width,
-              items: const ["Face ID", "Biometrics"],
-              itemsText: const ["Face ID", "Biometrics"],
-              valueNotifier: ValueNotifier("Face ID")),
-        ],
+    return Scaffold(
+      backgroundColor: ProtonColors.backgroundProton,
+      body: SafeArea(
+        child: PageLayoutV1(
+          title: S.of(context).security,
+          child: Column(
+            children: [
+              const SizedBox(height: defaultPadding),
+              GestureDetector(
+                  onTap: () {
+                    // viewModel.move(NavID.twoFactorAuthSetup); // TODO:: add back after fix ui
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(defaultPadding),
+                    decoration: BoxDecoration(
+                      color: ProtonColors.white,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(18.0)),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                S.of(context).setting_2fa_setup,
+                                style: FontManager.body2Regular(
+                                    ProtonColors.textNorm),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 12,
+                                color: ProtonColors.textHint,
+                              )
+                            ]),
+                      ],
+                    ),
+                  )),
+              const SizedBox(height: 10),
+              DropdownButtonV2(
+                  labelText: S.of(context).unlock_with,
+                  width: MediaQuery.of(context).size.width,
+                  items: const ["Face ID", "Biometrics"],
+                  itemsText: const ["Face ID", "Biometrics"],
+                  valueNotifier: ValueNotifier("Face ID")),
+            ],
+          ),
+        ),
       ),
     );
   }

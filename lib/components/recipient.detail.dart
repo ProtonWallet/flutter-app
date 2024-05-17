@@ -73,7 +73,8 @@ class RecipientDetail extends StatelessWidget {
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: bitcoinAddress))
                           .then((_) {
-                        CommonHelper.showSnackbar(context, S.of(context).copied_address);
+                        CommonHelper.showSnackbar(
+                            context, S.of(context).copied_address);
                       });
                     },
                     child: Row(children: [
@@ -130,38 +131,44 @@ void showInvite(BuildContext context, String email) {
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          return SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
-                          fit: BoxFit.fill, width: 86, height: 87),
-                      const SizedBox(height: 10),
-                      Text(S.of(context).no_wallet_found,
-                          style:
-                              FontManager.body1Median(ProtonColors.textNorm)),
-                      const SizedBox(height: 5),
-                      Text(S.of(context).no_wallet_found_desc,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textWeak)),
-                      const SizedBox(height: 20),
-                      ButtonV5(
-                        text: S.of(context).send_invite,
-                        width: MediaQuery.of(context).size.width,
-                        backgroundColor: ProtonColors.protonBlue,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
-                        height: 48,
-                        onPressed: () {
-                          sendEmailInvite(email, S.of(context).invite_subject,
-                              S.of(context).invite_body);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  )));
+          return SafeArea(
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(defaultPadding),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                            "assets/images/icon/no_wallet_found.svg",
+                            fit: BoxFit.fill,
+                            width: 86,
+                            height: 87),
+                        const SizedBox(height: 10),
+                        Text(S.of(context).no_wallet_found,
+                            style:
+                                FontManager.body1Median(ProtonColors.textNorm)),
+                        const SizedBox(height: 5),
+                        Text(S.of(context).no_wallet_found_desc,
+                            style: FontManager.body2Regular(
+                                ProtonColors.textWeak)),
+                        const SizedBox(height: 20),
+                        ButtonV5(
+                          text: S.of(context).send_invite,
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: ProtonColors.protonBlue,
+                          textStyle:
+                              FontManager.body1Median(ProtonColors.white),
+                          height: 48,
+                          onPressed: () {
+                            sendEmailInvite(email, S.of(context).invite_subject,
+                                S.of(context).invite_body);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ))),
+          );
         });
       });
 }
