@@ -159,33 +159,35 @@ void showQRScanBottomSheet(BuildContext context,
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return Container(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
-          child: Stack(children: [
-            Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  S.of(context).scan_btc_address,
-                  style: FontManager.body2Regular(ProtonColors.textNorm),
-                  textAlign: TextAlign.center,
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: MobileScanner(
-                  onDetect: (capture) {
-                    final List<Barcode> barcodes = capture.barcodes;
-                    for (final barcode in barcodes) {
-                      textEditingController.text = barcode.rawValue ?? "";
-                      if (callback != null) {
-                        Navigator.of(context).pop();
-                        callback();
+      return SafeArea(
+        child: Container(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
+            child: Stack(children: [
+              Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    S.of(context).scan_btc_address,
+                    style: FontManager.body2Regular(ProtonColors.textNorm),
+                    textAlign: TextAlign.center,
+                  )),
+              Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: MobileScanner(
+                    onDetect: (capture) {
+                      final List<Barcode> barcodes = capture.barcodes;
+                      for (final barcode in barcodes) {
+                        textEditingController.text = barcode.rawValue ?? "";
+                        if (callback != null) {
+                          Navigator.of(context).pop();
+                          callback();
+                        }
+                        break;
                       }
-                      break;
-                    }
-                  },
-                )),
-          ]));
+                    },
+                  )),
+            ])),
+      );
     },
   );
 }

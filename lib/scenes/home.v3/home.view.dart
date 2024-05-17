@@ -662,6 +662,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     ProtonColors.textHint)))),
                     ListTile(
                         onTap: () {
+                          Navigator.of(context).pop();
                           viewModel.move(NavID.securitySetting);
                         },
                         leading: SvgPicture.asset(

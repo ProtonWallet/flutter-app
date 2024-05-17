@@ -17,14 +17,16 @@ class HomeModalBottomSheet {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
         builder: (BuildContext context) {
-          return SingleChildScrollView(
-              controller: scrollController,
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: defaultPadding, horizontal: defaultPadding),
-                  child: child));
+          return SafeArea(
+            child: SingleChildScrollView(
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: defaultPadding, horizontal: defaultPadding),
+                    child: child)),
+          );
         });
   }
 }

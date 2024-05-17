@@ -133,82 +133,85 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       builder: (BuildContext context) {
-        return Container(
-            padding: const EdgeInsets.only(
-                bottom: defaultPadding,
-                top: defaultPadding * 2,
-                left: defaultPadding,
-                right: defaultPadding),
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                          child: Text(
-                        S.of(context).accounts,
-                        style: FontManager.body2Median(ProtonColors.textNorm),
-                      )),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      for (int index = 0;
-                          index < widget.accounts.length;
-                          index++)
-                        Container(
-                            height: 60,
-                            alignment: Alignment.center,
-                            child: Column(children: [
-                              ListTile(
-                                leading: selected == widget.accounts[index]
-                                    ? SvgPicture.asset(
-                                        "assets/images/icon/ic-checkmark.svg",
-                                        fit: BoxFit.fill,
-                                        width: 20,
-                                        height: 20)
-                                    : const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                title: Transform.translate(
-                                    offset: const Offset(-8, 0),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              widget
-                                                  .accounts[index].labelDecrypt,
-                                              style: FontManager.body2Regular(
-                                                  ProtonColors.textNorm)),
-                                          getWalletAccountBalanceWidget(
-                                              context, widget.accounts[index]),
-                                        ])),
-                                onTap: () {
-                                  setState(() {
-                                    selected = widget.accounts[index];
-                                    _textEditingController.text =
-                                        selected.labelDecrypt;
-                                    widget.valueNotifier?.value = selected;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              const Divider(
-                                thickness: 0.2,
-                                height: 1,
-                              )
-                            ])),
-                    ],
-                  )
-                ],
-              ),
-            ));
+        return SafeArea(
+          child: Container(
+              padding: const EdgeInsets.only(
+                  bottom: defaultPadding,
+                  top: defaultPadding * 2,
+                  left: defaultPadding,
+                  right: defaultPadding),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: Text(
+                          S.of(context).accounts,
+                          style: FontManager.body2Median(ProtonColors.textNorm),
+                        )),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        for (int index = 0;
+                            index < widget.accounts.length;
+                            index++)
+                          Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: Column(children: [
+                                ListTile(
+                                  leading: selected == widget.accounts[index]
+                                      ? SvgPicture.asset(
+                                          "assets/images/icon/ic-checkmark.svg",
+                                          fit: BoxFit.fill,
+                                          width: 20,
+                                          height: 20)
+                                      : const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                widget.accounts[index]
+                                                    .labelDecrypt,
+                                                style: FontManager.body2Regular(
+                                                    ProtonColors.textNorm)),
+                                            getWalletAccountBalanceWidget(
+                                                context,
+                                                widget.accounts[index]),
+                                          ])),
+                                  onTap: () {
+                                    setState(() {
+                                      selected = widget.accounts[index];
+                                      _textEditingController.text =
+                                          selected.labelDecrypt;
+                                      widget.valueNotifier?.value = selected;
+                                      Navigator.of(context).pop();
+                                    });
+                                  },
+                                ),
+                                const Divider(
+                                  thickness: 0.2,
+                                  height: 1,
+                                )
+                              ])),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+        );
       },
     );
   }

@@ -77,7 +77,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0-dev.33';
 
   @override
-  int get rustContentHash => -1233340014;
+  int get rustContentHash => 1572352785;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -112,7 +112,7 @@ abstract class RustLibApi extends BaseApi {
   void protonWalletAuthStoreSetDartCallback(
       {required FutureOr<String> Function(String) callback, dynamic hint});
 
-  Future<String> bdkWalletManagerGetFingerprint(
+  String bdkWalletManagerFingerprint(
       {required BdkWalletManager that, dynamic hint});
 
   Future<BdkWalletManager> bdkWalletManagerNew(
@@ -811,30 +811,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> bdkWalletManagerGetFingerprint(
+  String bdkWalletManagerFingerprint(
       {required BdkWalletManager that, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
             that, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 12, port: port_);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
-      constMeta: kBdkWalletManagerGetFingerprintConstMeta,
+      constMeta: kBdkWalletManagerFingerprintConstMeta,
       argValues: [that],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kBdkWalletManagerGetFingerprintConstMeta =>
+  TaskConstMeta get kBdkWalletManagerFingerprintConstMeta =>
       const TaskConstMeta(
-        debugName: "BdkWalletManager_get_fingerprint",
+        debugName: "BdkWalletManager_fingerprint",
         argNames: ["that"],
       );
 

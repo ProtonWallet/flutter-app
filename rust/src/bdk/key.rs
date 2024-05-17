@@ -1,7 +1,5 @@
-use bdk::bitcoin::secp256k1::Secp256k1;
-// use bdk::bitcoin::util::bip32::DerivationPath as BdkDerivationPath;
 use bdk::bitcoin::bip32::DerivationPath as BdkDerivationPath;
-// use bdk::descriptor::DescriptorXKey;
+use bdk::bitcoin::secp256k1::Secp256k1;
 use bdk::keys::bip39::{Language, Mnemonic as BdkMnemonic, WordCount};
 use bdk::keys::{DerivableKey, ExtendedKey, GeneratableKey, GeneratedKey};
 use bdk::keys::{

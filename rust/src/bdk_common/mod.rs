@@ -1,18 +1,18 @@
 
-// /// errors
+// errors
 // pub mod error;
 
-// // pub(crate) mod blockchain;
-// // pub(crate) mod descriptor;
-// // pub(crate) mod key;
-// // pub(crate) mod psbt;
+// pub(crate) mod blockchain;
+// pub(crate) mod descriptor;
+// pub(crate) mod key;
+// pub(crate) mod psbt;
 
-// pub mod account;
+// pub mod account;åß
 // pub mod blockchain;
 // pub mod wallet;
 // pub mod psbt;
 
-// /// types:
+// types
 // pub mod network;
 // pub mod types;
 // pub mod word_count;
