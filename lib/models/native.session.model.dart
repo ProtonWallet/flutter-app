@@ -4,20 +4,20 @@ part 'native.session.model.g.dart';
 
 @JsonSerializable()
 class NativeSession {
-  String UserId;
-  String SessionId;
-  String Username;
-  String Passphrase;
-  String AccessToken;
-  String RefreshToken;
+  String userId;
+  String sessionId;
+  String userName;
+  String passphrase;
+  String accessToken;
+  String refreshToken;
 
   NativeSession({
-    required this.UserId,
-    required this.SessionId,
-    required this.Username,
-    required this.Passphrase,
-    required this.AccessToken,
-    required this.RefreshToken,
+    required this.userId,
+    required this.sessionId,
+    required this.userName,
+    required this.passphrase,
+    required this.accessToken,
+    required this.refreshToken,
   });
 
   /// Connect the generated [_$NativeSessionFromJson] function to the `fromJson`

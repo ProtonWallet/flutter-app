@@ -87,8 +87,8 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
             labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
             suffixIconConstraints:
                 BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
-            contentPadding:
-                EdgeInsets.only(top: 4, bottom: widget.padding != null ? 2: 16),
+            contentPadding: EdgeInsets.only(
+                top: 4, bottom: widget.padding != null ? 2 : 16),
             suffixIcon: Icon(Icons.arrow_drop_down,
                 color: ProtonColors.textNorm, size: 24),
           ),
@@ -121,91 +121,95 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       builder: (BuildContext context) {
-        return Container(
-            padding: const EdgeInsets.only(
-                bottom: defaultPadding,
-                top: defaultPadding * 2,
-                left: defaultPadding,
-                right: defaultPadding),
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      for (int index = 0; index < widget.items.length; index++)
-                        Container(
-                            height: 60,
-                            alignment: Alignment.center,
-                            child: Column(children: [
-                              ListTile(
-                                trailing: selected == widget.items[index]
-                                    ? SvgPicture.asset(
-                                        "assets/images/icon/ic-checkmark.svg",
-                                        fit: BoxFit.fill,
-                                        width: 20,
-                                        height: 20)
-                                    : null,
-                                title: Text(widget.itemsText[index],
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.textNorm)),
-                                onTap: () {
-                                  setState(() {
-                                    selected = widget.items[index];
-                                    int selectedIndex =
-                                        max(widget.items.indexOf(selected), 0);
-                                    _textEditingController.text =
-                                        widget.itemsText[selectedIndex];
-                                    widget.valueNotifier?.value = selected;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              const Divider(
-                                thickness: 0.2,
-                                height: 1,
-                              )
-                            ])),
-                      // ListView.separated(
-                      //     itemCount: widget.items.length,
-                      //     separatorBuilder: (context, _) {
-                      //       return const Divider(
-                      //         thickness: 0.2,
-                      //         height: 1,
-                      //       );
-                      //     },
-                      //     itemBuilder: (context, index) {
-                      //       return ListTile(
-                      //         trailing: selected == widget.items[index]
-                      //             ? SvgPicture.asset(
-                      //                 "assets/images/icon/ic-checkmark.svg",
-                      //                 fit: BoxFit.fill,
-                      //                 width: 20,
-                      //                 height: 20)
-                      //             : null,
-                      //         title: Text(
-                      //             widget.itemsText[index],
-                      //             style: FontManager.body2Regular(
-                      //                 ProtonColors.textNorm)),
-                      //         onTap: () {
-                      //           setState(() {
-                      //             selected = widget.items[index];
-                      //           });
-                      //         },
-                      //       );
-                      //     }),
-                    ],
-                  )
-                ],
-              ),
-            ));
+        return SafeArea(
+          child: Container(
+              padding: const EdgeInsets.only(
+                  bottom: defaultPadding,
+                  top: defaultPadding * 2,
+                  left: defaultPadding,
+                  right: defaultPadding),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        for (int index = 0;
+                            index < widget.items.length;
+                            index++)
+                          Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: Column(children: [
+                                ListTile(
+                                  trailing: selected == widget.items[index]
+                                      ? SvgPicture.asset(
+                                          "assets/images/icon/ic-checkmark.svg",
+                                          fit: BoxFit.fill,
+                                          width: 20,
+                                          height: 20)
+                                      : null,
+                                  title: Text(widget.itemsText[index],
+                                      style: FontManager.body2Regular(
+                                          ProtonColors.textNorm)),
+                                  onTap: () {
+                                    setState(() {
+                                      selected = widget.items[index];
+                                      int selectedIndex = max(
+                                          widget.items.indexOf(selected), 0);
+                                      _textEditingController.text =
+                                          widget.itemsText[selectedIndex];
+                                      widget.valueNotifier?.value = selected;
+                                      Navigator.of(context).pop();
+                                    });
+                                  },
+                                ),
+                                const Divider(
+                                  thickness: 0.2,
+                                  height: 1,
+                                )
+                              ])),
+                        // ListView.separated(
+                        //     itemCount: widget.items.length,
+                        //     separatorBuilder: (context, _) {
+                        //       return const Divider(
+                        //         thickness: 0.2,
+                        //         height: 1,
+                        //       );
+                        //     },
+                        //     itemBuilder: (context, index) {
+                        //       return ListTile(
+                        //         trailing: selected == widget.items[index]
+                        //             ? SvgPicture.asset(
+                        //                 "assets/images/icon/ic-checkmark.svg",
+                        //                 fit: BoxFit.fill,
+                        //                 width: 20,
+                        //                 height: 20)
+                        //             : null,
+                        //         title: Text(
+                        //             widget.itemsText[index],
+                        //             style: FontManager.body2Regular(
+                        //                 ProtonColors.textNorm)),
+                        //         onTap: () {
+                        //           setState(() {
+                        //             selected = widget.items[index];
+                        //           });
+                        //         },
+                        //       );
+                        //     }),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+        );
       },
     );
   }

@@ -189,12 +189,6 @@ impl From<DescriptorKeyParseError> for Error {
     }
 }
 
-// impl From<bdk::bitcoin::locktime::Error> for Error {
-//     fn from(value: bdk::bitcoin::locktime::Error) -> Self {
-//         Error::Miniscript(value.to_string())
-//     }
-// }
-
 impl From<serde_json::Error> for Error {
     fn from(value: serde_json::Error) -> Self {
         Error::Json(value.to_string())
