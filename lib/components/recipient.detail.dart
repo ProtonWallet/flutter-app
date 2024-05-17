@@ -13,12 +13,14 @@ class RecipientDetail extends StatelessWidget {
   final String? name;
   final String? email;
   final String bitcoinAddress;
+  final bool isSelfBitcoinAddress;
   final VoidCallback? callback;
 
   const RecipientDetail({
     super.key,
     this.name,
     this.email,
+    this.isSelfBitcoinAddress = false,
     required this.bitcoinAddress,
     this.callback,
   });
@@ -108,6 +110,11 @@ class RecipientDetail extends StatelessWidget {
                       Icon(Icons.email,
                           color: ProtonColors.protonBlue, size: 14),
                     ])),
+          if (isSelfBitcoinAddress)
+            Text(
+              S.of(context).error_you_can_not_send_to_self_account,
+              style: FontManager.captionSemiBold(ProtonColors.signalError),
+            ),
         ],
       ),
       trailing: IconButton(

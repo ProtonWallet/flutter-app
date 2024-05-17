@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/custom.loading.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -127,9 +128,14 @@ class TransactionListTitle extends StatelessWidget {
                                 padding: const EdgeInsets.all(2.0),
                                 child: Icon(Icons.edit_outlined,
                                     size: 10, color: ProtonColors.textHint)),
-                            Text(S.of(context).trans_note(note),
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width - 150,
+                                child: Text(
+                                  S.of(context).trans_note(CommonHelper.getFirstNChar(note, 24)),
+                                  style: FontManager.captionRegular(
+                                      ProtonColors.textHint),
+                                  overflow: TextOverflow.ellipsis,
+                                ))
                           ]),
                     if ((body ?? "").isNotEmpty)
                       Row(
@@ -142,12 +148,16 @@ class TransactionListTitle extends StatelessWidget {
                                 ),
                                 margin: const EdgeInsets.only(right: 4, top: 2),
                                 padding: const EdgeInsets.all(2.0),
-                                child: Icon(Icons.edit_outlined,
+                                child: Icon(Icons.messenger_outline,
                                     size: 10, color: ProtonColors.textHint)),
-                            SizedBox(width: MediaQuery.of(context).size.width - 150, child:
-                            Text(S.of(context).trans_body(body ?? ""),
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint), overflow: TextOverflow.ellipsis,))
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width - 150,
+                                child: Text(
+                                  S.of(context).trans_body(body ?? ""),
+                                  style: FontManager.captionRegular(
+                                      ProtonColors.textHint),
+                                  overflow: TextOverflow.ellipsis,
+                                ))
                           ]),
                   ],
                 )),

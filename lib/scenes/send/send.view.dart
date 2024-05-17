@@ -101,18 +101,25 @@ class SendView extends ViewBase<SendViewModel> {
                             const SizedBox(height: 40),
                             getTransactionValueWidget(context, viewModel),
                             const SizedBox(height: 20),
-                            for (String recipent in viewModel.recipents)
+                            for (String recipient in viewModel.recipients)
                               if (viewModel.bitcoinAddresses
-                                      .containsKey(recipent) &&
-                                  viewModel.bitcoinAddresses[recipent]! != "")
+                                      .containsKey(recipient) &&
+                                  viewModel.bitcoinAddresses[recipient]! !=
+                                      "" &&
+                                  viewModel.selfBitcoinAddresses.contains(
+                                          viewModel.bitcoinAddresses[
+                                                  recipient] ??
+                                              "") ==
+                                      false)
                                 Column(children: [
                                   TransactionHistoryItem(
                                     title: S.of(context).trans_to,
-                                    content: recipent,
-                                    memo: viewModel.bitcoinAddresses[recipent],
-                                    amountInSATS: viewModel.recipents.length > 1
-                                        ? viewModel.amountInSATS
-                                        : null,
+                                    content: recipient,
+                                    memo: viewModel.bitcoinAddresses[recipient],
+                                    amountInSATS:
+                                        viewModel.recipients.length > 1
+                                            ? viewModel.amountInSATS
+                                            : null,
                                   ),
                                   const Divider(
                                     thickness: 0.2,
@@ -168,36 +175,46 @@ class SendView extends ViewBase<SendViewModel> {
                                               width: 32,
                                               height: 32),
                                           const SizedBox(width: 10),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (viewModel.emailBodyController
-                                                  .text.isNotEmpty)
-                                                Text(
-                                                    viewModel
-                                                        .emailBodyController
-                                                        .text,
-                                                    style:
-                                                        FontManager.body2Median(
-                                                            ProtonColors
-                                                                .textNorm)),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    viewModel.editEmailBody();
-                                                  },
-                                                  child: Text(
+                                          GestureDetector(
+                                              onTap: () {
+                                                viewModel.editEmailBody();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  if (viewModel
+                                                      .emailBodyController
+                                                      .text
+                                                      .isNotEmpty)
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            defaultPadding * 6 -
+                                                            10,
+                                                        child: Flexible(
+                                                            child: Text(
+                                                                viewModel
+                                                                    .emailBodyController
+                                                                    .text,
+                                                                style: FontManager
+                                                                    .body2Median(
+                                                                        ProtonColors
+                                                                            .textNorm)))),
+                                                  Text(
                                                       S
                                                           .of(context)
                                                           .message_to_recipient_optional,
                                                       style: FontManager
                                                           .body2Median(
                                                               ProtonColors
-                                                                  .protonBlue))),
-                                            ],
-                                          )
+                                                                  .protonBlue)),
+                                                ],
+                                              ))
                                         ],
                                       ))
                                   : Container(
@@ -212,6 +229,11 @@ class SendView extends ViewBase<SendViewModel> {
                                         myFocusNode:
                                             viewModel.emailBodyFocusNode,
                                         paddingSize: 7,
+                                        maxLines: 3,
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(
+                                              maxMemoTextCharSize)
+                                        ],
                                         validation: (String value) {
                                           return "";
                                         },
@@ -240,35 +262,45 @@ class SendView extends ViewBase<SendViewModel> {
                                             width: 32,
                                             height: 32),
                                         const SizedBox(width: 10),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            if (viewModel.memoTextController
-                                                .text.isNotEmpty)
-                                              Text(
-                                                  viewModel
-                                                      .memoTextController.text,
-                                                  style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
-                                                              .textNorm)),
-                                            GestureDetector(
-                                                onTap: () {
-                                                  viewModel.editMemo();
-                                                },
-                                                child: Text(
+                                        GestureDetector(
+                                            onTap: () {
+                                              viewModel.editMemo();
+                                            },
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (viewModel.memoTextController
+                                                    .text.isNotEmpty)
+                                                  SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              defaultPadding *
+                                                                  6 -
+                                                              10,
+                                                      child: Flexible(
+                                                          child: Text(
+                                                              viewModel
+                                                                  .memoTextController
+                                                                  .text,
+                                                              style: FontManager
+                                                                  .body2Median(
+                                                                      ProtonColors
+                                                                          .textNorm)))),
+                                                Text(
                                                     S
                                                         .of(context)
                                                         .message_to_myself,
                                                     style:
                                                         FontManager.body2Median(
                                                             ProtonColors
-                                                                .protonBlue))),
-                                          ],
-                                        )
+                                                                .protonBlue)),
+                                              ],
+                                            ))
                                       ],
                                     ))
                                 : Container(
@@ -281,51 +313,17 @@ class SendView extends ViewBase<SendViewModel> {
                                           viewModel.memoTextController,
                                       myFocusNode: viewModel.memoFocusNode,
                                       paddingSize: 7,
+                                      maxLines: 3,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(
+                                            maxMemoTextCharSize)
+                                      ],
                                       validation: (String value) {
                                         return "";
                                       },
                                     ),
                                   ),
                             const SizedBox(height: 10),
-                            // Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         horizontal: defaultPadding),
-                            //     child: Column(children: [
-                            //       ExpansionTile(
-                            //           shape: const Border(),
-                            //           tilePadding: const EdgeInsets.all(0),
-                            //           initiallyExpanded: false,
-                            //           title: Text(S.of(context).advanced_options,
-                            //               style: FontManager.captionMedian(
-                            //                   ProtonColors.textNorm)),
-                            //           iconColor: ProtonColors.textHint,
-                            //           collapsedIconColor: ProtonColors.textHint,
-                            //           children: [
-                            //             const SizedBox(height: 10),
-                            //             SizedBox(
-                            //               width: MediaQuery.of(context).size.width,
-                            //               child: Row(
-                            //                   mainAxisAlignment:
-                            //                       MainAxisAlignment.spaceBetween,
-                            //                   children: [
-                            //                     Text(
-                            //                       S.of(context).fees_default,
-                            //                       style: FontManager.captionMedian(
-                            //                           ProtonColors.textNorm),
-                            //                     ),
-                            //                     GestureDetector(
-                            //                         onTap: () {
-                            //                           showSelectTransactionFeeMode(
-                            //                               context, viewModel);
-                            //                         },
-                            //                         child:
-                            //                             getTransactionFeeModeWidget(
-                            //                                 context, viewModel)),
-                            //                   ]),
-                            //             ),
-                            //             const SizedBox(height: 10),
-                            //           ])
-                            //     ])),
                           ])))),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -416,7 +414,7 @@ class SendView extends ViewBase<SendViewModel> {
                                   }),
                               const SizedBox(height: 5),
                             ]),
-                            if (viewModel.recipents.isNotEmpty)
+                            if (viewModel.recipients.isNotEmpty)
                               Container(
                                 margin:
                                     const EdgeInsets.only(top: 20, bottom: 10),
@@ -428,17 +426,23 @@ class SendView extends ViewBase<SendViewModel> {
                                 ),
                               ),
                             for (int index = 0;
-                                index < viewModel.recipents.length;
+                                index < viewModel.recipients.length;
                                 index++)
                               RecipientDetail(
-                                name: viewModel.recipents[index],
-                                email: viewModel.recipents[index],
+                                name: viewModel.recipients[index],
+                                email: viewModel.recipients[index],
                                 bitcoinAddress: viewModel.bitcoinAddresses
-                                        .containsKey(viewModel.recipents[index])
+                                        .containsKey(
+                                            viewModel.recipients[index])
                                     ? viewModel.bitcoinAddresses[
-                                            viewModel.recipents[index]] ??
+                                            viewModel.recipients[index]] ??
                                         ""
                                     : "",
+                                isSelfBitcoinAddress: viewModel
+                                    .selfBitcoinAddresses
+                                    .contains(viewModel.bitcoinAddresses[
+                                            viewModel.recipients[index]] ??
+                                        ""),
                                 callback: () {
                                   viewModel.removeRecipient(index);
                                 },
@@ -533,7 +537,7 @@ class SendView extends ViewBase<SendViewModel> {
                   onPressed: () {
                     viewModel.updatePageStatus(inReview: true);
                   },
-                  enable: viewModel.validRecipientCount > 0,
+                  enable: viewModel.validRecipientCount() > 0,
                   text: S.of(context).review_transaction,
                   width: MediaQuery.of(context).size.width,
                   backgroundColor: ProtonColors.protonBlue,
@@ -578,10 +582,19 @@ void showSelectTransactionFeeMode(
                               width: 20,
                               height: 20)
                           : null,
-                      onTap: () {
+                      onTap: () async {
+                        TransactionFeeMode originTransactionFeeMode =
+                            viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.highPriority);
-                        Navigator.of(context).pop();
+                        bool success = await viewModel.buildTransactionScript();
+                        if (success == false) {
+                          viewModel.updateTransactionFeeMode(
+                              originTransactionFeeMode);
+                        }
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                     const Divider(
@@ -601,10 +614,19 @@ void showSelectTransactionFeeMode(
                               width: 20,
                               height: 20)
                           : null,
-                      onTap: () {
+                      onTap: () async {
+                        TransactionFeeMode originTransactionFeeMode =
+                            viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.medianPriority);
-                        Navigator.of(context).pop();
+                        bool success = await viewModel.buildTransactionScript();
+                        if (success == false) {
+                          viewModel.updateTransactionFeeMode(
+                              originTransactionFeeMode);
+                        }
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                     const Divider(
@@ -625,10 +647,19 @@ void showSelectTransactionFeeMode(
                           : null,
                       title: getEstimatedFeeInfo(
                           context, viewModel, TransactionFeeMode.lowPriority),
-                      onTap: () {
+                      onTap: () async {
+                        TransactionFeeMode originTransactionFeeMode =
+                            viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.lowPriority);
-                        Navigator.of(context).pop();
+                        bool success = await viewModel.buildTransactionScript();
+                        if (success == false) {
+                          viewModel.updateTransactionFeeMode(
+                              originTransactionFeeMode);
+                        }
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                   ])),

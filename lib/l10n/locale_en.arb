@@ -21,8 +21,8 @@
   "create_new_wallet": "Create a new wallet",
   "import_existing_wallet": "Import an existing wallet",
   "no_data": "No data",
-  "trans_note": "Note: {note}",
-  "trans_body": "Message from sender: {message}",
+  "trans_note": "{note}",
+  "trans_body": "{message}",
   "@trans_note": {
     "description": "notes user set on a transaction",
     "placeholders": {
@@ -32,6 +32,11 @@
       }
     }
   },
+  "wallet_setup": "Wallet setup",
+  "wallet_setup_desc": "Choose your local fiat currency to see the value of your transactions.",
+  "my_wallet_has_passphrase": "My wallet has a passphrase",
+  "wallet_import_mnemonic_guide": "Enter your secret recovery phrase in its exact order.",
+  "wallet_import_mnemonic_help": "What’s a recovery phrase?",
   "transactions": "Transactions",
   "trans_details": "Transaction Detail",
   "trans_total": "Total",
@@ -300,7 +305,9 @@
   "receive_address": "Receive Address",
   "share_button": "Share",
   "share_address_button": "Share Address",
+  "error_this_bitcoin_address_already_in_recipients": "Sorry, this bitcoin address is already in recipients list.",
   "error_you_dont_have_sufficient_balance": "Sorry, you don't have sufficient balance.",
+  "error_you_can_not_send_to_self_account": "Sorry, you can not send bitcoin to your own account.",
   "set_passphrase": "Set passphrase",
   "setting_bitcoin_unit_label": "Bitcoin Unit",
   "setting_fiat_currency_label": "Local Currency",

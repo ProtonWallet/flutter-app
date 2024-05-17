@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/event_loop_helper.dart';
@@ -17,6 +18,7 @@ import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -54,7 +56,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Map<String, AddressPublicKey> email2AddressKey = {};
   List<AddressPublicKey> addressPublicKeys = [];
 
-  List<String> recipents = [];
+  List<String> recipients = [];
+  List<String> selfBitcoinAddresses = [];
   List<ProtonAddress> protonAddresses = [];
   int balance = 0;
   double feeRateHighPriority = 2.0;
@@ -65,7 +68,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int estimatedFeeInSAT = 0;
   int amountInSATS = 0; // per recipient
   int totalAmountInSAT = 0; // total value
-  int validRecipientCount = 0;
   bool inReview = false;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
   bool amountTextControllerChanged = false;
@@ -104,7 +106,11 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   void addressAutoCompleteCallback();
 
+  int validRecipientCount();
+
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
+
+  Future<bool> buildTransactionScript();
 
   List<ContactsModel> contactsEmail = [];
   late TxBuilder txBuilder;
@@ -217,7 +223,27 @@ class SendViewModelImpl extends SendViewModel {
         addresses.where((element) => element.status == 1).toList();
   }
 
+  @override
+  int validRecipientCount() {
+    int count = 0;
+    for (String recipient in recipients) {
+      String bitcoinAddress = bitcoinAddresses[recipient] ?? "";
+      if (CommonHelper.isBitcoinAddress(bitcoinAddress) &&
+          selfBitcoinAddresses.contains(bitcoinAddress) == false) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   Future<void> updateWallet() async {
+    selfBitcoinAddresses.clear();
+    List<BitcoinAddressModel> localBitcoinAddresses = await DBHelper
+        .bitcoinAddressDao!
+        .findByWalletAccount(walletID, accountModel?.id ?? 0);
+    selfBitcoinAddresses = localBitcoinAddresses.map((bitcoinAddressModel) {
+      return bitcoinAddressModel.bitcoinAddress;
+    }).toList();
     _wallet =
         await WalletManager.loadWalletWithID(walletID, accountModel?.id ?? 0);
     var walletBalance = await _wallet.getBalance();
@@ -240,7 +266,6 @@ class SendViewModelImpl extends SendViewModel {
         feeRateSatPerVByte = feeRateLowPriority;
         break;
     }
-    await buildTransactionScript();
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -248,12 +273,18 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> updatePageStatus({required bool inReview}) async {
     if (inReview == true) {
       hasEmailIntegrationRecipient = false;
-      for (String email in recipents) {
-        if (email2AddressKey.containsKey(email)) {
+      for (String email in recipients) {
+        String bitcoinAddress = bitcoinAddresses[email] ?? "";
+        if (email2AddressKey.containsKey(email) &&
+            selfBitcoinAddresses.contains(bitcoinAddress) == false) {
           hasEmailIntegrationRecipient = true;
         }
       }
       await updateTransactionFeeMode(userTransactionFeeMode);
+      bool success = await buildTransactionScript();
+      if (success == false) {
+        inReview = false;
+      }
     }
     this.inReview = inReview;
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -267,16 +298,16 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> loadBitcoinAddresses() async {
-    for (String recipent in recipents) {
-      if (bitcoinAddresses.containsKey(recipent)) {
+    for (String recipient in recipients) {
+      if (bitcoinAddresses.containsKey(recipient)) {
         continue;
       }
       String? bitcoinAddress;
-      if (CommonHelper.isBitcoinAddress(recipent)) {
-        bitcoinAddress = recipent;
+      if (CommonHelper.isBitcoinAddress(recipient)) {
+        bitcoinAddress = recipient;
       } else {
         try {
-          bitcoinAddress = await WalletManager.lookupBitcoinAddress(recipent);
+          bitcoinAddress = await WalletManager.lookupBitcoinAddress(recipient);
         } catch (e) {
           logger.e(e.toString());
           if (e.toString().contains("http error: channel closed")) {
@@ -285,36 +316,68 @@ class SendViewModelImpl extends SendViewModel {
           logger.i("Muon reloaded");
         }
       }
-      bitcoinAddresses[recipent] = bitcoinAddress ?? "";
+      bitcoinAddresses[recipient] = bitcoinAddress ?? "";
     }
   }
 
   @override
   Future<void> addRecipient() async {
-    String recipent = recipientTextController.text;
-    if (recipents.contains(recipent) == false) {
-      recipents.add(recipent);
-    }
+    String recipient = recipientTextController.text.trim();
     recipientTextController.text = "";
+    if (recipients.contains(recipient) == false) {
+      if (bitcoinAddresses.values.contains(recipient)) {
+        if (Coordinator.navigatorKey.currentContext != null) {
+          BuildContext context = Coordinator.navigatorKey.currentContext!;
+          if (context.mounted) {
+            CommonHelper.showSnackbar(context,
+                S.of(context).error_this_bitcoin_address_already_in_recipients,
+                isError: true);
+          }
+        }
+        return;
+      }
+      recipients.add(recipient);
+    }
     EasyLoading.show(
         status: "loading bitcoin address..",
         maskType: EasyLoadingMaskType.black);
     try {
       await loadBitcoinAddresses();
-      if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipent]!)) {
-        if (recipent.contains("@")) {
-          List<AllKeyAddressKey> recipientAddressKeys = await proton_api
-              .getAllPublicKeys(email: recipent, internalOnly: 0);
-          if (recipientAddressKeys.isNotEmpty) {
-            for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
-              // TODO:: use default key
-              email2AddressKey[recipent] =
-                  AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
-              break;
+      String bitcoinAddress = bitcoinAddresses[recipient] ?? "";
+      if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
+        if (selfBitcoinAddresses.contains(bitcoinAddress) == false) {
+          if (bitcoinAddresses.values
+                  .where((value) => (bitcoinAddress == value))
+                  .length <=
+              1) {
+            if (recipient.contains("@")) {
+              List<AllKeyAddressKey> recipientAddressKeys = await proton_api
+                  .getAllPublicKeys(email: recipient, internalOnly: 0);
+              if (recipientAddressKeys.isNotEmpty) {
+                for (AllKeyAddressKey allKeyAddressKey
+                    in recipientAddressKeys) {
+                  // TODO:: use default key
+                  email2AddressKey[recipient] =
+                      AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
+                  break;
+                }
+              }
             }
+          } else {
+            if (Coordinator.navigatorKey.currentContext != null) {
+              BuildContext context = Coordinator.navigatorKey.currentContext!;
+              if (context.mounted) {
+                CommonHelper.showSnackbar(
+                    context,
+                    S
+                        .of(context)
+                        .error_this_bitcoin_address_already_in_recipients,
+                    isError: true);
+              }
+            }
+            recipients.remove(recipient);
           }
         }
-        validRecipientCount++;
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -329,11 +392,7 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   void removeRecipient(int index) {
-    String recipient = recipents[index];
-    if (CommonHelper.isBitcoinAddress(bitcoinAddresses[recipient]!)) {
-      validRecipientCount--;
-    }
-    recipents.removeAt(index);
+    recipients.removeAt(index);
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -341,7 +400,8 @@ class SendViewModelImpl extends SendViewModel {
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
 
-  Future<void> buildTransactionScript() async {
+  @override
+  Future<bool> buildTransactionScript() async {
     try {
       if (amountTextController.text != "") {
         // bool isBitcoinBase = false;
@@ -355,14 +415,15 @@ class SendViewModelImpl extends SendViewModel {
         amountInSATS = (btcAmount * 100000000).ceil();
         txBuilder = TxBuilder();
 
-        for (String email in recipents) {
+        for (String email in recipients) {
           String bitcoinAddress = "";
           if (email.contains("@")) {
             bitcoinAddress = bitcoinAddresses[email] ?? email;
           } else {
             bitcoinAddress = email;
           }
-          if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
+          if (CommonHelper.isBitcoinAddress(bitcoinAddress) &&
+              selfBitcoinAddresses.contains(bitcoinAddress) == false) {
             logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
             Address address = await Address.create(address: bitcoinAddress);
 
@@ -379,14 +440,26 @@ class SendViewModelImpl extends SendViewModel {
         baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
       }
     } catch (e) {
-      errorMessage = e.toString();
-      if (errorMessage.isNotEmpty) {
-        CommonHelper.showErrorDialog(errorMessage);
-        errorMessage = "";
+      if (e is InsufficientFundsException) {
+        if (Coordinator.navigatorKey.currentContext != null) {
+          BuildContext context = Coordinator.navigatorKey.currentContext!;
+          if (context.mounted) {
+            CommonHelper.showSnackbar(
+                context, S.of(context).error_you_dont_have_sufficient_balance,
+                isError: true);
+          }
+        }
+      } else {
+        errorMessage = e.toString();
+        if (errorMessage.isNotEmpty) {
+          CommonHelper.showErrorDialog(errorMessage);
+          errorMessage = "";
+        }
       }
-      rethrow;
+      return false;
     }
     datasourceChangedStreamController.sinkAddSafe(this);
+    return true;
   }
 
   @override
@@ -394,25 +467,11 @@ class SendViewModelImpl extends SendViewModel {
     EasyLoading.show(
         status: "Broadcasting transaction..",
         maskType: EasyLoadingMaskType.black);
+    addressPublicKeys.clear();
     try {
       String? emailAddressID;
       if (protonAddresses.isNotEmpty) {
         emailAddressID = protonAddresses.first.id;
-        try {
-          List<AllKeyAddressKey> recipientAddressKeys =
-              await proton_api.getAllPublicKeys(
-                  email: protonAddresses.first.email, internalOnly: 0);
-          if (recipientAddressKeys.isNotEmpty) {
-            for (AllKeyAddressKey allKeyAddressKey in recipientAddressKeys) {
-              // TODO:: use default key
-              addressPublicKeys
-                  .add(AddressPublicKey(publicKey: allKeyAddressKey.publicKey));
-              break;
-            }
-          }
-        } catch (e) {
-          logger.e(e.toString());
-        }
       }
       String? encryptedLabel;
       SecretKey? secretKey =
@@ -423,8 +482,10 @@ class SendViewModelImpl extends SendViewModel {
       }
 
       String? encryptedMessage;
-      for (String email in recipents) {
-        if (email2AddressKey.containsKey(email)) {
+      for (String email in recipients) {
+        String bitcoinAddress = bitcoinAddresses[email] ?? "";
+        if (email2AddressKey.containsKey(email) &&
+            selfBitcoinAddresses.contains(bitcoinAddress) == false) {
           addressPublicKeys.add(email2AddressKey[email]!);
         }
       }
@@ -447,25 +508,28 @@ class SendViewModelImpl extends SendViewModel {
           logger.i("txid = $txid");
 
           // for multi-recipients
-          for (String email in recipents) {
+          for (String email in recipients) {
             String bitcoinAddress = "";
             if (email.contains("@")) {
               bitcoinAddress = bitcoinAddresses[email] ?? email;
             } else {
               bitcoinAddress = email;
             }
-            await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
-                id: null,
-                externalTransactionID: utf8.encode(txid),
-                amountInSATS: amountInSATS,
-                feeInSATS: estimatedFeeInSAT,
-                isSend: 1,
-                transactionTime: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                feeMode: userTransactionFeeMode.index,
-                serverWalletID: walletModel!.serverWalletID,
-                serverAccountID: accountModel!.serverAccountID,
-                toEmail: email.contains("@") ? email : "",
-                toBitcoinAddress: bitcoinAddress));
+            if (selfBitcoinAddresses.contains(bitcoinAddress) == false) {
+              await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
+                  id: null,
+                  externalTransactionID: utf8.encode(txid),
+                  amountInSATS: amountInSATS,
+                  feeInSATS: estimatedFeeInSAT,
+                  isSend: 1,
+                  transactionTime:
+                      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                  feeMode: userTransactionFeeMode.index,
+                  serverWalletID: walletModel!.serverWalletID,
+                  serverAccountID: accountModel!.serverAccountID,
+                  toEmail: email.contains("@") ? email : "",
+                  toBitcoinAddress: bitcoinAddress));
+            }
           }
         }
       } catch (e) {
