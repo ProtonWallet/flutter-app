@@ -98,6 +98,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
+                  scrollPadding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 60),
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,
                   style: FontManager.body1Median(ProtonColors.textNorm),
