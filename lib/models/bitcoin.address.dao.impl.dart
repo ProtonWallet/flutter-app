@@ -19,6 +19,8 @@ abstract class BitcoinAddressDao extends BitcoinAddressDatabase
   Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
       int walletID, int accountID);
   Future<int> getUnusedPoolCount(int walletID, int accountID);
+  Future<bool> isMine(int walletID, int accountID, String bitcoinAddress);
+  Future<List<BitcoinAddressModel>> findByWalletAccount(int walletID, int accountID);
 }
 
 class BitcoinAddressDaoImpl extends BitcoinAddressDao {
@@ -131,5 +133,24 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
       return maps.length;
     }
     return 0;
+  }
+
+  @override
+  Future<bool> isMine(int walletID, int accountID, String bitcoinAddress) async {
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'walletID = ? and accountID = ? and bitcoinAddress = ?',
+        whereArgs: [walletID, accountID, bitcoinAddress],
+        orderBy: 'bitcoinAddressIndex desc');
+    return maps.isNotEmpty;
+  }
+
+  @override
+  Future<List<BitcoinAddressModel>> findByWalletAccount(int walletID, int accountID) async {
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'walletID = ? and accountID = ?',
+        whereArgs: [walletID, accountID],
+        orderBy: 'bitcoinAddressIndex desc');
+    return List.generate(
+        maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
   }
 }

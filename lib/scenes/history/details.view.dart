@@ -51,7 +51,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         height: double.infinity,
         child: SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 26),
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -121,9 +121,19 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                   children: [
                                     if (viewModel
                                         .memoController.text.isNotEmpty)
-                                      Text(viewModel.memoController.text,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textNorm)),
+                                      SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              defaultPadding * 6 -
+                                              10,
+                                          child: Flexible(
+                                              child: Text(
+                                                  viewModel.memoController.text,
+                                                  style:
+                                                      FontManager.body2Median(
+                                                          ProtonColors
+                                                              .textNorm)))),
                                     GestureDetector(
                                         onTap: () {
                                           viewModel.editMemo();
@@ -143,6 +153,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               textController: viewModel.memoController,
                               myFocusNode: viewModel.memoFocusNode,
                               paddingSize: 7,
+                              maxLines: 3,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(
+                                    maxMemoTextCharSize)
+                              ],
                               validation: (String value) {
                                 return "";
                               },
