@@ -127,13 +127,18 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                   .width -
                                               defaultPadding * 6 -
                                               10,
-                                          child: Flexible(
-                                              child: Text(
-                                                  viewModel.memoController.text,
-                                                  style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
-                                                              .textNorm)))),
+                                          child: Flex(
+                                              direction: Axis.horizontal,
+                                              children: [
+                                                Flexible(
+                                                    child: Text(
+                                                        viewModel.memoController
+                                                            .text,
+                                                        style: FontManager
+                                                            .body2Median(
+                                                                ProtonColors
+                                                                    .textNorm)))
+                                              ])),
                                     GestureDetector(
                                         onTap: () {
                                           viewModel.editMemo();
