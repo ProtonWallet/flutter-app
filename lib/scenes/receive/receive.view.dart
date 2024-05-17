@@ -183,16 +183,16 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                               color: ProtonColors.textWeak,
                                             ))
                                       ]),
-                                  const SizedBox(height: 10),
+                                  // const SizedBox(height: 10),
                                   // TODO:: remove this debug output
-                                  Text(
-                                    "(Debug) AddressIndex: ${viewModel.addressIndex}",
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.textWeak),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  // Text(
+                                  //   "(Debug) AddressIndex: ${viewModel.addressIndex}",
+                                  //   style: FontManager.body2Regular(
+                                  //       ProtonColors.textWeak),
+                                  //   maxLines: 2,
+                                  //   overflow: TextOverflow.ellipsis,
+                                  //   textAlign: TextAlign.center,
+                                  // ),
                                   const SizedBox(height: 20),
                                 ])),
                       ],

@@ -22,17 +22,17 @@ class CommonHelper {
     }
   }
 
-  static void showSnackbar(BuildContext context, String message){
+  static void showSnackbar(BuildContext context, String message,
+      {bool isError = false}) {
     var snackBar = SnackBar(
+      backgroundColor: isError ? ProtonColors.signalError : null,
       content: Center(
           child: Text(
-            message,
-            style: FontManager.body2Regular(
-                ProtonColors.white),
-          )),
+        message,
+        style: FontManager.body2Regular(ProtonColors.white),
+      )),
     );
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   static String getFirstNChar(String str, int n) {
@@ -85,10 +85,9 @@ class CommonHelper {
 
   static bool checkSelectWallet(BuildContext context) {
     if (context.mounted) {
-      if (Provider
-          .of<ProtonWalletProvider>(context, listen: false)
-          .protonWallet
-          .currentWallet ==
+      if (Provider.of<ProtonWalletProvider>(context, listen: false)
+              .protonWallet
+              .currentWallet ==
           null) {
         CommonHelper.showSnackbar(context, "Please select your wallet first");
         return false;

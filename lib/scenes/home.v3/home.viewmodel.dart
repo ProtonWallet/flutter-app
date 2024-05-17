@@ -37,6 +37,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
 
@@ -154,7 +155,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   ProtonAddress? getProtonAddressByID(String addressID);
 
-  int totalTodoSteps = 5;
+  int totalTodoSteps = 3;
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
@@ -382,7 +383,8 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void setOnBoard() async {
     hasWallet = true;
-    move(NavID.setupOnboard);
+    OnboardingGuideSheet.show(Coordinator.navigatorKey.currentContext!, this);
+    // move(NavID.setupOnboard);
   }
 
   @override
@@ -681,6 +683,12 @@ class HomeViewModelImpl extends HomeViewModel {
     switch (to) {
       case NavID.setupOnboard:
         coordinator.showSetupOnbaord();
+        break;
+      case NavID.setupCreate:
+        coordinator.showSetupCreate();
+        break;
+      case NavID.importWallet:
+        coordinator.showImportWallet();
         break;
       case NavID.send:
         coordinator.showSend(currentWallet?.id ?? 0, currentAccount?.id ?? 0);

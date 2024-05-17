@@ -9,7 +9,7 @@ import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/fiat.currency.setting.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -56,48 +56,6 @@ class SecureYourWalletSheet {
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {},
               ),
-              const Divider(
-                height: 0.3,
-                thickness: 0.3,
-              ),
-              ListTile(
-                title: Text(S.of(context).todos_setup_email_integration,
-                    style: FontManager.body2Median(ProtonColors.protonBlue)),
-                trailing: Icon(Icons.arrow_forward_ios_rounded,
-                    color: ProtonColors.protonBlue, size: 14),
-                onTap: () {
-                  if (CommonHelper.checkSelectWallet(context)) {
-                    WalletModel? walletModel =
-                        Provider.of<ProtonWalletProvider>(context)
-                            .protonWallet
-                            .currentWallet;
-                    AccountModel? accountModel =
-                        Provider.of<ProtonWalletProvider>(context)
-                            .protonWallet
-                            .currentAccount;
-                    if (walletModel != null && accountModel != null) {
-                      viewModel.updateEmailIntegration(
-                          walletModel, accountModel);
-                    }
-                    EmailIntegrationSheet.show(context, viewModel);
-                  }
-                },
-              ),
-              const Divider(
-                height: 0.3,
-                thickness: 0.3,
-              ),
-              ListTile(
-                title: Text(S.of(context).todos_setup_fiat,
-                    style: FontManager.body2Median(ProtonColors.protonBlue)),
-                trailing: Icon(Icons.arrow_forward_ios_rounded,
-                    color: ProtonColors.protonBlue, size: 14),
-                onTap: () {
-                  if (CommonHelper.checkSelectWallet(context)) {
-                    FiatCurrencySettingSheet.show(context, viewModel);
-                  }
-                },
-              )
             ]));
   }
 }

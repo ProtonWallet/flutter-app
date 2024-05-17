@@ -716,9 +716,9 @@ class WalletManager {
       refreshToken = '3fewwq3qoyjvz7pq4smsmcw6o56tishx';
 
       // user proton.wallet.test@proton.me
-      uid = 'iogqonug7zhpi32f5cvcqak6wt272ggw';
-      accessToken = 'prg3t7kquzmhd6uaeustfzlv6xrtkppp';
-      refreshToken = 'bxfdhsdzkx62voxn5p2blyjsg4la5bah';
+      uid = 'ssgmof5o7pfkysygdd252ro2wzsr3pat';
+      accessToken = 'kp4vrbfrlihwecza3ocvogjmdktl77pq';
+      refreshToken = 'q4pwytzpgvvezuphc637cb475s2o6e5x';
 
       // user "dclbitcoin@proton.me"
       // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
