@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/alert.custom.dart';
+import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -58,6 +62,31 @@ class ImportView extends ViewBase<ImportViewModel> {
                   },
                 ),
                 SizedBoxes.box12,
+                AlertCustom(
+                  content: S
+                      .of(context)
+                      .wallet_import_mnemonic_guide,
+                  learnMore: Underline(
+                      onTap: () {
+                        CustomPlaceholder.show(context);
+                      },
+                      color: ProtonColors.purple1Text,
+                      child: Text(S.of(context).wallet_import_mnemonic_help,
+                          style: FontManager.body2Median(
+                              ProtonColors.purple1Text))),
+                  leadingWidget: SvgPicture.asset(
+                      "assets/images/icon/alert_info.svg",
+                      fit: BoxFit.fill,
+                      width: 22,
+                      height: 22),
+                  border: Border.all(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  backgroundColor: ProtonColors.purple1Background,
+                  color: ProtonColors.purple1Text,
+                ),
+                SizedBoxes.box12,
                 TextFieldTextV2(
                   labelText: S.of(context).your_mnemonic,
                   textController: viewModel.mnemonicTextController,
@@ -72,7 +101,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                 ExpansionTile(
                     shape: const Border(),
                     initiallyExpanded: false,
-                    title: Text(S.of(context).advanced_options,
+                    title: Text(S.of(context).my_wallet_has_passphrase,
                         style: FontManager.body2Median(ProtonColors.textWeak)),
                     iconColor: ProtonColors.textHint,
                     collapsedIconColor: ProtonColors.textHint,

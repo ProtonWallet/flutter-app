@@ -29,7 +29,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/fiat.currency.setting.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
@@ -256,41 +256,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                 title: S.of(context).todos_setup_2fa,
                                 checked: viewModel.hadBackup,
                                 callback: () {}),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            CustomTodos(
-                              title:
-                                  S.of(context).todos_setup_email_integration,
-                              checked: viewModel.hadSetupEmailIntegration,
-                              callback: () {
-                                WalletModel? walletModel =
-                                    Provider.of<ProtonWalletProvider>(context)
-                                        .protonWallet
-                                        .currentWallet;
-                                AccountModel? accountModel =
-                                    Provider.of<ProtonWalletProvider>(context)
-                                        .protonWallet
-                                        .currentAccount;
-                                if (walletModel != null &&
-                                    accountModel != null) {
-                                  viewModel.updateEmailIntegration(
-                                      walletModel, accountModel);
-                                }
-                                EmailIntegrationSheet.show(context, viewModel);
-                              },
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            CustomTodos(
-                              title: S.of(context).todos_setup_fiat,
-                              checked: viewModel.hadSetFiatCurrency,
-                              callback: () {
-                                FiatCurrencySettingSheet.show(
-                                    context, viewModel);
-                              },
-                            ),
                             const SizedBox(
                               height: 5,
                             ),
@@ -725,7 +690,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                           .wallets
                                           .length <
                                       freeUserWalletLimit) {
-                                    viewModel.move(NavID.setupOnboard);
+                                    Navigator.pop(context);
+                                    OnboardingGuideSheet.show(context, viewModel);
                                   } else {
                                     CommonHelper.showSnackbar(
                                         context,
