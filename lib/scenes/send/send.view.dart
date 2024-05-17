@@ -461,12 +461,12 @@ class SendView extends ViewBase<SendViewModel> {
                                         .currentAccounts,
                                     valueNotifier: viewModel.initialized
                                         ? viewModel.accountValueNotifier
-                                        : ValueNotifier(Provider.of<
-                                        ProtonWalletProvider>(
-                                        context)
-                                        .protonWallet
-                                        .currentAccounts
-                                        .first)),
+                                        : ValueNotifier(
+                                            Provider.of<ProtonWalletProvider>(
+                                                    context)
+                                                .protonWallet
+                                                .currentAccounts
+                                                .first)),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -554,82 +554,85 @@ void showSelectTransactionFeeMode(
         borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
       ),
       builder: (BuildContext context) {
-        return Container(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.keyboard_double_arrow_up_rounded,
-                        size: 18),
-                    title: getEstimatedFeeInfo(
-                        context, viewModel, TransactionFeeMode.highPriority),
-                    trailing: viewModel.userTransactionFeeMode ==
-                            TransactionFeeMode.highPriority
-                        ? SvgPicture.asset(
-                            "assets/images/icon/ic-checkmark.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20)
-                        : null,
-                    onTap: () {
-                      viewModel.updateTransactionFeeMode(
-                          TransactionFeeMode.highPriority);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  const Divider(
-                    thickness: 0.2,
-                    height: 1,
-                  ),
-                  ListTile(
-                    leading:
-                        const Icon(Icons.horizontal_rule_rounded, size: 18),
-                    title: getEstimatedFeeInfo(
-                        context, viewModel, TransactionFeeMode.medianPriority),
-                    trailing: viewModel.userTransactionFeeMode ==
-                            TransactionFeeMode.medianPriority
-                        ? SvgPicture.asset(
-                            "assets/images/icon/ic-checkmark.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20)
-                        : null,
-                    onTap: () {
-                      viewModel.updateTransactionFeeMode(
-                          TransactionFeeMode.medianPriority);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  const Divider(
-                    thickness: 0.2,
-                    height: 1,
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                        Icons.keyboard_double_arrow_down_rounded,
-                        size: 18),
-                    trailing: viewModel.userTransactionFeeMode ==
-                            TransactionFeeMode.lowPriority
-                        ? SvgPicture.asset(
-                            "assets/images/icon/ic-checkmark.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20)
-                        : null,
-                    title: getEstimatedFeeInfo(
-                        context, viewModel, TransactionFeeMode.lowPriority),
-                    onTap: () {
-                      viewModel.updateTransactionFeeMode(
-                          TransactionFeeMode.lowPriority);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ]));
+        return SafeArea(
+          child: Container(
+              padding: const EdgeInsets.all(defaultPadding),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                          Icons.keyboard_double_arrow_up_rounded,
+                          size: 18),
+                      title: getEstimatedFeeInfo(
+                          context, viewModel, TransactionFeeMode.highPriority),
+                      trailing: viewModel.userTransactionFeeMode ==
+                              TransactionFeeMode.highPriority
+                          ? SvgPicture.asset(
+                              "assets/images/icon/ic-checkmark.svg",
+                              fit: BoxFit.fill,
+                              width: 20,
+                              height: 20)
+                          : null,
+                      onTap: () {
+                        viewModel.updateTransactionFeeMode(
+                            TransactionFeeMode.highPriority);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    const Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                    ListTile(
+                      leading:
+                          const Icon(Icons.horizontal_rule_rounded, size: 18),
+                      title: getEstimatedFeeInfo(context, viewModel,
+                          TransactionFeeMode.medianPriority),
+                      trailing: viewModel.userTransactionFeeMode ==
+                              TransactionFeeMode.medianPriority
+                          ? SvgPicture.asset(
+                              "assets/images/icon/ic-checkmark.svg",
+                              fit: BoxFit.fill,
+                              width: 20,
+                              height: 20)
+                          : null,
+                      onTap: () {
+                        viewModel.updateTransactionFeeMode(
+                            TransactionFeeMode.medianPriority);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    const Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                          Icons.keyboard_double_arrow_down_rounded,
+                          size: 18),
+                      trailing: viewModel.userTransactionFeeMode ==
+                              TransactionFeeMode.lowPriority
+                          ? SvgPicture.asset(
+                              "assets/images/icon/ic-checkmark.svg",
+                              fit: BoxFit.fill,
+                              width: 20,
+                              height: 20)
+                          : null,
+                      title: getEstimatedFeeInfo(
+                          context, viewModel, TransactionFeeMode.lowPriority),
+                      onTap: () {
+                        viewModel.updateTransactionFeeMode(
+                            TransactionFeeMode.lowPriority);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ])),
+        );
       });
 }
 

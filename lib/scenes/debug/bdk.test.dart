@@ -147,8 +147,11 @@ class BdkLibrary {
   Future<void> syncWallet(Blockchain blockchain, Wallet aliceWallet) async {
     try {
       // await aliceWallet.syncWallet(blockchain);
-      await Isolate.run(() async =>
-          {await RustLib.init(), await aliceWallet.syncWallet(blockchain)});
+      await Isolate.run(() async => {
+            await RustLib.init(),
+            await aliceWallet.syncWallet(blockchain),
+            RustLib.dispose()
+          });
     } on FormatException catch (e) {
       logger.d(e.message);
     }

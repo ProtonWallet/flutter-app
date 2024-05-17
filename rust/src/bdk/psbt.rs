@@ -1,5 +1,5 @@
-use bdk::bitcoin::consensus::Decodable;
 use crate::bdk::types::{TxIn, TxOut};
+use bdk::bitcoin::consensus::Decodable;
 use bdk::bitcoin::psbt::PartiallySignedTransaction as BdkPartiallySignedTransaction;
 use bdk::bitcoin::Transaction as BdkTransaction;
 use bdk::psbt::PsbtUtils;

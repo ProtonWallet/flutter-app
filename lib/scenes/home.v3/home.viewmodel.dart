@@ -191,12 +191,12 @@ class HomeViewModelImpl extends HomeViewModel {
 
   Future<void> buildTempSession() async {
     session = NativeSession(
-        UserId: await SecureStorageHelper.instance.get("userId"),
-        Username: await SecureStorageHelper.instance.get("userName"),
-        SessionId: await SecureStorageHelper.instance.get("sessionId"),
-        AccessToken: await SecureStorageHelper.instance.get("accessToken"),
-        RefreshToken: await SecureStorageHelper.instance.get("refreshToken"),
-        Passphrase: "");
+        userId: await SecureStorageHelper.instance.get("userId"),
+        userName: await SecureStorageHelper.instance.get("userName"),
+        sessionId: await SecureStorageHelper.instance.get("sessionId"),
+        accessToken: await SecureStorageHelper.instance.get("accessToken"),
+        refreshToken: await SecureStorageHelper.instance.get("refreshToken"),
+        passphrase: "");
   }
 
   @override

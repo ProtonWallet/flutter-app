@@ -1,17 +1,13 @@
 use super::error::Error;
 use super::network::Network;
-// use super::descriptor::BdkDescriptor;
-// use super::psbt::PartiallySignedTransaction;
 use super::types::{
-    AddressIndex, AddressInfo, KeychainKind, OutPoint, Progress, ProgressHolder,
-    PsbtSigHashType, TransactionDetails, TxOut,
+    AddressIndex, AddressInfo, KeychainKind, OutPoint, Progress, ProgressHolder, PsbtSigHashType,
+    TransactionDetails, TxOut,
 };
 
 use bdk::bitcoin::psbt::{Input, PsbtSighashType};
 use bdk::bitcoin::Script;
 use bdk::database::{AnyDatabase, AnyDatabaseConfig, ConfigurableDatabase};
-// use bdk::descriptor::KeyMap;
-// use bdk::{bitcoin, Error as BdkError, SyncOptions};
 use bdk::{SignOptions as BdkSignOptions, Wallet as BdkWallet};
 use lazy_static::lazy_static;
 use std::borrow::Borrow;
@@ -22,8 +18,6 @@ use std::hash::Hasher;
 use std::ops::Deref;
 use std::sync::RwLock;
 use std::sync::{Arc, Mutex, MutexGuard};
-
-// use super::blockchain::Blockchain;
 
 lazy_static! {
     static ref WALLET: RwLock<HashMap<String, Arc<Wallet>>> = RwLock::new(HashMap::new());
@@ -65,8 +59,13 @@ impl Wallet {
     ) -> Result<String, Error> {
         let database: AnyDatabase = AnyDatabase::from_config(&database_config.into()).unwrap();
         let net: andromeda_common::Network = network.into();
-        let bdk_wallet =
-            BdkWallet::new(&descriptor, change_descriptor.as_ref(), net.into(), database).unwrap();
+        let bdk_wallet = BdkWallet::new(
+            &descriptor,
+            change_descriptor.as_ref(),
+            net.into(),
+            database,
+        )
+        .unwrap();
         let wallet_mutex = Mutex::new(bdk_wallet);
 
         let wallet = Wallet { wallet_mutex };
@@ -79,103 +78,6 @@ impl Wallet {
     pub(crate) fn get_wallet(&self) -> MutexGuard<BdkWallet<AnyDatabase>> {
         self.wallet_mutex.lock().expect("wallet")
     }
-    // pub fn sync(&self, blockchain: &Blockchain, progress: Option<Box<dyn Progress>>) {
-    //     let bdk_sync_option: SyncOptions = if let Some(p) = progress {
-    //         SyncOptions {
-    //             progress: Some(Box::new(ProgressHolder { progress: p })
-    //                 as Box<(dyn bdk::blockchain::Progress + 'static)>),
-    //         }
-    //     } else {
-    //         SyncOptions { progress: None }
-    //     };
-    //     let blockchain = blockchain.get_blockchain();
-    //     self.get_wallet()
-    //         .sync(blockchain.deref(), bdk_sync_option)
-    //         .unwrap()
-    // }
-    // /// Return the balance, meaning the sum of this wallet’s unspent outputs’ values. Note that this method only operates
-    // /// on the internal database, which first needs to be Wallet.sync manually.
-    // pub fn get_balance(&self) -> Result<Balance, Error> {
-    //     self.get_wallet().get_balance().map(|b| b.into())
-    // }
-    
-    // pub(crate) fn is_mine(&self, script: Script) -> Result<bool, BdkError> {
-    //     self.get_wallet().is_mine(&script)
-    // }
-//     // Return a derived address using the internal (change) descriptor.
-//     ///
-//     /// If the wallet doesn't have an internal descriptor it will use the external descriptor.
-//     ///
-//     /// see [`AddressIndex`] for available address index selection strategies. If none of the keys
-//     /// in the descriptor are derivable (i.e. does not end with /*) then the same address will always
-//     /// be returned for any [`AddressIndex`].
-//     pub(crate) fn get_internal_address(
-//         &self,
-//         address_index: AddressIndex,
-//     ) -> Result<AddressInfo, BdkError> {
-//         self.get_wallet()
-//             .get_internal_address(address_index.into())
-//             .map(AddressInfo::from)
-//     }
-//     pub fn get_address(&self, address_index: AddressIndex) -> Result<AddressInfo, BdkError> {
-//         self.get_wallet()
-//             .get_address(address_index.into())
-//             .map(AddressInfo::from)
-//     }
-
-//     /// Return the list of transactions made and received by the wallet. Note that this method only operate on the internal database, which first needs to be [Wallet.sync] manually.
-//     pub fn list_transactions(
-//         &self,
-//         include_raw: bool,
-//     ) -> Result<Vec<TransactionDetails>, BdkError> {
-//         let transaction_details = self.get_wallet().list_transactions(include_raw).unwrap();
-//         Ok(transaction_details
-//             .iter()
-//             .map(TransactionDetails::from)
-//             .collect())
-//     }
-//     // Return the list of unspent outputs of this wallet. Note that this method only operates on the internal database,
-//     // which first needs to be Wallet.sync manually.
-//     pub fn list_unspent(&self) -> Result<Vec<LocalUtxo>, BdkError> {
-//         let unspents = self.get_wallet().list_unspent()?;
-//         Ok(unspents.into_iter().map(LocalUtxo::from).collect())
-//     }
-//     pub(crate) fn sign(
-//         &self,
-//         psbt: &PartiallySignedTransaction,
-//         sign_options: Option<SignOptions>,
-//     ) -> Result<bool, BdkError> {
-//         let mut psbt = psbt.internal.lock().unwrap();
-//         self.get_wallet().sign(
-//             &mut psbt,
-//             sign_options.map(SignOptions::into).unwrap_or_default(),
-//         )
-//     }
-//     /// Returns the descriptor used to create addresses for a particular `keychain`.
-//     pub fn get_descriptor_for_keychain(
-//         &self,
-//         keychain: KeychainKind,
-//     ) -> Result<BdkDescriptor, BdkError> {
-//         let wallet = self.get_wallet();
-//         Ok(BdkDescriptor {
-//             extended_descriptor: wallet
-//                 .get_descriptor_for_keychain(keychain.into())
-//                 .to_owned(),
-//             key_map: KeyMap::new(),
-//         })
-//     }
-//     pub fn get_psbt_input(
-//         &self,
-//         utxo: LocalUtxo,
-//         only_witness_utxo: bool,
-//         psbt_sighash_type: Option<PsbtSigHashType>,
-//     ) -> Result<Input, BdkError> {
-//         self.get_wallet().get_psbt_input(
-//             utxo.into(),
-//             psbt_sighash_type.map(|x| PsbtSighashType::from_u32(x.inner)),
-//             only_witness_utxo,
-//         )
-//     }
 }
 
 /// Options for a software signer
@@ -240,62 +142,6 @@ pub struct SignOptions {
     pub allow_grinding: bool,
 }
 
-// impl From<SignOptions> for BdkSignOptions {
-//     fn from(sign_options: SignOptions) -> Self {
-//         BdkSignOptions {
-//             trust_witness_utxo: sign_options.trust_witness_utxo,
-//             assume_height: sign_options.assume_height,
-//             allow_all_sighashes: sign_options.allow_all_sighashes,
-//             remove_partial_sigs: sign_options.remove_partial_sigs,
-//             try_finalize: sign_options.try_finalize,
-//             tap_leaves_options: Default::default(),
-//             sign_with_tap_internal_key: sign_options.sign_with_tap_internal_key,
-//             allow_grinding: sign_options.allow_grinding,
-//         }
-//     }
-// }
-
-// /// Unspent outputs of this wallet
-// pub struct LocalUtxo {
-//     /// Reference to a transaction output
-//     pub outpoint: OutPoint,
-//     ///Transaction output
-//     pub txout: TxOut,
-//     ///Whether this UTXO is spent or not
-//     pub is_spent: bool,
-//     pub keychain: KeychainKind,
-// }
-
-// impl From<LocalUtxo> for bdk::LocalUtxo {
-//     fn from(x: LocalUtxo) -> Self {
-//         bdk::LocalUtxo {
-//             outpoint: x.outpoint.borrow().into(),
-//             txout: bitcoin::blockdata::transaction::TxOut {
-//                 value: x.txout.value,
-//                 script_pubkey: x.txout.script_pubkey.into(),
-//             },
-//             keychain: x.keychain.into(),
-//             is_spent: x.is_spent,
-//         }
-//     }
-// }
-// impl From<bdk::LocalUtxo> for LocalUtxo {
-//     fn from(local_utxo: bdk::LocalUtxo) -> Self {
-//         LocalUtxo {
-//             outpoint: OutPoint {
-//                 txid: local_utxo.outpoint.txid.to_string(),
-//                 vout: local_utxo.outpoint.vout,
-//             },
-//             txout: TxOut {
-//                 value: local_utxo.clone().txout.value,
-//                 script_pubkey: local_utxo.clone().txout.script_pubkey.into(),
-//             },
-//             keychain: local_utxo.keychain.into(),
-//             is_spent: local_utxo.is_spent,
-//         }
-//     }
-// }
-
 ///Configuration type for a SqliteDatabase database
 pub struct SqliteDbConfiguration {
     ///Main directory of the db
@@ -307,9 +153,7 @@ pub struct SqliteDbConfiguration {
 /// will find this particularly useful.
 pub enum DatabaseConfig {
     Memory,
-    Sqlite {
-        config: SqliteDbConfiguration,
-    },
+    Sqlite { config: SqliteDbConfiguration },
 }
 impl From<DatabaseConfig> for AnyDatabaseConfig {
     fn from(config: DatabaseConfig) -> Self {
@@ -323,149 +167,3 @@ impl From<DatabaseConfig> for AnyDatabaseConfig {
         }
     }
 }
-
-// #[cfg(test)]
-// mod test {
-
-//     use crate::bdk::descriptor::BdkDescriptor;
-//     use crate::bdk::wallet::{AddressIndex, DatabaseConfig, Wallet};
-//     use bdk::bitcoin::Network;
-
-//     #[test]
-//     fn test_peek_reset_address() {
-//         let test_wpkh = "wpkh(tprv8hwWMmPE4BVNxGdVt3HhEERZhondQvodUY7Ajyseyhudr4WabJqWKWLr4Wi2r26CDaNCQhhxEftEaNzz7dPGhWuKFU4VULesmhEfZYyBXdE/0/*)";
-//         let descriptor = BdkDescriptor::new(test_wpkh.to_string(), Network::Regtest).unwrap();
-//         let change_descriptor = BdkDescriptor::new(
-//             test_wpkh.to_string().replace("/0/*", "/1/*"),
-//             Network::Regtest,
-//         )
-//         .unwrap();
-
-//         let wallet_id = Wallet::new_wallet(
-//             descriptor.as_string_private(),
-//             Some(change_descriptor.as_string_private()),
-//             Network::Regtest,
-//             DatabaseConfig::Memory,
-//         )
-//         .unwrap();
-//         let wallet = Wallet::retrieve_wallet(wallet_id);
-//         assert_eq!(
-//             wallet
-//                 .get_address(AddressIndex::Peek { index: 2 })
-//                 .unwrap()
-//                 .address,
-//             "bcrt1q5g0mq6dkmwzvxscqwgc932jhgcxuqqkjv09tkj"
-//         );
-
-//         assert_eq!(
-//             wallet
-//                 .get_address(AddressIndex::Peek { index: 1 })
-//                 .unwrap()
-//                 .address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-
-//         // new index still 0
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1qqjn9gky9mkrm3c28e5e87t5akd3twg6xezp0tv"
-//         );
-
-//         // new index now 1
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-
-//         // new index now 2
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1q5g0mq6dkmwzvxscqwgc932jhgcxuqqkjv09tkj"
-//         );
-
-//         // peek index 1
-//         assert_eq!(
-//             wallet
-//                 .get_address(AddressIndex::Peek { index: 1 })
-//                 .unwrap()
-//                 .address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-
-//         // reset to index 0
-//         assert_eq!(
-//             wallet
-//                 .get_address(AddressIndex::Reset { index: 0 })
-//                 .unwrap()
-//                 .address,
-//             "bcrt1qqjn9gky9mkrm3c28e5e87t5akd3twg6xezp0tv"
-//         );
-
-//         // new index 1 again
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-//     }
-//     #[test]
-//     fn test_get_address() {
-//         let test_wpkh = "wpkh(tprv8hwWMmPE4BVNxGdVt3HhEERZhondQvodUY7Ajyseyhudr4WabJqWKWLr4Wi2r26CDaNCQhhxEftEaNzz7dPGhWuKFU4VULesmhEfZYyBXdE/0/*)";
-//         let descriptor = BdkDescriptor::new(test_wpkh.to_string(), Network::Regtest).unwrap();
-//         let change_descriptor = BdkDescriptor::new(
-//             test_wpkh.to_string().replace("/0/*", "/1/*"),
-//             Network::Regtest,
-//         )
-//         .unwrap();
-
-//         let wallet_id = Wallet::new_wallet(
-//             descriptor.as_string_private(),
-//             Some(change_descriptor.as_string_private()),
-//             Network::Regtest,
-//             DatabaseConfig::Memory,
-//         )
-//         .unwrap();
-//         let wallet = Wallet::retrieve_wallet(wallet_id);
-
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1qqjn9gky9mkrm3c28e5e87t5akd3twg6xezp0tv"
-//         );
-
-//         assert_eq!(
-//             wallet.get_address(AddressIndex::New).unwrap().address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-
-//         assert_eq!(
-//             wallet
-//                 .get_address(AddressIndex::LastUnused)
-//                 .unwrap()
-//                 .address,
-//             "bcrt1q0xs7dau8af22rspp4klya4f7lhggcnqfun2y3a"
-//         );
-
-//         assert_eq!(
-//             wallet
-//                 .get_internal_address(AddressIndex::New)
-//                 .unwrap()
-//                 .address,
-//             "bcrt1qpmz73cyx00r4a5dea469j40ax6d6kqyd67nnpj"
-//         );
-
-//         assert_eq!(
-//             wallet
-//                 .get_internal_address(AddressIndex::New)
-//                 .unwrap()
-//                 .address,
-//             "bcrt1qaux734vuhykww9632v8cmdnk7z2mw5lsf74v6k"
-//         );
-
-//         assert_eq!(
-//             wallet
-//                 .get_internal_address(AddressIndex::LastUnused)
-//                 .unwrap()
-//                 .address,
-//             "bcrt1qaux734vuhykww9632v8cmdnk7z2mw5lsf74v6k"
-//         );
-//     }
-// }

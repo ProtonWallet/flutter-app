@@ -26,8 +26,9 @@ class BdkWalletManager extends RustOpaque {
         .instance.api.rust_arc_decrement_strong_count_BdkWalletManagerPtr,
   );
 
-  Future<String> getFingerprint({dynamic hint}) => RustLib.instance.api
-      .bdkWalletManagerGetFingerprint(that: this, hint: hint);
+  String get fingerprint => RustLib.instance.api.bdkWalletManagerFingerprint(
+        that: this,
+      );
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<BdkWalletManager> newInstance(

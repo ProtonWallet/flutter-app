@@ -33,7 +33,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1233340014;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1572352785;
 
 // Section: executor
 
@@ -329,17 +329,16 @@ fn wire_proton_wallet_auth_store_set_dart_callback_impl(
                      crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_dart_callback(api_callback)
                 })()) })
 }
-fn wire_BdkWalletManager_get_fingerprint_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
+fn wire_BdkWalletManager_fingerprint_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BdkWalletManager_get_fingerprint",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+            debug_name: "BdkWalletManager_fingerprint",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
         move || {
             let message = unsafe {
@@ -355,27 +354,23 @@ fn wire_BdkWalletManager_get_fingerprint_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BdkWalletManager>,
             >>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| {
-                transform_result_sse((move || {
-                    let mut api_that_decoded = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(
-                            vec![api_that.rust_auto_opaque_lock_order_info(0, false)],
-                        );
-                    for i in decode_indices_ {
-                        match i {
-                            0 => {
-                                api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref())
-                            }
-                            _ => unreachable!(),
-                        }
+            transform_result_sse((move || {
+                let mut api_that_decoded = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(
+                        vec![api_that.rust_auto_opaque_lock_order_info(0, false)],
+                    );
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref()),
+                        _ => unreachable!(),
                     }
-                    let api_that = api_that_decoded.unwrap();
-                    Result::<_, ()>::Ok(crate::api::bdk_wallet::BdkWalletManager::get_fingerprint(
-                        &api_that,
-                    ))
-                })())
-            }
+                }
+                let api_that = api_that_decoded.unwrap();
+                Result::<_, ()>::Ok(crate::api::bdk_wallet::BdkWalletManager::fingerprint(
+                    &api_that,
+                ))
+            })())
         },
     )
 }
@@ -6276,7 +6271,6 @@ fn pde_ffi_dispatcher_primary_impl(
         7 => wire_ProtonApiService_init_api_service_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_ProtonApiService_new_impl(port, ptr, rust_vec_len, data_len),
         8 => wire_ProtonApiService_read_text_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire_BdkWalletManager_get_fingerprint_impl(port, ptr, rust_vec_len, data_len),
         11 => wire_BdkWalletManager_new_impl(port, ptr, rust_vec_len, data_len),
         15 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
         14 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
@@ -6399,6 +6393,7 @@ fn pde_ffi_dispatcher_sync_impl(
         3 => wire_greet_impl(ptr, rust_vec_len, data_len),
         5 => wire_helloworld_impl(ptr, rust_vec_len, data_len),
         10 => wire_proton_wallet_auth_store_set_dart_callback_impl(ptr, rust_vec_len, data_len),
+        12 => wire_BdkWalletManager_fingerprint_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
