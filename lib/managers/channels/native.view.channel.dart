@@ -7,6 +7,7 @@ abstract class NativeViewChannel {
   Future<void> switchToNativeSignup(ApiEnv env);
   Future<void> switchToNativeLogin(ApiEnv env);
   Future<void> restartNative();
+  Future<void> initalNativeApiEnv(ApiEnv env);
 
   /// Add more methods here
   Future<void> switchToUpgrade(NativeSession session);
@@ -57,6 +58,16 @@ class NativeViewChannelImpl implements NativeViewChannel {
       await toNativeChannel.invokeMethod(upgrade, [key, session.toJson()]);
     } on PlatformException catch (e) {
       logger.e("Failed to switch to native view: '${e.message}'.");
+    }
+  }
+
+  @override
+  Future<void> initalNativeApiEnv(ApiEnv env) async {
+    try {
+      await toNativeChannel.invokeMethod(
+          'native.initialize.core.environment', {envKey: env.toString()});
+    } on PlatformException catch (e) {
+      logger.e("Failed to initialize native environment: '${e.message}'.");
     }
   }
 }

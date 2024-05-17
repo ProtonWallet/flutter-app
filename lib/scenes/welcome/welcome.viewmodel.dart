@@ -10,6 +10,7 @@ import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.session.dart';
+import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/network/api.helper.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -22,7 +23,9 @@ abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
 }
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
-  WelcomeViewModelImpl(super.coordinator);
+  final NativeViewChannel nativeChannel;
+
+  WelcomeViewModelImpl(super.coordinator, this.nativeChannel);
   static const _appChannel = MethodChannel('me.proton.wallet/app.view');
 
   late UserSessionProvider userSessionProvider;
@@ -40,11 +43,10 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> _localLogin() async {
+    nativeChannel.initalNativeApiEnv(appConfig.apiEnv);
     if (!hadLocallogin) {
       hadLocallogin = true;
       if (await SecureStorageHelper.instance.get("sessionId") != "") {
-        // need also check if current session is same env with current env
-
         await loginResume();
         // LocalAuth.authenticate("Authenticate to login").then((auth) {
         //   if (auth) {

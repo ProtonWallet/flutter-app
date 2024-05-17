@@ -31,7 +31,7 @@ class WelcomeCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = WelcomeViewModelImpl(this);
+    var viewModel = WelcomeViewModelImpl(this, nativeViewChannel);
     widget = WelcomeView(
       viewModel,
     );

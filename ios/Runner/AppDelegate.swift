@@ -71,6 +71,8 @@ import CryptoKit
                 }
             case "native.navigation.plan.upgrade":
                 print("native.navigation.plan.upgrade:", call.arguments ?? "")
+            case "native.initialize.core.environment":
+                print("native.initialize.core.environment data:", call.arguments ?? "")
             default:
                 result(FlutterMethodNotImplemented)
             }
