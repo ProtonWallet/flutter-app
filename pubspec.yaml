@@ -39,7 +39,7 @@ dependencies:
   #rust
   rust_builder:
     path: rust_builder
-  flutter_rust_bridge: 2.0.0-dev.33
+  flutter_rust_bridge: 2.0.0-dev.35
   #golang ffi plugin
   proton_crypto:
     path: gopenpgp_plugin
