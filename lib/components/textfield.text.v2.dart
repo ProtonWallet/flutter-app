@@ -19,24 +19,27 @@ class TextFieldTextV2 extends StatefulWidget {
   final double? paddingSize;
   final int? maxLines;
   final EdgeInsets? scrollPadding;
+  final String? hintText;
 
-  const TextFieldTextV2(
-      {super.key,
-      this.labelText = "",
-      this.onFinish,
-      this.backgroundColor,
-      this.autofocus = false,
-      required this.textController,
-      required this.myFocusNode,
-      this.inputFormatters = const [],
-      this.keyboardType,
-      this.textInputAction,
-      required this.validation,
-      this.isPassword = false,
-      this.paddingSize,
-      this.maxLines,
-      this.checkOfErrorOnFocusChange = true,
-      this.scrollPadding});
+  const TextFieldTextV2({
+    super.key,
+    this.labelText = "",
+    this.onFinish,
+    this.backgroundColor,
+    this.autofocus = false,
+    required this.textController,
+    required this.myFocusNode,
+    this.inputFormatters = const [],
+    this.keyboardType,
+    this.textInputAction,
+    required this.validation,
+    this.isPassword = false,
+    this.paddingSize,
+    this.maxLines,
+    this.checkOfErrorOnFocusChange = true,
+    this.scrollPadding,
+    this.hintText,
+  });
 
   @override
   State<StatefulWidget> createState() => TextFieldTextV2State();
@@ -105,7 +108,8 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
-                  scrollPadding: widget.scrollPadding ?? const EdgeInsets.all(20),
+                  scrollPadding:
+                      widget.scrollPadding ?? const EdgeInsets.all(20),
                   obscureText: widget.isPassword ? isObscureText : false,
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,
@@ -146,6 +150,8 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                             icon: Icon(Icons.visibility_rounded,
                                 size: 20, color: ProtonColors.textWeak))
                         : null,
+                    hintText: widget.hintText,
+                    hintStyle: FontManager.textFieldLabelStyle(ProtonColors.textHint),
                     labelText: widget.labelText,
                     labelStyle: isError
                         ? FontManager.textFieldLabelStyle(

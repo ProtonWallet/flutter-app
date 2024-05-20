@@ -69,6 +69,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get addAccount =>
       const SvgGenImage('assets/images/icon/add-account.svg');
 
+  /// File path: assets/images/icon/alert_info.svg
+  SvgGenImage get alertInfo =>
+      const SvgGenImage('assets/images/icon/alert_info.svg');
+
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
@@ -243,6 +247,7 @@ class $AssetsImagesIconGen {
   List<dynamic> get values => [
         accessKey,
         addAccount,
+        alertInfo,
         bitcoin,
         btc,
         discoverPlaceholder0,

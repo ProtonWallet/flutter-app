@@ -291,3 +291,6 @@ Future<List<AllKeyAddressKey>> getAllPublicKeys(
         {required String email, required int internalOnly, dynamic hint}) =>
     RustLib.instance.api
         .getAllPublicKeys(email: email, internalOnly: internalOnly, hint: hint);
+
+Future<bool> isValidToken({dynamic hint}) =>
+    RustLib.instance.api.isValidToken(hint: hint);

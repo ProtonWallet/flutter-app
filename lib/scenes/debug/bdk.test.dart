@@ -12,7 +12,6 @@ import 'package:wallet/helper/logger.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/rust/bdk/blockchain.dart';
 import 'package:wallet/rust/frb_generated.dart';
 

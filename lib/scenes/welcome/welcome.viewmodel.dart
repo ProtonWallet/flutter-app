@@ -43,7 +43,11 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> _localLogin() async {
-    nativeChannel.initalNativeApiEnv(appConfig.apiEnv);
+    try {
+      nativeChannel.initalNativeApiEnv(appConfig.apiEnv);
+    } catch (e) {
+      logger.e(e.toString());
+    }
     if (await SecureStorageHelper.instance.get("sessionId") != "") {
       await loginResume();
       // LocalAuth.authenticate("Authenticate to login").then((auth) {

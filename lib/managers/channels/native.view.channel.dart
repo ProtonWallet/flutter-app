@@ -68,6 +68,8 @@ class NativeViewChannelImpl implements NativeViewChannel {
           'native.initialize.core.environment', {envKey: env.toString()});
     } on PlatformException catch (e) {
       logger.e("Failed to initialize native environment: '${e.message}'.");
+    } on MissingPluginException catch (e){
+      logger.e("Failed to initialize native environment: '${e.message}'.");
     }
   }
 }

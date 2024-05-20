@@ -20,6 +20,7 @@ class TextFieldText extends StatefulWidget {
   final bool showMailTag;
   final double borderRadius;
   final Widget? prefixIcon;
+  final EdgeInsets? scrollPadding;
 
   const TextFieldText(
       {super.key,
@@ -38,6 +39,7 @@ class TextFieldText extends StatefulWidget {
       this.color = Colors.transparent,
       this.showEnabledBorder = true,
       this.digitOnly = false,
+      this.scrollPadding,
       this.showMailTag = false});
 
   @override
@@ -69,6 +71,8 @@ class TextFieldTextState extends State<TextFieldText> {
                   maxLines: widget.multiLine ? null : 1,
                   minLines: widget.multiLine ? 5 : 1,
                   controller: widget.controller,
+                  scrollPadding:
+                      widget.scrollPadding ?? const EdgeInsets.all(20),
                   focusNode: widget.focusNode,
                   keyboardType: widget.digitOnly
                       ? const TextInputType.numberWithOptions(decimal: true)
