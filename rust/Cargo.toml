@@ -10,7 +10,7 @@ mockall = "0.12.1"
 hyper = "1.1.0"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = { version = "2.0.0-dev.28" }
+flutter_rust_bridge_codegen = { version = "2.0.0-dev.33" }
 
 [dependencies]
 rand = "0.8"

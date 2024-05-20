@@ -28,7 +28,6 @@ import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
@@ -187,7 +186,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                               null) {
                             viewModel.move(NavID.send);
                           } else {
-                            CommonHelper.showSnackbar(context, S.of(context).please_select_wallet_first);
+                            CommonHelper.showSnackbar(context,
+                                S.of(context).please_select_wallet_first);
                           }
                         },
                         onBuy: () {
@@ -210,7 +210,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                               null) {
                             move(context, viewModel, NavID.receive);
                           } else {
-                            CommonHelper.showSnackbar(context, S.of(context).please_select_wallet_first);
+                            CommonHelper.showSnackbar(context,
+                                S.of(context).please_select_wallet_first);
                           }
                         }),
                     const SizedBox(
@@ -253,7 +254,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             CustomTodos(
                                 title:
                                     S.of(context).todos_backup_proton_account,
-                                checked: viewModel.hadBackup,
+                                checked: viewModel.hadBackupProtonAccount,
                                 callback: () {}),
                             const SizedBox(
                               height: 5,
@@ -270,7 +271,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             ),
                             CustomTodos(
                                 title: S.of(context).todos_setup_2fa,
-                                checked: viewModel.hadBackup,
+                                checked: viewModel.hadSetup2FA,
                                 callback: () {}),
                             const SizedBox(
                               height: 5,
@@ -304,6 +305,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         viewModel
                                             .setSearchHistoryTextField(false);
                                       },
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              100),
                                       controller:
                                           viewModel.transactionSearchController,
                                     )
@@ -669,6 +675,18 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
+                        onTap: () {},
+                        leading: SvgPicture.asset(
+                            "assets/images/icon/ic-bugreport.svg",
+                            fit: BoxFit.fill,
+                            width: 20,
+                            height: 20),
+                        title: Transform.translate(
+                            offset: const Offset(-8, 0),
+                            child: Text(S.of(context).report_a_problem,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textHint)))),
+                    ListTile(
                         onTap: () async {
                           await viewModel.logout();
                         },
@@ -719,8 +737,17 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               )
                             ])),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
+                    if (viewModel.packageInfo != null)
+                      Center(
+                          child: Container(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                "${S.of(context).app_name} ${viewModel.packageInfo!.version} (${viewModel.packageInfo!.buildNumber})",
+                                style: FontManager.captionRegular(
+                                    ProtonColors.textHint),
+                              ))),
                   ]))));
 }
 
@@ -812,37 +839,39 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                   fit: BoxFit.fill,
                   width: 18,
                   height: 18),
-              onExpansionChanged: (expanded) {
-                viewModel.selectWallet(walletModel);
-              },
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Provider.of<ProtonWalletProvider>(context)
                           .protonWallet
                           .hasPassphrase(walletModel)
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      CommonHelper.getFirstNChar(
-                                          walletModel.name, 12),
-                                      style: FontManager.captionSemiBold(
-                                          AvatarColorHelper.getTextColor(
-                                              Provider.of<ProtonWalletProvider>(
-                                                      context)
-                                                  .protonWallet
-                                                  .wallets
-                                                  .indexOf(walletModel)))),
-                                  Text(
-                                      "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
-                                      style: FontManager.captionRegular(
-                                          ProtonColors.textHint))
-                                ],
-                              )
-                            ])
+                      ? GestureDetector(
+                          onTap: () {
+                            viewModel.selectWallet(walletModel);
+                            Navigator.pop(context);
+                          },
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        CommonHelper.getFirstNChar(
+                                            walletModel.name, 12),
+                                        style: FontManager.captionSemiBold(
+                                            AvatarColorHelper.getTextColor(
+                                                Provider.of<ProtonWalletProvider>(
+                                                        context)
+                                                    .protonWallet
+                                                    .wallets
+                                                    .indexOf(walletModel)))),
+                                    Text(
+                                        "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
+                                        style: FontManager.captionRegular(
+                                            ProtonColors.textHint))
+                                  ],
+                                )
+                              ]))
                       : Row(children: [
                           GestureDetector(
                               onTap: () {

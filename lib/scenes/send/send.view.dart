@@ -64,9 +64,11 @@ class SendView extends ViewBase<SendViewModel> {
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
-      body: viewModel.inReview
-          ? buildReviewContent(context, viewModel, viewSize)
-          : buildContent(context, viewModel, viewSize),
+      body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: viewModel.inReview
+              ? buildReviewContent(context, viewModel, viewSize)
+              : buildContent(context, viewModel, viewSize)),
     );
   }
 

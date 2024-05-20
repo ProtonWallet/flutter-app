@@ -478,6 +478,11 @@ class WalletManager {
     return DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
   }
 
+  static Future<bool> isValidToken() async {
+    bool valid = await proton_api.isValidToken();
+    return valid;
+  }
+
   static Future<void> initContacts() async {
     List<ProtonContactEmails> mails = await proton_api.getContacts();
     for (ProtonContactEmails mail in mails) {
@@ -721,9 +726,9 @@ class WalletManager {
       refreshToken = 'q4pwytzpgvvezuphc637cb475s2o6e5x';
 
       // user "dclbitcoin@proton.me"
-      // uid = 'kgpus7m4woa7pkrhgqk6ef3zpu6i72mr';
-      // accessToken = 'pn2yq4owbrcrhlkywwrrenfexl45nznm';
-      // refreshToken = 'ke2h3ubw4mlpsnydo3qjwxgrrqyi2ewm';
+      uid = 'ayqqfz2hwtzclczfdkotrwddyk4fkbpp';
+      accessToken = 'krsd37mwvoifa3klnbdtojgfomxtltfg';
+      refreshToken = 'roggwqpox32sgpggkbvevg2gvozlqjqc';
     }
     logger.i("uid = '$uid';");
     logger.i("accessToken = '$accessToken';");
