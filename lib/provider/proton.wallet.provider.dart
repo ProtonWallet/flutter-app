@@ -49,6 +49,15 @@ class ProtonWallet {
     // check if wallet has passphrase
     for (WalletModel walletModel in wallets) {
       await checkPassphrase(walletModel);
+
+      // sync all wallet accounts when init
+      for (AccountModel accountModel in accounts) {
+        if (accountModel.walletID == walletModel.id!) {
+          Wallet wallet = await WalletManager.loadWalletWithID(
+              walletModel.id!, accountModel.id!);
+          syncWallet(wallet, accountModel);
+        }
+      }
     }
   }
 

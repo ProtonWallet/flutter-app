@@ -55,6 +55,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                 SizedBoxes.box18,
                 TextFieldTextV2(
                   labelText: S.of(context).wallet_name,
+                  hintText:S.of(context).wallet_name_hint,
                   textController: viewModel.nameTextController,
                   myFocusNode: viewModel.nameFocusNode,
                   validation: (String _) {
@@ -89,6 +90,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                 SizedBoxes.box12,
                 TextFieldTextV2(
                   labelText: S.of(context).your_mnemonic,
+                  hintText: S.of(context).your_mnemonic_hint,
                   textController: viewModel.mnemonicTextController,
                   myFocusNode: viewModel.mnemonicFocusNode,
                   maxLines: 6,

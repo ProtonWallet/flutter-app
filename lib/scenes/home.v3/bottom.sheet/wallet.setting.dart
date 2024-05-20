@@ -57,8 +57,8 @@ class WalletSettingSheet {
       for (var item in userAccounts)
         item.id!: ValueNotifier(viewModel.protonAddresses.firstOrNull)
     };
-    HomeModalBottomSheet.show(context,
-        scrollController: scrollController, child: StatefulBuilder(
+    HomeModalBottomSheet.show(context, scrollController: scrollController,
+        child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -212,6 +212,11 @@ class WalletSettingSheet {
                                         accountNameControllers[userAccount.id!]!
                                             .text);
                                   },
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          80),
                                   validation: (String value) {
                                     if (value.isEmpty) {
                                       return "Required";

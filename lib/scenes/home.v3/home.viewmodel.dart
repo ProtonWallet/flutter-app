@@ -40,6 +40,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 enum WalletDrawerStatus {
   close,
@@ -63,6 +64,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isFetching = false;
   bool isLogout = false;
   int currentHistoryPage = 0;
+  PackageInfo? packageInfo;
   bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
@@ -109,8 +111,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hadBackup = false;
   bool hadBackupProtonAccount = false;
   bool hadSetup2FA = false;
-  bool hadSetupEmailIntegration = false;
-  bool hadSetFiatCurrency = false;
   bool showSearchHistoryTextField = false;
 
   void setOnBoard();
@@ -120,8 +120,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void selectAccount(WalletModel walletModel, AccountModel accountModel);
 
   void showMoreTransactionHistory();
-
-  void updateFiatCurrency(FiatCurrency fiatCurrency);
 
   Future<void> updateEmailIntegration(
       WalletModel walletModel, AccountModel accountModel);
@@ -161,6 +159,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   String selectedTXID = "";
   bool isWalletPassphraseMatch = true;
+  bool isValidToken = false;
 
   late FocusNode newAccountNameFocusNode;
   late FocusNode walletNameFocusNode;
@@ -233,6 +232,7 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     try {
+      packageInfo = await PackageInfo.fromPlatform();
       hideEmptyUsedAddressesController = TextEditingController();
       walletNameController = TextEditingController(text: "");
       twoFactorAmountThresholdController = TextEditingController(text: "3");
@@ -250,62 +250,61 @@ class HomeViewModelImpl extends HomeViewModel {
       await Future.delayed(const Duration(
           seconds:
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
-
-      hasWallet = await WalletManager.hasWallet();
-      if (hasWallet == false) {
-        await WalletManager.fetchWalletsFromServer();
+      isValidToken = await WalletManager.isValidToken();
+      if (isValidToken) {
         hasWallet = await WalletManager.hasWallet();
-      }
-      WalletManager.initContacts();
-      EventLoopHelper.start();
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("loadData() 1: $errorMessage");
-      errorMessage = "";
-    }
-    try {
-      buildTempSession();
-      getUserSettings();
-      cryptoPriceDataService.start(); //start service
-      checkNetwork();
-      loadDiscoverContents();
-      checkProtonAddresses();
-      refreshWithUserSettingProvider();
-      fiatCurrencyNotifier.addListener(() async {
-        updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
-      });
-      bitcoinUnitNotifier.addListener(() async {
-        updateBitcoinUnit(bitcoinUnitNotifier.value);
-        userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
-      });
+        if (hasWallet == false) {
+          await WalletManager.fetchWalletsFromServer();
+          hasWallet = await WalletManager.hasWallet();
+        }
+        WalletManager.initContacts();
+        EventLoopHelper.start();
 
-      protonWalletProvider = Provider.of<ProtonWalletProvider>(
-          Coordinator.navigatorKey.currentContext!,
-          listen: false);
-      protonWalletProvider.addListener(() async {
-        walletNameController.text =
-            protonWalletProvider.protonWallet.currentWallet?.name ?? "";
-      });
-      protonWalletProvider.init();
-      transactionSearchController.addListener(() {
-        protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
-            protonWalletProvider.protonWallet.transactionFilter,
-            transactionSearchController.text);
-      });
-      checkPreference();
+        buildTempSession();
+        getUserSettings();
+        cryptoPriceDataService.start(); //start service
+        checkNetwork();
+        loadDiscoverContents();
+        checkProtonAddresses();
+        refreshWithUserSettingProvider();
+        fiatCurrencyNotifier.addListener(() async {
+          updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
+        });
+        bitcoinUnitNotifier.addListener(() async {
+          updateBitcoinUnit(bitcoinUnitNotifier.value);
+          userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
+        });
+
+        protonWalletProvider = Provider.of<ProtonWalletProvider>(
+            Coordinator.navigatorKey.currentContext!,
+            listen: false);
+        protonWalletProvider.addListener(() async {
+          walletNameController.text =
+              protonWalletProvider.protonWallet.currentWallet?.name ?? "";
+        });
+        protonWalletProvider.init();
+        transactionSearchController.addListener(() {
+          protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
+              protonWalletProvider.protonWallet.transactionFilter,
+              transactionSearchController.text);
+        });
+        checkPreference();
+      } else {
+        errorMessage =
+            "Muon token expired, please logout then login again. (This will be fix after muon v2)";
+      }
     } catch (e) {
       errorMessage = e.toString();
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("loadData() 2: $errorMessage");
+      CommonHelper.showErrorDialog("App init: $errorMessage");
       errorMessage = "";
-    }
-    initialed = true;
-    if (hasWallet == false) {
-      setOnBoard();
+    } else {
+      initialed = true;
+      if (hasWallet == false) {
+        setOnBoard();
+      }
     }
     datasourceStreamSinkAdd();
   }
@@ -511,27 +510,17 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> checkPreference({bool runOnce = false}) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
-    AccountModel? currentAccount =
-        protonWalletProvider.protonWallet.currentAccount;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (currentWallet != null) {
       String serverWalletID = currentWallet.serverWalletID;
       hadBackup =
           preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
-      hadSetFiatCurrency =
-          preferences.getBool("todo_hadSetFiatCurrency") ?? false;
     }
-    if (currentAccount != null) {
-      hadSetupEmailIntegration = preferences.getBool(
-              "todo_hadSetEmailIntegration_${currentAccount.serverAccountID}") ??
-          false;
-    }
+
     currentTodoStep = 0;
     currentTodoStep += hadBackup ? 1 : 0;
     currentTodoStep += hadBackupProtonAccount ? 1 : 0;
     currentTodoStep += hadSetup2FA ? 1 : 0;
-    currentTodoStep += hadSetFiatCurrency ? 1 : 0;
-    currentTodoStep += hadSetupEmailIntegration ? 1 : 0;
     datasourceStreamSinkAdd();
     if (runOnce == false) {
       await Future.delayed(const Duration(seconds: 1));
@@ -578,14 +567,6 @@ class HomeViewModelImpl extends HomeViewModel {
       CommonHelper.showErrorDialog("addBitcoinAddress(): $errorMessage");
       errorMessage = "";
     }
-  }
-
-  @override
-  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool("todo_hadSetFiatCurrency", true);
-    hadSetFiatCurrency = true;
-    datasourceStreamSinkAdd();
   }
 
   @override
@@ -793,6 +774,14 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   void setSearchHistoryTextField(bool show) {
+    if (show == false){
+      if (transactionSearchController.text.isNotEmpty) {
+        transactionSearchController.text = "";
+        protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
+            protonWalletProvider.protonWallet.transactionFilter,
+            transactionSearchController.text);
+      }
+    }
     showSearchHistoryTextField = show;
     datasourceStreamSinkAdd();
   }

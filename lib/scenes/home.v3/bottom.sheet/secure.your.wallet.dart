@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
