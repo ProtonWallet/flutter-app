@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +42,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         scrolledUnderElevation:
             0.0, // don't change background color when scroll down
       ),
-      body: buildNoHistory(context, viewModel, viewSize),
+      body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: buildNoHistory(context, viewModel, viewSize)),
     );
   }
 
@@ -200,7 +204,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     if (viewModel.blockConfirmTimestamp != null)
                       TransactionHistoryItem(
                           title: S.of(context).trans_date,
-                          content: parsetime(viewModel.blockConfirmTimestamp!)),
+                          content: parsetime(
+                              context, viewModel.blockConfirmTimestamp!)),
                     const Divider(
                       thickness: 0.2,
                       height: 1,
@@ -342,15 +347,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
     );
   }
 
-  String parsetime(int timestemp) {
+  String parsetime(BuildContext context, int timestemp) {
     var millis = timestemp;
     var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
 
-    var d12 =
-        DateFormat('MM/dd/yyyy, hh:mm a').format(dt); // 12/31/2000, 10:00 PM
-
-    // var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
-    return d12.toString();
+    var dateLocalFormat =
+        DateFormat.yMd(Platform.localeName).add_jm().format(dt);
+    return dateLocalFormat.toString();
   }
 }
 

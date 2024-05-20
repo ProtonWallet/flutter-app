@@ -580,6 +580,14 @@ pub async fn get_all_public_keys(
     }
 }
 
+pub async fn is_valid_token() -> Result<bool, ApiError> {
+    let result = get_latest_event_id().await;
+    match result {
+        Ok(_) => Ok(true),
+        Err(_) => Ok(false),
+    }
+}
+
 // enable it after 2fa mr ready for andromeda
 
 // pub async fn get_2fa_enabled() -> Result<u32, ApiError> {

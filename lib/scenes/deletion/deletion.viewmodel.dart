@@ -51,7 +51,11 @@ class WalletDeletionViewModelImpl extends WalletDeletionViewModel {
         .then((_) {
       hasSaveMnemonic = true;
       datasourceChangedStreamController.sinkAddSafe(this);
-      CommonHelper.showSnackbar(context, S.of(context).copied_mnemonic);
+      if (context.mounted) {
+        CommonHelper.showSnackbar(context, S
+            .of(context)
+            .copied_mnemonic);
+      }
     });
   }
 
