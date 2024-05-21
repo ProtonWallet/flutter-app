@@ -79,5 +79,5 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 }

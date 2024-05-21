@@ -35,6 +35,7 @@ class $AssetsImagesGen {
       const SvgGenImage('assets/images/frame_word_logo.svg');
 
   $AssetsImagesIconGen get icon => const $AssetsImagesIconGen();
+  $AssetsImagesLogosGen get logos => const $AssetsImagesLogosGen();
 
   /// File path: assets/images/mail_integration.svg
   SvgGenImage get mailIntegration =>
@@ -45,6 +46,7 @@ class $AssetsImagesGen {
 
   $AssetsImagesWalletCreationGen get walletCreation =>
       const $AssetsImagesWalletCreationGen();
+  $AssetsImagesWelcomeGen get welcome => const $AssetsImagesWelcomeGen();
 
   /// List of all assets
   List<dynamic> get values => [
@@ -56,6 +58,16 @@ class $AssetsImagesGen {
         mailIntegration,
         wallet
       ];
+}
+
+class $AssetsJsonGen {
+  const $AssetsJsonGen();
+
+  /// File path: assets/json/custom_discovers.json
+  String get customDiscovers => 'assets/json/custom_discovers.json';
+
+  /// List of all assets
+  List<String> get values => [customDiscovers];
 }
 
 class $AssetsImagesIconGen {
@@ -295,6 +307,17 @@ class $AssetsImagesIconGen {
       ];
 }
 
+class $AssetsImagesLogosGen {
+  const $AssetsImagesLogosGen();
+
+  /// File path: assets/images/logos/proton_p_logo.svg
+  SvgGenImage get protonPLogo =>
+      const SvgGenImage('assets/images/logos/proton_p_logo.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [protonPLogo];
+}
+
 class $AssetsImagesWalletCreationGen {
   const $AssetsImagesWalletCreationGen();
 
@@ -343,14 +366,39 @@ class $AssetsImagesWalletCreationGen {
       ];
 }
 
+class $AssetsImagesWelcomeGen {
+  const $AssetsImagesWelcomeGen();
+
+  /// File path: assets/images/welcome/proton_privacy_by_default_footer.svg
+  SvgGenImage get protonPrivacyByDefaultFooter => const SvgGenImage(
+      'assets/images/welcome/proton_privacy_by_default_footer.svg');
+
+  /// File path: assets/images/welcome/wallet_welcome_head.png
+  AssetGenImage get walletWelcomeHeadPng =>
+      const AssetGenImage('assets/images/welcome/wallet_welcome_head.png');
+
+  /// File path: assets/images/welcome/wallet_welcome_head.svg
+  SvgGenImage get walletWelcomeHeadSvg =>
+      const SvgGenImage('assets/images/welcome/wallet_welcome_head.svg');
+
+  /// File path: assets/images/welcome/wallet_welcome_head_cover.svg
+  SvgGenImage get walletWelcomeHeadCover =>
+      const SvgGenImage('assets/images/welcome/wallet_welcome_head_cover.svg');
+
+  /// List of all assets
+  List<dynamic> get values => [
+        protonPrivacyByDefaultFooter,
+        walletWelcomeHeadPng,
+        walletWelcomeHeadSvg,
+        walletWelcomeHeadCover
+      ];
+}
+
 class Assets {
   Assets._();
 
-  static const String customDiscovers = 'assets/custom_discovers.json';
   static const $AssetsImagesGen images = $AssetsImagesGen();
-
-  /// List of all assets
-  static List<String> get values => [customDiscovers];
+  static const $AssetsJsonGen json = $AssetsJsonGen();
 }
 
 class AssetGenImage {

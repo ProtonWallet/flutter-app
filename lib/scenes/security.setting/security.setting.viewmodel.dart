@@ -28,7 +28,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavID to) {
+  Future<void> move(NavID to) async {
     switch (to) {
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();

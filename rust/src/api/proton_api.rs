@@ -1,4 +1,4 @@
-pub use andromeda_api::settings::FiatCurrency;
+pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
 use andromeda_api::{
     transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
     AccessToken, AppSpec, AuthData, Product, ProtonWalletApiClient, RefreshToken,
@@ -7,7 +7,7 @@ use andromeda_api::{
 use andromeda_common::BitcoinUnit;
 use chrono::Utc;
 use lazy_static::lazy_static;
-use log::{debug, info};
+use log::info;
 use std::sync::{Arc, RwLock};
 
 use crate::{
@@ -66,7 +66,7 @@ pub fn init_api_service_auth_store(
     env: Option<String>,
 ) {
     info!("start init_api_service");
-    debug!(
+    info!(
         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
         uid, access, refresh, scopes
     );

@@ -1,6 +1,4 @@
-use andromeda_api::proton_email_address::{
-    ApiAllKeyAddressKey, ApiProtonAddress, ApiProtonAddressKey,
-};
+use andromeda_api::proton_email_address::{ApiAllKeyAddressKey, ApiProtonAddress, ApiProtonAddressKey};
 
 #[derive(Debug)]
 pub struct AllKeyAddressKey {

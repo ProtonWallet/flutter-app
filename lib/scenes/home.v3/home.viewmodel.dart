@@ -16,17 +16,15 @@ import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/event_loop_helper.dart';
+import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
-import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/native.session.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
@@ -34,7 +32,7 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
@@ -173,11 +171,23 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool get keepAlive => true;
 
   Future<void> logout();
+
+  String userEmail = "";
+  String displayName = "";
+  Future<void> updatePassphrase(String key, String passphrase);
 }
 
 class HomeViewModelImpl extends HomeViewModel {
-  HomeViewModelImpl(super.coordinator, super.apiEnv);
+  HomeViewModelImpl(super.coordinator, super.apiEnv, this.userManager,
+      this.eventLoop, this.protonWalletManager);
+  // user manager
+  final UserManager userManager;
+  // event loop manger
+  final EventLoop eventLoop;
+  // wallet mangaer
+  final ProtonWalletManager protonWalletManager;
 
+  ///
   final datasourceChangedStreamController =
       StreamController<HomeViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
@@ -185,19 +195,6 @@ class HomeViewModelImpl extends HomeViewModel {
   CryptoPriceDataService cryptoPriceDataService =
       CryptoPriceDataService(duration: const Duration(seconds: 10));
   late StreamSubscription _subscription;
-
-  /// TODO:: fix me temp
-  late NativeSession session;
-
-  Future<void> buildTempSession() async {
-    session = NativeSession(
-        userId: await SecureStorageHelper.instance.get("userId"),
-        userName: await SecureStorageHelper.instance.get("userName"),
-        sessionId: await SecureStorageHelper.instance.get("sessionId"),
-        accessToken: await SecureStorageHelper.instance.get("accessToken"),
-        refreshToken: await SecureStorageHelper.instance.get("refreshToken"),
-        passphrase: "");
-  }
 
   @override
   void dispose() {
@@ -227,7 +224,10 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    await WalletManager.initMuon(apiEnv);
+    await userManager.initMuon();
+    var userInfo = userManager.userInfo;
+    userEmail = userInfo.userMail;
+    displayName = userInfo.userDisplayName;
     initServices();
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
@@ -257,10 +257,19 @@ class HomeViewModelImpl extends HomeViewModel {
           await WalletManager.fetchWalletsFromServer();
           hasWallet = await WalletManager.hasWallet();
         }
-        WalletManager.initContacts();
-        EventLoopHelper.start();
 
-        buildTempSession();
+        protonWalletProvider = Provider.of<ProtonWalletProvider>(
+            Coordinator.navigatorKey.currentContext!,
+            listen: false);
+        protonWalletProvider.addListener(() async {
+          walletNameController.text =
+              protonWalletProvider.protonWallet.currentWallet?.name ?? "";
+        });
+        await protonWalletProvider.init();
+
+        WalletManager.initContacts();
+        eventLoop.start();
+
         getUserSettings();
         cryptoPriceDataService.start(); //start service
         checkNetwork();
@@ -275,14 +284,6 @@ class HomeViewModelImpl extends HomeViewModel {
           userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
         });
 
-        protonWalletProvider = Provider.of<ProtonWalletProvider>(
-            Coordinator.navigatorKey.currentContext!,
-            listen: false);
-        protonWalletProvider.addListener(() async {
-          walletNameController.text =
-              protonWalletProvider.protonWallet.currentWallet?.name ?? "";
-        });
-        protonWalletProvider.init();
         transactionSearchController.addListener(() {
           protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
               protonWalletProvider.protonWallet.transactionFilter,
@@ -467,22 +468,20 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> renameAccount(AccountModel accountModel, String newName) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
-    if (currentWallet != null) {
-      logger.i("currentWallet.name = ${currentWallet.name}");
-      try {
-        SecretKey? secretKey =
-            await WalletManager.getWalletKey(currentWallet.serverWalletID);
-        WalletAccount walletAccount = await proton_api.updateWalletAccountLabel(
-            walletId: currentWallet.serverWalletID,
-            walletAccountId: accountModel.serverAccountID,
-            newLabel: await WalletKeyHelper.encrypt(secretKey!, newName));
-        accountModel.label = base64Decode(walletAccount.label);
-        accountModel.labelDecrypt = newName;
-        await DBHelper.accountDao!.update(accountModel);
-        await protonWalletProvider.insertOrUpdateWalletAccount(accountModel);
-      } catch (e) {
-        logger.e(e);
-      }
+    logger.i("currentWallet.name = ${currentWallet?.name}");
+    try {
+      SecretKey secretKey =
+          await protonWalletManager.getWalletKey(currentWallet!.serverWalletID);
+      WalletAccount walletAccount = await proton_api.updateWalletAccountLabel(
+          walletId: currentWallet.serverWalletID,
+          walletAccountId: accountModel.serverAccountID,
+          newLabel: await WalletKeyHelper.encrypt(secretKey, newName));
+      accountModel.label = base64Decode(walletAccount.label);
+      accountModel.labelDecrypt = newName;
+      await DBHelper.accountDao!.update(accountModel);
+      await protonWalletProvider.insertOrUpdateWalletAccount(accountModel);
+    } catch (e) {
+      logger.e(e);
     }
   }
 
@@ -515,13 +514,13 @@ class HomeViewModelImpl extends HomeViewModel {
       String serverWalletID = currentWallet.serverWalletID;
       hadBackup =
           preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
+      currentTodoStep = 0;
+      currentTodoStep += hadBackup ? 1 : 0;
+      currentTodoStep += hadBackupProtonAccount ? 1 : 0;
+      currentTodoStep += hadSetup2FA ? 1 : 0;
+      datasourceStreamSinkAdd();
     }
 
-    currentTodoStep = 0;
-    currentTodoStep += hadBackup ? 1 : 0;
-    currentTodoStep += hadBackupProtonAccount ? 1 : 0;
-    currentTodoStep += hadSetup2FA ? 1 : 0;
-    datasourceStreamSinkAdd();
     if (runOnce == false) {
       await Future.delayed(const Duration(seconds: 1));
       if (isLogout == false) {
@@ -564,7 +563,7 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("addBitcoinAddress(): $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
   }
@@ -622,7 +621,7 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("removeEmailAddress(): $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
     datasourceStreamSinkAdd();
@@ -635,8 +634,8 @@ class HomeViewModelImpl extends HomeViewModel {
         status: "log out, cleaning cache..",
         maskType: EasyLoadingMaskType.black);
     try {
-      EventLoopHelper.stop();
-      await UserSessionProvider().logout();
+      eventLoop.stop();
+      userManager.logout();
       await WalletManager.cleanBDKCache();
       await DBHelper.reset();
       await WalletManager.cleanSharedPreference();
@@ -647,16 +646,14 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
-      assert(false, " logout() error:  $errorMessage");
-      logger.d(" logout() error:  $errorMessage");
-      CommonHelper.showErrorDialog("logout(): $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
     coordinator.logout();
   }
 
   @override
-  void move(NavID to) {
+  Future<void> move(NavID to) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
     AccountModel? currentAccount =
@@ -672,11 +669,11 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showImportWallet();
         break;
       case NavID.send:
-        coordinator.showSend(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        coordinator.showSend(currentWallet!.id ?? 0, currentAccount?.id ?? 0);
         break;
       case NavID.receive:
         coordinator.showReceive(
-            currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+            currentWallet!.id ?? 0, currentAccount?.id ?? 0);
         break;
       case NavID.testWebsocket:
         coordinator.showWebSocket();
@@ -688,11 +685,11 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.logout();
         break;
       case NavID.walletDeletion:
-        coordinator.showWalletDeletion(currentWallet?.id ?? 0);
+        coordinator.showWalletDeletion(currentWallet!.id ?? 0);
         break;
       case NavID.historyDetails:
         coordinator.showHistoryDetails(
-            currentWallet?.id ?? 0,
+            currentWallet!.id ?? 0,
             historyAccountModel?.id ?? 0,
             selectedTXID,
             fiatCurrencyNotifier.value);
@@ -704,15 +701,16 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showTwoFactorAuthDisable();
         break;
       case NavID.setupBackup:
-        coordinator.showSetupBackup(currentWallet?.id ?? 0);
+        coordinator.showSetupBackup(currentWallet!.id ?? 0);
         break;
       case NavID.discover:
         coordinator.showDiscover();
         break;
       case NavID.buy:
-        coordinator.showBuy(currentWallet?.id ?? 0, currentAccount?.id ?? 0);
+        coordinator.showBuy(currentWallet!.id ?? 0, currentAccount!.id ?? 0); // TODO:: currentAccount will be null if it's in walletView
         break;
       case NavID.nativeUpgrade:
+        final session = await userManager.getChildSession();
         coordinator.showNativeUpgrade(session);
         break;
       default:
@@ -731,7 +729,7 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("addWalletAccount(): $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
     EasyLoading.dismiss();
@@ -754,27 +752,15 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
-      if (isReloaded) {
-        CommonHelper.showErrorDialog(
-            "addEmailAddressToWalletAccount(): $errorMessage");
-        errorMessage = "";
-      } else {
-        // try remove first then add again
-        errorMessage = "";
-        await removeEmailAddress(
-            serverWalletID, serverAccountID, serverAddressID,
-            isTriedRemove: true);
-        addEmailAddressToWalletAccount(
-            serverWalletID, serverAccountID, serverAddressID,
-            isReloaded: true);
-      }
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
     }
     datasourceStreamSinkAdd();
   }
 
   @override
   void setSearchHistoryTextField(bool show) {
-    if (show == false){
+    if (show == false) {
       if (transactionSearchController.text.isNotEmpty) {
         transactionSearchController.text = "";
         protonWalletProvider.applyHistoryTransactionFilterAndKeyword(
@@ -822,22 +808,24 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateWalletName(String serverWalletID, String newName) async {
-    SecretKey? secretKey = await WalletManager.getWalletKey(
+    SecretKey? secretKey = await protonWalletManager.getWalletKey(
         protonWalletProvider.protonWallet.currentWallet!.serverWalletID);
-    if (secretKey != null) {
-      try {
-        String encryptedName =
-            await WalletKeyHelper.encrypt(secretKey, newName);
-        await proton_api.updateWalletName(
-            walletId: serverWalletID, newName: encryptedName);
-        protonWalletProvider.updateCurrentWalletName(newName);
-      } catch (e) {
-        errorMessage = e.toString();
-      }
-      if (errorMessage.isNotEmpty) {
-        CommonHelper.showErrorDialog("loadData() 1: $errorMessage");
-        errorMessage = "";
-      }
+    try {
+      String encryptedName = await WalletKeyHelper.encrypt(secretKey, newName);
+      await proton_api.updateWalletName(
+          walletId: serverWalletID, newName: encryptedName);
+      protonWalletProvider.updateCurrentWalletName(newName);
+    } catch (e) {
+      errorMessage = e.toString();
     }
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog("loadData() 1: $errorMessage");
+      errorMessage = "";
+    }
+  }
+
+  @override
+  Future<void> updatePassphrase(String key, String passphrase) async {
+    await protonWalletManager.setPassphrase(key, passphrase);
   }
 }

@@ -7,11 +7,11 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -107,7 +107,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
         BitcoinAddressModel? bitcoinAddressModel = await DBHelper
             .bitcoinAddressDao!
-            .findLatestUnusedLocalBitcoinAddress(walletID, accountModel!.id ?? 0);
+            .findLatestUnusedLocalBitcoinAddress(
+                walletID, accountModel!.id ?? 0);
         if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
           addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
         } else {
@@ -137,9 +138,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   @override
-  void move(NavID to) {
-    // TODO: implement move
-  }
+  Future<void> move(NavID to) async {}
 
   @override
   Future<void> changeAccount(AccountModel newAccountModel) async {
@@ -151,7 +150,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       await WalletManager.syncBitcoinAddressIndex(
           walletModel!.serverWalletID, accountModel!.serverAccountID);
       await getAddress(init: true);
-    } catch (e){
+    } catch (e) {
       logger.e(e.toString());
     }
     EasyLoading.dismiss();

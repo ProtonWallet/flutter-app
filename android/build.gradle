@@ -39,7 +39,6 @@ allprojects {
         }
     }
     // This code is where all the magic happens and fixes the error.
-
 }
 
 rootProject.buildDir = '../build'

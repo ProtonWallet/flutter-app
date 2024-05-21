@@ -1,4 +1,4 @@
-pub use andromeda_api::settings::FiatCurrency;
+pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
 use andromeda_api::settings::UserSettings;
 pub use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;

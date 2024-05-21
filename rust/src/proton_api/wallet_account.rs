@@ -1,4 +1,7 @@
-use andromeda_api::wallet::{ApiEmailAddress, ApiWalletAccount, CreateWalletAccountRequestBody};
+use andromeda_api::{
+    settings::FiatCurrencySymbol as FiatCurrency,
+    wallet::{ApiEmailAddress, ApiWalletAccount, CreateWalletAccountRequestBody},
+};
 
 #[derive(Debug)]
 pub struct CreateWalletAccountReq {
@@ -38,6 +41,7 @@ pub struct WalletAccount {
     pub label: String,
     pub script_type: u8,
     pub addresses: Vec<EmailAddress>,
+    pub fiat_currency: FiatCurrency,
 }
 
 #[derive(Debug)]
@@ -77,6 +81,7 @@ impl From<WalletAccount> for ApiWalletAccount {
                 .into_iter()
                 .map(|v| v.into())
                 .collect(),
+            FiatCurrency: wallet_account.fiat_currency,
         }
     }
 }
@@ -90,6 +95,7 @@ impl From<ApiWalletAccount> for WalletAccount {
             script_type: account.ScriptType,
             wallet_id: account.WalletID,
             addresses: account.Addresses.into_iter().map(|v| v.into()).collect(),
+            fiat_currency: account.FiatCurrency,
         }
     }
 }

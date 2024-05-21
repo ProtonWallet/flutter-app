@@ -1,9 +1,11 @@
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home/navigation.coordinator.dart';
+import 'package:wallet/scenes/signin/signin.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.view.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 
@@ -29,9 +31,15 @@ class WelcomeCoordinator extends Coordinator {
     pushReplacement(view);
   }
 
+  void showFlutterSignin(ApiEnv env) {
+    var view = SigninCoordinator().start();
+    showDialog1(view);
+  }
+
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = WelcomeViewModelImpl(this, nativeViewChannel);
+    var userManager = serviceManager.get<UserManager>();
+    var viewModel = WelcomeViewModelImpl(this, nativeViewChannel, userManager);
     widget = WelcomeView(
       viewModel,
     );
