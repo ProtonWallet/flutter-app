@@ -29,5 +29,5 @@ class AppViewModelImpl extends AppViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 }

@@ -10,6 +10,7 @@ class ButtonV5 extends StatelessWidget {
   final TextStyle textStyle;
   final VoidCallback? onPressed;
   final bool enable;
+  final Size? maximumSize;
 
   const ButtonV5(
       {super.key,
@@ -17,7 +18,7 @@ class ButtonV5 extends StatelessWidget {
       required this.width,
       required this.height,
       this.onPressed,
-      this.radius = 30.0,
+      this.radius = 24.0,
       this.backgroundColor = const Color(0xFF6D4AFF),
       this.borderColor = Colors.transparent,
       this.textStyle = const TextStyle(
@@ -26,7 +27,8 @@ class ButtonV5 extends StatelessWidget {
         fontFamily: 'Inter',
         fontWeight: FontWeight.w400,
       ),
-      this.enable = true});
+      this.enable = true,
+      this.maximumSize = Size.infinite});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class ButtonV5 extends StatelessWidget {
         child: Stack(alignment: Alignment.center, children: [
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+            maximumSize: maximumSize,
             fixedSize: Size(width, height),
             backgroundColor: backgroundColor,
             // foreground

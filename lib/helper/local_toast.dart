@@ -46,7 +46,7 @@ class LocalToast {
             style: TextStyle(
               color: isWarning
                   ? Colors.white
-                  : Theme.of(context).colorScheme.onBackground,
+                  : Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],

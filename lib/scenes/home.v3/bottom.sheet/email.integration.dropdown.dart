@@ -6,7 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';

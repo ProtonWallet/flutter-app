@@ -13,16 +13,16 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -72,13 +72,22 @@ abstract class HistoryDetailViewModel
 }
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
-  HistoryDetailViewModelImpl(super.coordinator, super.walletID, super.accountID,
-      super.txid, super.userFiatCurrency);
+  HistoryDetailViewModelImpl(
+      super.coordinator,
+      super.walletID,
+      super.accountID,
+      super.txid,
+      super.userFiatCurrency,
+      this.userManager,
+      this.protonWalletManager);
 
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();
+
+  final UserManager userManager;
+  final ProtonWalletManager protonWalletManager;
 
   @override
   void dispose() {
@@ -102,7 +111,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       AccountModel accountModel =
           await DBHelper.accountDao!.findById(accountID);
       SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel.serverWalletID);
+          await protonWalletManager.getWalletKey(walletModel.serverWalletID);
 
       transactionModel = await DBHelper.transactionDao!.find(utf8.encode(txid),
           walletModel.serverWalletID, accountModel.serverAccountID);
@@ -174,11 +183,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       logger.i("transactionModel == null ? ${transactionModel == null}");
       if (transactionModel == null) {
         String hashedTransactionID =
-            await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
+            await WalletKeyHelper.getHmacHashedString(secretKey, txid);
         String encryptedLabel = await WalletKeyHelper.encrypt(secretKey, "");
 
-        String userPrivateKey =
-            await SecureStorageHelper.instance.get("userPrivateKey");
+        var key = await userManager.getFirstKey();
+        String userPrivateKey = key.privateKey;
+
         String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
         DateTime now = DateTime.now();
         WalletTransaction walletTransaction =
@@ -218,7 +228,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       }
       if (transactionModel!.label.isNotEmpty) {
         userLabel = await WalletKeyHelper.decrypt(
-            secretKey!, utf8.decode(transactionModel!.label));
+            secretKey, utf8.decode(transactionModel!.label));
       }
       memoController.text = userLabel;
 
@@ -226,15 +236,25 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       for (AddressKey addressKey in addressKeys) {
         try {
-          toEmail = toEmail.isNotEmpty ? toEmail: addressKey.decrypt(transactionModel!.tolist ?? "");
-          fromEmail = fromEmail.isNotEmpty ? fromEmail: addressKey.decrypt(transactionModel!.sender ?? "");
-          body = body.isNotEmpty ? body: addressKey.decrypt(transactionModel!.body ?? "");
+          toEmail = toEmail.isNotEmpty
+              ? toEmail
+              : addressKey.decrypt(transactionModel!.tolist ?? "");
+          fromEmail = fromEmail.isNotEmpty
+              ? fromEmail
+              : addressKey.decrypt(transactionModel!.sender ?? "");
+          body = body.isNotEmpty
+              ? body
+              : addressKey.decrypt(transactionModel!.body ?? "");
         } catch (e) {
           logger.e(e.toString());
         }
         try {
-          toEmail = toEmail.isNotEmpty ? toEmail: addressKey.decryptBinary(transactionModel!.tolist ?? "");
-          fromEmail = fromEmail.isNotEmpty ? fromEmail: addressKey.decryptBinary(transactionModel!.sender ?? "");
+          toEmail = toEmail.isNotEmpty
+              ? toEmail
+              : addressKey.decryptBinary(transactionModel!.tolist ?? "");
+          fromEmail = fromEmail.isNotEmpty
+              ? fromEmail
+              : addressKey.decryptBinary(transactionModel!.sender ?? "");
           if (toEmail.isNotEmpty) {
             break;
           }
@@ -344,12 +364,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     try {
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel.serverWalletID);
+          await protonWalletManager.getWalletKey(walletModel.serverWalletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text) {
           userLabel = memoController.text;
           String encryptedLabel =
-              await WalletKeyHelper.encrypt(secretKey!, userLabel);
+              await WalletKeyHelper.encrypt(secretKey, userLabel);
           transactionModel!.label = utf8.encode(encryptedLabel);
           DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
           await proton_api.updateWalletTransactionLabel(
@@ -377,7 +397,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 
   @override
   void editMemo() {

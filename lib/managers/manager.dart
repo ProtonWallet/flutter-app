@@ -1,4 +1,4 @@
 abstract class Manager {
   Future<void> init();
-  Future<void> end();
+  Future<void> dispose();
 }

@@ -4,12 +4,47 @@ pub struct AuthCredential {
     // Session unique ID
     uid: String,
     // user id
-    userID: String,
+    user_id: String,
     access_token: String,
-    refreshToken: String,
+    refresh_token: String,
     expiration: i32,
     event_id: String,
 }
+
+// "UID": "6f3c4f52cf499c2066e6c5669a293177c1f43755",
+// "UserID": "-Bpgivr5H2qGDRiUQ4-7gm5YLf215MEgZCdzOtLW5psxgB8oNc8OnoFRykab4Z23EGEW1ka3GtQPF9xwx9-VUA==",
+// "EventID": "ACXDmTaBub14w==",
+// "ServerProof": "<base64_encoded_proof>",
+// "TokenType": "Bearer",
+// "AccessToken": "hnnamrzvsgdbxvx74rjadbovyjy63vz4",
+// "RefreshToken": "wfih0367aa7dc0359bf5c42d15a93e6c",
+// "ExpiresIn": 360000,
+// "LocalID": 0,
+// "Scopes": [
+// "full"
+// ],
+// "Scope": "full other_scopes",
+// "PasswordMode": 2,
+// "TemporaryPassword": 0,
+// "2FA": {
+// "Enabled": 3,
+// "FIDO2": {
+// "AuthenticationOptions": { },
+// "RegisteredKeys": []
+// }
+// }
+// }
+
+// public var UID: String
+//     public var accessToken: String
+//     public var refreshToken: String
+//     @available(*, deprecated, message: "Please do not use expiration property")
+//     public var expiration: Date = .distantPast
+//     public var userName: String
+//     public var userID: String
+//     @available(*, deprecated, renamed: "scopes")
+//     public var scope: Scopes { scopes }
+//     public var scopes: Scopes
 
 #[derive(Debug)]
 pub struct ProtonAuthData {
@@ -44,7 +79,7 @@ impl ProtonAuthData {
             Uid::from(uid),
             RefreshToken::from(refresh_token),
             AccessToken::from(access_token),
-            scopes.into_iter().map(|x| Scope::from(x)).collect(),
+            scopes.into_iter().map(Scope::from).collect(),
         );
         Some(Auth::init(access_auth_data))
     }

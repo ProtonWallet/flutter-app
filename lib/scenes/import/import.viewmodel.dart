@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -75,5 +75,5 @@ class ImportViewModelImpl extends ImportViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 }

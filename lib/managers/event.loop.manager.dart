@@ -8,13 +8,15 @@ import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
+import 'package:wallet/managers/manager.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart'
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart'
     as proton_wallet_provider;
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/contacts.dart';
@@ -27,12 +29,16 @@ import 'package:wallet/rust/proton_api/wallet_settings.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/scenes/core/coordinator.dart';
 
-class EventLoop {
+class EventLoop implements Manager {
+  final UserManager userManager;
+  final ProtonWalletManager protonWalletManager;
   static const int loopDuration = 10;
   bool _isRunning = false;
   String latestEventId = "";
   late UserSettingProvider userSettingProvider;
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
+
+  EventLoop(this.protonWalletManager, this.userManager);
 
   Future<void> start() async {
     if (!_isRunning) {
@@ -87,10 +93,10 @@ class EventLoop {
             }
             ProtonWallet? walletData = walletEvent.wallet;
 
-            String userPrivateKey =
-                await SecureStorageHelper.instance.get("userPrivateKey");
-            String userPassphrase =
-                await SecureStorageHelper.instance.get("userPassphrase");
+            UserKey firstKey = await userManager.getFirstKey();
+
+            String userPrivateKey = firstKey.privateKey;
+            String userPassphrase = firstKey.passphrase;
 
             String encodedEncryptedEntropy = "";
             Uint8List entropy = Uint8List(0);
@@ -115,7 +121,8 @@ class EventLoop {
                 secretKey =
                     WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
                 if (secretKey != null) {
-                  await WalletManager.setWalletKey(serverWalletID, secretKey);
+                  await protonWalletManager.setWalletKey(
+                      serverWalletID, secretKey);
                 }
               }
               // int status = entropy.isNotEmpty
@@ -124,9 +131,10 @@ class EventLoop {
               int status = WalletModel.statusActive;
               String decryptedWalletName = walletData.name;
               try {
-                secretKey ??= await WalletManager.getWalletKey(serverWalletID);
+                secretKey ??=
+                    await protonWalletManager.getWalletKey(serverWalletID);
                 decryptedWalletName = await WalletKeyHelper.decrypt(
-                    secretKey!, decryptedWalletName);
+                    secretKey, decryptedWalletName);
               } catch (e) {
                 logger.e(e.toString());
               }
@@ -198,9 +206,6 @@ class EventLoop {
       await polling();
     } catch (e) {
       logger.e("Event Loop error: ${e.toString()}");
-      if (_isRunning) {
-        await WalletManager.initMuon(WalletManager.apiEnv);
-      }
     }
   }
 
@@ -223,6 +228,13 @@ class EventLoop {
       for (AccountModel accountModel in accountModels) {
         Wallet wallet = await WalletManager.loadWalletWithID(
             walletModel.id!, accountModel.id!);
+        List<String> accountAddressIDs =
+            await WalletManager.getAccountAddressIDs(
+                accountModel.serverAccountID);
+        if (accountAddressIDs.isEmpty) {
+          continue;
+        }
+
         try {
           await WalletManager.handleBitcoinAddressRequests(
               wallet, walletModel.serverWalletID, accountModel.serverAccountID);
@@ -242,4 +254,10 @@ class EventLoop {
   void stop() {
     _isRunning = false;
   }
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> init() async {}
 }

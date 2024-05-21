@@ -127,7 +127,8 @@ class BdkLibrary {
       for (FileSystemEntity entity in entities) {
         if (entity is File) {
           String fileName = basename(entity.path);
-          if ((fileName.endsWith("true.db") || fileName.endsWith("false.db")) && fileName.contains("_m_")) {
+          if ((fileName.endsWith("true.db") || fileName.endsWith("false.db")) &&
+              fileName.contains("_m_")) {
             // TODO:: update with regular expression
             logger.i("removing bdk db: ${entity.path}");
             entity.deleteSync();

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/setup/onboard.coordinator.dart';
@@ -33,7 +33,7 @@ class SetupOnboardViewModelImpl extends SetupOnboardViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavID to) {
+  Future<void> move(NavID to) async {
     switch (to) {
       case NavID.setupCreate:
         coordinator.showSetupCreate();

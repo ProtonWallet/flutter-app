@@ -2,11 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:wallet/helper/dbhelper.dart';
 
-import 'package:wallet/helper/wallet_manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import 'package:wallet/models/wallet.model.dart';
 
 class AccountModel {
   int? id;
@@ -45,14 +42,12 @@ class AccountModel {
     };
   }
 
-  Future<void> decrypt() async {
-    for (int i =0; i< 5; i++) {
+  Future<void> decrypt(SecretKey secretKey) async {
+    //TODO:: fix me why 5 times
+    for (int i = 0; i < 5; i++) {
       try {
-        WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-        SecretKey? secretKey = await WalletManager.getWalletKey(
-            walletModel.serverWalletID);
         String value = base64Encode(label);
-        if (value != "" && secretKey != null) {
+        if (value != "") {
           labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
         }
         break;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 class WelcomeImage extends StatelessWidget {
   const WelcomeImage({
@@ -11,27 +10,22 @@ class WelcomeImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const SizedBox(height: 46),
+        Assets.images.welcome.walletWelcomeHeadPng.image(),
+        const SizedBox(height: defaultPadding),
         SizedBox(
-          width: 250,
-          height: 56,
-          child: SvgPicture.asset(
-            'assets/images/frame_word_logo.svg',
-            fit: BoxFit.contain,
-          ),
+          width: 220,
+          height: 45,
+          child: Assets.images.walletCreation.protonWalletLogoLight
+              .svg(fit: BoxFit.fitHeight),
         ),
-        const SizedBox(height: defaultPadding * 2),
-        Row(
-          children: [
-            const Spacer(),
-            Expanded(
-                flex: 8,
-                child: Text(
-                  S.of(context).welcome_privacy_notes,
-                  textAlign: TextAlign.center,
-                )),
-            const Spacer(),
-          ],
+        const SizedBox(height: defaultPadding),
+        const SizedBox(
+          width: 280,
+          child: Text(
+              "Please Mister Postman, look and see! Is there's a letter in your bag for me?"),
         ),
         const SizedBox(height: defaultPadding * 2),
       ],
