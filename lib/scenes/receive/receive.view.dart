@@ -13,7 +13,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
@@ -112,9 +112,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                       null)
                                     Column(children: [
                                       WalletAccountDropdown(
-                                          labelText: S
-                                              .of(context)
-                                              .receive_to,
+                                          labelText: S.of(context).receive_to,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width -

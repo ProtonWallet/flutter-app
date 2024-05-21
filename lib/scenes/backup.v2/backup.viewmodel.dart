@@ -4,7 +4,7 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -57,7 +57,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 
   @override
   void setIntroduce(bool introduce) {

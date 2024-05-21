@@ -10,3 +10,6 @@
 [submodule "vendor/proton-srp"]
 	path = vendor/proton-srp
 	url = git@gitlab.protontech.ch:ProtonVPN/rust/proton-srp.git
+[submodule "vendor/proton-crypto-rs"]
+	path = vendor/proton-crypto-rs
+	url = git@gitlab.protontech.ch:rust/proton-crypto-rs.git

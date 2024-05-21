@@ -13,8 +13,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -24,20 +23,22 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
-  BuyBitcoinViewModel(super.coordinator, this.walletID, this.accountID);
+  BuyBitcoinViewModel(
+      super.coordinator, this.walletID, this.accountID, this.userEmail);
   late final Configuration configuration;
   late final RampFlutter ramp;
   bool get isTestEnv;
   bool get supportOffRamp;
   String receiveAddress = "";
-  String userEmail = "";
 
   final int walletID;
+  final String userEmail;
   final int accountID;
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
-  BuyBitcoinViewModelImpl(super.coordinator, super.walletID, super.accountID);
+  BuyBitcoinViewModelImpl(
+      super.coordinator, super.walletID, super.accountID, super.userEmail);
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
   @override
@@ -58,7 +59,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         status: "syncing bitcoin address index..",
         maskType: EasyLoadingMaskType.black);
     try {
-      userEmail = await SecureStorageHelper.instance.get("userMail");
       WalletModel? walletModel;
       if (walletID == 0) {
         walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
@@ -76,7 +76,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
     datasourceChangedStreamController.sinkAddSafe(this);
 
-    // String base64LogoUrl = await getBase64ImageUrl('assets/images/wallet.png');
     configuration = Configuration()
       ..url = isTestEnv
           ? "https://app.demo.ramp.network/"
@@ -112,7 +111,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavID to) {
+  Future<void> move(NavID to) async {
     if (to == NavID.rampExternal) {
       presentRamp();
     }

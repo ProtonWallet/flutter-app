@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/page_route.dart';
-import 'package:wallet/managers/channels/platform.channel.manager.dart';
-import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 
 abstract class Coordinator implements ViewNavigator {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   // create base class for manager and implement it
   // create a list of managers. reflection by class name. T etc
-  static PlatformChannelManager platformChannelManager =
-      PlatformChannelManagerImpl();
+
+  ManagerFactory get serviceManager {
+    return ManagerFactory();
+  }
 
   Coordinator();
 
-  ViewBase start();
+  Widget start();
 
   void end();
 
-  List<ViewBase> starts() {
+  List<Widget> starts() {
     throw UnimplementedError();
   }
 
-  void showInBottomSheet(ViewBase view) {
+  void showInBottomSheet(Widget view) {
     Future.delayed(Duration.zero, () {
       showModalBottomSheet(
           backgroundColor: Colors.transparent,
@@ -45,7 +46,7 @@ abstract class Coordinator implements ViewNavigator {
     });
   }
 
-  void pushReplacement(ViewBase view, {bool fullscreenDialog = false}) {
+  void pushReplacement(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
@@ -58,7 +59,7 @@ abstract class Coordinator implements ViewNavigator {
     });
   }
 
-  void push(ViewBase view, {bool fullscreenDialog = false}) {
+  void push(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.navigatorKey.currentState?.push(
         MaterialPageRoute(
@@ -75,17 +76,28 @@ abstract class Coordinator implements ViewNavigator {
     Coordinator.navigatorKey.currentState?.pop();
   }
 
-  void pushCustom(ViewBase view, {bool fullscreenDialog = false}) {
+  void pushCustom(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.navigatorKey.currentState?.push(
           CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
     });
   }
 
-  void pushReplacementCustom(ViewBase view, {bool fullscreenDialog = false}) {
+  void pushReplacementCustom(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.navigatorKey.currentState?.pushReplacement(
           CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
     });
+  }
+
+  void showDialog1(Widget view) {
+    if (Coordinator.navigatorKey.currentContext == null) {
+      return;
+    }
+    showDialog(
+      context: Coordinator.navigatorKey.currentContext!,
+      builder: (context) => view,
+      barrierDismissible: false,
+    );
   }
 }

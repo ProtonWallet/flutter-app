@@ -1,3 +1,5 @@
+import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -16,7 +18,15 @@ class SendCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = SendViewModelImpl(this, walletID, accountID);
+    var eventLoop = serviceManager.get<EventLoop>();
+    var walletManager = serviceManager.get<ProtonWalletManager>();
+    var viewModel = SendViewModelImpl(
+      this,
+      walletID,
+      accountID,
+      eventLoop,
+      walletManager,
+    );
     widget = SendView(
       viewModel,
     );

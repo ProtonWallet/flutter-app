@@ -44,5 +44,5 @@ class WebSocketViewModelImpl extends WebSocketViewModel {
   }
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 }

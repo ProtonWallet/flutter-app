@@ -44,7 +44,7 @@ class ProtonFeedItem {
 
   static Future<List<ProtonFeedItem>> loadJsonFromAsset() async {
     String jsonString =
-        await rootBundle.loadString('assets/custom_discovers.json');
+        await rootBundle.loadString('assets/json/custom_discovers.json');
     final decodedJsonList = json.decode(jsonString) as List<dynamic>;
     return fromJsonList(decodedJsonList);
   }

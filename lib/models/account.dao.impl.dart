@@ -110,9 +110,9 @@ class AccountDaoImpl extends AccountDao {
         await db.query(tableName, where: 'walletID = ?', whereArgs: [walletID]);
     List accounts = List.generate(
         maps.length, (index) => AccountModel.fromMap(maps[index]));
-    for (dynamic account in accounts) {
-      await account.decrypt();
-    }
+    // for (dynamic account in accounts) {
+    //   await account.decrypt();
+    // }
     return accounts;
   }
 
@@ -125,7 +125,7 @@ class AccountDaoImpl extends AccountDao {
     AccountModel? accountModel;
     if (maps.isNotEmpty) {
       accountModel = AccountModel.fromMap(maps.first);
-      await accountModel.decrypt();
+      // await accountModel.decrypt();??????
     }
     return accountModel;
   }

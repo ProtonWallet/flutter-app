@@ -1,3 +1,4 @@
+import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -18,7 +19,8 @@ class BuyBitcoinCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = BuyBitcoinViewModelImpl(this, walletID, accountID);
+    var email = serviceManager.get<UserManager>().userInfo.userMail;
+    var viewModel = BuyBitcoinViewModelImpl(this, walletID, accountID, email);
     widget = BuyBitcoinView(
       viewModel,
     );

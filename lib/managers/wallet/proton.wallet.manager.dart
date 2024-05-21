@@ -4,6 +4,9 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
+import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -11,8 +14,7 @@ import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/transaction.model.dart';
@@ -20,7 +22,11 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
-class ProtonWallet {
+class ProtonWalletManager implements Manager {
+  final SecureStorageManager storage;
+  // wallet key
+  static const String walletKey = "WALLET_KEY";
+
   WalletModel? currentWallet;
   AccountModel? currentAccount; // show Wallet View when no account pick
   List<WalletModel> wallets = [];
@@ -37,14 +43,21 @@ class ProtonWallet {
   String transactionFilter = "";
   List<AddressKey> addressKeys = [];
 
+  ProtonWalletManager({required this.storage});
+
+  @override
   Future<void> init() async {
     blockchain ??= await _lib.initializeBlockchain(false);
     wallets = (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
     accounts = (await DBHelper.accountDao!.findAll()).cast<AccountModel>();
+
     for (AccountModel accountModel in accounts) {
       accountModel.balance = await WalletManager.getWalletAccountBalance(
           accountModel.walletID, accountModel.id ?? -1);
-      await accountModel.decrypt();
+      var wallet =
+          wallets.where((element) => element.id == accountModel.walletID).first;
+      SecretKey secretKey = await getWalletKey(wallet.serverWalletID);
+      await accountModel.decrypt(secretKey);
     }
     // check if wallet has passphrase
     for (WalletModel walletModel in wallets) {
@@ -79,6 +92,9 @@ class ProtonWallet {
   }
 
   Future<void> syncWallet(Wallet? wallet, AccountModel? accountModel) async {
+    if (currentWallet == null){
+      return;
+    }
     wallet ??= await WalletManager.loadWalletWithID(
         currentWallet!.id!, currentAccount!.id!);
     if (hasPassphrase(currentWallet!) == false) {
@@ -125,22 +141,52 @@ class ProtonWallet {
       return;
     }
     if (walletModel.passphrase != 0) {
-      String passphrase =
-          await SecureStorageHelper.instance.get(walletModel.serverWalletID);
+      String passphrase = await getPassphrase(walletModel.serverWalletID);
       _hasPassphrase[id] = passphrase.isNotEmpty;
     } else {
       _hasPassphrase[id] = true; // no need passphrase
     }
   }
 
-  Future<void> setPassphrase(WalletModel walletModel, String passphrase) async {
+  ///
+  Future<void> setPassphraseWithCheck(
+      WalletModel walletModel, String passphrase) async {
     try {
-      await SecureStorageHelper.instance
-          .set(walletModel.serverWalletID, passphrase);
+      await setPassphrase(walletModel.serverWalletID, passphrase);
       await checkPassphrase(walletModel);
     } catch (e) {
       logger.e(e.toString());
     }
+  }
+
+  Future<void> setPassphrase(String serverWalletID, String passphrase) async {
+    try {
+      await storage.set(serverWalletID, passphrase);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<String> getPassphrase(String serverWalletID) async {
+    return await storage.get(serverWalletID);
+  }
+
+  Future<SecretKey> getWalletKey(String serverWalletID) async {
+    String keyPath = "${walletKey}_$serverWalletID";
+    SecretKey secretKey;
+    String encodedEntropy = await storage.get(keyPath);
+    if (encodedEntropy.isEmpty) {
+      throw Exception("Cannot find wallet key for $serverWalletID");
+    }
+    secretKey =
+        WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(encodedEntropy);
+    return secretKey;
+  }
+
+  Future<void> setWalletKey(String serverWalletID, SecretKey secretKey) async {
+    String keyPath = "${walletKey}_$serverWalletID";
+    String encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
+    await storage.set(keyPath, encodedEntropy);
   }
 
   void destroy() {
@@ -341,7 +387,11 @@ class ProtonWallet {
         break;
       }
     }
-    await newAccountModel.decrypt();
+    var wallet = wallets
+        .where((element) => element.id == newAccountModel.walletID)
+        .first;
+    SecretKey secretKey = await getWalletKey(wallet.serverWalletID);
+    await newAccountModel.decrypt(secretKey);
     if (indexToUpdate > -1) {
       accounts[indexToUpdate] = newAccountModel;
     } else {
@@ -409,8 +459,7 @@ class ProtonWallet {
           await _lib.getAllTransactions(wallet);
       bdkSynced =
           bdkSynced | transactionHistoryFromBDK.isNotEmpty; // for wallet view
-      SecretKey? secretKey =
-          await WalletManager.getWalletKey(oldWalletModel.serverWalletID);
+      SecretKey? secretKey = await getWalletKey(oldWalletModel.serverWalletID);
 
       for (TransactionDetails transactionDetail in transactionHistoryFromBDK) {
         String txID = transactionDetail.txid;
@@ -419,7 +468,7 @@ class ProtonWallet {
                 accountModel.serverAccountID);
         String userLabel = transactionModel != null
             ? await WalletKeyHelper.decrypt(
-                secretKey!, utf8.decode(transactionModel.label))
+                secretKey, utf8.decode(transactionModel.label))
             : "";
         String toList = "";
         String sender = "";
@@ -502,7 +551,7 @@ class ProtonWallet {
           .findAllByServerAccountID(accountModel.serverAccountID);
       for (TransactionModel transactionModel in transactionModels) {
         String userLabel = await WalletKeyHelper.decrypt(
-            secretKey!, utf8.decode(transactionModel.label));
+            secretKey, utf8.decode(transactionModel.label));
 
         String txID = utf8.decode(transactionModel.externalTransactionID);
         String key = "$txID-${accountModel.serverAccountID}";
@@ -739,10 +788,18 @@ class ProtonWallet {
       }
     }
   }
+
+  @override
+  Future<void> dispose() async {}
 }
 
 class ProtonWalletProvider with ChangeNotifier {
-  final ProtonWallet protonWallet = ProtonWallet();
+  late ProtonWalletManager protonWallet;
+
+  ProtonWalletProvider() {
+    var storage = SecureStorageManager(storage: SecureStorage()); // TODO: temp
+    protonWallet = ProtonWalletManager(storage: storage);
+  }
 
   Future<void> init() async {
     try {
@@ -786,14 +843,15 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> syncWallet() async {
     List<AccountModel> accountsToCheckTransaction = [];
     WalletModel? walletModel = protonWallet.currentWallet;
-    if (walletModel != null && protonWallet.currentAccount != null) {
+    if (protonWallet.currentAccount != null) {
       // wallet account view
       accountsToCheckTransaction.add(protonWallet.currentAccount!);
-    } else if (walletModel != null) {
+    } else {
       // wallet view
       await protonWallet.getCurrentWalletAccounts();
-      accountsToCheckTransaction = protonWallet.currentAccounts;
     }
+    accountsToCheckTransaction = protonWallet.currentAccounts;
+
     for (AccountModel accountModel in accountsToCheckTransaction) {
       try {
         Wallet wallet = await WalletManager.loadWalletWithID(
@@ -832,7 +890,7 @@ class ProtonWalletProvider with ChangeNotifier {
   }
 
   Future<void> setPassphrase(WalletModel walletModel, String passphrase) async {
-    await protonWallet.setPassphrase(walletModel, passphrase);
+    await protonWallet.setPassphraseWithCheck(walletModel, passphrase);
     notifyListeners();
   }
 

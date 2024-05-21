@@ -1,5 +1,3 @@
-pub mod auth_credential;
-pub mod auth_store;
 pub mod contacts;
 pub mod errors;
 pub mod event_routes;
@@ -9,3 +7,7 @@ pub mod user_settings;
 pub mod wallet;
 pub mod wallet_account;
 pub mod wallet_settings;
+
+// auth
+pub mod auth_credential;
+pub mod auth_store;

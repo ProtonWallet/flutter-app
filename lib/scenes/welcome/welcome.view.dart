@@ -1,4 +1,7 @@
 import 'package:flutter/services.dart';
+import 'dart:math';
+import 'package:wallet/scenes/welcome/login.signup.button.dart';
+import 'package:wallet/scenes/welcome/welcom.backgroud.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +9,11 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+
+import 'package:wallet/scenes/welcome/welcome.image.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -18,9 +24,82 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
   @override
   Widget buildWithViewModel(
       BuildContext context, WelcomeViewModel viewModel, ViewSize viewSize) {
-    return buildWelcome(context);
+    return buildBackground(context);
   }
 
+  Widget buildBackground(BuildContext context) {
+    return WelcomBackground(
+        child: SingleChildScrollView(
+      child: SafeArea(
+        child: Responsive(
+          desktop: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                        height: max(
+                            (MediaQuery.of(context).size.height - 600) / 2, 0)),
+                    const WelcomeImage(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                        height: max(
+                            (MediaQuery.of(context).size.height - 300) / 2, 0)),
+                    SizedBox(
+                      height: 120,
+                      width: 450,
+                      child: LoginAndSignupBtn(
+                        signupPressed: () {
+                          viewModel.move(NavID.nativeSignup);
+                        },
+                        signinPressed: () {
+                          viewModel.move(NavID.nativeSignin);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          mobile: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                  height:
+                      max((MediaQuery.of(context).size.height - 900) / 2, 0)),
+              const WelcomeImage(),
+              Row(
+                children: [
+                  const Spacer(),
+                  Expanded(
+                    flex: 8,
+                    child: LoginAndSignupBtn(
+                      signupPressed: () {
+                        viewModel.move(NavID.nativeSignup);
+                      },
+                      signinPressed: () {
+                        viewModel.move(NavID.nativeSignin);
+                      },
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
+
+  // TODO:: old build function remove after testing
   Widget buildWelcome(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark,
@@ -49,8 +128,8 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                   child: SizedBox(
                       width: 190.8,
                       height: 44.15,
-                      child: Assets.images.walletCreation.protonWalletLogoDark
-                          .svg(fit: BoxFit.fill))),
+                      child: Assets.images.walletCreation.protonWalletLogoLight
+                          .svg())),
               SizedBoxes.box32,
               Container(
                   margin: const EdgeInsets.symmetric(

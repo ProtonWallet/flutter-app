@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+16
+version: 1.0.0+17
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
@@ -36,13 +36,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   ffi: ^2.1.0
 
-  #rust
+  ####rust
   rust_builder:
     path: rust_builder
-  flutter_rust_bridge: 2.0.0-dev.35
+  flutter_rust_bridge: 2.0.0-dev.33
+
   #golang ffi plugin
   proton_crypto:
     path: gopenpgp_plugin
+
   freezed_annotation: ^2.4.1
   logger: ^2.0.2+1
   shared_preferences: ^2.2.2
@@ -93,6 +95,11 @@ dependencies:
   # json serializable depends on this
   json_annotation: ^4.9.0
   package_info_plus: ^8.0.0
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.3 # better use with flutter bloc
+
+  ### database
+  drift: ^2.18.0
 
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
@@ -121,10 +128,11 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   # json serializable
   json_serializable: ^6.8.0
-  
+
   ## dev tools
   analyzer: ^6.4.1
   # meta: ^1.14.0
+  drift_dev: ^2.18.0
 
 #flutter launcher icons configs
 flutter_launcher_icons:
@@ -167,10 +175,12 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/custom_discovers.json
     - assets/images/
     - assets/images/icon/
+    - assets/images/logos/
     - assets/images/wallet_creation/
+    - assets/images/welcome/
+    - assets/json/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/user.session.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AccountInfoV2 extends StatelessWidget {
-  const AccountInfoV2({super.key});
+  final String displayName;
+  final String userEmail;
+  const AccountInfoV2(
+      {super.key, required this.displayName, required this.userEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +16,9 @@ class AccountInfoV2 extends StatelessWidget {
         child: ExpansionTile(
           title:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-                Provider.of<UserSessionProvider>(context)
-                    .userSession
-                    .userDisplayName,
+            Text(displayName,
                 style: FontManager.body1Median(ProtonColors.white)),
-            Text(Provider.of<UserSessionProvider>(context).userSession.userMail,
+            Text(userEmail,
                 style: FontManager.body2Regular(ProtonColors.textHint)),
           ]),
           iconColor: ProtonColors.textHint,
