@@ -1,17 +1,15 @@
-import 'package:wallet/helper/event_loop.dart';
+class EventLoopHelper1 {
+  // static final eventLoop = EventLoop();
 
-class EventLoopHelper {
-  static final eventLoop = EventLoop();
+  // static void start() {
+  //   eventLoop.start();
+  // }
 
-  static void start() {
-    eventLoop.start();
-  }
+  // static Future<void> runOnce() async {
+  //   await eventLoop.runOnce();
+  // }
 
-  static Future<void> runOnce() async {
-    await eventLoop.runOnce();
-  }
-
-  static void stop() {
-    eventLoop.stop();
-  }
+  // static void stop() {
+  //   eventLoop.stop();
+  // }
 }

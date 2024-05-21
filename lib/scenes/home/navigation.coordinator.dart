@@ -1,4 +1,5 @@
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -29,9 +30,9 @@ class HomeNavigationCoordinator extends Coordinator {
 
   @override
   List<ViewBase<ViewModel>> starts() {
-    var channel = Coordinator.platformChannelManager.nativeViewChannel;
+    final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
     return [
-      HomeCoordinator(apiEnv, channel).start(),
+      HomeCoordinator(apiEnv, nativeViewChannel).start(),
       // HistoryCoordinator().start(),
       // BuyBitcoinCoordinator().start(),
       // TransferCoordinator().start(),

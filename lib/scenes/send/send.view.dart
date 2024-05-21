@@ -17,7 +17,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/l10n/generated/locale.dart';

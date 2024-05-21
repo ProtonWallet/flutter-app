@@ -1,6 +1,6 @@
 //
 abstract class NavigationFlowInterface {
-  void move(NavID to);
+  Future<void> move(NavID to);
 }
 
 enum NavID {

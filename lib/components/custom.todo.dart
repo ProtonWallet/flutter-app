@@ -26,7 +26,7 @@ class CustomTodos extends StatelessWidget {
               borderRadius: BorderRadius.circular(24.0),
             ),
             child: ListTile(
-              dense:true,
+              dense: true,
               leading: Radio<bool>(
                 value: true,
                 groupValue: checked,
@@ -46,9 +46,15 @@ class CustomTodos extends StatelessWidget {
                   offset: const Offset(-10, -1),
                   child: Text(
                     title,
-                    style: checked? FontManager.body2MedianLineThrough(ProtonColors.protonBlue): FontManager.body2Median(ProtonColors.protonBlue),
+                    style: checked
+                        ? FontManager.body2MedianLineThrough(
+                            ProtonColors.protonBlue)
+                        : FontManager.body2Median(ProtonColors.protonBlue),
                   )),
-              trailing: checked ? null: Icon(Icons.arrow_forward_ios_rounded, color: ProtonColors.protonBlue, size: 14),
+              trailing: checked
+                  ? null
+                  : Icon(Icons.arrow_forward_ios_rounded,
+                      color: ProtonColors.protonBlue, size: 14),
             )));
   }
 }

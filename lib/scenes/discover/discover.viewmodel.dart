@@ -40,7 +40,7 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void move(NavID to) {}
+  Future<void> move(NavID to) async {}
 
   Future<void> loadFeed() async {
     try {

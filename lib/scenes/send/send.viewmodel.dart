@@ -9,12 +9,13 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/event_loop_helper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
@@ -120,7 +121,13 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 }
 
 class SendViewModelImpl extends SendViewModel {
-  SendViewModelImpl(super.coordinator, super.walletID, super.accountID);
+  SendViewModelImpl(super.coordinator, super.walletID, super.accountID,
+      this.eventLoop, this.walletManger);
+
+  // event loop
+  final EventLoop eventLoop;
+  // wallet manger
+  final ProtonWalletManager walletManger;
 
   final datasourceChangedStreamController =
       StreamController<SendViewModel>.broadcast();
@@ -310,10 +317,6 @@ class SendViewModelImpl extends SendViewModel {
           bitcoinAddress = await WalletManager.lookupBitcoinAddress(recipient);
         } catch (e) {
           logger.e(e.toString());
-          if (e.toString().contains("http error: channel closed")) {
-            await WalletManager.initMuon(WalletManager.apiEnv);
-          }
-          logger.i("Muon reloaded");
         }
       }
       bitcoinAddresses[recipient] = bitcoinAddress ?? "";
@@ -475,11 +478,9 @@ class SendViewModelImpl extends SendViewModel {
       }
       String? encryptedLabel;
       SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel!.serverWalletID);
-      if (secretKey != null) {
-        encryptedLabel =
-            await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
-      }
+          await walletManger.getWalletKey(walletModel!.serverWalletID);
+      encryptedLabel =
+          await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
 
       String? encryptedMessage;
       for (String email in recipients) {
@@ -545,7 +546,7 @@ class SendViewModelImpl extends SendViewModel {
       return false;
     }
     try {
-      await EventLoopHelper.runOnce();
+      await eventLoop.runOnce();
     } catch (e) {
       e.toString();
     }
@@ -598,9 +599,7 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  void move(NavID to) {
-    // TODO: implement move
-  }
+  Future<void> move(NavID to) async {}
 
   @override
   void addressAutoCompleteCallback() {

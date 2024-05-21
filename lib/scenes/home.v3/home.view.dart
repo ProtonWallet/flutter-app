@@ -19,12 +19,11 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/secure_storage_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/provider/proton.wallet.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
@@ -568,7 +567,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             ),
                           ]),
                     ),
-                    const AccountInfoV2(),
+                    AccountInfoV2(
+                        displayName: viewModel.displayName,
+                        userEmail: viewModel.userEmail),
                     const SizedBox(
                       height: 10,
                     ),
@@ -773,8 +774,8 @@ Widget showUpdateWalletPassphraseDialog(
               status: "saving passphrase..",
               maskType: EasyLoadingMaskType.black);
           try {
-            await SecureStorageHelper.instance
-                .set(walletModel.serverWalletID, textEditingController.text);
+            await viewModel.updatePassphrase(
+                walletModel.serverWalletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
           } catch (e) {
             viewModel.errorMessage = e.toString();

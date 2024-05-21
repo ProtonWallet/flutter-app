@@ -10,7 +10,7 @@ import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/wallet_manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';

@@ -1,5 +1,8 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
+import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
@@ -33,7 +36,7 @@ class HomeCoordinator extends Coordinator {
   @override
   void end() {}
 
-  void showNativeUpgrade(NativeSession session) {
+  void showNativeUpgrade(FlutterSession session) {
     nativeViewChannel.switchToUpgrade(session);
   }
 
@@ -117,9 +120,15 @@ class HomeCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
+    var userManager = serviceManager.get<UserManager>();
+    var event = serviceManager.get<EventLoop>();
+    var wallet = serviceManager.get<ProtonWalletManager>();
     var viewModel = HomeViewModelImpl(
       this,
       apiEnv,
+      userManager,
+      event,
+      wallet,
     );
     widget = HomeView(
       viewModel,
