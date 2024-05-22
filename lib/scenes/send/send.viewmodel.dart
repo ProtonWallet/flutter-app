@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -79,7 +80,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late FocusNode addressFocusNode;
   late FocusNode amountFocusNode;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-      ValueNotifier(FiatCurrency.usd);
+      ValueNotifier(defaultFiatCurrency);
 
   bool isEditingEmailBody = false;
   bool isEditingMemo = false;
@@ -87,7 +88,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController memoController;
   late FocusNode emailBodyFocusNode;
   late FocusNode memoFocusNode;
-  FiatCurrency originFiatCurrency = FiatCurrency.usd;
+  FiatCurrency originFiatCurrency = defaultFiatCurrency;
 
   String txid = "";
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomHomePageBox extends StatelessWidget {
@@ -51,7 +53,8 @@ class CustomHomePageBox extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Row(children: [
-                        Text("\$${price.toStringAsFixed(defaultDisplayDigits)}",
+                        Text(
+                            "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(100000000).toStringAsFixed(defaultDisplayDigits)}",
                             style:
                                 FontManager.body1Median(ProtonColors.textNorm)),
                         const SizedBox(

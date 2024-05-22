@@ -243,6 +243,7 @@
   "sat_short": "St",
   "sun_short": "Sn",
   "in_progress": "In progress",
+  "not_a_valid_mnemonic": "Sorry, this is not a valid wallet seed phrases",
   "confirmed": "Confirmed",
   "did_you_save_it": "Did you save it?",
   "verify_you_saved_secret_phrase_": "Verify that you saved your secret recovery phrase by tapping the first (1st) then the last (12th) word.",
