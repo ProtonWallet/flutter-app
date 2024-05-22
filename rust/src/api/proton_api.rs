@@ -200,6 +200,22 @@ pub async fn update_wallet_account_label(
     }
 }
 
+pub async fn update_wallet_account_fiat_currency(
+    wallet_id: String,
+    wallet_account_id: String,
+    new_fiat_currency: FiatCurrency,
+) -> Result<WalletAccount, ApiError> {
+    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let result = proton_api
+        .wallet
+        .update_wallet_account_fiat_currency(wallet_id, wallet_account_id, new_fiat_currency)
+        .await;
+    match result {
+        Ok(response) => Ok(response.into()),
+        Err(err) => Err(err.into()),
+    }
+}
+
 pub async fn delete_wallet_account(
     wallet_id: String,
     wallet_account_id: String,

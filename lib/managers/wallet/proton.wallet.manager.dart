@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
+import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
@@ -20,10 +24,14 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 class ProtonWalletManager implements Manager {
   final SecureStorageManager storage;
+
   // wallet key
   static const String walletKey = "WALLET_KEY";
 
@@ -42,6 +50,7 @@ class ProtonWalletManager implements Manager {
   Blockchain? blockchain;
   String transactionFilter = "";
   List<AddressKey> addressKeys = [];
+  FiatCurrency newAccountFiatCurrency = defaultFiatCurrency;
 
   ProtonWalletManager({required this.storage});
 
@@ -92,7 +101,7 @@ class ProtonWalletManager implements Manager {
   }
 
   Future<void> syncWallet(Wallet? wallet, AccountModel? accountModel) async {
-    if (currentWallet == null){
+    if (currentWallet == null) {
       return;
     }
     wallet ??= await WalletManager.loadWalletWithID(
@@ -795,6 +804,7 @@ class ProtonWalletManager implements Manager {
 
 class ProtonWalletProvider with ChangeNotifier {
   late ProtonWalletManager protonWallet;
+  UserSettingProvider? userSettingProvider;
 
   ProtonWalletProvider() {
     var storage = SecureStorageManager(storage: SecureStorage()); // TODO: temp
@@ -803,6 +813,9 @@ class ProtonWalletProvider with ChangeNotifier {
 
   Future<void> init() async {
     try {
+      userSettingProvider = Provider.of<UserSettingProvider>(
+          Coordinator.navigatorKey.currentContext!,
+          listen: false);
       await protonWallet.init();
       await setDefaultWallet();
     } catch (e) {
@@ -814,6 +827,16 @@ class ProtonWalletProvider with ChangeNotifier {
     protonWallet.destroy();
   }
 
+  Future<void> updateFiatCurrencyInUserSettingProvider(
+      FiatCurrency fiatCurrency) async {
+    if (userSettingProvider != null) {
+      userSettingProvider!.updateFiatCurrency(fiatCurrency);
+      ProtonExchangeRate exchangeRate =
+          await ExchangeRateService.getExchangeRate(fiatCurrency);
+      userSettingProvider!.updateExchangeRate(exchangeRate);
+    }
+  }
+
   Future<void> updateCurrentWalletName(String newName) async {
     await protonWallet.updateCurrentWalletName(newName);
     notifyListeners();
@@ -821,6 +844,9 @@ class ProtonWalletProvider with ChangeNotifier {
 
   Future<void> setWallet(WalletModel walletModel) async {
     await protonWallet.setWallet(walletModel);
+    FiatCurrency fiatCurrency =
+    await WalletManager.getDefaultAccountFiatCurrency(protonWallet.currentWallet);
+    await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     await setCurrentTransactions();
     syncWallet();
     await Future.delayed(const Duration(
@@ -832,6 +858,9 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> setWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
     await protonWallet.setWalletAccount(walletModel, accountModel);
+    FiatCurrency fiatCurrency =
+        await WalletManager.getAccountFiatCurrency(protonWallet.currentAccount);
+    await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     await setCurrentTransactions();
     syncWallet();
     await Future.delayed(const Duration(
@@ -906,6 +935,9 @@ class ProtonWalletProvider with ChangeNotifier {
 
   Future<void> setDefaultWallet() async {
     await protonWallet.setDefaultWallet();
+    FiatCurrency fiatCurrency =
+    await WalletManager.getDefaultAccountFiatCurrency(protonWallet.currentWallet);
+    await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     notifyListeners();
   }
 

@@ -18,4 +18,8 @@ class AccountDatabase extends BaseDatabase {
       )
     ''');
   }
+  Future<void> migration_1() {
+    // Add column `fingerprint`
+    return addColumn("fiatCurrency", "TEXT");
+  }
 }

@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -143,7 +146,15 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       String walletName = nameTextController.text;
       String strPassphrase = passphraseTextController.text;
       await WalletManager.createWallet(
-          walletName, strMnemonic, WalletModel.importByUser, strPassphrase);
+          walletName,
+          strMnemonic,
+          WalletModel.importByUser,
+          Provider.of<ProtonWalletProvider>(
+                  Coordinator.navigatorKey.currentContext!,
+                  listen: false)
+              .protonWallet
+              .newAccountFiatCurrency,
+          strPassphrase);
 
       await WalletManager.autoBindEmailAddresses();
       await Future.delayed(

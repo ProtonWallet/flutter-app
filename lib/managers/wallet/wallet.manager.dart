@@ -154,12 +154,12 @@ class WalletManager implements Manager {
   static Future<void> autoCreateWallet() async {
     String walletName = "Default Wallet";
     Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
-    await createWallet(
-        walletName, mnemonic.asString(), WalletModel.createByProton);
+    await createWallet(walletName, mnemonic.asString(),
+        WalletModel.createByProton, defaultFiatCurrency);
   }
 
-  static Future<void> createWallet(
-      String walletName, String mnemonicStr, int walletType,
+  static Future<void> createWallet(String walletName, String mnemonicStr,
+      int walletType, FiatCurrency fiatCurrency,
       [String? passphrase]) async {
     try {
       SecretKey secretKey = WalletKeyHelper.generateSecretKey();
@@ -195,7 +195,7 @@ class WalletManager implements Manager {
 
       await protonWallet.setWalletKey(walletData.wallet.id, secretKey);
       await WalletManager.addWalletAccount(
-          walletID, appConfig.scriptType, "BTC Account");
+          walletID, appConfig.scriptType, "BTC Account", fiatCurrency);
       WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
       if (walletModel != null && passphrase != null && passphrase.isNotEmpty) {
         await Provider.of<ProtonWalletProvider>(
@@ -203,14 +203,11 @@ class WalletManager implements Manager {
                 listen: false)
             .setPassphrase(walletModel, passphrase);
       }
-      List<AccountModel> accountModels =
-          (await DBHelper.accountDao!.findAllByWalletID(walletID))
-              .cast<AccountModel>();
-      if (walletModel != null && accountModels.isNotEmpty) {
+      if (walletModel != null) {
         Provider.of<ProtonWalletProvider>(
                 Coordinator.navigatorKey.currentContext!,
                 listen: false)
-            .setWalletAccount(walletModel, accountModels.first);
+            .setWallet(walletModel);
       }
     } catch (e) {
       logger.e(e);
@@ -253,8 +250,13 @@ class WalletManager implements Manager {
         serverWalletID: data.wallet.id);
   }
 
-  static Future<void> insertOrUpdateAccount(int walletID, String labelEncrypted,
-      int scriptType, String derivationPath, String serverAccountID) async {
+  static Future<void> insertOrUpdateAccount(
+      int walletID,
+      String labelEncrypted,
+      int scriptType,
+      String derivationPath,
+      String serverAccountID,
+      FiatCurrency fiatCurrency) async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     SecretKey? secretKey =
         await protonWallet.getWalletKey(walletModel.serverWalletID);
@@ -268,6 +270,7 @@ class WalletManager implements Manager {
             await WalletKeyHelper.decrypt(secretKey, labelEncrypted);
         account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
         account.scriptType = scriptType;
+        account.fiatCurrency = fiatCurrency.name.toUpperCase();
         await DBHelper.accountDao!.update(account);
       } else {
         account = AccountModel(
@@ -276,6 +279,7 @@ class WalletManager implements Manager {
             derivationPath: derivationPath,
             label: base64Decode(labelEncrypted),
             scriptType: scriptType,
+            fiatCurrency: fiatCurrency.name.toUpperCase(),
             createTime: now.millisecondsSinceEpoch ~/ 1000,
             modifyTime: now.millisecondsSinceEpoch ~/ 1000,
             serverAccountID: serverAccountID);
@@ -349,8 +353,8 @@ class WalletManager implements Manager {
     return await DBHelper.walletDao!.counts() > 0;
   }
 
-  static Future<void> addWalletAccount(
-      int walletID, ScriptType scriptType, String label,
+  static Future<void> addWalletAccount(int walletID, ScriptType scriptType,
+      String label, FiatCurrency fiatCurrency,
       {int internal = 0}) async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     String serverWalletID = walletModel.serverWalletID;
@@ -367,8 +371,19 @@ class WalletManager implements Manager {
       req: req,
     );
 
-    await insertOrUpdateAccount(walletID, walletAccount.label, scriptType.index,
-        "$derivationPath/$internal", walletAccount.id);
+    // TODO:: ask backend to add fiatcurrency parameter when create wallet account
+    walletAccount = await proton_api.updateWalletAccountFiatCurrency(
+        walletId: serverWalletID,
+        walletAccountId: walletAccount.id,
+        newFiatCurrency: fiatCurrency);
+
+    await insertOrUpdateAccount(
+        walletID,
+        walletAccount.label,
+        scriptType.index,
+        "$derivationPath/$internal",
+        walletAccount.id,
+        walletAccount.fiatCurrency);
   }
 
   static Future<String> getNewDerivationPath(
@@ -634,6 +649,7 @@ class WalletManager implements Manager {
                 walletAccount.scriptType,
                 "${walletAccount.derivationPath}/0",
                 walletAccount.id,
+                walletAccount.fiatCurrency,
               );
               AccountModel accountModel = await DBHelper.accountDao!
                   .findByServerAccountID(walletAccount.id);
@@ -653,11 +669,13 @@ class WalletManager implements Manager {
             for (WalletAccount walletAccount in walletAccounts) {
               existingAccountIDs.add(walletAccount.id);
               await WalletManager.insertOrUpdateAccount(
-                  walletModel.id!,
-                  walletAccount.label,
-                  walletAccount.scriptType,
-                  "${walletAccount.derivationPath}/0",
-                  walletAccount.id);
+                walletModel.id!,
+                walletAccount.label,
+                walletAccount.scriptType,
+                "${walletAccount.derivationPath}/0",
+                walletAccount.id,
+                walletAccount.fiatCurrency,
+              );
               AccountModel accountModel = await DBHelper.accountDao!
                   .findByServerAccountID(walletAccount.id);
               for (EmailAddress address in walletAccount.addresses) {
@@ -1080,6 +1098,32 @@ class WalletManager implements Manager {
             Coordinator.navigatorKey.currentContext!,
             listen: false)
         .deleteWalletAccount(accountModel);
+  }
+
+  static Future<FiatCurrency> getDefaultAccountFiatCurrency(
+      WalletModel? walletModel) async {
+    if (walletModel != null) {
+      AccountModel? accountModel = await DBHelper.accountDao
+          ?.findDefaultAccountByWalletID(walletModel.id ?? 0);
+      if (accountModel != null) {
+        return FiatCurrency.values.firstWhere(
+            (v) =>
+                v.name.toUpperCase() == accountModel.fiatCurrency.toUpperCase(),
+            orElse: () => defaultFiatCurrency);
+      }
+    }
+    return defaultFiatCurrency;
+  }
+
+  static Future<FiatCurrency> getAccountFiatCurrency(
+      AccountModel? accountModel) async {
+    if (accountModel != null) {
+      return FiatCurrency.values.firstWhere(
+          (v) =>
+              v.name.toUpperCase() == accountModel.fiatCurrency.toUpperCase(),
+          orElse: () => defaultFiatCurrency);
+    }
+    return defaultFiatCurrency;
   }
 
   @override
