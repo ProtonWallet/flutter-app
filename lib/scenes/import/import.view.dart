@@ -95,6 +95,9 @@ class ImportView extends ViewBase<ImportViewModel> {
                   myFocusNode: viewModel.mnemonicFocusNode,
                   maxLines: 6,
                   validation: (String _) {
+                    if (viewModel.verifyMnemonic() == false){
+                      return S.of(context).not_a_valid_mnemonic;
+                    }
                     return "";
                   },
                   isPassword: false,
@@ -145,6 +148,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                                 context, S.of(context).wallet_imported);
                           }
                         },
+                        enable: viewModel.verifyMnemonic(),
                         text: S.of(context).import_button,
                         width: MediaQuery.of(context).size.width,
                         textStyle: FontManager.body1Median(ProtonColors.white),

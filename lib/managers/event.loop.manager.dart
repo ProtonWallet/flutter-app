@@ -160,7 +160,7 @@ class EventLoop implements Manager {
               int walletID = await WalletManager.getWalletIDByServerWalletID(
                   account.walletId);
               WalletManager.insertOrUpdateAccount(walletID, account.label,
-                  account.scriptType, account.derivationPath, account.id);
+                  account.scriptType, account.derivationPath, account.id, account.fiatCurrency);
             }
           }
         }

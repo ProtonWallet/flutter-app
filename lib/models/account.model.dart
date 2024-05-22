@@ -17,6 +17,7 @@ class AccountModel {
   String labelDecrypt = "Default Account";
   String serverAccountID;
   double balance = 0;
+  String fiatCurrency;
 
   AccountModel({
     required this.id,
@@ -27,6 +28,7 @@ class AccountModel {
     required this.createTime,
     required this.modifyTime,
     required this.serverAccountID,
+    required this.fiatCurrency,
   });
 
   Map<String, dynamic> toMap() {
@@ -39,6 +41,7 @@ class AccountModel {
       'createTime': createTime,
       'modifyTime': modifyTime,
       'serverAccountID': serverAccountID,
+      'fiatCurrency': fiatCurrency,
     };
   }
 
@@ -68,6 +71,7 @@ class AccountModel {
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
       serverAccountID: map['serverAccountID'] ?? "",
+      fiatCurrency: map['fiatCurrency'],
     );
     return accountModel;
   }

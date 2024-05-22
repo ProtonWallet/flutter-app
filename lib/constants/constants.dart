@@ -23,6 +23,8 @@ const String userSettingsFiatCurrency = "userSettings.fiatCurrency";
 const String userSettingsBitcoinUnit = "userSettings.bitcoinUnit";
 const String latestAddressIndex = "bitcoinAddress.latest";
 
+const FiatCurrency defaultFiatCurrency = FiatCurrency.usd;
+
 const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.btc,
   BitcoinUnit.mbtc,

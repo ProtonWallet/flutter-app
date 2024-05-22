@@ -97,6 +97,17 @@ Future<WalletAccount> updateWalletAccountLabel(
         newLabel: newLabel,
         hint: hint);
 
+Future<WalletAccount> updateWalletAccountFiatCurrency(
+        {required String walletId,
+        required String walletAccountId,
+        required FiatCurrency newFiatCurrency,
+        dynamic hint}) =>
+    RustLib.instance.api.updateWalletAccountFiatCurrency(
+        walletId: walletId,
+        walletAccountId: walletAccountId,
+        newFiatCurrency: newFiatCurrency,
+        hint: hint);
+
 Future<void> deleteWalletAccount(
         {required String walletId,
         required String walletAccountId,
