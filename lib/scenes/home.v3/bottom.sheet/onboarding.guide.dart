@@ -26,7 +26,7 @@ class OnboardingGuideSheet {
             DropdownButtonV2(
                 labelText: S.of(context).setting_fiat_currency_label,
                 width: MediaQuery.of(context).size.width -
-                    defaultPadding * 2,
+                    defaultPadding * 4,
                 items: fiatCurrencies,
                 itemsText: fiatCurrencies
                     .map((v) => FiatCurrencyHelper.getName(v))

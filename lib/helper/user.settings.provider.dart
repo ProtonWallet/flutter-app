@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -8,12 +9,12 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class WalletUserSetting {
   proton_user_setting.FiatCurrency fiatCurrency =
-      proton_user_setting.FiatCurrency.usd;
+      defaultFiatCurrency;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
-      fiatCurrency: FiatCurrency.usd,
+      fiatCurrency: defaultFiatCurrency,
       exchangeRateTime: '',
       exchangeRate: 1,
       cents: 1);

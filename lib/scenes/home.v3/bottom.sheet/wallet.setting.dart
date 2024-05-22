@@ -32,6 +32,8 @@ class WalletSettingSheet {
 
     Map<int, TextEditingController> accountNameControllers =
         viewModel.getAccountNameControllers(userAccounts);
+    Map<int, ValueNotifier> accountFiatCurrencyNotifier =
+        viewModel.getAccountFiatCurrencyNotifiers(userAccounts);
 
     ScrollController scrollController = ScrollController();
     Map<int, FocusNode> accountNameFocusNodes = {
@@ -123,30 +125,6 @@ class WalletSettingSheet {
                             .map((v) => v.name.toUpperCase())
                             .toList(),
                         valueNotifier: viewModel.bitcoinUnitNotifier),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ])),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: ProtonColors.white,
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Column(children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    DropdownButtonV2(
-                        labelText: S.of(context).setting_fiat_currency_label,
-                        width: MediaQuery.of(context).size.width -
-                            defaultPadding * 2,
-                        items: fiatCurrencies,
-                        itemsText: fiatCurrencies
-                            .map((v) => FiatCurrencyHelper.getName(v))
-                            .toList(),
-                        valueNotifier: viewModel.fiatCurrencyNotifier),
                     const SizedBox(
                       height: 10,
                     ),
@@ -244,6 +222,20 @@ class WalletSettingSheet {
                                           color: ProtonColors.textNorm),
                                     )))
                           ]),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
+                      ),
+                      DropdownButtonV2(
+                          labelText: S.of(context).setting_fiat_currency_label,
+                          width: MediaQuery.of(context).size.width -
+                              defaultPadding * 2,
+                          items: fiatCurrencies,
+                          itemsText: fiatCurrencies
+                              .map((v) => FiatCurrencyHelper.getName(v))
+                              .toList(),
+                          valueNotifier:
+                              accountFiatCurrencyNotifier[userAccount.id!]),
                       const Divider(
                         thickness: 0.2,
                         height: 1,

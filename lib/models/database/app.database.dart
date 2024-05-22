@@ -21,7 +21,7 @@ class AppDatabase {
   static String dbName = "proton_wallet_db";
   static String versionKey = "db_version";
   // current version of the database
-  int version = 12;
+  int version = 13;
   // future: if the database cached version < resetVersion. rebuild the cache with latest schema. we can clean up migrations.
   int resetVersion = 1;
   bool dbReset = false;
@@ -103,7 +103,10 @@ class AppDatabase {
       Migration(11, 12, () async {
         await transactionInfoDao.migration_2();
       }),
-      Migration(12, 13, () async {}),
+      Migration(12, 13, () async {
+        await accountDao.migration_1();
+      }),
+      Migration(13, 14, () async {}),
     ];
 
     migrationContainer.addMigrations(migrations);

@@ -9,6 +9,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -29,21 +30,6 @@ class AddWalletAccountSheet {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 10),
-              DropdownButtonV2(
-                  labelText: S.of(context).script_type,
-                  width: MediaQuery.of(context).size.width - defaultPadding * 4,
-                  items: ScriptType.scripts,
-                  itemsText: ScriptType.scripts.map((v) => v.name).toList(),
-                  valueNotifier: viewModel.newAccountScriptTypeValueNotifier),
-              const SizedBox(height: 4),
-              Underline(
-                  onTap: () {
-                    CustomPlaceholder.show(context);
-                  },
-                  color: ProtonColors.protonBlue,
-                  child: Text(S.of(context).learn_more,
-                      style: FontManager.body2Median(ProtonColors.protonBlue))),
-              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: TextFieldTextV2(
@@ -68,6 +54,43 @@ class AddWalletAccountSheet {
                   },
                 ),
               ),
+              ExpansionTile(
+                  shape: const Border(),
+                  initiallyExpanded: false,
+                  title: Text(S.of(context).advanced_options,
+                      style: FontManager.body2Median(ProtonColors.textWeak)),
+                  iconColor: ProtonColors.textHint,
+                  collapsedIconColor: ProtonColors.textHint,
+                  children: [
+                    DropdownButtonV2(
+                        labelText: S.of(context).setting_fiat_currency_label,
+                        width: MediaQuery.of(context).size.width -
+                            defaultPadding * 4,
+                        items: fiatCurrencies,
+                        itemsText: fiatCurrencies
+                            .map((v) => FiatCurrencyHelper.getName(v))
+                            .toList(),
+                        valueNotifier: viewModel.fiatCurrencyNotifier),
+                    const SizedBox(height: 12),
+                    DropdownButtonV2(
+                        labelText: S.of(context).script_type,
+                        width: MediaQuery.of(context).size.width -
+                            defaultPadding * 4,
+                        items: ScriptType.scripts,
+                        itemsText:
+                            ScriptType.scripts.map((v) => v.name).toList(),
+                        valueNotifier:
+                            viewModel.newAccountScriptTypeValueNotifier),
+                    const SizedBox(height: 4),
+                    Underline(
+                        onTap: () {
+                          CustomPlaceholder.show(context);
+                        },
+                        color: ProtonColors.protonBlue,
+                        child: Text(S.of(context).learn_more,
+                            style: FontManager.body2Median(
+                                ProtonColors.protonBlue))),
+                  ]),
               const SizedBox(height: 12),
               Container(
                   padding: const EdgeInsets.only(top: 20),

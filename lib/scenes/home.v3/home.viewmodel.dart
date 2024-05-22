@@ -70,9 +70,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   AccountModel? historyAccountModel;
 
   Map<int, TextEditingController> accountNameControllers = {};
+  Map<int, ValueNotifier> accountFiatCurrencyNotifiers = {};
 
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-      ValueNotifier(FiatCurrency.chf);
+      ValueNotifier(defaultFiatCurrency);
   ValueNotifier<BitcoinUnit> bitcoinUnitNotifier =
       ValueNotifier(BitcoinUnit.btc);
   late ValueNotifier<ProtonAddress> emailIntegrationNotifier;
@@ -92,6 +93,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void getUserSettings();
 
   Map<int, TextEditingController> getAccountNameControllers(
+      List<AccountModel> userAccounts);
+
+  Map<int, ValueNotifier> getAccountFiatCurrencyNotifiers(
       List<AccountModel> userAccounts);
 
   void updateBitcoinUnit(BitcoinUnit symbol);
@@ -174,16 +178,20 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   String userEmail = "";
   String displayName = "";
+
   Future<void> updatePassphrase(String key, String passphrase);
 }
 
 class HomeViewModelImpl extends HomeViewModel {
   HomeViewModelImpl(super.coordinator, super.apiEnv, this.userManager,
       this.eventLoop, this.protonWalletManager);
+
   // user manager
   final UserManager userManager;
+
   // event loop manger
   final EventLoop eventLoop;
+
   // wallet mangaer
   final ProtonWalletManager protonWalletManager;
 
@@ -275,9 +283,9 @@ class HomeViewModelImpl extends HomeViewModel {
         checkNetwork();
         loadDiscoverContents();
         checkProtonAddresses();
-        refreshWithUserSettingProvider();
         fiatCurrencyNotifier.addListener(() async {
-          updateFiatCurrencyInUserSettingProvider(fiatCurrencyNotifier.value);
+          protonWalletProvider.protonWallet.newAccountFiatCurrency =
+              fiatCurrencyNotifier.value;
         });
         bitcoinUnitNotifier.addListener(() async {
           updateBitcoinUnit(bitcoinUnitNotifier.value);
@@ -401,36 +409,14 @@ class HomeViewModelImpl extends HomeViewModel {
     loadUserSettings();
   }
 
-  Future<void> updateFiatCurrencyInUserSettingProvider(
-      FiatCurrency fiatCurrency) async {
-    userSettingProvider.updateFiatCurrency(fiatCurrency);
-    ProtonExchangeRate exchangeRate =
-        await ExchangeRateService.getExchangeRate(fiatCurrency);
-    userSettingProvider.updateExchangeRate(exchangeRate);
-  }
-
-  void refreshWithUserSettingProvider() async {
-    if (userSettingProvider.walletUserSetting.fiatCurrency !=
-        fiatCurrencyNotifier.value) {
-      fiatCurrencyNotifier.value =
-          userSettingProvider.walletUserSetting.fiatCurrency;
-    }
-    await Future.delayed(const Duration(seconds: 1));
-    if (isLogout == false) {
-      refreshWithUserSettingProvider();
-    }
-  }
-
   void loadUserSettings() {
     if (userSettings != null) {
       bitcoinUnitNotifier.value = userSettings!.bitcoinUnit;
-      fiatCurrencyNotifier.value = userSettings!.fiatCurrency;
       hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
       int twoFactorAmountThreshold =
           userSettings!.twoFactorAmountThreshold ?? 1000;
       twoFactorAmountThresholdController.text =
           twoFactorAmountThreshold.toString();
-      updateFiatCurrencyInUserSettingProvider(userSettings!.fiatCurrency);
     }
     datasourceStreamSinkAdd();
   }
@@ -442,14 +428,14 @@ class HomeViewModelImpl extends HomeViewModel {
       int twoFactorAmountThreshold =
           int.parse(twoFactorAmountThresholdController.text);
       BitcoinUnit bitcoinUnit = bitcoinUnitNotifier.value;
-      FiatCurrency fiatCurrency = fiatCurrencyNotifier.value;
 
       userSettings = await proton_api.hideEmptyUsedAddresses(
           hideEmptyUsedAddresses: hideEmptyUsedAddresses);
       userSettings =
           await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
       userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
-      userSettings = await proton_api.fiatCurrency(symbol: fiatCurrency);
+      userSettings = await proton_api.fiatCurrency(
+          symbol: defaultFiatCurrency); // TODO:: remove this from user setting
 
       loadUserSettings();
       await WalletManager.saveUserSetting(userSettings!);
@@ -707,7 +693,10 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showDiscover();
         break;
       case NavID.buy:
-        coordinator.showBuy(currentWallet!.id ?? 0, currentAccount!.id ?? 0); // TODO:: currentAccount will be null if it's in walletView
+        coordinator.showBuy(
+            currentWallet!.id ?? 0,
+            currentAccount!.id ??
+                0); // TODO:: currentAccount will be null if it's in walletView
         break;
       case NavID.nativeUpgrade:
         final session = await userManager.getChildSession();
@@ -724,7 +713,8 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "Adding account..", maskType: EasyLoadingMaskType.black);
     try {
-      await WalletManager.addWalletAccount(walletID, scriptType, label);
+      await WalletManager.addWalletAccount(walletID, scriptType, label,
+          fiatCurrencyNotifier.value);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -782,6 +772,53 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     return accountNameControllers;
+  }
+
+  @override
+  Map<int, ValueNotifier> getAccountFiatCurrencyNotifiers(
+      List<AccountModel> userAccounts) {
+    for (AccountModel accountModel in userAccounts) {
+      if (accountFiatCurrencyNotifiers.containsKey(accountModel.id!) == false) {
+        ValueNotifier valueNotifier = ValueNotifier(FiatCurrency.values
+            .firstWhere(
+                (v) =>
+                    v.name.toUpperCase() ==
+                    accountModel.fiatCurrency.toUpperCase(),
+                orElse: () => defaultFiatCurrency));
+        valueNotifier.addListener(() {
+          updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
+        });
+        accountFiatCurrencyNotifiers[accountModel.id!] = valueNotifier;
+      }
+    }
+    return accountFiatCurrencyNotifiers;
+  }
+
+  Future<void> updateWalletAccountFiatCurrency(
+      AccountModel accountModel, FiatCurrency newFiatCurrency) async {
+    WalletModel walletModel =
+        await DBHelper.walletDao!.findById(accountModel.walletID);
+    WalletAccount walletAccount =
+        await proton_api.updateWalletAccountFiatCurrency(
+            walletId: walletModel.serverWalletID,
+            walletAccountId: accountModel.serverAccountID,
+            newFiatCurrency: newFiatCurrency);
+    accountModel.fiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
+    await DBHelper.accountDao!.update(accountModel);
+    if (protonWalletProvider.protonWallet.currentAccount == null) {
+      // wallet view
+      FiatCurrency fiatCurrency =
+          await WalletManager.getDefaultAccountFiatCurrency(walletModel);
+      protonWalletProvider
+          .updateFiatCurrencyInUserSettingProvider(fiatCurrency);
+    } else {
+      if (accountModel.serverAccountID ==
+          (protonWalletProvider.protonWallet.currentAccount?.serverAccountID ??
+              "")) {
+        protonWalletProvider
+            .updateFiatCurrencyInUserSettingProvider(newFiatCurrency);
+      }
+    }
   }
 
   Future<void> checkNetwork() async {
