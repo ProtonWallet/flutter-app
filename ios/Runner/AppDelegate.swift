@@ -48,31 +48,25 @@ import CryptoKit
             guard let self = self else { return }
             switch call.method {
             case "native.navigation.login", "native.navigation.signup":
-                if let arguments = call.arguments as? [String: Any] {
-                    let environment = Environment(from: arguments)
-                    switch environment.type {
-                    case .prod, .atlas, .atlasCustom:
-                        if call.method == "native.navigation.login" {
-                            print("Logging in with environment:", environment.type)
-                            self.switchToSignIn(env: environment)
-                        } else if call.method == "native.navigation.signup" {
-                            print("Signing up with environment:", environment.type)
-                            self.switchToSignup(env: environment)
-                        }
-                    default:
-                        result(FlutterError(code: "INVALID_ENVIRONMENT", 
-                                            message: "Environment unknown",
-                                            details: nil))
-                    }
-                } else {
-                    result(FlutterError(code: "INVALID_ARGUMENTS", 
-                                        message: "Can't parse arguments",
-                                        details: nil))
+                if call.method == "native.navigation.login" {
+                    print("Starting login.")
+                    self.switchToSignIn()
+                } else if call.method == "native.navigation.signup" {
+                    print("Starting sign-up.")
+                    self.switchToSignUp()
                 }
             case "native.navigation.plan.upgrade":
                 print("native.navigation.plan.upgrade:", call.arguments ?? "")
             case "native.initialize.core.environment":
                 print("native.initialize.core.environment data:", call.arguments ?? "")
+                if let arguments = call.arguments as? [String: Any] {
+                    let environment = Environment(from: arguments)
+                    self.initAPIService(env: environment)
+                } else {
+                    result(FlutterError(code: "INVALID_ARGUMENTS",
+                                        message: "Can't parse arguments. \"native.initialize.core.environment\" missing environment parameter.",
+                                        details: nil))
+                }
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -95,24 +89,35 @@ import CryptoKit
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func initSignupLogin(env: Environment) {
-        let clientApp: ClientApp = .mail
+    func initAPIService(env: Environment) {
         PMAPIService.noTrustKit = true
-        let apiService = PMAPIService.createAPIServiceWithoutSession(environment: env.toCoreEnv(),
-                                                                     challengeParametersProvider: ChallengeParametersProvider.forAPIService(clientApp: clientApp,
-                                                                                                                                            challenge: PMChallenge()))
-        self.apiService = apiService
+        let challengeParametersProvider = ChallengeParametersProvider.forAPIService(clientApp: .mail, // TODO: fix, use .wallet
+                                                                                    challenge: PMChallenge())
+        let apiService = PMAPIService.createAPIServiceWithoutSession(
+            environment: env.toCoreEnv(),
+            challengeParametersProvider: challengeParametersProvider)
+
         self.authManager = AuthHelper()
-        self.humanVerificationDelegate = HumanCheckHelper(apiService: apiService, inAppTheme: getInAppTheme, clientApp: clientApp)
+        self.humanVerificationDelegate = HumanCheckHelper(apiService: apiService,
+                                                          inAppTheme: getInAppTheme,
+                                                          clientApp: .mail) // TODO: fix, use .wallet
         apiService.authDelegate = authManager
         apiService.serviceDelegate = serviceDelegate
-        //apiService.forceUpgradeDelegate = forceUpgradeServiceDelegate
         apiService.humanDelegate = humanVerificationDelegate
-        
+
+        self.apiService = apiService
+    }
+
+    func initLoginAndSignup() {
+        guard let apiService = self.apiService else {
+            PMLog.error("APIService not set.")
+            return
+        }
+
         let appName = "Proton Wallet"
         login = LoginAndSignup(
             appName: appName,
-            clientApp: .mail,
+            clientApp: .mail, // TODO: fix, use .wallet
             apiService: apiService,
             minimumAccountType: .internal,
             isCloseButtonAvailable: true,
@@ -230,14 +235,14 @@ import CryptoKit
         sendDataToFlutter(jsonData: convertedString)
     }
 
-    func switchToSignIn(env: Environment) {
+    func switchToSignIn() {
         guard let rootViewController = self.window.rootViewController else {
             PMLog.error("rootViewController must be set before calling \(#function)")
             return
         }
 
         print("Showing sign-in view")
-        self.initSignupLogin(env: env)
+        self.initLoginAndSignup()
         login?.presentLoginFlow(over: rootViewController,
                                 customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
@@ -248,14 +253,14 @@ import CryptoKit
                                 ), updateBlock: processLoginResult)
     }
 
-    func switchToSignup(env: Environment) {
+    func switchToSignUp() {
         guard let rootViewController = self.window.rootViewController else {
             PMLog.error("rootViewController must be set before calling \(#function)")
             return
         }
 
         print("Showing sign-up view")
-        self.initSignupLogin(env: env)
+        self.initLoginAndSignup()
         login?.presentSignupFlow(over: rootViewController,
                                  customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
