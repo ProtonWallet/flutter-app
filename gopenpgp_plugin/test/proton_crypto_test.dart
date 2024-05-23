@@ -7,11 +7,27 @@ import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 class UserKeys {
   String privateKey;
   String passphrase;
+  String? publicKey;
 
-  UserKeys({required this.privateKey, required this.passphrase});
+  UserKeys(
+      {required this.privateKey, required this.passphrase, this.publicKey});
 }
 
 UserKeys protonWallet = UserKeys(
+    publicKey: '''-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEZcHI+hYJKwYBBAHaRw8BAQdAP95X+OxFf4BIZ6pVof0uGieuTrnlpxOn07kb
+narFd9m0O25vdF9mb3JfZW1haWxfdXNlQGRvbWFpbi50bGQgPG5vdF9mb3JfZW1h
+aWxfdXNlQGRvbWFpbi50bGQ+iIwEEBYKAD4FgmXByPoECwkHCAmQtzfRDPpr3VcD
+FQgKBBYAAgECGQECmwMCHgEWIQTpDybn7vqc3J8MpkS3N9EM+mvdVwAAC+sA/RDB
+9qEthLneyTaLJYfMVmnPW09ebFFJhgYMDElsX8lvAP42+7m1TgaEL5dBUKXr7lkn
+GwsLDVyPe5e4+tt2vn+eD7g4BGXByPoSCisGAQQBl1UBBQEBB0CxIORcCabhZFHG
+ZTcK4FC/KapurUD+R9N5B65RGkVGaQMBCAeIeAQYFgoAKgWCZcHI+gmQtzfRDPpr
+3VcCmwwWIQTpDybn7vqc3J8MpkS3N9EM+mvdVwAABDYBAJA4gYLI3NnxVTw4u7i4
+qL9T+5AFRy9bnPxb9CR8yIULAQCbfmC8wkHVJyYoIUk0jS0+C4kazGA1bqbCSzM2
+Nh8JBg==
+=Nhgd
+-----END PGP PUBLIC KEY BLOCK-----''',
     privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: ProtonMail
 
@@ -33,7 +49,61 @@ PguJGsxgNW6mwkszNjYfCQY=
 -----END PGP PRIVATE KEY BLOCK-----''',
     passphrase: "4sFlJ8gesYLeYyS0cBFQ5biAZPIZyHe");
 
-UserKeys user1 = UserKeys(privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+UserKeys user1 = UserKeys(
+    publicKey: '''-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+FRysfkWrCC2kMwKyY/ziLql5MZHV81hM+A==
+=blx1
+-----END PGP PUBLIC KEY BLOCK-----''',
+    privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: Keybase OpenPGP v2.0.76
 Comment: https://keybase.io/crypto
 
@@ -131,9 +201,24 @@ tP2clyG9teSWEPzkFey7k7FM032v9MbW32t76E3DTe4FifRsf7krGRvEa3+ZddOX
 rCZjXwO/XGnIduMxvmnJ66VyqlQTYtt1L4YsFRysfkWrCC2kMwKyY/ziLql5MZHV
 81hM+A==
 =tMIn
------END PGP PRIVATE KEY BLOCK-----''', passphrase: "hellopgp");
+-----END PGP PRIVATE KEY BLOCK-----''',
+    passphrase: "hellopgp");
 
-UserKeys user2 = UserKeys(privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
+UserKeys user2 = UserKeys(
+    publicKey: '''-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKSObqn
+hO8lmx60GXdpbGwgPHdpbGwuaHN1QHByb3Rvbi5jaD6IjAQQFgoAPgWCZbIlGQQL
+CQcICZDzaZwh7AdT8AMVCAoEFgACAQIZAQKbAwIeARYhBMG8kZAYRWL8Vs0uoPNp
+nCHsB1PwAAD6/wEAmHNDvqCG+U4HkQ2xyCUzW6s4mGwloMrsQYfLT+GEcLoBANs7
+CsdN4vEh3+Q/1adYExXMY3dvVBHF7K5YjbkpqEsAuDgEZbIlGRIKKwYBBAGXVQEF
+AQEHQB+mCbnna6cgVTm+NDY/qbYKBK0mNTuEi++So9eR8iF3AwEIB4h4BBgWCgAq
+BYJlsiUZCZDzaZwh7AdT8AKbDBYhBMG8kZAYRWL8Vs0uoPNpnCHsB1PwAAD3OwEA
+1kfyPw4vtWxhsUT/4Ty834etr2JEU7l0/dvwb0EI/J0A/jpXiEwN5gThTSSztwj1
+U+Z4iY5gE1xM5kiogDaESeIG
+=9jt9
+-----END PGP PUBLIC KEY BLOCK-----''',
+    privateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----
 
 xYYEZbIlGRYJKwYBBAHaRw8BAQdAdgwLi+IULWqS++gRe2dQ3MizLRArYnKS
 ObqnhO8lmx7+CQMIylIrAYAm2CTgEg659zXzpjkiKKZy7K/JuNkR2C/vTB5K
@@ -149,7 +234,8 @@ FgoAKgWCZbIlGQmQ82mcIewHU/ACmwwWIQTBvJGQGEVi/FbNLqDzaZwh7AdT
 8AAA9zsBANZH8j8OL7VsYbFE/+E8vN+Hra9iRFO5dP3b8G9BCPydAP46V4hM
 DeYE4U0ks7cI9VPmeImOYBNcTOZIqIA2hEniBg==
 =/tHc
------END PGP PRIVATE KEY BLOCK-----''', passphrase: "12345678");
+-----END PGP PRIVATE KEY BLOCK-----''',
+    passphrase: "12345678");
 
 void main() {
   group('Proton Crypto functions', () {
@@ -591,6 +677,113 @@ void main() {
       Uint8List result = proton_crypto.decryptBinary(protonWallet.privateKey,
           protonWallet.passphrase, base64Decode(encodedEncryptedEntropy));
       expect(result, equals(origin));
+    });
+
+    test('binary signature test 1', () async {
+      Uint8List origin = Uint8List.fromList([
+        239,
+        203,
+        93,
+        93,
+        253,
+        145,
+        50,
+        82,
+        227,
+        145,
+        154,
+        177,
+        206,
+        86,
+        83,
+        32,
+        251,
+        160,
+        160,
+        29,
+        164,
+        144,
+        177,
+        101,
+        205,
+        128,
+        169,
+        38,
+        59,
+        33,
+        146,
+        218
+      ]);
+      String context = "wallet.key";
+      String signature = proton_crypto.getBinarySignatureWithContext(
+          protonWallet.privateKey, protonWallet.passphrase, origin, context);
+      bool shouldBeTrue = proton_crypto.verifyBinarySignatureWithContext(
+          protonWallet.publicKey ?? "", origin, signature, context);
+      expect(shouldBeTrue, equals(true));
+
+      bool shouldBeFalse = proton_crypto.verifyBinarySignatureWithContext(
+          user1.publicKey ?? "", origin, signature, context);
+      expect(shouldBeFalse, equals(false));
+    });
+
+    test('signature case 1', () async {
+      String message = "This is a plaintext message!";
+      String signature = proton_crypto.getSignature(
+          user1.privateKey, user1.passphrase, message);
+      bool verify = proton_crypto.verifySignature(
+          user1.publicKey ?? "", message, signature);
+      expect(verify, equals(true));
+    });
+
+    test('signature case 2', () async {
+      String message = "This is a plaintext message! Hello world!";
+      List<UserKeys> userKeys = [user1, user2];
+      List<String> signatures = [];
+      for (UserKeys userKey in userKeys) {
+        signatures.add(proton_crypto.getSignature(
+            userKey.privateKey, userKey.passphrase, message));
+      }
+      String signature = signatures.join("\n\n");
+      bool verifyWithUser1PublicKey = proton_crypto.verifySignature(
+          user1.publicKey ?? "", message, signature);
+      expect(verifyWithUser1PublicKey, equals(true));
+      bool verifyWithUser2PublicKey = proton_crypto.verifySignature(
+          user2.publicKey ?? "", message, signature);
+      expect(verifyWithUser2PublicKey, equals(true));
+      bool verifyWithProtonWalletPublicKey = proton_crypto.verifySignature(
+          protonWallet.publicKey ?? "", message, signature);
+      expect(verifyWithProtonWalletPublicKey, equals(false));
+    });
+    test('signature with context case 1', () async {
+      String message = "你好世界！This is a plaintext message!";
+      String context = "wallet.bitcoin-address";
+      String signature = proton_crypto.getSignatureWithContext(
+          user1.privateKey, user1.passphrase, message, context);
+      bool verify = proton_crypto.verifySignatureWithContext(
+          user1.publicKey ?? "", message, signature, context);
+      expect(verify, equals(true));
+    });
+
+    test('signature with context case 2', () async {
+      String message = "你好世界！This is a plaintext message! Hello world!";
+      List<UserKeys> userKeys = [user1, user2];
+      List<String> signatures = [];
+      String context = "wallet.bitcoin-address";
+      for (UserKeys userKey in userKeys) {
+        signatures.add(proton_crypto.getSignatureWithContext(
+            userKey.privateKey, userKey.passphrase, message, context));
+      }
+      String signature = signatures.join("\n\n");
+      bool verifyWithUser1PublicKey = proton_crypto.verifySignatureWithContext(
+          user1.publicKey ?? "", message, signature, context);
+      expect(verifyWithUser1PublicKey, equals(true));
+      bool verifyWithUser2PublicKey = proton_crypto.verifySignatureWithContext(
+          user2.publicKey ?? "", message, signature, context);
+      expect(verifyWithUser2PublicKey, equals(true));
+      bool verifyWithProtonWalletPublicKey =
+          proton_crypto.verifySignatureWithContext(
+              protonWallet.publicKey ?? "", message, signature, context);
+      expect(verifyWithProtonWalletPublicKey, equals(false));
     });
 
     test('encrypt decrypt case 1', () async {

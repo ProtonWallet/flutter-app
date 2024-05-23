@@ -142,6 +142,7 @@ pub struct ProtonWalletKey {
     pub wallet_id: String,
     pub user_key_id: String,
     pub wallet_key: String,
+    pub wallet_key_signature: String,
 }
 impl From<ApiWalletKey> for ProtonWalletKey {
     fn from(wallet_key: ApiWalletKey) -> Self {
@@ -149,6 +150,7 @@ impl From<ApiWalletKey> for ProtonWalletKey {
             wallet_id: wallet_key.WalletID,
             user_key_id: wallet_key.UserKeyID,
             wallet_key: wallet_key.WalletKey,
+            wallet_key_signature: wallet_key.WalletKeySignature,
         }
     }
 }
@@ -206,6 +208,7 @@ pub struct CreateWalletReq {
     pub public_key: Option<String>,
 
     pub fingerprint: Option<String>,
+    pub wallet_key_signature: String,
 }
 
 impl From<CreateWalletRequestBody> for CreateWalletReq {
@@ -220,6 +223,7 @@ impl From<CreateWalletRequestBody> for CreateWalletReq {
             mnemonic: req.Mnemonic,
             public_key: req.PublicKey,
             fingerprint: req.Fingerprint,
+            wallet_key_signature: req.WalletKeySignature,
         }
     }
 }
@@ -236,6 +240,7 @@ impl From<CreateWalletReq> for CreateWalletRequestBody {
             Mnemonic: req.mnemonic,
             PublicKey: req.public_key,
             Fingerprint: req.fingerprint,
+            WalletKeySignature: req.wallet_key_signature,
         }
     }
 }

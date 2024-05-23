@@ -86,6 +86,12 @@ extern "C" {
 
 extern __declspec(dllexport) char* encryptWithKeyRing(char* userPublicKeysSepInComma, char* message);
 extern __declspec(dllexport) char* encrypt(char* userPrivateKey, char* message);
+extern __declspec(dllexport) char* getSignatureWithContext(char* userPrivateKey, char* passphrase, char* message, char* context);
+extern __declspec(dllexport) int verifySignatureWithContext(char* userPublicKey, char* message, char* signature, char* context);
+extern __declspec(dllexport) char* getBinarySignatureWithContext(char* userPrivateKey, char* passphrase, char* binaryMessage, int length, char* context);
+extern __declspec(dllexport) int verifyBinarySignatureWithContext(char* userPublicKey, char* binaryMessage, int length, char* signature, char* context);
+extern __declspec(dllexport) char* getSignature(char* userPrivateKey, char* passphrase, char* message);
+extern __declspec(dllexport) int verifySignature(char* userPublicKey, char* message, char* signature);
 extern __declspec(dllexport) char* decrypt(char* userPrivateKey, char* passphrase, char* armor);
 extern __declspec(dllexport) struct BinaryResult encryptBinary(char* userPrivateKey, char* binaryMessage, int length);
 extern __declspec(dllexport) char* encryptBinaryArmor(char* userPrivateKey, char* binaryMessage, int length);

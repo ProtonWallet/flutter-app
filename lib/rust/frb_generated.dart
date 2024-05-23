@@ -4709,8 +4709,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CreateWalletReq dco_decode_create_wallet_req(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return CreateWalletReq(
       name: dco_decode_String(arr[0]),
       isImported: dco_decode_u_8(arr[1]),
@@ -4721,6 +4721,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       mnemonic: dco_decode_opt_String(arr[6]),
       publicKey: dco_decode_opt_String(arr[7]),
       fingerprint: dco_decode_opt_String(arr[8]),
+      walletKeySignature: dco_decode_String(arr[9]),
     );
   }
 
@@ -5483,12 +5484,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonWalletKey dco_decode_proton_wallet_key(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return ProtonWalletKey(
       walletId: dco_decode_String(arr[0]),
       userKeyId: dco_decode_String(arr[1]),
       walletKey: dco_decode_String(arr[2]),
+      walletKeySignature: dco_decode_String(arr[3]),
     );
   }
 
@@ -6346,6 +6348,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_mnemonic = sse_decode_opt_String(deserializer);
     var var_publicKey = sse_decode_opt_String(deserializer);
     var var_fingerprint = sse_decode_opt_String(deserializer);
+    var var_walletKeySignature = sse_decode_String(deserializer);
     return CreateWalletReq(
         name: var_name,
         isImported: var_isImported,
@@ -6355,7 +6358,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         walletKey: var_walletKey,
         mnemonic: var_mnemonic,
         publicKey: var_publicKey,
-        fingerprint: var_fingerprint);
+        fingerprint: var_fingerprint,
+        walletKeySignature: var_walletKeySignature);
   }
 
   @protected
@@ -7421,10 +7425,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_walletId = sse_decode_String(deserializer);
     var var_userKeyId = sse_decode_String(deserializer);
     var var_walletKey = sse_decode_String(deserializer);
+    var var_walletKeySignature = sse_decode_String(deserializer);
     return ProtonWalletKey(
         walletId: var_walletId,
         userKeyId: var_userKeyId,
-        walletKey: var_walletKey);
+        walletKey: var_walletKey,
+        walletKeySignature: var_walletKeySignature);
   }
 
   @protected
@@ -8236,6 +8242,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.mnemonic, serializer);
     sse_encode_opt_String(self.publicKey, serializer);
     sse_encode_opt_String(self.fingerprint, serializer);
+    sse_encode_String(self.walletKeySignature, serializer);
   }
 
   @protected
@@ -9124,6 +9131,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.walletId, serializer);
     sse_encode_String(self.userKeyId, serializer);
     sse_encode_String(self.walletKey, serializer);
+    sse_encode_String(self.walletKeySignature, serializer);
   }
 
   @protected

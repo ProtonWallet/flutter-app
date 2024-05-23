@@ -124,8 +124,14 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         EasyLoading.dismiss();
                         if (context.mounted) {
                           Navigator.of(context).pop();
-                          CommonHelper.showSnackbar(
-                              context, S.of(context).wallet_created);
+                          if (viewModel.errorMessage.isEmpty) {
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).wallet_created);
+                          } else {
+                            CommonHelper.showSnackbar(
+                                context, viewModel.errorMessage,
+                                isError: true);
+                          }
                         }
                       } else {
                         CommonHelper.showSnackbar(
@@ -202,8 +208,14 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     EasyLoading.dismiss();
                     if (context.mounted) {
                       Navigator.of(context).pop();
-                      CommonHelper.showSnackbar(
-                          context, S.of(context).wallet_created);
+                      if (viewModel.errorMessage.isEmpty) {
+                        CommonHelper.showSnackbar(
+                            context, S.of(context).wallet_created);
+                      } else {
+                        CommonHelper.showSnackbar(
+                            context, viewModel.errorMessage,
+                            isError: true);
+                      }
                     }
                   },
                   text: S.of(context).continue_without_passphrase_button,

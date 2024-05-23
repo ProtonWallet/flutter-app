@@ -310,6 +310,8 @@
   "receive_address": "Receive Address",
   "share_button": "Share",
   "share_address_button": "Share Address",
+  "error_this_bitcoin_address_signature_is_invalid": "Sorry, this bitcoin address signature is invalid.",
+  "error_this_bitcoin_address_is_blocked": "Sorry, this bitcoin address is blocked.",
   "error_this_bitcoin_address_already_in_recipients": "Sorry, this bitcoin address is already in recipients list.",
   "error_you_dont_have_sufficient_balance": "Sorry, you don't have sufficient balance.",
   "error_you_can_not_send_to_self_account": "Sorry, you can not send bitcoin to your own account.",

@@ -94,7 +94,6 @@ dependencies:
   ramp_flutter: ^3.0.0
   # json serializable depends on this
   json_annotation: ^4.9.0
-  package_info_plus: ^8.0.0
   flutter_bloc: ^8.1.5
   equatable: ^2.0.3 # better use with flutter bloc
 

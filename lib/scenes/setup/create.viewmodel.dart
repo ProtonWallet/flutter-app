@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/widgets.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/setup/create.coordinator.dart';
@@ -58,10 +60,13 @@ class SetupCreateViewModelImpl extends SetupCreateViewModel {
       } catch (e) {
         errorMessage = e.toString();
       }
-      coordinator.pop();
       if (errorMessage.isNotEmpty) {
-        CommonHelper.showErrorDialog(e.toString());
+        BuildContext context = Coordinator.navigatorKey.currentContext!;
+        if (context.mounted) {
+          CommonHelper.showSnackbar(context, errorMessage, isError: true);
+        }
       }
+      coordinator.pop();
     } else {
       Future.delayed(const Duration(milliseconds: 1000), () {
         coordinator.showPassphrase(strMnemonic);
