@@ -228,20 +228,20 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				3F4908122BE391C000999F61 /* Runner.entitlements */,
-				7548DB302B184644002588F4 /* Scenes */,
-				7548DAE82B182817002588F4 /* WalletApiServiceMananger.swift */,
-				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
+				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
+				3F4908122BE391C000999F61 /* Runner.entitlements */,
 				97C147021CF9000F007C117D /* Info.plist */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
-				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
-				7548D9F52B17ED57002588F4 /* SwiftUIView.swift */,
+				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */,
+				7548D9F52B17ED57002588F4 /* SwiftUIView.swift */,
 				750F3B0E2BCD4F9800626388 /* Environment.swift */,
+				7548DAE82B182817002588F4 /* WalletApiServiceMananger.swift */,
+				7548DB302B184644002588F4 /* Scenes */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
