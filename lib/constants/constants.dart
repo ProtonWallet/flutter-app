@@ -24,6 +24,8 @@ const String userSettingsBitcoinUnit = "userSettings.bitcoinUnit";
 const String latestAddressIndex = "bitcoinAddress.latest";
 
 const FiatCurrency defaultFiatCurrency = FiatCurrency.usd;
+const String gpgContextWalletBitcoinAddress = "wallet.bitcoin-address";
+const String gpgContextWalletKey = "wallet.key";
 
 const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.btc,

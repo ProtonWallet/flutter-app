@@ -43,7 +43,7 @@ impl ProtonAPIService {
         let auth_store = WalletAuthStore::new(auth_store_env, auth_data.clone());
         let transport = ReqwestTransportFactory::new();
         let session = Session::new_with_transport(auth_store, app_spec, transport).unwrap();
-        let api = ProtonWalletApiClient::from_session(session);
+        let api = ProtonWalletApiClient::from_session(session, None);
         ProtonAPIService {
             inner: Arc::new(api),
         }
@@ -101,7 +101,7 @@ impl ProtonAPIService {
     }
 
     pub async fn get_wallets(&self) -> Result<Vec<WalletData>, ApiError> {
-        let result = self.inner.wallet.get_wallets().await;
+        let result = self.inner.clients().wallet.get_wallets().await;
         match result {
             Ok(response) => Ok(response.into_iter().map(|w| w.into()).collect()),
             Err(err) => Err(err.into()),

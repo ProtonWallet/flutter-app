@@ -7,6 +7,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class RecipientDetail extends StatelessWidget {
@@ -14,6 +15,8 @@ class RecipientDetail extends StatelessWidget {
   final String? email;
   final String bitcoinAddress;
   final bool isSelfBitcoinAddress;
+  final bool isSignatureInvalid;
+  final bool isBlocked;
   final VoidCallback? callback;
 
   const RecipientDetail({
@@ -21,6 +24,8 @@ class RecipientDetail extends StatelessWidget {
     this.name,
     this.email,
     this.isSelfBitcoinAddress = false,
+    this.isSignatureInvalid = false,
+    this.isBlocked = false,
     required this.bitcoinAddress,
     this.callback,
   });
@@ -69,7 +74,7 @@ class RecipientDetail extends StatelessWidget {
           if (email != null && name != email && !isBitcoinAddress)
             Text(email!,
                 style: FontManager.captionMedian(ProtonColors.textNorm)),
-          if (!isBitcoinAddress)
+          if (!isBitcoinAddress && !isSignatureInvalid && !isBlocked)
             bitcoinAddress.isNotEmpty
                 ? GestureDetector(
                     onTap: () {
@@ -91,17 +96,17 @@ class RecipientDetail extends StatelessWidget {
                     ]))
                 : GestureDetector(
                     onTap: () {
-                      showInvite(context, email ?? "");
+                      InviteSheet.show(context, email ?? "");
                     },
                     child: Row(children: [
+                      Icon(Icons.info_rounded,
+                          color: ProtonColors.signalError, size: 14),
+                      const SizedBox(width: 1),
                       Text(
                         S.of(context).no_wallet_found,
                         style: FontManager.captionRegular(
                             ProtonColors.signalError),
                       ),
-                      const SizedBox(width: 1),
-                      Icon(Icons.info_rounded,
-                          color: ProtonColors.signalError, size: 14),
                       const SizedBox(width: 16),
                       Text(S.of(context).send_invite,
                           style: FontManager.captionRegular(
@@ -111,10 +116,44 @@ class RecipientDetail extends StatelessWidget {
                           color: ProtonColors.protonBlue, size: 14),
                     ])),
           if (isSelfBitcoinAddress)
-            Text(
-              S.of(context).error_you_can_not_send_to_self_account,
-              style: FontManager.captionSemiBold(ProtonColors.signalError),
-            ),
+            Row(children: [
+              Icon(Icons.info_rounded,
+                  color: ProtonColors.signalError, size: 14),
+              const SizedBox(width: 1),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 200,
+                child: Text(
+                  S.of(context).error_you_can_not_send_to_self_account,
+                  style: FontManager.captionSemiBold(ProtonColors.signalError),
+                ),
+              )
+            ]),
+          if (isSignatureInvalid)
+            Row(children: [
+              Icon(Icons.info_rounded,
+                  color: ProtonColors.signalError, size: 14),
+              const SizedBox(width: 1),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 200,
+                child: Text(
+                  S.of(context).error_this_bitcoin_address_signature_is_invalid,
+                  style: FontManager.captionSemiBold(ProtonColors.signalError),
+                ),
+              )
+            ]),
+          if (isBlocked)
+            Row(children: [
+              Icon(Icons.info_rounded,
+                  color: ProtonColors.signalError, size: 14),
+              const SizedBox(width: 1),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 200,
+                child: Text(
+                  S.of(context).error_this_bitcoin_address_is_blocked,
+                  style: FontManager.captionSemiBold(ProtonColors.signalError),
+                ),
+              )
+            ])
         ],
       ),
       trailing: IconButton(
@@ -125,66 +164,11 @@ class RecipientDetail extends StatelessWidget {
   }
 }
 
-void showInvite(BuildContext context, String email) {
-  showModalBottomSheet(
-      context: context,
-      backgroundColor: ProtonColors.white,
-      constraints: BoxConstraints(
-        minWidth: MediaQuery.of(context).size.width,
-      ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-      ),
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return SafeArea(
-            child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.all(defaultPadding),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                            "assets/images/icon/no_wallet_found.svg",
-                            fit: BoxFit.fill,
-                            width: 86,
-                            height: 87),
-                        const SizedBox(height: 10),
-                        Text(S.of(context).no_wallet_found,
-                            style:
-                                FontManager.body1Median(ProtonColors.textNorm)),
-                        const SizedBox(height: 5),
-                        Text(S.of(context).no_wallet_found_desc,
-                            style: FontManager.body2Regular(
-                                ProtonColors.textWeak)),
-                        const SizedBox(height: 20),
-                        ButtonV5(
-                          text: S.of(context).send_invite,
-                          width: MediaQuery.of(context).size.width,
-                          backgroundColor: ProtonColors.protonBlue,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
-                          height: 48,
-                          onPressed: () {
-                            sendEmailInvite(email, S.of(context).invite_subject,
-                                S.of(context).invite_body);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ))),
-          );
-        });
-      });
-}
-
-Future<void> sendEmailInvite(String email, String subject, String body) async {
-  final Uri params = Uri(
-    scheme: 'mailto',
-    path: email,
-    query: 'subject=$subject&body=$body',
-  );
-  launchUrl(params);
-}
+// Future<void> sendEmailInvite(String email, String subject, String body) async {
+//   final Uri params = Uri(
+//     scheme: 'mailto',
+//     path: email,
+//     query: 'subject=$subject&body=$body',
+//   );
+//   launchUrl(params);
+// }
