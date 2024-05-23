@@ -12,12 +12,10 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
-import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -26,7 +24,6 @@ import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -38,7 +35,6 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 enum WalletDrawerStatus {
   close,
@@ -62,7 +58,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isFetching = false;
   bool isLogout = false;
   int currentHistoryPage = 0;
-  PackageInfo? packageInfo;
   bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
@@ -123,9 +118,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void showMoreTransactionHistory();
 
-  Future<void> updateEmailIntegration(
-      WalletModel walletModel, AccountModel accountModel);
-
   Future<void> addWalletAccount(
       int walletID, ScriptType scriptType, String label);
 
@@ -141,9 +133,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> deleteAccount(
       WalletModel walletModel, AccountModel accountModel);
-
-  Future<void> addBitcoinAddress(
-      Wallet wallet, WalletModel walletModel, AccountModel accountModel);
 
   Future<void> addEmailAddressToWalletAccount(
       String serverWalletID, String serverAccountID, String serverAddressID);
@@ -240,7 +229,6 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
     try {
-      packageInfo = await PackageInfo.fromPlatform();
       hideEmptyUsedAddressesController = TextEditingController();
       walletNameController = TextEditingController(text: "");
       twoFactorAmountThresholdController = TextEditingController(text: "3");
@@ -260,6 +248,7 @@ class HomeViewModelImpl extends HomeViewModel {
               1)); // TODO:: replace this workaround, we need to wait some time for rust to init api service
       isValidToken = await WalletManager.isValidToken();
       if (isValidToken) {
+        await getUserSettings();
         hasWallet = await WalletManager.hasWallet();
         if (hasWallet == false) {
           await WalletManager.fetchWalletsFromServer();
@@ -278,7 +267,6 @@ class HomeViewModelImpl extends HomeViewModel {
         WalletManager.initContacts();
         eventLoop.start();
 
-        getUserSettings();
         cryptoPriceDataService.start(); //start service
         checkNetwork();
         loadDiscoverContents();
@@ -309,6 +297,7 @@ class HomeViewModelImpl extends HomeViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog("App init: $errorMessage");
       errorMessage = "";
+      await logout();
     } else {
       initialed = true;
       if (hasWallet == false) {
@@ -512,45 +501,6 @@ class HomeViewModelImpl extends HomeViewModel {
       if (isLogout == false) {
         checkPreference();
       }
-    }
-  }
-
-  @override
-  Future<void> updateEmailIntegration(
-      WalletModel walletModel, AccountModel accountModel) async {
-    try {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setBool(
-          "todo_hadSetEmailIntegration_${accountModel.serverAccountID}", true);
-
-      datasourceStreamSinkAdd();
-      await WalletManager.syncBitcoinAddressIndex(
-          walletModel.serverWalletID, accountModel.serverAccountID);
-      Wallet wallet = await WalletManager.loadWalletWithID(
-          walletModel.id!, accountModel.id!);
-      for (int i = 0; i < defaultBitcoinAddressCountForOneEmail; i++) {
-        addBitcoinAddress(wallet, walletModel, accountModel);
-      }
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("updateEmailIntegration(): $errorMessage");
-      errorMessage = "";
-    }
-  }
-
-  @override
-  Future<void> addBitcoinAddress(
-      Wallet wallet, WalletModel walletModel, AccountModel accountModel) async {
-    try {
-      await WalletManager.addBitcoinAddress(wallet, walletModel, accountModel);
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(errorMessage);
-      errorMessage = "";
     }
   }
 

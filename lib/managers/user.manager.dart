@@ -33,6 +33,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
 
   /// Login and session management
   Future<bool> sessionExists() async {
+    await firstRun();
     return await storage.get("sessionId") != "";
   }
 

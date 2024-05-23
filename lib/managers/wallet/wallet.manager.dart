@@ -161,56 +161,59 @@ class WalletManager implements Manager {
   static Future<void> createWallet(String walletName, String mnemonicStr,
       int walletType, FiatCurrency fiatCurrency,
       [String? passphrase]) async {
-    try {
-      SecretKey secretKey = WalletKeyHelper.generateSecretKey();
+    SecretKey secretKey = WalletKeyHelper.generateSecretKey();
 
-      var key = await userManager.getFirstKey();
+    var key = await userManager.getFirstKey();
 
-      String userPrivateKey = key.privateKey;
-      String userKeyID = key.keyID;
+    String userPrivateKey = key.privateKey;
+    String userKeyID = key.keyID;
 
-      Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-      String encryptedMnemonic =
-          await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
-      String encryptedWalletName = await WalletKeyHelper.encrypt(
-          secretKey, walletName.isNotEmpty ? walletName : "Default Wallet");
-      String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
-          mnemonicStr,
-          passphrase:
-              passphrase != null && passphrase.isNotEmpty ? passphrase : null);
-      CreateWalletReq walletReq = buildWalletRequest(
-          encryptedWalletName,
-          walletType,
-          encryptedMnemonic,
-          fingerprint,
-          userPrivateKey,
-          userKeyID,
-          entropy,
-          passphrase != null && passphrase.isNotEmpty);
+    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    String encryptedMnemonic =
+        await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
+    String encryptedWalletName = await WalletKeyHelper.encrypt(
+        secretKey, walletName.isNotEmpty ? walletName : "Default Wallet");
+    String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
+        mnemonicStr,
+        passphrase:
+            passphrase != null && passphrase.isNotEmpty ? passphrase : null);
+    String encryptedWalletKey =
+        proton_crypto.encryptBinaryArmor(userPrivateKey, entropy);
+    String walletKeySignature = proton_crypto.getSignatureWithContext(
+        userPrivateKey,
+        key.passphrase,
+        encryptedWalletKey,
+        gpgContextWalletKey);
+    CreateWalletReq walletReq = buildWalletRequest(
+        encryptedWalletName,
+        walletType,
+        encryptedMnemonic,
+        fingerprint,
+        userPrivateKey,
+        userKeyID,
+        encryptedWalletKey,
+        walletKeySignature,
+        passphrase != null && passphrase.isNotEmpty);
 
-      WalletData walletData =
-          await proton_api.createWallet(walletReq: walletReq);
-      int walletID = await processWalletData(
-          walletData, walletName, encryptedMnemonic, fingerprint, walletType);
+    WalletData walletData = await proton_api.createWallet(walletReq: walletReq);
+    int walletID = await processWalletData(
+        walletData, walletName, encryptedMnemonic, fingerprint, walletType);
 
-      await protonWallet.setWalletKey(walletData.wallet.id, secretKey);
-      await WalletManager.addWalletAccount(
-          walletID, appConfig.scriptType, "BTC Account", fiatCurrency);
-      WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
-      if (walletModel != null && passphrase != null && passphrase.isNotEmpty) {
-        await Provider.of<ProtonWalletProvider>(
-                Coordinator.navigatorKey.currentContext!,
-                listen: false)
-            .setPassphrase(walletModel, passphrase);
-      }
-      if (walletModel != null) {
-        Provider.of<ProtonWalletProvider>(
-                Coordinator.navigatorKey.currentContext!,
-                listen: false)
-            .setWallet(walletModel);
-      }
-    } catch (e) {
-      logger.e(e);
+    await protonWallet.setWalletKey(walletData.wallet.id, secretKey);
+    await WalletManager.addWalletAccount(
+        walletID, appConfig.scriptType, "BTC Account", fiatCurrency);
+    WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
+    if (walletModel != null && passphrase != null && passphrase.isNotEmpty) {
+      await Provider.of<ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false)
+          .setPassphrase(walletModel, passphrase);
+    }
+    if (walletModel != null) {
+      Provider.of<ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false)
+          .setWallet(walletModel);
     }
   }
 
@@ -221,7 +224,8 @@ class WalletManager implements Manager {
       String fingerprint,
       String userKey,
       String userKeyID,
-      Uint8List entropy,
+      String encryptedWalletKey,
+      String walletKeySignature,
       bool hasPassphrase) {
     return CreateWalletReq(
       name: encryptedName,
@@ -229,9 +233,11 @@ class WalletManager implements Manager {
       type: WalletModel.typeOnChain,
       hasPassphrase: hasPassphrase ? 1 : 0,
       userKeyId: userKeyID,
-      walletKey: proton_crypto.encryptBinaryArmor(userKey, entropy),
+      walletKey: encryptedWalletKey,
+      //proton_crypto.encryptBinaryArmor(userKey, entropy),
       fingerprint: fingerprint,
       mnemonic: mnemonic,
+      walletKeySignature: walletKeySignature,
     );
   }
 
@@ -712,11 +718,12 @@ class WalletManager implements Manager {
     return preferences.getString("latestEventId");
   }
 
-  static Future<String?> lookupBitcoinAddress(String email) async {
+  static Future<EmailIntegrationBitcoinAddress?> lookupBitcoinAddress(
+      String email) async {
     EmailIntegrationBitcoinAddress emailIntegrationBitcoinAddress =
         await proton_api.lookupBitcoinAddress(email: email);
     // TODO:: check signature!
-    return emailIntegrationBitcoinAddress.bitcoinAddress;
+    return emailIntegrationBitcoinAddress;
   }
 
   static Future<List<AddressKey>> getAddressKeys() async {
@@ -730,8 +737,10 @@ class WalletManager implements Manager {
     List<AddressKey> addressKeys = [];
 
     // TODO:: remove this, use old version decrypt method to get addresskeys' passphrase
-    addressKeys.add(
-        AddressKey(privateKey: userPrivateKey, passphrase: userPassphrase));
+    addressKeys.add(AddressKey(
+        id: "firstUserKey",
+        privateKey: userPrivateKey,
+        passphrase: userPassphrase));
 
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
@@ -741,6 +750,7 @@ class WalletManager implements Manager {
           String addressKeyPassphrase = proton_crypto.decrypt(
               userPrivateKey, userPassphrase, addressKeyToken);
           addressKeys.add(AddressKey(
+              id: address.id,
               privateKey: addressKeyPrivateKey,
               passphrase: addressKeyPassphrase));
         } catch (e) {
@@ -836,41 +846,45 @@ class WalletManager implements Manager {
             walletAccountId: serverAccountID,
             onlyRequest: 1);
     bool hasSyncedBitcoinAddressIndex = false;
-    for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
-      if (walletBitcoinAddress.bitcoinAddress == null) {
-        if (hasSyncedBitcoinAddressIndex == false) {
-          hasSyncedBitcoinAddressIndex = true;
-          await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
-        }
-        int addressIndex =
-            await getBitcoinAddressIndex(serverWalletID, serverAccountID);
-        var addressInfo =
-            await _lib.getAddress(wallet, addressIndex: addressIndex);
-        String address = addressInfo.address;
-        BitcoinAddress bitcoinAddress = BitcoinAddress(
-            bitcoinAddress: address,
-            bitcoinAddressSignature:
-                "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
-            bitcoinAddressIndex: 0);
-        await proton_api.updateBitcoinAddress(
-            walletId: serverWalletID,
-            walletAccountId: serverAccountID,
-            walletAccountBitcoinAddressId: walletBitcoinAddress.id,
-            bitcoinAddress: bitcoinAddress);
-        try {
-          WalletModel? walletModel = await DBHelper.walletDao!
-              .getWalletByServerWalletID(serverWalletID);
-          AccountModel? accountModel =
-              await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
-          await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-              walletID: walletModel!.id!,
-              accountID: accountModel!.id!,
+    AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+    if (accountModel != null) {
+      for (WalletBitcoinAddress walletBitcoinAddress
+          in walletBitcoinAddresses) {
+        if (walletBitcoinAddress.bitcoinAddress == null) {
+          if (hasSyncedBitcoinAddressIndex == false) {
+            hasSyncedBitcoinAddressIndex = true;
+            await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
+          }
+          int addressIndex =
+              await getBitcoinAddressIndex(serverWalletID, serverAccountID);
+          var addressInfo =
+              await _lib.getAddress(wallet, addressIndex: addressIndex);
+          String address = addressInfo.address;
+          String signature = await getSignature(
+              accountModel, address, gpgContextWalletBitcoinAddress);
+          BitcoinAddress bitcoinAddress = BitcoinAddress(
               bitcoinAddress: address,
-              bitcoinAddressIndex: addressIndex,
-              inEmailIntegrationPool: 1,
-              used: 0);
-        } catch (e) {
-          logger.e(e.toString());
+              bitcoinAddressSignature: signature,
+              bitcoinAddressIndex: addressIndex);
+          await proton_api.updateBitcoinAddress(
+              walletId: serverWalletID,
+              walletAccountId: serverAccountID,
+              walletAccountBitcoinAddressId: walletBitcoinAddress.id,
+              bitcoinAddress: bitcoinAddress);
+          try {
+            WalletModel? walletModel = await DBHelper.walletDao!
+                .getWalletByServerWalletID(serverWalletID);
+            await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+                walletID: walletModel!.id!,
+                accountID: accountModel.id!,
+                bitcoinAddress: address,
+                bitcoinAddressIndex: addressIndex,
+                inEmailIntegrationPool: 1,
+                used: 0);
+          } catch (e) {
+            logger.e(e.toString());
+          }
         }
       }
     }
@@ -882,11 +896,17 @@ class WalletManager implements Manager {
     String key = "$latestAddressIndex.$serverWalletID.$serverAccountID";
     int latestIndex = preferences.getInt(key) ?? 0;
     int latestIndexFromAPI = 0;
-    try {
-      latestIndexFromAPI = await proton_api.getBitcoinAddressLatestIndex(
-          walletId: serverWalletID, walletAccountId: serverAccountID);
-    } catch (e) {
-      logger.e(e.toString());
+    List<String> addressIDs =
+        await WalletManager.getAccountAddressIDs(serverAccountID);
+    if (addressIDs.isNotEmpty) {
+      logger.i(
+          "This wallet account enable email integration, checking latest used index");
+      try {
+        latestIndexFromAPI = await proton_api.getBitcoinAddressLatestIndex(
+            walletId: serverWalletID, walletAccountId: serverAccountID);
+      } catch (e) {
+        logger.e(e.toString());
+      }
     }
     logger.i(
         "serverAccountID = $serverAccountID \nlatestIndex = $latestIndex, latestIndexFromAPI = $latestIndexFromAPI");
@@ -951,6 +971,7 @@ class WalletManager implements Manager {
     if (addingCount > 0) {
       await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
     }
+
     for (int _ = 0; _ < addingCount; _++) {
       int addressIndex =
           await getBitcoinAddressIndex(serverWalletID, serverAccountID);
@@ -959,10 +980,11 @@ class WalletManager implements Manager {
       var addressInfo =
           await _lib.getAddress(wallet, addressIndex: addressIndex);
       String address = addressInfo.address;
+      String signature = await getSignature(
+          accountModel!, address, gpgContextWalletBitcoinAddress);
       BitcoinAddress bitcoinAddress = BitcoinAddress(
           bitcoinAddress: address,
-          bitcoinAddressSignature:
-              "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
+          bitcoinAddressSignature: signature,
           bitcoinAddressIndex: addressInfo.index);
       await proton_api.addBitcoinAddresses(
           walletId: serverWalletID,
@@ -984,6 +1006,35 @@ class WalletManager implements Manager {
         logger.e(e.toString());
       }
     }
+  }
+
+  static Future<String> getSignature(AccountModel accountModel,
+      String bitcoinAddress, String gpgContext) async {
+    List<String> addressIDs =
+        await WalletManager.getAccountAddressIDs(accountModel.serverAccountID);
+    List<AddressKey> addressKeys = Provider.of<ProtonWalletProvider>(
+            Coordinator.navigatorKey.currentContext!,
+            listen: false)
+        .protonWallet
+        .addressKeys
+        .where((addressKey) => addressIDs.contains(addressKey.id))
+        .toList();
+
+    List<String> signatures = [];
+    for (AddressKey addressKey in addressKeys) {
+      signatures.add(proton_crypto.getSignatureWithContext(
+          addressKey.privateKey,
+          addressKey.passphrase,
+          bitcoinAddress,
+          gpgContext));
+    }
+    return signatures.join("\n\n");
+  }
+
+  static Future<bool> verifySignature(String publicAddressKey,
+      String bitcoinAddress, String signature, String gpgContext) async {
+    return proton_crypto.verifySignatureWithContext(
+        publicAddressKey, bitcoinAddress, signature, gpgContext);
   }
 
   static String getEmailFromWalletTransaction(String jsonString) {
@@ -1057,34 +1108,6 @@ class WalletManager implements Manager {
       }
     }
     return false;
-  }
-
-  static Future<void> addBitcoinAddress(
-      Wallet wallet, WalletModel walletModel, AccountModel accountModel) async {
-    int addressIndex = await WalletManager.getBitcoinAddressIndex(
-        walletModel.serverWalletID, accountModel.serverAccountID);
-    var addressInfo = await _lib.getAddress(wallet, addressIndex: addressIndex);
-    String address = addressInfo.address;
-    BitcoinAddress bitcoinAddress = BitcoinAddress(
-        bitcoinAddress: address,
-        bitcoinAddressSignature:
-            "-----BEGIN PGP SIGNATURE-----\nVersion: ProtonMail\n\nwsBzBAEBCAAnBYJmA55ZCZAEzZ3CX7rlCRYhBFNy3nIbmXFRgnNYHgTNncJf\nuuUJAAAQAgf9EicFZ9NfoTbXc0DInR3fXHgcpQj25Z0uaapvvPMpWwmMSoKp\nm4WrWkWnX/VOizzfwfmSTeLYN8dkGytHACqj1AyEkpSKTbpsYn+BouuNQmat\nYhUnnlT6LLcjDAxv5FU3cDxB6wMmoFZwxu+XsS+zwfldxVp7rq3PNQE/mUzn\no0qf9WcE7vRDtoYu8I26ILwYUEiXgXMvGk5y4mz9P7+UliH7R1/qcFdZoqe4\n4f/cAStdFOMvm8hGk/wIZ/an7lDxE+ggN1do9Vjs2eYVQ8LwwE96Xj5Ny7s5\nFlajisB2YqgTMOC5egrwXE3lxKy2O3TNw1FCROQUR0WaumG8E0foRg==\n=42uQ\n-----END PGP SIGNATURE-----\n",
-        bitcoinAddressIndex: addressInfo.index);
-    await proton_api.addBitcoinAddresses(
-        walletId: walletModel.serverWalletID,
-        walletAccountId: accountModel.serverAccountID,
-        bitcoinAddresses: [bitcoinAddress]);
-    try {
-      await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-          walletID: walletModel.id!,
-          accountID: accountModel.id!,
-          bitcoinAddress: address,
-          bitcoinAddressIndex: addressIndex,
-          inEmailIntegrationPool: 1,
-          used: 0);
-    } catch (e) {
-      logger.e(e.toString());
-    }
   }
 
   static Future<void> deleteWalletAccount(
