@@ -7600,6 +7600,162 @@ class NativeLibrary {
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
+  ffi.Pointer<ffi.Char> getSignatureWithContext(
+    ffi.Pointer<ffi.Char> userPrivateKey,
+    ffi.Pointer<ffi.Char> passphrase,
+    ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Char> context,
+  ) {
+    return _getSignatureWithContext(
+      userPrivateKey,
+      passphrase,
+      message,
+      context,
+    );
+  }
+
+  late final _getSignatureWithContextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('getSignatureWithContext');
+  late final _getSignatureWithContext = _getSignatureWithContextPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
+
+  int verifySignatureWithContext(
+    ffi.Pointer<ffi.Char> userPublicKey,
+    ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Char> signature,
+    ffi.Pointer<ffi.Char> context,
+  ) {
+    return _verifySignatureWithContext(
+      userPublicKey,
+      message,
+      signature,
+      context,
+    );
+  }
+
+  late final _verifySignatureWithContextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('verifySignatureWithContext');
+  late final _verifySignatureWithContext =
+      _verifySignatureWithContextPtr.asFunction<
+          int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  ffi.Pointer<ffi.Char> getBinarySignatureWithContext(
+    ffi.Pointer<ffi.Char> userPrivateKey,
+    ffi.Pointer<ffi.Char> passphrase,
+    ffi.Pointer<ffi.Char> binaryMessage,
+    int length,
+    ffi.Pointer<ffi.Char> context,
+  ) {
+    return _getBinarySignatureWithContext(
+      userPrivateKey,
+      passphrase,
+      binaryMessage,
+      length,
+      context,
+    );
+  }
+
+  late final _getBinarySignatureWithContextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int,
+              ffi.Pointer<ffi.Char>)>>('getBinarySignatureWithContext');
+  late final _getBinarySignatureWithContext =
+      _getBinarySignatureWithContextPtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              int,
+              ffi.Pointer<ffi.Char>)>();
+
+  int verifyBinarySignatureWithContext(
+    ffi.Pointer<ffi.Char> userPublicKey,
+    ffi.Pointer<ffi.Char> binaryMessage,
+    int length,
+    ffi.Pointer<ffi.Char> signature,
+    ffi.Pointer<ffi.Char> context,
+  ) {
+    return _verifyBinarySignatureWithContext(
+      userPublicKey,
+      binaryMessage,
+      length,
+      signature,
+      context,
+    );
+  }
+
+  late final _verifyBinarySignatureWithContextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('verifyBinarySignatureWithContext');
+  late final _verifyBinarySignatureWithContext =
+      _verifyBinarySignatureWithContextPtr.asFunction<
+          int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  ffi.Pointer<ffi.Char> getSignature(
+    ffi.Pointer<ffi.Char> userPrivateKey,
+    ffi.Pointer<ffi.Char> passphrase,
+    ffi.Pointer<ffi.Char> message,
+  ) {
+    return _getSignature(
+      userPrivateKey,
+      passphrase,
+      message,
+    );
+  }
+
+  late final _getSignaturePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('getSignature');
+  late final _getSignature = _getSignaturePtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+
+  int verifySignature(
+    ffi.Pointer<ffi.Char> userPublicKey,
+    ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Char> signature,
+  ) {
+    return _verifySignature(
+      userPublicKey,
+      message,
+      signature,
+    );
+  }
+
+  late final _verifySignaturePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('verifySignature');
+  late final _verifySignature = _verifySignaturePtr.asFunction<
+      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
+
   ffi.Pointer<ffi.Char> decrypt(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> passphrase,

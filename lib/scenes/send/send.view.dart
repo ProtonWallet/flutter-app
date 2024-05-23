@@ -457,6 +457,10 @@ class SendView extends ViewBase<SendViewModel> {
                                             viewModel.recipients[index]] ??
                                         ""
                                     : "",
+                                isSignatureInvalid:
+                                    viewModel.bitcoinAddressesInvalidSignature[
+                                            viewModel.recipients[index]] ??
+                                        false,
                                 isSelfBitcoinAddress: viewModel
                                     .selfBitcoinAddresses
                                     .contains(viewModel.bitcoinAddresses[
@@ -563,7 +567,8 @@ class SendView extends ViewBase<SendViewModel> {
                     onPressed: () {
                       viewModel.updatePageStatus(inReview: true);
                     },
-                    enable: viewModel.validRecipientCount() > 0,
+                    enable: viewModel.validRecipientCount() > 0 &&
+                        viewModel.amountTextController.text.isNotEmpty,
                     text: S.of(context).review_transaction,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.protonBlue,

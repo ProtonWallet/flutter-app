@@ -6,10 +6,11 @@ import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/strings.dart';
 
 class AddressKey {
+  final String id;
   final String privateKey;
   final String passphrase;
 
-  AddressKey({required this.privateKey, required this.passphrase});
+  AddressKey({required this.id, required this.privateKey, required this.passphrase});
 
   String decryptBinary(String? binaryEncryptedString) {
     if (binaryEncryptedString != null) {

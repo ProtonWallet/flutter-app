@@ -21,6 +21,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   late FocusNode nameFocusNode;
   late FocusNode passphraseFocusNode;
   bool isValidMnemonic = false;
+  String errorMessage = "";
 
   bool verifyMnemonic();
 
@@ -75,7 +76,7 @@ class ImportViewModelImpl extends ImportViewModel {
       await Future.delayed(
           const Duration(seconds: 1)); // wait for account show on sidebar
     } catch (e) {
-      logger.e(e);
+      errorMessage = e.toString();
     }
   }
 

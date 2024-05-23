@@ -27,11 +27,13 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
@@ -53,6 +55,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
   Map<String, String> bitcoinAddresses = {};
+  Map<String, bool> bitcoinAddressesInvalidSignature = {};
   late UserSettingProvider userSettingProvider;
 
   Map<String, AddressPublicKey> email2AddressKey = {};
@@ -75,6 +78,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
   bool hasEmailIntegrationRecipient = false;
+  bool showInvite = false;
   WalletModel? walletModel;
   AccountModel? accountModel;
   late FocusNode addressFocusNode;
@@ -127,6 +131,7 @@ class SendViewModelImpl extends SendViewModel {
 
   // event loop
   final EventLoop eventLoop;
+
   // wallet manger
   final ProtonWalletManager walletManger;
 
@@ -306,6 +311,7 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> loadBitcoinAddresses() async {
+    showInvite = false;
     for (String recipient in recipients) {
       if (bitcoinAddresses.containsKey(recipient)) {
         continue;
@@ -315,9 +321,47 @@ class SendViewModelImpl extends SendViewModel {
         bitcoinAddress = recipient;
       } else {
         try {
-          bitcoinAddress = await WalletManager.lookupBitcoinAddress(recipient);
+          if (recipient.contains("@")) {
+            EmailIntegrationBitcoinAddress? emailIntegrationBitcoinAddress =
+                await WalletManager.lookupBitcoinAddress(recipient);
+            if (emailIntegrationBitcoinAddress != null) {
+              List<AllKeyAddressKey> recipientAddressKeys = await proton_api
+                  .getAllPublicKeys(email: recipient, internalOnly: 1);
+              bool verifySignature = false;
+              for (AllKeyAddressKey recipientAddressKey
+                  in recipientAddressKeys) {
+                verifySignature = await WalletManager.verifySignature(
+                    recipientAddressKey.publicKey,
+                    emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
+                    emailIntegrationBitcoinAddress.bitcoinAddressSignature ??
+                        "",
+                    gpgContextWalletBitcoinAddress);
+                if (verifySignature == true) {
+                  break;
+                }
+              }
+              if (verifySignature == true) {
+                bitcoinAddress = emailIntegrationBitcoinAddress.bitcoinAddress;
+              } else {
+                BuildContext context = Coordinator.navigatorKey.currentContext!;
+                if (context.mounted) {
+                  CommonHelper.showSnackbar(
+                      context,
+                      S
+                          .of(context)
+                          .error_this_bitcoin_address_signature_is_invalid,
+                      isError: true);
+                }
+                bitcoinAddressesInvalidSignature[recipient] = true;
+              }
+            } else {
+              showInvite = true;
+            }
+          }
+          // TODO:: handle banned bitcoin address alert here
         } catch (e) {
           logger.e(e.toString());
+          showInvite = true;
         }
       }
       bitcoinAddresses[recipient] = bitcoinAddress ?? "";
@@ -390,6 +434,12 @@ class SendViewModelImpl extends SendViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
+    }
+    if (showInvite) {
+      BuildContext context = Coordinator.navigatorKey.currentContext!;
+      if (context.mounted) {
+        InviteSheet.show(context, recipient);
+      }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
   }

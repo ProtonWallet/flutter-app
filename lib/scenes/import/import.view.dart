@@ -55,7 +55,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                 SizedBoxes.box18,
                 TextFieldTextV2(
                   labelText: S.of(context).wallet_name,
-                  hintText:S.of(context).wallet_name_hint,
+                  hintText: S.of(context).wallet_name_hint,
                   textController: viewModel.nameTextController,
                   myFocusNode: viewModel.nameFocusNode,
                   validation: (String _) {
@@ -64,9 +64,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                 ),
                 SizedBoxes.box12,
                 AlertCustom(
-                  content: S
-                      .of(context)
-                      .wallet_import_mnemonic_guide,
+                  content: S.of(context).wallet_import_mnemonic_guide,
                   learnMore: Underline(
                       onTap: () {
                         CustomPlaceholder.show(context);
@@ -95,7 +93,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                   myFocusNode: viewModel.mnemonicFocusNode,
                   maxLines: 6,
                   validation: (String _) {
-                    if (viewModel.verifyMnemonic() == false){
+                    if (viewModel.verifyMnemonic() == false) {
                       return S.of(context).not_a_valid_mnemonic;
                     }
                     return "";
@@ -144,8 +142,14 @@ class ImportView extends ViewBase<ImportViewModel> {
                           EasyLoading.dismiss();
                           if (context.mounted) {
                             Navigator.of(context).pop();
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).wallet_imported);
+                            if (viewModel.errorMessage.isEmpty) {
+                              CommonHelper.showSnackbar(
+                                  context, S.of(context).wallet_imported);
+                            } else {
+                              CommonHelper.showSnackbar(
+                                  context, viewModel.errorMessage,
+                                  isError: true);
+                            }
                           }
                         },
                         enable: viewModel.verifyMnemonic(),

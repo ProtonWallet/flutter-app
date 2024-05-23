@@ -46,6 +46,7 @@ class CreateWalletReq {
   final String? mnemonic;
   final String? publicKey;
   final String? fingerprint;
+  final String walletKeySignature;
 
   const CreateWalletReq({
     required this.name,
@@ -57,6 +58,7 @@ class CreateWalletReq {
     this.mnemonic,
     this.publicKey,
     this.fingerprint,
+    required this.walletKeySignature,
   });
 
   @override
@@ -69,7 +71,8 @@ class CreateWalletReq {
       walletKey.hashCode ^
       mnemonic.hashCode ^
       publicKey.hashCode ^
-      fingerprint.hashCode;
+      fingerprint.hashCode ^
+      walletKeySignature.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -84,7 +87,8 @@ class CreateWalletReq {
           walletKey == other.walletKey &&
           mnemonic == other.mnemonic &&
           publicKey == other.publicKey &&
-          fingerprint == other.fingerprint;
+          fingerprint == other.fingerprint &&
+          walletKeySignature == other.walletKeySignature;
 }
 
 class EmailIntegrationBitcoinAddress {
@@ -168,16 +172,21 @@ class ProtonWalletKey {
   final String walletId;
   final String userKeyId;
   final String walletKey;
+  final String walletKeySignature;
 
   const ProtonWalletKey({
     required this.walletId,
     required this.userKeyId,
     required this.walletKey,
+    required this.walletKeySignature,
   });
 
   @override
   int get hashCode =>
-      walletId.hashCode ^ userKeyId.hashCode ^ walletKey.hashCode;
+      walletId.hashCode ^
+      userKeyId.hashCode ^
+      walletKey.hashCode ^
+      walletKeySignature.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -186,7 +195,8 @@ class ProtonWalletKey {
           runtimeType == other.runtimeType &&
           walletId == other.walletId &&
           userKeyId == other.userKeyId &&
-          walletKey == other.walletKey;
+          walletKey == other.walletKey &&
+          walletKeySignature == other.walletKeySignature;
 }
 
 class WalletBitcoinAddress {

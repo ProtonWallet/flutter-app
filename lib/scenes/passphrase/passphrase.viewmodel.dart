@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -22,6 +21,7 @@ abstract class SetupPassPhraseViewModel
   List<String> userPhraseList = [];
   String strMnemonic;
   int editIndex = 0;
+  String errorMessage = "";
   bool isAddingPassPhrase = false;
   late TextEditingController passphraseTextController;
   late TextEditingController passphraseTextConfirmController;
@@ -160,7 +160,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       await Future.delayed(
           const Duration(seconds: 1)); // wait for account show on sidebar
     } catch (e) {
-      logger.e(e);
+      errorMessage = e.toString();
     }
   }
 

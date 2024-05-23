@@ -5,6 +5,72 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:proton_crypto/generated_golang_bindings.dart';
 
+String getBinarySignatureWithContext(String userPrivateKey, String passphrase, Uint8List data, String context) {
+  String result = "";
+  using((alloc) {
+    final Pointer<Uint8> pData = alloc(data.length);
+    pData.asTypedList(data.length).setAll(0, data);
+    result = (_bindings.getBinarySignatureWithContext(
+        userPrivateKey.toNativeUtf8() as Pointer<Char>,
+        passphrase.toNativeUtf8() as Pointer<Char>,
+        pData as Pointer<Char>,
+        data.length,
+        context.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
+        .toDartString();
+  });
+  return result;
+}
+
+bool verifyBinarySignatureWithContext(String userPublicKey, Uint8List data, String signature, String context) {
+  bool result = false;
+  using((alloc) {
+    final Pointer<Uint8> pData = alloc(data.length);
+    pData.asTypedList(data.length).setAll(0, data);
+    result = _bindings.verifyBinarySignatureWithContext(
+        userPublicKey.toNativeUtf8() as Pointer<Char>,
+        pData as Pointer<Char>,
+        data.length,
+        signature.toNativeUtf8() as Pointer<Char>,
+        context.toNativeUtf8() as Pointer<Char>) ==
+        1;
+  });
+  return result;
+}
+
+String getSignatureWithContext(String userPrivateKey, String passphrase, String message, String context) {
+  return (_bindings.getSignatureWithContext(
+      userPrivateKey.toNativeUtf8() as Pointer<Char>,
+      passphrase.toNativeUtf8() as Pointer<Char>,
+      message.toNativeUtf8() as Pointer<Char>,
+      context.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
+      .toDartString();
+}
+
+bool verifySignatureWithContext(String userPublicKey, String message, String signature, String context) {
+  return _bindings.verifySignatureWithContext(
+      userPublicKey.toNativeUtf8() as Pointer<Char>,
+      message.toNativeUtf8() as Pointer<Char>,
+      signature.toNativeUtf8() as Pointer<Char>,
+      context.toNativeUtf8() as Pointer<Char>) ==
+      1;
+}
+
+String getSignature(String userPrivateKey, String passphrase, String message) {
+  return (_bindings.getSignature(
+      userPrivateKey.toNativeUtf8() as Pointer<Char>,
+      passphrase.toNativeUtf8() as Pointer<Char>,
+      message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
+      .toDartString();
+}
+
+bool verifySignature(String userPublicKey, String message, String signature) {
+  return _bindings.verifySignature(
+      userPublicKey.toNativeUtf8() as Pointer<Char>,
+      message.toNativeUtf8() as Pointer<Char>,
+      signature.toNativeUtf8() as Pointer<Char>) ==
+      1;
+}
+
 String encrypt(String userPrivateKey, String message) {
   return (_bindings.encrypt(userPrivateKey.toNativeUtf8() as Pointer<Char>,
           message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
@@ -12,8 +78,9 @@ String encrypt(String userPrivateKey, String message) {
 }
 
 String encryptWithKeyRing(String userPublicKeysSepInComma, String message) {
-  return (_bindings.encryptWithKeyRing(userPublicKeysSepInComma.toNativeUtf8() as Pointer<Char>,
-      message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
+  return (_bindings.encryptWithKeyRing(
+          userPublicKeysSepInComma.toNativeUtf8() as Pointer<Char>,
+          message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
       .toDartString();
 }
 
@@ -25,11 +92,11 @@ String decrypt(String userPrivateKey, String passphrase, String armor) {
       .toDartString();
 }
 
-Uint8List decryptBinaryPGP(String userPrivateKey, String passphrase, String armor) {
+Uint8List decryptBinaryPGP(
+    String userPrivateKey, String passphrase, String armor) {
   Uint8List unArmored = unArmor(armor);
   return decryptBinary(userPrivateKey, passphrase, unArmored);
 }
-
 
 Uint8List encryptBinary(String userPrivateKey, Uint8List data) {
   Uint8List result = Uint8List(0);
@@ -144,7 +211,7 @@ final DynamicLibrary _dylib = () {
   if (Platform.isLinux) {
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
       return DynamicLibrary.open(
-          '${Directory.current.path}/linux/shared/proton_crypto.so');
+          '${Directory.current.path}/linux/shared/libproton_crypto.so');
     }
     return DynamicLibrary.open('proton_crypto.so');
   }

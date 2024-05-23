@@ -740,15 +740,23 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     const SizedBox(
                       height: 20,
                     ),
-                    if (viewModel.packageInfo != null)
-                      Center(
-                          child: Container(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                "${S.of(context).app_name} ${viewModel.packageInfo!.version} (${viewModel.packageInfo!.buildNumber})",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint),
-                              ))),
+                    // TODO:: use packageinfo but need fix dependency issue
+                    //   Center(
+                    //       child: Container(
+                    //           padding: const EdgeInsets.only(bottom: 10),
+                    //           child: Text(
+                    //             "${S.of(context).app_name} ${viewModel.packageInfo!.version} (${viewModel.packageInfo!.buildNumber})",
+                    //             style: FontManager.captionRegular(
+                    //                 ProtonColors.textHint),
+                    //           ))),
+                    Center(
+                        child: Container(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "${S.of(context).app_name} 1.0.0 (18)",
+                              style: FontManager.captionRegular(
+                                  ProtonColors.textHint),
+                            ))),
                   ]))));
 }
 
@@ -856,16 +864,22 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                        CommonHelper.getFirstNChar(
-                                            walletModel.name, 12),
-                                        style: FontManager.captionSemiBold(
-                                            AvatarColorHelper.getTextColor(
-                                                Provider.of<ProtonWalletProvider>(
-                                                        context)
-                                                    .protonWallet
-                                                    .wallets
-                                                    .indexOf(walletModel)))),
+                                    SizedBox(
+                                        width: min(
+                                            MediaQuery.of(context).size.width -
+                                                180,
+                                            drawerMaxWidth - 110),
+                                        child: Text(
+                                          walletModel.name,
+                                          style: FontManager.captionSemiBold(
+                                              AvatarColorHelper.getTextColor(
+                                                  Provider.of<ProtonWalletProvider>(
+                                                          context)
+                                                      .protonWallet
+                                                      .wallets
+                                                      .indexOf(walletModel))),
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
                                     Text(
                                         "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
                                         style: FontManager.captionRegular(
@@ -886,17 +900,25 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            CommonHelper.getFirstNChar(
-                                                walletModel.name, 12),
-                                            style: FontManager.captionSemiBold(
-                                                AvatarColorHelper.getTextColor(
-                                                    Provider.of<ProtonWalletProvider>(
-                                                            context)
-                                                        .protonWallet
-                                                        .wallets
-                                                        .indexOf(
-                                                            walletModel)))),
+                                        SizedBox(
+                                            width: min(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    250,
+                                                drawerMaxWidth - 180),
+                                            child: Text(walletModel.name,
+                                                style: FontManager.captionSemiBold(
+                                                    AvatarColorHelper
+                                                        .getTextColor(Provider
+                                                                .of<ProtonWalletProvider>(
+                                                                    context)
+                                                            .protonWallet
+                                                            .wallets
+                                                            .indexOf(
+                                                                walletModel))),
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
                                         Text(
                                             "${Provider.of<ProtonWalletProvider>(context).protonWallet.getAccountCounts(walletModel)} accounts",
                                             style: FontManager.captionRegular(
