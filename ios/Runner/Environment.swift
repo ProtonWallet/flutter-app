@@ -1,17 +1,26 @@
 import Foundation
 import ProtonCoreEnvironment
 
-enum EnvironmentType {
+enum EnvironmentType: Equatable {
     case prod
     case atlas
     case atlasCustom(String)
     case unknown
+
+    var title: String {
+        switch self {
+        case .prod: return "production"
+        case .atlas: return "black"
+        case .atlasCustom(let string): return string
+        case .unknown: return "unknown"
+        }
+    }
 }
 
 struct Environment {
     let evnKey = "env-key"
     let type: EnvironmentType
-    
+
     init(from dictionary: [String: Any]) {
         guard let envValue = dictionary[evnKey] as? String else {
             self.type = .unknown
