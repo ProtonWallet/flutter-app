@@ -542,9 +542,10 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
 
-      encryptedMessage = AddressPublicKey.encryptWithKeys(
-          addressPublicKeys, emailBodyController.text);
-
+      if (addressPublicKeys.isNotEmpty) {
+        encryptedMessage = AddressPublicKey.encryptWithKeys(
+            addressPublicKeys, emailBodyController.text);
+      }
       txid = await _lib.sendBitcoinWithAPI(
           _blockchain!,
           _wallet,

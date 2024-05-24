@@ -85,6 +85,7 @@ extern "C" {
 #endif
 
 extern __declspec(dllexport) char* encryptWithKeyRing(char* userPublicKeysSepInComma, char* message);
+extern __declspec(dllexport) char* getArmoredPublicKey(char* userPrivateKey);
 extern __declspec(dllexport) char* encrypt(char* userPrivateKey, char* message);
 extern __declspec(dllexport) char* getSignatureWithContext(char* userPrivateKey, char* passphrase, char* message, char* context);
 extern __declspec(dllexport) int verifySignatureWithContext(char* userPublicKey, char* message, char* signature, char* context);

@@ -258,6 +258,7 @@ class HomeViewModelImpl extends HomeViewModel {
         protonWalletProvider = Provider.of<ProtonWalletProvider>(
             Coordinator.navigatorKey.currentContext!,
             listen: false);
+        protonWalletProvider.destroy();
         protonWalletProvider.addListener(() async {
           walletNameController.text =
               protonWalletProvider.protonWallet.currentWallet?.name ?? "";
@@ -297,7 +298,6 @@ class HomeViewModelImpl extends HomeViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog("App init: $errorMessage");
       errorMessage = "";
-      await logout();
     } else {
       initialed = true;
       if (hasWallet == false) {
@@ -571,9 +571,12 @@ class HomeViewModelImpl extends HomeViewModel {
         maskType: EasyLoadingMaskType.black);
     try {
       eventLoop.stop();
-      userManager.logout();
+      await userManager.logout();
       await WalletManager.cleanBDKCache();
       await DBHelper.reset();
+      protonWalletProvider.destroy();
+      userSettingProvider.destroy();
+      protonWalletManager.destroy();
       await WalletManager.cleanSharedPreference();
       await Future.delayed(
           const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
@@ -663,13 +666,16 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "Adding account..", maskType: EasyLoadingMaskType.black);
     try {
-      await WalletManager.addWalletAccount(walletID, scriptType, label,
-          fiatCurrencyNotifier.value);
+      await WalletManager.addWalletAccount(
+          walletID, scriptType, label, fiatCurrencyNotifier.value);
     } catch (e) {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(errorMessage);
+      BuildContext? context = Coordinator.navigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showSnackbar(context, errorMessage, isError: true);
+      }
       errorMessage = "";
     }
     EasyLoading.dismiss();

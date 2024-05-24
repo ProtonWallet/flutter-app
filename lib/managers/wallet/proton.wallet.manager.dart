@@ -212,6 +212,9 @@ class ProtonWalletManager implements Manager {
 
   void clearAll() {
     clearCurrent();
+    blockchain = null;
+    transactionFilter = "";
+    addressKeys.clear();
     wallets.clear();
     accounts.clear();
     isWalletSyncing.clear();
@@ -845,7 +848,8 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> setWallet(WalletModel walletModel) async {
     await protonWallet.setWallet(walletModel);
     FiatCurrency fiatCurrency =
-    await WalletManager.getDefaultAccountFiatCurrency(protonWallet.currentWallet);
+        await WalletManager.getDefaultAccountFiatCurrency(
+            protonWallet.currentWallet);
     await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     await setCurrentTransactions();
     syncWallet();
@@ -936,7 +940,8 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> setDefaultWallet() async {
     await protonWallet.setDefaultWallet();
     FiatCurrency fiatCurrency =
-    await WalletManager.getDefaultAccountFiatCurrency(protonWallet.currentWallet);
+        await WalletManager.getDefaultAccountFiatCurrency(
+            protonWallet.currentWallet);
     await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     notifyListeners();
   }

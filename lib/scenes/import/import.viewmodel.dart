@@ -21,9 +21,13 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   late FocusNode nameFocusNode;
   late FocusNode passphraseFocusNode;
   bool isValidMnemonic = false;
+  bool isPasteMode = true;
   String errorMessage = "";
 
   bool verifyMnemonic();
+
+  void switchToManualInputMode();
+  void switchToPasteMode();
 
   Future<void> importWallet();
 }
@@ -103,5 +107,17 @@ class ImportViewModelImpl extends ImportViewModel {
     datasourceChangedStreamController.sinkAddSafe(this);
     isValidMnemonic = true;
     return true;
+  }
+
+  @override
+  void switchToManualInputMode() {
+    isPasteMode = false;
+    datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  void switchToPasteMode() {
+    isPasteMode = true;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

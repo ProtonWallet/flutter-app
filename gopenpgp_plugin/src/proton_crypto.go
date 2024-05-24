@@ -55,6 +55,16 @@ func encryptWithKeyRing(userPublicKeysSepInComma *C.char, message *C.char) *C.ch
 	return C.CString(armor)
 }
 
+//export getArmoredPublicKey
+func getArmoredPublicKey(userPrivateKey *C.char) *C.char {
+	privateKeyObj, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
+	armoredPublicKey, err := privateKeyObj.GetArmoredPublicKey()
+    if err != nil {
+        fmt.Printf("Failed to armor public key: %v", err)
+    }
+	return C.CString(armoredPublicKey)
+}
+
 //export encrypt
 func encrypt(userPrivateKey *C.char, message *C.char) *C.char {
 	key, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
