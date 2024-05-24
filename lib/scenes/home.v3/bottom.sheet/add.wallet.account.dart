@@ -34,6 +34,7 @@ class AddWalletAccountSheet {
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: TextFieldTextV2(
                   labelText: S.of(context).account_label,
+                  maxLength: maxWalletNameSize,
                   textController: viewModel.newAccountNameController,
                   myFocusNode: viewModel.newAccountNameFocusNode,
                   validation: (String newAccountName) {

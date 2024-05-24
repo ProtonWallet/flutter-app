@@ -80,6 +80,7 @@ class WalletSettingSheet {
                 labelText: S.of(context).wallet_name,
                 textController: viewModel.walletNameController,
                 myFocusNode: viewModel.walletNameFocusNode,
+                maxLength: maxWalletNameSize,
                 onFinish: () async {
                   await viewModel.updateWalletName(
                       Provider.of<ProtonWalletProvider>(context, listen: false)
@@ -180,6 +181,7 @@ class WalletSettingSheet {
                                     50,
                                 child: TextFieldTextV2(
                                   labelText: S.of(context).account_label,
+                                  maxLength: maxAccountNameSize,
                                   textController:
                                       accountNameControllers[userAccount.id!]!,
                                   myFocusNode:
