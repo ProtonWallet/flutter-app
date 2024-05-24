@@ -252,6 +252,8 @@
   "save_12_words_securely": "Save these 12 words securely and never share them with anyone.",
   "your_mnemonic": "Seed phrase (12-24 words)",
   "your_mnemonic_hint": "Enter your seed phrase in exact order",
+  "import_manual_input": "Manual input",
+  "import_paste_input": "Paste to complete",
   "this_is_your_secret_recovery_phrase": "This is your secret recovery phrase. If you lose access to your account, this phrase will help you recover your wallet.",
   "mnemonic_backup_page_title": "Wallet seed phrases",
   "mnemonic_backup_content_title": "Write this down in order",

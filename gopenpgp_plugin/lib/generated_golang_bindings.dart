@@ -7582,6 +7582,21 @@ class NativeLibrary {
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
+  ffi.Pointer<ffi.Char> getArmoredPublicKey(
+    ffi.Pointer<ffi.Char> userPrivateKey,
+  ) {
+    return _getArmoredPublicKey(
+      userPrivateKey,
+    );
+  }
+
+  late final _getArmoredPublicKeyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>)>>('getArmoredPublicKey');
+  late final _getArmoredPublicKey = _getArmoredPublicKeyPtr
+      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
+
   ffi.Pointer<ffi.Char> encrypt(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> message,

@@ -20,6 +20,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final int? maxLines;
   final EdgeInsets? scrollPadding;
   final String? hintText;
+  final int? maxLength;
 
   const TextFieldTextV2({
     super.key,
@@ -39,6 +40,7 @@ class TextFieldTextV2 extends StatefulWidget {
     this.checkOfErrorOnFocusChange = true,
     this.scrollPadding,
     this.hintText,
+    this.maxLength,
   });
 
   @override
@@ -119,6 +121,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   textInputAction: widget.textInputAction,
                   inputFormatters: widget.inputFormatters,
                   maxLines: widget.maxLines ?? 1,
+                  maxLength: widget.maxLength,
                   validator: (string) {
                     if (widget
                         .validation(widget.textController.text)
@@ -150,6 +153,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                             icon: Icon(Icons.visibility_rounded,
                                 size: 20, color: ProtonColors.textWeak))
                         : null,
+                    counterText: "",
                     hintText: widget.hintText,
                     hintStyle: FontManager.textFieldLabelStyle(ProtonColors.textHint),
                     labelText: widget.labelText,

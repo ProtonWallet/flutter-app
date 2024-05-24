@@ -179,11 +179,8 @@ class WalletManager implements Manager {
             passphrase != null && passphrase.isNotEmpty ? passphrase : null);
     String encryptedWalletKey =
         proton_crypto.encryptBinaryArmor(userPrivateKey, entropy);
-    String walletKeySignature = proton_crypto.getSignatureWithContext(
-        userPrivateKey,
-        key.passphrase,
-        encryptedWalletKey,
-        gpgContextWalletKey);
+    String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
+        userPrivateKey, key.passphrase, entropy, gpgContextWalletKey);
     CreateWalletReq walletReq = buildWalletRequest(
         encryptedWalletName,
         walletType,
@@ -609,8 +606,16 @@ class WalletManager implements Manager {
       Uint8List entropy = Uint8List(0);
       try {
         pgpBinaryMessage = walletData.walletKey.walletKey;
+        String signature = walletData.walletKey.walletKeySignature;
+
         entropy = proton_crypto.decryptBinaryPGP(
             userPrivateKey, userPassphrase, pgpBinaryMessage);
+        String userPublicKey =
+            proton_crypto.getArmoredPublicKey(userPrivateKey);
+        bool isValidWalletKeySignature = proton_crypto.verifyBinarySignatureWithContext(
+            userPublicKey, entropy, signature, gpgContextWalletKey);
+        logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
+        // TODO:: do something if it's not valid
       } catch (e) {
         logger.e(e.toString());
       }
@@ -936,6 +941,15 @@ class WalletManager implements Manager {
         await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
     AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
+    List<String> addressIDs =
+    await WalletManager.getAccountAddressIDs(serverAccountID);
+    List<AddressKey> addressKeys = Provider.of<ProtonWalletProvider>(
+        Coordinator.navigatorKey.currentContext!,
+        listen: false)
+        .protonWallet
+        .addressKeys
+        .where((addressKey) => addressIDs.contains(addressKey.id))
+        .toList();
     for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
       try {
         String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
@@ -955,6 +969,23 @@ class WalletManager implements Manager {
       if (walletBitcoinAddress.fetched == 0 && walletBitcoinAddress.used == 0) {
         unFetchedBitcoinAddressCount++;
       }
+      bool isValidSignature = false;
+      if (walletBitcoinAddress.bitcoinAddress != null &&
+          walletBitcoinAddress.bitcoinAddressSignature != null) {
+        for (AddressKey addressKey in addressKeys) {
+          String armoredPublicKey =
+              proton_crypto.getArmoredPublicKey(addressKey.privateKey);
+          isValidSignature = await verifySignature(
+              armoredPublicKey,
+              walletBitcoinAddress.bitcoinAddress!,
+              walletBitcoinAddress.bitcoinAddressSignature!,
+              gpgContextWalletBitcoinAddress);
+          if (isValidSignature == true) {
+            break;
+          }
+        }
+      }
+      logger.i("bitcoinAddressSignature valid is $isValidSignature");
     }
     int addingCount = max(0,
         defaultBitcoinAddressCountForOneEmail - unFetchedBitcoinAddressCount);
@@ -971,7 +1002,6 @@ class WalletManager implements Manager {
     if (addingCount > 0) {
       await syncBitcoinAddressIndex(serverWalletID, serverAccountID);
     }
-
     for (int _ = 0; _ < addingCount; _++) {
       int addressIndex =
           await getBitcoinAddressIndex(serverWalletID, serverAccountID);
@@ -1031,10 +1061,10 @@ class WalletManager implements Manager {
     return signatures.join("\n\n");
   }
 
-  static Future<bool> verifySignature(String publicAddressKey,
-      String bitcoinAddress, String signature, String gpgContext) async {
+  static Future<bool> verifySignature(String publicAddressKey, String message,
+      String signature, String gpgContext) async {
     return proton_crypto.verifySignatureWithContext(
-        publicAddressKey, bitcoinAddress, signature, gpgContext);
+        publicAddressKey, message, signature, gpgContext);
   }
 
   static String getEmailFromWalletTransaction(String jsonString) {

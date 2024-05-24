@@ -39,22 +39,23 @@ class ImportView extends ViewBase<ImportViewModel> {
               .transparent, // Theme.of(context).colorScheme.inversePrimary,
         ),
         backgroundColor: ProtonColors.backgroundProton,
-        body: SingleChildScrollView(
-            child: Center(
-                child: Stack(children: [
+        body: Center(
+            child: Stack(children: [
           Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height -
                   56 -
                   MediaQuery.of(context).padding.top,
               margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Column(children: <Widget>[
+              child: SingleChildScrollView(
+                  child: Column(children: <Widget>[
                 SizedBoxes.box18,
                 Text(S.of(context).import_wallet_header,
                     style: FontManager.body2Regular(ProtonColors.textWeak)),
                 SizedBoxes.box18,
                 TextFieldTextV2(
                   labelText: S.of(context).wallet_name,
+                  maxLength: maxAccountNameSize,
                   hintText: S.of(context).wallet_name_hint,
                   textController: viewModel.nameTextController,
                   myFocusNode: viewModel.nameFocusNode,
@@ -86,20 +87,9 @@ class ImportView extends ViewBase<ImportViewModel> {
                   color: ProtonColors.purple1Text,
                 ),
                 SizedBoxes.box12,
-                TextFieldTextV2(
-                  labelText: S.of(context).your_mnemonic,
-                  hintText: S.of(context).your_mnemonic_hint,
-                  textController: viewModel.mnemonicTextController,
-                  myFocusNode: viewModel.mnemonicFocusNode,
-                  maxLines: 6,
-                  validation: (String _) {
-                    if (viewModel.verifyMnemonic() == false) {
-                      return S.of(context).not_a_valid_mnemonic;
-                    }
-                    return "";
-                  },
-                  isPassword: false,
-                ),
+                viewModel.isPasteMode
+                    ? buildPasteMode(context)
+                    : buildManualInputMode(context),
                 SizedBoxes.box24,
                 ExpansionTile(
                     shape: const Border(),
@@ -118,8 +108,9 @@ class ImportView extends ViewBase<ImportViewModel> {
                         },
                         isPassword: true,
                       )
-                    ])
-              ])),
+                    ]),
+                const SizedBox(height: 80),
+              ]))),
           Container(
               padding: const EdgeInsets.only(bottom: defaultPadding),
               width: MediaQuery.of(context).size.width,
@@ -159,6 +150,51 @@ class ImportView extends ViewBase<ImportViewModel> {
                         backgroundColor: ProtonColors.protonBlue,
                         height: 48),
                   ]))
-        ]))));
+        ])));
+  }
+
+  Widget buildPasteMode(BuildContext context) {
+    return Column(children: [
+      // GestureDetector(
+      //     onTap: () {
+      //       viewModel.switchToManualInputMode();
+      //     },
+      //     child: Text(S.of(context).import_manual_input,
+      //         style: FontManager.body2Median(ProtonColors.protonBlue))),
+      // SizedBoxes.box8,
+      TextFieldTextV2(
+        labelText: S.of(context).your_mnemonic,
+        hintText: S.of(context).your_mnemonic_hint,
+        textController: viewModel.mnemonicTextController,
+        myFocusNode: viewModel.mnemonicFocusNode,
+        maxLines: 6,
+        validation: (String _) {
+          if (viewModel.verifyMnemonic() == false) {
+            return S.of(context).not_a_valid_mnemonic;
+          }
+          return "";
+        },
+        isPassword: false,
+      ),
+    ]);
+  }
+
+  Widget buildManualInputMode(BuildContext context) {
+    return Column(children: [
+      GestureDetector(
+          onTap: () {
+            viewModel.switchToPasteMode();
+          },
+          child: Text(S.of(context).import_paste_input,
+              style: FontManager.body2Median(ProtonColors.protonBlue))),
+      SizedBoxes.box8,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(),
+          Column(),
+        ],
+      ),
+    ]);
   }
 }
