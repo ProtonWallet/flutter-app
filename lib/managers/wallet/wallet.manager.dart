@@ -612,8 +612,9 @@ class WalletManager implements Manager {
             userPrivateKey, userPassphrase, pgpBinaryMessage);
         String userPublicKey =
             proton_crypto.getArmoredPublicKey(userPrivateKey);
-        bool isValidWalletKeySignature = proton_crypto.verifyBinarySignatureWithContext(
-            userPublicKey, entropy, signature, gpgContextWalletKey);
+        bool isValidWalletKeySignature =
+            proton_crypto.verifyBinarySignatureWithContext(
+                userPublicKey, entropy, signature, gpgContextWalletKey);
         logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
         // TODO:: do something if it's not valid
       } catch (e) {
@@ -868,6 +869,7 @@ class WalletManager implements Manager {
           String address = addressInfo.address;
           String signature = await getSignature(
               accountModel, address, gpgContextWalletBitcoinAddress);
+          logger.i(signature);
           BitcoinAddress bitcoinAddress = BitcoinAddress(
               bitcoinAddress: address,
               bitcoinAddressSignature: signature,
@@ -942,10 +944,10 @@ class WalletManager implements Manager {
     AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
     List<String> addressIDs =
-    await WalletManager.getAccountAddressIDs(serverAccountID);
+        await WalletManager.getAccountAddressIDs(serverAccountID);
     List<AddressKey> addressKeys = Provider.of<ProtonWalletProvider>(
-        Coordinator.navigatorKey.currentContext!,
-        listen: false)
+            Coordinator.navigatorKey.currentContext!,
+            listen: false)
         .protonWallet
         .addressKeys
         .where((addressKey) => addressIDs.contains(addressKey.id))
@@ -1058,7 +1060,10 @@ class WalletManager implements Manager {
           bitcoinAddress,
           gpgContext));
     }
-    return signatures.join("\n\n");
+    return signatures.isNotEmpty
+        ? signatures[0]
+        : "-----BEGIN PGP SIGNATURE-----*-----END PGP SIGNATURE-----";
+    // return signatures.join("\n"); // TODO:: add back after check with backend
   }
 
   static Future<bool> verifySignature(String publicAddressKey, String message,

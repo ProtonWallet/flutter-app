@@ -154,7 +154,7 @@ macos: ## Build macos release
 	@install_name_tool -id "@rpath/libproton_crypto.dylib" ${BUILD_DIR}/${LIB_NAME}.dylib
 
 	@mv -f ${BUILD_DIR}/${LIB_NAME}.dylib ./macos/${LIB_NAME}.dylib
- 	@rm ${BUILD_DIR}/${LIB_NAME}_*.h
+	@rm ${BUILD_DIR}/${LIB_NAME}_*.h
 	@rm ${BUILD_DIR}/${LIB_NAME}_*.dylib
 	@echo "Building macos ${BUILD_DIR}/${LIB_NAME}.dylib... Done"
 	
