@@ -188,6 +188,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     width: MediaQuery.of(context).size.width,
                     child: TextFieldTextV2(
                       labelText: S.of(context).wallet_name,
+                      maxLength: maxAccountNameSize,
                       textController: viewModel.nameTextController,
                       myFocusNode: viewModel.walletNameFocusNode,
                       validation: (String _) {

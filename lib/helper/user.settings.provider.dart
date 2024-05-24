@@ -18,6 +18,19 @@ class WalletUserSetting {
       exchangeRateTime: '',
       exchangeRate: 1,
       cents: 1);
+
+  void destroy() {
+    // clear data to default one
+    fiatCurrency = defaultFiatCurrency;
+    bitcoinUnit = BitcoinUnit.btc;
+    exchangeRate = const ProtonExchangeRate(
+        id: 'default',
+        bitcoinUnit: BitcoinUnit.btc,
+        fiatCurrency: defaultFiatCurrency,
+        exchangeRateTime: '',
+        exchangeRate: 1,
+        cents: 1);
+  }
 }
 
 class UserSettingProvider with ChangeNotifier {
@@ -87,5 +100,9 @@ class UserSettingProvider with ChangeNotifier {
     return fiatCurrency2Info.containsKey(walletUserSetting.fiatCurrency)
         ? fiatCurrency2Info[walletUserSetting.fiatCurrency]!.sign
         : "\$";
+  }
+
+  void destroy() {
+    walletUserSetting.destroy();
   }
 }

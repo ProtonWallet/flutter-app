@@ -21,7 +21,7 @@ class AppConfig {
 final appConfigForTestNet = AppConfig(
     coinType: bitcoinTestnet,
     scriptType: ScriptType.nativeSegWit,
-    apiEnv: ApiEnv.atlas("lysenko"),
+    apiEnv: ApiEnv.atlas(null),
     esploraBaseUrl: "https://blockstream.info/testnet/",
     testMode: true);
 
