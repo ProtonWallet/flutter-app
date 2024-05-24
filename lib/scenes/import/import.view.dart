@@ -188,7 +188,7 @@ class ImportView extends ViewBase<ImportViewModel> {
           child: Text(S.of(context).import_paste_input,
               style: FontManager.body2Median(ProtonColors.protonBlue))),
       SizedBoxes.box8,
-      Row(
+      const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(),
