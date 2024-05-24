@@ -159,8 +159,15 @@ class EventLoop implements Manager {
             if (account != null) {
               int walletID = await WalletManager.getWalletIDByServerWalletID(
                   account.walletId);
-              WalletManager.insertOrUpdateAccount(walletID, account.label,
-                  account.scriptType, account.derivationPath, account.id, account.fiatCurrency);
+              int internal = 0;
+              WalletManager.insertOrUpdateAccount(
+                  walletID,
+                  account.label,
+                  account.scriptType,
+                  "${account.derivationPath}/$internal",
+                  // Backend store m/$ScriptType/$CoinType/$accountIndex, we need m/$ScriptType/$CoinType/$accountIndex/$internal here
+                  account.id,
+                  account.fiatCurrency);
             }
           }
         }
