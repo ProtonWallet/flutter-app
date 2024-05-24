@@ -33,7 +33,7 @@ import CryptoKit
     private var getInAppTheme: () -> InAppTheme {
         return { .matchSystem }
     }
-    
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -61,6 +61,7 @@ import CryptoKit
                 print("native.initialize.core.environment data:", call.arguments ?? "")
                 if let arguments = call.arguments as? [String: Any] {
                     let environment = Environment(from: arguments)
+                    PMLog.setEnvironment(environment: environment.type.title)
                     self.initAPIService(env: environment)
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS",
@@ -74,7 +75,6 @@ import CryptoKit
         
         navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", 
                                                  binaryMessenger: rootViewController.binaryMessenger)
-        PMLog.setEnvironment(environment: "wallet-test")
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
             GeneratedPluginRegistrant.register(with: registry)
@@ -88,7 +88,7 @@ import CryptoKit
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
+
     func initAPIService(env: Environment) {
         PMAPIService.noTrustKit = true
         let challengeParametersProvider = ChallengeParametersProvider.forAPIService(clientApp: .mail, // TODO: fix, use .wallet
