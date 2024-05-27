@@ -27,6 +27,7 @@ import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
@@ -726,6 +727,11 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                           .length <
                                       freeUserWalletLimit) {
                                     Navigator.pop(context);
+                                    viewModel.nameTextController.text = "";
+                                    viewModel.passphraseTextController.text =
+                                        "";
+                                    viewModel.passphraseConfirmTextController
+                                        .text = "";
                                     OnboardingGuideSheet.show(
                                         context, viewModel);
                                   } else {
@@ -753,7 +759,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                         child: Container(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
-                              "${S.of(context).app_name} 1.0.0 (18)",
+                              "${S.of(context).app_name} 1.0.0 (21)",
                               style: FontManager.captionRegular(
                                   ProtonColors.textHint),
                             ))),
@@ -935,8 +941,9 @@ Widget sidebarWalletItems(BuildContext context, HomeViewModel viewModel) {
                                   ])),
                           GestureDetector(
                               onTap: () {
-                                viewModel.coordinator
-                                    .showWalletDeletion(walletModel.id ?? 0);
+                                DeleteWalletSheet.show(
+                                    context, viewModel, walletModel, false,
+                                    isInvalidWallet: true);
                               },
                               child: Padding(
                                   padding: const EdgeInsets.symmetric(
