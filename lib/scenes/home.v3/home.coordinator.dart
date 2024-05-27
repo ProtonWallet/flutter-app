@@ -11,7 +11,6 @@ import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/websocket.coordinator.dart';
-import 'package:wallet/scenes/deletion/deletion.coordinator.dart';
 import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
@@ -20,8 +19,6 @@ import 'package:wallet/scenes/import/import.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
-import 'package:wallet/scenes/setup/create.coordinator.dart';
-import 'package:wallet/scenes/setup/onboard.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth/two.factor.auth.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
@@ -38,11 +35,6 @@ class HomeCoordinator extends Coordinator {
 
   void showNativeUpgrade(FlutterSession session) {
     nativeViewChannel.switchToUpgrade(session);
-  }
-
-  void showSetupOnbaord() {
-    var view = SetupOnbaordCoordinator().start();
-    push(view, fullscreenDialog: true);
   }
 
   void showSend(int walletID, int accountID) {
@@ -80,11 +72,6 @@ class HomeCoordinator extends Coordinator {
     push(view);
   }
 
-  void showWalletDeletion(int walletID) {
-    var view = WalletDeletionCoordinator(walletID).start();
-    push(view, fullscreenDialog: true);
-  }
-
   void showHistoryDetails(
       int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
     var view =
@@ -106,11 +93,6 @@ class HomeCoordinator extends Coordinator {
   void logout() {
     var view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
-  }
-
-  void showSetupCreate() {
-    var view = SetupCreateCoordinator().start();
-    pushReplacementCustom(view);
   }
 
   void showImportWallet() {

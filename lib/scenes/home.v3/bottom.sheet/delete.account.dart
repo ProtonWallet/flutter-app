@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/components/alert.warning.dart';
+import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -21,35 +23,83 @@ class DeleteAccountSheet {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 12),
-            AlertWarning(
-                content: S.of(context).delete_account_message,
-                width: MediaQuery.of(context).size.width),
-            Container(
-                padding: const EdgeInsets.only(top: 20),
-                margin: const EdgeInsets.symmetric(
-                    horizontal: defaultButtonPadding),
-                child: ButtonV5(
-                    onPressed: () async {
-                      await viewModel.deleteAccount(
-                          Provider.of<ProtonWalletProvider>(context,
-                                  listen: false)
-                              .protonWallet
-                              .currentWallet!,
-                          userAccount);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                        CommonHelper.showSnackbar(
-                            context, S.of(context).account_deleted);
-                      }
-                    },
-                    backgroundColor: ProtonColors.signalError,
-                    text: S.of(context).delete_account,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(
-                        ProtonColors.backgroundSecondary),
-                    height: 48)),
+            Align(
+                alignment: Alignment.centerRight,
+                child: CloseButtonV1(onPressed: () {
+                  Navigator.of(context).pop();
+                })),
+            Transform.translate(
+                offset: const Offset(0, -20),
+                child: Column(children: [
+                  SvgPicture.asset("assets/images/icon/delete_warning.svg",
+                      fit: BoxFit.fill, width: 72, height: 72),
+                  const SizedBox(height: 10),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              S.of(context).confirm_to_delete_wallet_account(
+                                  userAccount.labelDecrypt),
+                              style: FontManager.titleHeadline(
+                                  ProtonColors.textNorm),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            if (userAccount.balance > 0)
+                              Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: AlertCustom(
+                                    content: S
+                                        .of(context)
+                                        .confirm_to_delete_wallet_account_has_balance_warning,
+                                    canClose: false,
+                                    leadingWidget: SvgPicture.asset(
+                                        "assets/images/icon/alert_warning.svg",
+                                        fit: BoxFit.fill,
+                                        width: 22,
+                                        height: 22),
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                      width: 0,
+                                    ),
+                                    backgroundColor:
+                                        ProtonColors.errorBackground,
+                                    color: ProtonColors.signalError,
+                                  )),
+                            Text(
+                                S
+                                    .of(context)
+                                    .confirm_to_delete_wallet_account_content,
+                                style: FontManager.body2Regular(
+                                    ProtonColors.textWeak)),
+                            const SizedBox(height: 40),
+                            ButtonV5(
+                                onPressed: () async {
+                                  await viewModel.deleteAccount(
+                                      Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .currentWallet!,
+                                      userAccount);
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    CommonHelper.showSnackbar(
+                                        context, S.of(context).account_deleted);
+                                  }
+                                },
+                                backgroundColor: ProtonColors.signalError,
+                                text: S.of(context).delete_account,
+                                width: MediaQuery.of(context).size.width,
+                                textStyle: FontManager.body1Median(
+                                    ProtonColors.backgroundSecondary),
+                                height: 48),
+                          ])),
+                ])),
           ]);
     }));
   }

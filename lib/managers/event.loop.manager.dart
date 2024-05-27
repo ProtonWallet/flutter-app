@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
@@ -90,6 +90,7 @@ class EventLoop implements Manager {
               String serverWalletID = walletEvent.id;
               await WalletManager.deleteWalletByServerWalletID(
                   serverWalletID); // Will also delete account
+              continue;
             }
             ProtonWallet? walletData = walletEvent.wallet;
 
@@ -97,8 +98,6 @@ class EventLoop implements Manager {
 
             String userPrivateKey = firstKey.privateKey;
             String userPassphrase = firstKey.passphrase;
-
-            String encodedEncryptedEntropy = "";
             Uint8List entropy = Uint8List(0);
             if (walletData != null) {
               String serverWalletID = walletData.id;
@@ -107,9 +106,21 @@ class EventLoop implements Manager {
                     in walletID2ProtonWalletKey[serverWalletID]!) {
                   try {
                     // try to decrypt
-                    encodedEncryptedEntropy = walletKey!.walletKey;
-                    entropy = proton_crypto.decryptBinary(userPrivateKey,
-                        userPassphrase, base64Decode(encodedEncryptedEntropy));
+                    String pgpBinaryMessage = walletKey?.walletKey ?? "";
+                    String signature = walletKey?.walletKeySignature ?? "";
+
+                    entropy = proton_crypto.decryptBinaryPGP(
+                        userPrivateKey, userPassphrase, pgpBinaryMessage);
+                    String userPublicKey =
+                        proton_crypto.getArmoredPublicKey(userPrivateKey);
+                    bool isValidWalletKeySignature =
+                        proton_crypto.verifyBinarySignatureWithContext(
+                            userPublicKey,
+                            entropy,
+                            signature,
+                            gpgContextWalletKey);
+                    logger.i(
+                        "isValidWalletKeySignature = $isValidWalletKeySignature");
                     break;
                   } catch (e) {
                     continue;
@@ -155,6 +166,12 @@ class EventLoop implements Manager {
         if (event.walletAccountEvents != null) {
           for (WalletAccountEvent walletAccountEvent
               in event.walletAccountEvents!) {
+            if (walletAccountEvent.action == 0) {
+              String serverAccountID = walletAccountEvent.id;
+              await WalletManager.deleteWalletAccountByServerAccountID(
+                  serverAccountID);
+              continue;
+            }
             WalletAccount? account = walletAccountEvent.walletAccount;
             if (account != null) {
               int walletID = await WalletManager.getWalletIDByServerWalletID(

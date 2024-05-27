@@ -20,14 +20,14 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   late FocusNode mnemonicFocusNode;
   late FocusNode nameFocusNode;
   late FocusNode passphraseFocusNode;
-  bool isValidMnemonic = false;
   bool isPasteMode = true;
   String errorMessage = "";
-
-  bool verifyMnemonic();
+  bool isValidMnemonic = false;
 
   void switchToManualInputMode();
   void switchToPasteMode();
+
+  void updateValidMnemonic(bool isValidMnemonic);
 
   Future<void> importWallet();
 }
@@ -88,28 +88,6 @@ class ImportViewModelImpl extends ImportViewModel {
   Future<void> move(NavID to) async {}
 
   @override
-  bool verifyMnemonic() {
-    String strMnemonic = mnemonicTextController.text;
-    final RegExp regex = RegExp(r'^[a-z ]*$');
-    isValidMnemonic = false;
-    bool matchPattern = regex.hasMatch(strMnemonic);
-    if (matchPattern == false) {
-      logger.i("pattern not match!");
-      datasourceChangedStreamController.sinkAddSafe(this);
-      return false;
-    }
-    int mnemonicLength = strMnemonic.split(" ").length;
-    if (mnemonicLength != 12 && mnemonicLength != 18 && mnemonicLength != 24) {
-      logger.i("length not match! ($mnemonicLength)");
-      datasourceChangedStreamController.sinkAddSafe(this);
-      return false;
-    }
-    datasourceChangedStreamController.sinkAddSafe(this);
-    isValidMnemonic = true;
-    return true;
-  }
-
-  @override
   void switchToManualInputMode() {
     isPasteMode = false;
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -118,6 +96,12 @@ class ImportViewModelImpl extends ImportViewModel {
   @override
   void switchToPasteMode() {
     isPasteMode = true;
+    datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  void updateValidMnemonic(bool isValidMnemonic) {
+    this.isValidMnemonic = isValidMnemonic;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

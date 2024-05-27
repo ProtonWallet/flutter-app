@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -41,9 +42,12 @@ class AdvanceWalletSettingSheet {
                       style:
                           FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                viewModel.move(NavID.walletDeletion);
+                DeleteWalletSheet.show(
+                    context,
+                    viewModel,
+                    viewModel.protonWalletProvider.protonWallet.currentWallet!,
+                    viewModel.protonWalletProvider.protonWallet.currentBalance >
+                        0, );
               }),
         ],
       );
