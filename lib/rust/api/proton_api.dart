@@ -22,7 +22,7 @@ Future<void> initApiService(
     RustLib.instance.api
         .initApiService(userName: userName, password: password, hint: hint);
 
-Future<void> initApiServiceAuthStore(
+void initApiServiceAuthStore(
         {required String uid,
         required String access,
         required String refresh,
@@ -32,25 +32,6 @@ Future<void> initApiServiceAuthStore(
         String? env,
         dynamic hint}) =>
     RustLib.instance.api.initApiServiceAuthStore(
-        uid: uid,
-        access: access,
-        refresh: refresh,
-        scopes: scopes,
-        appVersion: appVersion,
-        userAgent: userAgent,
-        env: env,
-        hint: hint);
-
-Future<void> initApiServiceFromAuthAndVersion(
-        {required String uid,
-        required String access,
-        required String refresh,
-        required List<String> scopes,
-        required String appVersion,
-        required String userAgent,
-        String? env,
-        dynamic hint}) =>
-    RustLib.instance.api.initApiServiceFromAuthAndVersion(
         uid: uid,
         access: access,
         refresh: refresh,

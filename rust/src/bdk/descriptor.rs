@@ -32,12 +32,12 @@ impl BdkDescriptor {
         })
     }
 
-    pub(crate) fn new_bip44(
+    pub(crate) async fn new_bip44(
         secret_key: DescriptorSecretKey,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
-        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().unwrap();
+        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
@@ -58,14 +58,14 @@ impl BdkDescriptor {
         }
     }
 
-    pub(crate) fn new_bip44_public(
+    pub(crate) async fn new_bip44_public(
         public_key: DescriptorPublicKey,
         fingerprint: String,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
         let fingerprint = Fingerprint::from_str(fingerprint.as_str()).unwrap();
-        let derivable_key = public_key.descriptor_public_key_mutex.lock().unwrap();
+        let derivable_key = public_key.descriptor_public_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorPublicKey::XPub(descriptor_x_key) => {
@@ -89,12 +89,12 @@ impl BdkDescriptor {
         }
     }
 
-    pub(crate) fn new_bip49(
+    pub(crate) async fn new_bip49(
         secret_key: DescriptorSecretKey,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
-        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().unwrap();
+        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
@@ -115,14 +115,14 @@ impl BdkDescriptor {
         }
     }
 
-    pub(crate) fn new_bip49_public(
+    pub(crate) async fn new_bip49_public(
         public_key: DescriptorPublicKey,
         fingerprint: String,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
         let fingerprint = Fingerprint::from_str(fingerprint.as_str()).unwrap();
-        let derivable_key = public_key.descriptor_public_key_mutex.lock().unwrap();
+        let derivable_key = public_key.descriptor_public_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorPublicKey::XPub(descriptor_x_key) => {
@@ -146,12 +146,12 @@ impl BdkDescriptor {
         }
     }
 
-    pub(crate) fn new_bip84(
+    pub(crate) async fn new_bip84(
         secret_key: DescriptorSecretKey,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
-        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().unwrap();
+        let derivable_key = secret_key.descriptor_secret_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
@@ -172,14 +172,14 @@ impl BdkDescriptor {
         }
     }
 
-    pub(crate) fn new_bip84_public(
+    pub(crate) async fn new_bip84_public(
         public_key: DescriptorPublicKey,
         fingerprint: String,
         keychain_kind: KeychainKind,
         network: Network,
     ) -> Self {
         let fingerprint = Fingerprint::from_str(fingerprint.as_str()).unwrap();
-        let derivable_key = public_key.descriptor_public_key_mutex.lock().unwrap();
+        let derivable_key = public_key.descriptor_public_key_mutex.lock().await;
 
         match derivable_key.deref() {
             BdkDescriptorPublicKey::XPub(descriptor_x_key) => {
@@ -226,60 +226,70 @@ mod test {
     use bdk::descriptor::DescriptorError::Key;
     use bdk::keys::KeyError::InvalidNetwork;
     use bdk::KeychainKind;
+    use std::str::FromStr;
     use std::sync::Arc;
 
     fn get_descriptor_secret_key() -> DescriptorSecretKey {
-        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect".to_string()).unwrap();
+        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect").unwrap();
         DescriptorSecretKey::new(Network::Testnet, mnemonic, None).unwrap()
     }
 
-    #[test]
-    fn test_descriptor_templates() {
+    #[tokio::test]
+    async fn test_descriptor_templates() {
         let master: DescriptorSecretKey = get_descriptor_secret_key();
-        println!("Master: {:?}", master.as_string());
+        println!("Master: {:?}", master.as_string().await);
         // tprv8ZgxMBicQKsPdWuqM1t1CDRvQtQuBPyfL6GbhQwtxDKgUAVPbxmj71pRA8raTqLrec5LyTs5TqCxdABcZr77bt2KyWA5bizJHnC4g4ysm4h
         let handmade_public_44 = master
             .derive(Arc::new(
                 DerivationPath::new("m/44h/1h/0h".to_string()).unwrap(),
             ))
+            .await
             .unwrap()
             .as_public()
+            .await
             .unwrap();
-        println!("Public 44: {}", handmade_public_44.as_string());
+        println!("Public 44: {}", handmade_public_44.as_string().await);
         // Public 44: [d1d04177/44'/1'/0']tpubDCoPjomfTqh1e7o1WgGpQtARWtkueXQAepTeNpWiitS3Sdv8RKJ1yvTrGHcwjDXp2SKyMrTEca4LoN7gEUiGCWboyWe2rz99Kf4jK4m2Zmx/*
         let handmade_public_49 = master
             .derive(Arc::new(
                 DerivationPath::new("m/49h/1h/0h".to_string()).unwrap(),
             ))
+            .await
             .unwrap()
             .as_public()
+            .await
             .unwrap();
-        println!("Public 49: {}", handmade_public_49.as_string());
+        println!("Public 49: {}", handmade_public_49.as_string().await);
         // Public 49: [d1d04177/49'/1'/0']tpubDC65ZRvk1NDddHrVAUAZrUPJ772QXzooNYmPywYF9tMyNLYKf5wpKE7ZJvK9kvfG3FV7rCsHBNXy1LVKW95jrmC7c7z4hq7a27aD2sRrAhR/*
         let handmade_public_84 = master
             .derive(Arc::new(
                 DerivationPath::new("m/84h/1h/0h".to_string()).unwrap(),
             ))
+            .await
             .unwrap()
             .as_public()
+            .await
             .unwrap();
-        println!("Public 84: {}", handmade_public_84.as_string());
+        println!("Public 84: {}", handmade_public_84.as_string().await);
         // Public 84: [d1d04177/84'/1'/0']tpubDDNxbq17egjFk2edjv8oLnzxk52zny9aAYNv9CMqTzA4mQDiQq818sEkNe9Gzmd4QU8558zftqbfoVBDQorG3E4Wq26tB2JeE4KUoahLkx6/*
         let template_private_44 = BdkDescriptor::new_bip44(
             get_descriptor_secret_key(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         let template_private_49 = BdkDescriptor::new_bip49(
             get_descriptor_secret_key(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         let template_private_84 = BdkDescriptor::new_bip84(
             get_descriptor_secret_key(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         // the extended public keys are the same when creating them manually as they are with the templates
         println!("Template 49: {}", template_private_49.as_string());
         println!("Template 44: {}", template_private_44.as_string());
@@ -290,19 +300,22 @@ mod test {
             "d1d04177".to_string(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         let template_public_49 = BdkDescriptor::new_bip49_public(
             handmade_public_49,
             "d1d04177".to_string(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         let template_public_84 = BdkDescriptor::new_bip84_public(
             handmade_public_84,
             "d1d04177".to_string(),
             KeychainKind::External,
             Network::Testnet,
-        );
+        )
+        .await;
         println!("Template public 49: {}", template_public_49.as_string());
         println!("Template public 44: {}", template_public_44.as_string());
         println!("Template public 84: {}", template_public_84.as_string());

@@ -36,8 +36,6 @@ miniscript = { version = "10.0.0", default-features = false, features = [
 esplora-client = { version = "0.6.0", path = "../vendor/esplora-client", default-features = false, features = [
   "async-https",
 ] }
-# muon = { version = "0.1.1", path = "../vendor/muon"}
-# muon = { version = "0.1.1", registry = "proton_internal"}
 
 tokio = { version = "1.28.0", features = ["full"] }
 flutter_rust_bridge = "=2.0.0-dev.33"
@@ -53,7 +51,9 @@ flutter_logger = { version = "0.6.1", features = ["panic"] }
 log = "0.4.19"
 
 ### proton dependencies
-andromeda-api = { path = "../vendor/andromeda/crates/api" }
+andromeda-api = { path = "../vendor/andromeda/crates/api", features = [
+  "muon-v2",
+] }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
 
@@ -86,7 +86,7 @@ build_targets = ["aarch64-apple-ios"]
 
 [patch.crates-io]
 esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
-muon = { version = "0.2.0", path = "../vendor/muon"}
+# muon = { version = "0.2.0", path = "../vendor/muon" }
 
 # [profile.default]
 # retries = 0

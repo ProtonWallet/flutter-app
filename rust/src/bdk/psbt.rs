@@ -9,7 +9,8 @@ use std::borrow::Borrow;
 use std::io::Cursor;
 use std::ops::Deref;
 use std::str::FromStr;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 
 #[derive(Debug)]
 pub struct PartiallySignedTransaction {
@@ -25,32 +26,32 @@ impl PartiallySignedTransaction {
         })
     }
 
-    pub(crate) fn serialize(&self) -> String {
-        let psbt = self.internal.lock().unwrap().clone();
+    pub(crate) async fn serialize(&self) -> String {
+        let psbt = self.internal.lock().await.clone();
         psbt.to_string()
     }
 
-    pub(crate) fn txid(&self) -> String {
-        let tx = self.internal.lock().unwrap().clone().extract_tx();
+    pub(crate) async fn txid(&self) -> String {
+        let tx = self.internal.lock().await.clone().extract_tx();
         let txid = tx.txid();
         txid.to_string()
     }
 
     /// Return the transaction.
-    pub(crate) fn extract_tx(&self) -> Transaction {
-        let tx = self.internal.lock().unwrap().clone().extract_tx();
+    pub(crate) async fn extract_tx(&self) -> Transaction {
+        let tx = self.internal.lock().await.clone().extract_tx();
         Transaction { internal: tx }
     }
 
     /// Combines this PartiallySignedTransaction with other PSBT as described by BIP 174.
     ///
     /// In accordance with BIP 174 this function is commutative i.e., `A.combine(B) == B.combine(A)`
-    pub(crate) fn combine(
+    pub(crate) async fn combine(
         &self,
         other: Arc<PartiallySignedTransaction>,
     ) -> Result<Arc<PartiallySignedTransaction>, BdkError> {
-        let other_psbt = other.internal.lock().unwrap().clone();
-        let mut original_psbt = self.internal.lock().unwrap().clone();
+        let other_psbt = other.internal.lock().await.clone();
+        let mut original_psbt = self.internal.lock().await.clone();
 
         original_psbt.combine(other_psbt)?;
         Ok(Arc::new(PartiallySignedTransaction {
@@ -60,21 +61,21 @@ impl PartiallySignedTransaction {
 
     /// The total transaction fee amount, sum of input amounts minus sum of output amounts, in Sats.
     /// If the PSBT is missing a TxOut for an input returns None.
-    pub(crate) fn fee_amount(&self) -> Option<u64> {
-        self.internal.lock().unwrap().fee_amount()
+    pub(crate) async fn fee_amount(&self) -> Option<u64> {
+        self.internal.lock().await.fee_amount()
     }
 
     /// The transaction's fee rate. This value will only be accurate if calculated AFTER the
     /// `PartiallySignedTransaction` is finalized and all witness/signature data is added to the
     /// transaction.
     /// If the PSBT is missing a TxOut for an input returns None.
-    pub(crate) fn fee_rate(&self) -> Option<Arc<FeeRate>> {
-        self.internal.lock().unwrap().fee_rate().map(Arc::new)
+    pub(crate) async fn fee_rate(&self) -> Option<Arc<FeeRate>> {
+        self.internal.lock().await.fee_rate().map(Arc::new)
     }
 
     /// Serialize the PSBT data structure as a String of JSON.
-    pub(crate) fn json_serialize(&self) -> String {
-        let psbt = self.internal.lock().unwrap();
+    pub(crate) async fn json_serialize(&self) -> String {
+        let psbt = self.internal.lock().await;
         serde_json::to_string(psbt.deref()).unwrap()
     }
 }

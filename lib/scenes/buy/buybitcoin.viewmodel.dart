@@ -17,6 +17,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/buy/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -34,6 +35,10 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   final int walletID;
   final String userEmail;
   final int accountID;
+  bool isloading = false;
+  void startLoading();
+  bool isBuying = true;
+  BuyBitcoinBloc get bloc;
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
@@ -46,6 +51,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     datasourceChangedStreamController.close();
   }
 
+  BuyBitcoinBloc myBloc = BuyBitcoinBloc();
+  @override
+  BuyBitcoinBloc get bloc => myBloc;
+
   @override
   bool get isTestEnv => false;
   @override
@@ -55,6 +64,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   @override
   Future<void> loadData() async {
+    bloc.add(const LoadAddressEvent());
+    bloc.add(const LoadCountryEvent());
     EasyLoading.show(
         status: "syncing bitcoin address index..",
         maskType: EasyLoadingMaskType.black);
@@ -77,9 +88,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     datasourceChangedStreamController.sinkAddSafe(this);
 
     configuration = Configuration()
-      ..url = isTestEnv
-          ? "https://app.demo.ramp.network/"
-          : "https://app.ramp.network"
       ..hostApiKey = apiKey
       ..hostAppName = "Proton Wallet"
       ..defaultFlow = "ONRAMP"
@@ -206,6 +214,19 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       }
       datasourceChangedStreamController.sinkAddSafe(this);
     }
+  }
+
+  @override
+  void startLoading() {
+    bloc.add(const LoadCountryEvent());
+    bloc.add(const LoadAddressEvent());
+    presentRamp();
+    isloading = true;
+    datasourceChangedStreamController.sinkAddSafe(this);
+    // Simulate a network request or any async task
+    Future.delayed(const Duration(seconds: 3), () {
+      isloading = false;
+    });
   }
 
   void presentRamp() {
