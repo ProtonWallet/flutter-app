@@ -10,7 +10,8 @@ use bdk::Error as BdkError;
 use miniscript::descriptor::DescriptorXKey;
 use std::ops::Deref;
 use std::str::FromStr;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 
 pub struct DerivationPath {
     pub derivation_path_mutex: Mutex<BdkDerivationPath>,
@@ -24,8 +25,8 @@ impl DerivationPath {
             })
             .map_err(|e| BdkError::Generic(e.to_string()))
     }
-    pub fn as_string(&self) -> String {
-        self.derivation_path_mutex.lock().unwrap().to_string()
+    pub async fn as_string(&self) -> String {
+        self.derivation_path_mutex.lock().await.to_string()
     }
 }
 pub struct Mnemonic {
@@ -40,12 +41,7 @@ impl Mnemonic {
         let mnemonic = BdkMnemonic::parse_in(Language::English, generated_key.to_string()).unwrap();
         Mnemonic { internal: mnemonic }
     }
-    /// Parse a Mnemonic with given string
-    pub fn from_str(mnemonic: String) -> Result<Self, BdkError> {
-        BdkMnemonic::from_str(&mnemonic)
-            .map(|m| Mnemonic { internal: m })
-            .map_err(|e| BdkError::Generic(e.to_string()))
-    }
+
     /// Create a new Mnemonic in the specified language from the given entropy.
     /// Entropy must be a multiple of 32 bits (4 bytes) and 128-256 bits in length.
     pub fn from_entropy(entropy: Vec<u8>) -> Result<Self, BdkError> {
@@ -57,6 +53,16 @@ impl Mnemonic {
     /// Returns Mnemonic as string
     pub fn as_string(&self) -> String {
         self.internal.to_string()
+    }
+}
+
+impl FromStr for Mnemonic {
+    type Err = BdkError;
+    /// Parse a Mnemonic with given string
+    fn from_str(mnemonic: &str) -> Result<Self, BdkError> {
+        BdkMnemonic::from_str(mnemonic)
+            .map(|m| Mnemonic { internal: m })
+            .map_err(|e| BdkError::Generic(e.to_string()))
     }
 }
 
@@ -83,10 +89,10 @@ impl DescriptorSecretKey {
         })
     }
 
-    pub fn derive(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
+    pub async fn derive(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
         let secp = Secp256k1::new();
-        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().unwrap();
-        let path = path.derivation_path_mutex.lock().unwrap().deref().clone();
+        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().await;
+        let path = path.derivation_path_mutex.lock().await.deref().clone();
         match descriptor_secret_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
                 let derived_xprv = descriptor_x_key.xkey.derive_priv(&secp, &path)?;
@@ -112,9 +118,9 @@ impl DescriptorSecretKey {
             }
         }
     }
-    pub fn extend(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
-        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().unwrap();
-        let path = path.derivation_path_mutex.lock().unwrap().deref().clone();
+    pub async fn extend(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
+        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().await;
+        let path = path.derivation_path_mutex.lock().await.deref().clone();
         match descriptor_secret_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
                 let extended_path = descriptor_x_key.derivation_path.extend(path);
@@ -136,12 +142,12 @@ impl DescriptorSecretKey {
             }
         }
     }
-    pub fn as_public(&self) -> Result<DescriptorPublicKey, BdkError> {
+    pub async fn as_public(&self) -> Result<DescriptorPublicKey, BdkError> {
         let secp = Secp256k1::new();
         let descriptor_public_key = self
             .descriptor_secret_key_mutex
             .lock()
-            .unwrap()
+            .await
             .to_public(&secp)
             .unwrap();
         Ok(DescriptorPublicKey {
@@ -149,8 +155,8 @@ impl DescriptorSecretKey {
         })
     }
     /// Get the private key as bytes.
-    pub fn secret_bytes(&self) -> Result<Vec<u8>, BdkError> {
-        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().unwrap();
+    pub async fn secret_bytes(&self) -> Result<Vec<u8>, BdkError> {
+        let descriptor_secret_key = self.descriptor_secret_key_mutex.lock().await;
         let secret_bytes: Vec<u8> = match descriptor_secret_key.deref() {
             BdkDescriptorSecretKey::XPrv(descriptor_x_key) => {
                 descriptor_x_key.xkey.private_key.secret_bytes().to_vec()
@@ -172,8 +178,8 @@ impl DescriptorSecretKey {
             descriptor_secret_key_mutex: Mutex::new(key),
         })
     }
-    pub fn as_string(&self) -> String {
-        self.descriptor_secret_key_mutex.lock().unwrap().to_string()
+    pub async fn as_string(&self) -> String {
+        self.descriptor_secret_key_mutex.lock().await.to_string()
     }
 }
 
@@ -189,10 +195,10 @@ impl DescriptorPublicKey {
             descriptor_public_key_mutex: Mutex::new(key),
         })
     }
-    pub fn derive(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
+    pub async fn derive(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
         let secp = Secp256k1::new();
-        let descriptor_public_key = self.descriptor_public_key_mutex.lock().unwrap();
-        let path = path.derivation_path_mutex.lock().unwrap().deref().clone();
+        let descriptor_public_key = self.descriptor_public_key_mutex.lock().await;
+        let path = path.derivation_path_mutex.lock().await.deref().clone();
 
         match descriptor_public_key.deref() {
             BdkDescriptorPublicKey::XPub(descriptor_x_key) => {
@@ -219,9 +225,9 @@ impl DescriptorPublicKey {
             }
         }
     }
-    pub fn extend(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
-        let descriptor_public_key = self.descriptor_public_key_mutex.lock().unwrap();
-        let path = path.derivation_path_mutex.lock().unwrap().deref().clone();
+    pub async fn extend(&self, path: Arc<DerivationPath>) -> Result<Arc<Self>, BdkError> {
+        let descriptor_public_key = self.descriptor_public_key_mutex.lock().await;
+        let path = path.derivation_path_mutex.lock().await.deref().clone();
         match descriptor_public_key.deref() {
             BdkDescriptorPublicKey::XPub(descriptor_x_key) => {
                 let extended_path = descriptor_x_key.derivation_path.extend(path);
@@ -243,8 +249,8 @@ impl DescriptorPublicKey {
             }
         }
     }
-    pub fn as_string(&self) -> String {
-        self.descriptor_public_key_mutex.lock().unwrap().to_string()
+    pub async fn as_string(&self) -> String {
+        self.descriptor_public_key_mutex.lock().await.to_string()
     }
 }
 #[cfg(test)]
@@ -253,79 +259,80 @@ mod test {
     // use bdk::bitcoin::hashes::hex::ToHex;
     use bdk::bitcoin::Network;
     use bdk::Error as BdkError;
+    use std::str::FromStr;
     use std::sync::Arc;
 
     fn get_descriptor_secret_key() -> Result<DescriptorSecretKey, BdkError> {
-        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect".to_string()).unwrap();
+        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect")?;
         DescriptorSecretKey::new(Network::Testnet, mnemonic, None)
     }
 
-    fn derive_dsk(
+    async fn derive_dsk(
         key: &DescriptorSecretKey,
         path: &str,
     ) -> Result<Arc<DescriptorSecretKey>, BdkError> {
         let path = Arc::new(DerivationPath::new(path.to_string()).unwrap());
-        key.derive(path)
+        key.derive(path).await
     }
 
-    fn extend_dsk(
+    async fn extend_dsk(
         key: &DescriptorSecretKey,
         path: &str,
     ) -> Result<Arc<DescriptorSecretKey>, BdkError> {
         let path = Arc::new(DerivationPath::new(path.to_string()).unwrap());
-        key.extend(path)
+        key.extend(path).await
     }
 
-    fn derive_dpk(
+    async fn derive_dpk(
         key: &DescriptorPublicKey,
         path: &str,
     ) -> Result<Arc<DescriptorPublicKey>, BdkError> {
         let path = Arc::new(DerivationPath::new(path.to_string()).unwrap());
-        key.derive(path)
+        key.derive(path).await
     }
 
-    #[test]
-    fn test_generate_descriptor_secret_key() {
+    #[tokio::test]
+    async fn test_generate_descriptor_secret_key() {
         let master_dsk = get_descriptor_secret_key().unwrap();
-        assert_eq!(master_dsk.as_string(), "tprv8ZgxMBicQKsPdWuqM1t1CDRvQtQuBPyfL6GbhQwtxDKgUAVPbxmj71pRA8raTqLrec5LyTs5TqCxdABcZr77bt2KyWA5bizJHnC4g4ysm4h/*");
-        assert_eq!(master_dsk.as_public().unwrap().as_string(), "tpubD6NzVbkrYhZ4WywdEfYbbd62yuvqLjAZuPsNyvzCNV85JekAEMbKHWSHLF9h3j45SxewXDcLv328B1SEZrxg4iwGfmdt1pDFjZiTkGiFqGa/*");
+        assert_eq!(master_dsk.as_string().await, "tprv8ZgxMBicQKsPdWuqM1t1CDRvQtQuBPyfL6GbhQwtxDKgUAVPbxmj71pRA8raTqLrec5LyTs5TqCxdABcZr77bt2KyWA5bizJHnC4g4ysm4h/*");
+        assert_eq!(master_dsk.as_public().await.unwrap().as_string().await, "tpubD6NzVbkrYhZ4WywdEfYbbd62yuvqLjAZuPsNyvzCNV85JekAEMbKHWSHLF9h3j45SxewXDcLv328B1SEZrxg4iwGfmdt1pDFjZiTkGiFqGa/*");
     }
 
-    #[test]
-    fn test_derive_self() {
+    #[tokio::test]
+    async fn test_derive_self() {
         let master_dsk = get_descriptor_secret_key().unwrap();
-        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m").unwrap();
-        assert_eq!(derived_dsk.as_string(), "[d1d04177]tprv8ZgxMBicQKsPdWuqM1t1CDRvQtQuBPyfL6GbhQwtxDKgUAVPbxmj71pRA8raTqLrec5LyTs5TqCxdABcZr77bt2KyWA5bizJHnC4g4ysm4h/*");
-        let master_dpk: &DescriptorPublicKey = &master_dsk.as_public().unwrap();
-        let derived_dpk: &DescriptorPublicKey = &derive_dpk(master_dpk, "m").unwrap();
-        assert_eq!(derived_dpk.as_string(), "[d1d04177]tpubD6NzVbkrYhZ4WywdEfYbbd62yuvqLjAZuPsNyvzCNV85JekAEMbKHWSHLF9h3j45SxewXDcLv328B1SEZrxg4iwGfmdt1pDFjZiTkGiFqGa/*");
+        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m").await.unwrap();
+        assert_eq!(derived_dsk.as_string().await, "[d1d04177]tprv8ZgxMBicQKsPdWuqM1t1CDRvQtQuBPyfL6GbhQwtxDKgUAVPbxmj71pRA8raTqLrec5LyTs5TqCxdABcZr77bt2KyWA5bizJHnC4g4ysm4h/*");
+        let master_dpk: &DescriptorPublicKey = &master_dsk.as_public().await.unwrap();
+        let derived_dpk: &DescriptorPublicKey = &derive_dpk(master_dpk, "m").await.unwrap();
+        assert_eq!(derived_dpk.as_string().await, "[d1d04177]tpubD6NzVbkrYhZ4WywdEfYbbd62yuvqLjAZuPsNyvzCNV85JekAEMbKHWSHLF9h3j45SxewXDcLv328B1SEZrxg4iwGfmdt1pDFjZiTkGiFqGa/*");
     }
 
-    #[test]
-    fn test_derive_descriptors_keys() {
+    #[tokio::test]
+    async fn test_derive_descriptors_keys() {
         let master_dsk = get_descriptor_secret_key().unwrap();
-        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m/0").unwrap();
-        assert_eq!(derived_dsk.as_string(), "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/*");
-        let master_dpk: &DescriptorPublicKey = &master_dsk.as_public().unwrap();
-        let derived_dpk: &DescriptorPublicKey = &derive_dpk(master_dpk, "m/0").unwrap();
-        assert_eq!(derived_dpk.as_string(), "[d1d04177/0]tpubD9oaCiP1MPmQdndm7DCD3D3QU34pWd6BbKSRedoZF1UJcNhEk3PJwkALNYkhxeTKL29oGNR7psqvT1KZydCGqUDEKXN6dVQJY2R8ooLPy8m/*");
+        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m/0").await.unwrap();
+        assert_eq!(derived_dsk.as_string().await, "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/*");
+        let master_dpk: &DescriptorPublicKey = &master_dsk.as_public().await.unwrap();
+        let derived_dpk: &DescriptorPublicKey = &derive_dpk(master_dpk, "m/0").await.unwrap();
+        assert_eq!(derived_dpk.as_string().await, "[d1d04177/0]tpubD9oaCiP1MPmQdndm7DCD3D3QU34pWd6BbKSRedoZF1UJcNhEk3PJwkALNYkhxeTKL29oGNR7psqvT1KZydCGqUDEKXN6dVQJY2R8ooLPy8m/*");
     }
 
-    #[test]
-    fn test_derive_and_extend_descriptor_secret_key() {
+    #[tokio::test]
+    async fn test_derive_and_extend_descriptor_secret_key() {
         let master_dsk = get_descriptor_secret_key().unwrap();
         // derive DescriptorSecretKey with path "m/0" from master
-        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m/0").unwrap();
-        assert_eq!(derived_dsk.as_string(), "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/*");
+        let derived_dsk: &DescriptorSecretKey = &derive_dsk(&master_dsk, "m/0").await.unwrap();
+        assert_eq!(derived_dsk.as_string().await, "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/*");
         // extend derived_dsk with path "m/0"
-        let extended_dsk: &DescriptorSecretKey = &extend_dsk(derived_dsk, "m/0").unwrap();
-        assert_eq!(extended_dsk.as_string(), "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/0/*");
+        let extended_dsk: &DescriptorSecretKey = &extend_dsk(derived_dsk, "m/0").await.unwrap();
+        assert_eq!(extended_dsk.as_string().await, "[d1d04177/0]tprv8d7Y4JLmD25jkKbyDZXcdoPHu1YtMHuH21qeN7mFpjfumtSU7eZimFYUCSa3MYzkEYfSNRBV34GEr2QXwZCMYRZ7M1g6PUtiLhbJhBZEGYJ/0/*");
     }
 
-    #[test]
-    fn test_derive_hardened_path_using_public() {
-        let master_dpk = get_descriptor_secret_key().unwrap().as_public();
-        let derived_dpk = &derive_dpk(&master_dpk.unwrap(), "m/84h/1h/0h");
+    #[tokio::test]
+    async fn test_derive_hardened_path_using_public() {
+        let master_dpk = get_descriptor_secret_key().unwrap().as_public().await;
+        let derived_dpk = &derive_dpk(&master_dpk.unwrap(), "m/84h/1h/0h").await;
         assert!(derived_dpk.is_err());
     }
 

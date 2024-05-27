@@ -7,7 +7,16 @@ import '../../frb_generated.dart';
 import '../../proton_api/errors.dart';
 import '../../proton_api/wallet.dart';
 import '../../proton_api/wallet_settings.dart';
+import 'bitcoin_address_client.dart';
+import 'email_integration_client.dart';
+import 'event_client.dart';
+import 'exchange_rate_client.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'proton_contacts_client.dart';
+import 'proton_email_addr_client.dart';
+import 'settings_client.dart';
+import 'transaction_client.dart';
+import 'wallet_client.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>>
 @sealed
@@ -27,13 +36,39 @@ class ProtonApiService extends RustOpaque {
         .instance.api.rust_arc_decrement_strong_count_ProtonApiServicePtr,
   );
 
+  BitcoinAddressClient getBitcoinAddrClient({dynamic hint}) =>
+      RustLib.instance.api
+          .protonApiServiceGetBitcoinAddrClient(that: this, hint: hint);
+
+  EmailIntegrationClient getEmailIntegrationClient({dynamic hint}) =>
+      RustLib.instance.api
+          .protonApiServiceGetEmailIntegrationClient(that: this, hint: hint);
+
+  EventClient getEventClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetEventClient(that: this, hint: hint);
+
+  ExchangeRateClient getExchangeRateClient({dynamic hint}) =>
+      RustLib.instance.api
+          .protonApiServiceGetExchangeRateClient(that: this, hint: hint);
+
+  ContactsClient getProtonContactsClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetProtonContactsClient(that: this, hint: hint);
+
+  ProtonEmailAddressClient getProtonEmailAddrClient({dynamic hint}) =>
+      RustLib.instance.api
+          .protonApiServiceGetProtonEmailAddrClient(that: this, hint: hint);
+
+  SettingsClient getSettingsClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetSettingsClient(that: this, hint: hint);
+
+  TransactionClient getTransactionClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetTransactionClient(that: this, hint: hint);
+
+  WalletClient getWalletClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetWalletClient(that: this, hint: hint);
+
   Future<List<WalletData>> getWallets({dynamic hint}) =>
       RustLib.instance.api.protonApiServiceGetWallets(that: this, hint: hint);
-
-  static Future<void> initApiService(
-          {required String userName, required String password, dynamic hint}) =>
-      RustLib.instance.api.protonApiServiceInitApiService(
-          userName: userName, password: password, hint: hint);
 
   static Future<ProtonApiService> initWith(
           {required String uid,

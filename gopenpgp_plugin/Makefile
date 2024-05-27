@@ -1,10 +1,20 @@
 SHELL:=/bin/bash
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 PROJECT_ROOT := $(dir $(MAKEFILE_PATH))
+
 # Define variables
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+    NDK_BIN := $(ANDROID_NDK)/toolchains/llvm/prebuilt/linux-x86_64/bin
+else ifeq ($(UNAME_S), Darwin)
+    NDK_BIN := $(ANDROID_NDK)/toolchains/llvm/prebuilt/darwin-x86_64/bin
+else ifeq ($(UNAME_S), Windows)
+    NDK_BIN := $(ANDROID_NDK)/toolchains/llvm/prebuilt/windows-x86_64/bin
+else
+    $(error Unsupported platform: $(UNAME_S))
+endif
+
 ANDROID_OUT=../android/src/main/jniLibs
-ANDROID_SDK=$(HOME)/AndroidSDK
-NDK_BIN=$(ANDROID_SDK)/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64/bin
 LIB_NAME=libproton_crypto
 BUILD_DIR := $(PROJECT_ROOT)build
 GOARCH_ADM64 := amd64
@@ -154,8 +164,8 @@ macos: ## Build macos release
 	@install_name_tool -id "@rpath/libproton_crypto.dylib" ${BUILD_DIR}/${LIB_NAME}.dylib
 
 	@mv -f ${BUILD_DIR}/${LIB_NAME}.dylib ./macos/${LIB_NAME}.dylib
-	@rm ${BUILD_DIR}/${LIB_NAME}_*.h
 	@rm ${BUILD_DIR}/${LIB_NAME}_*.dylib
+	@rm ${BUILD_DIR}/${LIB_NAME}_*.h
 	@echo "Building macos ${BUILD_DIR}/${LIB_NAME}.dylib... Done"
 	
 .PHONY: windows

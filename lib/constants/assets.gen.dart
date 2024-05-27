@@ -66,8 +66,11 @@ class $AssetsJsonGen {
   /// File path: assets/json/custom_discovers.json
   String get customDiscovers => 'assets/json/custom_discovers.json';
 
+  /// File path: assets/json/ramp_countries.json
+  String get rampCountries => 'assets/json/ramp_countries.json';
+
   /// List of all assets
-  List<String> get values => [customDiscovers];
+  List<String> get values => [customDiscovers, rampCountries];
 }
 
 class $AssetsImagesIconGen {
