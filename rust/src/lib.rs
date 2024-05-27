@@ -7,7 +7,5 @@ pub mod proton_api;
 pub mod utilities;
 pub use andromeda_api::wallet::CreateWalletAccountRequestBody;
 
-pub use api::proton_api::init_api_service;
-
 pub use crate::bdk::key::Mnemonic;
 pub use crate::proton_api::*;

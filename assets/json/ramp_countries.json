@@ -1,0 +1,1107 @@
+[
+    {
+        "code": "ic",
+        "name": "Canary Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "au",
+        "name": "Australia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "et",
+        "name": "Ethiopia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "in",
+        "name": "India",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "dk",
+        "name": "Denmark",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gf",
+        "name": "French Guiana",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "ax",
+        "name": "Åland Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ag",
+        "name": "Antigua and Barbuda",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ca",
+        "name": "Canada",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cv",
+        "name": "Cabo Verde",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cx",
+        "name": "Christmas Island",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "gl",
+        "name": "Greenland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mz",
+        "name": "Mozambique",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "hr",
+        "name": "Croatia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "dj",
+        "name": "Djibouti",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "dm",
+        "name": "Dominica",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "do",
+        "name": "Dominican Republic",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ee",
+        "name": "Estonia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "pf",
+        "name": "French Polynesia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "gp",
+        "name": "Guadeloupe",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "hk",
+        "name": "Hong Kong",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "mk",
+        "name": "North Macedonia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "my",
+        "name": "Malaysia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "yt",
+        "name": "Mayotte",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "fm",
+        "name": "Micronesia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "mc",
+        "name": "Monaco",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "me",
+        "name": "Montenegro",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "nc",
+        "name": "New Caledonia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "nz",
+        "name": "New Zealand",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "nu",
+        "name": "Niue",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "nf",
+        "name": "Norfolk Island",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "no",
+        "name": "Norway",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "pl",
+        "name": "Poland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "pt",
+        "name": "Portugal",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "re",
+        "name": "Réunion",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "bl",
+        "name": "Saint Barthélemy",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sh",
+        "name": "Saint Helena",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "lc",
+        "name": "Saint Lucia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "pm",
+        "name": "Saint Pierre and Miquelon",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "vc",
+        "name": "Saint Vincent",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "bw",
+        "name": "Botswana",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "us",
+        "name": "United States",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD",
+        "supportedAssets": [
+            "CELO",
+            "SOLANA_SOL",
+            "MATIC",
+            "USDC",
+            "ETH",
+            "USDT",
+            "DAI",
+            "MATIC_DAI",
+            "SOLANA_USDT",
+            "FLOW_FLOW",
+            "RONIN_SLP",
+            "RONIN_WETH",
+            "CUSD",
+            "MATIC_ETH",
+            "MATIC_USDC",
+            "SOLANA_USDC",
+            "LOOPRING_ETH",
+            "LOOPRING_USDC",
+            "EGLD",
+            "SOLANA_KIN",
+            "SAND",
+            "LOOPRING_LRC",
+            "FLOW_FUSD",
+            "ARBITRUM_ETH",
+            "HARMONY_ONE",
+            "MATIC_SAND",
+            "XDAI",
+            "ETH_ENS",
+            "ETH_BAT",
+            "FLOW_USDC",
+            "LINK",
+            "SOLANA_BAT",
+            "OPTIMISM_ETH",
+            "MATIC_OVR",
+            "MATIC_BAT",
+            "CELO_CREAL",
+            "BSC_BNB",
+            "AVAX_USDC",
+            "MANA",
+            "MATIC_MANA",
+            "IMMUTABLEX_ETH",
+            "STARKNET_ETH",
+            "NEAR_NEAR",
+            "OPTIMISM_DAI",
+            "LTC",
+            "FANTOM_FTM",
+            "BTC",
+            "FUSE_USDC",
+            "OKC_OKT",
+            "RONIN_USDC",
+            "ZKSYNCERA_ETH",
+            "ZKSYNCERA_USDC",
+            "AVAX_USDT",
+            "ARBITRUM_USDT",
+            "OPTIMISM_USDT",
+            "MATIC_USDT",
+            "FANTOM_USDC",
+            "OPTIMISM_USDC",
+            "MATIC_WMATIC",
+            "POLYGONZKEVM_WBTC",
+            "POLYGONZKEVM_ETH",
+            "POLYGONZKEVM_USDC",
+            "POLYGONZKEVM_USDT",
+            "POLYGONZKEVM_MATIC",
+            "ARBITRUM_USDC",
+            "ZILLIQA_ZIL",
+            "BASE_ETH",
+            "BASE_USDC",
+            "CASPER_CSPR",
+            "LINEA_ETH",
+            "LINEA_USDCE",
+            "ARBITRUM_USDCE",
+            "ETH_TON",
+            "CARDANO_ADA",
+            "COSMOS_ATOM",
+            "BCH",
+            "FILECOIN_FIL",
+            "XRP",
+            "BSC_GFAL",
+            "OPTIMISM_USDCE",
+            "MATIC_USDC",
+            "BASE_USDCE",
+            "DOT",
+            "KSM",
+            "TON_TON",
+            "TELOS_TLOS",
+            "AVAX",
+            "CELO_USDC",
+            "NEAR_SWEAT",
+            "DOT_USDT",
+            "DOT_USDC",
+            "NEAR_USDT",
+            "NEAR_USDC",
+            "DOT_DOT",
+            "CELO_USDT",
+            "LUKSO_LYX",
+            "DOGE"
+        ],
+        "apiV3SupportedAssets": [
+            "CELO_CELO",
+            "SOLANA_SOL",
+            "MATIC_MATIC",
+            "ETH_USDC",
+            "ETH_ETH",
+            "ETH_USDT",
+            "ETH_DAI",
+            "ZKSYNC_DAI",
+            "ZKSYNC_ETH",
+            "ZKSYNC_USDC",
+            "ZKSYNC_USDT",
+            "ZKSYNC_WBTC",
+            "MATIC_DAI",
+            "SOLANA_USDT",
+            "FLOW_FLOW",
+            "RONIN_SLP",
+            "RONIN_WETH",
+            "STARKWARE_SORARE_ETH",
+            "CELO_CUSD",
+            "MATIC_ETH",
+            "MATIC_USDC",
+            "SOLANA_USDC",
+            "LOOPRING_ETH",
+            "LOOPRING_USDC",
+            "ELROND_EGLD",
+            "SOLANA_KIN",
+            "ETH_SAND",
+            "LOOPRING_LRC",
+            "FLOW_FUSD",
+            "ARBITRUM_ETH",
+            "HARMONY_ONE",
+            "MATIC_SAND",
+            "XDAI_XDAI",
+            "ETH_ENS",
+            "ETH_BAT",
+            "FLOW_USDC",
+            "ETH_LINK",
+            "SOLANA_BAT",
+            "OPTIMISM_ETH",
+            "MATIC_OVR",
+            "MATIC_BAT",
+            "CELO_CREAL",
+            "BSC_BNB",
+            "AVAX_USDC",
+            "ETH_MANA",
+            "MATIC_MANA",
+            "IMMUTABLEX_ETH",
+            "STARKNET_ETH",
+            "NEAR_NEAR",
+            "OPTIMISM_DAI",
+            "LTC_LTC",
+            "FANTOM_FTM",
+            "BTC_BTC",
+            "FUSE_USDC",
+            "OKC_OKT",
+            "RONIN_USDC",
+            "ZKSYNCERA_ETH",
+            "ZKSYNCERA_USDC",
+            "AVAX_USDT",
+            "ARBITRUM_USDT",
+            "OPTIMISM_USDT",
+            "MATIC_USDT",
+            "FANTOM_USDC",
+            "OPTIMISM_USDC",
+            "MATIC_WMATIC",
+            "POLYGONZKEVM_WBTC",
+            "POLYGONZKEVM_ETH",
+            "POLYGONZKEVM_USDC",
+            "POLYGONZKEVM_USDT",
+            "POLYGONZKEVM_MATIC",
+            "ARBITRUM_USDC",
+            "ZILLIQA_ZIL",
+            "BASE_ETH",
+            "BASE_USDC",
+            "ARBITRUM_USDC.e",
+            "CASPER_CSPR",
+            "LINEA_ETH",
+            "LINEA_USDCE",
+            "ARBITRUM_USDCE",
+            "ETH_TON",
+            "CARDANO_ADA",
+            "COSMOS_ATOM",
+            "BCH_BCH",
+            "FILECOIN_FIL",
+            "XRP_XRP",
+            "BSC_GFAL",
+            "OPTIMISM_USDCE",
+            "MATIC_USDCE",
+            "BASE_USDCE",
+            "POLKADOT_DOT",
+            "KUSAMA_KSM",
+            "TON_TON",
+            "TELOS_TLOS",
+            "AVAX_AVAX",
+            "CELO_USDC",
+            "NEAR_SWEAT",
+            "DOT_USDT",
+            "DOT_USDC",
+            "NEAR_USDT",
+            "NEAR_USDC",
+            "DOT_DOT",
+            "CELO_USDT",
+            "LUKSO_LYX",
+            "DOGE_DOGE"
+        ]
+    },
+    {
+        "code": "ae",
+        "name": "United Arab Emirates",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "gi",
+        "name": "Gibraltar",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "sm",
+        "name": "San Marino",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "rs",
+        "name": "Serbia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "sx",
+        "name": "Sint Maarten",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "uy",
+        "name": "Uruguay",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "wf",
+        "name": "Wallis and Futuna",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "ao",
+        "name": "Angola",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gh",
+        "name": "Ghana",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gn",
+        "name": "Guinea",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gm",
+        "name": "Gambia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "ad",
+        "name": "Andorra",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "at",
+        "name": "Austria",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "be",
+        "name": "Belgium",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "bz",
+        "name": "Belize",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "bq",
+        "name": "Caribbean Netherlands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "ba",
+        "name": "Bosnia and Herzegovina",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "za",
+        "name": "South Africa",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gt",
+        "name": "Guatemala",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "gu",
+        "name": "Guam",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "zm",
+        "name": "Zambia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "td",
+        "name": "Chad",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "tg",
+        "name": "Togo",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "br",
+        "name": "Brazil",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "bn",
+        "name": "Brunei",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cc",
+        "name": "Cocos (Keeling) Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cz",
+        "name": "Czechia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gq",
+        "name": "Equatorial Guinea",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "fk",
+        "name": "Falkland Island",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "fo",
+        "name": "Faroe Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "fi",
+        "name": "Finland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "hn",
+        "name": "Honduras",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "mq",
+        "name": "Martinique",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sl",
+        "name": "Sierra Leone",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "rw",
+        "name": "Rwanda",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mx",
+        "name": "Mexico",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "nr",
+        "name": "Nauru",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "nl",
+        "name": "Netherlands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mt",
+        "name": "Malta",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "lk",
+        "name": "Sri Lanka",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ke",
+        "name": "Kenya",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mg",
+        "name": "Madagascar",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mr",
+        "name": "Mauritania",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "bm",
+        "name": "Bermuda",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "bt",
+        "name": "Bhutan",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "is",
+        "name": "Iceland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "km",
+        "name": "Comoros",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cg",
+        "name": "Republic of the Congo",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ck",
+        "name": "Cook Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cy",
+        "name": "Cyprus",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "ge",
+        "name": "Georgia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gr",
+        "name": "Greece",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gd",
+        "name": "Grenada",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ie",
+        "name": "Ireland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "lu",
+        "name": "Luxembourg",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "hu",
+        "name": "Hungary",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "it",
+        "name": "Italy",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "kz",
+        "name": "Kazakhstan",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ki",
+        "name": "Kiribati",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "kw",
+        "name": "Kuwait",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "la",
+        "name": "Laos",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "lv",
+        "name": "Latvia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "li",
+        "name": "Liechtenstein",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "lt",
+        "name": "Lithuania",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mh",
+        "name": "Marshall Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "md",
+        "name": "Moldova",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "mp",
+        "name": "Northern Mariana Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "pg",
+        "name": "Papua New Guinea",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "pe",
+        "name": "Peru",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ro",
+        "name": "Romania",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "mf",
+        "name": "Saint Martin",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "st",
+        "name": "São Tomé and Príncipe",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sg",
+        "name": "Singapore",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sk",
+        "name": "Slovakia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "si",
+        "name": "Slovenia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "se",
+        "name": "Sweden",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "il",
+        "name": "Israel",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ar",
+        "name": "Argentina",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sb",
+        "name": "Solomon Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cl",
+        "name": "Chile",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "cr",
+        "name": "Costa Rica",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sv",
+        "name": "El Salvador",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "gg",
+        "name": "Guernsey",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "im",
+        "name": "Isle of Man",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "je",
+        "name": "Jersey",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "py",
+        "name": "Paraguay",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sr",
+        "name": "Suriname",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "sz",
+        "name": "Eswaniti",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "th",
+        "name": "Thailand",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "tl",
+        "name": "Timor-Leste",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "to",
+        "name": "Tonga",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "tm",
+        "name": "Turkmenistan",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "tc",
+        "name": "Turks and Caicos Islands",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "tv",
+        "name": "Tuvalu",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ua",
+        "name": "Ukraine",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "uz",
+        "name": "Uzbekistan",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "va",
+        "name": "Vatican",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "de",
+        "name": "Germany",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "fr",
+        "name": "France",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "al",
+        "name": "Albania",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "bg",
+        "name": "Bulgaria",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "co",
+        "name": "Colombia",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "COP"
+    },
+    {
+        "code": "tr",
+        "name": "Turkey",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "ph",
+        "name": "Philippines",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    },
+    {
+        "code": "es",
+        "name": "Spain",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "gb",
+        "name": "United Kingdom",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "GBP"
+    },
+    {
+        "code": "ch",
+        "name": "Switzerland",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "EUR"
+    },
+    {
+        "code": "tk",
+        "name": "Tokelau",
+        "cardPaymentsEnabled": true,
+        "mainCurrencyCode": "USD"
+    }
+]
