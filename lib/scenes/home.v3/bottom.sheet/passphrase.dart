@@ -34,8 +34,8 @@ class PassphraseSheet {
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: TextFieldTextV2(
                 labelText: S.of(context).passphrase_label,
-                textController: viewModel.walletPassphraseController,
-                myFocusNode: viewModel.walletPassphraseFocusNode,
+                textController: viewModel.walletRecoverPassphraseController,
+                myFocusNode: viewModel.walletRecoverPassphraseFocusNode,
                 validation: (String value) {
                   if (value.isEmpty) {
                     return "Required";
@@ -55,7 +55,7 @@ class PassphraseSheet {
                 child: ButtonV5(
                     onPressed: () async {
                       String passphrase =
-                          viewModel.walletPassphraseController.text;
+                          viewModel.walletRecoverPassphraseController.text;
                       bool match = await WalletManager.checkFingerprint(
                           walletModel, passphrase);
                       setState(() {
@@ -83,7 +83,7 @@ class PassphraseSheet {
                         }
                         EasyLoading.dismiss();
                       }
-                      viewModel.walletPassphraseController.text = "";
+                      viewModel.walletRecoverPassphraseController.text = "";
                       if (context.mounted && match) {
                         Navigator.of(context).pop();
                       }

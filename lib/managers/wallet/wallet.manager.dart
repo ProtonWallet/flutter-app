@@ -90,6 +90,17 @@ class WalletManager implements Manager {
     }
   }
 
+  static Future<void> deleteWalletAccountByServerAccountID(
+      String serverWalletAccountID) async {
+    AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerAccountID(serverWalletAccountID);
+    WalletModel? walletModel =
+        await DBHelper.walletDao!.findById(accountModel?.walletID ?? 0);
+    if (walletModel != null && accountModel != null) {
+      await (deleteWalletAccount(walletModel, accountModel));
+    }
+  }
+
   static Future<void> deleteWallet(int walletID) async {
     WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
     await DBHelper.walletDao!.delete(walletID);
