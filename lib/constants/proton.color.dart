@@ -9,6 +9,8 @@ class ProtonColors {
   static Color backgroundBlack = const Color(0xFF000000);
   static Color primaryColor = const Color(0xFF0E0E0E);
   static Color textWeak = const Color(0xFF535964);
+  static Color textWeakPressed = const Color(0xFFE2E2E2);
+  static Color errorBackground = const Color(0xFFFFE0E0);
   static Color textHint = const Color(0xFF999693);
   static Color iconWeak = const Color(0xFF706D6B);
   static Color wMajor1 = const Color(0xFFDEDBD9);
@@ -18,7 +20,7 @@ class ProtonColors {
   static Color alertWaning = const Color(0xFFF78400);
   static Color alertWaningBackground = const Color(0x19FF9900);
   static Color signalSuccess = const Color(0xFF1EA885);
-  static Color signalError = const Color(0xFFE32B6D);
+  static Color signalError = const Color(0xFFFF6464);
   static Color accentSlateblue = const Color(0xFF415DF0);
   static Color mailIntegrationBox = const Color(0xFFEDEAFB);
   static Color transactionNoteBackground = const Color(0x44D0D7E4);
@@ -74,7 +76,7 @@ class ProtonColors {
     alertWaning = const Color(0xFFF78400);
     alertWaningBackground = const Color(0x19FF9900);
     signalSuccess = const Color(0xFF1EA885);
-    signalError = const Color(0xFFE32B6D);
+    signalError = const Color(0xFFFF6464);
     accentSlateblue = const Color(0xFF415DF0);
     mailIntegrationBox = const Color(0xFFEDEAFB);
 
@@ -102,7 +104,7 @@ class ProtonColors {
     alertWaning = const Color(0xFFF78400);
     alertWaningBackground = const Color(0x19FF9900);
     signalSuccess = const Color(0xFF1EA885);
-    signalError = const Color(0xFFE32B6D);
+    signalError = const Color(0xFFFF6464);
     accentSlateblue = const Color(0xFF415DF0);
     mailIntegrationBox = const Color(0x12151504);
 

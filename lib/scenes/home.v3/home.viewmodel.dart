@@ -12,6 +12,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -24,6 +25,7 @@ import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -99,6 +101,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void setSearchHistoryTextField(bool show);
 
+  Future<void> createWallet();
+  Future<void> deleteWallet(WalletModel walletModel);
+
   ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
@@ -154,11 +159,18 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   late FocusNode newAccountNameFocusNode;
   late FocusNode walletNameFocusNode;
-  late FocusNode walletPassphraseFocusNode;
+  late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
   late TextEditingController newAccountNameController;
-  late TextEditingController walletPassphraseController;
+  late TextEditingController walletRecoverPassphraseController;
   late ValueNotifier newAccountScriptTypeValueNotifier;
+
+  late FocusNode passphraseFocusNode;
+  late FocusNode passphraseConfirmFocusNode;
+  late TextEditingController passphraseTextController;
+  late TextEditingController passphraseConfirmTextController;
+  late FocusNode nameFocusNode;
+  late TextEditingController nameTextController;
 
   @override
   bool get keepAlive => true;
@@ -234,11 +246,17 @@ class HomeViewModelImpl extends HomeViewModel {
       twoFactorAmountThresholdController = TextEditingController(text: "3");
       newAccountNameController = TextEditingController(text: "BTC Account");
       newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
-      walletPassphraseController = TextEditingController(text: "");
+      walletRecoverPassphraseController = TextEditingController(text: "");
+      passphraseTextController = TextEditingController(text: "");
+      passphraseConfirmTextController = TextEditingController(text: "");
+      nameTextController = TextEditingController();
 
-      walletPassphraseFocusNode = FocusNode();
+      walletRecoverPassphraseFocusNode = FocusNode();
       newAccountNameFocusNode = FocusNode();
       walletNameFocusNode = FocusNode();
+      passphraseFocusNode = FocusNode();
+      passphraseConfirmFocusNode = FocusNode();
+      nameFocusNode = FocusNode();
 
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.navigatorKey.currentContext!,
@@ -592,18 +610,25 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
+  Future<void> deleteWallet(WalletModel walletModel) async {
+    EasyLoading.show(
+        status: "deleting wallet..", maskType: EasyLoadingMaskType.black);
+    try {
+      await proton_api.deleteWallet(walletId: walletModel.serverWalletID);
+      await WalletManager.deleteWallet(walletModel.id!);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    EasyLoading.dismiss();
+  }
+
+  @override
   Future<void> move(NavID to) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
     AccountModel? currentAccount =
         protonWalletProvider.protonWallet.currentAccount;
     switch (to) {
-      case NavID.setupOnboard:
-        coordinator.showSetupOnbaord();
-        break;
-      case NavID.setupCreate:
-        coordinator.showSetupCreate();
-        break;
       case NavID.importWallet:
         coordinator.showImportWallet();
         break;
@@ -622,9 +647,6 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.welcome:
         coordinator.logout();
-        break;
-      case NavID.walletDeletion:
-        coordinator.showWalletDeletion(currentWallet!.id ?? 0);
         break;
       case NavID.historyDetails:
         coordinator.showHistoryDetails(
@@ -820,5 +842,31 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> updatePassphrase(String key, String passphrase) async {
     await protonWalletManager.setPassphrase(key, passphrase);
+  }
+
+  @override
+  Future<void> createWallet() async{
+    try {
+      Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
+      String strMnemonic = mnemonic.asString();
+      String walletName = nameTextController.text;
+      String strPassphrase = passphraseTextController.text;
+      await WalletManager.createWallet(
+          walletName,
+          strMnemonic,
+          WalletModel.importByUser,
+          Provider.of<ProtonWalletProvider>(
+              Coordinator.navigatorKey.currentContext!,
+              listen: false)
+              .protonWallet
+              .newAccountFiatCurrency,
+          strPassphrase);
+
+      await WalletManager.autoBindEmailAddresses();
+      await Future.delayed(
+          const Duration(seconds: 1)); // wait for account show on sidebar
+    } catch (e) {
+      errorMessage = e.toString();
+    }
   }
 }

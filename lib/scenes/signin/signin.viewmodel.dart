@@ -81,9 +81,9 @@ class SigninViewModelImpl extends SigninViewModel {
         userMail: "proton.wallet.test@proton.me",
         userName: "proton.wallet.test",
         userDisplayName: "proton.wallet.test",
-        sessionId: "4muigspfgvzyewkfalqhyabjmwzh3opu",
-        accessToken: "m2v7iywbwusezrxbspz56nkjvn5xtger",
-        refreshToken: "e7ydfgdnaounewb5qqhu7sspqrh2yjdj",
+        sessionId: "uvgquyxt2ojuhry24ujdquaszmtyy6cz",
+        accessToken: "uandw5woblyugdpfikbnsigxqlugpm2d",
+        refreshToken: "lszwkws6cu7k57efdh3mqaupog6vma7r",
         scopes: "full,locked,self,payments,keys,parent,user,loggedin,nondelinquent,verified,settings,wallet",
         userKeyID: "54DY3FZ-inMbCA6beQINReu6ziXMErdTiKgmCvATLXJtNGQx9BNo8Iggbgk5IKAXhBOrEWWeq5YcJA6pCvOTDQ==",
         userPrivateKey: '''-----BEGIN PGP PRIVATE KEY BLOCK-----

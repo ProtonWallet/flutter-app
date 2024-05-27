@@ -5,17 +5,12 @@ abstract class NavigationFlowInterface {
 
 enum NavID {
   root,
-
-  // Setup & Import
-  setupOnboard,
-  setupCreate,
   setupBackup,
   setupReady,
 
   // Wallet
   wallet, //????
   importWallet,
-  walletDeletion,
 
   // Home and Welcome
   welcome,

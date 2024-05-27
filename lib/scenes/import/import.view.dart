@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.custom.dart';
-import 'package:wallet/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/components/bottom.sheets/passphrase.tutorial.dart';
+import 'package:wallet/components/bottom.sheets/seed.phrase.tutorial.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
-import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/components/button.v5.dart';
@@ -65,15 +66,11 @@ class ImportView extends ViewBase<ImportViewModel> {
                 ),
                 SizedBoxes.box12,
                 AlertCustom(
-                  content: S.of(context).wallet_import_mnemonic_guide,
-                  learnMore: Underline(
-                      onTap: () {
-                        CustomPlaceholder.show(context);
-                      },
-                      color: ProtonColors.purple1Text,
-                      child: Text(S.of(context).wallet_import_mnemonic_help,
-                          style: FontManager.body2Median(
-                              ProtonColors.purple1Text))),
+                  content: S.of(context).what_is_seed_phrase,
+                  onTap: () {
+                    SeedPhraseTutorialSheet.show(context);
+                  },
+                  canClose: false,
                   leadingWidget: SvgPicture.asset(
                       "assets/images/icon/alert_info.svg",
                       fit: BoxFit.fill,
@@ -99,6 +96,25 @@ class ImportView extends ViewBase<ImportViewModel> {
                     iconColor: ProtonColors.textHint,
                     collapsedIconColor: ProtonColors.textHint,
                     children: [
+                      AlertCustom(
+                        content: S.of(context).what_is_wallet_passphrase,
+                        onTap: () {
+                          PassphraseTutorialSheet.show(context);
+                        },
+                        canClose: false,
+                        leadingWidget: SvgPicture.asset(
+                            "assets/images/icon/alert_info.svg",
+                            fit: BoxFit.fill,
+                            width: 22,
+                            height: 22),
+                        border: Border.all(
+                          color: Colors.transparent,
+                          width: 0,
+                        ),
+                        backgroundColor: ProtonColors.purple1Background,
+                        color: ProtonColors.purple1Text,
+                      ),
+                      SizedBoxes.box12,
                       TextFieldTextV2(
                         labelText: S.of(context).your_passphrase_optional,
                         textController: viewModel.passphraseTextController,
@@ -143,7 +159,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                             }
                           }
                         },
-                        enable: viewModel.verifyMnemonic(),
+                        enable: viewModel.isValidMnemonic,
                         text: S.of(context).import_button,
                         width: MediaQuery.of(context).size.width,
                         textStyle: FontManager.body1Median(ProtonColors.white),
@@ -168,15 +184,34 @@ class ImportView extends ViewBase<ImportViewModel> {
         textController: viewModel.mnemonicTextController,
         myFocusNode: viewModel.mnemonicFocusNode,
         maxLines: 6,
-        validation: (String _) {
-          if (viewModel.verifyMnemonic() == false) {
+        validation: (String strMnemonic) {
+          if (verifyMnemonic(strMnemonic) == false) {
             return S.of(context).not_a_valid_mnemonic;
           }
           return "";
         },
         isPassword: false,
+        onFinish: () {
+          viewModel.updateValidMnemonic(
+              verifyMnemonic(viewModel.mnemonicTextController.text));
+        },
       ),
     ]);
+  }
+
+  bool verifyMnemonic(String strMnemonic) {
+    final RegExp regex = RegExp(r'^[a-z ]*$');
+    bool matchPattern = regex.hasMatch(strMnemonic);
+    if (matchPattern == false) {
+      logger.i("pattern not match!");
+      return false;
+    }
+    int mnemonicLength = strMnemonic.split(" ").length;
+    if (mnemonicLength != 12 && mnemonicLength != 18 && mnemonicLength != 24) {
+      logger.i("length not match! ($mnemonicLength)");
+      return false;
+    }
+    return true;
   }
 
   Widget buildManualInputMode(BuildContext context) {
