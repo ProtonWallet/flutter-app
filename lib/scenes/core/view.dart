@@ -39,13 +39,13 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
   @override
   void initState() {
     viewModel = widget.viewModel as V;
+    super.initState();
     StreamSubscription<ViewModel> streamDatasourceChanged;
     streamDatasourceChanged = viewModel.datasourceChanged.listen((viewModel) {
       setState(() {});
     });
     subscriptions.add(streamDatasourceChanged);
     viewModel.loadData();
-    super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
 

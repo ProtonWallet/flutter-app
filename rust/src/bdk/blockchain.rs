@@ -9,8 +9,8 @@ use esplora_client::AsyncClient;
 use lazy_static::lazy_static;
 use log::debug;
 use std::collections::HashMap;
-use std::sync::RwLock;
-use std::sync::{Arc, Mutex, MutexGuard};
+use std::sync::{Arc, RwLock};
+use tokio::sync::{Mutex, MutexGuard};
 
 lazy_static! {
     static ref BLOCKCHAIN: RwLock<HashMap<String, Arc<Blockchain>>> = RwLock::new(HashMap::new());
@@ -87,26 +87,34 @@ impl Blockchain {
         let blockchain_lock = BLOCKCHAIN.read().unwrap();
         blockchain_lock.get(id.as_str()).unwrap().clone()
     }
-    pub fn get_blockchain(&self) -> MutexGuard<AnyBlockchain> {
-        self.blockchain_mutex.lock().expect("blockchain")
+    pub async fn get_blockchain(&self) -> MutexGuard<AnyBlockchain> {
+        self.blockchain_mutex.lock().await
     }
 
     // broadcast a transaction
     pub(crate) async fn broadcast(&self, tx: Transaction) -> Result<String, BdkError> {
-        let _ = self.get_blockchain().broadcast(&tx.internal.clone()).await;
+        let _ = self
+            .get_blockchain()
+            .await
+            .broadcast(&tx.internal.clone())
+            .await;
         Ok(tx.internal.txid().to_string())
     }
 
     pub async fn get_height(&self) -> Result<u32, BdkError> {
-        self.get_blockchain().get_height().await
+        self.get_blockchain().await.get_height().await
     }
 
     // get the fee rate
     pub async fn estimate_fee(&self, target: u64) -> Result<FeeRate, BdkError> {
-        self.get_blockchain().estimate_fee(target as usize).await
+        self.get_blockchain()
+            .await
+            .estimate_fee(target as usize)
+            .await
     }
     pub async fn get_block_hash(&self, height: u32) -> Result<String, BdkError> {
         self.get_blockchain()
+            .await
             .get_block_hash(u64::from(height))
             .await
             .map(|hash| hash.to_string())

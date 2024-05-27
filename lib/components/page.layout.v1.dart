@@ -15,30 +15,32 @@ class PageLayoutV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ProtonColors.backgroundProton,
-        body: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BackButtonV1(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                    const SizedBox(height: defaultPadding),
-                    if (title != null)
-                      Text(title!,
-                          style:
-                              FontManager.titleSubHero(ProtonColors.textNorm)),
-                    if (child != null) child!,
-                  ]))),
-              if (bottomWidget != null) bottomWidget!,
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BackButtonV1(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                      const SizedBox(height: defaultPadding),
+                      if (title != null)
+                        Text(title!,
+                            style: FontManager.titleSubHero(
+                                ProtonColors.textNorm)),
+                      if (child != null) child!,
+                    ]))),
+                if (bottomWidget != null) bottomWidget!,
+              ],
+            ),
           ),
         ));
   }

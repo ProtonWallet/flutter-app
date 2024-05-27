@@ -75,7 +75,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
       userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
     }
 
-    await proton_api.initApiServiceAuthStore(
+    proton_api.initApiServiceAuthStore(
       uid: uid,
       access: accessToken,
       refresh: refreshToken,

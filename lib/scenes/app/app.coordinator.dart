@@ -9,11 +9,14 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/scenes/app/app.view.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
+
+late ProtonApiService protonApiService; //temp. will need to move to manager
 
 class AppCoordinator extends Coordinator {
   late ViewBase widget;

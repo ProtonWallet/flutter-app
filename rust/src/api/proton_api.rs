@@ -1,31 +1,27 @@
 pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
 use andromeda_api::{
-    transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
-    AccessToken, AppSpec, AuthData, Product, ProtonWalletApiClient, RefreshToken,
-    ReqwestTransportFactory, Scope, Session, Uid,
+    transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody, Auth,
+    ProtonWalletApiClient, Tokens,
 };
 use andromeda_common::BitcoinUnit;
 use chrono::Utc;
+use flutter_rust_bridge::frb;
 use lazy_static::lazy_static;
 use log::info;
 use std::sync::{Arc, RwLock};
 
-use crate::{
-    auth_credential::ProtonAuthData,
-    auth_store::WalletAuthStore,
-    proton_api::{
-        contacts::ProtonContactEmails,
-        errors::ApiError,
-        event_routes::ProtonEvent,
-        exchange_rate::ProtonExchangeRate,
-        proton_address::{AllKeyAddressKey, ProtonAddress},
-        user_settings::ApiUserSettings,
-        wallet::{
-            BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
-            WalletBitcoinAddress, WalletData, WalletTransaction,
-        },
-        wallet_account::{CreateWalletAccountReq, WalletAccount},
+use crate::proton_api::{
+    contacts::ProtonContactEmails,
+    errors::ApiError,
+    event_routes::ProtonEvent,
+    exchange_rate::ProtonExchangeRate,
+    proton_address::{AllKeyAddressKey, ProtonAddress},
+    user_settings::ApiUserSettings,
+    wallet::{
+        BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
+        WalletBitcoinAddress, WalletData, WalletTransaction,
     },
+    wallet_account::{CreateWalletAccountReq, WalletAccount},
 };
 
 use crate::bdk::psbt::Transaction;
@@ -45,17 +41,19 @@ pub(crate) fn retrieve_proton_api() -> Arc<ProtonWalletApiClient> {
 pub async fn init_api_service(user_name: String, password: String) {
     info!("start init_api_service");
     // create a global proton api service
-    let mut api = ProtonWalletApiClient::from_version(
+    let api = ProtonWalletApiClient::from_version(
         // TODO:: fix me later add -dev back in debug builds
         "android-wallet@1.0.0".to_string(), //-dev
         "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
-    );
+    )
+    .unwrap();
     api.login(&user_name, &password).await.unwrap();
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(Arc::new(api));
 }
 
 // initapiserviceauthstore
+#[frb(sync)]
 pub fn init_api_service_auth_store(
     uid: String,
     access: String,
@@ -64,56 +62,51 @@ pub fn init_api_service_auth_store(
     app_version: String,
     user_agent: String,
     env: Option<String>,
-) {
+) -> Result<(), ApiError> {
     info!("start init_api_service");
     info!(
         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
         uid, access, refresh, scopes
     );
-    let auth_data = Arc::new(RwLock::new(ProtonAuthData::new(
-        uid, refresh, access, scopes,
-    )));
-    let app_spec = AppSpec::new(Product::Wallet, app_version, user_agent);
-    let auth_store_env = env.unwrap_or("atlas".to_string());
-    let auth_store = WalletAuthStore::new(auth_store_env, auth_data.clone());
-    let transport = ReqwestTransportFactory::new();
-    let session = Session::new_with_transport(auth_store, app_spec, transport).unwrap();
-    let api = ProtonWalletApiClient::from_session(session, None);
+    let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+    let api = ProtonWalletApiClient::from_auth_with_version(auth, app_version, user_agent, env)?;
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(Arc::new(api));
+    Ok(())
 }
 
 // initApiServiceFromAuthAndVersion
-pub fn init_api_service_from_auth_and_version(
-    uid: String,
-    access: String,
-    refresh: String,
-    scopes: Vec<String>,
-    app_version: String,
-    user_agent: String,
-    env: Option<String>,
-) {
-    info!("start init_api_service with session");
-    // create a global proton api service
-    let auth = AuthData::Access(
-        Uid::from(uid.clone()),
-        RefreshToken::from(refresh.clone()),
-        AccessToken::from(access.clone()),
-        scopes
-            .into_iter()
-            .map(|scope_string| Scope::from(scope_string))
-            .collect(),
-    );
-    let api = ProtonWalletApiClient::from_auth_with_version(
-        auth,
-        app_version.clone(),
-        user_agent.clone(),
-        env,
-    )
-    .expect("error from auth()");
-    let mut api_ref = PROTON_API.write().unwrap();
-    *api_ref = Some(Arc::new(api));
-}
+// pub fn init_api_service_from_auth_and_version(
+//     uid: String,
+//     access: String,
+//     refresh: String,
+//     scopes: Vec<String>,
+//     app_version: String,
+//     user_agent: String,
+//     env: Option<String>,
+// ) {
+//     info!("start init_api_service with session");
+// create a global proton api service
+// let auth = AuthData::Access(
+//     Uid::from(uid.clone()),
+//     RefreshToken::from(refresh.clone()),
+//     AccessToken::from(access.clone()),
+//     scopes
+//         .into_iter()
+//         .map(|scope_string| Scope::from(scope_string))
+//         .collect(),
+// );
+
+//     let api = ProtonWalletApiClient::from_auth_with_version(
+//         Auth::None,
+//         app_version.clone(),
+//         user_agent.clone(),
+//         env,
+//     )
+//     .expect("error from auth()");
+//     let mut api_ref = PROTON_API.write().unwrap();
+//     *api_ref = Some(Arc::new(api));
+// }
 
 // wallets
 pub async fn get_wallets() -> Result<Vec<WalletData>, ApiError> {
@@ -289,6 +282,8 @@ pub async fn hide_empty_used_addresses(
         .settings
         .hide_empty_used_addresses(hide_empty_used_addresses)
         .await;
+
+    info!("hide_empty_userd_addresses: {:?}", result);
     match result {
         Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),
@@ -306,6 +301,9 @@ pub async fn get_exchange_rate(
         .exchange_rate
         .get_exchange_rate(fiat_currency, time)
         .await;
+
+    info!("get_exchange_rate: {:?}", result);
+
     match result {
         Ok(response) => Ok(response.into()),
         Err(err) => Err(err.into()),
@@ -574,6 +572,7 @@ pub async fn delete_wallet_transactions(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub async fn broadcast_raw_transaction(
     signed_transaction_hex: String,
     wallet_id: String,
