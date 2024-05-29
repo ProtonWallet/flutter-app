@@ -97,8 +97,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 ProtonColors.signalSuccess)),
                     Text(
                         viewModel.isSend
-                            ? "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs().toStringAsFixed(defaultDisplayDigits)}"
-                            : "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs().toStringAsFixed(defaultDisplayDigits)}",
+                            ? "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
+                            : "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.textHint)),
                     const SizedBox(height: 20),
@@ -225,7 +225,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               showNetworkFee(context);
                             },
                             content:
-                                "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt()).toStringAsFixed(defaultDisplayDigits)}",
+                                "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(defaultDisplayDigits)}",
                             memo: Provider.of<UserSettingProvider>(context)
                                 .getBitcoinUnitLabel(viewModel.fee.toInt()),
                           ),
@@ -236,8 +236,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                               title: S.of(context).trans_total,
                               content: viewModel.isSend
-                                  ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt()).abs().toStringAsFixed(defaultDisplayDigits)}"
-                                  : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt()).toStringAsFixed(defaultDisplayDigits)}",
+                                  ? "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
+                                  : "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(defaultDisplayDigits)}",
                               memo: viewModel.isSend
                                   ? Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
@@ -317,6 +317,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         copyContent: true,
         memo: memo,
         amountInSATS: amountInSATS,
+        exchangeRate: viewModel.exchangeRate,
       )
     ]);
   }

@@ -44,9 +44,7 @@ class ImportView extends ViewBase<ImportViewModel> {
             child: Stack(children: [
           Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height -
-                  56 -
-                  MediaQuery.of(context).padding.top,
+              height: MediaQuery.of(context).size.height,
               margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: SingleChildScrollView(
                   child: Column(children: <Widget>[
@@ -127,45 +125,45 @@ class ImportView extends ViewBase<ImportViewModel> {
                     ]),
                 const SizedBox(height: 80),
               ]))),
-          Container(
-              padding: const EdgeInsets.only(bottom: defaultPadding),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height -
-                  56 -
-                  MediaQuery.of(context).padding.top,
-              // AppBar default height is 56
-              margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ButtonV5(
-                        onPressed: () async {
-                          EasyLoading.show(
-                              status: "creating wallet..",
-                              maskType: EasyLoadingMaskType.black);
-                          await viewModel.importWallet();
-                          viewModel.coordinator.end();
-                          EasyLoading.dismiss();
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                            if (viewModel.errorMessage.isEmpty) {
-                              CommonHelper.showSnackbar(
-                                  context, S.of(context).wallet_imported);
-                            } else {
-                              CommonHelper.showSnackbar(
-                                  context, viewModel.errorMessage,
-                                  isError: true);
+          if (MediaQuery.of(context).viewInsets.bottom < 80)
+            Container(
+                padding: const EdgeInsets.only(bottom: defaultPadding),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - 56,
+                // AppBar default height is 56
+                margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ButtonV5(
+                          onPressed: () async {
+                            EasyLoading.show(
+                                status: "creating wallet..",
+                                maskType: EasyLoadingMaskType.black);
+                            await viewModel.importWallet();
+                            viewModel.coordinator.end();
+                            EasyLoading.dismiss();
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              if (viewModel.errorMessage.isEmpty) {
+                                CommonHelper.showSnackbar(
+                                    context, S.of(context).wallet_imported);
+                              } else {
+                                CommonHelper.showSnackbar(
+                                    context, viewModel.errorMessage,
+                                    isError: true);
+                              }
                             }
-                          }
-                        },
-                        enable: viewModel.isValidMnemonic,
-                        text: S.of(context).import_button,
-                        width: MediaQuery.of(context).size.width,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
-                        backgroundColor: ProtonColors.protonBlue,
-                        height: 48),
-                  ]))
+                          },
+                          enable: viewModel.isValidMnemonic,
+                          text: S.of(context).import_button,
+                          width: MediaQuery.of(context).size.width,
+                          textStyle:
+                              FontManager.body1Median(ProtonColors.white),
+                          backgroundColor: ProtonColors.protonBlue,
+                          height: 48),
+                    ]))
         ])));
   }
 
@@ -192,6 +190,8 @@ class ImportView extends ViewBase<ImportViewModel> {
         },
         isPassword: false,
         onFinish: () {
+          viewModel.mnemonicTextController.text =
+              viewModel.mnemonicTextController.text.trim();
           viewModel.updateValidMnemonic(
               verifyMnemonic(viewModel.mnemonicTextController.text));
         },
