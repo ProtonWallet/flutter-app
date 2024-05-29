@@ -96,6 +96,7 @@ dependencies:
   json_annotation: ^4.9.0
   flutter_bloc: ^8.1.5
   equatable: ^2.0.3 # better use with flutter bloc
+  animated_flip_counter: ^0.3.4
 
   ### database
   drift: ^2.18.0

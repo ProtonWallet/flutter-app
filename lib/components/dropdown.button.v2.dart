@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
@@ -11,6 +12,7 @@ class DropdownButtonV2 extends StatefulWidget {
   final double width;
   final List items;
   final List itemsText;
+  final List? itemsTextForDisplay;
   final ValueNotifier? valueNotifier;
   final String? defaultOption;
   final String? labelText;
@@ -24,6 +26,7 @@ class DropdownButtonV2 extends StatefulWidget {
       required this.width,
       required this.items,
       required this.itemsText,
+      this.itemsTextForDisplay,
       this.labelText,
       this.backgroundColor,
       this.defaultOption,
@@ -41,11 +44,22 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
 
+  String getDisplayText(int index) {
+    try {
+      if (widget.itemsTextForDisplay != null) {
+        return widget.itemsTextForDisplay![index];
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return widget.itemsText[index];
+  }
+
   @override
   void initState() {
     selected = widget.valueNotifier?.value;
     int selectedIndex = max(widget.items.indexOf(selected), 0);
-    _textEditingController.text = widget.itemsText[selectedIndex];
+    _textEditingController.text = getDisplayText(selectedIndex);
     super.initState();
   }
 
@@ -165,7 +179,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                       int selectedIndex = max(
                                           widget.items.indexOf(selected), 0);
                                       _textEditingController.text =
-                                          widget.itemsText[selectedIndex];
+                                          getDisplayText(selectedIndex);
                                       widget.valueNotifier?.value = selected;
                                       Navigator.of(context).pop();
                                     });

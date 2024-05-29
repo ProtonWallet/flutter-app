@@ -16,14 +16,26 @@ class FiatCurrencyHelper {
     return symbol;
   }
 
-  static String getName(FiatCurrency apiFiatCurrency) {
+  static String getFullName(FiatCurrency apiFiatCurrency) {
     String name = "";
     String sign = "";
+    String symbol = "";
     if (fiatCurrency2Info.containsKey(apiFiatCurrency)) {
       name = fiatCurrency2Info[apiFiatCurrency]!.name;
       sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
+      symbol = fiatCurrency2Info[apiFiatCurrency]!.symbol.toUpperCase();
     }
-    return "$name $sign";
+    return "$name, $symbol($sign)";
+  }
+
+  static String getDisplayName(FiatCurrency apiFiatCurrency) {
+    String sign = "";
+    String symbol = "";
+    if (fiatCurrency2Info.containsKey(apiFiatCurrency)) {
+      sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
+      symbol = fiatCurrency2Info[apiFiatCurrency]!.symbol.toUpperCase();
+    }
+    return "$symbol($sign)";
   }
 }
 

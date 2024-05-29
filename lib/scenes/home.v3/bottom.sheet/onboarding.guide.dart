@@ -60,7 +60,7 @@ class OnboardingGuideSheet {
                       width: MediaQuery.of(context).size.width,
                       items: fiatCurrencies,
                       itemsText: fiatCurrencies
-                          .map((v) => FiatCurrencyHelper.getName(v))
+                          .map((v) => FiatCurrencyHelper.getFullName(v))
                           .toList(),
                       valueNotifier: viewModel.fiatCurrencyNotifier),
                   const SizedBox(height: 10),
@@ -69,7 +69,7 @@ class OnboardingGuideSheet {
                       initiallyExpanded: false,
                       title: Transform.translate(
                           offset: const Offset(-12, 0),
-                          child: Text(S.of(context).my_wallet_has_passphrase,
+                          child: Text(S.of(context).add_a_passphrase_optional,
                               style: FontManager.body2Median(
                                   ProtonColors.textWeak))),
                       iconColor: ProtonColors.textHint,

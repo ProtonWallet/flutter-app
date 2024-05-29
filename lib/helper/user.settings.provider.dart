@@ -68,16 +68,17 @@ class UserSettingProvider with ChangeNotifier {
         "Updating exchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}");
   }
 
-  double getNotionalInFiatCurrency(int amountInSATS) {
+  double getNotionalInFiatCurrency(int amountInSATS, {ProtonExchangeRate? exchangeRate}) {
     FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
+    exchangeRate ??= walletUserSetting.exchangeRate;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
-      return walletUserSetting.exchangeRate.exchangeRate *
+      return exchangeRate.exchangeRate *
           amountInSATS /
           fiatCurrencyInfo.cents /
           100000000;
     }
-    return walletUserSetting.exchangeRate.exchangeRate *
+    return exchangeRate.exchangeRate *
         amountInSATS /
         100000000;
   }
