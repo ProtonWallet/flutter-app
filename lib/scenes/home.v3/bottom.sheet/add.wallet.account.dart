@@ -69,7 +69,7 @@ class AddWalletAccountSheet {
                             defaultPadding * 4,
                         items: fiatCurrencies,
                         itemsText: fiatCurrencies
-                            .map((v) => FiatCurrencyHelper.getName(v))
+                            .map((v) => FiatCurrencyHelper.getFullName(v))
                             .toList(),
                         valueNotifier: viewModel.fiatCurrencyNotifier),
                     const SizedBox(height: 12),

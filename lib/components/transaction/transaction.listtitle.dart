@@ -7,6 +7,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 import '../../constants/constants.dart';
@@ -20,6 +21,7 @@ class TransactionListTitle extends StatelessWidget {
   final VoidCallback? onTap;
   final String note;
   final String? body;
+  final ProtonExchangeRate? exchangeRate;
 
   const TransactionListTitle({
     super.key,
@@ -31,6 +33,7 @@ class TransactionListTitle extends StatelessWidget {
     this.note = "",
     this.onTap,
     this.body,
+    this.exchangeRate,
   });
 
   String parsetime(int timestemp) {
@@ -44,7 +47,7 @@ class TransactionListTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double notional = Provider.of<UserSettingProvider>(context)
-        .getNotionalInFiatCurrency(amount.toInt());
+        .getNotionalInFiatCurrency(amount.toInt(), exchangeRate: exchangeRate);
     return GestureDetector(
         onTap: onTap,
         child: Container(

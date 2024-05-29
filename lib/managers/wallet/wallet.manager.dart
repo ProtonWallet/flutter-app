@@ -58,6 +58,10 @@ class WalletManager implements Manager {
     await preferences.clear();
   }
 
+  static Future<List<ProtonAddress>> getProtonAddress() async {
+    return await proton_api.getProtonAddress();
+  }
+
   // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   // TODO:: return Wallet? to avoid issue, add try-catch here
   static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
@@ -1083,28 +1087,44 @@ class WalletManager implements Manager {
         publicAddressKey, message, signature, gpgContext);
   }
 
-  static String getEmailFromWalletTransaction(String jsonString) {
+  static String getEmailFromWalletTransaction(String jsonString,
+      {List<String> selfEmailAddresses = const []}) {
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].values.first;
     } catch (e) {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
-        return jsonList.values.toList()[0];
+        for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
+          // bitcoinAddress as key, emailAddress as value
+          if (selfEmailAddresses.contains(keyValues.value)) {
+            continue;
+          }
+          return keyValues.value;
+        }
+        return "";
       } catch (e) {
         return jsonString;
       }
     }
   }
 
-  static String getBitcoinAddressFromWalletTransaction(String jsonString) {
+  static String getBitcoinAddressFromWalletTransaction(String jsonString,
+      {List<String> selfEmailAddresses = const []}) {
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].keys.first;
     } catch (e) {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
-        return jsonList.keys.toList()[0];
+        for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
+          // bitcoinAddress as key, emailAddress as value
+          if (selfEmailAddresses.contains(keyValues.value)) {
+            continue;
+          }
+          return keyValues.key;
+        }
+        return "";
       } catch (e) {
         return jsonString;
       }

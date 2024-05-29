@@ -25,6 +25,7 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -39,6 +40,7 @@ class ProtonWalletManager implements Manager {
   AccountModel? currentAccount; // show Wallet View when no account pick
   List<WalletModel> wallets = [];
   List<AccountModel> accounts = [];
+  List<ProtonAddress> protonAddresses = [];
   List<AccountModel> currentAccounts = [];
   List<HistoryTransaction> historyTransactions = [];
   List<HistoryTransaction> historyTransactionsAfterFilter = [];
@@ -448,6 +450,11 @@ class ProtonWalletManager implements Manager {
     if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();
     }
+    if (protonAddresses.isEmpty) {
+      List<ProtonAddress> addresses = await WalletManager.getProtonAddress();
+      protonAddresses =
+          addresses.where((element) => element.status == 1).toList();
+    }
     if (oldWalletModel != null && currentAccount != null) {
       // wallet account view
       accountsToCheckTransaction.add(currentAccount!);
@@ -541,6 +548,16 @@ class ProtonWalletManager implements Manager {
         }
         int amountInSATS = transactionDetail.received - transactionDetail.sent;
         String key = "$txID-${accountModel.serverAccountID}";
+        ProtonExchangeRate? exchangeRate =
+            await ExchangeRateService.getExchangeRate(
+                Provider.of<UserSettingProvider>(
+                        Coordinator.navigatorKey.currentContext!,
+                        listen: false)
+                    .walletUserSetting
+                    .fiatCurrency,
+                time: transactionModel?.transactionTime != null
+                    ? int.parse(transactionModel?.transactionTime ?? "0")
+                    : null);
         newHistoryTransactionsMap[key] = HistoryTransaction(
           txID: txID,
           createTimestamp: transactionDetail.confirmationTime?.timestamp,
@@ -553,6 +570,7 @@ class ProtonWalletManager implements Manager {
           inProgress: transactionDetail.confirmationTime == null,
           accountModel: accountModel,
           body: body.isNotEmpty ? body : null,
+          exchangeRate: exchangeRate,
         );
         updateBitcoinAddressUsed(
             txID); // update local bitcoin address to set used, TODO:: fix performance here
@@ -634,7 +652,9 @@ class ProtonWalletManager implements Manager {
               utf8.encode(txID),
               oldWalletModel.serverWalletID,
               accountModel.serverAccountID,
-              WalletManager.getBitcoinAddressFromWalletTransaction(toList));
+              WalletManager.getBitcoinAddressFromWalletTransaction(toList,
+                  selfEmailAddresses:
+                      protonAddresses.map((e) => e.email).toList()));
         } catch (e) {
           logger.e(e.toString());
         }
@@ -653,6 +673,13 @@ class ProtonWalletManager implements Manager {
             inProgress: true,
             accountModel: accountModel,
             body: body.isNotEmpty ? body : null,
+            exchangeRate: await ExchangeRateService.getExchangeRate(
+                Provider.of<UserSettingProvider>(
+                        Coordinator.navigatorKey.currentContext!,
+                        listen: false)
+                    .walletUserSetting
+                    .fiatCurrency,
+                time: transactionInfoModel.transactionTime),
           );
         } else {
           // get transaction info from blockstream or esplora, for recipients
@@ -696,6 +723,7 @@ class ProtonWalletManager implements Manager {
                   inProgress: true,
                   accountModel: accountModel,
                   body: body.isNotEmpty ? body : null,
+                  exchangeRate: null,
                 );
               } else {
                 // logger.i("Cannot find this tx, $txID");

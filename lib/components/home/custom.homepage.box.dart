@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/assets.gen.dart';
@@ -53,19 +54,35 @@ class CustomHomePageBox extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Row(children: [
-                        Text(
-                            "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(100000000).toStringAsFixed(defaultDisplayDigits)}",
-                            style:
+                        AnimatedFlipCounter(
+                            duration: const Duration(milliseconds: 500),
+                            prefix: Provider.of<UserSettingProvider>(context)
+                                .getFiatCurrencySign(),
+                            value: Provider.of<UserSettingProvider>(context)
+                                .getNotionalInFiatCurrency(100000000),
+                            // value: price,
+                            fractionDigits: defaultDisplayDigits,
+                            textStyle:
                                 FontManager.body1Median(ProtonColors.textNorm)),
                         const SizedBox(
                           width: 8,
                         ),
                         priceChange > 0
-                            ? Text("▲${priceChange.toStringAsFixed(2)}% (1d)",
-                                style: FontManager.body2Regular(
+                            ? AnimatedFlipCounter(
+                                duration: const Duration(milliseconds: 500),
+                                prefix: "▲",
+                                value: priceChange,
+                                suffix: "% (1d)",
+                                fractionDigits: 2,
+                                textStyle: FontManager.body2Regular(
                                     ProtonColors.signalSuccess))
-                            : Text("▼${priceChange.toStringAsFixed(2)}% (1d)",
-                                style: FontManager.body2Regular(
+                            : AnimatedFlipCounter(
+                                duration: const Duration(milliseconds: 500),
+                                prefix: "▼",
+                                value: priceChange,
+                                suffix: "% (1d)",
+                                fractionDigits: 2,
+                                textStyle: FontManager.body2Regular(
                                     ProtonColors.signalError)),
                       ]),
                     )
