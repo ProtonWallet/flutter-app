@@ -72,6 +72,30 @@ class SendView extends ViewBase<SendViewModel> {
     );
   }
 
+  double getTotalAmountInFiatCurrency(SendViewModel viewModel) {
+    double totalAmountInFiatCurrency = 0;
+    for (ProtonRecipient protonRecipient in viewModel.recipients) {
+      if (protonRecipient.amountController.text.isNotEmpty) {
+        double amount = 0.0;
+        try {
+          amount = double.parse(protonRecipient.amountController.text);
+        } catch (e) {
+          amount = 0.0;
+        }
+        totalAmountInFiatCurrency += amount;
+      }
+    }
+    return totalAmountInFiatCurrency;
+  }
+
+  int getTotalAmountInSATS(SendViewModel viewModel) {
+    int totalAmountInSATS = 0;
+    for (ProtonRecipient protonRecipient in viewModel.recipients) {
+      totalAmountInSATS += protonRecipient.amountInSATS ?? 0;
+    }
+    return totalAmountInSATS;
+  }
+
   Widget buildReviewContent(
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
     int estimatedFee = 0;
@@ -103,24 +127,27 @@ class SendView extends ViewBase<SendViewModel> {
                             const SizedBox(height: 40),
                             getTransactionValueWidget(context, viewModel),
                             const SizedBox(height: 20),
-                            for (String recipient in viewModel.recipients)
+                            for (ProtonRecipient protonRecipient
+                                in viewModel.recipients)
                               if (viewModel.bitcoinAddresses
-                                      .containsKey(recipient) &&
-                                  viewModel.bitcoinAddresses[recipient]! !=
+                                      .containsKey(protonRecipient.email) &&
+                                  viewModel.bitcoinAddresses[
+                                          protonRecipient.email]! !=
                                       "" &&
                                   viewModel.selfBitcoinAddresses.contains(
                                           viewModel.bitcoinAddresses[
-                                                  recipient] ??
+                                                  protonRecipient.email] ??
                                               "") ==
                                       false)
                                 Column(children: [
                                   TransactionHistoryItem(
                                     title: S.of(context).trans_to,
-                                    content: recipient,
-                                    memo: viewModel.bitcoinAddresses[recipient],
+                                    content: protonRecipient.email,
+                                    memo: viewModel.bitcoinAddresses[
+                                        protonRecipient.email],
                                     amountInSATS:
                                         viewModel.recipients.length > 1
-                                            ? viewModel.amountInSATS
+                                            ? protonRecipient.amountInSATS
                                             : null,
                                   ),
                                   const Divider(
@@ -376,15 +403,17 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionValueWidget(
       BuildContext context, SendViewModel viewModel) {
+    int amountInSATS = getTotalAmountInSATS(viewModel);
+    double amountInFiatCurrency = getTotalAmountInFiatCurrency(viewModel);
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.totalAmountInSAT).toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel(viewModel.totalAmountInSAT),
+              .getBitcoinUnitLabel(amountInSATS),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
@@ -448,33 +477,38 @@ class SendView extends ViewBase<SendViewModel> {
                                 index < viewModel.recipients.length;
                                 index++)
                               RecipientDetail(
-                                name: viewModel.recipients[index],
-                                email: viewModel.recipients[index],
+                                name: viewModel.recipients[index].email,
+                                email: viewModel.recipients[index].email,
                                 bitcoinAddress: viewModel.bitcoinAddresses
                                         .containsKey(
-                                            viewModel.recipients[index])
-                                    ? viewModel.bitcoinAddresses[
-                                            viewModel.recipients[index]] ??
+                                            viewModel.recipients[index].email)
+                                    ? viewModel.bitcoinAddresses[viewModel
+                                            .recipients[index].email] ??
                                         ""
                                     : "",
-                                isSignatureInvalid:
-                                    viewModel.bitcoinAddressesInvalidSignature[
-                                            viewModel.recipients[index]] ??
-                                        false,
-                                isSelfBitcoinAddress: viewModel
-                                    .selfBitcoinAddresses
-                                    .contains(viewModel.bitcoinAddresses[
-                                            viewModel.recipients[index]] ??
-                                        ""),
+                                isSignatureInvalid: viewModel
+                                            .bitcoinAddressesInvalidSignature[
+                                        viewModel.recipients[index].email] ??
+                                    false,
+                                isSelfBitcoinAddress:
+                                    viewModel.selfBitcoinAddresses.contains(
+                                        viewModel.bitcoinAddresses[viewModel
+                                                .recipients[index].email] ??
+                                            ""),
                                 callback: () {
                                   viewModel.removeRecipient(index);
                                 },
                               ),
                             const SizedBox(height: 20),
                             if (Provider.of<ProtonWalletProvider>(context)
-                                    .protonWallet
-                                    .currentAccount ==
-                                null)
+                                        .protonWallet
+                                        .currentAccount ==
+                                    null &&
+                                Provider.of<ProtonWalletProvider>(context)
+                                        .protonWallet
+                                        .currentAccounts
+                                        .length >
+                                    1)
                               Column(children: [
                                 WalletAccountDropdown(
                                     labelText: S.of(context).trans_from,
@@ -527,11 +561,11 @@ class SendView extends ViewBase<SendViewModel> {
                               Container(
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: DropdownButtonV2(
-                                      width: 90,
+                                      width: 100,
                                       padding: const EdgeInsets.only(
                                           left: 10,
                                           right: 10,
-                                          top: 2,
+                                          top: 4,
                                           bottom: 2),
                                       maxSuffixIconWidth: 20,
                                       textStyle: FontManager.captionMedian(
@@ -541,7 +575,12 @@ class SendView extends ViewBase<SendViewModel> {
                                       items: fiatCurrencies,
                                       itemsText: fiatCurrencies
                                           .map((v) =>
-                                              FiatCurrencyHelper.getName(v))
+                                              FiatCurrencyHelper.getFullName(v))
+                                          .toList(),
+                                      itemsTextForDisplay: fiatCurrencies
+                                          .map((v) =>
+                                              FiatCurrencyHelper.getDisplayName(
+                                                  v))
                                           .toList(),
                                       valueNotifier:
                                           viewModel.fiatCurrencyNotifier)),

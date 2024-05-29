@@ -19,7 +19,10 @@ class SecureYourWalletSheet {
               const SizedBox(height: 10),
               ListTile(
                 title: Text(S.of(context).todos_backup_proton_account,
-                    style: FontManager.body2Median(ProtonColors.protonBlue)),
+                    style: viewModel.hadBackupProtonAccount == false
+                        ? FontManager.body2Median(ProtonColors.protonBlue)
+                        : FontManager.body2MedianLineThrough(
+                            ProtonColors.protonBlue)),
                 trailing: Icon(Icons.arrow_forward_ios_rounded,
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {},
@@ -30,10 +33,14 @@ class SecureYourWalletSheet {
               ),
               ListTile(
                 title: Text(S.of(context).todos_backup_wallet_mnemonic,
-                    style: FontManager.body2Median(ProtonColors.protonBlue)),
+                    style: viewModel.hadBackup == false
+                        ? FontManager.body2Median(ProtonColors.protonBlue)
+                        : FontManager.body2MedianLineThrough(
+                            ProtonColors.protonBlue)),
                 trailing: Icon(Icons.arrow_forward_ios_rounded,
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {
+                  Navigator.of(context).pop(); // pop this modalBottomSheet
                   if (CommonHelper.checkSelectWallet(context)) {
                     viewModel.move(NavID.setupBackup);
                   }
@@ -45,7 +52,10 @@ class SecureYourWalletSheet {
               ),
               ListTile(
                 title: Text(S.of(context).todos_setup_2fa,
-                    style: FontManager.body2Median(ProtonColors.protonBlue)),
+                    style: viewModel.hadSetup2FA == false
+                        ? FontManager.body2Median(ProtonColors.protonBlue)
+                        : FontManager.body2MedianLineThrough(
+                            ProtonColors.protonBlue)),
                 trailing: Icon(Icons.arrow_forward_ios_rounded,
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {},

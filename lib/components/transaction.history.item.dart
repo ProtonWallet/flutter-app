@@ -6,6 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistoryItem extends StatelessWidget {
@@ -17,6 +18,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final Color? contentColor;
   final bool copyContent;
   final int? amountInSATS;
+  final ProtonExchangeRate? exchangeRate;
 
   const TransactionHistoryItem({
     super.key,
@@ -28,6 +30,7 @@ class TransactionHistoryItem extends StatelessWidget {
     this.contentColor,
     this.copyContent = false,
     this.amountInSATS,
+    this.exchangeRate,
   });
 
   @override
@@ -108,7 +111,7 @@ class TransactionHistoryItem extends StatelessWidget {
             Row(
               children: [
                 Text(
-                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amountInSATS!).abs().toStringAsFixed(defaultDisplayDigits)}",
+                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amountInSATS!, exchangeRate: exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}",
                     style: FontManager.body2Regular(ProtonColors.textHint)),
                 const SizedBox(width: 5),
                 Text(

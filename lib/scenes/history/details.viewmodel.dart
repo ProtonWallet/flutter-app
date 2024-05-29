@@ -11,6 +11,7 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -64,6 +65,7 @@ abstract class HistoryDetailViewModel
   Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
   int lastExchangeRateTime = 0;
   FiatCurrency userFiatCurrency;
+  ProtonExchangeRate? exchangeRate;
   late UserSettingProvider userSettingProvider;
   String errorMessage = "";
   bool isRecipientsFromBlockChain = false;
@@ -112,7 +114,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           await DBHelper.accountDao!.findById(accountID);
       SecretKey? secretKey =
           await protonWalletManager.getWalletKey(walletModel.serverWalletID);
-
+      List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
       transactionModel = await DBHelper.transactionDao!.find(utf8.encode(txid),
           walletModel.serverWalletID, accountModel.serverAccountID);
 
@@ -191,48 +193,63 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
         String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
         DateTime now = DateTime.now();
-        WalletTransaction walletTransaction =
-            await proton_api.createWalletTransactions(
-          walletId: walletModel.serverWalletID,
-          walletAccountId: accountModel.serverAccountID,
-          transactionId: transactionId,
-          hashedTransactionId: hashedTransactionID,
-          label: encryptedLabel,
-          transactionTime: blockConfirmTimestamp != null
-              ? blockConfirmTimestamp.toString()
-              : (now.millisecondsSinceEpoch ~/ 1000).toString(),
-        );
-        String exchangeRateID = "";
-        if (walletTransaction.exchangeRate != null) {
-          exchangeRateID = walletTransaction.exchangeRate!.id;
+        try {
+          WalletTransaction walletTransaction =
+              await proton_api.createWalletTransactions(
+            walletId: walletModel.serverWalletID,
+            walletAccountId: accountModel.serverAccountID,
+            transactionId: transactionId,
+            hashedTransactionId: hashedTransactionID,
+            label: encryptedLabel,
+            transactionTime: blockConfirmTimestamp != null
+                ? blockConfirmTimestamp.toString()
+                : (now.millisecondsSinceEpoch ~/ 1000).toString(),
+          );
+
+          String exchangeRateID = "";
+          if (walletTransaction.exchangeRate != null) {
+            exchangeRateID = walletTransaction.exchangeRate!.id;
+          }
+          transactionModel = TransactionModel(
+              id: null,
+              walletID: walletID,
+              label: utf8.encode(walletTransaction.label ?? ""),
+              externalTransactionID: utf8.encode(txid),
+              createTime: now.millisecondsSinceEpoch ~/ 1000,
+              modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+              hashedTransactionID:
+                  utf8.encode(walletTransaction.hashedTransactionId ?? ""),
+              transactionID: walletTransaction.id,
+              transactionTime: walletTransaction.transactionTime,
+              exchangeRateID: exchangeRateID,
+              serverWalletID: walletTransaction.walletId,
+              serverAccountID: walletTransaction.walletAccountId!,
+              sender: walletTransaction.sender,
+              tolist: walletTransaction.tolist,
+              subject: walletTransaction.subject,
+              body: walletTransaction.body);
+          await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
+        } catch (e) {
+          if (e.toString().contains("Hashed TransactionId is already used") ||
+              e.toString().contains("Code:2011")) {
+            // TODO:: fix logic here, only fetch wallet transactions in account or specific hashedTransaction
+            await WalletManager.handleWalletTransactions(
+                walletModel, addressKeys);
+            transactionModel = await DBHelper.transactionDao!.find(
+                utf8.encode(txid),
+                walletModel.serverWalletID,
+                accountModel.serverAccountID);
+            if (transactionModel == null) {
+              rethrow;
+            }
+          }
         }
-        transactionModel = TransactionModel(
-            id: null,
-            walletID: walletID,
-            label: utf8.encode(walletTransaction.label ?? ""),
-            externalTransactionID: utf8.encode(txid),
-            createTime: now.millisecondsSinceEpoch ~/ 1000,
-            modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-            hashedTransactionID:
-                utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-            transactionID: walletTransaction.id,
-            transactionTime: walletTransaction.transactionTime,
-            exchangeRateID: exchangeRateID,
-            serverWalletID: walletTransaction.walletId,
-            serverAccountID: walletTransaction.walletAccountId!,
-            sender: walletTransaction.sender,
-            tolist: walletTransaction.tolist,
-            subject: walletTransaction.subject,
-            body: walletTransaction.body);
-        await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
       }
       if (transactionModel!.label.isNotEmpty) {
         userLabel = await WalletKeyHelper.decrypt(
             secretKey, utf8.decode(transactionModel!.label));
       }
       memoController.text = userLabel;
-
-      List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
 
       for (AddressKey addressKey in addressKeys) {
         try {
@@ -340,6 +357,16 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
         }
       }
+
+      exchangeRate = await ExchangeRateService.getExchangeRate(
+          Provider.of<UserSettingProvider>(
+                  Coordinator.navigatorKey.currentContext!,
+                  listen: false)
+              .walletUserSetting
+              .fiatCurrency,
+          time: transactionModel?.transactionTime != null
+              ? int.parse(transactionModel?.transactionTime ?? "0")
+              : null);
 
       datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {

@@ -234,7 +234,7 @@ class WalletSettingSheet {
                               defaultPadding * 2,
                           items: fiatCurrencies,
                           itemsText: fiatCurrencies
-                              .map((v) => FiatCurrencyHelper.getName(v))
+                              .map((v) => FiatCurrencyHelper.getFullName(v))
                               .toList(),
                           valueNotifier:
                               accountFiatCurrencyNotifier[userAccount.id!]),
