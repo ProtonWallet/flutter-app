@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/helper/firebase_messaging_helper.dart';
-import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/api/api_service/wallet_auth_store.dart';
 import 'package:wallet/rust/api/flutter_logger.dart';
 import 'package:wallet/rust/frb_generated.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
-import 'package:wallet/helper/local_notification.dart';
 
 Future setupLogger() async {
   infoLogger().listen((msg) {
@@ -32,27 +28,11 @@ Future setupLogger() async {
   });
 }
 
-// TODO:: need move this to a correct place
-Future testCallbackfunction() async {
-  final authStore = await ProtonWalletAuthStore.newInstance();
-  authStore.setDartCallback(callback: (message) {
-    logger.d("Received message from Rust: $message");
-    // if we have session then update auth data
-    return "Reply from Dart";
-  });
-  logger.d("testCallbackfunction --- setup");
-  await authStore.testCallback();
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalNotification.init();
-  await FirebaseMessagingHelper.init();
-  await LocalAuth.init();
   await RustLib.init();
-  await setupLogger();
-  await testCallbackfunction();
+  setupLogger();
+
   var app = AppCoordinator();
-  await app.init();
   runApp(app.start());
 }

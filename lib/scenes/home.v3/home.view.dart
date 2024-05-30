@@ -687,9 +687,13 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                       ProtonColors.textHint)),
                             ])),
                     ListTile(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.of(context).pop();
-                          viewModel.move(NavID.nativeUpgrade);
+                          EasyLoading.show(
+                              status: "child session..",
+                              maskType: EasyLoadingMaskType.black);
+                          await viewModel.move(NavID.nativeUpgrade);
+                          EasyLoading.dismiss();
                         },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-diamondwallet_plus.svg",

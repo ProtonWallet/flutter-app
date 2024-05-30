@@ -19,6 +19,7 @@
 
 // Section: imports
 
+use crate::api::api_service::address_client::*;
 use crate::api::api_service::bitcoin_address_client::*;
 use crate::api::api_service::email_integration_client::*;
 use crate::api::api_service::event_client::*;
@@ -44,7 +45,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1806564235;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1738962064;
 
 // Section: executor
 
@@ -198,6 +199,133 @@ fn wire_init_app_impl(
             deserializer.end();
             move |context| {
                 transform_result_sse((move || Result::<_, ()>::Ok(crate::api::api2::init_app()))())
+            }
+        },
+    )
+}
+fn wire_AddressClient_get_address_balance_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "AddressClient_get_address_balance", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>>::sse_decode(&mut deserializer);
+let api_address = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::address_client::AddressClient::get_address_balance(&api_that, api_address).await
+                    })().await)
+                } })
+}
+fn wire_AddressClient_get_scripthash_transactions_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "AddressClient_get_scripthash_transactions", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>>::sse_decode(&mut deserializer);
+let api_script_hash = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::address_client::AddressClient::get_scripthash_transactions(&api_that, api_script_hash).await
+                    })().await)
+                } })
+}
+fn wire_AddressClient_get_scripthash_transactions_at_transaction_id_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "AddressClient_get_scripthash_transactions_at_transaction_id", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>>::sse_decode(&mut deserializer);
+let api_script_hash = <String>::sse_decode(&mut deserializer);
+let api_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::address_client::AddressClient::get_scripthash_transactions_at_transaction_id(&api_that, api_script_hash, api_transaction_id).await
+                    })().await)
+                } })
+}
+fn wire_AddressClient_new_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "AddressClient_new",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_service = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse((move || {
+                    let mut api_service_decoded = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(
+                            vec![api_service.rust_auto_opaque_lock_order_info(0, false)],
+                        );
+                    for i in decode_indices_ {
+                        match i {
+                            0 => {
+                                api_service_decoded =
+                                    Some(api_service.rust_auto_opaque_decode_sync_ref())
+                            }
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_service = api_service_decoded.unwrap();
+                    Result::<_, ()>::Ok(
+                        crate::api::api_service::address_client::AddressClient::new(&api_service),
+                    )
+                })())
             }
         },
     )
@@ -615,6 +743,28 @@ fn wire_ExchangeRateClient_new_impl(
         },
     )
 }
+fn wire_ProtonApiService_get_address_client_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonApiService_get_address_client", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>>>::sse_decode(&mut deserializer);deserializer.end();
+                transform_result_sse((move || {
+                    let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref()),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ Result::<_,()>::Ok(crate::api::api_service::proton_api_service::ProtonAPIService::get_address_client(&api_that))
+                })()) })
+}
 fn wire_ProtonApiService_get_bitcoin_addr_client_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -862,6 +1012,21 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
                     })().await)
                 } })
 }
+fn wire_ProtonApiService_init_api_service_auth_store_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonApiService_init_api_service_auth_store", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_app_version = <String>::sse_decode(&mut deserializer);
+let api_user_agent = <String>::sse_decode(&mut deserializer);
+let api_store = <ProtonWalletAuthStore>::sse_decode(&mut deserializer);deserializer.end();
+                transform_result_sse((move || {
+                     crate::api::api_service::proton_api_service::ProtonAPIService::init_api_service_auth_store(api_app_version, api_user_agent, api_store)
+                })()) })
+}
 fn wire_ProtonApiService_init_with_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -908,17 +1073,42 @@ fn wire_ProtonApiService_init_with_impl(
         },
     )
 }
-fn wire_ProtonApiService_read_text_impl(
+fn wire_ProtonApiService_login_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonApiService_login", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>>>::sse_decode(&mut deserializer);
+let api_username = <String>::sse_decode(&mut deserializer);
+let api_password = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::proton_api_service::ProtonAPIService::login(&api_that, api_username, api_password).await
+                    })().await)
+                } })
+}
+fn wire_ProtonApiService_new_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "ProtonApiService_read_text",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+            debug_name: "ProtonApiService_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
         move || {
             let message = unsafe {
@@ -930,33 +1120,11 @@ fn wire_ProtonApiService_read_text_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>,
-            >>::sse_decode(&mut deserializer);
+            let api_store = <ProtonWalletAuthStore>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| {
-                transform_result_sse((move || {
-                    let mut api_that_decoded = None;
-                    let decode_indices_ =
-                        flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(
-                            vec![api_that.rust_auto_opaque_lock_order_info(0, false)],
-                        );
-                    for i in decode_indices_ {
-                        match i {
-                            0 => {
-                                api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref())
-                            }
-                            _ => unreachable!(),
-                        }
-                    }
-                    let api_that = api_that_decoded.unwrap();
-                    Result::<_, ()>::Ok(
-                        crate::api::api_service::proton_api_service::ProtonAPIService::read_text(
-                            &api_that,
-                        ),
-                    )
-                })())
-            }
+            transform_result_sse((move || {
+                crate::api::api_service::proton_api_service::ProtonAPIService::new(api_store)
+            })())
         },
     )
 }
@@ -1355,6 +1523,31 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
                     })().await)
                 } })
 }
+fn wire_TransactionClient_get_raw_transaction_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "TransactionClient_get_raw_transaction", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TransactionClient>>>::sse_decode(&mut deserializer);
+let api_txid = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::transaction_client::TransactionClient::get_raw_transaction(&api_that, api_txid).await
+                    })().await)
+                } })
+}
 fn wire_TransactionClient_new_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1408,17 +1601,40 @@ fn wire_TransactionClient_new_impl(
         },
     )
 }
-fn wire_ProtonWalletAuthStore_new_impl(
+fn wire_ProtonWalletAuthStore_clear_auth_dart_callback_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonWalletAuthStore_clear_auth_dart_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::clear_auth_dart_callback(&api_that).await
+                    })().await)
+                } })
+}
+fn wire_ProtonWalletAuthStore_from_session_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "ProtonWalletAuthStore_new",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+            debug_name: "ProtonWalletAuthStore_from_session",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
         move || {
             let message = unsafe {
@@ -1430,63 +1646,132 @@ fn wire_ProtonWalletAuthStore_new_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_env = <String>::sse_decode(&mut deserializer);
+            let api_uid = <String>::sse_decode(&mut deserializer);
+            let api_access = <String>::sse_decode(&mut deserializer);
+            let api_refresh = <String>::sse_decode(&mut deserializer);
+            let api_scopes = <Vec<String>>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| {
-                transform_result_sse((move || {
-                    crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::new()
-                })())
-            }
+            transform_result_sse((move || {
+                crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::from_session(
+                    &api_env,
+                    api_uid,
+                    api_access,
+                    api_refresh,
+                    api_scopes,
+                )
+            })())
         },
     )
 }
-fn wire_ProtonWalletAuthStore_set_dart_callback_impl(
+fn wire_ProtonWalletAuthStore_new_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "ProtonWalletAuthStore_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_env = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse((move || {
+                crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::new(&api_env)
+            })())
+        },
+    )
+}
+fn wire_ProtonWalletAuthStore_set_auth_dart_callback_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonWalletAuthStore_set_dart_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonWalletAuthStore_set_auth_dart_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>>>::sse_decode(&mut deserializer);
-let api_callback = decode_DartFn_Inputs_String_Output_String(<flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer));deserializer.end(); move |context| async move {
+let api_callback = decode_DartFn_Inputs_child_session_Output_String(<flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer));deserializer.end(); move |context| async move {
                     transform_result_sse((move || async move {
                         let mut api_that_decoded = None;
-let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, true)]);
         for i in decode_indices_ {
             match i {
-                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref_mut().await),
                 _ => unreachable!(),
             }
         }
-        let api_that = api_that_decoded.unwrap();
- crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_dart_callback(&api_that, api_callback).await
+        let mut api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_auth_dart_callback(&mut api_that, api_callback).await
                     })().await)
                 } })
 }
-fn wire_ProtonWalletAuthStore_test_callback_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
+fn wire_ProtonWalletAuthStore_set_auth_sync_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "ProtonWalletAuthStore_test_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
-                    transform_result_sse((move ||  {
-                        let mut api_that_decoded = None;
-let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
-        for i in decode_indices_ {
-            match i {
-                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref()),
-                _ => unreachable!(),
-            }
-        }
-        let api_that = api_that_decoded.unwrap();
- Result::<_,()>::Ok(crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::test_callback(&api_that))
-                    })())
-                } })
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "ProtonWalletAuthStore_set_auth_sync",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>,
+            >>::sse_decode(&mut deserializer);
+            let api_uid = <String>::sse_decode(&mut deserializer);
+            let api_access = <String>::sse_decode(&mut deserializer);
+            let api_refresh = <String>::sse_decode(&mut deserializer);
+            let api_scopes = <Vec<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse((move || {
+                let mut api_that_decoded = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(
+                        vec![api_that.rust_auto_opaque_lock_order_info(0, true)],
+                    );
+                for i in decode_indices_ {
+                    match i {
+                        0 => {
+                            api_that_decoded = Some(api_that.rust_auto_opaque_decode_sync_ref_mut())
+                        }
+                        _ => unreachable!(),
+                    }
+                }
+                let mut api_that = api_that_decoded.unwrap();
+                crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_auth_sync(
+                    &mut api_that,
+                    api_uid,
+                    api_access,
+                    api_refresh,
+                    api_scopes,
+                )
+            })())
+        },
+    )
 }
 fn wire_WalletClient_add_email_address_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -2630,6 +2915,37 @@ fn wire_fiat_currency_impl(
         },
     )
 }
+fn wire_fork_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "fork",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move { crate::api::proton_api::fork().await })().await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_all_public_keys_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3095,49 +3411,6 @@ fn wire_init_api_service_impl(
                     .await,
                 )
             }
-        },
-    )
-}
-fn wire_init_api_service_auth_store_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "init_api_service_auth_store",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_uid = <String>::sse_decode(&mut deserializer);
-            let api_access = <String>::sse_decode(&mut deserializer);
-            let api_refresh = <String>::sse_decode(&mut deserializer);
-            let api_scopes = <Vec<String>>::sse_decode(&mut deserializer);
-            let api_app_version = <String>::sse_decode(&mut deserializer);
-            let api_user_agent = <String>::sse_decode(&mut deserializer);
-            let api_env = <Option<String>>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse((move || {
-                crate::api::proton_api::init_api_service_auth_store(
-                    api_uid,
-                    api_access,
-                    api_refresh,
-                    api_scopes,
-                    api_app_version,
-                    api_user_agent,
-                    api_env,
-                )
-            })())
         },
     )
 }
@@ -5931,21 +6204,34 @@ fn wire_my_test_object_read_text_impl(
 
 #[allow(clippy::unnecessary_literal_unwrap)]
 const _: fn() = || {
-    let LogEntry = None::<crate::api::flutter_logger::LogEntry>.unwrap();
-    let _: i64 = LogEntry.time_millis;
-    let _: String = LogEntry.msg;
-    let _: crate::api::flutter_logger::Level = LogEntry.log_level;
-    let _: String = LogEntry.lbl;
+    {
+        let ChildSession = None::<crate::proton_api::auth_credential::ChildSession>.unwrap();
+        let _: String = ChildSession.session_id;
+        let _: String = ChildSession.access_token;
+        let _: String = ChildSession.refresh_token;
+        let _: Vec<String> = ChildSession.scopes;
+    }
+    {
+        let LogEntry = None::<crate::api::flutter_logger::LogEntry>.unwrap();
+        let _: i64 = LogEntry.time_millis;
+        let _: String = LogEntry.msg;
+        let _: crate::api::flutter_logger::Level = LogEntry.log_level;
+        let _: String = LogEntry.lbl;
+    }
 };
 
 // Section: related_funcs
 
-fn decode_DartFn_Inputs_String_Output_String(
+fn decode_DartFn_Inputs_child_session_Output_String(
     dart_opaque: flutter_rust_bridge::DartOpaque,
-) -> impl Fn(String) -> flutter_rust_bridge::DartFnFuture<String> {
+) -> impl Fn(crate::proton_api::auth_credential::ChildSession) -> flutter_rust_bridge::DartFnFuture<String>
+{
     use flutter_rust_bridge::IntoDart;
 
-    async fn body(dart_opaque: flutter_rust_bridge::DartOpaque, arg0: String) -> String {
+    async fn body(
+        dart_opaque: flutter_rust_bridge::DartOpaque,
+        arg0: crate::proton_api::auth_credential::ChildSession,
+    ) -> String {
         let args = vec![arg0.into_into_dart().into_dart()];
         let message = FLUTTER_RUST_BRIDGE_HANDLER
             .dart_fn_invoke(dart_opaque, args)
@@ -5953,13 +6239,22 @@ fn decode_DartFn_Inputs_String_Output_String(
         <String>::sse_decode_single(message)
     }
 
-    move |arg0: String| {
+    move |arg0: crate::proton_api::auth_credential::ChildSession| {
         flutter_rust_bridge::for_generated::convert_into_dart_fn_future(body(
             dart_opaque.clone(),
             arg0,
         ))
     }
 }
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressBalance>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>
+);
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Arc<ProtonAPIService>>
 );
@@ -6002,8 +6297,41 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>
 );
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>
+);
 
 // Section: dart2rust
+
+impl SseDecode for AddressBalance {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressBalance>,
+        >>::sse_decode(deserializer);
+        return inner.rust_auto_opaque_decode_owned();
+    }
+}
+
+impl SseDecode for AddressClient {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>,
+        >>::sse_decode(deserializer);
+        return inner.rust_auto_opaque_decode_owned();
+    }
+}
+
+impl SseDecode for ApiTx {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>,
+        >>::sse_decode(deserializer);
+        return inner.rust_auto_opaque_decode_owned();
+    }
+}
 
 impl SseDecode for Arc<ProtonAPIService> {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6145,11 +6473,49 @@ impl SseDecode for WalletClient {
     }
 }
 
+impl SseDecode for bdkTransaction {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>,
+        >>::sse_decode(deserializer);
+        return inner.rust_auto_opaque_decode_owned();
+    }
+}
+
 impl SseDecode for flutter_rust_bridge::DartOpaque {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <usize>::sse_decode(deserializer);
         return unsafe { flutter_rust_bridge::for_generated::sse_decode_dart_opaque(inner) };
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressBalance>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
     }
 }
 
@@ -6302,6 +6668,16 @@ impl SseDecode
 }
 
 impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
     for StreamSink<
         crate::api::flutter_logger::LogEntry,
         flutter_rust_bridge::for_generated::SseCodec,
@@ -6421,6 +6797,38 @@ impl SseDecode for crate::proton_api::user_settings::ApiUserSettings {
     }
 }
 
+impl SseDecode for crate::proton_api::auth_credential::AuthCredential {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_sessionId = <String>::sse_decode(deserializer);
+        let mut var_userId = <String>::sse_decode(deserializer);
+        let mut var_accessToken = <String>::sse_decode(deserializer);
+        let mut var_refreshToken = <String>::sse_decode(deserializer);
+        let mut var_eventId = <String>::sse_decode(deserializer);
+        let mut var_userMail = <String>::sse_decode(deserializer);
+        let mut var_userName = <String>::sse_decode(deserializer);
+        let mut var_displayName = <String>::sse_decode(deserializer);
+        let mut var_scops = <Vec<String>>::sse_decode(deserializer);
+        let mut var_userKeyId = <String>::sse_decode(deserializer);
+        let mut var_userPrivateKey = <String>::sse_decode(deserializer);
+        let mut var_userPassphrase = <String>::sse_decode(deserializer);
+        return crate::proton_api::auth_credential::AuthCredential {
+            session_id: var_sessionId,
+            user_id: var_userId,
+            access_token: var_accessToken,
+            refresh_token: var_refreshToken,
+            event_id: var_eventId,
+            user_mail: var_userMail,
+            user_name: var_userName,
+            display_name: var_displayName,
+            scops: var_scops,
+            user_key_id: var_userKeyId,
+            user_private_key: var_userPrivateKey,
+            user_passphrase: var_userPassphrase,
+        };
+    }
+}
+
 impl SseDecode for crate::bdk::types::Balance {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -6496,6 +6904,22 @@ impl SseDecode for crate::bdk::types::ChangeSpendPolicy {
             1 => crate::bdk::types::ChangeSpendPolicy::OnlyChange,
             2 => crate::bdk::types::ChangeSpendPolicy::ChangeForbidden,
             _ => unreachable!("Invalid variant for ChangeSpendPolicy: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::auth_credential::ChildSession {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_sessionId = <String>::sse_decode(deserializer);
+        let mut var_accessToken = <String>::sse_decode(deserializer);
+        let mut var_refreshToken = <String>::sse_decode(deserializer);
+        let mut var_scopes = <Vec<String>>::sse_decode(deserializer);
+        return crate::proton_api::auth_credential::ChildSession {
+            session_id: var_sessionId,
+            access_token: var_accessToken,
+            refresh_token: var_refreshToken,
+            scopes: var_scopes,
         };
     }
 }
@@ -6941,6 +7365,18 @@ impl SseDecode for crate::api::flutter_logger::Level {
             4 => crate::api::flutter_logger::Level::Trace,
             _ => unreachable!("Invalid variant for Level: {}", inner),
         };
+    }
+}
+
+impl SseDecode for Vec<ApiTx> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<ApiTx>::sse_decode(deserializer));
+        }
+        return ans_;
     }
 }
 
@@ -8279,194 +8715,214 @@ fn pde_ffi_dispatcher_primary_impl(
         1 => wire_add_one_impl(port, ptr, rust_vec_len, data_len),
         2 => wire_add_three_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        8 => {
+        7 => wire_AddressClient_get_address_balance_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire_AddressClient_get_scripthash_transactions_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire_AddressClient_get_scripthash_transactions_at_transaction_id_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        6 => wire_AddressClient_new_impl(port, ptr, rust_vec_len, data_len),
+        12 => {
             wire_BitcoinAddressClient_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len)
         }
-        10 => wire_BitcoinAddressClient_get_bitcoin_address_latest_index_impl(
+        14 => wire_BitcoinAddressClient_get_bitcoin_address_latest_index_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire_BitcoinAddressClient_get_wallet_bitcoin_address_impl(
+        13 => wire_BitcoinAddressClient_get_wallet_bitcoin_address_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        6 => wire_BitcoinAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
-        7 => {
+        10 => wire_BitcoinAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
+        11 => {
             wire_BitcoinAddressClient_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len)
         }
-        12 => wire_EmailIntegrationClient_lookup_bitcoin_address_impl(
+        16 => wire_EmailIntegrationClient_lookup_bitcoin_address_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => wire_EmailIntegrationClient_new_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire_EventClient_collect_events_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire_EventClient_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire_EventClient_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire_EventClient_new_impl(port, ptr, rust_vec_len, data_len),
-        18 => wire_ExchangeRateClient_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire_ExchangeRateClient_new_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire_ProtonApiService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire_ProtonApiService_init_with_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire_ProtonApiService_read_text_impl(port, ptr, rust_vec_len, data_len),
-        32 => wire_ContactsClient_get_contacts_impl(port, ptr, rust_vec_len, data_len),
-        31 => wire_ContactsClient_new_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire_ProtonEmailAddressClient_get_all_public_keys_impl(
+        15 => wire_EmailIntegrationClient_new_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire_EventClient_collect_events_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire_EventClient_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire_EventClient_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire_EventClient_new_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire_ExchangeRateClient_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire_ExchangeRateClient_new_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire_ProtonApiService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire_ProtonApiService_init_with_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire_ProtonApiService_login_impl(port, ptr, rust_vec_len, data_len),
+        39 => wire_ContactsClient_get_contacts_impl(port, ptr, rust_vec_len, data_len),
+        38 => wire_ContactsClient_new_impl(port, ptr, rust_vec_len, data_len),
+        41 => wire_ProtonEmailAddressClient_get_all_public_keys_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => {
+        42 => {
             wire_ProtonEmailAddressClient_get_proton_address_impl(port, ptr, rust_vec_len, data_len)
         }
-        33 => wire_ProtonEmailAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
-        36 => wire_ProtonUsersClient_new_impl(port, ptr, rust_vec_len, data_len),
-        39 => wire_SettingsClient_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-        40 => wire_SettingsClient_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        38 => wire_SettingsClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-        42 => wire_SettingsClient_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-        37 => wire_SettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
-        41 => wire_SettingsClient_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-        44 => {
+        40 => wire_ProtonEmailAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
+        43 => wire_ProtonUsersClient_new_impl(port, ptr, rust_vec_len, data_len),
+        46 => wire_SettingsClient_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+        47 => wire_SettingsClient_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        45 => wire_SettingsClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire_SettingsClient_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+        44 => wire_SettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
+        48 => wire_SettingsClient_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+        51 => {
             wire_TransactionClient_broadcast_raw_transaction_impl(port, ptr, rust_vec_len, data_len)
         }
-        43 => wire_TransactionClient_new_impl(port, ptr, rust_vec_len, data_len),
-        45 => wire_ProtonWalletAuthStore_new_impl(port, ptr, rust_vec_len, data_len),
-        46 => wire_ProtonWalletAuthStore_set_dart_callback_impl(port, ptr, rust_vec_len, data_len),
-        47 => wire_ProtonWalletAuthStore_test_callback_impl(port, ptr, rust_vec_len, data_len),
-        57 => wire_WalletClient_add_email_address_impl(port, ptr, rust_vec_len, data_len),
-        50 => wire_WalletClient_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        54 => wire_WalletClient_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        60 => wire_WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        52 => wire_WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-        56 => wire_WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        62 => wire_WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        53 => wire_WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-        59 => wire_WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        49 => wire_WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        48 => wire_WalletClient_new_impl(port, ptr, rust_vec_len, data_len),
-        58 => wire_WalletClient_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-        55 => wire_WalletClient_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-        51 => wire_WalletClient_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-        61 => wire_WalletClient_update_wallet_transaction_label_impl(
+        52 => wire_TransactionClient_get_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
+        50 => wire_TransactionClient_new_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire_ProtonWalletAuthStore_clear_auth_dart_callback_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => wire_BdkWalletManager_new_impl(port, ptr, rust_vec_len, data_len),
-        67 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
-        66 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire_test_impl(port, ptr, rust_vec_len, data_len),
-        68 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
-        69 => wire_test_one_impl(port, ptr, rust_vec_len, data_len),
-        94 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
-        91 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-        102 => wire_broadcast_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
-        73 => wire_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        77 => wire_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-        80 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        101 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        83 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        103 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
-        97 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
-        89 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
-        86 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-        96 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        72 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-        70 => wire_init_api_service_impl(port, ptr, rust_vec_len, data_len),
-        104 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
-        95 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        92 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-        84 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-        93 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        79 => wire_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        78 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-        74 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-        100 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-        151 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-        153 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
-        152 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
-        109 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
-        130 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        127 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
-        150 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
-        147 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        131 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        149 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
-        141 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        105 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-        110 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
-        154 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        144 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        139 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
-        138 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
-        148 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
-        146 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
-        145 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
-        142 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
-        108 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
-        143 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        124 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
-        169 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
-        168 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-        167 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-        155 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
-        159 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        107 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
-        166 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
-        106 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
-        157 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
-        165 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
-        161 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        120 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
-        115 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
-        116 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
-        117 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
-        156 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
-        128 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
-        164 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
-        160 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
-        119 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
-        140 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
-        132 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        133 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
-        134 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        135 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
-        136 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        137 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
-        121 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
-        126 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
-        125 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-        123 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
-        122 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
-        162 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
-        113 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
-        158 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
-        129 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        111 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
-        118 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
-        114 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
-        163 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
-        112 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
-        170 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
-        171 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
+        56 => wire_ProtonWalletAuthStore_set_auth_dart_callback_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        67 => wire_WalletClient_add_email_address_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire_WalletClient_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        64 => wire_WalletClient_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        70 => wire_WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        62 => wire_WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+        66 => wire_WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        72 => wire_WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        63 => wire_WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+        69 => wire_WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire_WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire_WalletClient_new_impl(port, ptr, rust_vec_len, data_len),
+        68 => wire_WalletClient_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+        65 => wire_WalletClient_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+        61 => wire_WalletClient_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+        71 => wire_WalletClient_update_wallet_transaction_label_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        73 => wire_BdkWalletManager_new_impl(port, ptr, rust_vec_len, data_len),
+        77 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
+        76 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
+        75 => wire_test_impl(port, ptr, rust_vec_len, data_len),
+        78 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
+        79 => wire_test_one_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
+        100 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
+        91 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+        111 => wire_broadcast_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
+        97 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+        89 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        110 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        92 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        114 => wire_fork_impl(port, ptr, rust_vec_len, data_len),
+        112 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
+        98 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
+        95 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+        96 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+        90 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+        105 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        81 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire_init_api_service_impl(port, ptr, rust_vec_len, data_len),
+        113 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        101 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+        93 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+        102 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        87 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+        109 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
+        161 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+        163 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
+        162 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
+        119 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
+        140 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        137 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
+        160 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
+        157 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        141 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        159 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
+        151 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        115 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+        120 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
+        164 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        154 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        149 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
+        148 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
+        158 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
+        156 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
+        155 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
+        152 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
+        118 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
+        153 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        134 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
+        179 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
+        178 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+        177 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+        165 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
+        169 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        117 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
+        176 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
+        116 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
+        167 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
+        175 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
+        171 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        130 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
+        125 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
+        126 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
+        127 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
+        166 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
+        138 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
+        174 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
+        170 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
+        129 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
+        150 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
+        142 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        143 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
+        144 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        145 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
+        146 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        147 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
+        131 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
+        136 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
+        135 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+        133 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
+        132 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
+        172 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
+        123 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
+        168 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
+        139 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        121 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
+        128 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
+        124 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
+        173 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
+        122 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
+        180 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
+        181 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -8481,22 +8937,72 @@ fn pde_ffi_dispatcher_sync_impl(
     match func_id {
         3 => wire_greet_impl(ptr, rust_vec_len, data_len),
         5 => wire_helloworld_impl(ptr, rust_vec_len, data_len),
-        30 => wire_ProtonApiService_get_bitcoin_addr_client_impl(ptr, rust_vec_len, data_len),
-        27 => wire_ProtonApiService_get_email_integration_client_impl(ptr, rust_vec_len, data_len),
-        28 => wire_ProtonApiService_get_event_client_impl(ptr, rust_vec_len, data_len),
-        23 => wire_ProtonApiService_get_exchange_rate_client_impl(ptr, rust_vec_len, data_len),
-        26 => wire_ProtonApiService_get_proton_contacts_client_impl(ptr, rust_vec_len, data_len),
-        25 => wire_ProtonApiService_get_proton_email_addr_client_impl(ptr, rust_vec_len, data_len),
-        24 => wire_ProtonApiService_get_settings_client_impl(ptr, rust_vec_len, data_len),
-        29 => wire_ProtonApiService_get_transaction_client_impl(ptr, rust_vec_len, data_len),
-        22 => wire_ProtonApiService_get_wallet_client_impl(ptr, rust_vec_len, data_len),
-        64 => wire_BdkWalletManager_fingerprint_impl(ptr, rust_vec_len, data_len),
-        71 => wire_init_api_service_auth_store_impl(ptr, rust_vec_len, data_len),
+        37 => wire_ProtonApiService_get_address_client_impl(ptr, rust_vec_len, data_len),
+        36 => wire_ProtonApiService_get_bitcoin_addr_client_impl(ptr, rust_vec_len, data_len),
+        33 => wire_ProtonApiService_get_email_integration_client_impl(ptr, rust_vec_len, data_len),
+        34 => wire_ProtonApiService_get_event_client_impl(ptr, rust_vec_len, data_len),
+        29 => wire_ProtonApiService_get_exchange_rate_client_impl(ptr, rust_vec_len, data_len),
+        32 => wire_ProtonApiService_get_proton_contacts_client_impl(ptr, rust_vec_len, data_len),
+        31 => wire_ProtonApiService_get_proton_email_addr_client_impl(ptr, rust_vec_len, data_len),
+        30 => wire_ProtonApiService_get_settings_client_impl(ptr, rust_vec_len, data_len),
+        35 => wire_ProtonApiService_get_transaction_client_impl(ptr, rust_vec_len, data_len),
+        28 => wire_ProtonApiService_get_wallet_client_impl(ptr, rust_vec_len, data_len),
+        26 => wire_ProtonApiService_init_api_service_auth_store_impl(ptr, rust_vec_len, data_len),
+        24 => wire_ProtonApiService_new_impl(ptr, rust_vec_len, data_len),
+        54 => wire_ProtonWalletAuthStore_from_session_impl(ptr, rust_vec_len, data_len),
+        53 => wire_ProtonWalletAuthStore_new_impl(ptr, rust_vec_len, data_len),
+        55 => wire_ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
+        74 => wire_BdkWalletManager_fingerprint_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
 
 // Section: rust2dart
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<AddressBalance> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<AddressBalance> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<AddressBalance>> for AddressBalance {
+    fn into_into_dart(self) -> FrbWrapper<AddressBalance> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<AddressClient> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<AddressClient> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<AddressClient>> for AddressClient {
+    fn into_into_dart(self) -> FrbWrapper<AddressClient> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<ApiTx> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<ApiTx> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<ApiTx>> for ApiTx {
+    fn into_into_dart(self) -> FrbWrapper<ApiTx> {
+        self.into()
+    }
+}
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<Arc<ProtonAPIService>> {
@@ -8735,6 +9241,21 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<WalletClient>> for WalletClien
 }
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<bdkTransaction> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<bdkTransaction> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<bdkTransaction>> for bdkTransaction {
+    fn into_into_dart(self) -> FrbWrapper<bdkTransaction> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::bdk::types::AddressIndex {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -8866,6 +9387,37 @@ impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::user_settings::ApiUser
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::proton_api::auth_credential::AuthCredential {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.session_id.into_into_dart().into_dart(),
+            self.user_id.into_into_dart().into_dart(),
+            self.access_token.into_into_dart().into_dart(),
+            self.refresh_token.into_into_dart().into_dart(),
+            self.event_id.into_into_dart().into_dart(),
+            self.user_mail.into_into_dart().into_dart(),
+            self.user_name.into_into_dart().into_dart(),
+            self.display_name.into_into_dart().into_dart(),
+            self.scops.into_into_dart().into_dart(),
+            self.user_key_id.into_into_dart().into_dart(),
+            self.user_private_key.into_into_dart().into_dart(),
+            self.user_passphrase.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::proton_api::auth_credential::AuthCredential
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::proton_api::auth_credential::AuthCredential>
+    for crate::proton_api::auth_credential::AuthCredential
+{
+    fn into_into_dart(self) -> crate::proton_api::auth_credential::AuthCredential {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::bdk::types::Balance {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -8965,6 +9517,31 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::ChangeSpendPolicy>
 {
     fn into_into_dart(self) -> crate::bdk::types::ChangeSpendPolicy {
         self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for FrbWrapper<crate::proton_api::auth_credential::ChildSession>
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.session_id.into_into_dart().into_dart(),
+            self.0.access_token.into_into_dart().into_dart(),
+            self.0.refresh_token.into_into_dart().into_dart(),
+            self.0.scopes.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::proton_api::auth_credential::ChildSession>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::proton_api::auth_credential::ChildSession>>
+    for crate::proton_api::auth_credential::ChildSession
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::proton_api::auth_credential::ChildSession> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -10114,6 +10691,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::bdk::types::WordCount>
     }
 }
 
+impl SseEncode for AddressBalance {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressBalance>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
+impl SseEncode for AddressClient {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
+impl SseEncode for ApiTx {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>>>::sse_encode(
+            flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self),
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for Arc<ProtonAPIService> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -10237,10 +10838,48 @@ impl SseEncode for WalletClient {
     }
 }
 
+impl SseEncode for bdkTransaction {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
 impl SseEncode for flutter_rust_bridge::DartOpaque {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <usize>::sse_encode(self.encode(), serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressBalance>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AddressClient>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
     }
 }
 
@@ -10407,6 +11046,17 @@ impl SseEncode
 }
 
 impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
     for StreamSink<
         crate::api::flutter_logger::LogEntry,
         flutter_rust_bridge::for_generated::SseCodec,
@@ -10499,6 +11149,24 @@ impl SseEncode for crate::proton_api::user_settings::ApiUserSettings {
     }
 }
 
+impl SseEncode for crate::proton_api::auth_credential::AuthCredential {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.session_id, serializer);
+        <String>::sse_encode(self.user_id, serializer);
+        <String>::sse_encode(self.access_token, serializer);
+        <String>::sse_encode(self.refresh_token, serializer);
+        <String>::sse_encode(self.event_id, serializer);
+        <String>::sse_encode(self.user_mail, serializer);
+        <String>::sse_encode(self.user_name, serializer);
+        <String>::sse_encode(self.display_name, serializer);
+        <Vec<String>>::sse_encode(self.scops, serializer);
+        <String>::sse_encode(self.user_key_id, serializer);
+        <String>::sse_encode(self.user_private_key, serializer);
+        <String>::sse_encode(self.user_passphrase, serializer);
+    }
+}
+
 impl SseEncode for crate::bdk::types::Balance {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -10566,6 +11234,16 @@ impl SseEncode for crate::bdk::types::ChangeSpendPolicy {
             },
             serializer,
         );
+    }
+}
+
+impl SseEncode for crate::proton_api::auth_credential::ChildSession {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.session_id, serializer);
+        <String>::sse_encode(self.access_token, serializer);
+        <String>::sse_encode(self.refresh_token, serializer);
+        <Vec<String>>::sse_encode(self.scopes, serializer);
     }
 }
 
@@ -10968,6 +11646,16 @@ impl SseEncode for crate::api::flutter_logger::Level {
             },
             serializer,
         );
+    }
+}
+
+impl SseEncode for Vec<ApiTx> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <ApiTx>::sse_encode(item, serializer);
+        }
     }
 }
 

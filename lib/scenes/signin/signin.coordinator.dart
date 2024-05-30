@@ -1,5 +1,6 @@
 import 'package:wallet/constants/env.dart';
-import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -20,7 +21,9 @@ class SigninCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> start() {
     var userManager = serviceManager.get<UserManager>();
-    var viewModel = SigninViewModelImpl(this, userManager);
+    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    var apiService = apiServiceManager.getApiService();
+    var viewModel = SigninViewModelImpl(this, userManager, apiService);
     widget = SigninView(
       viewModel,
     );

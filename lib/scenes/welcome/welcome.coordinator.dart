@@ -1,6 +1,6 @@
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/constants/env.dart';
-import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -18,12 +18,12 @@ class WelcomeCoordinator extends Coordinator {
   @override
   void end() {}
 
-  void showNativeSignin(ApiEnv env) {
-    nativeViewChannel.switchToNativeLogin(env);
+  void showNativeSignin() {
+    nativeViewChannel.switchToNativeLogin();
   }
 
-  void showNativeSignup(ApiEnv env) {
-    nativeViewChannel.switchToNativeSignup(env);
+  void showNativeSignup() {
+    nativeViewChannel.switchToNativeSignup();
   }
 
   void showHome(ApiEnv env) {

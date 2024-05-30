@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/colors.gen.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/signin/signin.viewmodel.dart';
 
@@ -19,6 +20,12 @@ class SigninView extends ViewBase<SigninViewModel> {
   Widget buildWelcome(BuildContext context) {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (viewModel.errorMessage.isEmpty == false) {
+        LocalToast.showErrorToast(context, viewModel.errorMessage);
+        viewModel.errorMessage = "";
+      }
+    });
     return AlertDialog(
       title: buildHeader(),
       backgroundColor: ColorName.light10,

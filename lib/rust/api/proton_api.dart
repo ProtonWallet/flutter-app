@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import '../proton_api/auth_credential.dart';
 import '../proton_api/contacts.dart';
 import '../proton_api/errors.dart';
 import '../proton_api/event_routes.dart';
@@ -21,25 +22,6 @@ Future<void> initApiService(
         {required String userName, required String password, dynamic hint}) =>
     RustLib.instance.api
         .initApiService(userName: userName, password: password, hint: hint);
-
-void initApiServiceAuthStore(
-        {required String uid,
-        required String access,
-        required String refresh,
-        required List<String> scopes,
-        required String appVersion,
-        required String userAgent,
-        String? env,
-        dynamic hint}) =>
-    RustLib.instance.api.initApiServiceAuthStore(
-        uid: uid,
-        access: access,
-        refresh: refresh,
-        scopes: scopes,
-        appVersion: appVersion,
-        userAgent: userAgent,
-        env: env,
-        hint: hint);
 
 Future<List<WalletData>> getWallets({dynamic hint}) =>
     RustLib.instance.api.getWallets(hint: hint);
@@ -286,3 +268,6 @@ Future<List<AllKeyAddressKey>> getAllPublicKeys(
 
 Future<bool> isValidToken({dynamic hint}) =>
     RustLib.instance.api.isValidToken(hint: hint);
+
+Future<ChildSession> fork({dynamic hint}) =>
+    RustLib.instance.api.fork(hint: hint);

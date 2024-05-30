@@ -19,10 +19,10 @@ buildscript {
 
 allprojects {
     repositories {
-        // Ramp
-        maven { url 'https://jitpack.io' }
         google()
         mavenCentral()
+        // Ramp
+        maven { url 'https://jitpack.io' }
     }
     // https://stackoverflow.com/questions/76108428/how-do-i-fix-namespace-not-specified-error-in-android-studio
     // fixed Namespace not specified issue after gradle upgrade to 8.1.3

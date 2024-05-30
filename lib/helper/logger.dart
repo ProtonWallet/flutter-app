@@ -8,5 +8,6 @@ var logger = Logger(
     colors: true,
     printEmojis: true,
     printTime: true,
+    noBoxingByDefault: false,
   ),
 );

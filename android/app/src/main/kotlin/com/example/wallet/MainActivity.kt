@@ -18,20 +18,25 @@
 
 package com.example.wallet
 
+import android.content.Context
 import android.content.Intent
+import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterFragmentActivity() {
+    
     companion object {
         var flutterEngineInstance: FlutterEngine? = null
     }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         flutterEngineInstance = flutterEngine
         GeneratedPluginRegistrant.registerWith(flutterEngine)
+        flutterEngine.plugins.add(WalletJNIPlugin())
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "me.proton.wallet/native.views")
             .setMethodCallHandler { call: MethodCall, result ->
@@ -59,8 +64,34 @@ class MainActivity : FlutterFragmentActivity() {
                         val arguments = call.arguments
                         println("Upgrade Plan called with arguments: $arguments")
                     }
+                    "native.navigation.report" -> {
+                        println("native.navigation.report triggered")
+                    } 
+                    "native.account.logout" -> {
+                        println("native.account.logout triggered")
+                    }
                 }
             }
+    }
+}
+
+class WalletJNIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
+    companion object {
+        init {
+            System.loadLibrary("proton_wallet_common")
+        }
+    }
+
+    external fun init_android(ctx: Context): Boolean
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        var ret = init_android(binding.applicationContext)
+        println("JNI init_android returned $ret")
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    }
+
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     }
 
 }

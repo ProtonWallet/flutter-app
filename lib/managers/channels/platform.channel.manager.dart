@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/helper/extension/platform.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.event.dart';
@@ -16,7 +17,10 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   final toNativeChannel = const MethodChannel('me.proton.wallet/native.views');
   final fromNativeChannel = const MethodChannel('me.proton.wallet/app.view');
 
-  PlatformChannelManager() : super(NativeLoginInitial()) {
+// The api environment
+  final ApiEnv env;
+
+  PlatformChannelManager(this.env) : super(NativeLoginInitial()) {
     on<DirectEmitEvent>((event, emit) => emit(event.newState));
   }
 
@@ -30,57 +34,90 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   /// Commands
   @override
-  Future<void> switchToNativeSignup(ApiEnv env) async {
-    const envKey = "env-key";
+  Future<void> switchToNativeSignup() async {
+    if (PlatformExtension.desktop) {
+      return logger.i("switchToNativeSignup is mobile only feature");
+    }
     try {
-      await toNativeChannel
-          .invokeMethod('native.navigation.signup', {envKey: env.toString()});
-    } on PlatformException catch (e) {
-      logger.e("Failed to switch to native view: '${e.message}'.");
+      await toNativeChannel.invokeMethod('native.navigation.signup');
+    } on Exception catch (e) {
+      logger.e("Failed to switch to native signup view: '${e.toString()}'.");
     }
   }
 
   @override
-  Future<void> switchToNativeLogin(ApiEnv env) async {
-    const envKey = "env-key";
+  Future<void> switchToNativeLogin() async {
+    if (PlatformExtension.desktop) {
+      return logger.i("switchToNativeLogin is mobile only feature");
+    }
     try {
-      await toNativeChannel
-          .invokeMethod('native.navigation.login', {envKey: env.toString()});
-    } on PlatformException catch (e) {
-      logger.e("Failed to switch to native view: '${e.message}'.");
+      await toNativeChannel.invokeMethod('native.navigation.login');
+    } on Exception catch (e) {
+      logger.e("Failed to switch to native login view: '${e.toString()}'.");
     }
   }
 
   @override
   Future<void> restartNative() async {
+    if (PlatformExtension.desktop) {
+      return logger.i("restartNative is mobile only feature");
+    }
     try {
       await toNativeChannel.invokeMethod('native.navigation.restartApp');
-    } on PlatformException catch (e) {
-      logger.e("Failed to switch to native view: '${e.message}'.");
+    } on Exception catch (e) {
+      logger.e("Failed to restart native: '${e.toString()}'.");
     }
   }
 
   @override
   Future<void> switchToUpgrade(FlutterSession session) async {
+    if (PlatformExtension.desktop) {
+      return logger.i("switchToUpgrade is mobile only feature");
+    }
     const key = "session-key";
     const String upgrade = "native.navigation.plan.upgrade";
     try {
       await toNativeChannel.invokeMethod(upgrade, [key, session.toJson()]);
-    } on PlatformException catch (e) {
-      logger.e("Failed to switch to native view: '${e.message}'.");
+    } on Exception catch (e) {
+      logger.e("Failed to switch to upgrade view: '${e.toString()}'.");
     }
   }
 
   @override
   Future<void> initalNativeApiEnv(ApiEnv env) async {
+    if (PlatformExtension.desktop) {
+      return logger.i("initalNativeApiEnv is mobile only feature");
+    }
     const envKey = "env-key";
     try {
       await toNativeChannel.invokeMethod(
           'native.initialize.core.environment', {envKey: env.toString()});
-    } on PlatformException catch (e) {
-      logger.e("Failed to initialize native environment: '${e.message}'.");
-    } on MissingPluginException catch (e){
-      logger.e("Failed to initialize native environment: '${e.message}'.");
+    } on Exception catch (e) {
+      logger.e("Failed to initialize native environment: '${e.toString()}'.");
+    }
+  }
+
+  @override
+  Future<void> nativeLogout() async {
+    if (PlatformExtension.desktop) {
+      return logger.i("initalNativeApiEnv is mobile only feature");
+    }
+    try {
+      await toNativeChannel.invokeMethod('native.account.logout');
+    } on Exception catch (e) {
+      logger.e("Failed to native logout: '${e.toString()}'.");
+    }
+  }
+
+  @override
+  Future<void> nativeReportBugs() async {
+    if (PlatformExtension.desktop) {
+      return logger.i("initalNativeApiEnv is mobile only feature");
+    }
+    try {
+      await toNativeChannel.invokeMethod('native.navigation.report');
+    } on Exception catch (e) {
+      logger.e("Failed to native report bugs: '${e.toString()}'.");
     }
   }
 

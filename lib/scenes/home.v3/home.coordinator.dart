@@ -1,7 +1,8 @@
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
-import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -105,12 +106,14 @@ class HomeCoordinator extends Coordinator {
     var userManager = serviceManager.get<UserManager>();
     var event = serviceManager.get<EventLoop>();
     var wallet = serviceManager.get<ProtonWalletManager>();
+    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var viewModel = HomeViewModelImpl(
       this,
       apiEnv,
       userManager,
       event,
       wallet,
+      apiServiceManager,
     );
     widget = HomeView(
       viewModel,
