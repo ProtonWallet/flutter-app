@@ -1,4 +1,7 @@
-use andromeda_api::error::Error;
+use std::str::Utf8Error;
+
+use andromeda_api::{error::Error, StoreWriteErr};
+use proton_srp::MailboxHashError;
 
 #[derive(Debug)]
 pub enum ApiError {
@@ -13,6 +16,24 @@ pub enum ApiError {
 impl From<String> for ApiError {
     fn from(value: String) -> Self {
         ApiError::Generic(value)
+    }
+}
+
+impl From<StoreWriteErr> for ApiError {
+    fn from(value: StoreWriteErr) -> Self {
+        ApiError::Generic(value.to_string())
+    }
+}
+
+impl From<Utf8Error> for ApiError {
+    fn from(value: Utf8Error) -> Self {
+        ApiError::Generic(value.to_string())
+    }
+}
+
+impl From<MailboxHashError> for ApiError {
+    fn from(value: MailboxHashError) -> Self {
+        ApiError::Generic(value.to_string())
     }
 }
 

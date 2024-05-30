@@ -1,4 +1,4 @@
-pub use andromeda_api::{exchange_rate::ApiExchangeRate, settings::FiatCurrencySymbol as FiatCurrency};
+use andromeda_api::{exchange_rate::ApiExchangeRate, settings::FiatCurrencySymbol as FiatCurrency};
 use andromeda_common::BitcoinUnit;
 #[derive(Debug)]
 pub struct ProtonExchangeRate {

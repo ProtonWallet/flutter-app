@@ -10,7 +10,7 @@ import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/managers/manager.dart';
-import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
@@ -725,7 +725,9 @@ class WalletManager implements Manager {
         }
       }
     }
-    await fetchWalletTransactions();
+    if (wallets.isNotEmpty) {
+      await fetchWalletTransactions();
+    }
     isFetchingWallets = false;
   }
 

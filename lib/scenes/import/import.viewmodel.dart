@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';

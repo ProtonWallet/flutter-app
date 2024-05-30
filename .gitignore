@@ -55,6 +55,7 @@ app.*.map.json
 ## Build generated
 build/
 DerivedData/
+xcuserdata/
 
 ## Various settings
 ExportOptions.plist

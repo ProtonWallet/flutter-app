@@ -42,9 +42,10 @@ post_install do |installer|
   end
   installer.generated_projects.each do |project|
     project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings["DEVELOPMENT_TEAM"] = "2SB5Z68H26"
-         end
+      target.build_configurations.each do |config|
+        config.build_settings["DEVELOPMENT_TEAM"] = "2SB5Z68H26"
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.14'
+      end
     end
   end
 end

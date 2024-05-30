@@ -49,16 +49,17 @@ chrono = "0.4.34"
 ## flutter rust logger
 flutter_logger = { version = "0.6.1", features = ["panic"] }
 log = "0.4.19"
-
 ### proton dependencies
 andromeda-api = { path = "../vendor/andromeda/crates/api", features = [
   "muon-v2",
 ] }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
+proton-srp = { version = "0.4.0", default-features = false, registry = "proton_internal" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
+jni = { version = "0.21.1" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2.12", features = ["js"] }

@@ -209,9 +209,11 @@ final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
     // this is workaround. Env or have a lib in build folder is better option.
     //   we can fix it later
-    if (Platform.isMacOS && Platform.environment.containsKey('FLUTTER_TEST')) {
-      return DynamicLibrary.open(
-          '${Directory.current.path}/macos/libproton_crypto.dylib');
+    if (Platform.isMacOS) {
+      if (Platform.environment.containsKey('FLUTTER_TEST')) {
+        return DynamicLibrary.open(
+            '${Directory.current.path}/macos/libproton_crypto.dylib');
+      }
     }
     return DynamicLibrary.open('$_libName.framework/$_libName');
   }

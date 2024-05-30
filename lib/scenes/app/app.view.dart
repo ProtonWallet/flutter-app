@@ -91,3 +91,15 @@ class AppView extends ViewBase<AppViewModel> {
     );
   }
 }
+
+class SplashView extends StatelessWidget {
+  const SplashView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: ProtonColors.launchBackground,
+      child: const Center(child: CircularProgressIndicator()),
+    );
+  }
+}

@@ -9,3 +9,21 @@ pub use andromeda_api::wallet::CreateWalletAccountRequestBody;
 
 pub use crate::bdk::key::Mnemonic;
 pub use crate::proton_api::*;
+
+#[cfg(target_os = "android")]
+use {
+    jni::{objects::JClass, objects::JObject, JNIEnv},
+    // mylib::setup_android,
+    log::info,
+};
+
+#[cfg(target_os = "android")]
+#[no_mangle]
+pub extern "system" fn Java_com_example_wallet_WalletJNIPlugin_init_1android(
+    env: JNIEnv,
+    _class: JClass,
+    ctx: JObject,
+) {
+    //setup_android(env, ctx);
+    info!("init_android called from rust lib.rs file.");
+}
