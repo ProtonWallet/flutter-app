@@ -161,11 +161,13 @@ class AppDatabase {
   Future<void> initDatabase(Database database) async {
     try {
       if (db.isOpen) {
+        logger.i("db is open return");
         return;
       }
     } catch (e) {
       logger.e(e);
     }
+    logger.i("set inited Database");
     db = database;
   }
 

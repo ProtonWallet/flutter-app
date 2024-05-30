@@ -13,18 +13,6 @@ class SecureStorageManager implements Manager {
 
   SecureStorageManager({required this.storage});
 
-  // // singleton
-  // static SecureStorageManager? _instance;
-
-  // SecureStorageManager._({required this.storage});
-
-  // static SecureStorageManager get instance {
-  //   if (_instance == null) {
-  //     throw Exception("SecureStorageHelper not initialized");
-  //   }
-  //   return _instance!;
-  // }
-
   /// function
   Future<void> deleteAll() async {
     if (Platform.isWindows) {

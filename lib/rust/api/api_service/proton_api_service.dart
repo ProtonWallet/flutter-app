@@ -4,9 +4,11 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../../proton_api/auth_credential.dart';
 import '../../proton_api/errors.dart';
 import '../../proton_api/wallet.dart';
 import '../../proton_api/wallet_settings.dart';
+import 'address_client.dart';
 import 'bitcoin_address_client.dart';
 import 'email_integration_client.dart';
 import 'event_client.dart';
@@ -16,6 +18,7 @@ import 'proton_contacts_client.dart';
 import 'proton_email_addr_client.dart';
 import 'settings_client.dart';
 import 'transaction_client.dart';
+import 'wallet_auth_store.dart';
 import 'wallet_client.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>>
@@ -35,6 +38,9 @@ class ProtonApiService extends RustOpaque {
     rustArcDecrementStrongCountPtr: RustLib
         .instance.api.rust_arc_decrement_strong_count_ProtonApiServicePtr,
   );
+
+  AddressClient getAddressClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetAddressClient(that: this, hint: hint);
 
   BitcoinAddressClient getBitcoinAddrClient({dynamic hint}) =>
       RustLib.instance.api
@@ -70,6 +76,17 @@ class ProtonApiService extends RustOpaque {
   Future<List<WalletData>> getWallets({dynamic hint}) =>
       RustLib.instance.api.protonApiServiceGetWallets(that: this, hint: hint);
 
+  static ProtonApiService initApiServiceAuthStore(
+          {required String appVersion,
+          required String userAgent,
+          required ProtonWalletAuthStore store,
+          dynamic hint}) =>
+      RustLib.instance.api.protonApiServiceInitApiServiceAuthStore(
+          appVersion: appVersion,
+          userAgent: userAgent,
+          store: store,
+          hint: hint);
+
   static Future<ProtonApiService> initWith(
           {required String uid,
           required String access,
@@ -89,6 +106,12 @@ class ProtonApiService extends RustOpaque {
           env: env,
           hint: hint);
 
-  Future<String> readText({dynamic hint}) =>
-      RustLib.instance.api.protonApiServiceReadText(that: this, hint: hint);
+  Future<AuthCredential> login(
+          {required String username, required String password, dynamic hint}) =>
+      RustLib.instance.api.protonApiServiceLogin(
+          that: this, username: username, password: password, hint: hint);
+
+  factory ProtonApiService(
+          {required ProtonWalletAuthStore store, dynamic hint}) =>
+      RustLib.instance.api.protonApiServiceNew(store: store, hint: hint);
 }

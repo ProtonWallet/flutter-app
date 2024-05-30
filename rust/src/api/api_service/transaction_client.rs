@@ -1,4 +1,3 @@
-pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
 use andromeda_api::transaction::ExchangeRateOrTransactionTime;
 use chrono::Utc;
 use log::info;
@@ -9,7 +8,7 @@ use crate::{api::rust_api::Transaction, proton_api::errors::ApiError};
 use super::proton_api_service::ProtonAPIService;
 
 use bdk::bitcoin::consensus::serialize;
-use bdk::bitcoin::Transaction as bdkTransaction;
+pub use bdk::bitcoin::Transaction as bdkTransaction;
 use bitcoin_internals::hex::display::DisplayHex;
 
 pub struct TransactionClient {
@@ -67,5 +66,9 @@ impl TransactionClient {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
         }
+    }
+
+    pub async fn get_raw_transaction(&self, txid: String) -> Result<bdkTransaction, ApiError> {
+        Ok(self.inner.get_raw_transaction(txid).await?)
     }
 }

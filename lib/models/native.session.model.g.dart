@@ -14,6 +14,8 @@ FlutterSession _$FlutterSessionFromJson(Map<String, dynamic> json) =>
       passphrase: json['passphrase'] as String,
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
+      scopes:
+          (json['scopes'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$FlutterSessionToJson(FlutterSession instance) =>
@@ -24,6 +26,7 @@ Map<String, dynamic> _$FlutterSessionToJson(FlutterSession instance) =>
       'passphrase': instance.passphrase,
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,
+      'scopes': instance.scopes,
     };
 
 UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
