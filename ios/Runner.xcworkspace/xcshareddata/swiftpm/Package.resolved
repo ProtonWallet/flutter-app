@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "b4b7037f9b0d4da80b3b9dec8ced5af4139fee3b",
-        "version" : "25.0.2"
+        "revision" : "a6b6dd452d91e8908c99551196669ba63386f68b",
+        "version" : "25.1.1"
       }
     },
     {
