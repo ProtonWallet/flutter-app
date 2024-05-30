@@ -887,7 +887,7 @@
 			repositoryURL = "https://gitlab.protontech.ch/apple/shared/protoncore";
 			requirement = {
 				kind = exactVersion;
-				version = 25.0.2;
+				version = 25.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
