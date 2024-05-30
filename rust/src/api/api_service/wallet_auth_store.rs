@@ -1,71 +1,130 @@
 use std::{future::Future, pin::Pin, sync::Arc};
 
-use log::{debug, info};
+use andromeda_api::{
+    Auth, ChildSession, EnvId, SimpleAuthStore, Store, StoreReadErr, StoreWriteErr, Tokens,
+};
+use flutter_rust_bridge::frb;
+use log::info;
 
-use crate::{auth_store::AuthStoreExt, errors::ApiError};
+use crate::errors::ApiError;
 use tokio::sync::Mutex;
 pub type DartFnFuture<T> = Pin<Box<dyn Future<Output = T> + Send + 'static>>;
-pub type DartCallback = dyn Fn(String) -> DartFnFuture<String> + Send + Sync;
+pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
 
-// lazy_static::lazy_static! {
-//     static ref GLOBAL_SESSION_UPDATE: Mutex<Option<Arc<DartCallback>>> = Mutex::new(None);
-//     // static ref GLOBAL_SESSION_UPDATE_RUNTIME: Option<Arc<tokio::runtime::Runtime>> = None;
-// }
+lazy_static::lazy_static! {
+    static ref GLOBAL_SESSION_DART_CALLBACK: Mutex<Option<Arc<DartCallback>>> = Mutex::new(None);
+}
 
-// pub async fn set_session_update_delegate(
-//     callback: impl Fn(String) -> DartFnFuture<String> + Send + Sync + 'static,
-// ) -> Result<(), ApiError> {
-//     let mut cb = GLOBAL_SESSION_UPDATE.lock().await;
-//     *cb = Some(Arc::new(callback));
-//     Ok(())
-// }
-
+#[derive(Debug, Clone)]
+#[frb(opaque)]
+// Define a new struct that wraps WalletAuthStore
 pub struct ProtonWalletAuthStore {
-    rt: tokio::runtime::Runtime,
-    session: Mutex<Option<Arc<DartCallback>>>,
+    pub(crate) inner: SimpleAuthStore,
 }
 
 impl ProtonWalletAuthStore {
-    pub fn new() -> Result<Self, ApiError> {
-        match tokio::runtime::Builder::new_current_thread().build() {
-            Ok(rt) => Ok(Self {
-                rt,
-                session: Mutex::new(None),
-            }),
-            Err(e) => Err(ApiError::Generic(format!(
-                "Error creating runtime: {:?}",
-                e
-            ))),
-        }
+    #[frb(sync)]
+    pub fn new(env: &str) -> Result<Self, ApiError> {
+        let auth = Arc::new(std::sync::Mutex::new(Auth::None));
+        ProtonWalletAuthStore::from_auth(env, auth)
     }
 
-    pub async fn set_dart_callback(
-        &self,
-        callback: impl Fn(String) -> DartFnFuture<String> + Send + Sync + 'static,
+    #[frb(ignore)]
+    pub(crate) fn from_auth(
+        env: &str,
+        auth: Arc<std::sync::Mutex<Auth>>,
+    ) -> Result<Self, ApiError> {
+        let store = SimpleAuthStore::from_env_str(env, auth);
+        Ok(Self { inner: store })
+    }
+
+    #[frb(sync)]
+    pub fn from_session(
+        env: &str,
+        uid: String,
+        access: String,
+        refresh: String,
+        scopes: Vec<String>,
+    ) -> Result<Self, ApiError> {
+        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        ProtonWalletAuthStore::from_auth(env, Arc::new(std::sync::Mutex::new(auth)))
+    }
+
+    #[frb(sync)]
+    pub fn set_auth_sync(
+        &mut self,
+        uid: String,
+        access: String,
+        refresh: String,
+        scopes: Vec<String>,
     ) -> Result<(), ApiError> {
-        let mut cb = self.session.lock().await;
-        *cb = Some(Arc::new(callback));
+        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        let _ = self.inner.set_auth(auth)?;
         Ok(())
     }
 
-    pub fn test_callback(&self) {
-        debug!("test_callback");
-        self.refresh_auth_credential("Test Token".to_string())
+    #[frb(ignore)]
+    pub(crate) fn update_auth(mut self, auth: Auth) -> Result<Self, ApiError> {
+        let _ = self.inner.set_auth(auth)?;
+        Ok(self)
+    }
+
+    pub async fn set_auth_dart_callback(
+        &mut self,
+        callback: impl Fn(ChildSession) -> DartFnFuture<String> + Send + Sync + 'static,
+    ) -> Result<(), ApiError> {
+        let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+        *cb = Some(Arc::new(callback));
+        info!("set_auth_dart_callback ok");
+        Ok(())
+    }
+
+    pub async fn clear_auth_dart_callback(&self) -> Result<(), ApiError> {
+        let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+        *cb = None;
+        info!("clear_auth_dart_callback ok");
+        Ok(())
+    }
+
+    fn refresh_auth_credential(&self, auth: Auth) {
+        info!("refresh_auth_credential- start:");
+        // let rt = self.rt.clone();
+        tokio::spawn(async move {
+            // Assuming `self` is accessible here
+            // rt.block_on(async move {
+            info!("refresh_auth_credential run block on");
+            let cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+            if let Some(callback) = cb.as_ref() {
+                info!("refresh_auth_credential found callback and calling it");
+                let session = ChildSession {
+                    scopes: auth.scopes().unwrap_or_default().to_vec(),
+                    session_id: auth.uid().unwrap_or_default().to_string(),
+                    access_token: auth.acc_tok().unwrap_or_default().to_string(),
+                    refresh_token: auth.ref_tok().unwrap_or_default().to_string(),
+                };
+                let msg = callback(session).await;
+                info!("refresh_auth_credential messageFromDart: {}", msg);
+            }
+            // });
+        });
+        info!("refresh_auth_credential- end");
     }
 }
 
-impl AuthStoreExt for ProtonWalletAuthStore {
-    fn refresh_auth_credential(&self, message: String) {
-        info!("refresh_auth_credential- start: {}", message);
-        self.rt.block_on(async move {
-            info!("refresh_auth_credential run block on");
-            let cb = self.session.lock().await;
-            if let Some(callback) = cb.as_ref() {
-                info!("refresh_auth_credential found callback and calling it");
-                let msg = callback(message).await;
-                info!("refresh_auth_credential messageFromDart: {}", msg);
-            }
-        });
-        info!("refresh_auth_credential- end");
+impl Store for ProtonWalletAuthStore {
+    fn env(&self) -> EnvId {
+        info!("ProtonWalletAuthStore env");
+        self.inner.env()
+    }
+
+    fn get_auth(&self) -> Result<Auth, StoreReadErr> {
+        info!("ProtonWalletAuthStore get_auth");
+        self.inner.get_auth()
+    }
+
+    fn set_auth(&mut self, auth: Auth) -> Result<Auth, StoreWriteErr> {
+        info!("Custom set_auth: {:?}", auth.clone());
+        self.refresh_auth_credential(auth.clone());
+        self.inner.set_auth(auth)
     }
 }

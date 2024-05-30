@@ -35,7 +35,8 @@ impl Api {
 
     /// create esplora blockchain with proton api
     pub fn create_esplora_blockchain_with_api(config: EsploraConfig) -> Result<String, Error> {
-        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> =
+            retrieve_proton_api().inner.clone();
         let blockchain = Blockchain::new_blockchain_with_api(config, proton_api);
         match blockchain {
             Ok(e) => Ok(e),
@@ -732,7 +733,7 @@ mod test {
 
         init_api_service("pro".to_string(), "pro".to_string()).await;
 
-        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let proton_api = retrieve_proton_api();
         let config = EsploraConfig {
             base_url: "https://blockstream.info/testnet/api".to_string(),
             proxy: None,
@@ -740,7 +741,8 @@ mod test {
             stop_gap: 10,
             timeout: None,
         };
-        let blockchain_id = Blockchain::new_blockchain_with_api(config, proton_api).unwrap();
+        let blockchain_id =
+            Blockchain::new_blockchain_with_api(config, proton_api.inner.clone()).unwrap();
         let blockchain = Blockchain::retrieve_blockchain(blockchain_id);
 
         println!("start syncing");
@@ -785,7 +787,7 @@ mod test {
 
         init_api_service("feng100".to_string(), "12345678".to_string()).await;
 
-        let proton_api: Arc<andromeda_api::ProtonWalletApiClient> = retrieve_proton_api();
+        let proton_api = retrieve_proton_api();
         let config = EsploraConfig {
             base_url: "https://blockstream.info/testnet/api".to_string(),
             proxy: None,
@@ -793,7 +795,8 @@ mod test {
             stop_gap: 10,
             timeout: None,
         };
-        let blockchain_id = Blockchain::new_blockchain_with_api(config, proton_api).unwrap();
+        let blockchain_id =
+            Blockchain::new_blockchain_with_api(config, proton_api.inner.clone()).unwrap();
         let blockchain = Blockchain::retrieve_blockchain(blockchain_id);
 
         println!("start syncing");

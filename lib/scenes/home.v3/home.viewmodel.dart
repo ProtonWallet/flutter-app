@@ -16,12 +16,13 @@ import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import 'package:wallet/managers/user.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -185,7 +186,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
 class HomeViewModelImpl extends HomeViewModel {
   HomeViewModelImpl(super.coordinator, super.apiEnv, this.userManager,
-      this.eventLoop, this.protonWalletManager);
+      this.eventLoop, this.protonWalletManager, this.apiServiceManager);
 
   // user manager
   final UserManager userManager;
@@ -195,6 +196,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // wallet mangaer
   final ProtonWalletManager protonWalletManager;
+
+  // networking
+  final ProtonApiServiceManager apiServiceManager;
 
   ///
   final datasourceChangedStreamController =
@@ -233,7 +237,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    await userManager.initMuon();
+    await apiServiceManager.initalOldApiService();
     var userInfo = userManager.userInfo;
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;

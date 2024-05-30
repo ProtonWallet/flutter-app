@@ -50,8 +50,32 @@ class TransactionClient extends RustOpaque {
           body: body,
           hint: hint);
 
+  Future<BdkTransaction> getRawTransaction(
+          {required String txid, dynamic hint}) =>
+      RustLib.instance.api.transactionClientGetRawTransaction(
+          that: this, txid: txid, hint: hint);
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<TransactionClient> newInstance(
           {required ProtonApiService service, dynamic hint}) =>
       RustLib.instance.api.transactionClientNew(service: service, hint: hint);
+}
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<bdkTransaction>>
+@sealed
+class BdkTransaction extends RustOpaque {
+  BdkTransaction.dcoDecode(List<dynamic> wire)
+      : super.dcoDecode(wire, _kStaticData);
+
+  BdkTransaction.sseDecode(int ptr, int externalSizeOnNative)
+      : super.sseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_BdkTransaction,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_BdkTransaction,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_BdkTransactionPtr,
+  );
 }

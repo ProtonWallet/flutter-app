@@ -43,8 +43,10 @@ class ProtonColors {
   static Color drawerButtonBackground = const Color(0xFF44448F);
   static Color drawerWalletPlus = const Color(0xFF7B57FC);
 
-  static Color drawerWalletBackground1 = const Color.fromARGB(41, 255, 196, 131);
-  static Color drawerWalletTextColor1 = const Color.fromARGB(255, 255, 196, 131);
+  static Color drawerWalletBackground1 =
+      const Color.fromARGB(41, 255, 196, 131);
+  static Color drawerWalletTextColor1 =
+      const Color.fromARGB(255, 255, 196, 131);
 
   static Color orange1Text = const Color(0xffff8902);
   static Color orange1Background = const Color(0x48ffc483);
@@ -58,6 +60,8 @@ class ProtonColors {
   static Color yellow1Background = const Color(0x88FFC483);
   static Color green1Text = const Color(0xff5fc88f);
   static Color green1Background = const Color(0x485fc88f);
+
+  static Color launchBackground = const Color(0xff191927);
 
   static void updateLightTheme() {
     interactionNorm = const Color(0xFF6D4AFF);

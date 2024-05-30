@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:wallet/rust/proton_api/auth_credential.dart';
 
 part 'native.session.model.g.dart';
 
@@ -10,6 +11,7 @@ class FlutterSession {
   String passphrase;
   String accessToken;
   String refreshToken;
+  List<String> scopes;
 
   FlutterSession({
     required this.userId,
@@ -18,6 +20,7 @@ class FlutterSession {
     required this.passphrase,
     required this.accessToken,
     required this.refreshToken,
+    required this.scopes,
   });
 
   /// Connect the generated [_$FlutterSessionFromJson] function to the `fromJson`
@@ -71,6 +74,22 @@ class UserInfo {
       userKeyID: userInfo["userKeyID"] ?? "",
       userPrivateKey: userInfo["userPrivateKey"] ?? "",
       userPassphrase: userInfo["userPassphrase"] ?? "",
+    );
+  }
+
+  factory UserInfo.fromAuth(AuthCredential auth) {
+    return UserInfo(
+      userId: auth.userId,
+      userMail: auth.userMail,
+      userName: auth.userName,
+      userDisplayName: auth.displayName,
+      sessionId: auth.sessionId,
+      accessToken: auth.accessToken,
+      refreshToken: auth.accessToken,
+      scopes: auth.scops.join(","),
+      userKeyID: auth.userKeyId,
+      userPrivateKey: auth.userPrivateKey,
+      userPassphrase: auth.userPassphrase,
     );
   }
 

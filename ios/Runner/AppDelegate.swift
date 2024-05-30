@@ -68,6 +68,10 @@ import CryptoKit
                                         message: "Can't parse arguments. \"native.initialize.core.environment\" missing environment parameter.",
                                         details: nil))
                 }
+            case "native.navigation.report":
+                print("native.navigation.report triggered")
+            case "native.account.logout":
+                print("native.account.logout triggered")
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -79,12 +83,11 @@ import CryptoKit
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
             GeneratedPluginRegistrant.register(with: registry)
         }
-
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
         }
 
-        // disable 
+         // disable 
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

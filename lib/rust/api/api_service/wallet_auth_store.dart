@@ -4,8 +4,11 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../../proton_api/auth_credential.dart';
 import '../../proton_api/errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
+// The type `GLOBAL_SESSION_DART_CALLBACK` is not used by any `pub` functions, thus it is ignored.
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>>
 @sealed
@@ -25,16 +28,44 @@ class ProtonWalletAuthStore extends RustOpaque {
         .instance.api.rust_arc_decrement_strong_count_ProtonWalletAuthStorePtr,
   );
 
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ProtonWalletAuthStore> newInstance({dynamic hint}) =>
-      RustLib.instance.api.protonWalletAuthStoreNew(hint: hint);
+  Future<void> clearAuthDartCallback({dynamic hint}) => RustLib.instance.api
+      .protonWalletAuthStoreClearAuthDartCallback(that: this, hint: hint);
 
-  Future<void> setDartCallback(
-          {required FutureOr<String> Function(String) callback,
+  static ProtonWalletAuthStore fromSession(
+          {required String env,
+          required String uid,
+          required String access,
+          required String refresh,
+          required List<String> scopes,
           dynamic hint}) =>
-      RustLib.instance.api.protonWalletAuthStoreSetDartCallback(
+      RustLib.instance.api.protonWalletAuthStoreFromSession(
+          env: env,
+          uid: uid,
+          access: access,
+          refresh: refresh,
+          scopes: scopes,
+          hint: hint);
+
+  factory ProtonWalletAuthStore({required String env, dynamic hint}) =>
+      RustLib.instance.api.protonWalletAuthStoreNew(env: env, hint: hint);
+
+  Future<void> setAuthDartCallback(
+          {required FutureOr<String> Function(ChildSession) callback,
+          dynamic hint}) =>
+      RustLib.instance.api.protonWalletAuthStoreSetAuthDartCallback(
           that: this, callback: callback, hint: hint);
 
-  Future<void> testCallback({dynamic hint}) => RustLib.instance.api
-      .protonWalletAuthStoreTestCallback(that: this, hint: hint);
+  void setAuthSync(
+          {required String uid,
+          required String access,
+          required String refresh,
+          required List<String> scopes,
+          dynamic hint}) =>
+      RustLib.instance.api.protonWalletAuthStoreSetAuthSync(
+          that: this,
+          uid: uid,
+          access: access,
+          refresh: refresh,
+          scopes: scopes,
+          hint: hint);
 }

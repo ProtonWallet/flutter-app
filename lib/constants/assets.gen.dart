@@ -88,12 +88,20 @@ class $AssetsImagesIconGen {
   SvgGenImage get alertInfo =>
       const SvgGenImage('assets/images/icon/alert_info.svg');
 
+  /// File path: assets/images/icon/alert_warning.svg
+  SvgGenImage get alertWarning =>
+      const SvgGenImage('assets/images/icon/alert_warning.svg');
+
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
 
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
+
+  /// File path: assets/images/icon/delete_warning.svg
+  SvgGenImage get deleteWarning =>
+      const SvgGenImage('assets/images/icon/delete_warning.svg');
 
   /// File path: assets/images/icon/discover_placeholder_0.svg
   SvgGenImage get discoverPlaceholder0 =>
@@ -197,6 +205,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get noWalletFound =>
       const SvgGenImage('assets/images/icon/no_wallet_found.svg');
 
+  /// File path: assets/images/icon/passphrase_lock.svg
+  SvgGenImage get passphraseLock =>
+      const SvgGenImage('assets/images/icon/passphrase_lock.svg');
+
   /// File path: assets/images/icon/protect.svg
   SvgGenImage get protect =>
       const SvgGenImage('assets/images/icon/protect.svg');
@@ -263,8 +275,10 @@ class $AssetsImagesIconGen {
         accessKey,
         addAccount,
         alertInfo,
+        alertWarning,
         bitcoin,
         btc,
+        deleteWarning,
         discoverPlaceholder0,
         discoverPlaceholder1,
         discoverPlaceholder2,
@@ -291,6 +305,7 @@ class $AssetsImagesIconGen {
         logoText,
         mobile,
         noWalletFound,
+        passphraseLock,
         protect,
         receive,
         send,

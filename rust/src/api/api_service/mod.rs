@@ -10,3 +10,4 @@ pub mod settings_client;
 pub mod transaction_client;
 pub mod wallet_auth_store;
 pub mod wallet_client;
+pub mod address_client;
