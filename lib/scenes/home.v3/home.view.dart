@@ -415,29 +415,28 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     .of(context)
                                     .size
                                     .width,
-                                address: CommonHelper.getFirstNChar(
-                                    WalletManager.getEmailFromWalletTransaction(
-                                        Provider
-                                            .of<ProtonWalletProvider>(context)
-                                            .protonWallet
-                                            .historyTransactionsAfterFilter[index]
-                                            .amountInSATS > 0
-                                            ? Provider
-                                            .of<ProtonWalletProvider>(context)
-                                            .protonWallet
-                                            .historyTransactionsAfterFilter[
-                                        index]
-                                            .sender
-                                            : Provider
-                                            .of<ProtonWalletProvider>(context)
-                                            .protonWallet
-                                            .historyTransactionsAfterFilter[
-                                        index]
-                                            .toList,
-                                        selfEmailAddresses: viewModel
-                                            .protonAddresses.map((e) => e.email)
-                                            .toList()),
-                                    24),
+                                address:
+                                WalletManager.getEmailFromWalletTransaction(
+                                    Provider
+                                        .of<ProtonWalletProvider>(context)
+                                        .protonWallet
+                                        .historyTransactionsAfterFilter[index]
+                                        .amountInSATS > 0
+                                        ? Provider
+                                        .of<ProtonWalletProvider>(context)
+                                        .protonWallet
+                                        .historyTransactionsAfterFilter[
+                                    index]
+                                        .sender
+                                        : Provider
+                                        .of<ProtonWalletProvider>(context)
+                                        .protonWallet
+                                        .historyTransactionsAfterFilter[
+                                    index]
+                                        .toList,
+                                    selfEmailAddresses: viewModel
+                                        .protonAddresses.map((e) => e.email)
+                                        .toList()),
                                 amount:
                                 Provider
                                     .of<ProtonWalletProvider>(context)
@@ -558,7 +557,13 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   text: S
                                       .of(context)
                                       .receive,
-                                  width: 180,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width > 424 ? 180 : MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 2 - defaultPadding * 2,
                                   textStyle: FontManager.body1Median(
                                       ProtonColors.protonBlue),
                                   height: 48),
@@ -571,7 +576,13 @@ class HomeView extends ViewBase<HomeViewModel> {
                                   text: S
                                       .of(context)
                                       .buy,
-                                  width: 180,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width > 424 ? 180 : MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 2 - defaultPadding * 2,
                                   textStyle: FontManager.body1Median(
                                       ProtonColors.backgroundSecondary),
                                   height: 48),
