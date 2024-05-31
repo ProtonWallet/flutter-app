@@ -54,26 +54,36 @@ class ProtonMailAutoComplete extends StatelessWidget {
             Iterable<ContactsModel> options) {
           return Align(
             alignment: Alignment.topLeft,
-            child: Material(
-              elevation: 4.0,
-              child: Container(
-                width: MediaQuery.of(context).size.width - defaultPadding * 2,
-                constraints: const BoxConstraints(maxHeight: 320),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: options.map((ContactsModel option) {
-                    return GestureDetector(
-                      onTap: () {
-                        onSelected(option);
-                      },
-                      child: ListTile(
+            child: Container(
+              width: MediaQuery.of(context).size.width - defaultPadding * 2,
+              constraints: const BoxConstraints(maxHeight: 320),
+              decoration: BoxDecoration(
+                color: ProtonColors.backgroundProton,
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                children: options.map((ContactsModel option) {
+                  return GestureDetector(
+                    onTap: () {
+                      onSelected(option);
+                    },
+                    child: Column(children: [
+                      ListTile(
                         leading: getEmailAvatar(option.name),
                         title: Text(option.name),
                         subtitle: Text(option.email),
                       ),
-                    );
-                  }).toList(),
-                ),
+                      const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: defaultPadding),
+                          child: Divider(
+                            thickness: 0.2,
+                            height: 1,
+                          )),
+                    ]),
+                  );
+                }).toList(),
               ),
             ),
           );

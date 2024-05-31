@@ -39,17 +39,21 @@ class SendView extends ViewBase<SendViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: ProtonColors.white,
-        title: Text(
-            viewModel.inReview
-                ? "Review your transaction"
-                : S.of(context).send_bitcoin,
-            style: FontManager.body2Median(ProtonColors.textNorm)),
+        title: viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction
+            ? Text(S.of(context).review_your_transaction,
+                style: FontManager.body2Median(ProtonColors.textNorm))
+            : null,
         centerTitle: true,
-        leading: viewModel.inReview
+        leading: viewModel.sendFlowStatus != SendFlowStatus.addRecipient
             ? IconButton(
                 icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
                 onPressed: () {
-                  viewModel.updatePageStatus(inReview: false);
+                  if (viewModel.sendFlowStatus ==
+                      SendFlowStatus.reviewTransaction) {
+                    viewModel.updatePageStatus(SendFlowStatus.editAmount);
+                  } else {
+                    viewModel.updatePageStatus(SendFlowStatus.addRecipient);
+                  }
                 },
               )
             : IconButton(
@@ -58,6 +62,19 @@ class SendView extends ViewBase<SendViewModel> {
                   Navigator.of(context).pop();
                 },
               ),
+        actions: [
+          if (viewModel.sendFlowStatus == SendFlowStatus.editAmount)
+            GestureDetector(
+                onTap: () {
+                  viewModel.updatePageStatus(SendFlowStatus.addRecipient);
+                },
+                child: Padding(
+                    padding: const EdgeInsets.only(right: defaultPadding),
+                    child: Text(
+                      S.of(context).add_recipient,
+                      style: FontManager.body2Median(ProtonColors.protonBlue),
+                    )))
+        ],
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
@@ -66,10 +83,168 @@ class SendView extends ViewBase<SendViewModel> {
       ),
       body: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: viewModel.inReview
-              ? buildReviewContent(context, viewModel, viewSize)
-              : buildContent(context, viewModel, viewSize)),
+          child: buildMainView(context, viewModel, viewSize)),
     );
+  }
+
+  Widget buildMainView(
+      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+    switch (viewModel.sendFlowStatus) {
+      case SendFlowStatus.addRecipient:
+        return buildAddRecipient(context, viewModel, viewSize);
+      case SendFlowStatus.editAmount:
+        return buildEditAmount(context, viewModel, viewSize);
+      case SendFlowStatus.reviewTransaction:
+        return buildReviewContent(context, viewModel, viewSize);
+    }
+  }
+
+  Widget buildEditAmount(
+      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+    return Container(
+        color: ProtonColors.white,
+        child: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Center(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                            const SizedBox(height: 20),
+                            Row(children: [
+                              Expanded(
+                                  child: TextFieldSendBTCV2(
+                                backgroundColor: ProtonColors.backgroundProton,
+                                labelText: S.of(context).amount,
+                                textController: viewModel.amountTextController,
+                                myFocusNode: viewModel.amountFocusNode,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d*\.?\d*$'))
+                                ],
+                                currency:
+                                    Provider.of<UserSettingProvider>(context)
+                                        .walletUserSetting
+                                        .fiatCurrency,
+                                currencyExchangeRate:
+                                    Provider.of<UserSettingProvider>(context)
+                                        .walletUserSetting
+                                        .exchangeRate
+                                        .exchangeRate,
+                                btcBalance: viewModel.balance / 100000000,
+                                userSettingProvider:
+                                    Provider.of<UserSettingProvider>(context),
+                                validation: (String value) {
+                                  return "";
+                                },
+                              )),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: DropdownButtonV2(
+                                      width: 100,
+                                      padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 4,
+                                          bottom: 2),
+                                      maxSuffixIconWidth: 20,
+                                      textStyle: FontManager.captionMedian(
+                                          ProtonColors.textNorm),
+                                      backgroundColor:
+                                          ProtonColors.backgroundProton,
+                                      items: fiatCurrencies,
+                                      itemsText: fiatCurrencies
+                                          .map((v) =>
+                                              FiatCurrencyHelper.getFullName(v))
+                                          .toList(),
+                                      itemsTextForDisplay: fiatCurrencies
+                                          .map((v) =>
+                                              FiatCurrencyHelper.getDisplayName(
+                                                  v))
+                                          .toList(),
+                                      valueNotifier:
+                                          viewModel.fiatCurrencyNotifier)),
+                            ]),
+                            if (viewModel.recipients.isNotEmpty)
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 20, bottom: 10),
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  S.of(context).recipients,
+                                  style: FontManager.captionMedian(
+                                      ProtonColors.textNorm),
+                                ),
+                              ),
+                            for (int index = 0;
+                                index < viewModel.recipients.length;
+                                index++)
+                              RecipientDetail(
+                                name: viewModel.recipients[index].email,
+                                email: viewModel.recipients[index].email,
+                                bitcoinAddress: viewModel.bitcoinAddresses
+                                        .containsKey(
+                                            viewModel.recipients[index].email)
+                                    ? viewModel.bitcoinAddresses[viewModel
+                                            .recipients[index].email] ??
+                                        ""
+                                    : "",
+                                isSignatureInvalid: viewModel
+                                            .bitcoinAddressesInvalidSignature[
+                                        viewModel.recipients[index].email] ??
+                                    false,
+                                isSelfBitcoinAddress:
+                                    viewModel.selfBitcoinAddresses.contains(
+                                        viewModel.bitcoinAddresses[viewModel
+                                                .recipients[index].email] ??
+                                            ""),
+                                callback: () {
+                                  viewModel.removeRecipient(index);
+                                },
+                                amountController:
+                                    viewModel.recipients.length > 1
+                                        ? viewModel
+                                            .recipients[index].amountController
+                                        : null,
+                                amountFocusNode: viewModel.recipients.length > 1
+                                    ? viewModel.recipients[index].focusNode
+                                    : null,
+                              ),
+                            const SizedBox(height: 20),
+                            if (viewModel.errorMessage.isNotEmpty)
+                              Text(
+                                viewModel.errorMessage,
+                                style: FontManager.body2Median(
+                                    ProtonColors.signalError),
+                              ),
+                          ]))))),
+          if (MediaQuery.of(context).viewInsets.bottom < 80)
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: defaultButtonPadding),
+                child: ButtonV5(
+                    onPressed: () {
+                      viewModel
+                          .updatePageStatus(SendFlowStatus.reviewTransaction);
+                    },
+                    enable: viewModel.validRecipientCount() > 0 &&
+                        viewModel.amountTextController.text.isNotEmpty,
+                    text: S.of(context).review_transaction,
+                    width: MediaQuery.of(context).size.width,
+                    backgroundColor: ProtonColors.protonBlue,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    height: 48)),
+        ]));
   }
 
   double getTotalAmountInFiatCurrency(SendViewModel viewModel) {
@@ -434,7 +609,7 @@ class SendView extends ViewBase<SendViewModel> {
     );
   }
 
-  Widget buildContent(
+  Widget buildAddRecipient(
       BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
     return Container(
         color: ProtonColors.white,
@@ -461,6 +636,39 @@ class SendView extends ViewBase<SendViewModel> {
                                     viewModel.addressAutoCompleteCallback();
                                   }),
                               const SizedBox(height: 5),
+                              if (Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .currentAccount ==
+                                      null &&
+                                  Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .currentAccounts
+                                          .length >
+                                      1)
+                                Column(children: [
+                                  WalletAccountDropdown(
+                                      labelText: S.of(context).trans_from,
+                                      backgroundColor:
+                                          ProtonColors.backgroundProton,
+                                      width: MediaQuery.of(context).size.width -
+                                          defaultPadding * 2,
+                                      accounts:
+                                          Provider.of<ProtonWalletProvider>(
+                                                  context)
+                                              .protonWallet
+                                              .currentAccounts,
+                                      valueNotifier: viewModel.initialized
+                                          ? viewModel.accountValueNotifier
+                                          : ValueNotifier(
+                                              Provider.of<ProtonWalletProvider>(
+                                                      context)
+                                                  .protonWallet
+                                                  .currentAccounts
+                                                  .first)),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ]),
                             ]),
                             if (viewModel.recipients.isNotEmpty)
                               Container(
@@ -499,103 +707,6 @@ class SendView extends ViewBase<SendViewModel> {
                                   viewModel.removeRecipient(index);
                                 },
                               ),
-                            const SizedBox(height: 20),
-                            if (Provider.of<ProtonWalletProvider>(context)
-                                        .protonWallet
-                                        .currentAccount ==
-                                    null &&
-                                Provider.of<ProtonWalletProvider>(context)
-                                        .protonWallet
-                                        .currentAccounts
-                                        .length >
-                                    1)
-                              Column(children: [
-                                WalletAccountDropdown(
-                                    labelText: S.of(context).trans_from,
-                                    backgroundColor:
-                                        ProtonColors.backgroundProton,
-                                    width: MediaQuery.of(context).size.width -
-                                        defaultPadding * 2,
-                                    accounts: Provider.of<ProtonWalletProvider>(
-                                            context)
-                                        .protonWallet
-                                        .currentAccounts,
-                                    valueNotifier: viewModel.initialized
-                                        ? viewModel.accountValueNotifier
-                                        : ValueNotifier(
-                                            Provider.of<ProtonWalletProvider>(
-                                                    context)
-                                                .protonWallet
-                                                .currentAccounts
-                                                .first)),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ]),
-                            Row(children: [
-                              Expanded(
-                                  child: TextFieldSendBTCV2(
-                                backgroundColor: ProtonColors.backgroundProton,
-                                labelText: S.of(context).amount,
-                                textController: viewModel.amountTextController,
-                                myFocusNode: viewModel.amountFocusNode,
-                                currency:
-                                    Provider.of<UserSettingProvider>(context)
-                                        .walletUserSetting
-                                        .fiatCurrency,
-                                currencyExchangeRate:
-                                    Provider.of<UserSettingProvider>(context)
-                                        .walletUserSetting
-                                        .exchangeRate
-                                        .exchangeRate,
-                                btcBalance: viewModel.balance / 100000000,
-                                userSettingProvider:
-                                    Provider.of<UserSettingProvider>(context),
-                                validation: (String value) {
-                                  return "";
-                                },
-                              )),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: DropdownButtonV2(
-                                      width: 100,
-                                      padding: const EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 4,
-                                          bottom: 2),
-                                      maxSuffixIconWidth: 20,
-                                      textStyle: FontManager.captionMedian(
-                                          ProtonColors.textNorm),
-                                      backgroundColor:
-                                          ProtonColors.backgroundProton,
-                                      items: fiatCurrencies,
-                                      itemsText: fiatCurrencies
-                                          .map((v) =>
-                                              FiatCurrencyHelper.getFullName(v))
-                                          .toList(),
-                                      itemsTextForDisplay: fiatCurrencies
-                                          .map((v) =>
-                                              FiatCurrencyHelper.getDisplayName(
-                                                  v))
-                                          .toList(),
-                                      valueNotifier:
-                                          viewModel.fiatCurrencyNotifier)),
-                            ]),
-                            const SizedBox(height: 20),
-                            if (viewModel.errorMessage.isNotEmpty)
-                              Text(
-                                viewModel.errorMessage,
-                                style: FontManager.body2Median(
-                                    ProtonColors.signalError),
-                              ),
-                            // Text(viewModel.feeRateHighPriority.toStringAsFixed(6)),
-                            // Text(
-                            //     viewModel.feeRateMedianPriority.toStringAsFixed(6)),
-                            // Text(viewModel.feeRateLowPriority.toStringAsFixed(6)),
                           ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
             Container(
@@ -604,11 +715,10 @@ class SendView extends ViewBase<SendViewModel> {
                     horizontal: defaultButtonPadding),
                 child: ButtonV5(
                     onPressed: () {
-                      viewModel.updatePageStatus(inReview: true);
+                      viewModel.updatePageStatus(SendFlowStatus.editAmount);
                     },
-                    enable: viewModel.validRecipientCount() > 0 &&
-                        viewModel.amountTextController.text.isNotEmpty,
-                    text: S.of(context).review_transaction,
+                    enable: viewModel.validRecipientCount() > 0,
+                    text: S.of(context).confirm,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),

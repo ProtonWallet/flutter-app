@@ -48,7 +48,7 @@ class ProtonColors {
   static Color drawerWalletTextColor1 =
       const Color.fromARGB(255, 255, 196, 131);
 
-  static Color orange1Text = const Color(0xffff8902);
+  static Color orange1Text = const Color(0xfff7931a);
   static Color orange1Background = const Color(0x48ffc483);
   static Color pink1Text = const Color(0xffeb8dd6);
   static Color pink1Background = const Color(0x48eb8dd6);
