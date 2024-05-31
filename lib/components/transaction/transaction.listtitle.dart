@@ -80,9 +80,15 @@ class TransactionListTitle extends StatelessWidget {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(address,
-                              style: FontManager.captionRegular(
-                                  ProtonColors.textNorm)),
+                          Expanded(
+                              child: Text(
+                            address,
+                            style: FontManager.captionRegular(
+                                ProtonColors.textNorm),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                          const SizedBox(width: 4),
                           isSend
                               ? Text(
                                   Provider.of<UserSettingProvider>(context)
@@ -98,9 +104,14 @@ class TransactionListTitle extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           timestamp != null
-                              ? Text(parsetime(timestamp!),
+                              ? Expanded(
+                                  child: Text(
+                                  parsetime(timestamp!),
                                   style: FontManager.captionRegular(
-                                      ProtonColors.textHint))
+                                      ProtonColors.textHint),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ))
                               : Row(children: [
                                   const CustomLoading(),
                                   const SizedBox(width: 6),
@@ -108,6 +119,7 @@ class TransactionListTitle extends StatelessWidget {
                                       style: FontManager.captionRegular(
                                           ProtonColors.protonBlue)),
                                 ]),
+                          const SizedBox(width: 4),
                           isSend
                               ? Text(
                                   "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
@@ -134,7 +146,8 @@ class TransactionListTitle extends StatelessWidget {
                             SizedBox(
                                 width: MediaQuery.of(context).size.width - 150,
                                 child: Text(
-                                  S.of(context).trans_note(CommonHelper.getFirstNChar(note, 24)),
+                                  S.of(context).trans_note(
+                                      CommonHelper.getFirstNChar(note, 24)),
                                   style: FontManager.captionRegular(
                                       ProtonColors.textHint),
                                   overflow: TextOverflow.ellipsis,

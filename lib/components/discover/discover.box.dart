@@ -90,8 +90,8 @@ class _Details extends StatelessWidget {
         Text(title, style: FontManager.body2Median(ProtonColors.textNorm)),
         const SizedBox(height: 2),
         Text(pubDate, style: FontManager.captionRegular(ProtonColors.textWeak)),
-        Row(
-          children: [
+        Wrap(
+            children: [
             TagProtonDiscover(text: category),
             TagProtonDiscover(text: author),
           ],

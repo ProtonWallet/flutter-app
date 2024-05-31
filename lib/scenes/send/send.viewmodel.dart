@@ -43,14 +43,22 @@ enum TransactionFeeMode {
   lowPriority,
 }
 
+enum SendFlowStatus {
+  addRecipient,
+  editAmount,
+  reviewTransaction,
+}
+
 class ProtonRecipient {
   String email;
   TextEditingController amountController;
+  FocusNode focusNode;
   int? amountInSATS;
 
   ProtonRecipient({
     required this.email,
     required this.amountController,
+    required this.focusNode,
   });
 }
 
@@ -84,7 +92,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int estimatedFeeInSAT = 0;
   int amountInSATS = 0; // per recipient
   int totalAmountInSAT = 0; // total value
-  bool inReview = false;
+  SendFlowStatus sendFlowStatus = SendFlowStatus.addRecipient;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
@@ -93,6 +101,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   bool isBitcoinBase = false; // TODO:: add bitcoin base logic
   WalletModel? walletModel;
   AccountModel? accountModel;
+  BuildContext? context;
   late FocusNode addressFocusNode;
   late FocusNode amountFocusNode;
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
@@ -120,7 +129,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   void removeRecipient(int index);
 
-  void updatePageStatus({required bool inReview});
+  void updatePageStatus(SendFlowStatus status);
 
   void addressAutoCompleteCallback();
 
@@ -171,6 +180,7 @@ class SendViewModelImpl extends SendViewModel {
     EasyLoading.show(
         status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
     try {
+      context = Coordinator.navigatorKey.currentContext!;
       addressFocusNode = FocusNode();
       amountFocusNode = FocusNode();
       memoFocusNode = FocusNode();
@@ -203,7 +213,8 @@ class SendViewModelImpl extends SendViewModel {
           Coordinator.navigatorKey.currentContext!,
           listen: false);
       userSettingProvider.addListener(() {
-        if (exchangeRate != null && inReview) {
+        if (exchangeRate != null &&
+            sendFlowStatus == SendFlowStatus.reviewTransaction) {
           if (userSettingProvider.walletUserSetting.exchangeRate.id !=
               exchangeRate!.id) {
             exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
@@ -221,7 +232,21 @@ class SendViewModelImpl extends SendViewModel {
       recipientTextController = TextEditingController(text: "");
       memoTextController = TextEditingController();
       amountTextController = TextEditingController();
-      amountTextController.addListener(() {
+      amountFocusNode.addListener(() {
+        double totalAmount = 0;
+        try {
+          totalAmount = double.parse(amountTextController.text);
+        } catch (e) {
+          // ignore parsing error
+        }
+        int recipientCount = validRecipientCount();
+        if (recipientCount > 0) {
+          double amount = totalAmount / recipientCount;
+          for (ProtonRecipient recipient in recipients) {
+            recipient.amountController.text =
+                amount.toStringAsFixed(defaultDisplayDigits);
+          }
+        }
         datasourceChangedStreamController.sinkAddSafe(this);
       });
 
@@ -307,8 +332,8 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   @override
-  Future<void> updatePageStatus({required bool inReview}) async {
-    if (inReview == true) {
+  Future<void> updatePageStatus(SendFlowStatus status) async {
+    if (status == SendFlowStatus.reviewTransaction) {
       hasEmailIntegrationRecipient = false;
       for (ProtonRecipient protonRecipient in recipients) {
         String email = protonRecipient.email;
@@ -321,10 +346,10 @@ class SendViewModelImpl extends SendViewModel {
       await updateTransactionFeeMode(userTransactionFeeMode);
       bool success = await buildTransactionScript();
       if (success == false) {
-        inReview = false;
+        sendFlowStatus = SendFlowStatus.editAmount;
       }
     }
-    this.inReview = inReview;
+    sendFlowStatus = status;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -368,12 +393,11 @@ class SendViewModelImpl extends SendViewModel {
               if (verifySignature == true) {
                 bitcoinAddress = emailIntegrationBitcoinAddress.bitcoinAddress;
               } else {
-                BuildContext context = Coordinator.navigatorKey.currentContext!;
-                if (context.mounted) {
+                if (context != null && context!.mounted) {
                   CommonHelper.showSnackbar(
-                      context,
+                      context!,
                       S
-                          .of(context)
+                          .of(context!)
                           .error_this_bitcoin_address_signature_is_invalid,
                       isError: true);
                 }
@@ -403,6 +427,8 @@ class SendViewModelImpl extends SendViewModel {
     if (toBeRemoved != null) {
       recipients.remove(toBeRemoved);
     }
+    bitcoinAddresses.removeWhere((key, value) => value == email);
+    bitcoinAddresses.removeWhere((key, value) => key == email);
   }
 
   bool isRecipientExists(String email) {
@@ -430,10 +456,28 @@ class SendViewModelImpl extends SendViewModel {
         }
         return;
       }
+      TextEditingController textEditingController = TextEditingController();
+      FocusNode focusNode = FocusNode();
+      focusNode.addListener(() {
+        double totalAmount = 0;
+        for (ProtonRecipient recipient in recipients) {
+          double amount = 0;
+          try {
+            amount = double.parse(recipient.amountController.text);
+          } catch (e) {
+            // ignore parsing error
+          }
+          totalAmount += amount;
+        }
+        amountTextController.text =
+            totalAmount.toStringAsFixed(defaultDisplayDigits);
+        datasourceChangedStreamController.sinkAddSafe(this);
+      });
       recipients.add(ProtonRecipient(
-          email: email,
-          amountController:
-              amountTextController)); // TODO:: every recipient has own amountTextController
+        email: email,
+        amountController: textEditingController,
+        focusNode: focusNode,
+      )); // TODO:: every recipient has own amountTextController
     }
     EasyLoading.show(
         status: "loading bitcoin address..",
@@ -475,6 +519,12 @@ class SendViewModelImpl extends SendViewModel {
             removeRecipientByEmail(email);
           }
         }
+      } else {
+        // not a valid bitcoinAddress, remove it
+        removeRecipientByEmail(email);
+        CommonHelper.showSnackbar(
+            context!, S.of(context!).incorrect_bitcoin_address,
+            isError: true);
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -484,10 +534,25 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
+    if (isRecipientExists(email) == false && recipients.isEmpty) {
+      return;
+    }
     if (showInvite) {
+      removeRecipientByEmail(email);
       BuildContext context = Coordinator.navigatorKey.currentContext!;
       if (context.mounted) {
         InviteSheet.show(context, email);
+      }
+    } else {
+      bool isSelfBitcoinAddress =
+          selfBitcoinAddresses.contains(bitcoinAddresses[email]);
+      if (isSelfBitcoinAddress) {
+        if (context != null && context!.mounted) {
+          removeRecipientByEmail(email);
+          CommonHelper.showSnackbar(
+              context!, S.of(context!).error_you_can_not_send_to_self_account,
+              isError: true);
+        }
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -495,8 +560,10 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   void removeRecipient(int index) {
-    recipients.removeAt(index);
-    datasourceChangedStreamController.sinkAddSafe(this);
+    if (index < recipients.length) {
+      removeRecipientByEmail(recipients[index].email);
+      datasourceChangedStreamController.sinkAddSafe(this);
+    }
   }
 
   @override
@@ -546,10 +613,9 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       if (e is InsufficientFundsException) {
         if (Coordinator.navigatorKey.currentContext != null) {
-          BuildContext context = Coordinator.navigatorKey.currentContext!;
-          if (context.mounted) {
+          if (context != null && context!.mounted) {
             CommonHelper.showSnackbar(
-                context, S.of(context).error_you_dont_have_sufficient_balance,
+                context!, S.of(context!).error_you_dont_have_sufficient_balance,
                 isError: true);
           }
         }

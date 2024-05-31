@@ -42,52 +42,57 @@ class CustomHomePageBox extends StatelessWidget {
                 const SizedBox(
                   width: 12,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: TextStyle(
-                          color: ProtonColors.textWeak,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(children: [
-                        AnimatedFlipCounter(
-                            duration: const Duration(milliseconds: 500),
-                            prefix: Provider.of<UserSettingProvider>(context)
-                                .getFiatCurrencySign(),
-                            value: Provider.of<UserSettingProvider>(context)
-                                .getNotionalInFiatCurrency(100000000),
-                            // value: price,
-                            fractionDigits: defaultDisplayDigits,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.textNorm)),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        priceChange > 0
-                            ? AnimatedFlipCounter(
+                SizedBox(
+                    width: MediaQuery.of(context).size.width -
+                        defaultPadding * 2 -
+                        88,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
+                            style: TextStyle(
+                              color: ProtonColors.textWeak,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            )),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Wrap(children: [
+                            AnimatedFlipCounter(
                                 duration: const Duration(milliseconds: 500),
-                                prefix: "▲",
-                                value: priceChange,
-                                suffix: "% (1d)",
-                                fractionDigits: 2,
-                                textStyle: FontManager.body2Regular(
-                                    ProtonColors.signalSuccess))
-                            : AnimatedFlipCounter(
-                                duration: const Duration(milliseconds: 500),
-                                prefix: "▼",
-                                value: priceChange,
-                                suffix: "% (1d)",
-                                fractionDigits: 2,
-                                textStyle: FontManager.body2Regular(
-                                    ProtonColors.signalError)),
-                      ]),
-                    )
-                  ],
-                ),
+                                prefix:
+                                    Provider.of<UserSettingProvider>(context)
+                                        .getFiatCurrencySign(),
+                                value: Provider.of<UserSettingProvider>(context)
+                                    .getNotionalInFiatCurrency(100000000),
+                                // value: price,
+                                fractionDigits: defaultDisplayDigits,
+                                textStyle: FontManager.body1Median(
+                                    ProtonColors.textNorm)),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            priceChange > 0
+                                ? AnimatedFlipCounter(
+                                    duration: const Duration(milliseconds: 500),
+                                    prefix: "▲",
+                                    value: priceChange,
+                                    suffix: "% (1d)",
+                                    fractionDigits: 2,
+                                    textStyle: FontManager.body2Regular(
+                                        ProtonColors.signalSuccess))
+                                : AnimatedFlipCounter(
+                                    duration: const Duration(milliseconds: 500),
+                                    prefix: "▼",
+                                    value: priceChange,
+                                    suffix: "% (1d)",
+                                    fractionDigits: 2,
+                                    textStyle: FontManager.body2Regular(
+                                        ProtonColors.signalError)),
+                          ]),
+                        )
+                      ],
+                    )),
               ]),
               const SizedBox(
                 height: 6,
