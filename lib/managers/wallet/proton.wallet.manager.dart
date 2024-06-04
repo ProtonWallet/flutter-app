@@ -13,6 +13,7 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -34,6 +35,7 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 // this is wallet manager. all wallet's from one account.
 class ProtonWalletManager implements Manager {
   final SecureStorageManager storage;
+
   // final WalletsDataProvider walletsDataProvider;
 
   // wallet key
@@ -546,16 +548,40 @@ class ProtonWalletManager implements Manager {
         }
         int amountInSATS = transactionDetail.received - transactionDetail.sent;
         String key = "$txID-${accountModel.serverAccountID}";
-        ProtonExchangeRate? exchangeRate =
-            await ExchangeRateService.getExchangeRate(
-                Provider.of<UserSettingProvider>(
-                        Coordinator.rootNavigatorKey.currentContext!,
-                        listen: false)
-                    .walletUserSetting
-                    .fiatCurrency,
-                time: transactionModel?.transactionTime != null
-                    ? int.parse(transactionModel?.transactionTime ?? "0")
-                    : null);
+        ProtonExchangeRate? exchangeRate;
+        if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
+          ExchangeRateModel? exchangeRateModel = await DBHelper.exchangeRateDao!
+              .findByServerID(transactionModel!.exchangeRateID);
+          if (exchangeRateModel != null) {
+            BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
+                (v) =>
+                    v.name.toUpperCase() ==
+                    exchangeRateModel.bitcoinUnit.toUpperCase(),
+                orElse: () => defaultBitcoinUnit);
+            FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
+                (v) =>
+                    v.name.toUpperCase() ==
+                    exchangeRateModel.fiatCurrency.toUpperCase(),
+                orElse: () => defaultFiatCurrency);
+            exchangeRate = ProtonExchangeRate(
+              id: exchangeRateModel.serverID,
+              bitcoinUnit: bitcoinUnit,
+              fiatCurrency: fiatCurrency,
+              exchangeRateTime: exchangeRateModel.exchangeRateTime,
+              exchangeRate: exchangeRateModel.exchangeRate,
+              cents: exchangeRateModel.cents,
+            );
+          }
+        }
+        exchangeRate ??= await ExchangeRateService.getExchangeRate(
+            Provider.of<UserSettingProvider>(
+                    Coordinator.rootNavigatorKey.currentContext!,
+                    listen: false)
+                .walletUserSetting
+                .fiatCurrency,
+            time: transactionModel?.transactionTime != null
+                ? int.parse(transactionModel?.transactionTime ?? "0")
+                : null);
         newHistoryTransactionsMap[key] = HistoryTransaction(
           txID: txID,
           createTimestamp: transactionDetail.confirmationTime?.timestamp,
@@ -868,6 +894,7 @@ class ProtonWalletProvider with ChangeNotifier {
       ProtonExchangeRate exchangeRate =
           await ExchangeRateService.getExchangeRate(fiatCurrency);
       userSettingProvider!.updateExchangeRate(exchangeRate);
+      setCurrentTransactions();
     }
   }
 

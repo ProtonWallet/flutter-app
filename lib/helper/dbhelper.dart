@@ -5,6 +5,7 @@ import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
 import 'package:wallet/models/database/app.database.dart';
 import 'package:wallet/models/account.dao.impl.dart';
+import 'package:wallet/models/exchangerate.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/transaction.info.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
@@ -44,6 +45,13 @@ class DBHelper {
   static TransactionDao? get transactionDao {
     if (_appDatabase != null) {
       return _appDatabase!.transactionDao;
+    }
+    return null;
+  }
+
+  static ExchangeRateDao? get exchangeRateDao {
+    if (_appDatabase != null) {
+      return _appDatabase!.exchangeRateDao;
     }
     return null;
   }

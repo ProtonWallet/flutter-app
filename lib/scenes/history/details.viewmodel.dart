@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -20,6 +21,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -201,9 +203,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             transactionId: transactionId,
             hashedTransactionId: hashedTransactionID,
             label: encryptedLabel,
-            transactionTime: blockConfirmTimestamp != null
-                ? blockConfirmTimestamp.toString()
-                : (now.millisecondsSinceEpoch ~/ 1000).toString(),
+            exchangeRateId: userSettingProvider.walletUserSetting.exchangeRate.id, // TODO:: fix it after finalize logic
+            // transactionTime: blockConfirmTimestamp != null
+            //     ? blockConfirmTimestamp.toString()
+            //     : (now.millisecondsSinceEpoch ~/ 1000).toString(),
           );
 
           String exchangeRateID = "";
@@ -357,8 +360,31 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
         }
       }
-
-      exchangeRate = await ExchangeRateService.getExchangeRate(
+      if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
+        ExchangeRateModel? exchangeRateModel = await DBHelper.exchangeRateDao!
+            .findByServerID(transactionModel!.exchangeRateID);
+        if (exchangeRateModel != null) {
+          BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
+              (v) =>
+                  v.name.toUpperCase() ==
+                  exchangeRateModel.bitcoinUnit.toUpperCase(),
+              orElse: () => defaultBitcoinUnit);
+          FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
+              (v) =>
+                  v.name.toUpperCase() ==
+                  exchangeRateModel.fiatCurrency.toUpperCase(),
+              orElse: () => defaultFiatCurrency);
+          exchangeRate = ProtonExchangeRate(
+            id: exchangeRateModel.serverID,
+            bitcoinUnit: bitcoinUnit,
+            fiatCurrency: fiatCurrency,
+            exchangeRateTime: exchangeRateModel.exchangeRateTime,
+            exchangeRate: exchangeRateModel.exchangeRate,
+            cents: exchangeRateModel.cents,
+          );
+        }
+      }
+      exchangeRate ??= await ExchangeRateService.getExchangeRate(
           Provider.of<UserSettingProvider>(
                   Coordinator.rootNavigatorKey.currentContext!,
                   listen: false)

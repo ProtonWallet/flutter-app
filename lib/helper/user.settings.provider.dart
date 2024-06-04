@@ -93,13 +93,15 @@ class UserSettingProvider with ChangeNotifier {
     return amountInFiatCurrency / (walletUserSetting.exchangeRate.exchangeRate / 100);
   }
 
-  String getFiatCurrencyName() {
-    return walletUserSetting.fiatCurrency.name.toString().toUpperCase();
+  String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
+    fiatCurrency ??= walletUserSetting.fiatCurrency;
+    return fiatCurrency.name.toString().toUpperCase();
   }
 
-  String getFiatCurrencySign() {
-    return fiatCurrency2Info.containsKey(walletUserSetting.fiatCurrency)
-        ? fiatCurrency2Info[walletUserSetting.fiatCurrency]!.sign
+  String getFiatCurrencySign({FiatCurrency? fiatCurrency}) {
+    fiatCurrency ??= walletUserSetting.fiatCurrency;
+    return fiatCurrency2Info.containsKey(fiatCurrency)
+        ? fiatCurrency2Info[fiatCurrency]!.sign
         : "\$";
   }
 
