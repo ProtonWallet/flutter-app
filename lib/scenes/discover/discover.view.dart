@@ -11,8 +11,7 @@ class DiscoverView extends ViewBase<DiscoverViewModel> {
       : super(viewModel, const Key("DiscoverView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, DiscoverViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return PageLayoutV1(
         title: S.of(context).discover,
         child: DiscoverFeedsView(

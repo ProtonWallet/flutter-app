@@ -28,8 +28,7 @@ class SendView extends ViewBase<SendViewModel> {
       : super(viewModel, const Key("SendView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -83,24 +82,22 @@ class SendView extends ViewBase<SendViewModel> {
       ),
       body: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: buildMainView(context, viewModel, viewSize)),
+          child: buildMainView(context)),
     );
   }
 
-  Widget buildMainView(
-      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+  Widget buildMainView(BuildContext context) {
     switch (viewModel.sendFlowStatus) {
       case SendFlowStatus.addRecipient:
-        return buildAddRecipient(context, viewModel, viewSize);
+        return buildAddRecipient(context);
       case SendFlowStatus.editAmount:
-        return buildEditAmount(context, viewModel, viewSize);
+        return buildEditAmount(context);
       case SendFlowStatus.reviewTransaction:
-        return buildReviewContent(context, viewModel, viewSize);
+        return buildReviewContent(context);
     }
   }
 
-  Widget buildEditAmount(
-      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+  Widget buildEditAmount(BuildContext context) {
     return Container(
         color: ProtonColors.white,
         child: Column(children: [
@@ -247,7 +244,7 @@ class SendView extends ViewBase<SendViewModel> {
         ]));
   }
 
-  double getTotalAmountInFiatCurrency(SendViewModel viewModel) {
+  double getTotalAmountInFiatCurrency() {
     double totalAmountInFiatCurrency = 0;
     for (ProtonRecipient protonRecipient in viewModel.recipients) {
       if (protonRecipient.amountController.text.isNotEmpty) {
@@ -263,7 +260,7 @@ class SendView extends ViewBase<SendViewModel> {
     return totalAmountInFiatCurrency;
   }
 
-  int getTotalAmountInSATS(SendViewModel viewModel) {
+  int getTotalAmountInSATS() {
     int totalAmountInSATS = 0;
     for (ProtonRecipient protonRecipient in viewModel.recipients) {
       totalAmountInSATS += protonRecipient.amountInSATS ?? 0;
@@ -271,8 +268,7 @@ class SendView extends ViewBase<SendViewModel> {
     return totalAmountInSATS;
   }
 
-  Widget buildReviewContent(
-      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+  Widget buildReviewContent(BuildContext context) {
     int estimatedFee = 0;
     switch (viewModel.userTransactionFeeMode) {
       case TransactionFeeMode.lowPriority:
@@ -300,7 +296,7 @@ class SendView extends ViewBase<SendViewModel> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const SizedBox(height: 40),
-                            getTransactionValueWidget(context, viewModel),
+                            getTransactionValueWidget(context),
                             const SizedBox(height: 20),
                             for (ProtonRecipient protonRecipient
                                 in viewModel.recipients)
@@ -576,10 +572,9 @@ class SendView extends ViewBase<SendViewModel> {
         ]));
   }
 
-  Widget getTransactionValueWidget(
-      BuildContext context, SendViewModel viewModel) {
-    int amountInSATS = getTotalAmountInSATS(viewModel);
-    double amountInFiatCurrency = getTotalAmountInFiatCurrency(viewModel);
+  Widget getTransactionValueWidget(BuildContext context) {
+    int amountInSATS = getTotalAmountInSATS();
+    double amountInFiatCurrency = getTotalAmountInFiatCurrency();
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
@@ -609,8 +604,7 @@ class SendView extends ViewBase<SendViewModel> {
     );
   }
 
-  Widget buildAddRecipient(
-      BuildContext context, SendViewModel viewModel, ViewSize viewSize) {
+  Widget buildAddRecipient(BuildContext context) {
     return Container(
         color: ProtonColors.white,
         child: Column(children: [

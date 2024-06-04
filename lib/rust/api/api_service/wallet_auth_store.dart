@@ -46,6 +46,9 @@ class ProtonWalletAuthStore extends RustOpaque {
           scopes: scopes,
           hint: hint);
 
+  Future<void> logout({dynamic hint}) =>
+      RustLib.instance.api.protonWalletAuthStoreLogout(that: this, hint: hint);
+
   factory ProtonWalletAuthStore({required String env, dynamic hint}) =>
       RustLib.instance.api.protonWalletAuthStoreNew(env: env, hint: hint);
 

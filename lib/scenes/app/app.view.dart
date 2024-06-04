@@ -20,8 +20,7 @@ class AppView extends ViewBase<AppViewModel> {
   final Widget rootView;
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, AppViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserSettingProvider>(
@@ -83,9 +82,7 @@ class AppView extends ViewBase<AppViewModel> {
             '/': (BuildContext context) => rootView,
           },
           builder: EasyLoading.init(builder: FToastBuilder()),
-          navigatorKey: Coordinator.navigatorKey,
-          // home: homeView,
-          // routes: ["/", homeView],
+          navigatorKey: Coordinator.rootNavigatorKey,
         );
       }),
     );

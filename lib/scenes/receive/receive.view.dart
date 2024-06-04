@@ -26,8 +26,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
       : super(viewModel, const Key("ReceiveView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, ReceiveViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(

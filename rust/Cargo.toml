@@ -92,5 +92,5 @@ esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
 # [profile.default]
 # retries = 0
 # slow-timeout = { period = "30s", terminate-after = 10 }
-[env]
-RUST_BACKTRACE = "1"
+# [env] #not useable 
+# RUST_BACKTRACE = "1"

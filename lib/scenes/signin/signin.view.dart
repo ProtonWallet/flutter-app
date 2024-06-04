@@ -12,8 +12,7 @@ class SigninView extends ViewBase<SigninViewModel> {
       : super(viewModel, const Key("WelcomeView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, SigninViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return buildWelcome(context);
   }
 

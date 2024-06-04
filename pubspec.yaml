@@ -101,6 +101,10 @@ dependencies:
   ### database
   drift: ^2.18.0
 
+  # hive, shared_perferences is not stable
+  hive: ^2.2.3
+  hive_flutter: any
+
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
   intl: 0.19.0

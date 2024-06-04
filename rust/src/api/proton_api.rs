@@ -1,11 +1,11 @@
 use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
+use andromeda_api::wallet::{ApiWallet, ApiWalletAccount, ApiWalletData};
 use andromeda_api::{
     transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
-    ChildSession, ProtonWalletApiClient,
+    ChildSession,
 };
 use andromeda_common::BitcoinUnit;
 use chrono::Utc;
-use flutter_rust_bridge::frb;
 use lazy_static::lazy_static;
 use log::info;
 use std::sync::{Arc, RwLock};
@@ -19,18 +19,16 @@ use crate::proton_api::{
     proton_address::{AllKeyAddressKey, ProtonAddress},
     user_settings::ApiUserSettings,
     wallet::{
-        BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, ProtonWallet,
-        WalletBitcoinAddress, WalletData, WalletTransaction,
+        BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, WalletBitcoinAddress,
+        WalletTransaction,
     },
-    wallet_account::{CreateWalletAccountReq, WalletAccount},
+    wallet_account::CreateWalletAccountReq,
 };
 
 use crate::bdk::psbt::Transaction;
 use bdk::bitcoin::consensus::serialize;
 use bdk::bitcoin::Transaction as bdkTransaction;
 use bitcoin_internals::hex::display::DisplayHex;
-
-use super::api_service::wallet_auth_store::ProtonWalletAuthStore;
 
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);
@@ -45,9 +43,15 @@ pub(crate) fn set_proton_api(inner: Arc<ProtonAPIService>) {
     *api_ref = Some(inner.clone());
 }
 
+pub(crate) fn logout() {
+    let mut api_ref = PROTON_API.write().unwrap();
+    *api_ref = None;
+}
+
 // build functions
 pub async fn init_api_service(user_name: String, password: String) {
     info!("start init_api_service");
+    info!("user_name: {}, password: {}", user_name, password);
     // create a global proton api service
     // let store = SimpleAuthStore::prod();
     // let api = ProtonWalletApiClient::from_version(
@@ -84,17 +88,17 @@ pub async fn init_api_service(user_name: String, password: String) {
 // }
 
 // wallets
-pub async fn get_wallets() -> Result<Vec<WalletData>, ApiError> {
+pub async fn get_wallets() -> Result<Vec<ApiWalletData>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result: Result<Vec<andromeda_api::wallet::ApiWalletData>, andromeda_api::error::Error> =
         proton_api.inner.clients().wallet.get_wallets().await;
     match result {
-        Ok(response) => Ok(response.into_iter().map(|w| w.into()).collect()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
 
-pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, ApiError> {
+pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<ApiWalletData, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -103,7 +107,7 @@ pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, Ap
         .create_wallet(wallet_req.into())
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -111,7 +115,7 @@ pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<WalletData, Ap
 pub async fn update_wallet_name(
     wallet_id: String,
     new_name: String,
-) -> Result<ProtonWallet, ApiError> {
+) -> Result<ApiWallet, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -120,7 +124,7 @@ pub async fn update_wallet_name(
         .update_wallet_name(wallet_id, new_name)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -140,7 +144,7 @@ pub async fn delete_wallet(wallet_id: String) -> Result<(), ApiError> {
 }
 
 // wallet accounts
-pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<WalletAccount>, ApiError> {
+pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<ApiWalletAccount>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -149,7 +153,7 @@ pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<WalletAccount>
         .get_wallet_accounts(wallet_id)
         .await;
     match result {
-        Ok(response) => Ok(response.into_iter().map(|a| a.into()).collect()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -157,7 +161,7 @@ pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<WalletAccount>
 pub async fn create_wallet_account(
     wallet_id: String,
     req: CreateWalletAccountReq,
-) -> Result<WalletAccount, ApiError> {
+) -> Result<ApiWalletAccount, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -166,7 +170,7 @@ pub async fn create_wallet_account(
         .create_wallet_account(wallet_id, req.into())
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -175,7 +179,7 @@ pub async fn update_wallet_account_label(
     wallet_id: String,
     wallet_account_id: String,
     new_label: String,
-) -> Result<WalletAccount, ApiError> {
+) -> Result<ApiWalletAccount, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -184,7 +188,7 @@ pub async fn update_wallet_account_label(
         .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -193,7 +197,7 @@ pub async fn update_wallet_account_fiat_currency(
     wallet_id: String,
     wallet_account_id: String,
     new_fiat_currency: FiatCurrency,
-) -> Result<WalletAccount, ApiError> {
+) -> Result<ApiWalletAccount, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -202,7 +206,7 @@ pub async fn update_wallet_account_fiat_currency(
         .update_wallet_account_fiat_currency(wallet_id, wallet_account_id, new_fiat_currency)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -374,7 +378,7 @@ pub async fn add_email_address(
     wallet_id: String,
     wallet_account_id: String,
     address_id: String,
-) -> Result<WalletAccount, ApiError> {
+) -> Result<ApiWalletAccount, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
@@ -384,7 +388,7 @@ pub async fn add_email_address(
         .add_email_address(wallet_id, wallet_account_id, address_id)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -393,7 +397,7 @@ pub async fn remove_email_address(
     wallet_id: String,
     wallet_account_id: String,
     address_id: String,
-) -> Result<WalletAccount, ApiError> {
+) -> Result<ApiWalletAccount, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
 
     let result = proton_api
@@ -403,7 +407,7 @@ pub async fn remove_email_address(
         .remove_email_address(wallet_id, wallet_account_id, address_id)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }

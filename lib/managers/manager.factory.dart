@@ -44,4 +44,10 @@ class ManagerFactory {
     }
     _managers.clear();
   }
+
+  Future<void> logout() async {
+    for (var entry in _managers.entries) {
+      await entry.value.logout();
+    }
+  }
 }

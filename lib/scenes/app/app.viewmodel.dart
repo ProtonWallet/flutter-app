@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/helper/firebase_messaging_helper.dart';
 import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/local_notification.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
+import 'package:wallet/managers/preferences/hive.preference.impl.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
@@ -58,15 +61,21 @@ class AppViewModelImpl extends AppViewModel {
     /// notify native initalized
     platform.initalNativeApiEnv(apiEnv);
 
+    /// inital hive
+    await Hive.initFlutter();
+
+    /// sqlite db
+    await DBHelper.init();
+
     /// persistent storage
     var storage = SecureStorageManager(storage: SecureStorage());
     serviceManager.register(storage);
 
-    /// shared preferences
-    var shared = await SharedPreferences.getInstance();
-
-    /// sqlite db
-    await DBHelper.init();
+    /// preferences
+    var hiveImpl = HivePreferenceImpl();
+    await hiveImpl.init();
+    var shared = PreferencesManager(hiveImpl);
+    serviceManager.register(shared);
 
     /// networking
     var apiServiceManager = ProtonApiServiceManager(apiEnv, storage: storage);
@@ -77,14 +86,22 @@ class AppViewModelImpl extends AppViewModel {
     var userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
     serviceManager.register(userManager);
 
+    var dataProviderManager =
+        DataProviderManager(storage, apiServiceManager.getApiService());
+    // dataProviderManager.init();
+    serviceManager.register(dataProviderManager);
+
     /// proton wallet manager
-    var protonWallet = ProtonWalletManager(storage: storage);
+    var protonWallet = ProtonWalletManager(
+      storage: storage,
+    );
     serviceManager.register(protonWallet);
 
     // TODO:: fix me
     WalletManager.apiEnv = apiEnv;
     WalletManager.userManager = userManager;
     WalletManager.protonWallet = protonWallet;
+    WalletManager.walletKeysProvider = dataProviderManager.walletKeysProvider;
 
     /// event loop
     serviceManager.register(EventLoop(protonWallet, userManager));

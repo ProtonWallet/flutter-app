@@ -5,6 +5,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
+import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_auth_store.dart';
 import 'package:wallet/rust/proton_api/auth_credential.dart';
 
@@ -16,7 +17,7 @@ class ProtonApiServiceManager implements Manager {
   final String agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
 
   //
-  ProtonApiService? apiService;
+  ProtonApiService? _apiService;
   late ProtonWalletAuthStore authStore;
 
   // add networking service here
@@ -59,15 +60,25 @@ class ProtonApiServiceManager implements Manager {
       userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
     }
 
-    authStore = ProtonWalletAuthStore.fromSession(
-        env: env.toString(),
-        uid: uid,
-        access: accessToken,
-        refresh: refreshToken,
-        scopes: scopes.split(","));
-    await authStore.setAuthDartCallback(callback: callback);
-    apiService = ProtonApiService.initApiServiceAuthStore(
-        appVersion: appVersion, userAgent: userAgent, store: authStore);
+    var apiService = _apiService;
+    if (apiService != null) {
+      logger.w("ApiService already initalized");
+      await apiService.updateAuth(
+          uid: uid,
+          access: accessToken,
+          refresh: refreshToken,
+          scopes: scopes.split(","));
+    } else {
+      authStore = ProtonWalletAuthStore.fromSession(
+          env: env.toString(),
+          uid: uid,
+          access: accessToken,
+          refresh: refreshToken,
+          scopes: scopes.split(","));
+      await authStore.setAuthDartCallback(callback: callback);
+      _apiService = ProtonApiService.initApiServiceAuthStore(
+          appVersion: appVersion, userAgent: userAgent, store: authStore);
+    }
   }
 
   ProtonApiService getApiService() {
@@ -75,12 +86,12 @@ class ProtonApiServiceManager implements Manager {
     // final appVersion = '${info.version} (${info.buildNumber})';
     // final userAgent =
     //     'ProtonWallet/${info.version} (${Platform.operatingSystem}/${Platform.operatingSystemVersion}; ${Platform.localeName})';
-    apiService ??= ProtonApiService(store: authStore);
-    return apiService!;
+    _apiService ??= ProtonApiService(store: authStore);
+    return _apiService!;
   }
 
-  Future<void> logout() async {
-    apiService = null;
+  Future<ProtonEmailAddressClient> getUserApiClient() async {
+    return getApiService().getProtonEmailAddrClient();
   }
 
   Future<void> buildAndRestore() async {}
@@ -91,6 +102,16 @@ class ProtonApiServiceManager implements Manager {
   @override
   Future<void> init() async {
     await authStore.setAuthDartCallback(callback: callback);
-    apiService = ProtonApiService(store: authStore);
+    _apiService = ProtonApiService(store: authStore);
+  }
+
+  @override
+  Future<void> logout() async {
+    /// the apiSerice logout is global clean up in rust layer. remove the ProtonAPiSerive caches and also reset the AuthStore session.
+    ///  after called this function, you need re-init the ProtonApiService again. dont foget to setup AuthDartCallback.
+    await _apiService?.logout();
+    // _apiService = null;
+    // authStore = ProtonWalletAuthStore(env: env.toString());
+    // await init();
   }
 }

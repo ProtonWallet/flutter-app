@@ -54,4 +54,9 @@ class SecureStorageManager implements Manager {
 
   @override
   Future<void> init() async {}
+
+  @override
+  Future<void> logout() async {
+    await deleteAll();
+  }
 }

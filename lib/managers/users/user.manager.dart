@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.event.dart';
 import 'package:wallet/managers/users/user.manager.state.dart';
 import 'package:wallet/models/native.session.model.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/auth_credential.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 class UserKey {
   final String keyID;
@@ -23,17 +23,19 @@ class UserKey {
 class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     implements Manager {
   final SecureStorageManager storage;
-  final SharedPreferences shared;
+  final PreferencesManager shared;
   late UserInfo userInfo;
   final ApiEnv apiEnv;
-
-  // add db here
 
   // api service here
   final ProtonApiServiceManager apiServiceManager;
 
-  UserManager(this.storage, this.shared, this.apiEnv, this.apiServiceManager)
-      : super(UserManagerInitial());
+  UserManager(
+    this.storage,
+    this.shared,
+    this.apiEnv,
+    this.apiServiceManager,
+  ) : super(UserManagerInitial());
 
   /// Login and session management
   Future<bool> sessionExists() async {
@@ -54,11 +56,16 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   Future<void> firstRun() async {
-    // check the app first time run
-    if (shared.getBool('firstTimeEntry') ?? true) {
+    await shared.checkif('firstTimeEntry', false, () async {
       await storage.deleteAll();
-      shared.setBool('firstTimeEntry', false);
-    }
+    });
+    // check the app first time run
+    // if (shared.getBool('firstTimeEntry') ?? true) {
+    //   await storage.deleteAll();
+    //   await shared.setBool('firstTimeEntry', false);
+    // }
+
+    // shared.checkAndRunLogic()
     // add more
   }
 
@@ -104,11 +111,6 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     await storage.set("userPassphrase", userInfo.userPassphrase);
   }
 
-  Future<void> logout() async {
-    // TODO:: remove all user info from memory
-    await storage.deleteAll();
-  }
-
   Future<UserKey> getFirstKey() async {
     return UserKey(
         keyID: userInfo.userKeyID,
@@ -124,4 +126,9 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  Future<void> logout() async {
+    await storage.deleteAll();
+  }
 }

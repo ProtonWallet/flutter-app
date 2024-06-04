@@ -175,35 +175,32 @@ class WalletSettingSheet {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width -
-                                    defaultPadding * 2 -
-                                    50,
-                                child: TextFieldTextV2(
-                                  labelText: S.of(context).account_label,
-                                  maxLength: maxAccountNameSize,
-                                  textController:
-                                      accountNameControllers[userAccount.id!]!,
-                                  myFocusNode:
-                                      accountNameFocusNodes[userAccount.id!]!,
-                                  onFinish: () async {
-                                    viewModel.renameAccount(
-                                        userAccount,
-                                        accountNameControllers[userAccount.id!]!
-                                            .text);
-                                  },
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
+                            Expanded(
+                                child: SizedBox(
+                                    child: TextFieldTextV2(
+                              labelText: S.of(context).account_label,
+                              maxLength: maxAccountNameSize,
+                              textController:
+                                  accountNameControllers[userAccount.id!]!,
+                              myFocusNode:
+                                  accountNameFocusNodes[userAccount.id!]!,
+                              onFinish: () async {
+                                viewModel.renameAccount(
+                                    userAccount,
+                                    accountNameControllers[userAccount.id!]!
+                                        .text);
+                              },
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
                                           80),
-                                  validation: (String value) {
-                                    if (value.isEmpty) {
-                                      return "Required";
-                                    }
-                                    return "";
-                                  },
-                                )),
+                              validation: (String value) {
+                                if (value.isEmpty) {
+                                  return "Required";
+                                }
+                                return "";
+                              },
+                            ))),
                             Container(
                                 width: 50,
                                 padding: const EdgeInsets.only(right: 10),
