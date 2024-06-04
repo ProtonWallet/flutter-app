@@ -104,6 +104,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setSearchHistoryTextField(bool show);
 
   Future<void> createWallet();
+
   Future<void> deleteWallet(WalletModel walletModel);
 
   ApiUserSettings? userSettings;
