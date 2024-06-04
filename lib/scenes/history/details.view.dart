@@ -242,12 +242,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                               title: S.of(context).trans_total,
                               content: viewModel.isSend
-                                  ? "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
+                                  ? "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() - viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
                                   : "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(defaultDisplayDigits)}",
                               memo: viewModel.isSend
                                   ? Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
-                                          (viewModel.amount.toInt()).abs())
+                                          (viewModel.amount.toInt() -
+                                                  viewModel.fee.toInt())
+                                              .abs())
                                   : Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
                                           viewModel.amount.toInt() +
