@@ -11,6 +11,7 @@ import ProtonCoreUIFoundations
 import ProtonCoreFoundations
 import ProtonCoreNetworking
 import ProtonCorePayments
+import ProtonCoreSettings
 import Flutter
 import flutter_local_notifications
 import ProtonCoreLog
@@ -68,8 +69,20 @@ import CryptoKit
                                         message: "Can't parse arguments. \"native.initialize.core.environment\" missing environment parameter.",
                                         details: nil))
                 }
-            case "native.navigation.report":
-                print("native.navigation.report triggered")
+            case "native.nagivation.report":
+                print("native.navigation.report triggered", call.arguments ?? "")
+                if let arguments = call.arguments as? [String: Any],
+                   let username = arguments["username"] as? String,
+                   let email = arguments["email"] as? String {
+                    self.switchToBugReport(
+                        username: username,
+                        email: email
+                    )
+                } else {
+                    result(FlutterError(code: "INVALID_ARGUMENTS",
+                                        message: "Can't parse arguments. \"native.nagivation.report\" missing username and email parameters.",
+                                        details: nil))
+                }
             case "native.account.logout":
                 print("native.account.logout triggered")
             default:
@@ -79,6 +92,7 @@ import CryptoKit
         
         navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", 
                                                  binaryMessenger: rootViewController.binaryMessenger)
+        Brand.currentBrand = .wallet
 
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
             GeneratedPluginRegistrant.register(with: registry)
@@ -132,14 +146,14 @@ import CryptoKit
     private var getSignupAvailability: SignupAvailability {
         let signupAvailability: SignupAvailability
         let summaryScreenVariant: SummaryScreenVariant = .noSummaryScreen
-        signupAvailability = .available(parameters: SignupParameters(separateDomainsButton: false,
+        signupAvailability = .available(parameters: SignupParameters(separateDomainsButton: true,
                                                                      passwordRestrictions: .default,
                                                                      summaryScreenVariant: summaryScreenVariant))
         return signupAvailability
     }
     
     private var getShowWelcomeScreen: WelcomeScreenVariant? {
-        return .mail(.init(body: "Please Mister Postman, look and see! Is there's a letter in your bag for me?"))
+        return .wallet(.init(body: "Please Mister Postman, look and see! Is there's a letter in your bag for me?"))
     }
 
     private var getAdditionalWork: WorkBeforeFlow? {
@@ -285,6 +299,23 @@ import CryptoKit
         case .dismissed:
             print("dismissed")
         }
+    }
+
+    func switchToBugReport(username: String, email: String) {
+        guard let rootViewController = self.window.rootViewController else {
+            PMLog.error("rootViewController must be set before calling \(#function)")
+            return
+        }
+        guard let apiService else {
+            PMLog.error("APIService not set.")
+            return
+        }
+        let viewController = BugReportModule.makeBugReportViewController(
+            apiService: apiService,
+            username: username,
+            email: email
+        )
+        rootViewController.present(viewController, animated: true)
     }
 }
 
