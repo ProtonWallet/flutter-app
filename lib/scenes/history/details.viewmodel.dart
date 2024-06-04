@@ -143,6 +143,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               transaction.received.toDouble() - transaction.sent.toDouble();
           fee = transaction.fee!.toDouble();
           isSend = amount < 0;
+          // bdk sent include fee, so need add back to make display send amount without fee
+          if (isSend) {
+            amount += transaction.fee ?? 0;
+          }
           foundedInBDKHistory = true;
 
           if (isSend) {
@@ -203,7 +207,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             transactionId: transactionId,
             hashedTransactionId: hashedTransactionID,
             label: encryptedLabel,
-            exchangeRateId: userSettingProvider.walletUserSetting.exchangeRate.id, // TODO:: fix it after finalize logic
+            exchangeRateId: userSettingProvider.walletUserSetting.exchangeRate
+                .id, // TODO:: fix it after finalize logic
             // transactionTime: blockConfirmTimestamp != null
             //     ? blockConfirmTimestamp.toString()
             //     : (now.millisecondsSinceEpoch ~/ 1000).toString(),

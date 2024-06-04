@@ -547,6 +547,10 @@ class ProtonWalletManager implements Manager {
           toList = "";
         }
         int amountInSATS = transactionDetail.received - transactionDetail.sent;
+        if (amountInSATS < 0) {
+          // bdk sent include fee, so need add back to make display send amount without fee
+          amountInSATS += transactionDetail.fee ?? 0;
+        }
         String key = "$txID-${accountModel.serverAccountID}";
         ProtonExchangeRate? exchangeRate;
         if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
