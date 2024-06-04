@@ -13,6 +13,7 @@ import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -835,6 +836,20 @@ class WalletManager implements Manager {
     String exchangeRateID = "";
     if (walletTransaction.exchangeRate != null) {
       exchangeRateID = walletTransaction.exchangeRate!.id;
+      ExchangeRateModel exchangeRateModel = ExchangeRateModel(
+        id: null,
+        serverID: walletTransaction.exchangeRate!.id,
+        bitcoinUnit:
+            walletTransaction.exchangeRate!.bitcoinUnit.name.toUpperCase(),
+        fiatCurrency:
+            walletTransaction.exchangeRate!.fiatCurrency.name.toUpperCase(),
+        sign: "",
+        // TODO:: add sign once apiClient update for it
+        exchangeRateTime: walletTransaction.exchangeRate!.exchangeRateTime,
+        exchangeRate: walletTransaction.exchangeRate!.exchangeRate,
+        cents: walletTransaction.exchangeRate!.cents,
+      );
+      await DBHelper.exchangeRateDao!.insert(exchangeRateModel);
     }
     TransactionModel transactionModel = TransactionModel(
         id: null,

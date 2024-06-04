@@ -35,6 +35,12 @@ class TransactionHistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String fiatCurrencyName =
+        Provider.of<UserSettingProvider>(context).getFiatCurrencyName();
+    if (exchangeRate != null) {
+      fiatCurrencyName = Provider.of<UserSettingProvider>(context)
+          .getFiatCurrencyName(fiatCurrency: exchangeRate!.fiatCurrency);
+    }
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(defaultPadding),
@@ -111,7 +117,7 @@ class TransactionHistoryItem extends StatelessWidget {
             Row(
               children: [
                 Text(
-                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amountInSATS!, exchangeRate: exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}",
+                    "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(amountInSATS!, exchangeRate: exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}",
                     style: FontManager.body2Regular(ProtonColors.textHint)),
                 const SizedBox(width: 5),
                 Text(

@@ -9,6 +9,7 @@ import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
 import 'package:wallet/models/address.dao.impl.dart';
+import 'package:wallet/models/exchangerate.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/transaction.info.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
@@ -21,7 +22,7 @@ class AppDatabase {
   static String dbName = "proton_wallet_db";
   static String versionKey = "db_version";
   // current version of the database
-  int version = 13;
+  int version = 14;
   // future: if the database cached version < resetVersion. rebuild the cache with latest schema. we can clean up migrations.
   int resetVersion = 1;
   bool dbReset = false;
@@ -36,6 +37,7 @@ class AppDatabase {
   late AddressDao addressDao;
   late BitcoinAddressDao bitcoinAddressDao;
   late TransactionInfoDao transactionInfoDao;
+  late ExchangeRateDao exchangeRateDao;
 
   AppDatabase() {
     migrationContainer = MigrationContainer();
@@ -54,6 +56,7 @@ class AppDatabase {
     await addressDao.dropTable();
     await bitcoinAddressDao.dropTable();
     await transactionInfoDao.dropTable();
+    await exchangeRateDao.dropTable();
   }
 
   void initDAO() {
@@ -64,6 +67,7 @@ class AppDatabase {
     addressDao = AddressDaoImpl(db);
     bitcoinAddressDao = BitcoinAddressDaoImpl(db);
     transactionInfoDao = TransactionInfoDaoImpl(db);
+    exchangeRateDao = ExchangeRateDaoImpl(db);
   }
 
   void buildMigration() {
@@ -106,7 +110,10 @@ class AppDatabase {
       Migration(12, 13, () async {
         await accountDao.migration_1();
       }),
-      Migration(13, 14, () async {}),
+      Migration(13, 14, () async {
+        await exchangeRateDao.migration_0();
+      }),
+      Migration(14, 15, () async {}),
     ];
 
     migrationContainer.addMigrations(migrations);

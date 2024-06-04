@@ -55,7 +55,7 @@ class CustomHomePageBox extends StatelessWidget {
                           AnimatedFlipCounter(
                               duration: const Duration(milliseconds: 500),
                               prefix: Provider.of<UserSettingProvider>(context)
-                                  .getFiatCurrencySign(),
+                                  .getFiatCurrencyName(),
                               value: Provider.of<UserSettingProvider>(context)
                                   .getNotionalInFiatCurrency(100000000),
                               // value: price,
