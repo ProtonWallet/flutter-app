@@ -44,7 +44,7 @@ class RecipientDetail extends StatelessWidget {
       padding:
           const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
       decoration: BoxDecoration(
-          color: ProtonColors.white, borderRadius: BorderRadius.circular(12.0)),
+          color: ProtonColors.backgroundProton, borderRadius: BorderRadius.circular(12.0)),
       child: buildContent(context, CommonHelper.isBitcoinAddress(name ?? "")),
     );
   }
