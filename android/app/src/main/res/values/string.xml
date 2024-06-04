@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="default_notification_channel_id">fcm_channel_id</string>
+
+    <!-- TODO: Add Product.Wallet in Core. -->
+    <string name="auth_signup_start_using_pass">Start using Proton Wallet</string>
 </resources>

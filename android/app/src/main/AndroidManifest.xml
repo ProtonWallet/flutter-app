@@ -1,20 +1,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
     <application
+        android:name="me.proton.wallet.android.WalletApplication"
+        android:icon="@mipmap/ic_launcher"
         android:label="Proton Wallet"
-        android:name=".MyApplication"
-        android:icon="@mipmap/ic_launcher">
+        android:taskAffinity=""
+        android:theme="@style/ProtonTheme.Wallet"
+        tools:replace="android:theme">
+
         <meta-data
             android:name="io.sentry.auto-init"
             android:value="false" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -26,15 +34,11 @@
                 tools:node="remove" />
             <!-- Disable some Initializers. See MainInitializer. -->
             <meta-data
-                android:name="com.example.wallet.initializer.AccountStateHandlerInitializer"
+                android:name="me.proton.wallet.android.initializer.AccountStateHandlerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="me.proton.core.crypto.validator.presentation.init.CryptoValidatorInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-            <meta-data
-                android:name="com.example.wallet.initializer.EventManagerInitializer"
+                android:name="me.proton.wallet.android.initializer.EventManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
@@ -42,11 +46,11 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="com.example.wallet.log.impl.LoggerInitializer"
+                android:name="me.proton.wallet.android.initializer.LoggerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="com.example.wallet.initializer.MainInitializer"
+                android:name="me.proton.wallet.android.initializer.MainInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
@@ -54,23 +58,11 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="com.example.wallet.tracing.impl.SentryInitializer"
+                android:name="me.proton.wallet.android.tracing.impl.SentryInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="com.example.wallet.initializer.StrictModeInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-            <meta-data
-                android:name="com.example.wallet.data.impl.sync.SyncInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-            <meta-data
-                android:name="com.example.wallet.telemetry.impl.startup.TelemetryInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-            <meta-data
-                android:name="com.example.wallet.data.impl.migration.DataMigrationInitializer"
+                android:name="me.proton.wallet.android.initializer.StrictModeInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
@@ -78,42 +70,44 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
+                android:name="me.proton.core.plan.presentation.PurchaseHandlerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove"/>
+            <meta-data
+                android:name="me.proton.core.paymentiap.presentation.GooglePurchaseHandlerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove"/>
+            <meta-data
                 android:name="me.proton.core.plan.presentation.UnredeemedPurchaseInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
             <meta-data
-                android:name="com.example.wallet.initializer.AccountListenerInitializer"
+                android:name="me.proton.core.userrecovery.presentation.compose.DeviceRecoveryInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
+            android:name="me.proton.wallet.android.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
             android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
-            <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity
-            android:name=".AuthActivity">
-        </activity>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
     </application>
+
 </manifest>

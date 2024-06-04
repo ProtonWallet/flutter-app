@@ -1,0 +1,204 @@
+[versions]
+# Android Sdk
+minSdk = "24"
+compileSdk = "34"
+targetSdk = "34"
+
+# AndroidX
+androidx-activity = "1.6.1"
+androidx-core-splashscreen = "1.0.1"
+androidx-espresso-core = "3.5.1"
+androidx-hilt = "1.2.0"
+androidx-hilt-navigation-compose = "1.2.0"
+androidx-lifecycle = "2.4.6"
+androidx-navigation = "2.6.0"
+androidx-room = "2.6.1"
+androidx-startup = "1.1.1"
+androidx-test = "1.5.0"
+androidx-test-junit = "1.1.5"
+androidx-test-orchestrator = "1.4.2"
+androidx-test-uiautomator = "2.3.0"
+androidx-work = "2.8.1"
+
+# Compose
+# See https://developer.android.com/develop/ui/compose/bom/bom-mapping
+androidx-compose-bom = "2024.02.01"
+androidx-compose-compiler = "1.5.10"
+
+# Proton Core
+core = "24.0.1"
+
+# Dagger
+dagger = "2.49"
+
+# Desugaring
+desugaring = "2.0.3"
+
+# Google
+firebase-bom = "32.7.0"
+firebase-messaging = "23.2.1"
+
+# Gradle
+gradlePlugin-android = "8.2.2"
+gradlePlugin-flutter = "1.0.0"
+gradlePlugin-google-services = "4.4.0"
+gradlePlugin-proton-config = "1.3.1"
+gradlePlugin-sentry = "3.5.0"
+
+# Kotlin
+kotlin = "1.9.22"
+kotlinx-coroutines = "1.8.0"
+kotlinx-datetime = "0.3.3"
+kotlinx-serialization-json = "1.6.3"
+
+# Ramp
+ramp = "4.0.0"
+
+# Sentry
+sentry = "6.18.1"
+
+# Square
+okhttp = "4.10.0"
+retrofit = "2.9.0"
+
+# Test
+junit = "4.13.2"
+fusion = "0.9.52"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradlePlugin-android" }
+android-library = { id = "com.android.library", version.ref = "gradlePlugin-android" }
+
+flutter = { id = "dev.flutter.flutter-gradle-plugin", version.ref = "gradlePlugin-flutter" }
+
+google-services = { id = "com.google.gms.google-services", version.ref = "gradlePlugin-google-services" }
+
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+proton-environmentConfig = { id = "me.proton.core.gradle-plugins.environment-config", version.ref = "gradlePlugin-proton-config" }
+sentry = { id = "io.sentry.android.gradle", version.ref = "gradlePlugin-sentry" }
+
+[libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-compose-foundationLayout = { module = "androidx.compose.foundation:foundation-layout" }
+androidx-compose-material-base = { module = "androidx.compose.material:material" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-uiTestManifest = { module = "androidx.compose.ui:ui-test-manifest" }
+
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
+
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" }
+
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
+
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
+
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
+
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
+androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso-core" }
+androidx-test-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "androidx-espresso-core" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-junit" }
+androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref = "androidx-test-orchestrator" }
+androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-test-uiautomator" }
+
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+
+core-account = { module = "me.proton.core:account", version.ref = "core" }
+core-accountManager = { module = "me.proton.core:account-manager", version.ref = "core" }
+core-accountRecovery = { module = "me.proton.core:account-recovery", version.ref = "core" }
+core-auth = { module = "me.proton.core:auth", version.ref = "core" }
+core-challenge = { module = "me.proton.core:challenge", version.ref = "core" }
+core-country = { module = "me.proton.core:country", version.ref = "core" }
+core-crypto = { module = "me.proton.core:crypto", version.ref = "core" }
+core-cryptoValidator = { module = "me.proton.core:crypto-validator", version.ref = "core" }
+core-data = { module = "me.proton.core:data", version.ref = "core" }
+core-dataRoom = { module = "me.proton.core:data-room", version.ref = "core" }
+core-domain = { module = "me.proton.core:domain", version.ref = "core" }
+core-eventManager = { module = "me.proton.core:event-manager", version.ref = "core" }
+core-featureFlag = { module = "me.proton.core:feature-flag", version.ref = "core" }
+core-humanVerification = { module = "me.proton.core:human-verification", version.ref = "core" }
+core-key = { module = "me.proton.core:key", version.ref = "core" }
+core-keyTransparency = { module = "me.proton.core:key-transparency", version.ref = "core" }
+core-network = { module = "me.proton.core:network", version.ref = "core" }
+core-notification = { module = "me.proton.core:notification", version.ref = "core" }
+core-observability = { module = "me.proton.core:observability", version.ref = "core" }
+core-payment = { module = "me.proton.core:payment", version.ref = "core" }
+core-paymentIap = { module = "me.proton.core:payment-iap", version.ref = "core" }
+core-plan = { module = "me.proton.core:plan", version.ref = "core" }
+core-presentation-base = { module = "me.proton.core:presentation", version.ref = "core" }
+core-presentation-compose = { module = "me.proton.core:presentation-compose", version.ref = "core" }
+core-proguard-rules = { module = "me.proton.core:proguard-rules", version.ref = "core" }
+core-push = { module = "me.proton.core:push", version.ref = "core" }
+core-report = { module = "me.proton.core:report", version.ref = "core" }
+core-test-android = { module = "me.proton.core:test-android", version.ref = "core" }
+core-test-android-instrumented = { module = "me.proton.core:test-android-instrumented", version.ref = "core" }
+core-test-kotlin = { module = "me.proton.core:test-kotlin", version.ref = "core" }
+core-telemetry = { module = "me.proton.core:telemetry", version.ref = "core" }
+core-user = { module = "me.proton.core:user", version.ref = "core" }
+core-userRecovery = { module = "me.proton.core:user-recovery", version.ref = "core" }
+core-userSettings = { module = "me.proton.core:user-settings", version.ref = "core" }
+core-utilAndroidDagger = { module = "me.proton.core:util-android-dagger", version.ref = "core" }
+core-utilAndroidDevice = { module = "me.proton.core:util-android-device", version.ref = "core" }
+core-utilAndroidSentry = { module = "me.proton.core:util-android-sentry", version.ref = "core" }
+core-utilKotlin = { module = "me.proton.core:util-kotlin", version.ref = "core" }
+core-config-data = { module = "me.proton.core:configuration-data", version.ref = "core" }
+core-config-dagger-staticDefaults = { module = "me.proton.core:configuration-dagger-staticdefaults", version.ref = "core" }
+core-config-dagger-contentResolver = { module = "me.proton.core:configuration-dagger-content-resolver", version.ref = "core" }
+
+dagger-hilt-android-base = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
+dagger-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "dagger" }
+dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
+
+desugaring-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
+
+fusion = { module = "me.proton.test:fusion", version.ref = "fusion" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+
+ramp-sdk-android = { module = "com.github.RampNetwork:ramp-sdk-android", version.ref = "ramp" }
+
+sentry-android-core = { module = "io.sentry:sentry-android-core", version.ref = "sentry" }
+sentry-android-timber = { module = "io.sentry:sentry-android-timber", version.ref = "sentry" }
+
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+
+[bundles]
+test-core = ["core-test-android-instrumented"]
+test-android = ["fusion", "junit", "kotlinx-coroutines-test", "androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-uiautomator", "dagger-hilt-android-testing"]

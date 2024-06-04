@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Proton AG
+  ~ This file is part of Proton AG and ProtonCore.
+  ~
+  ~ ProtonCore is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ProtonCore is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ProtonCore.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <!-- color palette -->
+    <color name="mirage">#191C32</color>
+    <color name="trout">#535964</color>
+    <color name="misty_silver">#9395A4</color>
+    <color name="mischka">#CED0DE</color>
+    <color name="mercury">#E2E2E2</color>
+    <color name="frost_whisper">#E6E8EC</color>
+    <color name="cloud_veil">#F3F5F6</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="midnight_pulse">#222247</color>
+    <color name="port_gore">#241C43</color>
+    <color name="mulled_wine">#524D68</color>
+    <color name="topaz">#747088</color>
+    <color name="cadet_blue">#A7A4B5</color>
+
+    <color name="meteorite">#372580</color>
+    <color name="victoria">#3E3C88</color>
+    <color name="moody_blue">#6367D7</color>
+    <color name="dreamy_blue">#767DFF</color>
+    <color name="lavender_mist">#8B8DF9</color>
+    <color name="whisper_lila">#9F9DF3</color>
+    <color name="titan_white">#E0E2FF</color>
+
+    <color name="bittersweet">#FF6464</color>
+    <color name="tree_poppy">#F7931A</color>
+    <color name="texas_rose">#FFC483</color>
+    <color name="flamingo">#EB8DD6</color>
+    <color name="cosmos">#FFDBDB</color>
+    <color name="negroni">#FFE4C3</color>
+    <color name="fair_pink">#FFEBE4</color>
+
+    <color name="grossamer">#059A6F</color>
+    <color name="emerald">#5FC88F</color>
+    <color name="mountain_meadow">#6AC06B</color>
+    <color name="paradiso">#3C8B8C</color>
+    <color name="tara">#DEF5E9</color>
+
+    <color name="royal_purple">#6638B7</color>
+    <color name="heliotrope">#9553F9</color>
+    <color name="melrose">#9C89FF</color>
+    <color name="serene_sky">#9F9DF3</color>
+    <color name="frostlight">#EBECFF</color>
+
+    <color name="bay_of_many">#213474</color>
+    <color name="cobalt">#0047AB</color>
+    <color name="dodger_blue">#4989FF</color>
+    <color name="malibu">#66B6FF</color>
+    <color name="pattens_blue">#29C0E6</color>
+
+    <!-- design color aliases -->
+
+    <color name="shade_100">@color/mirage</color>
+    <color name="shade_80">@color/trout</color>
+    <color name="shade_60">@color/misty_silver</color>
+    <color name="shade_50">@color/mischka</color>
+    <color name="shade_40">@color/mercury</color>
+    <color name="shade_20">@color/frost_whisper</color>
+    <color name="shade_15">@color/cloud_veil</color> <!-- NONE-->
+    <color name="shade_10">@color/cloud_veil</color>
+    <color name="shade_0">@color/white</color>
+
+    <!-- colors to use in the app -->
+
+    <color name="text_norm">@color/shade_100</color>
+    <color name="text_weak">@color/shade_80</color>
+    <color name="text_hint">@color/shade_60</color>
+    <color name="text_disabled">@color/shade_50</color>
+    <color name="text_inverted">@color/shade_0</color>
+
+    <color name="icon_norm">@color/shade_100</color>
+    <color name="icon_weak">@color/shade_80</color>
+    <color name="icon_hint">@color/shade_60</color>
+    <color name="icon_disabled">@color/shade_50</color>
+    <color name="icon_inverted">@color/shade_0</color>
+
+    <color name="interaction_weak">@color/shade_0</color>
+    <color name="interaction_weak_pressed">@color/shade_40</color>
+    <color name="interaction_weak_disabled">@color/shade_20</color>
+
+    <color name="interaction_strong">@color/shade_100</color>
+    <color name="interaction_strong_pressed">@color/shade_80</color>
+
+    <!-- Defined in theme (e.g. proton_interaction_norm)
+    <color name="interaction_norm">?attr/brand_norm</color>
+    <color name="interaction_norm_pressed">?attr/brand_darken_10</color>
+    <color name="interaction_norm_disabled">?attr/brand_lighten_30</color>
+    -->
+    <color name="background_norm">@color/shade_0</color>
+    <color name="background_secondary">@color/shade_10</color>
+    <color name="background_deep">@color/shade_20</color>
+
+    <color name="separator_norm">@color/shade_20</color>
+    <color name="separator_strong">@color/shade_40</color> <!-- NEW -->
+
+    <color name="notification_norm">@color/shade_100</color> <!-- brand_norm? -->
+    <color name="notification_error">@color/bittersweet</color>
+    <color name="notification_success">@color/mountain_meadow</color>
+    <color name="notification_warning">@color/tree_poppy</color>
+
+</resources>
