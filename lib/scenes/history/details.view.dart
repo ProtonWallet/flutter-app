@@ -34,7 +34,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundProton,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
@@ -57,7 +57,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               fiatCurrency: viewModel.exchangeRate!.fiatCurrency);
     }
     return Container(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundProton,
         height: double.infinity,
         child: SingleChildScrollView(
             child: Padding(
@@ -359,7 +359,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
 void showNetworkFee(BuildContext context) {
   showModalBottomSheet(
       context: context,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundProton,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
       ),

@@ -7,7 +7,6 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/protonmail.autocomplete.dart';
 import 'package:wallet/components/recipient.detail.dart';
-import 'package:wallet/components/tag.text.dart';
 import 'package:wallet/components/textfield.send.btc.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
@@ -37,7 +36,7 @@ class SendView extends ViewBase<SendViewModel> {
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundProton,
         title: viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction
             ? Text(S.of(context).review_your_transaction,
                 style: FontManager.body2Median(ProtonColors.textNorm))
@@ -99,7 +98,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildEditAmount(BuildContext context) {
     return Container(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundProton,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -114,7 +113,7 @@ class SendView extends ViewBase<SendViewModel> {
                             Row(children: [
                               Expanded(
                                   child: TextFieldSendBTCV2(
-                                backgroundColor: ProtonColors.backgroundProton,
+                                backgroundColor: ProtonColors.white,
                                 labelText: S.of(context).amount,
                                 textController: viewModel.amountTextController,
                                 myFocusNode: viewModel.amountFocusNode,
@@ -156,8 +155,7 @@ class SendView extends ViewBase<SendViewModel> {
                                       maxSuffixIconWidth: 20,
                                       textStyle: FontManager.captionMedian(
                                           ProtonColors.textNorm),
-                                      backgroundColor:
-                                          ProtonColors.backgroundProton,
+                                      backgroundColor: ProtonColors.white,
                                       items: fiatCurrencies,
                                       itemsText: fiatCurrencies
                                           .map((v) =>
@@ -285,7 +283,7 @@ class SendView extends ViewBase<SendViewModel> {
         break;
     }
     return Container(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundProton,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -606,7 +604,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildAddRecipient(BuildContext context) {
     return Container(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundProton,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -642,8 +640,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 Column(children: [
                                   WalletAccountDropdown(
                                       labelText: S.of(context).trans_from,
-                                      backgroundColor:
-                                          ProtonColors.backgroundProton,
+                                      backgroundColor: ProtonColors.white,
                                       width: MediaQuery.of(context).size.width -
                                           defaultPadding * 2,
                                       accounts:
@@ -871,34 +868,4 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
     Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",
         style: FontManager.captionRegular(ProtonColors.textHint)),
   ]);
-}
-
-Widget getTransactionFeeModeWidget(
-    BuildContext context, SendViewModel viewModel) {
-  switch (viewModel.userTransactionFeeMode) {
-    case TransactionFeeMode.highPriority:
-      return TagText(
-        width: 120,
-        text: "High Priority",
-        radius: 10.0,
-        background: const Color.fromARGB(255, 40, 116, 4),
-        textColor: ProtonColors.white,
-      );
-    case TransactionFeeMode.lowPriority:
-      return TagText(
-        width: 120,
-        text: "Low Priority",
-        radius: 10.0,
-        background: const Color.fromARGB(255, 247, 65, 143),
-        textColor: ProtonColors.white,
-      );
-    default:
-      return TagText(
-        width: 120,
-        text: "Median Priority",
-        radius: 10.0,
-        background: const Color.fromARGB(255, 255, 152, 0),
-        textColor: ProtonColors.white,
-      );
-  }
 }

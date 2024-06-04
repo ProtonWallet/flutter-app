@@ -30,7 +30,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
-            height: double.infinity,
             decoration: BoxDecoration(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24.0)),
@@ -192,40 +191,37 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                   // ),
                                   const SizedBox(height: 20),
                                 ])),
+                        SizedBoxes.box24,
+                        ButtonV5(
+                            onPressed: () {
+                              Share.share(viewModel.address,
+                                  subject: S.of(context).receive_address);
+                            },
+                            text: S.of(context).share_address_button,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: ProtonColors.protonBlue,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.white),
+                            height: 48),
+                        SizedBoxes.box12,
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.getAddress();
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              width: MediaQuery.of(context).size.width,
+                              height: 48,
+                              child: Text(
+                                S.of(context).generate_new_address,
+                                style: FontManager.body1Median(
+                                    ProtonColors.textWeak),
+                                textAlign: TextAlign.center,
+                              )),
+                        ),
                       ],
                     ),
                   )),
-                  Column(
-                    children: [
-                      ButtonV5(
-                          onPressed: () {
-                            Share.share(viewModel.address,
-                                subject: S.of(context).receive_address);
-                          },
-                          text: S.of(context).share_address_button,
-                          width: MediaQuery.of(context).size.width,
-                          backgroundColor: ProtonColors.protonBlue,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
-                          height: 48),
-                      SizedBoxes.box12,
-                      GestureDetector(
-                        onTap: () {
-                          viewModel.getAddress();
-                        },
-                        child: Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            width: MediaQuery.of(context).size.width,
-                            height: 48,
-                            child: Text(
-                              S.of(context).generate_new_address,
-                              style: FontManager.body1Median(
-                                  ProtonColors.textWeak),
-                              textAlign: TextAlign.center,
-                            )),
-                      ),
-                    ],
-                  )
                 ]))));
   }
 }
