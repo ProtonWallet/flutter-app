@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Proton AG
+  ~ This file is part of Proton AG and ProtonCore.
+  ~
+  ~ ProtonCore is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ProtonCore is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ProtonCore.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <color name="shade_100">@color/white</color>
+    <color name="shade_80">@color/cloud_veil</color>
+    <color name="shade_60">@color/cloud_veil</color>
+    <color name="shade_50">@color/frost_whisper</color>
+    <color name="shade_40">@color/mercury</color>
+    <color name="shade_20">@color/mischka</color>
+    <color name="shade_15">@color/misty_silver</color>
+    <color name="shade_10">@color/trout</color>
+    <color name="shade_0">@color/mirage</color>
+
+    <color name="text_norm">@color/shade_100</color>
+    <color name="text_weak">@color/shade_80</color>
+    <color name="text_hint">@color/shade_60</color>
+    <color name="text_disabled">@color/shade_50</color>
+    <color name="text_inverted">@color/shade_0</color>
+
+    <color name="icon_norm">@color/shade_100</color>
+    <color name="icon_weak">@color/shade_80</color>
+    <color name="icon_hint">@color/shade_60</color>
+    <color name="icon_disabled">@color/shade_50</color>
+    <color name="icon_inverted">@color/shade_0</color>
+
+    <color name="interaction_weak">@color/shade_0</color>
+    <color name="interaction_weak_pressed">@color/shade_40</color>
+    <color name="interaction_weak_disabled">@color/shade_20</color>
+
+    <color name="interaction_strong">@color/shade_100</color>
+    <color name="interaction_strong_pressed">@color/shade_80</color>
+
+    <color name="background_norm">@color/shade_0</color>
+    <color name="background_secondary">@color/shade_10</color>
+    <color name="background_deep">@color/shade_20</color>
+
+    <color name="separator_norm">@color/shade_20</color>
+
+    <color name="notification_norm">@color/shade_100</color> <!-- brand_norm? -->
+    <color name="notification_error">@color/bittersweet</color>
+    <color name="notification_success">@color/mountain_meadow</color>
+    <color name="notification_warning">@color/tree_poppy</color>
+
+</resources>
