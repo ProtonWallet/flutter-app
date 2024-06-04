@@ -917,7 +917,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             child: Text(
                               "${S
                                   .of(context)
-                                  .app_name} 1.0.0 (22)",
+                                  .app_name} 1.0.0 (27)",
                               style: FontManager.captionRegular(
                                   ProtonColors.textHint),
                             ))),

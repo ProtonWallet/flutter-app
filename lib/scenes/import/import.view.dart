@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/components/bottom.sheets/seed.phrase.tutorial.dart';
+import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -24,146 +25,131 @@ class ImportView extends ViewBase<ImportViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0.0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark,
-            // For Android (dark icons)
-            statusBarBrightness: Brightness.light, // For iOS (dark icons)
-          ),
-          title: Text(S.of(context).import_your_wallet),
-          centerTitle: true,
-          // automaticallyImplyLeading: false,
-          backgroundColor: Colors
-              .transparent, // Theme.of(context).colorScheme.inversePrimary,
-        ),
-        backgroundColor: ProtonColors.backgroundProton,
-        body: Center(
-            child: Stack(children: [
-          Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: SingleChildScrollView(
-                  child: Column(children: <Widget>[
-                SizedBoxes.box18,
-                Text(S.of(context).import_wallet_header,
-                    style: FontManager.body2Regular(ProtonColors.textWeak)),
-                SizedBoxes.box18,
-                TextFieldTextV2(
-                  labelText: S.of(context).wallet_name,
-                  maxLength: maxAccountNameSize,
-                  hintText: S.of(context).wallet_name_hint,
-                  textController: viewModel.nameTextController,
-                  myFocusNode: viewModel.nameFocusNode,
-                  validation: (String _) {
-                    return "";
-                  },
-                ),
-                SizedBoxes.box12,
-                AlertCustom(
-                  content: S.of(context).what_is_seed_phrase,
-                  onTap: () {
-                    SeedPhraseTutorialSheet.show(context);
-                  },
-                  canClose: false,
-                  leadingWidget: SvgPicture.asset(
-                      "assets/images/icon/alert_info.svg",
-                      fit: BoxFit.fill,
-                      width: 22,
-                      height: 22),
-                  border: Border.all(
-                    color: Colors.transparent,
-                    width: 0,
-                  ),
-                  backgroundColor: ProtonColors.purple1Background,
-                  color: ProtonColors.purple1Text,
-                ),
-                SizedBoxes.box12,
-                viewModel.isPasteMode
-                    ? buildPasteMode(context)
-                    : buildManualInputMode(context),
-                SizedBoxes.box24,
-                ExpansionTile(
-                    shape: const Border(),
-                    initiallyExpanded: false,
-                    title: Text(S.of(context).my_wallet_has_passphrase,
-                        style: FontManager.body2Median(ProtonColors.textWeak)),
-                    iconColor: ProtonColors.textHint,
-                    collapsedIconColor: ProtonColors.textHint,
-                    children: [
-                      AlertCustom(
-                        content: S.of(context).what_is_wallet_passphrase,
-                        onTap: () {
-                          PassphraseTutorialSheet.show(context);
-                        },
-                        canClose: false,
-                        leadingWidget: SvgPicture.asset(
-                            "assets/images/icon/alert_info.svg",
-                            fit: BoxFit.fill,
-                            width: 22,
-                            height: 22),
-                        border: Border.all(
-                          color: Colors.transparent,
-                          width: 0,
-                        ),
-                        backgroundColor: ProtonColors.purple1Background,
-                        color: ProtonColors.purple1Text,
+        backgroundColor: Colors.transparent,
+        body: Container(
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24.0)),
+              color: ProtonColors.backgroundProton,
+            ),
+            child: Center(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.all(defaultPadding),
+                  child: SingleChildScrollView(
+                      child: Column(children: <Widget>[
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: CloseButtonV1(onPressed: () {
+                          Navigator.of(context).pop();
+                        })),
+                    SizedBoxes.box18,
+                    Text(S.of(context).import_wallet_header,
+                        style: FontManager.body2Regular(ProtonColors.textWeak)),
+                    SizedBoxes.box18,
+                    TextFieldTextV2(
+                      labelText: S.of(context).wallet_name,
+                      maxLength: maxAccountNameSize,
+                      hintText: S.of(context).wallet_name_hint,
+                      textController: viewModel.nameTextController,
+                      myFocusNode: viewModel.nameFocusNode,
+                      validation: (String _) {
+                        return "";
+                      },
+                    ),
+                    SizedBoxes.box12,
+                    AlertCustom(
+                      content: S.of(context).what_is_seed_phrase,
+                      onTap: () {
+                        SeedPhraseTutorialSheet.show(context);
+                      },
+                      canClose: false,
+                      leadingWidget: SvgPicture.asset(
+                          "assets/images/icon/alert_info.svg",
+                          fit: BoxFit.fill,
+                          width: 22,
+                          height: 22),
+                      border: Border.all(
+                        color: Colors.transparent,
+                        width: 0,
                       ),
-                      SizedBoxes.box12,
-                      TextFieldTextV2(
-                        labelText: S.of(context).your_passphrase_optional,
-                        textController: viewModel.passphraseTextController,
-                        myFocusNode: viewModel.passphraseFocusNode,
-                        validation: (String _) {
-                          return "";
-                        },
-                        isPassword: true,
-                      )
-                    ]),
-                const SizedBox(height: 80),
-              ]))),
-          if (MediaQuery.of(context).viewInsets.bottom < 80)
-            Container(
-                padding: const EdgeInsets.only(bottom: defaultPadding),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 56,
-                // AppBar default height is 56
-                margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ButtonV5(
-                          onPressed: () async {
-                            EasyLoading.show(
-                                status: "creating wallet..",
-                                maskType: EasyLoadingMaskType.black);
-                            await viewModel.importWallet();
-                            viewModel.coordinator.end();
-                            EasyLoading.dismiss();
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
-                              if (viewModel.errorMessage.isEmpty) {
-                                CommonHelper.showSnackbar(
-                                    context, S.of(context).wallet_imported);
-                              } else {
-                                CommonHelper.showSnackbar(
-                                    context, viewModel.errorMessage,
-                                    isError: true);
-                              }
+                      backgroundColor: ProtonColors.purple1Background,
+                      color: ProtonColors.purple1Text,
+                    ),
+                    SizedBoxes.box12,
+                    viewModel.isPasteMode
+                        ? buildPasteMode(context)
+                        : buildManualInputMode(context),
+                    SizedBoxes.box24,
+                    ExpansionTile(
+                        shape: const Border(),
+                        initiallyExpanded: false,
+                        title: Text(S.of(context).my_wallet_has_passphrase,
+                            style:
+                                FontManager.body2Median(ProtonColors.textWeak)),
+                        iconColor: ProtonColors.textHint,
+                        collapsedIconColor: ProtonColors.textHint,
+                        children: [
+                          AlertCustom(
+                            content: S.of(context).what_is_wallet_passphrase,
+                            onTap: () {
+                              PassphraseTutorialSheet.show(context);
+                            },
+                            canClose: false,
+                            leadingWidget: SvgPicture.asset(
+                                "assets/images/icon/alert_info.svg",
+                                fit: BoxFit.fill,
+                                width: 22,
+                                height: 22),
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                            backgroundColor: ProtonColors.purple1Background,
+                            color: ProtonColors.purple1Text,
+                          ),
+                          SizedBoxes.box12,
+                          TextFieldTextV2(
+                            labelText: S.of(context).your_passphrase_optional,
+                            textController: viewModel.passphraseTextController,
+                            myFocusNode: viewModel.passphraseFocusNode,
+                            validation: (String _) {
+                              return "";
+                            },
+                            isPassword: true,
+                          )
+                        ]),
+                    const SizedBox(height: 40),
+                    ButtonV5(
+                        onPressed: () async {
+                          EasyLoading.show(
+                              status: "creating wallet..",
+                              maskType: EasyLoadingMaskType.black);
+                          await viewModel.importWallet();
+                          viewModel.coordinator.end();
+                          EasyLoading.dismiss();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                            if (viewModel.errorMessage.isEmpty) {
+                              CommonHelper.showSnackbar(
+                                  context, S.of(context).wallet_imported);
+                            } else {
+                              CommonHelper.showSnackbar(
+                                  context, viewModel.errorMessage,
+                                  isError: true);
                             }
-                          },
-                          enable: viewModel.isValidMnemonic,
-                          text: S.of(context).import_button,
-                          width: MediaQuery.of(context).size.width,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
-                          backgroundColor: ProtonColors.protonBlue,
-                          height: 48),
-                    ]))
-        ])));
+                          }
+                        },
+                        enable: viewModel.isValidMnemonic,
+                        text: S.of(context).import_button,
+                        width: MediaQuery.of(context).size.width,
+                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        backgroundColor: ProtonColors.protonBlue,
+                        height: 48),
+                    const SizedBox(height: 20),
+                  ]))),
+            )));
   }
 
   Widget buildPasteMode(BuildContext context) {
