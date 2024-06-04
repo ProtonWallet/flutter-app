@@ -22,8 +22,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       : super(viewModel, const Key("WelcomeView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, WelcomeViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return buildBackground(context);
   }
 

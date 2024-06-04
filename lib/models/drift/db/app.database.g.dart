@@ -4,7 +4,7 @@ part of 'app.database.dart';
 
 // ignore_for_file: type=lint
 class $UsersTableTable extends UsersTable
-    with TableInfo<$UsersTableTable, User> {
+    with TableInfo<$UsersTableTable, ProtonUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -153,7 +153,7 @@ class $UsersTableTable extends UsersTable
   String get actualTableName => $name;
   static const String $name = 'users_table';
   @override
-  VerificationContext validateIntegrity(Insertable<User> instance,
+  VerificationContext validateIntegrity(Insertable<ProtonUser> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -266,9 +266,9 @@ class $UsersTableTable extends UsersTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ProtonUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return ProtonUser(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       userId: attachedDatabase.typeMapping
@@ -313,7 +313,7 @@ class $UsersTableTable extends UsersTable
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class ProtonUser extends DataClass implements Insertable<ProtonUser> {
   final int id;
   final String userId;
   final String name;
@@ -331,7 +331,7 @@ class User extends DataClass implements Insertable<User> {
   final String? organizationPrivateKey;
   final String? email;
   final String? displayName;
-  const User(
+  const ProtonUser(
       {required this.id,
       required this.userId,
       required this.name,
@@ -406,10 +406,10 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json,
+  factory ProtonUser.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return ProtonUser(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
@@ -455,7 +455,7 @@ class User extends DataClass implements Insertable<User> {
     };
   }
 
-  User copyWith(
+  ProtonUser copyWith(
           {int? id,
           String? userId,
           String? name,
@@ -473,7 +473,7 @@ class User extends DataClass implements Insertable<User> {
           Value<String?> organizationPrivateKey = const Value.absent(),
           Value<String?> email = const Value.absent(),
           Value<String?> displayName = const Value.absent()}) =>
-      User(
+      ProtonUser(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         name: name ?? this.name,
@@ -496,7 +496,7 @@ class User extends DataClass implements Insertable<User> {
       );
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('ProtonUser(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
@@ -540,7 +540,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is ProtonUser &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.name == this.name &&
@@ -560,7 +560,7 @@ class User extends DataClass implements Insertable<User> {
           other.displayName == this.displayName);
 }
 
-class UsersTableCompanion extends UpdateCompanion<User> {
+class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> name;
@@ -628,7 +628,7 @@ class UsersTableCompanion extends UpdateCompanion<User> {
         subscribed = Value(subscribed),
         services = Value(services),
         delinquent = Value(delinquent);
-  static Insertable<User> custom({
+  static Insertable<ProtonUser> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? name,
@@ -1231,7 +1231,7 @@ typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
 class $$UsersTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UsersTableTable,
-    User,
+    ProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
     $$UsersTableTableProcessedTableManager,
@@ -1329,7 +1329,7 @@ class $$UsersTableTableTableManager extends RootTableManager<
 class $$UsersTableTableProcessedTableManager extends ProcessedTableManager<
     _$AppDatabase,
     $UsersTableTable,
-    User,
+    ProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
     $$UsersTableTableProcessedTableManager,

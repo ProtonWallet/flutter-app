@@ -7,8 +7,9 @@ use super::{
     settings_client::SettingsClient, transaction_client::TransactionClient,
     wallet_client::WalletClient,
 };
-use crate::api::proton_api::set_proton_api;
-use crate::{auth_credential::AuthCredential, errors::ApiError, wallet::WalletData};
+use crate::api::proton_api::{logout, set_proton_api};
+use crate::{auth_credential::AuthCredential, errors::ApiError};
+use andromeda_api::wallet::ApiWalletData;
 use andromeda_api::{Auth, ProtonWalletApiClient, Tokens};
 use bitcoin::base64::decode;
 use flutter_rust_bridge::frb;
@@ -57,15 +58,17 @@ impl ProtonAPIService {
         info!("start fresh api client");
         let app_version = "android-wallet@1.0.0";
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
-        let api = ProtonWalletApiClient::from_version(
+        let inner_api = ProtonWalletApiClient::from_version(
             app_version.to_string(),
             user_agent.to_string(),
             store.clone(),
         )?;
-        Ok(ProtonAPIService {
-            inner: Arc::new(api),
+        let api: ProtonAPIService = ProtonAPIService {
+            inner: Arc::new(inner_api),
             store: Arc::new(store),
-        })
+        };
+        set_proton_api(Arc::new(api.clone()));
+        Ok(api)
     }
 
     pub async fn login(
@@ -116,6 +119,7 @@ impl ProtonAPIService {
         let ref_token = auth.ref_tok().unwrap().to_string();
         let scopes = auth.tokens().unwrap().scopes().unwrap();
         info!("session_id: {:?}", session_id);
+        set_proton_api(Arc::new(self.clone()));
         Ok(AuthCredential {
             session_id,
             user_id: user_data.user.id,
@@ -130,6 +134,29 @@ impl ProtonAPIService {
             user_private_key: user_key.private_key.to_string(),
             user_passphrase: mailboxpwd.to_string(),
         })
+    }
+
+    pub async fn update_auth(
+        &mut self,
+        uid: String,
+        access: String,
+        refresh: String,
+        scopes: Vec<String>,
+    ) {
+        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        info!("update_auth api service --- loggin");
+        let mut old_auth = self.store.inner.auth.lock().unwrap();
+        *old_auth = auth;
+        info!("auth data is updated");
+    }
+
+    pub async fn logout(&mut self) {
+        // self.store.clone().logout().await;
+        info!("logout api service is loggin out");
+        let mut old_auth = self.store.inner.auth.lock().unwrap();
+        *old_auth = Auth::None;
+        info!("reset auth data");
+        logout();
     }
 
     #[frb(sync)]
@@ -150,10 +177,10 @@ impl ProtonAPIService {
         Ok(api)
     }
 
-    pub async fn get_wallets(&self) -> Result<Vec<WalletData>, ApiError> {
+    pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, ApiError> {
         let result = self.inner.clients().wallet.get_wallets().await;
         match result {
-            Ok(response) => Ok(response.into_iter().map(|w| w.into()).collect()),
+            Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
         }
     }

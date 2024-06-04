@@ -2,7 +2,7 @@
 import 'package:drift/drift.dart';
 import 'package:wallet/models/drift/tables/table.extension.dart';
 
-@DataClassName('User')
+@DataClassName('ProtonUser')
 @TableIndex(name: 'user_id_index', columns: {#userId})
 class UsersTable extends Table with AutoIncrementingPrimaryKey {
   TextColumn get userId => text()();

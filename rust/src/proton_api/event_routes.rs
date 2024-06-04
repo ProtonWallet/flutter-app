@@ -1,11 +1,12 @@
 use super::contacts::ProtonContactEmails;
 use super::user_settings::ApiUserSettings;
-use super::wallet::{ProtonWallet, ProtonWalletKey, WalletTransaction};
-use super::wallet_account::WalletAccount;
-use super::wallet_settings::WalletSettings;
-use andromeda_api::event::{
-    ApiContactsEmailEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
-    ApiWalletSettingsEvent, ApiWalletTransactionsEvent,
+use super::wallet::WalletTransaction;
+use andromeda_api::{
+    event::{
+        ApiContactsEmailEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
+        ApiWalletSettingsEvent, ApiWalletTransactionsEvent,
+    },
+    wallet::{ApiWallet, ApiWalletAccount, ApiWalletKey, ApiWalletSettings},
 };
 
 #[derive(Debug)]
@@ -57,7 +58,7 @@ impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
 pub struct WalletEvent {
     pub id: String,
     pub action: u32,
-    pub wallet: Option<ProtonWallet>,
+    pub wallet: Option<ApiWallet>,
 }
 
 impl From<ApiWalletEvent> for WalletEvent {
@@ -65,7 +66,7 @@ impl From<ApiWalletEvent> for WalletEvent {
         WalletEvent {
             id: event.ID,
             action: event.Action,
-            wallet: event.Wallet.map(|x| x.into()),
+            wallet: event.Wallet,
         }
     }
 }
@@ -74,7 +75,7 @@ impl From<ApiWalletEvent> for WalletEvent {
 pub struct WalletAccountEvent {
     pub id: String,
     pub action: u32,
-    pub wallet_account: Option<WalletAccount>,
+    pub wallet_account: Option<ApiWalletAccount>,
 }
 
 impl From<ApiWalletAccountEvent> for WalletAccountEvent {
@@ -82,7 +83,7 @@ impl From<ApiWalletAccountEvent> for WalletAccountEvent {
         WalletAccountEvent {
             id: event.ID,
             action: event.Action,
-            wallet_account: event.WalletAccount.map(|x| x.into()),
+            wallet_account: event.WalletAccount,
         }
     }
 }
@@ -91,7 +92,7 @@ impl From<ApiWalletAccountEvent> for WalletAccountEvent {
 pub struct WalletKeyEvent {
     pub id: String,
     pub action: u32,
-    pub wallet_key: Option<ProtonWalletKey>,
+    pub wallet_key: Option<ApiWalletKey>,
 }
 
 impl From<ApiWalletKeyEvent> for WalletKeyEvent {
@@ -99,7 +100,7 @@ impl From<ApiWalletKeyEvent> for WalletKeyEvent {
         WalletKeyEvent {
             id: event.ID,
             action: event.Action,
-            wallet_key: event.WalletKey.map(|x| x.into()),
+            wallet_key: event.WalletKey,
         }
     }
 }
@@ -108,7 +109,7 @@ impl From<ApiWalletKeyEvent> for WalletKeyEvent {
 pub struct WalletSettingsEvent {
     pub id: String,
     pub action: u32,
-    pub wallet_settings: Option<WalletSettings>,
+    pub wallet_settings: Option<ApiWalletSettings>,
 }
 
 impl From<ApiWalletSettingsEvent> for WalletSettingsEvent {
@@ -116,7 +117,7 @@ impl From<ApiWalletSettingsEvent> for WalletSettingsEvent {
         WalletSettingsEvent {
             id: event.ID,
             action: event.Action,
-            wallet_settings: event.WalletSettings.map(|x| x.into()),
+            wallet_settings: event.WalletSettings,
         }
     }
 }

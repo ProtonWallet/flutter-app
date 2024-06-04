@@ -115,9 +115,7 @@ class DeleteWalletSheet {
                                       .pop(); // pop up this bottomSheet
                                 }
                                 await viewModel.deleteWallet(walletModel);
-                                viewModel.coordinator.end();
                                 if (context.mounted) {
-                                  Navigator.of(context).pop();
                                   CommonHelper.showSnackbar(
                                       context, S.of(context).wallet_deleted);
                                 }

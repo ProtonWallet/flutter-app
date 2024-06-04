@@ -10,9 +10,8 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
       : super(viewModel, const Key("HomeNavigationView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      HomeNavigationViewModel viewModel, ViewSize viewSize) {
-    return buildBottomBar(context, viewModel, viewSize);
+  Widget build(BuildContext context) {
+    return buildBottomBar(context);
   }
 
   Widget buildSidemenu(BuildContext context, HomeNavigationViewModel viewModel,
@@ -47,8 +46,7 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
     );
   }
 
-  Widget buildBottomBar(BuildContext context, HomeNavigationViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildBottomBar(BuildContext context) {
     return Scaffold(
       body: PageView(
         controller: viewModel.pageController,

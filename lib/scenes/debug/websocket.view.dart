@@ -8,8 +8,7 @@ class WebSocketView extends ViewBase<WebSocketViewModel> {
       : super(viewModel, const Key("WebSocketView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, WebSocketViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(

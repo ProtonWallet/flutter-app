@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'db/app.database.dart';
 import 'tables/user.keys.dart';
 
-part 'keys.queries.g.dart';
+part 'user.keys.queries.g.dart';
 
 @DriftAccessor(tables: [UserKeysTable])
 class UserKeysQueries extends DatabaseAccessor<AppDatabase>

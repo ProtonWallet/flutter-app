@@ -691,7 +691,7 @@ mod test {
     use bdk::KeychainKind;
     use bitcoin::Network;
     use log::info;
-    use std::{ops::Deref, str::FromStr, sync::Arc};
+    use std::{ops::Deref, str::FromStr};
 
     use crate::{
         api::proton_api::{init_api_service, retrieve_proton_api},

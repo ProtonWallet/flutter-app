@@ -44,11 +44,11 @@ class EventLoop implements Manager {
     if (!_isRunning) {
       _isRunning = true;
       userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.navigatorKey.currentContext!,
+          Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
       protonWalletProvider =
           Provider.of<proton_wallet_provider.ProtonWalletProvider>(
-              Coordinator.navigatorKey.currentContext!,
+              Coordinator.rootNavigatorKey.currentContext!,
               listen: false);
       String? savedLatestEventId = await WalletManager.getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
@@ -65,7 +65,7 @@ class EventLoop implements Manager {
 
   Future<void> runOnce() async {
     logger.i("event loop runOnce()");
-    Map<String, List<ProtonWalletKey>> walletID2ProtonWalletKey = {};
+    Map<String, List<ApiWalletKey>> walletID2ProtonWalletKey = {};
     try {
       List<ProtonEvent> events =
           await proton_api.collectEvents(latestEventId: latestEventId);
@@ -74,13 +74,15 @@ class EventLoop implements Manager {
         await WalletManager.setLatestEventId(latestEventId);
         if (event.walletKeyEvents != null) {
           for (WalletKeyEvent walletKeyEvent in event.walletKeyEvents!) {
-            ProtonWalletKey? walletKey = walletKeyEvent.walletKey;
+            ApiWalletKey? walletKey = walletKeyEvent.walletKey;
             if (walletKey != null) {
               String serverWalletID = walletKey.walletId;
               if (!walletID2ProtonWalletKey.containsKey(serverWalletID)) {
                 walletID2ProtonWalletKey[serverWalletID] = [];
               }
               walletID2ProtonWalletKey[serverWalletID]!.add(walletKey);
+
+              await WalletManager.setWalletKey([walletKey]);
             }
           }
         }
@@ -92,7 +94,7 @@ class EventLoop implements Manager {
                   serverWalletID); // Will also delete account
               continue;
             }
-            ProtonWallet? walletData = walletEvent.wallet;
+            ApiWallet? walletData = walletEvent.wallet;
 
             UserKey firstKey = await userManager.getFirstKey();
 
@@ -102,7 +104,7 @@ class EventLoop implements Manager {
             if (walletData != null) {
               String serverWalletID = walletData.id;
               if (walletID2ProtonWalletKey.containsKey(serverWalletID)) {
-                for (ProtonWalletKey? walletKey
+                for (ApiWalletKey? walletKey
                     in walletID2ProtonWalletKey[serverWalletID]!) {
                   try {
                     // try to decrypt
@@ -131,10 +133,6 @@ class EventLoop implements Manager {
               if (entropy.isNotEmpty) {
                 secretKey =
                     WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
-                if (secretKey != null) {
-                  await protonWalletManager.setWalletKey(
-                      serverWalletID, secretKey);
-                }
               }
               // int status = entropy.isNotEmpty
               //     ? WalletModel.statusActive
@@ -142,8 +140,7 @@ class EventLoop implements Manager {
               int status = WalletModel.statusActive;
               String decryptedWalletName = walletData.name;
               try {
-                secretKey ??=
-                    await protonWalletManager.getWalletKey(serverWalletID);
+                secretKey ??= await WalletManager.getWalletKey(serverWalletID);
                 decryptedWalletName = await WalletKeyHelper.decrypt(
                     secretKey, decryptedWalletName);
               } catch (e) {
@@ -172,7 +169,7 @@ class EventLoop implements Manager {
                   serverAccountID);
               continue;
             }
-            WalletAccount? account = walletAccountEvent.walletAccount;
+            ApiWalletAccount? account = walletAccountEvent.walletAccount;
             if (account != null) {
               int walletID = await WalletManager.getWalletIDByServerWalletID(
                   account.walletId);
@@ -191,7 +188,7 @@ class EventLoop implements Manager {
         if (event.walletSettingEvents != null) {
           for (WalletSettingsEvent walletSettingEvent
               in event.walletSettingEvents!) {
-            WalletSettings? _ = walletSettingEvent.walletSettings;
+            ApiWalletSettings? _ = walletSettingEvent.walletSettings;
             // TODO::
           }
         }
@@ -284,4 +281,9 @@ class EventLoop implements Manager {
 
   @override
   Future<void> init() async {}
+
+  @override
+  Future<void> logout() async {
+    stop();
+  }
 }

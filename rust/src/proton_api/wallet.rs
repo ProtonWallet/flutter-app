@@ -1,42 +1,12 @@
 use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
-use andromeda_api::wallet::{
-    ApiWallet, ApiWalletKey, ApiWalletTransaction, CreateWalletRequestBody,
-};
+use andromeda_api::wallet::{ApiWalletSettings, ApiWalletTransaction, CreateWalletRequestBody};
+
+pub use andromeda_api::wallet::{ApiWallet, ApiWalletData, ApiWalletKey};
 
 use andromeda_api::bitcoin_address::{ApiBitcoinAddressCreationPayload, ApiWalletBitcoinAddress};
+use flutter_rust_bridge::frb;
 
 use super::exchange_rate::ProtonExchangeRate;
-use super::wallet_settings::WalletSettings;
-
-#[derive(Debug)]
-pub struct ProtonWallet {
-    pub id: String,
-    pub has_passphrase: u8,
-    pub is_imported: u8,
-    pub mnemonic: Option<String>,
-    pub name: String,
-    pub priority: u8,
-    pub public_key: Option<String>,
-    pub status: u8,
-    pub r#type: u8,
-    pub fingerprint: Option<String>,
-}
-impl From<ApiWallet> for ProtonWallet {
-    fn from(wallet: ApiWallet) -> Self {
-        ProtonWallet {
-            id: wallet.ID,
-            has_passphrase: wallet.HasPassphrase,
-            is_imported: wallet.IsImported,
-            mnemonic: wallet.Mnemonic,
-            name: wallet.Name,
-            priority: wallet.Priority,
-            public_key: wallet.PublicKey,
-            status: wallet.Status,
-            r#type: wallet.Type,
-            fingerprint: wallet.Fingerprint,
-        }
-    }
-}
 
 #[derive(Debug)]
 pub struct WalletTransaction {
@@ -137,54 +107,48 @@ impl From<BitcoinAddress> for ApiBitcoinAddressCreationPayload {
     }
 }
 
-#[derive(Debug)]
-pub struct ProtonWalletKey {
-    pub wallet_id: String,
-    pub user_key_id: String,
-    pub wallet_key: String,
-    pub wallet_key_signature: String,
-}
-impl From<ApiWalletKey> for ProtonWalletKey {
-    fn from(wallet_key: ApiWalletKey) -> Self {
-        ProtonWalletKey {
-            wallet_id: wallet_key.WalletID,
-            user_key_id: wallet_key.UserKeyID,
-            wallet_key: wallet_key.WalletKey,
-            wallet_key_signature: wallet_key.WalletKeySignature,
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct WalletData {
-    pub wallet: ProtonWallet,
-    pub wallet_key: ProtonWalletKey,
-    pub wallet_settings: WalletSettings,
-}
-impl From<andromeda_api::wallet::ApiWalletData> for WalletData {
-    fn from(wallet_data: andromeda_api::wallet::ApiWalletData) -> Self {
-        WalletData {
-            wallet: wallet_data.Wallet.into(),
-            wallet_key: wallet_data.WalletKey.into(),
-            wallet_settings: wallet_data.WalletSettings.into(),
-        }
-    }
+#[frb(mirror(ApiWallet))]
+#[allow(non_snake_case)]
+pub struct _ApiWallet {
+    pub ID: String,
+    /// Name of the wallet
+    pub Name: String,
+    /// 0 if the wallet is created with Proton Wallet
+    pub IsImported: u8,
+    /// Priority of the wallet (0 is main wallet)
+    pub Priority: u8,
+    /// 1 is onchain, 2 is lightning
+    pub Type: u8,
+    /// 1 if the wallet has a passphrase. We don't store it but clients need to
+    /// request on first wallet access.
+    pub HasPassphrase: u8,
+    /// 1 means disabled
+    pub Status: u8,
+    /// Wallet mnemonic encrypted with the WalletKey, in base64 format
+    pub Mnemonic: Option<String>,
+    // Unique identifier of the mnemonic, using the first 4 bytes of the master public key hash
+    pub Fingerprint: Option<String>,
+    /// Wallet master public key encrypted with the WalletKey, in base64 format.
+    /// Only allows fetching coins owned by wallet, no spending allowed.
+    pub PublicKey: Option<String>,
 }
 
-// #[derive(Debug, Deserialize)]
-// pub struct WalletsResponse {
-//     pub Code: i32,
-//     pub Wallets: Vec<ApiWalletData>,
-// }
+#[frb(mirror(ApiWalletKey))]
+#[allow(non_snake_case)]
+pub struct _ApiWalletKey {
+    pub WalletID: String,
+    pub UserKeyID: String,
+    pub WalletKey: String,
+    pub WalletKeySignature: String,
+}
 
-// #[derive(Debug, Deserialize)]
-// pub struct CreateWalletResponse {
-//     pub Code: i32,
-//     pub ApiWallet: ProtonWallet,
-//     pub ApiWalletKey: ProtonWalletKey,
-//     pub WalletSettings: WalletSettings,
-//     // Error: Option<String>,
-// }
+#[frb(mirror(ApiWalletData))]
+#[allow(non_snake_case)]
+pub struct _ApiWalletData {
+    pub Wallet: ApiWallet,
+    pub WalletKey: ApiWalletKey,
+    pub WalletSettings: ApiWalletSettings,
+}
 
 #[derive(Debug)]
 pub struct CreateWalletReq {

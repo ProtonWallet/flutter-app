@@ -136,4 +136,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   void directEmitExample(NativeLoginSucess newState) {
     add(DirectEmitEvent(newState));
   }
+
+  @override
+  Future<void> logout() async {}
 }

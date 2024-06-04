@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/helper/logger.dart';
 
 abstract class Service<T> {
   final _dataController = StreamController<T>.broadcast();
@@ -37,9 +38,14 @@ abstract class Service<T> {
   Future<void> _runTasks() async {
     while (_isRunning && !_isPaused) {
       await onUpdate();
-      await onUpdate().then((value) {
-        _dataController.sinkAddSafe(value);
-      });
+      try {
+        await onUpdate().then((value) {
+          _dataController.sinkAddSafe(value);
+        });
+      } catch (e) {
+        logger.e('Service $runtimeType runTask: $e');
+      }
+
       await Future.delayed(duration);
     }
   }

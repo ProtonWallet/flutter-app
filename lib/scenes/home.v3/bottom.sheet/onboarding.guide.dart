@@ -185,6 +185,7 @@ class OnboardingGuideSheet {
                         ButtonV5(
                             onPressed: () {
                               viewModel.move(NavID.importWallet);
+                              Navigator.of(context).pop();
                             },
                             text: S.of(context).import_your_wallet,
                             width: MediaQuery.of(context).size.width,
