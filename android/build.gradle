@@ -1,32 +1,21 @@
+// TODO: https://developer.android.com/build/migrate-to-kotlin-dsl#migrate-buildscript
 buildscript {
-    ext.kotlin_version = '1.8.10'
     repositories {
         google()
         mavenCentral()
     }
-//    configurations {
-//        cleanedAnnotations
-//        compile.exclude group: 'org.jetbrains' , module:'annotations'
-//    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.46.1'
-        classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
+        classpath("com.android.tools.build:gradle:${libs.versions.gradlePlugin.android.get()}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:${libs.versions.dagger.get()}")
+        classpath("com.google.gms:google-services:${libs.versions.gradlePlugin.google.services.get()}")
+        //classpath("io.sentry:sentry-android-gradle-plugin:${libs.versions.gradlePlugin.sentry.get()}")
     }
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        // Ramp
-        maven { url 'https://jitpack.io' }
-    }
-    // https://stackoverflow.com/questions/76108428/how-do-i-fix-namespace-not-specified-error-in-android-studio
-    // fixed Namespace not specified issue after gradle upgrade to 8.1.3
-    // This code is where all the magic happens and fixes the error.
+    // Flutter projects (cryptography_flutter, ...) don't specify namespace using android { namespace ... }.
+    // This fix make sure all projects specify it if null.
     subprojects {
         afterEvaluate { project ->
             if (project.hasProperty('android')) {
@@ -38,7 +27,6 @@ allprojects {
             }
         }
     }
-    // This code is where all the magic happens and fixes the error.
 }
 
 rootProject.buildDir = '../build'

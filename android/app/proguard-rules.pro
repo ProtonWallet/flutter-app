@@ -8,8 +8,10 @@
     volatile <fields>;
 }
 
+# Rust Platform Verifier
+-keep, includedescriptorclasses class org.rustls.platformverifier.** { *; }
 
-# from proton pass
+# from Proton Core
 -keep class me.proton.core.** { *; }
 
 
@@ -59,7 +61,7 @@
 # If you have any, replace classes with those containing named companion objects.
 -keepattributes InnerClasses # Needed for `getDeclaredClasses`.
 
--keep class com.example.wallet.commonui.*
+-keep class me.proton.wallet.android.commonui.*
 
 -keepnames class <1>$$serializer { # -keepnames suffices; class is kept when serializer() is kept.
     static <1>$$serializer INSTANCE;
@@ -90,8 +92,6 @@
  # kept. Suspend functions are wrapped in continuations where the type argument
  # is used.
  -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
-
-# end from proton pass
 
 -dontwarn com.google.auto.service.AutoService
 -dontwarn javax.lang.model.SourceVersion

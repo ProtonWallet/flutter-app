@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Proton AG
+  ~ This file is part of Proton  AG and ProtonCore.
+  ~
+  ~ ProtonCore is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ProtonCore is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ProtonCore.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!-- Show a splash screen on the activity. Automatically removed when
+             the Flutter engine draws its first frame -->
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+
+    <style name="ProtonTheme.Wallet" parent="ProtonTheme">
+        <item name="brand_norm">@color/dreamy_blue</item>
+        <!--<item name="brand_darken_10">@color/moody_blue</item>-->
+        <item name="brand_darken_20">@color/victoria</item>
+        <!--<item name="brand_darken_30">@color/meteorite</item>-->
+        <item name="brand_darken_40">@color/meteorite</item> <!-- NONE -->
+        <!--<item name="brand_lighten_10">@color/lavender_mist</item>-->
+        <item name="brand_lighten_20">@color/whisper_lila</item>
+        <!--<item name="brand_lighten_30">@color/titan_white</item>-->
+        <item name="brand_lighten_40">@color/titan_white</item>
+
+        <item name="proton_text_accent">?attr/brand_norm</item>
+        <item name="proton_icon_accent">?attr/brand_norm</item>
+
+        <item name="proton_interaction_norm">?attr/brand_norm</item>
+        <item name="proton_interaction_norm_pressed">@color/moody_blue</item>
+        <item name="proton_interaction_norm_disabled">@color/titan_white</item>
+
+        <item name="materialButtonStyle">@style/ProtonButton.Rounded</item>
+        <item name="materialButtonOutlinedStyle">@style/ProtonButton.OutlinedButton.Rounded</item>
+        <item name="outlinedButtonStyle">@style/ProtonButton.OutlinedButton.Rounded</item>
+    </style>
+
+</resources>
