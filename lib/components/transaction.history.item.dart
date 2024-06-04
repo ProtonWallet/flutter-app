@@ -42,9 +42,8 @@ class TransactionHistoryItem extends StatelessWidget {
           .getFiatCurrencyName(fiatCurrency: exchangeRate!.fiatCurrency);
     }
     return Container(
-      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(defaultPadding),
-      color: ProtonColors.white,
+      color: ProtonColors.backgroundProton,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,8 +74,7 @@ class TransactionHistoryItem extends StatelessWidget {
                               FontManager.body2Median(ProtonColors.textWeak)))
               ]),
           Row(children: [
-            SizedBox(
-                width: MediaQuery.of(context).size.width - 110,
+            Expanded(
                 child: Text(content.isNotEmpty ? content : memo ?? "",
                     style: FontManager.body2Median(contentColor != null
                         ? contentColor!
