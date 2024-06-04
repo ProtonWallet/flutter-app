@@ -98,7 +98,7 @@ class ProtonEvent {
 class WalletAccountEvent {
   final String id;
   final int action;
-  final WalletAccount? walletAccount;
+  final ApiWalletAccount? walletAccount;
 
   const WalletAccountEvent({
     required this.id,
@@ -122,7 +122,7 @@ class WalletAccountEvent {
 class WalletEvent {
   final String id;
   final int action;
-  final ProtonWallet? wallet;
+  final ApiWallet? wallet;
 
   const WalletEvent({
     required this.id,
@@ -146,7 +146,7 @@ class WalletEvent {
 class WalletKeyEvent {
   final String id;
   final int action;
-  final ProtonWalletKey? walletKey;
+  final ApiWalletKey? walletKey;
 
   const WalletKeyEvent({
     required this.id,
@@ -170,7 +170,7 @@ class WalletKeyEvent {
 class WalletSettingsEvent {
   final String id;
   final int action;
-  final WalletSettings? walletSettings;
+  final ApiWalletSettings? walletSettings;
 
   const WalletSettingsEvent({
     required this.id,

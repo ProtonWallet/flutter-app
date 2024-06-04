@@ -9,6 +9,7 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
@@ -30,18 +31,26 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
+// this is wallet manager. all wallet's from one account.
 class ProtonWalletManager implements Manager {
   final SecureStorageManager storage;
+  // final WalletsDataProvider walletsDataProvider;
 
   // wallet key
-  static const String walletKey = "WALLET_KEY";
+  // static const String walletKey = "WALLET_KEY";
 
   WalletModel? currentWallet;
   AccountModel? currentAccount; // show Wallet View when no account pick
+
+  // wallet tree
+  List<WalletData>? walletsData;
+
   List<WalletModel> wallets = [];
   List<AccountModel> accounts = [];
+
   List<ProtonAddress> protonAddresses = [];
   List<AccountModel> currentAccounts = [];
+
   List<HistoryTransaction> historyTransactions = [];
   List<HistoryTransaction> historyTransactionsAfterFilter = [];
   Map<String, bool> isWalletSyncing = {};
@@ -58,6 +67,9 @@ class ProtonWalletManager implements Manager {
 
   @override
   Future<void> init() async {
+    // get wallet data
+    // walletsData = await walletsDataProvider.getWallets();
+
     blockchain ??= await _lib.initializeBlockchain(false);
     wallets = (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
     accounts = (await DBHelper.accountDao!.findAll()).cast<AccountModel>();
@@ -65,10 +77,12 @@ class ProtonWalletManager implements Manager {
     for (AccountModel accountModel in accounts) {
       accountModel.balance = await WalletManager.getWalletAccountBalance(
           accountModel.walletID, accountModel.id ?? -1);
-      var wallet =
-          wallets.where((element) => element.id == accountModel.walletID).first;
-      SecretKey secretKey = await getWalletKey(wallet.serverWalletID);
-      await accountModel.decrypt(secretKey);
+      // var wallet =
+      //     wallets.where((element) => element.id == accountModel.walletID).first;
+
+      // we dont need to predecrypt. we decrypt when use and cache clear text in memory only
+      // SecretKey secretKey = await getWalletKey(wallet.serverWalletID);
+      // await accountModel.decrypt(secretKey);
     }
     // check if wallet has passphrase
     for (WalletModel walletModel in wallets) {
@@ -180,24 +194,6 @@ class ProtonWalletManager implements Manager {
 
   Future<String> getPassphrase(String serverWalletID) async {
     return await storage.get(serverWalletID);
-  }
-
-  Future<SecretKey> getWalletKey(String serverWalletID) async {
-    String keyPath = "${walletKey}_$serverWalletID";
-    SecretKey secretKey;
-    String encodedEntropy = await storage.get(keyPath);
-    if (encodedEntropy.isEmpty) {
-      throw Exception("Cannot find wallet key for $serverWalletID");
-    }
-    secretKey =
-        WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(encodedEntropy);
-    return secretKey;
-  }
-
-  Future<void> setWalletKey(String serverWalletID, SecretKey secretKey) async {
-    String keyPath = "${walletKey}_$serverWalletID";
-    String encodedEntropy = await WalletKeyHelper.getEncodedEntropy(secretKey);
-    await storage.set(keyPath, encodedEntropy);
   }
 
   void destroy() {
@@ -404,7 +400,8 @@ class ProtonWalletManager implements Manager {
     var wallet = wallets
         .where((element) => element.id == newAccountModel.walletID)
         .first;
-    SecretKey secretKey = await getWalletKey(wallet.serverWalletID);
+    SecretKey secretKey =
+        await WalletManager.getWalletKey(wallet.serverWalletID);
     await newAccountModel.decrypt(secretKey);
     if (indexToUpdate > -1) {
       accounts[indexToUpdate] = newAccountModel;
@@ -478,7 +475,8 @@ class ProtonWalletManager implements Manager {
           await _lib.getAllTransactions(wallet);
       bdkSynced =
           bdkSynced | transactionHistoryFromBDK.isNotEmpty; // for wallet view
-      SecretKey? secretKey = await getWalletKey(oldWalletModel.serverWalletID);
+      SecretKey? secretKey =
+          await WalletManager.getWalletKey(oldWalletModel.serverWalletID);
 
       for (TransactionDetails transactionDetail in transactionHistoryFromBDK) {
         String txID = transactionDetail.txid;
@@ -551,7 +549,7 @@ class ProtonWalletManager implements Manager {
         ProtonExchangeRate? exchangeRate =
             await ExchangeRateService.getExchangeRate(
                 Provider.of<UserSettingProvider>(
-                        Coordinator.navigatorKey.currentContext!,
+                        Coordinator.rootNavigatorKey.currentContext!,
                         listen: false)
                     .walletUserSetting
                     .fiatCurrency,
@@ -675,7 +673,7 @@ class ProtonWalletManager implements Manager {
             body: body.isNotEmpty ? body : null,
             exchangeRate: await ExchangeRateService.getExchangeRate(
                 Provider.of<UserSettingProvider>(
-                        Coordinator.navigatorKey.currentContext!,
+                        Coordinator.rootNavigatorKey.currentContext!,
                         listen: false)
                     .walletUserSetting
                     .fiatCurrency,
@@ -831,6 +829,11 @@ class ProtonWalletManager implements Manager {
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  Future<void> logout() async {
+    // TODO:: clean up wallet data
+  }
 }
 
 class ProtonWalletProvider with ChangeNotifier {
@@ -845,7 +848,7 @@ class ProtonWalletProvider with ChangeNotifier {
   Future<void> init() async {
     try {
       userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.navigatorKey.currentContext!,
+          Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
       await protonWallet.init();
       await setDefaultWallet();

@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
@@ -29,10 +32,15 @@ class HomeCoordinator extends Coordinator {
   final NativeViewChannel nativeViewChannel;
   ApiEnv apiEnv;
 
-  HomeCoordinator(this.apiEnv, this.nativeViewChannel);
+  HomeCoordinator(this.apiEnv, this.nativeViewChannel) {
+    Coordinator.nestedNavigatorKey ??=
+        GlobalKey<NavigatorState>(debugLabel: "HomeNestedNavigatorKey");
+  }
 
   @override
-  void end() {}
+  void end() {
+    Coordinator.nestedNavigatorKey = null;
+  }
 
   void showNativeUpgrade(FlutterSession session) {
     nativeViewChannel.switchToUpgrade(session);
@@ -92,13 +100,14 @@ class HomeCoordinator extends Coordinator {
   }
 
   void logout() {
+    serviceManager.logout();
     var view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
   }
 
   void showImportWallet() {
     var view = ImportCoordinator().start();
-    pushReplacementCustom(view);
+    showInBottomSheet(view);
   }
 
   @override
@@ -107,6 +116,11 @@ class HomeCoordinator extends Coordinator {
     var event = serviceManager.get<EventLoop>();
     var wallet = serviceManager.get<ProtonWalletManager>();
     var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    var dataProviderManager = serviceManager.get<DataProviderManager>();
+    //
+    var walletProvider = dataProviderManager.walletDataProvider;
+    var walletPassProvider = dataProviderManager.walletPassphraseProvider;
+    //
     var viewModel = HomeViewModelImpl(
       this,
       apiEnv,
@@ -114,6 +128,7 @@ class HomeCoordinator extends Coordinator {
       event,
       wallet,
       apiServiceManager,
+      WalletListBloc(walletProvider, walletPassProvider),
     );
     widget = HomeView(
       viewModel,

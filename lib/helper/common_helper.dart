@@ -53,9 +53,8 @@ class CommonHelper {
   }
 
   static void showErrorDialog(String errorMessage) {
-    if (Coordinator.navigatorKey.currentContext != null) {
-      BuildContext context = Coordinator.navigatorKey.currentContext!;
-
+    BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+    if (context != null) {
       showDialog(
         context: context,
         builder: (BuildContext context) {

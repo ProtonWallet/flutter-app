@@ -18,13 +18,11 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
       : super(viewModel, const Key("TwoFactorAuthDisableView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      TwoFactorAuthDisableViewModel viewModel, ViewSize viewSize) {
-    return Scaffold(body: build2FAConfirm(context, viewModel, viewSize));
+  Widget build(BuildContext context) {
+    return Scaffold(body: build2FAConfirm(context));
   }
 
-  Widget build2FAConfirm(BuildContext context,
-      TwoFactorAuthDisableViewModel viewModel, ViewSize viewSize) {
+  Widget build2FAConfirm(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[

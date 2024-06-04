@@ -79,6 +79,7 @@ class WalletJNIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     companion object {
         init {
             System.loadLibrary("proton_wallet_common")
+            println("JNI WalletJNIPlugin")
         }
     }
 

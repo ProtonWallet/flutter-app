@@ -10,12 +10,12 @@ class UserQueries extends DatabaseAccessor<AppDatabase>
     with _$UserQueriesMixin {
   UserQueries(super.db);
 
-  Future<User> getUser(String userId) {
+  Future<ProtonUser> getUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))
         .getSingle();
   }
 
-  Stream<User> watchUser(String userId) {
+  Stream<ProtonUser> watchUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))
         .watchSingle();
   }

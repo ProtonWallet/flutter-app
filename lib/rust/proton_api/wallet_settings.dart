@@ -6,33 +6,37 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class WalletSettings {
+class ApiWalletSettings {
+  final String walletId;
   final int hideAccounts;
-  final String? invoiceDefaultDesc;
-  final int invoiceExpTime;
+  final String? invoiceDefaultDescription;
+  final int invoiceExpirationTime;
   final int maxChannelOpeningFee;
 
-  const WalletSettings({
+  const ApiWalletSettings({
+    required this.walletId,
     required this.hideAccounts,
-    this.invoiceDefaultDesc,
-    required this.invoiceExpTime,
+    this.invoiceDefaultDescription,
+    required this.invoiceExpirationTime,
     required this.maxChannelOpeningFee,
   });
 
   @override
   int get hashCode =>
+      walletId.hashCode ^
       hideAccounts.hashCode ^
-      invoiceDefaultDesc.hashCode ^
-      invoiceExpTime.hashCode ^
+      invoiceDefaultDescription.hashCode ^
+      invoiceExpirationTime.hashCode ^
       maxChannelOpeningFee.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WalletSettings &&
+      other is ApiWalletSettings &&
           runtimeType == other.runtimeType &&
+          walletId == other.walletId &&
           hideAccounts == other.hideAccounts &&
-          invoiceDefaultDesc == other.invoiceDefaultDesc &&
-          invoiceExpTime == other.invoiceExpTime &&
+          invoiceDefaultDescription == other.invoiceDefaultDescription &&
+          invoiceExpirationTime == other.invoiceExpirationTime &&
           maxChannelOpeningFee == other.maxChannelOpeningFee;
 }

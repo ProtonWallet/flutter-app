@@ -16,16 +16,15 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
       : super(viewModel, const Key("SetupBackupView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
         body: viewModel.inIntroduce
-            ? buildIntroduceView(context, viewModel, viewSize)
-            : buildMnemonicView(context, viewModel, viewSize));
+            ? buildIntroduceView(context, viewModel)
+            : buildMnemonicView(context, viewModel));
   }
 
   Widget buildIntroduceView(
-      BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
+      BuildContext context, SetupBackupViewModel viewModel) {
     return Container(
         color: ProtonColors.backgroundProton,
         child: Column(children: [
@@ -212,7 +211,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   }
 
   Widget buildMnemonicView(
-      BuildContext context, SetupBackupViewModel viewModel, ViewSize viewSize) {
+      BuildContext context, SetupBackupViewModel viewModel) {
     return Container(
         color: ProtonColors.backgroundProton,
         child: Column(children: [

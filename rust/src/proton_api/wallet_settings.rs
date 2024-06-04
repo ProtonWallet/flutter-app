@@ -1,20 +1,12 @@
-use andromeda_api::wallet::ApiWalletSettings as CommonWalletSettings;
+pub use andromeda_api::wallet::ApiWalletSettings;
+use flutter_rust_bridge::frb;
 
-#[derive(Debug)]
-pub struct WalletSettings {
-    pub hide_accounts: u8,
-    pub invoice_default_desc: Option<String>,
-    pub invoice_exp_time: u64,
-    pub max_channel_opening_fee: u64,
-}
-
-impl From<CommonWalletSettings> for WalletSettings {
-    fn from(value: CommonWalletSettings) -> Self {
-        WalletSettings {
-            hide_accounts: value.HideAccounts,
-            invoice_default_desc: value.InvoiceDefaultDescription,
-            invoice_exp_time: value.InvoiceExpirationTime,
-            max_channel_opening_fee: value.MaxChannelOpeningFee,
-        }
-    }
+#[frb(mirror(ApiWalletSettings))]
+#[allow(non_snake_case)]
+pub struct _WalletSettings {
+    pub WalletID: String,
+    pub HideAccounts: u8,
+    pub InvoiceDefaultDescription: Option<String>,
+    pub InvoiceExpirationTime: u64,
+    pub MaxChannelOpeningFee: u64,
 }

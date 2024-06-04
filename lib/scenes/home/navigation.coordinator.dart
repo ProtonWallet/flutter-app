@@ -11,13 +11,18 @@ class HomeNavigationCoordinator extends Coordinator {
   late ViewBase widget;
   ApiEnv apiEnv;
 
+  List<ViewBase<ViewModel>> pageViews = [];
   HomeNavigationCoordinator(this.apiEnv);
 
   @override
-  void end() {}
+  void end() {
+    pageViews.clear();
+  }
 
   @override
   ViewBase<ViewModel> start() {
+    final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
+    pageViews.add(HomeCoordinator(apiEnv, nativeViewChannel).start());
     var viewModel = HomeNavigationViewModelImpl(
       this,
       apiEnv,
@@ -30,13 +35,11 @@ class HomeNavigationCoordinator extends Coordinator {
 
   @override
   List<ViewBase<ViewModel>> starts() {
-    final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
-    return [
-      HomeCoordinator(apiEnv, nativeViewChannel).start(),
-      // HistoryCoordinator().start(),
-      // BuyBitcoinCoordinator().start(),
-      // TransferCoordinator().start(),
-      // SettingsCoordinator().start()
-    ];
+    return pageViews;
+
+    // HistoryCoordinator().start(),
+    // BuyBitcoinCoordinator().start(),
+    // TransferCoordinator().start(),
+    // SettingsCoordinator().start()
   }
 }

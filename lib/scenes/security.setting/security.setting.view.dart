@@ -14,8 +14,7 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
       : super(viewModel, const Key("SecuritySettingView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      SecuritySettingViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return PageLayoutV1(
       title: S.of(context).security,
       child: Column(

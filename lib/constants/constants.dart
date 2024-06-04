@@ -16,7 +16,6 @@ const int maxMemoTextCharSize = 256;
 const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
 
-
 const String userSettingsHideEmptyUsedAddresses =
     "userSettings.hideEmptyUsedAddresses";
 const String userSettingsTwoFactorAmountThreshold =
@@ -35,4 +34,3 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.mbtc,
   BitcoinUnit.sats,
 ];
-

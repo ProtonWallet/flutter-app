@@ -16,8 +16,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
       : super(viewModel, const Key("BuyBitcoinView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, BuyBitcoinViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => viewModel.bloc,
         child: PageLayoutV1(

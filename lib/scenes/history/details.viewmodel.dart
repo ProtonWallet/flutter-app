@@ -107,13 +107,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         userFinishMemo();
       });
       userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.navigatorKey.currentContext!,
+          Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       AccountModel accountModel =
           await DBHelper.accountDao!.findById(accountID);
       SecretKey? secretKey =
-          await protonWalletManager.getWalletKey(walletModel.serverWalletID);
+          await WalletManager.getWalletKey(walletModel.serverWalletID);
       List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
       transactionModel = await DBHelper.transactionDao!.find(utf8.encode(txid),
           walletModel.serverWalletID, accountModel.serverAccountID);
@@ -360,7 +360,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       exchangeRate = await ExchangeRateService.getExchangeRate(
           Provider.of<UserSettingProvider>(
-                  Coordinator.navigatorKey.currentContext!,
+                  Coordinator.rootNavigatorKey.currentContext!,
                   listen: false)
               .walletUserSetting
               .fiatCurrency,
@@ -391,7 +391,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     try {
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       SecretKey? secretKey =
-          await protonWalletManager.getWalletKey(walletModel.serverWalletID);
+          await WalletManager.getWalletKey(walletModel.serverWalletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text) {
           userLabel = memoController.text;
@@ -406,7 +406,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             label: encryptedLabel,
           );
           await Provider.of<ProtonWalletProvider>(
-                  Coordinator.navigatorKey.currentContext!,
+                  Coordinator.rootNavigatorKey.currentContext!,
                   listen: false)
               .setCurrentTransactions();
         }

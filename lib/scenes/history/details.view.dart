@@ -25,8 +25,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       : super(viewModel, const Key("HistoryDetailView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      HistoryDetailViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -44,12 +43,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       ),
       body: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: buildNoHistory(context, viewModel, viewSize)),
+          child: buildNoHistory(context, viewModel)),
     );
   }
 
-  Widget buildNoHistory(BuildContext context, HistoryDetailViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildNoHistory(
+    BuildContext context,
+    HistoryDetailViewModel viewModel,
+  ) {
     return Container(
         color: ProtonColors.white,
         height: double.infinity,
@@ -183,8 +184,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         ),
                       ]),
                     viewModel.isSend
-                        ? buildSendInfo(context, viewModel, viewSize)
-                        : buildReceiveInfo(context, viewModel, viewSize),
+                        ? buildSendInfo(context)
+                        : buildReceiveInfo(context),
                     const Divider(
                       thickness: 0.2,
                       height: 1,
@@ -264,8 +265,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 ))));
   }
 
-  Widget buildSendInfo(BuildContext context, HistoryDetailViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildSendInfo(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -279,8 +279,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         viewModel.recipients.isEmpty
             ? buildTransToInfo(
                 context,
-                viewModel,
-                viewSize,
                 viewModel.toEmail.isNotEmpty
                     ? WalletManager.getEmailFromWalletTransaction(
                         viewModel.toEmail)
@@ -291,20 +289,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     : null)
             : Column(children: [
                 for (TransactionInfoModel info in viewModel.recipients)
-                  buildTransToInfo(context, viewModel, viewSize, info.toEmail,
-                      info.toBitcoinAddress,
+                  buildTransToInfo(context, info.toEmail, info.toBitcoinAddress,
                       amountInSATS: info.amountInSATS)
               ])
       ],
     );
   }
 
-  Widget buildTransToInfo(
-      BuildContext context,
-      HistoryDetailViewModel viewModel,
-      ViewSize viewSize,
-      String content,
-      String? memo,
+  Widget buildTransToInfo(BuildContext context, String content, String? memo,
       {int? amountInSATS}) {
     return Column(children: [
       const Divider(
@@ -322,8 +314,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
     ]);
   }
 
-  Widget buildReceiveInfo(BuildContext context,
-      HistoryDetailViewModel viewModel, ViewSize viewSize) {
+  Widget buildReceiveInfo(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

@@ -23,14 +23,14 @@ Future<void> initApiService(
     RustLib.instance.api
         .initApiService(userName: userName, password: password, hint: hint);
 
-Future<List<WalletData>> getWallets({dynamic hint}) =>
+Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
     RustLib.instance.api.getWallets(hint: hint);
 
-Future<WalletData> createWallet(
+Future<ApiWalletData> createWallet(
         {required CreateWalletReq walletReq, dynamic hint}) =>
     RustLib.instance.api.createWallet(walletReq: walletReq, hint: hint);
 
-Future<ProtonWallet> updateWalletName(
+Future<ApiWallet> updateWalletName(
         {required String walletId, required String newName, dynamic hint}) =>
     RustLib.instance.api
         .updateWalletName(walletId: walletId, newName: newName, hint: hint);
@@ -38,18 +38,18 @@ Future<ProtonWallet> updateWalletName(
 Future<void> deleteWallet({required String walletId, dynamic hint}) =>
     RustLib.instance.api.deleteWallet(walletId: walletId, hint: hint);
 
-Future<List<WalletAccount>> getWalletAccounts(
+Future<List<ApiWalletAccount>> getWalletAccounts(
         {required String walletId, dynamic hint}) =>
     RustLib.instance.api.getWalletAccounts(walletId: walletId, hint: hint);
 
-Future<WalletAccount> createWalletAccount(
+Future<ApiWalletAccount> createWalletAccount(
         {required String walletId,
         required CreateWalletAccountReq req,
         dynamic hint}) =>
     RustLib.instance.api
         .createWalletAccount(walletId: walletId, req: req, hint: hint);
 
-Future<WalletAccount> updateWalletAccountLabel(
+Future<ApiWalletAccount> updateWalletAccountLabel(
         {required String walletId,
         required String walletAccountId,
         required String newLabel,
@@ -60,7 +60,7 @@ Future<WalletAccount> updateWalletAccountLabel(
         newLabel: newLabel,
         hint: hint);
 
-Future<WalletAccount> updateWalletAccountFiatCurrency(
+Future<ApiWalletAccount> updateWalletAccountFiatCurrency(
         {required String walletId,
         required String walletAccountId,
         required FiatCurrency newFiatCurrency,
@@ -116,7 +116,7 @@ Future<List<ProtonContactEmails>> getContacts({dynamic hint}) =>
 Future<List<ProtonAddress>> getProtonAddress({dynamic hint}) =>
     RustLib.instance.api.getProtonAddress(hint: hint);
 
-Future<WalletAccount> addEmailAddress(
+Future<ApiWalletAccount> addEmailAddress(
         {required String walletId,
         required String walletAccountId,
         required String addressId,
@@ -127,7 +127,7 @@ Future<WalletAccount> addEmailAddress(
         addressId: addressId,
         hint: hint);
 
-Future<WalletAccount> removeEmailAddress(
+Future<ApiWalletAccount> removeEmailAddress(
         {required String walletId,
         required String walletAccountId,
         required String addressId,

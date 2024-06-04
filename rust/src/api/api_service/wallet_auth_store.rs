@@ -63,12 +63,6 @@ impl ProtonWalletAuthStore {
         Ok(())
     }
 
-    #[frb(ignore)]
-    pub(crate) fn update_auth(mut self, auth: Auth) -> Result<Self, ApiError> {
-        let _ = self.inner.set_auth(auth)?;
-        Ok(self)
-    }
-
     pub async fn set_auth_dart_callback(
         &mut self,
         callback: impl Fn(ChildSession) -> DartFnFuture<String> + Send + Sync + 'static,
@@ -84,6 +78,14 @@ impl ProtonWalletAuthStore {
         *cb = None;
         info!("clear_auth_dart_callback ok");
         Ok(())
+    }
+
+    pub async fn logout(&mut self) {
+        info!("logout");
+        let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+        *cb = None;
+        let mut old_auth = self.inner.auth.lock().unwrap();
+        *old_auth = Auth::None;
     }
 
     fn refresh_auth_credential(&self, auth: Auth) {
