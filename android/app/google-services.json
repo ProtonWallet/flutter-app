@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:319803162830:android:4e94bcf45174f0940cd09f",
         "android_client_info": {
-          "package_name": "com.example.wallet"
+          "package_name": "me.proton.wallet.android"
         }
       },
       "oauth_client": [],

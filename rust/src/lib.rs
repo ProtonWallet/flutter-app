@@ -19,7 +19,7 @@ use {
 
 #[cfg(target_os = "android")]
 #[no_mangle]
-pub extern "system" fn Java_com_example_wallet_WalletJNIPlugin_init_1android(
+pub extern "system" fn Java_me_proton_wallet_android_WalletFlutterPlugin_init_1android(
     env: JNIEnv,
     class: JClass,
     ctx: JObject,
