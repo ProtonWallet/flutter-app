@@ -20,8 +20,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
       : super(viewModel, const Key("SetupPassPhraseView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      SetupPassPhraseViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: ProtonColors.backgroundProton,
@@ -47,12 +46,11 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
         backgroundColor: ProtonColors.backgroundProton,
         resizeToAvoidBottomInset: false,
         body: viewModel.isAddingPassPhrase
-            ? buildAddPassPhrase(context, viewModel, viewSize)
-            : buildMain(context, viewModel, viewSize));
+            ? buildAddPassPhrase(context)
+            : buildMain(context));
   }
 
-  Widget buildAddPassPhrase(BuildContext context,
-      SetupPassPhraseViewModel viewModel, ViewSize viewSize) {
+  Widget buildAddPassPhrase(BuildContext context) {
     return SingleChildScrollView(
         child: Center(
             child: Stack(children: [
@@ -147,8 +145,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
     ])));
   }
 
-  Widget buildMain(BuildContext context, SetupPassPhraseViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildMain(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -205,7 +202,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                     EasyLoading.show(
                         status: "creating wallet..",
                         maskType: EasyLoadingMaskType.black);
-                    await this.viewModel.updateDB();
+                    await viewModel.updateDB();
                     EasyLoading.dismiss();
                     if (context.mounted) {
                       Navigator.of(context).pop();

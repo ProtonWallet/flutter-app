@@ -22,8 +22,7 @@ class ImportView extends ViewBase<ImportViewModel> {
       : super(viewModel, const Key("ImportView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, ImportViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           scrolledUnderElevation: 0.0,

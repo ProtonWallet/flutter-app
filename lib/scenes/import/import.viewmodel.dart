@@ -69,7 +69,7 @@ class ImportViewModelImpl extends ImportViewModel {
           strMnemonic,
           WalletModel.importByUser,
           Provider.of<ProtonWalletProvider>(
-                  Coordinator.navigatorKey.currentContext!,
+                  Coordinator.rootNavigatorKey.currentContext!,
                   listen: false)
               .protonWallet
               .newAccountFiatCurrency,

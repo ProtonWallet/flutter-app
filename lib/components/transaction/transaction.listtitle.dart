@@ -53,7 +53,7 @@ class TransactionListTitle extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(left: 26, right: 26, top: 10),
           padding: const EdgeInsets.symmetric(vertical: 5.0),
-          width: width,
+          // width: width,
           decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
@@ -72,111 +72,112 @@ class TransactionListTitle extends StatelessWidget {
             const SizedBox(
               width: 12,
             ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width - 130,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            address,
-                            style: FontManager.captionRegular(
-                                ProtonColors.textNorm),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                          const SizedBox(width: 4),
-                          isSend
-                              ? Text(
-                                  Provider.of<UserSettingProvider>(context)
-                                      .getBitcoinUnitLabel(amount.toInt()),
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.signalError))
-                              : Text(
-                                  "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.signalSuccess)),
-                        ]),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          timestamp != null
-                              ? Expanded(
+            Expanded(
+              child: SizedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: Text(
+                              address,
+                              style: FontManager.captionRegular(
+                                  ProtonColors.textNorm),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                            const SizedBox(width: 4),
+                            isSend
+                                ? Text(
+                                    Provider.of<UserSettingProvider>(context)
+                                        .getBitcoinUnitLabel(amount.toInt()),
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.signalError))
+                                : Text(
+                                    "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.signalSuccess)),
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            timestamp != null
+                                ? Expanded(
+                                    child: Text(
+                                    parsetime(timestamp!),
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ))
+                                : Row(children: [
+                                    const CustomLoading(),
+                                    const SizedBox(width: 6),
+                                    Text(S.of(context).in_progress,
+                                        style: FontManager.captionRegular(
+                                            ProtonColors.protonBlue)),
+                                  ]),
+                            const SizedBox(width: 4),
+                            isSend
+                                ? Text(
+                                    "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint))
+                                : Text(
+                                    "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.toStringAsFixed(defaultDisplayDigits)}",
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint))
+                          ]),
+                      if (note != "")
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ProtonColors.wMajor1,
+                                  ),
+                                  margin:
+                                      const EdgeInsets.only(right: 4, top: 2),
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Icon(Icons.edit_outlined,
+                                      size: 10, color: ProtonColors.textHint)),
+                              Expanded(
                                   child: Text(
-                                  parsetime(timestamp!),
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.textHint),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ))
-                              : Row(children: [
-                                  const CustomLoading(),
-                                  const SizedBox(width: 6),
-                                  Text(S.of(context).in_progress,
-                                      style: FontManager.captionRegular(
-                                          ProtonColors.protonBlue)),
-                                ]),
-                          const SizedBox(width: 4),
-                          isSend
-                              ? Text(
-                                  "-${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.textHint))
-                              : Text(
-                                  "+${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${notional.toStringAsFixed(defaultDisplayDigits)}",
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.textHint))
-                        ]),
-                    if (note != "")
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ProtonColors.wMajor1,
-                                ),
-                                margin: const EdgeInsets.only(right: 4, top: 2),
-                                padding: const EdgeInsets.all(2.0),
-                                child: Icon(Icons.edit_outlined,
-                                    size: 10, color: ProtonColors.textHint)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width - 150,
-                                child: Text(
-                                  S.of(context).trans_note(
-                                      CommonHelper.getFirstNChar(note, 24)),
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.textHint),
-                                  overflow: TextOverflow.ellipsis,
-                                ))
-                          ]),
-                    if ((body ?? "").isNotEmpty)
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ProtonColors.wMajor1,
-                                ),
-                                margin: const EdgeInsets.only(right: 4, top: 2),
-                                padding: const EdgeInsets.all(2.0),
-                                child: Icon(Icons.messenger_outline,
-                                    size: 10, color: ProtonColors.textHint)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width - 150,
-                                child: Text(
-                                  S.of(context).trans_body(body ?? ""),
-                                  style: FontManager.captionRegular(
-                                      ProtonColors.textHint),
-                                  overflow: TextOverflow.ellipsis,
-                                ))
-                          ]),
-                  ],
-                )),
+                                    S.of(context).trans_note(
+                                        CommonHelper.getFirstNChar(note, 24)),
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint),
+                                    overflow: TextOverflow.ellipsis,
+                                  ))
+                            ]),
+                      if ((body ?? "").isNotEmpty)
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ProtonColors.wMajor1,
+                                  ),
+                                  margin:
+                                      const EdgeInsets.only(right: 4, top: 2),
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Icon(Icons.messenger_outline,
+                                      size: 10, color: ProtonColors.textHint)),
+                              Expanded(
+                                  child: Text(
+                                    S.of(context).trans_body(body ?? ""),
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint),
+                                    overflow: TextOverflow.ellipsis,
+                                  ))
+                            ]),
+                    ],
+                  )),
+            ),
           ]),
         ));
   }

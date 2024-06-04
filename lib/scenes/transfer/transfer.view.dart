@@ -10,8 +10,7 @@ class TransferView extends ViewBase<TransferViewModel> {
       : super(viewModel, const Key("TransferView"));
 
   @override
-  Widget buildWithViewModel(
-      BuildContext context, TransferViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ProtonColors.backgroundProton,
       appBar: AppBar(

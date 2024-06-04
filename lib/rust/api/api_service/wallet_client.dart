@@ -32,7 +32,7 @@ class WalletClient extends RustOpaque {
   );
 
   /// wallet email related
-  Future<WalletAccount> addEmailAddress(
+  Future<ApiWalletAccount> addEmailAddress(
           {required String walletId,
           required String walletAccountId,
           required String addressId,
@@ -44,12 +44,12 @@ class WalletClient extends RustOpaque {
           addressId: addressId,
           hint: hint);
 
-  Future<WalletData> createWallet(
+  Future<ApiWalletData> createWallet(
           {required CreateWalletReq walletReq, dynamic hint}) =>
       RustLib.instance.api.walletClientCreateWallet(
           that: this, walletReq: walletReq, hint: hint);
 
-  Future<WalletAccount> createWalletAccount(
+  Future<ApiWalletAccount> createWalletAccount(
           {required String walletId,
           required CreateWalletAccountReq req,
           dynamic hint}) =>
@@ -102,7 +102,7 @@ class WalletClient extends RustOpaque {
           walletTransactionId: walletTransactionId,
           hint: hint);
 
-  Future<List<WalletAccount>> getWalletAccounts(
+  Future<List<ApiWalletAccount>> getWalletAccounts(
           {required String walletId, dynamic hint}) =>
       RustLib.instance.api.walletClientGetWalletAccounts(
           that: this, walletId: walletId, hint: hint);
@@ -120,7 +120,7 @@ class WalletClient extends RustOpaque {
           hashedTxids: hashedTxids,
           hint: hint);
 
-  Future<List<WalletData>> getWallets({dynamic hint}) =>
+  Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
       RustLib.instance.api.walletClientGetWallets(that: this, hint: hint);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
@@ -128,7 +128,7 @@ class WalletClient extends RustOpaque {
           {required ProtonApiService service, dynamic hint}) =>
       RustLib.instance.api.walletClientNew(service: service, hint: hint);
 
-  Future<WalletAccount> removeEmailAddress(
+  Future<ApiWalletAccount> removeEmailAddress(
           {required String walletId,
           required String walletAccountId,
           required String addressId,
@@ -140,7 +140,7 @@ class WalletClient extends RustOpaque {
           addressId: addressId,
           hint: hint);
 
-  Future<WalletAccount> updateWalletAccountLabel(
+  Future<ApiWalletAccount> updateWalletAccountLabel(
           {required String walletId,
           required String walletAccountId,
           required String newLabel,
@@ -152,7 +152,7 @@ class WalletClient extends RustOpaque {
           newLabel: newLabel,
           hint: hint);
 
-  Future<ProtonWallet> updateWalletName(
+  Future<ApiWallet> updateWalletName(
           {required String walletId, required String newName, dynamic hint}) =>
       RustLib.instance.api.walletClientUpdateWalletName(
           that: this, walletId: walletId, newName: newName, hint: hint);

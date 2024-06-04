@@ -7,6 +7,70 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'user_settings.dart';
 
+class ApiEmailAddress {
+  final String id;
+  final String email;
+
+  const ApiEmailAddress({
+    required this.id,
+    required this.email,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ email.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiEmailAddress &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          email == other.email;
+}
+
+class ApiWalletAccount {
+  final String id;
+  final String walletId;
+  final FiatCurrency fiatCurrency;
+  final String derivationPath;
+  final String label;
+  final int scriptType;
+  final List<ApiEmailAddress> addresses;
+
+  const ApiWalletAccount({
+    required this.id,
+    required this.walletId,
+    required this.fiatCurrency,
+    required this.derivationPath,
+    required this.label,
+    required this.scriptType,
+    required this.addresses,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      walletId.hashCode ^
+      fiatCurrency.hashCode ^
+      derivationPath.hashCode ^
+      label.hashCode ^
+      scriptType.hashCode ^
+      addresses.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiWalletAccount &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          walletId == other.walletId &&
+          fiatCurrency == other.fiatCurrency &&
+          derivationPath == other.derivationPath &&
+          label == other.label &&
+          scriptType == other.scriptType &&
+          addresses == other.addresses;
+}
+
 class CreateWalletAccountReq {
   final String label;
   final String derivationPath;
@@ -30,68 +94,4 @@ class CreateWalletAccountReq {
           label == other.label &&
           derivationPath == other.derivationPath &&
           scriptType == other.scriptType;
-}
-
-class EmailAddress {
-  final String id;
-  final String email;
-
-  const EmailAddress({
-    required this.id,
-    required this.email,
-  });
-
-  @override
-  int get hashCode => id.hashCode ^ email.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is EmailAddress &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          email == other.email;
-}
-
-class WalletAccount {
-  final String id;
-  final String walletId;
-  final String derivationPath;
-  final String label;
-  final int scriptType;
-  final List<EmailAddress> addresses;
-  final FiatCurrency fiatCurrency;
-
-  const WalletAccount({
-    required this.id,
-    required this.walletId,
-    required this.derivationPath,
-    required this.label,
-    required this.scriptType,
-    required this.addresses,
-    required this.fiatCurrency,
-  });
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      walletId.hashCode ^
-      derivationPath.hashCode ^
-      label.hashCode ^
-      scriptType.hashCode ^
-      addresses.hashCode ^
-      fiatCurrency.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WalletAccount &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          walletId == other.walletId &&
-          derivationPath == other.derivationPath &&
-          label == other.label &&
-          scriptType == other.scriptType &&
-          addresses == other.addresses &&
-          fiatCurrency == other.fiatCurrency;
 }

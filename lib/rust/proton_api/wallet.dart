@@ -9,6 +9,135 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'user_settings.dart';
 import 'wallet_settings.dart';
 
+class ApiWallet {
+  final String id;
+
+  /// Name of the wallet
+  final String name;
+
+  /// 0 if the wallet is created with Proton Wallet
+  final int isImported;
+
+  /// Priority of the wallet (0 is main wallet)
+  final int priority;
+
+  /// 1 is onchain, 2 is lightning
+  final int type;
+
+  /// 1 if the wallet has a passphrase. We don't store it but clients need to
+  /// request on first wallet access.
+  final int hasPassphrase;
+
+  /// 1 means disabled
+  final int status;
+
+  /// Wallet mnemonic encrypted with the WalletKey, in base64 format
+  final String? mnemonic;
+  final String? fingerprint;
+
+  /// Wallet master public key encrypted with the WalletKey, in base64 format.
+  /// Only allows fetching coins owned by wallet, no spending allowed.
+  final String? publicKey;
+
+  const ApiWallet({
+    required this.id,
+    required this.name,
+    required this.isImported,
+    required this.priority,
+    required this.type,
+    required this.hasPassphrase,
+    required this.status,
+    this.mnemonic,
+    this.fingerprint,
+    this.publicKey,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      isImported.hashCode ^
+      priority.hashCode ^
+      type.hashCode ^
+      hasPassphrase.hashCode ^
+      status.hashCode ^
+      mnemonic.hashCode ^
+      fingerprint.hashCode ^
+      publicKey.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiWallet &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          isImported == other.isImported &&
+          priority == other.priority &&
+          type == other.type &&
+          hasPassphrase == other.hasPassphrase &&
+          status == other.status &&
+          mnemonic == other.mnemonic &&
+          fingerprint == other.fingerprint &&
+          publicKey == other.publicKey;
+}
+
+class ApiWalletData {
+  final ApiWallet wallet;
+  final ApiWalletKey walletKey;
+  final ApiWalletSettings walletSettings;
+
+  const ApiWalletData({
+    required this.wallet,
+    required this.walletKey,
+    required this.walletSettings,
+  });
+
+  @override
+  int get hashCode =>
+      wallet.hashCode ^ walletKey.hashCode ^ walletSettings.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiWalletData &&
+          runtimeType == other.runtimeType &&
+          wallet == other.wallet &&
+          walletKey == other.walletKey &&
+          walletSettings == other.walletSettings;
+}
+
+class ApiWalletKey {
+  final String walletId;
+  final String userKeyId;
+  final String walletKey;
+  final String walletKeySignature;
+
+  const ApiWalletKey({
+    required this.walletId,
+    required this.userKeyId,
+    required this.walletKey,
+    required this.walletKeySignature,
+  });
+
+  @override
+  int get hashCode =>
+      walletId.hashCode ^
+      userKeyId.hashCode ^
+      walletKey.hashCode ^
+      walletKeySignature.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiWalletKey &&
+          runtimeType == other.runtimeType &&
+          walletId == other.walletId &&
+          userKeyId == other.userKeyId &&
+          walletKey == other.walletKey &&
+          walletKeySignature == other.walletKeySignature;
+}
+
 class BitcoinAddress {
   final String bitcoinAddress;
   final String bitcoinAddressSignature;
@@ -113,92 +242,6 @@ class EmailIntegrationBitcoinAddress {
           bitcoinAddressSignature == other.bitcoinAddressSignature;
 }
 
-class ProtonWallet {
-  final String id;
-  final int hasPassphrase;
-  final int isImported;
-  final String? mnemonic;
-  final String name;
-  final int priority;
-  final String? publicKey;
-  final int status;
-  final int type;
-  final String? fingerprint;
-
-  const ProtonWallet({
-    required this.id,
-    required this.hasPassphrase,
-    required this.isImported,
-    this.mnemonic,
-    required this.name,
-    required this.priority,
-    this.publicKey,
-    required this.status,
-    required this.type,
-    this.fingerprint,
-  });
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      hasPassphrase.hashCode ^
-      isImported.hashCode ^
-      mnemonic.hashCode ^
-      name.hashCode ^
-      priority.hashCode ^
-      publicKey.hashCode ^
-      status.hashCode ^
-      type.hashCode ^
-      fingerprint.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ProtonWallet &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          hasPassphrase == other.hasPassphrase &&
-          isImported == other.isImported &&
-          mnemonic == other.mnemonic &&
-          name == other.name &&
-          priority == other.priority &&
-          publicKey == other.publicKey &&
-          status == other.status &&
-          type == other.type &&
-          fingerprint == other.fingerprint;
-}
-
-class ProtonWalletKey {
-  final String walletId;
-  final String userKeyId;
-  final String walletKey;
-  final String walletKeySignature;
-
-  const ProtonWalletKey({
-    required this.walletId,
-    required this.userKeyId,
-    required this.walletKey,
-    required this.walletKeySignature,
-  });
-
-  @override
-  int get hashCode =>
-      walletId.hashCode ^
-      userKeyId.hashCode ^
-      walletKey.hashCode ^
-      walletKeySignature.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ProtonWalletKey &&
-          runtimeType == other.runtimeType &&
-          walletId == other.walletId &&
-          userKeyId == other.userKeyId &&
-          walletKey == other.walletKey &&
-          walletKeySignature == other.walletKeySignature;
-}
-
 class WalletBitcoinAddress {
   final String id;
   final String walletId;
@@ -244,31 +287,6 @@ class WalletBitcoinAddress {
           bitcoinAddress == other.bitcoinAddress &&
           bitcoinAddressSignature == other.bitcoinAddressSignature &&
           bitcoinAddressIndex == other.bitcoinAddressIndex;
-}
-
-class WalletData {
-  final ProtonWallet wallet;
-  final ProtonWalletKey walletKey;
-  final WalletSettings walletSettings;
-
-  const WalletData({
-    required this.wallet,
-    required this.walletKey,
-    required this.walletSettings,
-  });
-
-  @override
-  int get hashCode =>
-      wallet.hashCode ^ walletKey.hashCode ^ walletSettings.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WalletData &&
-          runtimeType == other.runtimeType &&
-          wallet == other.wallet &&
-          walletKey == other.walletKey &&
-          walletSettings == other.walletSettings;
 }
 
 class WalletTransaction {

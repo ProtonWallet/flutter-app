@@ -1,19 +1,17 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/scenes/core/nested.navigator.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
-enum ViewSize { mobile, desktop, tablet }
+enum ViewSize { mobile, desktop }
 
 abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   final V viewModel;
   @protected
-  Widget buildWithViewModel(
-    BuildContext context,
-    V viewModel,
-    ViewSize viewSize,
-  );
+  Widget build(BuildContext context);
 
   const ViewBase(this.viewModel, Key key) : super(key: key);
 
@@ -29,11 +27,114 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   void dispose() {
     logger.d("dispose is called");
   }
+
+  /// Helper build large/small screen drawer and content switcher.
+  /// this reqire nested navigator key and view model screen size state configuration
+  Widget buildDrawerNavigator(
+    BuildContext context, {
+    required double drawerMaxWidth,
+    required AppBar Function(BuildContext context) appBar,
+    required WidgetBuilder drawer,
+    required WidgetBuilder content,
+    required DrawerCallback onDrawerChanged,
+  }) {
+    return Responsive(
+      mobile: _buildMobile(
+        context,
+        appBar,
+        drawer,
+        content,
+        onDrawerChanged,
+      ),
+      desktop: _buildDesktop(
+        drawerMaxWidth,
+        context,
+        appBar,
+        drawer,
+        content,
+        onDrawerChanged,
+      ),
+    );
+  }
+
+  Widget _buildMobile(
+    BuildContext context,
+    AppBar Function(BuildContext context) appBar,
+    WidgetBuilder drawer,
+    WidgetBuilder content,
+    DrawerCallback onDrawerChanged,
+  ) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: ProtonColors.backgroundProton,
+      drawer: viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
+      onDrawerChanged:
+          viewModel.currentSize == ViewSize.mobile ? null : onDrawerChanged,
+      body: _buildNavigatorView(
+        context,
+        appBar,
+        drawer,
+        content,
+        onDrawerChanged,
+      ),
+    );
+  }
+
+  Widget _buildDesktop(
+    double drawerMaxWidth,
+    BuildContext context,
+    AppBar Function(BuildContext context) appBar,
+    WidgetBuilder drawer,
+    WidgetBuilder content,
+    DrawerCallback onDrawerChanged,
+  ) {
+    return Scaffold(
+        body: Row(children: [
+      ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: drawerMaxWidth),
+          child: drawer(context)),
+      const VerticalDivider(thickness: 1, width: 1),
+      Expanded(
+          child: _buildNavigatorView(
+        context,
+        appBar,
+        drawer,
+        content,
+        onDrawerChanged,
+      ))
+    ]));
+  }
+
+  Widget _buildNavigatorView(
+    BuildContext context,
+    AppBar Function(BuildContext context) appBar,
+    WidgetBuilder drawer,
+    WidgetBuilder content,
+    DrawerCallback onDrawerChanged,
+  ) {
+    return NestedNavigator(
+      builder: (context) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: ProtonColors.backgroundProton,
+          appBar: appBar(context),
+          drawer:
+              viewModel.currentSize == ViewSize.mobile ? drawer(context) : null,
+          onDrawerChanged:
+              viewModel.currentSize == ViewSize.mobile ? onDrawerChanged : null,
+          body: content(context),
+        );
+      },
+      navigatorKey: viewModel.navigatorKey,
+    );
+  }
 }
 
+// view base state
 class ViewState<V extends ViewModel> extends State<ViewBase>
     with AutomaticKeepAliveClientMixin<ViewBase>, WidgetsBindingObserver {
   late V viewModel;
+  ViewSize? current;
   List<StreamSubscription> subscriptions = [];
 
   @override
@@ -64,17 +165,27 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    ViewSize size = ViewSize.desktop;
-    if (Responsive.isMobile(context)) {
-      size = ViewSize.mobile;
-    } else if (Responsive.isTablet(context)) {
-      size = ViewSize.tablet;
+    // if not enable size state, skip the size check
+    if (viewModel.screenSizeState) {
+      ViewSize size = ViewSize.desktop;
+      if (Responsive.isMobile(context)) {
+        size = ViewSize.mobile;
+      } else if (Responsive.isTablet(context)) {
+        size = ViewSize.mobile;
+      }
+      viewModel.currentSize ??= size;
+      if (viewModel.currentSize != size) {
+        viewModel.currentSize = size;
+        setState(() {});
+      }
     }
-    return widget.buildWithViewModel(context, viewModel, size);
+
+    return widget.build(context);
   }
 
   @override
   bool get wantKeepAlive {
+    // keep a live, when navigation screen goes to backgroun
     return viewModel.keepAlive;
   }
 

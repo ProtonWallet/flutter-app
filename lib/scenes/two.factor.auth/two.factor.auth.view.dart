@@ -22,25 +22,22 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       : super(viewModel, const Key("TwoFactorAuthView"));
 
   @override
-  Widget buildWithViewModel(BuildContext context,
-      TwoFactorAuthViewModel viewModel, ViewSize viewSize) {
+  Widget build(BuildContext context) {
     if (viewModel.page == 0) {
-      return Scaffold(body: buildMain(context, viewModel, viewSize));
+      return Scaffold(body: buildMain(context));
     } else if (viewModel.page == 1) {
-      return Scaffold(body: buildQRcodeForSecret(context, viewModel, viewSize));
+      return Scaffold(body: buildQRcodeForSecret(context));
     } else if (viewModel.page == 2) {
-      return Scaffold(
-          body: buildTextViewForSecret(context, viewModel, viewSize));
+      return Scaffold(body: buildTextViewForSecret(context));
     } else if (viewModel.page == 3) {
-      return Scaffold(body: build2FAConfirm(context, viewModel, viewSize));
+      return Scaffold(body: build2FAConfirm(context));
     } else if (viewModel.page == 4) {
-      return Scaffold(body: buildBackupPage(context, viewModel, viewSize));
+      return Scaffold(body: buildBackupPage(context));
     }
-    return Scaffold(body: buildMain(context, viewModel, viewSize));
+    return Scaffold(body: buildMain(context));
   }
 
-  Widget buildMain(BuildContext context, TwoFactorAuthViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildMain(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -107,8 +104,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
     );
   }
 
-  Widget buildQRcodeForSecret(BuildContext context,
-      TwoFactorAuthViewModel viewModel, ViewSize viewSize) {
+  Widget buildQRcodeForSecret(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -188,8 +184,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
     );
   }
 
-  Widget buildTextViewForSecret(BuildContext context,
-      TwoFactorAuthViewModel viewModel, ViewSize viewSize) {
+  Widget buildTextViewForSecret(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -308,8 +303,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
     );
   }
 
-  Widget build2FAConfirm(BuildContext context, TwoFactorAuthViewModel viewModel,
-      ViewSize viewSize) {
+  Widget build2FAConfirm(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -420,8 +414,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
     );
   }
 
-  Widget buildBackupPage(BuildContext context, TwoFactorAuthViewModel viewModel,
-      ViewSize viewSize) {
+  Widget buildBackupPage(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[

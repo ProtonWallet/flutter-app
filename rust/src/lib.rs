@@ -12,7 +12,7 @@ pub use crate::proton_api::*;
 
 #[cfg(target_os = "android")]
 use {
-    jni::{objects::JClass, objects::JObject, JNIEnv},
+    andromeda_api::{jboolean, JClass, JNIEnv, JObject},
     // mylib::setup_android,
     log::info,
 };
@@ -21,9 +21,9 @@ use {
 #[no_mangle]
 pub extern "system" fn Java_com_example_wallet_WalletJNIPlugin_init_1android(
     env: JNIEnv,
-    _class: JClass,
+    class: JClass,
     ctx: JObject,
-) {
-    //setup_android(env, ctx);
+) -> jboolean {
     info!("init_android called from rust lib.rs file.");
+    return andromeda_api::init_android(env, class, ctx);
 }
