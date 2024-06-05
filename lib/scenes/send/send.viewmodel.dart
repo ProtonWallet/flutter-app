@@ -171,6 +171,7 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> dispose() async {
+    userSettingProvider.removeListener(userSettingProviderCallback);
     if (userSettingProvider.walletUserSetting.fiatCurrency.name !=
         originFiatCurrency.name) {
       Future.delayed(Duration.zero, () {
@@ -220,16 +221,7 @@ class SendViewModelImpl extends SendViewModel {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
-      userSettingProvider.addListener(() {
-        if (exchangeRate != null &&
-            sendFlowStatus == SendFlowStatus.editAmount) {
-          if (userSettingProvider.walletUserSetting.exchangeRate.id !=
-              exchangeRate!.id) {
-            exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
-            buildTransactionScript();
-          }
-        }
-      });
+      userSettingProvider.addListener(userSettingProviderCallback);
       addressKeys = await WalletManager.getAddressKeys();
       exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
       fiatCurrencyNotifier.value =
@@ -286,6 +278,16 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return count;
+  }
+
+  void userSettingProviderCallback() {
+    if (exchangeRate != null && sendFlowStatus == SendFlowStatus.editAmount) {
+      if (userSettingProvider.walletUserSetting.exchangeRate.id !=
+          exchangeRate!.id) {
+        exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
+        buildTransactionScript();
+      }
+    }
   }
 
   Future<void> updateWallet() async {
@@ -618,7 +620,8 @@ class SendViewModelImpl extends SendViewModel {
       } else {
         errorMessage = e.toString();
         if (errorMessage.isNotEmpty) {
-          CommonHelper.showErrorDialog(errorMessage);
+          CommonHelper.showErrorDialog(
+              "buildTransactionScript error: $errorMessage");
           errorMessage = "";
         }
       }
@@ -720,7 +723,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(errorMessage);
+      CommonHelper.showErrorDialog("sendCoin() error: $errorMessage");
       errorMessage = "";
       EasyLoading.dismiss();
       return false;

@@ -46,6 +46,11 @@ enum WalletDrawerStatus {
   openWalletPreference,
 }
 
+enum BodyListStatus {
+  transactionList,
+  bitcoinAddressList,
+}
+
 abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   HomeViewModel(super.coordinator, this.apiEnv, this.walletBloc);
 
@@ -67,6 +72,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
   AccountModel? historyAccountModel;
+  BodyListStatus bodyListStatus = BodyListStatus.transactionList;
 
   Map<int, TextEditingController> accountNameControllers = {};
   Map<int, ValueNotifier> accountFiatCurrencyNotifiers = {};
@@ -98,6 +104,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       List<AccountModel> userAccounts);
 
   void updateBitcoinUnit(BitcoinUnit symbol);
+
+  void updateBodyListStatus(BodyListStatus bodyListStatus);
 
   void saveUserSettings();
 
@@ -895,5 +903,11 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
+  }
+
+  @override
+  void updateBodyListStatus(BodyListStatus bodyListStatus) {
+    this.bodyListStatus = bodyListStatus;
+    datasourceStreamSinkAdd();
   }
 }

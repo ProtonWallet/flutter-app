@@ -18,21 +18,25 @@ import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.old.dart';
+import 'package:wallet/scenes/home.v3/transaction.list.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -74,7 +78,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         Container(
             margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
             child:
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const SizedBox(
                 height: 20,
               ),
@@ -82,14 +86,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (Provider
-                        .of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .currentAccount ==
+                    if (Provider.of<ProtonWalletProvider>(context)
+                            .protonWallet
+                            .currentAccount ==
                         null)
-                      Text(S
-                          .of(context)
-                          .total_accounts,
+                      Text(S.of(context).total_accounts,
                           style: FontManager.captionSemiBold(
                               ProtonColors.textNorm)),
                     AnimatedFlipCounter(
@@ -97,48 +98,45 @@ class HomeView extends ViewBase<HomeViewModel> {
                             .getFiatCurrencyName(),
                         value: Provider.of<UserSettingProvider>(context)
                             .getNotionalInFiatCurrency(
-                            Provider
-                                .of<ProtonWalletProvider>(context)
-                                .protonWallet
-                                .currentBalance),
+                                Provider.of<ProtonWalletProvider>(context)
+                                    .protonWallet
+                                    .currentBalance),
                         fractionDigits: defaultDisplayDigits,
                         textStyle: FontManager.balanceInFiatCurrency(
                             ProtonColors.textNorm)),
                     Text(
                         Provider.of<UserSettingProvider>(context)
                             .getBitcoinUnitLabel(
-                            Provider
-                                .of<ProtonWalletProvider>(context)
-                                .protonWallet
-                                .currentBalance
-                                .toInt()),
+                                Provider.of<ProtonWalletProvider>(context)
+                                    .protonWallet
+                                    .currentBalance
+                                    .toInt()),
                         style: FontManager.balanceInBTC(ProtonColors.textWeak))
                   ],
                 ),
                 const SizedBox(width: 4),
-                Provider
-                    .of<ProtonWalletProvider>(context)
-                    .protonWallet
-                    .isSyncing()
+                Provider.of<ProtonWalletProvider>(context)
+                        .protonWallet
+                        .isSyncing()
                     ? CustomLoadingWithIcon(
-                  icon: Icon(
-                    Icons.refresh_rounded,
-                    size: 22,
-                    color: ProtonColors.textWeak,
-                  ),
-                  durationInMilliSeconds: 800,
-                )
+                        icon: Icon(
+                          Icons.refresh_rounded,
+                          size: 22,
+                          color: ProtonColors.textWeak,
+                        ),
+                        durationInMilliSeconds: 800,
+                      )
                     : GestureDetector(
-                    onTap: () {
-                      Provider.of<ProtonWalletProvider>(context,
-                          listen: false)
-                          .syncWallet();
-                    },
-                    child: Icon(
-                      Icons.refresh_rounded,
-                      size: 22,
-                      color: ProtonColors.textWeak,
-                    ))
+                        onTap: () {
+                          Provider.of<ProtonWalletProvider>(context,
+                                  listen: false)
+                              .syncWallet();
+                        },
+                        child: Icon(
+                          Icons.refresh_rounded,
+                          size: 22,
+                          color: ProtonColors.textWeak,
+                        ))
               ]),
               const SizedBox(
                 height: 20,
@@ -147,26 +145,22 @@ class HomeView extends ViewBase<HomeViewModel> {
                   price: viewModel.btcPriceInfo.price,
                   priceChange: viewModel.btcPriceInfo.priceChange24h,
                   onSend: () {
-                    if (Provider
-                        .of<ProtonWalletProvider>(context,
-                        listen: false)
-                        .protonWallet
-                        .currentWallet !=
+                    if (Provider.of<ProtonWalletProvider>(context,
+                                listen: false)
+                            .protonWallet
+                            .currentWallet !=
                         null) {
                       viewModel.move(NavID.send);
                     } else {
                       CommonHelper.showSnackbar(
-                          context, S
-                          .of(context)
-                          .please_select_wallet_first);
+                          context, S.of(context).please_select_wallet_first);
                     }
                   },
                   onBuy: () {
-                    if (Provider
-                        .of<ProtonWalletProvider>(context,
-                        listen: false)
-                        .protonWallet
-                        .currentAccount !=
+                    if (Provider.of<ProtonWalletProvider>(context,
+                                listen: false)
+                            .protonWallet
+                            .currentAccount !=
                         null) {
                       viewModel.move(NavID.buy);
                     } else {
@@ -175,49 +169,41 @@ class HomeView extends ViewBase<HomeViewModel> {
                     }
                   },
                   onReceive: () {
-                    if (Provider
-                        .of<ProtonWalletProvider>(context,
-                        listen: false)
-                        .protonWallet
-                        .currentWallet !=
+                    if (Provider.of<ProtonWalletProvider>(context,
+                                listen: false)
+                            .protonWallet
+                            .currentWallet !=
                         null) {
                       move(context, NavID.receive);
                     } else {
                       CommonHelper.showSnackbar(
-                          context, S
-                          .of(context)
-                          .please_select_wallet_first);
+                          context, S.of(context).please_select_wallet_first);
                     }
                   }),
               const SizedBox(
                 height: 10,
               ),
-              if (Provider
-                  .of<ProtonWalletProvider>(context, listen: false)
+              if (Provider.of<ProtonWalletProvider>(context, listen: false)
                   .protonWallet
                   .historyTransactions
                   .isEmpty)
                 Center(
                     child: Underline(
                         onTap: () {
-                          if (Provider
-                              .of<ProtonWalletProvider>(context,
-                              listen: false)
-                              .protonWallet
-                              .currentWallet !=
+                          if (Provider.of<ProtonWalletProvider>(context,
+                                      listen: false)
+                                  .protonWallet
+                                  .currentWallet !=
                               null) {
                             SecureYourWalletSheet.show(context, viewModel);
                           }
                         },
                         color: ProtonColors.brandLighten20,
-                        child: Text(S
-                            .of(context)
-                            .secure_your_wallet,
+                        child: Text(S.of(context).secure_your_wallet,
                             style: FontManager.body2Median(
                                 ProtonColors.brandLighten20)))),
               if (viewModel.currentTodoStep < viewModel.totalTodoSteps &&
-                  Provider
-                      .of<ProtonWalletProvider>(context, listen: false)
+                  Provider.of<ProtonWalletProvider>(context, listen: false)
                       .protonWallet
                       .historyTransactions
                       .isNotEmpty)
@@ -229,18 +215,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                         height: 5,
                       ),
                       CustomTodos(
-                          title: S
-                              .of(context)
-                              .todos_backup_proton_account,
+                          title: S.of(context).todos_backup_proton_account,
                           checked: viewModel.hadBackupProtonAccount,
                           callback: () {}),
                       const SizedBox(
                         height: 5,
                       ),
                       CustomTodos(
-                          title: S
-                              .of(context)
-                              .todos_backup_wallet_mnemonic,
+                          title: S.of(context).todos_backup_wallet_mnemonic,
                           checked: viewModel.hadBackup,
                           callback: () {
                             move(context, NavID.setupBackup);
@@ -249,9 +231,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                         height: 5,
                       ),
                       CustomTodos(
-                          title: S
-                              .of(context)
-                              .todos_setup_2fa,
+                          title: S.of(context).todos_setup_2fa,
                           checked: viewModel.hadSetup2FA,
                           callback: () {}),
                       const SizedBox(
@@ -268,209 +248,39 @@ class HomeView extends ViewBase<HomeViewModel> {
                   ),
                   padding: const EdgeInsets.only(bottom: 20, top: 10),
                   child: Column(children: [
-                    Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: defaultPadding),
-                        child: viewModel.showSearchHistoryTextField
-                            ? TextFieldText(
-                          borderRadius: 20,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          height: 50,
-                          color: ProtonColors.backgroundSecondary,
-                          suffixIcon: const Icon(Icons.close, size: 16),
-                          prefixIcon: const Icon(Icons.search, size: 16),
-                          showSuffixIcon: true,
-                          suffixIconOnPressed: () {
-                            viewModel.setSearchHistoryTextField(false);
-                          },
-                          scrollPadding: EdgeInsets.only(
-                              bottom: MediaQuery
-                                  .of(context)
-                                  .viewInsets
-                                  .bottom +
-                                  100),
-                          controller:
-                          viewModel.transactionSearchController,
-                        )
-                            : Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(children: [
-                                    Text(
-                                      S
-                                          .of(context)
-                                          .transactions,
-                                      style: FontManager.body1Median(
-                                          ProtonColors.textNorm),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ]),
-                                  Row(children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          TransactionFilterSheet.show(
-                                              context, viewModel);
-                                        },
-                                        icon: SvgPicture.asset(
-                                            "assets/images/icon/setup-preference.svg",
-                                            fit: BoxFit.fill,
-                                            width: 16,
-                                            height: 16)),
-                                    IconButton(
-                                        onPressed: () {
-                                          viewModel
-                                              .setSearchHistoryTextField(
-                                              true);
-                                        },
-                                        icon: Icon(Icons.search_rounded,
-                                            color: ProtonColors.textNorm,
-                                            size: 16))
-                                  ]),
-                                ]))),
-                    for (int index = 0;
-                    index <
-                        min(
-                            Provider
-                                .of<ProtonWalletProvider>(context)
-                                .protonWallet
-                                .historyTransactionsAfterFilter
-                                .length,
-                            defaultTransactionPerPage *
-                                viewModel.currentHistoryPage +
-                                defaultTransactionPerPage);
-                    index++)
-                      TransactionListTitle(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          address: WalletManager.getEmailFromWalletTransaction(
-                              Provider
-                                  .of<ProtonWalletProvider>(context)
-                                  .protonWallet
-                                  .historyTransactionsAfterFilter[index]
-                                  .amountInSATS > 0
-                                  ? Provider
-                                  .of<ProtonWalletProvider>(context)
-                                  .protonWallet
-                                  .historyTransactionsAfterFilter[index]
-                                  .sender
-                                  : Provider
-                                  .of<ProtonWalletProvider>(context)
-                                  .protonWallet
-                                  .historyTransactionsAfterFilter[index]
-                                  .toList,
-                              selfEmailAddresses: viewModel.protonAddresses
-                                  .map((e) => e.email)
-                                  .toList()),
-                          amount: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index]
-                              .amountInSATS
-                              .toDouble(),
-                          note: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index]
-                              .label ??
-                              "",
-                          body: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index].body ??
-                              "",
-                          onTap: () {
-                            viewModel.selectedTXID =
-                                Provider
-                                    .of<ProtonWalletProvider>(context,
-                                    listen: false)
-                                    .protonWallet
-                                    .historyTransactionsAfterFilter[index]
-                                    .txID;
-                            viewModel.historyAccountModel =
-                                Provider
-                                    .of<ProtonWalletProvider>(context,
-                                    listen: false)
-                                    .protonWallet
-                                    .historyTransactionsAfterFilter[index]
-                                    .accountModel;
-                            viewModel.move(NavID.historyDetails);
-                          },
-                          timestamp: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index]
-                              .createTimestamp,
-                          isSend: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index]
-                              .amountInSATS < 0,
-                          exchangeRate: Provider
-                              .of<ProtonWalletProvider>(context)
-                              .protonWallet
-                              .historyTransactionsAfterFilter[index]
-                              .exchangeRate),
-                    if (Provider
-                        .of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .historyTransactionsAfterFilter
-                        .length >
-                        defaultTransactionPerPage *
-                            viewModel.currentHistoryPage +
-                            defaultTransactionPerPage)
-                      GestureDetector(
-                          onTap: () {
-                            viewModel.showMoreTransactionHistory();
-                          },
-                          child: Container(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Text("Show more",
-                                  style: FontManager.body1Regular(
-                                      ProtonColors.protonBlue)))),
-                    if (Provider
-                        .of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .historyTransactionsAfterFilter
-                        .isEmpty)
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                                child: SvgPicture.asset(
-                                    "assets/images/icon/do_transactions.svg",
-                                    fit: BoxFit.fill,
-                                    width: 26,
-                                    height: 26)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                                width: 280,
-                                child: Text(
-                                  "Send and receive Bitcoin with your email.",
-                                  style: FontManager.titleHeadline(
-                                      ProtonColors.textNorm),
-                                  textAlign: TextAlign.center,
-                                )),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ]),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              viewModel.updateBodyListStatus(
+                                  BodyListStatus.transactionList);
+                            },
+                            child: Text(S.of(context).transactions,
+                                style: FontManager.body1Median(
+                                    ProtonColors.protonBlue))),
+                        const SizedBox(width: 10),
+                        Text("|",
+                            style:
+                                FontManager.body1Median(ProtonColors.textNorm)),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                            onTap: () {
+                              viewModel.updateBodyListStatus(
+                                  BodyListStatus.bitcoinAddressList);
+                            },
+                            child: Text(S.of(context).bitcoin_address,
+                                style: FontManager.body1Median(
+                                    ProtonColors.protonBlue))),
+                      ],
+                    ),
+                    viewModel.bodyListStatus == BodyListStatus.transactionList
+                        ? TransactionList(viewModel: viewModel)
+                        : BitcoinAddressList(viewModel: viewModel),
                   ])),
-              if (Provider
-                  .of<ProtonWalletProvider>(context)
+              if (Provider.of<ProtonWalletProvider>(context)
                   .protonWallet
                   .historyTransactionsAfterFilter
                   .isEmpty)
@@ -484,21 +294,13 @@ class HomeView extends ViewBase<HomeViewModel> {
                           viewModel.move(NavID.receive);
                         },
                         backgroundColor: ProtonColors.white,
-                        text: S
-                            .of(context)
-                            .receive,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width > 424
+                        text: S.of(context).receive,
+                        width: MediaQuery.of(context).size.width > 424
                             ? 180
-                            : MediaQuery
-                            .of(context)
-                            .size
-                            .width / 2 -
-                            defaultPadding * 2,
+                            : MediaQuery.of(context).size.width / 2 -
+                                defaultPadding * 2,
                         textStyle:
-                        FontManager.body1Median(ProtonColors.protonBlue),
+                            FontManager.body1Median(ProtonColors.protonBlue),
                         height: 48),
                     const SizedBox(
                       width: 10,
@@ -506,19 +308,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                     ButtonV5(
                         onPressed: () {},
                         backgroundColor: ProtonColors.backgroundBlack,
-                        text: S
-                            .of(context)
-                            .buy,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width > 424
+                        text: S.of(context).buy,
+                        width: MediaQuery.of(context).size.width > 424
                             ? 180
-                            : MediaQuery
-                            .of(context)
-                            .size
-                            .width / 2 -
-                            defaultPadding * 2,
+                            : MediaQuery.of(context).size.width / 2 -
+                                defaultPadding * 2,
                         textStyle: FontManager.body1Median(
                             ProtonColors.backgroundSecondary),
                         height: 48),
@@ -526,22 +320,18 @@ class HomeView extends ViewBase<HomeViewModel> {
                 ]),
               const SizedBox(height: 20),
               if (viewModel.protonFeedItems.isNotEmpty &&
-                  Provider
-                      .of<ProtonWalletProvider>(context)
+                  Provider.of<ProtonWalletProvider>(context)
                       .protonWallet
                       .historyTransactionsAfterFilter
                       .isEmpty)
-                Text(S
-                    .of(context)
-                    .explore_wallet,
+                Text(S.of(context).explore_wallet,
                     style: FontManager.body1Median(ProtonColors.textNorm)),
               const SizedBox(height: 10),
-              if (Provider
-                  .of<ProtonWalletProvider>(context)
+              if (Provider.of<ProtonWalletProvider>(context)
                   .protonWallet
                   .historyTransactionsAfterFilter
                   .isEmpty)
-              //Discover feeds
+                //Discover feeds
                 DiscoverFeedsView(
                   onTap: (String link) {
                     launchUrl(Uri.parse(link));
@@ -561,10 +351,7 @@ class HomeView extends ViewBase<HomeViewModel> {
               topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
         ),
         backgroundColor: ProtonColors.drawerBackground,
-        width: min(MediaQuery
-            .of(context)
-            .size
-            .width - 70, drawerMaxWidth),
+        width: min(MediaQuery.of(context).size.width - 70, drawerMaxWidth),
         child: buildSidebar(context, viewModel));
   }
 
@@ -573,21 +360,19 @@ class HomeView extends ViewBase<HomeViewModel> {
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness:
-        viewModel.walletDrawerStatus == WalletDrawerStatus.close
-            ? Brightness.dark
-            : Brightness.light,
+            viewModel.walletDrawerStatus == WalletDrawerStatus.close
+                ? Brightness.dark
+                : Brightness.light,
         // For Android (dark icons)
         statusBarBrightness:
-        viewModel.walletDrawerStatus == WalletDrawerStatus.close
-            ? Brightness.light
-            : Brightness.dark,
+            viewModel.walletDrawerStatus == WalletDrawerStatus.close
+                ? Brightness.light
+                : Brightness.dark,
       ),
       backgroundColor: ProtonColors.backgroundProton,
       title: Text(
         Provider.of<ProtonWalletProvider>(context).getDisplayName() ??
-            S
-                .of(context)
-                .proton_wallet,
+            S.of(context).proton_wallet,
         style: FontManager.body2Median(ProtonColors.textNorm),
       ),
       centerTitle: true,
@@ -621,7 +406,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         },
       ),
       scrolledUnderElevation:
-      0.0, // don't change background color when scroll down
+          0.0, // don't change background color when scroll down
     );
   }
 
@@ -638,10 +423,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
   return SafeArea(
       child: SingleChildScrollView(
           child: SizedBox(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -675,11 +457,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                         padding: const EdgeInsets.symmetric(
                             horizontal: defaultPadding),
                         child: Text(
-                          S
-                              .of(context)
-                              .wallets,
+                          S.of(context).wallets,
                           style:
-                          FontManager.body2Regular(ProtonColors.textHint),
+                              FontManager.body2Regular(ProtonColors.textHint),
                         )),
                     const SizedBox(
                       height: 10,
@@ -724,9 +504,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(S
-                                  .of(context)
-                                  .more,
+                              Text(S.of(context).more,
                                   style: FontManager.body2Regular(
                                       ProtonColors.textHint)),
                             ])),
@@ -748,9 +526,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .wallet_plus,
+                            child: Text(S.of(context).wallet_plus,
                                 style: FontManager.body2Median(
                                     ProtonColors.drawerWalletPlus)))),
                     ListTile(
@@ -767,9 +543,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .discover,
+                            child: Text(S.of(context).discover,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
@@ -781,9 +555,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .settings_title,
+                            child: Text(S.of(context).settings_title,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
@@ -800,9 +572,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .security,
+                            child: Text(S.of(context).security,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
@@ -814,9 +584,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .recovery,
+                            child: Text(S.of(context).recovery,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
@@ -828,9 +596,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .report_a_problem,
+                            child: Text(S.of(context).report_a_problem,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
@@ -844,9 +610,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             height: 20),
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(S
-                                .of(context)
-                                .logout,
+                            child: Text(S.of(context).logout,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     Padding(
@@ -859,25 +623,19 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 height: 20,
                               ),
                               ButtonV5(
-                                text: S
-                                    .of(context)
-                                    .add_wallet,
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
+                                text: S.of(context).add_wallet,
+                                width: MediaQuery.of(context).size.width,
                                 backgroundColor:
-                                ProtonColors.drawerButtonBackground,
+                                    ProtonColors.drawerButtonBackground,
                                 textStyle: FontManager.body1Median(
                                     ProtonColors.protonBlue),
                                 height: 48,
                                 onPressed: () {
-                                  if (Provider
-                                      .of<ProtonWalletProvider>(context,
-                                      listen: false)
-                                      .protonWallet
-                                      .wallets
-                                      .length <
+                                  if (Provider.of<ProtonWalletProvider>(context,
+                                              listen: false)
+                                          .protonWallet
+                                          .wallets
+                                          .length <
                                       freeUserWalletLimit) {
                                     if (viewModel.currentSize ==
                                         ViewSize.mobile) {
@@ -885,7 +643,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     }
                                     viewModel.nameTextController.text = "";
                                     viewModel.passphraseTextController.text =
-                                    "";
+                                        "";
                                     viewModel.passphraseConfirmTextController
                                         .text = "";
                                     OnboardingGuideSheet.show(
@@ -915,23 +673,19 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                         child: Container(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
-                              "${S
-                                  .of(context)
-                                  .app_name} 1.0.0 (27)",
+                              "${S.of(context).app_name} 1.0.0 (27)",
                               style: FontManager.captionRegular(
                                   ProtonColors.textHint),
                             ))),
                   ]))));
 }
 
-Widget showUpdateWalletPassphraseDialog(BuildContext context,
-    HomeViewModel viewModel, WalletModel walletModel) {
+Widget showUpdateWalletPassphraseDialog(
+    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
   TextEditingController textEditingController = TextEditingController();
   textEditingController.text = "";
   return AlertDialog(
-    title: Text(S
-        .of(context)
-        .set_passphrase),
+    title: Text(S.of(context).set_passphrase),
     content: TextField(
       controller: textEditingController,
     ),
@@ -942,9 +696,7 @@ Widget showUpdateWalletPassphraseDialog(BuildContext context,
             Navigator.of(context).pop();
           }
         },
-        child: Text(S
-            .of(context)
-            .cancel),
+        child: Text(S.of(context).cancel),
       ),
       TextButton(
         onPressed: () async {
@@ -965,25 +717,23 @@ Widget showUpdateWalletPassphraseDialog(BuildContext context,
             } // pop current dialog
           }
         },
-        child: Text(S
-            .of(context)
-            .submit),
+        child: Text(S.of(context).submit),
       ),
     ],
   );
 }
 
-Widget getWalletAccountBalanceWidget(BuildContext context,
-    HomeViewModel viewModel,
-    AccountModel accountModel,
-    Color textColor,) {
+Widget getWalletAccountBalanceWidget(
+  BuildContext context,
+  HomeViewModel viewModel,
+  AccountModel accountModel,
+  Color textColor,
+) {
   double esitmateValue = Provider.of<UserSettingProvider>(context)
       .getNotionalInFiatCurrency(accountModel.balance.toInt());
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${Provider.of<UserSettingProvider>(context)
-            .getFiatCurrencyName()}${esitmateValue.toStringAsFixed(
-            defaultDisplayDigits)}",
+        "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.captionSemiBold(textColor)),
     Text(
         Provider.of<UserSettingProvider>(context)
