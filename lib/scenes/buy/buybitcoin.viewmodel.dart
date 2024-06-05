@@ -24,26 +24,25 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
-  BuyBitcoinViewModel(
-      super.coordinator, this.walletID, this.accountID, this.userEmail);
+  BuyBitcoinViewModel(super.coordinator);
   late final Configuration configuration;
   late final RampFlutter ramp;
   bool get isTestEnv;
   bool get supportOffRamp;
   String receiveAddress = "";
 
-  final int walletID;
-  final String userEmail;
-  final int accountID;
   bool isloading = false;
   void startLoading();
   bool isBuying = true;
+  int index = 0;
   BuyBitcoinBloc get bloc;
+
+  void toggleButtons();
+  void sellbutton();
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
-  BuyBitcoinViewModelImpl(
-      super.coordinator, super.walletID, super.accountID, super.userEmail);
+  BuyBitcoinViewModelImpl(super.coordinator);
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
   @override
@@ -52,6 +51,11 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   BuyBitcoinBloc myBloc = BuyBitcoinBloc();
+
+  final int walletID = 1;
+  final String userEmail = "";
+  final int accountID = 1;
+
   @override
   BuyBitcoinBloc get bloc => myBloc;
 
@@ -231,5 +235,17 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   void presentRamp() {
     ramp.showRamp(configuration);
+  }
+
+  @override
+  void toggleButtons() {
+    isBuying = !isBuying;
+    datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  void sellbutton() {
+    isBuying = false;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

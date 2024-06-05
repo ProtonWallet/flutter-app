@@ -666,45 +666,40 @@ class SendView extends ViewBase<SendViewModel> {
                                           .currentAccounts
                                           .length >
                                       1)
-                                Column(children: [
-                                  WalletAccountDropdown(
-                                      labelText: S.of(context).trans_from,
-                                      backgroundColor: ProtonColors.white,
-                                      width: MediaQuery.of(context).size.width -
-                                          defaultPadding * 2,
-                                      accounts:
-                                          Provider.of<ProtonWalletProvider>(
-                                                  context)
-                                              .protonWallet
-                                              .currentAccounts,
-                                      valueNotifier: viewModel.initialized
-                                          ? viewModel.accountValueNotifier
-                                          : ValueNotifier(
-                                              Provider.of<ProtonWalletProvider>(
-                                                      context)
-                                                  .protonWallet
-                                                  .currentAccounts
-                                                  .first)),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(width: defaultPadding),
-                                        Text(
-                                          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
-                                          style: FontManager.captionRegular(
-                                              ProtonColors.textWeak),
-                                        ),
-                                      ]),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ]),
+                                WalletAccountDropdown(
+                                    labelText: S.of(context).trans_from,
+                                    backgroundColor: ProtonColors.white,
+                                    width: MediaQuery.of(context).size.width -
+                                        defaultPadding * 2,
+                                    accounts: Provider.of<ProtonWalletProvider>(
+                                            context)
+                                        .protonWallet
+                                        .currentAccounts,
+                                    valueNotifier: viewModel.initialized
+                                        ? viewModel.accountValueNotifier
+                                        : ValueNotifier(
+                                            Provider.of<ProtonWalletProvider>(
+                                                    context)
+                                                .protonWallet
+                                                .currentAccounts
+                                                .first)),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(width: defaultPadding),
+                                    Text(
+                                      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                      style: FontManager.captionRegular(
+                                          ProtonColors.textWeak),
+                                    ),
+                                  ]),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ]),
                             if (viewModel.recipients.isNotEmpty)
                               Container(

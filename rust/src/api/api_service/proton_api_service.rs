@@ -238,6 +238,8 @@ impl ProtonAPIService {
 
 #[cfg(test)]
 mod test {
+    use andromeda_api::{network::NetworkClient, ProtonUsersClient};
+
     use crate::{
         api::api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
@@ -248,7 +250,29 @@ mod test {
     #[tokio::test]
     #[ignore]
     async fn test_init_api_and_login() {
-        // ProtonAPIService::init_api_service("pro".to_owned(), "pro".to_owned())?
+        let uid = "c6d5q57l7kiu7rmvz6x3u6c5nx5z6rx2";
+        let access_token = "4hswkfyec64s6v735aa2otb5rktjlgyc";
+        let refresh_token = "fslfmtvxzvun6djjanqk4cmjxb5425lo";
+        let store = ProtonWalletAuthStore::new("prod").unwrap();
+        let mut client = ProtonAPIService::new(store).unwrap();
+
+        client
+            .update_auth(
+                uid.to_string(),
+                access_token.to_string(),
+                refresh_token.to_string(),
+                vec!["wallet".to_string(), "account".to_string()],
+            )
+            .await;
+
+        // let network_client = ProtonUsersClient::new(client.inner.clone());
+
+        // let userinfo = network_client.get_user_settings().await.unwrap();
+
+        let settings_client = client.get_settings_client();
+        let res = settings_client.get_user_settings().await.unwrap();
+
+        println!("{:?}", res);
     }
 
     #[tokio::test]
