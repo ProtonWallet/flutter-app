@@ -109,58 +109,53 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             ProtonColors.textHint)),
                     const SizedBox(height: 20),
                     viewModel.isEditing == false
-                        ? Container(
-                            margin: const EdgeInsets.symmetric(vertical: 10.0),
-                            padding: const EdgeInsets.all(defaultPadding),
-                            decoration: BoxDecoration(
-                                color: ProtonColors.transactionNoteBackground,
-                                borderRadius: BorderRadius.circular(40.0)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                    "assets/images/icon/ic_note.svg",
-                                    fit: BoxFit.fill,
-                                    width: 32,
-                                    height: 32),
-                                const SizedBox(width: 10),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                        ? GestureDetector(
+                            onTap: () {
+                              viewModel.editMemo();
+                            },
+                            child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                padding: const EdgeInsets.all(defaultPadding),
+                                decoration: BoxDecoration(
+                                    color:
+                                        ProtonColors.transactionNoteBackground,
+                                    borderRadius: BorderRadius.circular(40.0)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    if (viewModel
-                                        .memoController.text.isNotEmpty)
-                                      SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              defaultPadding * 6 -
-                                              10,
-                                          child: Flex(
-                                              direction: Axis.horizontal,
-                                              children: [
-                                                Flexible(
-                                                    child: Text(
-                                                        viewModel.memoController
-                                                            .text,
-                                                        style: FontManager
-                                                            .body2Median(
-                                                                ProtonColors
-                                                                    .textNorm)))
-                                              ])),
-                                    GestureDetector(
-                                        onTap: () {
-                                          viewModel.editMemo();
-                                        },
-                                        child: Text(
-                                            S.of(context).trans_edit_note,
+                                    SvgPicture.asset(
+                                        "assets/images/icon/ic_note.svg",
+                                        fit: BoxFit.fill,
+                                        width: 32,
+                                        height: 32),
+                                    const SizedBox(width: 10),
+                                    Expanded(child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (viewModel
+                                            .memoController.text.isNotEmpty)
+                                          Row(children: [
+                                            Expanded(
+                                                child: Text(
+                                                    viewModel
+                                                        .memoController.text,
+                                                    style:
+                                                        FontManager.body2Median(
+                                                            ProtonColors
+                                                                .textNorm)))
+                                          ]),
+                                        Text(S.of(context).trans_edit_note,
                                             style: FontManager.body2Median(
-                                                ProtonColors.protonBlue))),
+                                                ProtonColors.protonBlue)),
+                                      ],
+                                    ))
                                   ],
-                                )
-                              ],
-                            ))
+                                )))
                         : Container(
                             margin: const EdgeInsets.symmetric(vertical: 10.0),
                             child: TextFieldTextV2(

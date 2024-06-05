@@ -4,6 +4,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -36,6 +37,7 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 enum TransactionFeeMode {
   highPriority,
@@ -85,6 +87,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<String> accountAddressIDs = [];
   int balance = 0;
   double feeRateHighPriority = 2.0;
+  List<AddressKey> addressKeys = [];
   double feeRateMedianPriority = 2.0;
   double feeRateLowPriority = 2.0;
   double feeRateSatPerVByte = 2.0;
@@ -134,6 +137,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   void addressAutoCompleteCallback();
 
   int validRecipientCount();
+
+  void splitAmountToRecipients();
 
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
@@ -187,6 +192,9 @@ class SendViewModelImpl extends SendViewModel {
       emailBodyFocusNode = FocusNode();
       memoTextController = TextEditingController();
       emailBodyController = TextEditingController();
+      recipientTextController = TextEditingController(text: "");
+      memoTextController = TextEditingController();
+      amountTextController = TextEditingController();
       txBuilder = TxBuilder();
 
       addressFocusNode.addListener(() {
@@ -214,7 +222,7 @@ class SendViewModelImpl extends SendViewModel {
           listen: false);
       userSettingProvider.addListener(() {
         if (exchangeRate != null &&
-            sendFlowStatus == SendFlowStatus.reviewTransaction) {
+            sendFlowStatus == SendFlowStatus.editAmount) {
           if (userSettingProvider.walletUserSetting.exchangeRate.id !=
               exchangeRate!.id) {
             exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
@@ -222,6 +230,7 @@ class SendViewModelImpl extends SendViewModel {
           }
         }
       });
+      addressKeys = await WalletManager.getAddressKeys();
       exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
       fiatCurrencyNotifier.value =
           userSettingProvider.walletUserSetting.fiatCurrency;
@@ -229,25 +238,8 @@ class SendViewModelImpl extends SendViewModel {
       fiatCurrencyNotifier.addListener(() async {
         updateUserSettingProvider(fiatCurrencyNotifier.value);
       });
-      recipientTextController = TextEditingController(text: "");
-      memoTextController = TextEditingController();
-      amountTextController = TextEditingController();
       amountFocusNode.addListener(() {
-        double totalAmount = 0;
-        try {
-          totalAmount = double.parse(amountTextController.text);
-        } catch (e) {
-          // ignore parsing error
-        }
-        int recipientCount = validRecipientCount();
-        if (recipientCount > 0) {
-          double amount = totalAmount / recipientCount;
-          for (ProtonRecipient recipient in recipients) {
-            recipient.amountController.text =
-                amount.toStringAsFixed(defaultDisplayDigits);
-          }
-        }
-        datasourceChangedStreamController.sinkAddSafe(this);
+        splitAmountToRecipients();
       });
 
       datasourceChangedStreamController.sinkAddSafe(this);
@@ -347,9 +339,12 @@ class SendViewModelImpl extends SendViewModel {
       bool success = await buildTransactionScript();
       if (success == false) {
         sendFlowStatus = SendFlowStatus.editAmount;
+      } else {
+        sendFlowStatus = status;
       }
+    } else {
+      sendFlowStatus = status;
     }
-    sendFlowStatus = status;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -617,6 +612,9 @@ class SendViewModelImpl extends SendViewModel {
                 isError: true);
           }
         }
+      } else if (e is NoRecipientsException) {
+        // amount is 0, or no recipients
+        return true;
       } else {
         errorMessage = e.toString();
         if (errorMessage.isNotEmpty) {
@@ -640,6 +638,9 @@ class SendViewModelImpl extends SendViewModel {
       String? emailAddressID;
       if (accountAddressIDs.isNotEmpty) {
         emailAddressID = accountAddressIDs.first;
+      } else {
+        // TODO:: check if we need default one
+        emailAddressID = addressKeys.firstOrNull?.id;
       }
       String? encryptedLabel;
       SecretKey? secretKey =
@@ -658,6 +659,16 @@ class SendViewModelImpl extends SendViewModel {
       }
 
       if (addressPublicKeys.isNotEmpty) {
+        for (AddressKey addressKey in addressKeys) {
+          if (addressKey.id == emailAddressID) {
+            // need to use self addressKey to encrypt the body too
+            String pgpArmoredPublicKey =
+                proton_crypto.getArmoredPublicKey(addressKey.privateKey);
+            addressPublicKeys
+                .add(AddressPublicKey(publicKey: pgpArmoredPublicKey));
+            break;
+          }
+        }
         encryptedMessage = AddressPublicKey.encryptWithKeys(
             addressPublicKeys, emailBodyController.text);
       }
@@ -688,8 +699,9 @@ class SendViewModelImpl extends SendViewModel {
               await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
                   id: null,
                   externalTransactionID: utf8.encode(txid),
-                  amountInSATS: amountInSATS,
+                  amountInSATS: protonRecipient.amountInSATS ?? 0,
                   feeInSATS: estimatedFeeInSAT,
+                  // all recipients have same fee since its same transaction
                   isSend: 1,
                   transactionTime:
                       DateTime.now().millisecondsSinceEpoch ~/ 1000,
@@ -780,5 +792,24 @@ class SendViewModelImpl extends SendViewModel {
             context, S.of(context).error_you_dont_have_sufficient_balance);
       }
     }
+  }
+
+  @override
+  void splitAmountToRecipients() {
+    double totalAmount = 0;
+    try {
+      totalAmount = double.parse(amountTextController.text);
+    } catch (e) {
+      // ignore parsing error
+    }
+    int recipientCount = validRecipientCount();
+    if (recipientCount > 0) {
+      double amount = totalAmount / recipientCount;
+      for (ProtonRecipient recipient in recipients) {
+        recipient.amountController.text =
+            amount.toStringAsFixed(defaultDisplayDigits);
+      }
+    }
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

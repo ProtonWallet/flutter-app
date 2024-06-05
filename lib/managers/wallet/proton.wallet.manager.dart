@@ -674,40 +674,74 @@ class ProtonWalletManager implements Manager {
         if (toList == "null") {
           toList = "";
         }
-        TransactionInfoModel? transactionInfoModel;
+        List<TransactionInfoModel> transactionInfoModels = [];
         try {
-          transactionInfoModel = await DBHelper.transactionInfoDao!.find(
-              utf8.encode(txID),
-              oldWalletModel.serverWalletID,
-              accountModel.serverAccountID,
-              WalletManager.getBitcoinAddressFromWalletTransaction(toList,
-                  selfEmailAddresses:
-                      protonAddresses.map((e) => e.email).toList()));
+          transactionInfoModels = await DBHelper.transactionInfoDao!
+              .findAllRecipients(utf8.encode(txID),
+                  oldWalletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e(e.toString());
         }
-        if (transactionInfoModel != null) {
+        if (transactionInfoModels.isNotEmpty) {
           // get transaction info locally, for sender
+          int amountInSATS = 0;
+          int feeInSATS = 0;
+          int time = 0;
+          for (TransactionInfoModel transactionInfoModel
+              in transactionInfoModels) {
+            amountInSATS += transactionInfoModel.isSend == 1
+                ? -transactionInfoModel.amountInSATS
+                : transactionInfoModel.amountInSATS;
+            feeInSATS = transactionInfoModel
+                .feeInSATS; // all recipients have same fee since its same transaction
+            time = transactionInfoModel.transactionTime;
+          }
+
+          ProtonExchangeRate? exchangeRate;
+          if ((transactionModel.exchangeRateID ?? "").isNotEmpty) {
+            ExchangeRateModel? exchangeRateModel = await DBHelper
+                .exchangeRateDao!
+                .findByServerID(transactionModel.exchangeRateID);
+            if (exchangeRateModel != null) {
+              BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
+                  (v) =>
+                      v.name.toUpperCase() ==
+                      exchangeRateModel.bitcoinUnit.toUpperCase(),
+                  orElse: () => defaultBitcoinUnit);
+              FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
+                  (v) =>
+                      v.name.toUpperCase() ==
+                      exchangeRateModel.fiatCurrency.toUpperCase(),
+                  orElse: () => defaultFiatCurrency);
+              exchangeRate = ProtonExchangeRate(
+                id: exchangeRateModel.serverID,
+                bitcoinUnit: bitcoinUnit,
+                fiatCurrency: fiatCurrency,
+                exchangeRateTime: exchangeRateModel.exchangeRateTime,
+                exchangeRate: exchangeRateModel.exchangeRate,
+                cents: exchangeRateModel.cents,
+              );
+            }
+          }
+          exchangeRate ??= await ExchangeRateService.getExchangeRate(
+              Provider.of<UserSettingProvider>(
+                      Coordinator.rootNavigatorKey.currentContext!,
+                      listen: false)
+                  .walletUserSetting
+                  .fiatCurrency,
+              time: int.parse(transactionModel.transactionTime));
+
           newHistoryTransactionsMap[key] = HistoryTransaction(
             txID: txID,
-            amountInSATS: transactionInfoModel.isSend == 1
-                ? -transactionInfoModel.amountInSATS -
-                    transactionInfoModel.feeInSATS
-                : transactionInfoModel.amountInSATS,
+            amountInSATS: amountInSATS,
             sender: sender.isNotEmpty ? sender : txID,
             toList: toList.isNotEmpty ? toList : txID,
-            feeInSATS: transactionInfoModel.feeInSATS,
+            feeInSATS: feeInSATS,
             label: userLabel,
             inProgress: true,
             accountModel: accountModel,
             body: body.isNotEmpty ? body : null,
-            exchangeRate: await ExchangeRateService.getExchangeRate(
-                Provider.of<UserSettingProvider>(
-                        Coordinator.rootNavigatorKey.currentContext!,
-                        listen: false)
-                    .walletUserSetting
-                    .fiatCurrency,
-                time: transactionInfoModel.transactionTime),
+            exchangeRate: exchangeRate,
           );
         } else {
           // get transaction info from blockstream or esplora, for recipients

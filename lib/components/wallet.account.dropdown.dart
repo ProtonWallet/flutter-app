@@ -112,7 +112,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
         .getNotionalInFiatCurrency(accountModel.balance.toInt());
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.captionSemiBold(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)

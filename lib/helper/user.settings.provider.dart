@@ -69,8 +69,8 @@ class UserSettingProvider with ChangeNotifier {
   }
 
   double getNotionalInFiatCurrency(int amountInSATS, {ProtonExchangeRate? exchangeRate}) {
-    FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
     exchangeRate ??= walletUserSetting.exchangeRate;
+    FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       return exchangeRate.exchangeRate *

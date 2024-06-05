@@ -110,6 +110,36 @@ class SendView extends ViewBase<SendViewModel> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                             const SizedBox(height: 20),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(width: defaultPadding),
+                                  Text(
+                                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textWeak),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // TODO:: fix logic to remain more accurate fee
+                                      viewModel.amountTextController.text =
+                                          Provider.of<UserSettingProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .getNotionalInFiatCurrency(
+                                                  viewModel.balance)
+                                              .toStringAsFixed(
+                                                  defaultDisplayDigits);
+                                      viewModel.splitAmountToRecipients();
+                                    },
+                                    child: Text(S.of(context).send_all,
+                                        style: FontManager.captionMedian(
+                                            ProtonColors.protonBlue)),
+                                  )
+                                ]),
+                            const SizedBox(height: 4),
                             Row(children: [
                               Expanded(
                                   child: TextFieldSendBTCV2(
@@ -133,7 +163,6 @@ class SendView extends ViewBase<SendViewModel> {
                                         .walletUserSetting
                                         .exchangeRate
                                         .exchangeRate,
-                                btcBalance: viewModel.balance / 100000000,
                                 userSettingProvider:
                                     Provider.of<UserSettingProvider>(context),
                                 validation: (String value) {
@@ -656,6 +685,22 @@ class SendView extends ViewBase<SendViewModel> {
                                                   .protonWallet
                                                   .currentAccounts
                                                   .first)),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: defaultPadding),
+                                        Text(
+                                          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                          style: FontManager.captionRegular(
+                                              ProtonColors.textWeak),
+                                        ),
+                                      ]),
                                   const SizedBox(
                                     height: 10,
                                   ),
