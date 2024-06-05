@@ -29,6 +29,8 @@ import me.proton.core.account.domain.entity.SessionState
 import me.proton.core.domain.entity.UserId
 import me.proton.core.network.domain.session.Session
 import me.proton.core.network.domain.session.SessionId
+import me.proton.wallet.android.LogTag
+import me.proton.wallet.android.WalletLogger
 
 interface NativeCallHandler {
     fun startLogin()
@@ -87,8 +89,13 @@ class NativeMethodChannel(
                     "native.account.logout" -> callHandler.logout(userId)
                 }
             }.fold(
-                onSuccess = { result.success(null) },
-                onFailure = { result.error("code", it.message, null) }
+                onSuccess = {
+                    result.success(null)
+                },
+                onFailure = {
+                    WalletLogger.e(LogTag.CHANNEL_NATIVE, it)
+                    result.error("code", it.message, null)
+                }
             )
         }
     }
@@ -102,34 +109,44 @@ class NativeMethodChannel(
     )
 
     @Suppress("UNCHECKED_CAST")
-    private fun getArgumentsOrNull(arguments: Any?): Map<String, String>? = runCatching {
+    private fun getArgumentsOrNull(arguments: Any?): Map<String, Any>? = runCatching {
         (arguments as? Map<String, String>) ?:
-        (arguments as? ArrayList<*>)?.getOrNull(1) as? Map<String, String> ?:
-        Json.decodeFromString<Map<String, String>>(arguments as String)
+        (arguments as? ArrayList<*>)?.getOrNull(1) as? Map<String, Any> ?:
+        Json.decodeFromString<Map<String, Any>>(arguments as String)
     }.getOrNull()
 
-    private fun getUserIdOrNull(arguments: Map<String, String>): UserId? =
-        arguments["userId"]?.let { UserId(it) }
+    private fun getUserIdOrNull(arguments: Map<String, Any>): UserId? = runCatching {
+        arguments["userId"]?.let { UserId(it as String) }
+    }.getOrNull()
 
-    private fun getAccountOrNull(arguments: Map<String, String>) = runCatching {
+    private fun getSessionIdOrNull(arguments: Map<String, Any>): SessionId? = runCatching {
+        arguments["sessionId"]?.let { SessionId(it as String) }
+    }.getOrNull()
+
+    private fun getAccountOrNull(arguments: Map<String, Any>) = runCatching {
         Account(
-            username = arguments["userName"],
-            userId = requireNotNull(arguments["userId"]?.let { UserId(it) }),
-            email = arguments["userMail"],
-            sessionId = requireNotNull(arguments["sessionId"]?.let { SessionId(it) }),
+            username = arguments["userName"] as String?,
+            userId = requireNotNull(getUserIdOrNull(arguments)),
+            email = arguments["userMail"] as String?,
+            sessionId = requireNotNull(getSessionIdOrNull(arguments)),
             state = AccountState.Ready,
             sessionState = SessionState.Authenticated,
             details = AccountDetails(null, null)
         )
+    }.onFailure {
+        WalletLogger.e(LogTag.CHANNEL_NATIVE, it)
     }.getOrNull()
 
-    private fun getSessionOrNull(arguments: Map<String, String>) = runCatching {
+    @Suppress("UNCHECKED_CAST")
+    private fun getSessionOrNull(arguments: Map<String, Any>) = runCatching {
         Session.Authenticated(
-            userId = requireNotNull(arguments["userId"]?.let { UserId(it) }),
-            sessionId = requireNotNull(arguments["sessionId"]?.let { SessionId(it) }),
-            accessToken = requireNotNull(arguments["accessToken"]),
-            refreshToken = requireNotNull(arguments["refreshToken"]),
-            scopes = arguments["scopes"]?.split(",").orEmpty(),
+            userId = requireNotNull(getUserIdOrNull(arguments)),
+            sessionId = requireNotNull(getSessionIdOrNull(arguments)),
+            accessToken = requireNotNull(arguments["accessToken"] as String),
+            refreshToken = requireNotNull(arguments["refreshToken"] as String),
+            scopes = arguments["scopes"] as ArrayList<String>,
         )
+    }.onFailure {
+        WalletLogger.e(LogTag.CHANNEL_NATIVE, it)
     }.getOrNull()
 }
