@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:wallet/components/page_route.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -70,7 +72,7 @@ abstract class Coordinator implements ViewNavigator {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         constraints: BoxConstraints(
-          maxWidth: 400,
+          maxWidth: max(400, MediaQuery.of(context).size.width / 3),
           maxHeight: MediaQuery.of(context).size.height,
           minHeight: MediaQuery.of(context).size.height,
         ),

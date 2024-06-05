@@ -79,7 +79,6 @@ class TransactionHistoryItem extends StatelessWidget {
                     style: FontManager.body2Median(contentColor != null
                         ? contentColor!
                         : ProtonColors.textNorm),
-                    maxLines: 3,
                     softWrap: true)),
             const SizedBox(width: 2),
             if (copyContent)
