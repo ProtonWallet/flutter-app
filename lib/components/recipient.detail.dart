@@ -199,7 +199,7 @@ class RecipientDetail extends StatelessWidget {
                       textController: amountController!,
                       paddingSize: 2,
                       myFocusNode: amountFocusNode ?? FocusNode(),
-                      backgroundColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.white,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
