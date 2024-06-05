@@ -141,7 +141,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                         width: 32,
                                         height: 32),
                                     const SizedBox(width: 10),
-                                    Expanded(child: Column(
+                                    Expanded(
+                                        child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
@@ -291,25 +292,31 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         viewModel.recipients.isEmpty
             ? buildTransToInfo(
                 context,
-                viewModel.toEmail.isNotEmpty
+                email: viewModel.toEmail.isNotEmpty
                     ? WalletManager.getEmailFromWalletTransaction(
                         viewModel.toEmail)
-                    : viewModel.addresses.firstOrNull ?? "",
-                viewModel.toEmail.isNotEmpty
+                    : null,
+                bitcoinAddress: viewModel.toEmail.isNotEmpty
                     ? WalletManager.getBitcoinAddressFromWalletTransaction(
                         viewModel.toEmail)
-                    : null)
+                    : viewModel.addresses.firstOrNull ?? "",
+              )
             : Column(children: [
                 for (TransactionInfoModel info in viewModel.recipients)
-                  buildTransToInfo(context, info.toEmail, info.toBitcoinAddress,
+                  buildTransToInfo(context,
+                      email: info.toEmail,
+                      bitcoinAddress: info.toBitcoinAddress,
                       amountInSATS: info.amountInSATS)
               ])
       ],
     );
   }
 
-  Widget buildTransToInfo(BuildContext context, String content, String? memo,
-      {int? amountInSATS}) {
+  Widget buildTransToInfo(BuildContext context,
+      {String? email,
+      String? bitcoinAddress,
+      String? walletAccountName,
+      int? amountInSATS}) {
     return Column(children: [
       const Divider(
         thickness: 0.2,
@@ -317,9 +324,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       ),
       TransactionHistoryItem(
         title: S.of(context).trans_to,
-        content: content,
-        copyContent: true,
-        memo: memo,
+        content: email ?? bitcoinAddress ?? "",
+        bitcoinAddress: bitcoinAddress,
+        walletAccountName: walletAccountName,
         amountInSATS: amountInSATS,
         exchangeRate: viewModel.exchangeRate,
       )
@@ -335,7 +342,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           title: S.of(context).trans_from,
           content: viewModel.fromEmail.isNotEmpty
               ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
-              : viewModel.addresses.firstOrNull ?? "",
+              : "Unknown",
         ),
         const Divider(
           thickness: 0.2,
@@ -343,9 +350,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         ),
         TransactionHistoryItem(
           title: S.of(context).trans_to,
-          content:
-              "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)",
-          memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
+          content: viewModel.toEmail.isNotEmpty ?
+              "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)" : "",
+          walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
+          bitcoinAddress: viewModel.selfBitcoinAddress,
         ),
       ],
     );
