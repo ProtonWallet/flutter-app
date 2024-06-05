@@ -71,6 +71,7 @@ abstract class HistoryDetailViewModel
   late UserSettingProvider userSettingProvider;
   String errorMessage = "";
   bool isRecipientsFromBlockChain = false;
+  String? selfBitcoinAddress;
 
   void editMemo();
 }
@@ -183,6 +184,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             }
           } else {
             addresses.add(txid);
+            TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+                await WalletManager.getTransactionDetailsFromBlockStream(txid);
+            if (transactionDetailFromBlockChain != null) {
+              for (Recipient recipient
+                  in transactionDetailFromBlockChain.recipients) {
+                if (await WalletManager.isMineBitcoinAddress(
+                    _wallet, recipient.bitcoinAddress)) {
+                  selfBitcoinAddress = recipient.bitcoinAddress;
+                  break;
+                }
+              }
+            }
           }
           datasourceChangedStreamController.sinkAddSafe(this);
           break;
@@ -304,7 +317,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             for (TransactionInfoModel recipient in recipients) {
               amount -= recipient.amountInSATS.toDouble();
             }
-            amount -= fee;
           } else {
             TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
                 await WalletManager.getTransactionDetailsFromBlockStream(txid);
@@ -323,6 +335,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               }
               if (me != null) {
                 isSend = false;
+                selfBitcoinAddress = me.bitcoinAddress;
                 amount = me.amountInSATS.toDouble();
               }
             }
