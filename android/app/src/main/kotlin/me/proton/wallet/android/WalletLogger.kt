@@ -22,3 +22,9 @@ import me.proton.core.util.android.sentry.TimberLogger
 import me.proton.core.util.kotlin.Logger
 
 object WalletLogger : Logger by TimberLogger
+
+object LogTag {
+    const val DEFAULT = "me.proton.wallet.android.default"
+    const val CHANNEL_FLUTTER = "me.proton.wallet.android.channel.flutter"
+    const val CHANNEL_NATIVE = "me.proton.wallet.android.channel.native"
+}
