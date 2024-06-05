@@ -1,3 +1,4 @@
+
 name: wallet
 description: "Proton Wallet for Bitcoin"
 # The following line prevents the package from being accidentally published to
@@ -104,6 +105,9 @@ dependencies:
   # hive, shared_perferences is not stable
   hive: ^2.2.3
   hive_flutter: any
+  currency_text_input_formatter: ^2.2.3
+  #
+  synchronized: ^3.1.0+1
 
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)

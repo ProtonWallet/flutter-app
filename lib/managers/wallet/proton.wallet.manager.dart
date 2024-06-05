@@ -137,12 +137,12 @@ class ProtonWalletManager implements Manager {
         await _lib.syncWallet(blockchain!, wallet);
         walletBalance = await wallet.getBalance();
         accountModel.balance = (walletBalance.total).toDouble();
-        setBalance();
+        await setBalance();
         logger.d(
             "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
         await insertOrUpdateWalletAccount(accountModel);
         isWalletSyncing[accountModel.serverAccountID] = false;
-        setCurrentTransactions();
+        await setCurrentTransactions();
       }
     } catch (e) {
       logger.e(e.toString());
@@ -497,6 +497,7 @@ class ProtonWalletManager implements Manager {
   }
 
   Future<void> setCurrentTransactions() async {
+    // await _lock.synchronized(() async {
     bool bdkSynced = false;
     Wallet wallet;
     List<AccountModel> accountsToCheckTransaction = [];
@@ -913,6 +914,7 @@ class ProtonWalletManager implements Manager {
       applyHistoryTransactionFilterAndKeyword(transactionFilter, "");
       logger.i("setCurrentTransactions finish()!");
     }
+    // });
   }
 
   int getAccountCounts(WalletModel walletModel) {
@@ -1052,7 +1054,7 @@ class ProtonWalletProvider with ChangeNotifier {
       ProtonExchangeRate exchangeRate =
           await ExchangeRateService.getExchangeRate(fiatCurrency);
       userSettingProvider!.updateExchangeRate(exchangeRate);
-      setCurrentTransactions();
+      await setCurrentTransactions();
     }
   }
 

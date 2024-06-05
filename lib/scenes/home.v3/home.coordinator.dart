@@ -71,8 +71,8 @@ class HomeCoordinator extends Coordinator {
     push(view);
   }
 
-  void showBuy(int walletID, int accountID) {
-    var view = BuyBitcoinCoordinator(walletID, accountID).start();
+  void showBuy() {
+    var view = BuyBitcoinCoordinator().start();
     push(view);
   }
 
