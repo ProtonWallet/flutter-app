@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,10 +52,19 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       BuildContext context, HistoryDetailViewModel viewModel) {
     String fiatCurrencyName =
         Provider.of<UserSettingProvider>(context).getFiatCurrencyName();
+    int displayDigits = defaultDisplayDigits;
     if (viewModel.exchangeRate != null) {
       fiatCurrencyName = Provider.of<UserSettingProvider>(context)
           .getFiatCurrencyName(
               fiatCurrency: viewModel.exchangeRate!.fiatCurrency);
+      displayDigits = (log(viewModel.exchangeRate!.cents) / log(10)).round();
+    } else {
+      displayDigits = (log(Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .exchangeRate
+                  .cents) /
+              log(10))
+          .round();
     }
     return Container(
         color: ProtonColors.backgroundProton,
@@ -103,8 +113,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 ProtonColors.signalSuccess)),
                     Text(
                         viewModel.isSend
-                            ? "-$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
-                            : "+$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}",
+                            ? "-$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}"
+                            : "+$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.textHint)),
                     const SizedBox(height: 20),
@@ -226,7 +236,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               showNetworkFee(context);
                             },
                             content:
-                                "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(defaultDisplayDigits)}",
+                                "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(displayDigits)}",
                             memo: Provider.of<UserSettingProvider>(context)
                                 .getBitcoinUnitLabel(viewModel.fee.toInt()),
                           ),
@@ -237,8 +247,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                               title: S.of(context).trans_total,
                               content: viewModel.isSend
-                                  ? "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() - viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(defaultDisplayDigits)}"
-                                  : "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(defaultDisplayDigits)}",
+                                  ? "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() - viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}"
+                                  : "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(displayDigits)}",
                               memo: viewModel.isSend
                                   ? Provider.of<UserSettingProvider>(context)
                                       .getBitcoinUnitLabel(
