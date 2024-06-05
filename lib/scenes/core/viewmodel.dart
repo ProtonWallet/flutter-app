@@ -6,7 +6,7 @@ import 'package:wallet/helper/extension/platform.extension.dart';
 
 abstract class ViewModel<T extends Coordinator>
     extends NavigationFlowInterface {
-  GlobalKey<NavigatorState> get navigatorKey => coordinator.navigatorKey;
+  GlobalKey<NavigatorState>? get nestedNavigatorKey => coordinator.navigatorKey;
 
   ViewModel(this.coordinator);
   final T coordinator;

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/components/button.v5.dart';
+import 'package:wallet/components/dropdown.button.v2.dart';
+import 'package:wallet/components/dropdown.button.v3.dart';
 import 'package:wallet/components/page.layout.v1.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/buy/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -23,16 +26,111 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
           title: S.of(context).buy_bitcoin,
           child: Column(
             children: [
-              Text(viewModel.userEmail,
-                  style: FontManager.body2Regular(ProtonColors.textHint)),
-              Text(viewModel.receiveAddress,
-                  style: FontManager.body2Regular(ProtonColors.textHint)),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    viewModel.move(NavID.rampExternal);
-                  },
-                  child: const Text("Present Ramp"),
+              SizedBoxes.box18,
+              // switch button [buy / sell]
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ToggleButtons(
+                    isSelected: [viewModel.isBuying, !viewModel.isBuying],
+                    onPressed: (index) {
+                      viewModel.toggleButtons();
+                    },
+                    highlightColor: ProtonColors.protonBlue,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    renderBorder: false,
+                    selectedColor: Colors.black,
+                    fillColor: ProtonColors.protonGrey,
+                    // color: Colors.black,
+                    disabledColor: Colors.grey,
+                    borderRadius: BorderRadius.circular(10.0),
+                    constraints: const BoxConstraints(
+                      minHeight: 36.0,
+                      minWidth: 90.0,
+                    ),
+                    children: const [
+                      Text('Buy'),
+                      Text('Sell'),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBoxes.box18,
+              const Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        DropdownButtonV2(
+                          labelText: "Account",
+                          items: [],
+                          itemsText: ["BTC Account"],
+                          valueNotifier: null,
+                          width: 200,
+                        ),
+                        DropdownButtonV2(
+                          labelText: "Account",
+                          items: [],
+                          itemsText: ["BTC Account"],
+                          valueNotifier: null,
+                          width: 200,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBoxes.box18,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(24.0)),
+                  color: ProtonColors.backgroundProton,
+                ),
+                constraints: const BoxConstraints(
+                  minHeight: 36.0,
+                  minWidth: 90.0,
+                ),
+                child: const Column(
+                  children: [
+                    DropdownButtonV3(),
+                  ],
+                ),
+              ),
+              SizedBoxes.box18,
+              const Text("1 BTC ≈ \$60,045.78 CHF (Includes fee)"),
+              SizedBoxes.box18,
+              // payment
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Pay with Credit card\nwith Ramp',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    viewModel.isloading
+                        ? const CircularProgressIndicator()
+                        : Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 6.0),
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: const Text(
+                              'Recommended',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                  ],
                 ),
               ),
               Padding(
@@ -40,25 +138,24 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ToggleButtons(
-                      isSelected: [viewModel.isBuying, !viewModel.isBuying],
-                      onPressed: (index) {
-                        // setState(() {
-                        //   isBuying = index == 0;
-                        // });
-                      },
-                      borderRadius: BorderRadius.circular(10.0),
-                      selectedColor: Colors.white,
-                      fillColor: Colors.blue,
-                      color: Colors.black,
-                      constraints: const BoxConstraints(
-                          minHeight: 40.0, minWidth: 100.0),
-                      children: const [
-                        Text('Buy'),
-                        Text('Sell'),
-                      ],
-                    ),
                     const SizedBox(height: 20.0),
+                    ButtonV5(
+                        onPressed:
+                            viewModel.isloading ? null : viewModel.startLoading,
+                        text: "Buy with credit card",
+                        width: MediaQuery.of(context).size.width - 100,
+                        backgroundColor: ProtonColors.protonBlue,
+                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        height: 48),
+                    const SizedBox(height: 20.0),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          viewModel.move(NavID.rampExternal);
+                        },
+                        child: const Text("Present Ramp"),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -75,7 +172,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20.0),
                     BlocBuilder<BuyBitcoinBloc, BuyBitcoinState>(
                       builder: (context, state) {
                         return Column(
@@ -101,7 +197,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         );
                       },
                     ),
-                    const SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -148,46 +243,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         ),
                       ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Pay with Credit card\nwith Ramp',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          viewModel.isloading
-                              ? const CircularProgressIndicator()
-                              : Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: const Text(
-                                    'Recommended',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ButtonV5(
-                        onPressed:
-                            viewModel.isloading ? null : viewModel.startLoading,
-                        text: "Buy with credit card",
-                        width: MediaQuery.of(context).size.width - 100,
-                        backgroundColor: ProtonColors.protonBlue,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
-                        height: 48),
-                    const SizedBox(height: 20.0),
                   ],
                 ),
               ),
