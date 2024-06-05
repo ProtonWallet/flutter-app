@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -20,7 +19,6 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final Color? backgroundColor;
   final FiatCurrency currency;
   final int currencyExchangeRate;
-  final double btcBalance;
   final UserSettingProvider userSettingProvider;
 
   const TextFieldSendBTCV2(
@@ -37,7 +35,6 @@ class TextFieldSendBTCV2 extends StatefulWidget {
       required this.validation,
       required this.currency,
       required this.currencyExchangeRate,
-      required this.btcBalance,
       required this.userSettingProvider,
       this.checkOfErrorOnFocusChange = true});
 
@@ -143,28 +140,6 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                     focusedErrorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              widget.textController.text = widget
-                                  .userSettingProvider
-                                  .getNotionalInFiatCurrency(
-                                      (widget.btcBalance * 100000000).toInt())
-                                  .toStringAsFixed(defaultDisplayDigits);
-                            },
-                            child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 2),
-                                child: Text("MAX",
-                                    style: FontManager.body2Median(
-                                        ProtonColors.alertWaning)))),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ),

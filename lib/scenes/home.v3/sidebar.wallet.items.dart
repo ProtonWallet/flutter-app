@@ -320,7 +320,7 @@ class SidebarWalletItems extends StatelessWidget {
         .getNotionalInFiatCurrency(accountModel.balance.toInt());
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.captionSemiBold(textColor)),
       Text(
           Provider.of<UserSettingProvider>(context)
