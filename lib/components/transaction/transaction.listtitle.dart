@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -50,9 +52,18 @@ class TransactionListTitle extends StatelessWidget {
         .getNotionalInFiatCurrency(amount.toInt(), exchangeRate: exchangeRate);
     String fiatCurrencyName =
         Provider.of<UserSettingProvider>(context).getFiatCurrencySign();
+    int displayDigits = defaultDisplayDigits;
     if (exchangeRate != null) {
       fiatCurrencyName = Provider.of<UserSettingProvider>(context)
           .getFiatCurrencyName(fiatCurrency: exchangeRate!.fiatCurrency);
+      displayDigits = (log(exchangeRate!.cents) / log(10)).round();
+    } else {
+      displayDigits = (log(Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .exchangeRate
+                  .cents) /
+              log(10))
+          .round();
     }
     return GestureDetector(
         onTap: onTap,
@@ -97,14 +108,13 @@ class TransactionListTitle extends StatelessWidget {
                         const SizedBox(width: 4),
                         isSend
                             ? Text(
-                                Provider.of<UserSettingProvider>(context)
-                                    .getBitcoinUnitLabel(amount.toInt()),
+                                "-$fiatCurrencyName ${notional.abs().toStringAsFixed(displayDigits)}",
                                 style: FontManager.captionRegular(
-                                    ProtonColors.signalError))
+                                    ProtonColors.textHint))
                             : Text(
-                                "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
+                                "+$fiatCurrencyName ${notional.toStringAsFixed(displayDigits)}",
                                 style: FontManager.captionRegular(
-                                    ProtonColors.signalSuccess)),
+                                    ProtonColors.textHint))
                       ]),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,13 +138,14 @@ class TransactionListTitle extends StatelessWidget {
                         const SizedBox(width: 4),
                         isSend
                             ? Text(
-                                "-$fiatCurrencyName ${notional.abs().toStringAsFixed(defaultDisplayDigits)}",
+                                Provider.of<UserSettingProvider>(context)
+                                    .getBitcoinUnitLabel(amount.toInt()),
                                 style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
+                                    ProtonColors.signalError))
                             : Text(
-                                "+$fiatCurrencyName ${notional.toStringAsFixed(defaultDisplayDigits)}",
+                                "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
                                 style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
+                                    ProtonColors.signalSuccess)),
                       ]),
                   if (note != "")
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [

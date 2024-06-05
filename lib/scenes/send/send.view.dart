@@ -363,7 +363,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     context, viewModel);
                               },
                               content:
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
+                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
                               memo: Provider.of<UserSettingProvider>(context)
                                   .getBitcoinUnitLabel(estimatedFee),
                             ),
@@ -606,7 +606,7 @@ class SendView extends ViewBase<SendViewModel> {
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           Provider.of<UserSettingProvider>(context)
@@ -625,7 +625,7 @@ class SendView extends ViewBase<SendViewModel> {
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
       memo: Provider.of<UserSettingProvider>(context)
           .getBitcoinUnitLabel((viewModel.totalAmountInSAT + estimatedFee)),
     );
@@ -905,7 +905,7 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
       break;
   }
   String estimatedFeeInFiatCurrency =
-      "${Provider.of<UserSettingProvider>(context).getFiatCurrencySign()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
+      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
   String estimatedFeeInSATS = Provider.of<UserSettingProvider>(context)
       .getBitcoinUnitLabel(estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

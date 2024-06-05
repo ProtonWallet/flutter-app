@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/bdk/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/bdk/types.dart' as type;
 
 class BdkLibrary {
   CoinType coinType;
@@ -241,6 +242,10 @@ class BdkLibrary {
       logger.d("amount: ${e["value"]}");
       logger.d("script_pubkey: ${e["script_pubkey"]}");
     }
+  }
+
+  Future<Address> addressFromScript(type.Script script) async {
+    return await Address.fromScript(script, coinType.network);
   }
 
   sendBitcoin(Blockchain blockchain, Wallet aliceWallet, String addressStr,
