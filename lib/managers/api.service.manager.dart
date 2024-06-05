@@ -62,7 +62,7 @@ class ProtonApiServiceManager implements Manager {
 
     var apiService = _apiService;
     if (apiService != null) {
-      logger.w("ApiService already initalized");
+      logger.w("ApiService already initalized, updating the session");
       await apiService.updateAuth(
           uid: uid,
           access: accessToken,

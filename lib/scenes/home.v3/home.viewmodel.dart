@@ -703,10 +703,7 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showDiscover();
         break;
       case NavID.buy:
-        coordinator.showBuy(
-            currentWallet!.id ?? 0,
-            currentAccount!.id ??
-                0); // TODO:: currentAccount will be null if it's in walletView
+        coordinator.showBuy();
         break;
       case NavID.nativeUpgrade:
         final session = await userManager.getChildSession();

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/nested.navigator.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -112,6 +113,9 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     WidgetBuilder content,
     DrawerCallback onDrawerChanged,
   ) {
+    /// in case the nested navigator key is not set, set it.
+    ///   need to rearrange the location
+    Coordinator.nestedNavigatorKey ??= GlobalKey<NavigatorState>();
     return NestedNavigator(
       builder: (context) {
         return Scaffold(
@@ -125,7 +129,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
           body: content(context),
         );
       },
-      navigatorKey: viewModel.navigatorKey,
+      navigatorKey: viewModel.nestedNavigatorKey,
     );
   }
 }
