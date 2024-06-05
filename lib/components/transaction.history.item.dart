@@ -13,10 +13,11 @@ class TransactionHistoryItem extends StatelessWidget {
   final String title;
   final String content;
   final String? memo;
+  final String? bitcoinAddress;
+  final String? walletAccountName;
   final VoidCallback? titleCallback; // display after title
   final VoidCallback? titleOptionsCallback; // display at far right of title
   final Color? contentColor;
-  final bool copyContent;
   final int? amountInSATS;
   final ProtonExchangeRate? exchangeRate;
 
@@ -28,9 +29,10 @@ class TransactionHistoryItem extends StatelessWidget {
     this.titleOptionsCallback,
     this.titleCallback,
     this.contentColor,
-    this.copyContent = false,
     this.amountInSATS,
     this.exchangeRate,
+    this.bitcoinAddress,
+    this.walletAccountName,
   });
 
   @override
@@ -73,43 +75,78 @@ class TransactionHistoryItem extends StatelessWidget {
                           style:
                               FontManager.body2Median(ProtonColors.textWeak)))
               ]),
-          Row(children: [
-            Expanded(
-                child: Text(content.isNotEmpty ? content : memo ?? "",
-                    style: FontManager.body2Median(contentColor != null
-                        ? contentColor!
-                        : ProtonColors.textNorm),
-                    softWrap: true)),
-            const SizedBox(width: 2),
-            if (copyContent)
-              GestureDetector(
-                onTap: () {
-                  // TODO:: fix me
-                  String bitcoinAddress = "";
-                  if (CommonHelper.isBitcoinAddress(content)) {
-                    bitcoinAddress = content;
-                  } else if (CommonHelper.isBitcoinAddress(memo ?? "")) {
-                    bitcoinAddress = memo ?? "";
-                  }
-                  if (bitcoinAddress.isNotEmpty) {
-                    Clipboard.setData(ClipboardData(text: bitcoinAddress))
-                        .then((_) {
-                      if (context.mounted) {
-                        CommonHelper.showSnackbar(
-                            context, S.of(context).copied_address);
-                      }
-                    });
-                  }
+          if (content.isNotEmpty || memo != null)
+            GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(
+                          text: content.isNotEmpty ? content : memo ?? ""))
+                      .then((_) {
+                    if (context.mounted) {
+                      CommonHelper.showSnackbar(context, S.of(context).copied);
+                    }
+                  });
                 },
-                child: Icon(Icons.copy_rounded,
-                    size: 16,
-                    color: contentColor != null
-                        ? contentColor!
-                        : ProtonColors.textHint),
-              )
-          ]),
+                child: Row(children: [
+                  Expanded(
+                      child: Text(content.isNotEmpty ? content : memo ?? "",
+                          style: FontManager.body2Median(contentColor != null
+                              ? contentColor!
+                              : ProtonColors.textNorm),
+                          softWrap: true)),
+                  const SizedBox(width: 2),
+                ])),
           if (memo != null && content.isNotEmpty)
-            Text(memo!, style: FontManager.body2Regular(ProtonColors.textHint)),
+            GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: memo ?? "")).then((_) {
+                    if (context.mounted) {
+                      CommonHelper.showSnackbar(context, S.of(context).copied);
+                    }
+                  });
+                },
+                child: Text(memo!,
+                    style: FontManager.body2Regular(ProtonColors.textHint))),
+          if (walletAccountName != null)
+            GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(
+                          ClipboardData(text: walletAccountName ?? ""))
+                      .then((_) {
+                    if (context.mounted) {
+                      CommonHelper.showSnackbar(context, S.of(context).copied);
+                    }
+                  });
+                },
+                child: Text(walletAccountName!,
+                    style: FontManager.body2Regular(ProtonColors.textNorm))),
+          if (bitcoinAddress != null)
+            GestureDetector(
+              onTap: () {
+                if (bitcoinAddress!.isNotEmpty) {
+                  Clipboard.setData(ClipboardData(text: bitcoinAddress!))
+                      .then((_) {
+                    if (context.mounted) {
+                      CommonHelper.showSnackbar(
+                          context, S.of(context).copied_address);
+                    }
+                  });
+                }
+              },
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(bitcoinAddress!,
+                        style: FontManager.body2Median(ProtonColors.textHint),
+                        softWrap: true),
+                    const SizedBox(width: 4),
+                    Icon(Icons.copy_rounded,
+                        size: 16,
+                        color: contentColor != null
+                            ? contentColor!
+                            : ProtonColors.textHint),
+                  ]),
+            ),
           if (amountInSATS != null)
             Row(
               children: [
