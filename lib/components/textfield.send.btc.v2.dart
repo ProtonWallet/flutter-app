@@ -45,9 +45,22 @@ class TextFieldSendBTCV2 extends StatefulWidget {
 class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   bool isError = false;
   String errorString = "";
+  int estimatedSATS = 0;
 
   getBorderColor(isFocus) {
     return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.textController.addListener(updateEstimateSATS);
+  }
+
+  @override
+  void dispose() {
+    widget.textController.removeListener(updateEstimateSATS);
+    super.dispose();
   }
 
   @override
@@ -95,53 +108,62 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
-                  scrollPadding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom + 60),
-                  focusNode: widget.myFocusNode,
-                  controller: widget.textController,
-                  style: FontManager.body1Median(ProtonColors.textNorm),
-                  autofocus: widget.autofocus,
-                  keyboardType: widget.keyboardType,
-                  textInputAction: widget.textInputAction,
-                  inputFormatters: widget.inputFormatters,
-                  validator: (string) {
-                    if (widget
-                        .validation(widget.textController.text)
-                        .toString()
-                        .isNotEmpty) {
-                      setState(() {
-                        isError = true;
-                        errorString =
-                            widget.validation(widget.textController.text);
-                      });
-                      return "";
-                    } else {
-                      setState(() {
-                        isError = false;
-                        errorString =
-                            widget.validation(widget.textController.text);
-                      });
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    labelText: widget.labelText,
-                    labelStyle: isError
-                        ? FontManager.textFieldLabelStyle(
-                            ProtonColors.signalError)
-                        : FontManager.textFieldLabelStyle(
-                            ProtonColors.textWeak),
-                    contentPadding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 4, bottom: 16),
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    border: InputBorder.none,
-                    errorStyle: const TextStyle(height: 0),
-                    focusedErrorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
-                ),
+                    scrollPadding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 60),
+                    focusNode: widget.myFocusNode,
+                    controller: widget.textController,
+                    style: FontManager.body1Median(ProtonColors.textNorm),
+                    autofocus: widget.autofocus,
+                    keyboardType: widget.keyboardType,
+                    textInputAction: widget.textInputAction,
+                    inputFormatters: widget.inputFormatters,
+                    validator: (string) {
+                      if (widget
+                          .validation(widget.textController.text)
+                          .toString()
+                          .isNotEmpty) {
+                        setState(() {
+                          isError = true;
+                          errorString =
+                              widget.validation(widget.textController.text);
+                        });
+                        return "";
+                      } else {
+                        setState(() {
+                          isError = false;
+                          errorString =
+                              widget.validation(widget.textController.text);
+                        });
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: widget.labelText,
+                      labelStyle: isError
+                          ? FontManager.textFieldLabelStyle(
+                              ProtonColors.signalError)
+                          : FontManager.textFieldLabelStyle(
+                              ProtonColors.textWeak),
+                      contentPadding: const EdgeInsets.only(
+                          left: 10, right: 10, top: 4, bottom: 16),
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      border: InputBorder.none,
+                      errorStyle: const TextStyle(height: 0),
+                      focusedErrorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      suffixIcon: widget.myFocusNode.hasFocus
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  widget.myFocusNode.unfocus();
+                                });
+                              },
+                              icon: Icon(Icons.check_circle_outline_rounded,
+                                  size: 20, color: ProtonColors.textWeak))
+                          : null,
+                    )),
               ),
             ),
           ),
@@ -151,8 +173,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                  widget.userSettingProvider
-                      .getBitcoinUnitLabel(getEstimateSats()),
+                  widget.userSettingProvider.getBitcoinUnitLabel(estimatedSATS),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],
@@ -160,7 +181,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     );
   }
 
-  int getEstimateSats() {
+  void updateEstimateSATS() {
     double amount = 0.0;
     try {
       amount = double.parse(widget.textController.text);
@@ -168,6 +189,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
       amount = 0.0;
     }
     double btcAmount = widget.userSettingProvider.getNotionalInBTC(amount);
-    return (btcAmount * 100000000).ceil();
+    setState(() {
+      estimatedSATS = (btcAmount * 100000000).ceil();
+    });
   }
 }

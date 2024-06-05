@@ -16,11 +16,18 @@ abstract class BitcoinAddressDao extends BitcoinAddressDatabase
       required int used});
 
   Future<BitcoinAddressModel?> findByBitcoinAddress(String bitcoinAddress);
+
   Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
       int walletID, int accountID);
+
   Future<int> getUnusedPoolCount(int walletID, int accountID);
+
   Future<bool> isMine(int walletID, int accountID, String bitcoinAddress);
-  Future<List<BitcoinAddressModel>> findByWalletAccount(int walletID, int accountID);
+
+  Future<List<BitcoinAddressModel>> findByWallet(int walletID, {String orderBy = "desc"});
+
+  Future<List<BitcoinAddressModel>> findByWalletAccount(
+      int walletID, int accountID, {String orderBy = "desc"});
 }
 
 class BitcoinAddressDaoImpl extends BitcoinAddressDao {
@@ -136,7 +143,8 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<bool> isMine(int walletID, int accountID, String bitcoinAddress) async {
+  Future<bool> isMine(
+      int walletID, int accountID, String bitcoinAddress) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'walletID = ? and accountID = ? and bitcoinAddress = ?',
         whereArgs: [walletID, accountID, bitcoinAddress],
@@ -145,11 +153,22 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<List<BitcoinAddressModel>> findByWalletAccount(int walletID, int accountID) async {
+  Future<List<BitcoinAddressModel>> findByWallet(int walletID, {String orderBy = "desc"}) async {
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'walletID = ?',
+        whereArgs: [walletID],
+        orderBy: 'bitcoinAddressIndex $orderBy');
+    return List.generate(
+        maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
+  }
+
+  @override
+  Future<List<BitcoinAddressModel>> findByWalletAccount(
+      int walletID, int accountID, {String orderBy = "desc"}) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'walletID = ? and accountID = ?',
         whereArgs: [walletID, accountID],
-        orderBy: 'bitcoinAddressIndex desc');
+        orderBy: 'bitcoinAddressIndex $orderBy');
     return List.generate(
         maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
   }
