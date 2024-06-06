@@ -26,7 +26,8 @@ class AdvanceWalletSettingSheet {
                   child: Text(S.of(context).backup_wallet,
                       style: FontManager.body2Regular(ProtonColors.textNorm))),
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // pop this modalBottomSheet
+                Navigator.of(context).pop(); // pop wallet setting sheet or it will hide setupBackup view
                 viewModel.move(NavID.setupBackup);
               }),
           const Divider(
