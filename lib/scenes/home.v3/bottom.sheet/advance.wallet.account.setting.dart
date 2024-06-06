@@ -9,7 +9,8 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AdvanceWalletAccountSettingSheet {
-  static void show(BuildContext context, HomeViewModel viewModel, AccountModel userAccount, bool canDelete) {
+  static void show(
+      BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -25,17 +26,11 @@ class AdvanceWalletAccountSettingSheet {
               title: Transform.translate(
                   offset: const Offset(-8, 0),
                   child: Text(S.of(context).delete_account,
-                      style: FontManager.body2Regular(
-                          ProtonColors.signalError))),
+                      style:
+                          FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 Navigator.of(context).pop();
-                if (canDelete) {
-                  DeleteAccountSheet.show(
-                      context, viewModel, userAccount);
-                } else {
-                  LocalToast.showErrorToast(
-                      context, S.of(context).cannot_delete_last_account);
-                }
+                DeleteAccountSheet.show(context, viewModel, userAccount);
               }),
         ],
       );
