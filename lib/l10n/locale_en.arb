@@ -136,6 +136,7 @@
   "recovery": "Recovery",
   "wallets": "Wallets",
   "wallet_name": "Wallet Name",
+  "search": "Search",
   "wallet_name_hint": "Give a name to this wallet",
   "update_wallet_name": "Wallet rename",
   "rename_account": "Rename Account",

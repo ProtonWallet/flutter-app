@@ -230,6 +230,7 @@ class WalletSettingSheet {
                           width: MediaQuery.of(context).size.width -
                               defaultPadding * 2,
                           items: fiatCurrencies,
+                          canSearch: true,
                           itemsText: fiatCurrencies
                               .map((v) => FiatCurrencyHelper.getFullName(v))
                               .toList(),
