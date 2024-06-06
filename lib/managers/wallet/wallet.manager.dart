@@ -452,7 +452,8 @@ class WalletManager implements Manager {
     try {
       Wallet wallet =
           await WalletManager.loadWalletWithID(walletID, walletAccountID);
-      return (await wallet.getBalance()).total.toDouble();
+      Balance balance = await wallet.getBalance();
+      return (balance.trustedPending + balance.confirmed).toDouble();
     } catch (e) {
       logger.e(e.toString());
     }

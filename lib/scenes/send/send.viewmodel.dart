@@ -303,7 +303,7 @@ class SendViewModelImpl extends SendViewModel {
     accountAddressIDs = await WalletManager.getAccountAddressIDs(
         accountModel?.serverAccountID ?? "");
     var walletBalance = await _wallet.getBalance();
-    balance = walletBalance.total;
+    balance = walletBalance.trustedPending + walletBalance.confirmed;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
