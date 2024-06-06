@@ -175,7 +175,7 @@ class SendView extends ViewBase<SendViewModel> {
                               Container(
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: DropdownButtonV2(
-                                      width: 100,
+                                      width: 80,
                                       padding: const EdgeInsets.only(
                                           left: 10,
                                           right: 10,
@@ -186,6 +186,7 @@ class SendView extends ViewBase<SendViewModel> {
                                           ProtonColors.textNorm),
                                       backgroundColor: ProtonColors.white,
                                       items: fiatCurrencies,
+                                      canSearch: true,
                                       itemsText: fiatCurrencies
                                           .map((v) =>
                                               FiatCurrencyHelper.getFullName(v))

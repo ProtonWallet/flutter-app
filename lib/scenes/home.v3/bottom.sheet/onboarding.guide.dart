@@ -61,6 +61,7 @@ class OnboardingGuideSheet {
                       labelText: S.of(context).setting_fiat_currency_label,
                       width: MediaQuery.of(context).size.width,
                       items: fiatCurrencies,
+                      canSearch: true,
                       itemsText: fiatCurrencies
                           .map((v) => FiatCurrencyHelper.getFullName(v))
                           .toList(),

@@ -81,6 +81,7 @@ class AddWalletAccountSheet {
                               width: MediaQuery.of(context).size.width -
                                   defaultPadding * 4,
                               items: fiatCurrencies,
+                              canSearch: true,
                               itemsText: fiatCurrencies
                                   .map((v) => FiatCurrencyHelper.getFullName(v))
                                   .toList(),

@@ -15,6 +15,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final Function? onFinish;
   final bool checkOfErrorOnFocusChange;
   final Color? backgroundColor;
+  final Color? borderColor;
   final bool isPassword;
   final double? paddingSize;
   final int? maxLines;
@@ -22,12 +23,14 @@ class TextFieldTextV2 extends StatefulWidget {
   final String? hintText;
   final int? maxLength;
   final bool? showFinishButton;
+  final Widget? prefixIcon;
 
   const TextFieldTextV2({
     super.key,
     this.labelText = "",
     this.onFinish,
     this.backgroundColor,
+    this.borderColor,
     this.autofocus = false,
     required this.textController,
     required this.myFocusNode,
@@ -43,6 +46,7 @@ class TextFieldTextV2 extends StatefulWidget {
     this.hintText,
     this.maxLength,
     this.showFinishButton,
+    this.prefixIcon,
   });
 
   @override
@@ -55,7 +59,9 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
   bool isObscureText = true;
 
   getBorderColor(isFocus) {
-    return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
+    return isFocus
+        ? ProtonColors.interactionNorm
+        : widget.borderColor ?? Colors.transparent;
   }
 
   @override
@@ -180,6 +186,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                             ProtonColors.signalError)
                         : FontManager.textFieldLabelStyle(
                             ProtonColors.textWeak),
+                    prefixIcon: widget.prefixIcon,
                     contentPadding: EdgeInsets.only(
                         left: 10,
                         right: 10,
