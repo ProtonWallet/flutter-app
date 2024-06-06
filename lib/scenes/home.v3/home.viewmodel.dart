@@ -709,6 +709,9 @@ class HomeViewModelImpl extends HomeViewModel {
         final session = await userManager.getChildSession();
         coordinator.showNativeUpgrade(session);
         break;
+      case NavID.natvieReportBugs:
+        coordinator.showNativeReportBugs();
+        break;
       default:
         break;
     }
