@@ -211,10 +211,10 @@ class WalletSettingSheet {
                                     child: IconButton(
                                       onPressed: () {
                                         AdvanceWalletAccountSettingSheet.show(
-                                            context,
-                                            viewModel,
-                                            userAccount,
-                                            userAccounts.length > 1);
+                                          context,
+                                          viewModel,
+                                          userAccount,
+                                        );
                                       },
                                       icon: Icon(Icons.more_horiz_rounded,
                                           size: 20,
