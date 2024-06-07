@@ -148,12 +148,14 @@ class ProtonWalletManager implements Manager {
         isWalletSyncing[accountModel.serverAccountID] = true;
         logger.i("set isWalletSyncing[${accountModel.serverAccountID}] = true");
         var balance = await wallet.getBalance();
-        accountModel.balance =  (balance.trustedPending + balance.confirmed).toDouble();
+        accountModel.balance =
+            (balance.trustedPending + balance.confirmed).toDouble();
         logger.d(
             "start syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
         await _lib.syncWallet(blockchain!, wallet);
         balance = await wallet.getBalance();
-        accountModel.balance = (balance.trustedPending + balance.confirmed).toDouble();
+        accountModel.balance =
+            (balance.trustedPending + balance.confirmed).toDouble();
         await setBalance();
         logger.d(
             "end syncing ${accountModel.labelDecrypt} at ${DateTime.now()}, currentBalance = $currentBalance");
@@ -448,6 +450,11 @@ class ProtonWalletManager implements Manager {
         deletedWalletModel.serverWalletID) {
       await setDefaultWallet();
     }
+    for (AccountModel accountModel in accounts) {
+      if (accountModel.walletID == deletedWalletModel.id) {
+        _accountID2IntegratedEmailIDs.remove(accountModel.id);
+      }
+    }
   }
 
   Future<void> insertOrUpdateWalletAccount(AccountModel newAccountModel) async {
@@ -491,6 +498,7 @@ class ProtonWalletManager implements Manager {
     if (indexToDelete >= 0) {
       accounts.removeAt(indexToDelete);
     }
+    _accountID2IntegratedEmailIDs.remove(deletedAccountModel.id!);
     await getCurrentWalletAccounts();
     if (deletedAccountModel.serverAccountID ==
         (currentAccount?.serverAccountID ?? "")) {
@@ -523,7 +531,8 @@ class ProtonWalletManager implements Manager {
     maxAddressIndex = max(
         maxAddressIndex,
         serverAccountID2BitcoinAddresses[accountModel.serverAccountID]!
-            .highestUsedIndex + 1);
+                .highestUsedIndex +
+            1);
     // TODO:: update local one in sharepreference so that receive bitcoin address can be the correct one
 
     for (int addressIndex = 0;

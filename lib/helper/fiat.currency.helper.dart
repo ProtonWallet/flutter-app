@@ -25,7 +25,7 @@ class FiatCurrencyHelper {
       sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
       symbol = fiatCurrency2Info[apiFiatCurrency]!.symbol.toUpperCase();
     }
-    return "$name, $symbol($sign)";
+    return "$symbol ($sign) - $name";
   }
 
   static String getDisplayName(FiatCurrency apiFiatCurrency) {
@@ -35,7 +35,7 @@ class FiatCurrencyHelper {
       sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
       symbol = fiatCurrency2Info[apiFiatCurrency]!.symbol.toUpperCase();
     }
-    return "$symbol($sign)";
+    return symbol;
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/components/button.v5.dart';
@@ -15,6 +16,7 @@ import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -59,90 +61,97 @@ class OnboardingGuideSheet {
                       labelText: S.of(context).setting_fiat_currency_label,
                       width: MediaQuery.of(context).size.width,
                       items: fiatCurrencies,
+                      canSearch: true,
                       itemsText: fiatCurrencies
                           .map((v) => FiatCurrencyHelper.getFullName(v))
                           .toList(),
                       valueNotifier: viewModel.fiatCurrencyNotifier),
                   const SizedBox(height: 10),
-                  ExpansionTile(
-                      shape: const Border(),
-                      initiallyExpanded: false,
-                      title: Transform.translate(
-                          offset: const Offset(-12, 0),
-                          child: Text(S.of(context).add_a_passphrase_optional,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak))),
-                      iconColor: ProtonColors.textHint,
-                      collapsedIconColor: ProtonColors.textHint,
-                      children: [
-                        AlertCustom(
-                          content: S.of(context).what_is_wallet_passphrase,
-                          onTap: () {
-                            PassphraseTutorialSheet.show(context);
-                          },
-                          canClose: false,
-                          leadingWidget: SvgPicture.asset(
-                              "assets/images/icon/alert_info.svg",
-                              fit: BoxFit.fill,
-                              width: 22,
-                              height: 22),
-                          border: Border.all(
-                            color: Colors.transparent,
-                            width: 0,
+                  if (Provider.of<ProtonWalletProvider>(context)
+                      .protonWallet
+                      .wallets
+                      .isNotEmpty)
+                    ExpansionTile(
+                        shape: const Border(),
+                        initiallyExpanded: false,
+                        title: Transform.translate(
+                            offset: const Offset(-12, 0),
+                            child: Text(S.of(context).add_a_passphrase_optional,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textWeak))),
+                        iconColor: ProtonColors.textHint,
+                        collapsedIconColor: ProtonColors.textHint,
+                        children: [
+                          AlertCustom(
+                            content: S.of(context).what_is_wallet_passphrase,
+                            onTap: () {
+                              PassphraseTutorialSheet.show(context);
+                            },
+                            canClose: false,
+                            leadingWidget: SvgPicture.asset(
+                                "assets/images/icon/alert_info.svg",
+                                fit: BoxFit.fill,
+                                width: 22,
+                                height: 22),
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                            backgroundColor: ProtonColors.purple1Background,
+                            color: ProtonColors.purple1Text,
                           ),
-                          backgroundColor: ProtonColors.purple1Background,
-                          color: ProtonColors.purple1Text,
-                        ),
-                        SizedBoxes.box12,
-                        TextFieldTextV2(
-                          labelText: S.of(context).add_a_passphrase_optional,
-                          textController: viewModel.passphraseTextController,
-                          myFocusNode: viewModel.passphraseFocusNode,
-                          validation: (String _) {
-                            if (viewModel.passphraseTextController.text !=
-                                    viewModel
-                                        .passphraseConfirmTextController.text &&
-                                viewModel.passphraseConfirmTextController.text
-                                    .isNotEmpty) {
-                              return S.of(context).passphrase_are_not_match;
-                            }
-                            return "";
-                          },
-                          onFinish: () {
-                            setState(() {
-                              passphraseConfirmed =
-                                  viewModel.passphraseTextController.text ==
-                                      viewModel
-                                          .passphraseConfirmTextController.text;
-                            });
-                          },
-                          isPassword: true,
-                        ),
-                        SizedBoxes.box8,
-                        TextFieldTextV2(
-                          labelText: S.of(context).confirm_passphrase_label,
-                          textController:
-                              viewModel.passphraseConfirmTextController,
-                          myFocusNode: viewModel.passphraseConfirmFocusNode,
-                          validation: (String _) {
-                            if (viewModel.passphraseTextController.text !=
-                                viewModel
-                                    .passphraseConfirmTextController.text) {
-                              return S.of(context).passphrase_are_not_match;
-                            }
-                            return "";
-                          },
-                          onFinish: () {
-                            setState(() {
-                              passphraseConfirmed =
-                                  viewModel.passphraseTextController.text ==
-                                      viewModel
-                                          .passphraseConfirmTextController.text;
-                            });
-                          },
-                          isPassword: true,
-                        ),
-                      ]),
+                          SizedBoxes.box12,
+                          TextFieldTextV2(
+                            labelText: S.of(context).add_a_passphrase_optional,
+                            textController: viewModel.passphraseTextController,
+                            myFocusNode: viewModel.passphraseFocusNode,
+                            validation: (String _) {
+                              if (viewModel.passphraseTextController.text !=
+                                      viewModel.passphraseConfirmTextController
+                                          .text &&
+                                  viewModel.passphraseConfirmTextController.text
+                                      .isNotEmpty) {
+                                return S.of(context).passphrase_are_not_match;
+                              }
+                              return "";
+                            },
+                            onFinish: () {
+                              setState(() {
+                                passphraseConfirmed =
+                                    viewModel.passphraseTextController.text ==
+                                        viewModel
+                                            .passphraseConfirmTextController
+                                            .text;
+                              });
+                            },
+                            isPassword: true,
+                          ),
+                          SizedBoxes.box8,
+                          TextFieldTextV2(
+                            labelText: S.of(context).confirm_passphrase_label,
+                            textController:
+                                viewModel.passphraseConfirmTextController,
+                            myFocusNode: viewModel.passphraseConfirmFocusNode,
+                            validation: (String _) {
+                              if (viewModel.passphraseTextController.text !=
+                                  viewModel
+                                      .passphraseConfirmTextController.text) {
+                                return S.of(context).passphrase_are_not_match;
+                              }
+                              return "";
+                            },
+                            onFinish: () {
+                              setState(() {
+                                passphraseConfirmed =
+                                    viewModel.passphraseTextController.text ==
+                                        viewModel
+                                            .passphraseConfirmTextController
+                                            .text;
+                              });
+                            },
+                            isPassword: true,
+                          ),
+                        ]),
                   const SizedBox(height: 30),
                   Padding(
                       padding: const EdgeInsets.symmetric(
@@ -153,13 +162,13 @@ class OnboardingGuideSheet {
                               if (viewModel.passphraseTextController.text ==
                                   viewModel
                                       .passphraseConfirmTextController.text) {
+                                Navigator.of(context).pop();
                                 EasyLoading.show(
                                     status: "creating wallet..",
                                     maskType: EasyLoadingMaskType.black);
                                 await viewModel.createWallet();
                                 EasyLoading.dismiss();
                                 if (context.mounted) {
-                                  Navigator.of(context).pop();
                                   if (viewModel.errorMessage.isEmpty) {
                                     CommonHelper.showSnackbar(
                                         context, S.of(context).wallet_created);

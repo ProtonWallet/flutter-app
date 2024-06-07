@@ -10,6 +10,7 @@ abstract class AddressDao extends AddressDatabase implements BaseDao {
   Future<AddressModel?> findByServerID(String serverID);
 
   Future<void> deleteByServerID(String serverID);
+  Future<void> deleteByServerAccountID(String serverAccountID);
 }
 
 class AddressDaoImpl extends AddressDao {
@@ -80,5 +81,10 @@ class AddressDaoImpl extends AddressDao {
       return AddressModel.fromMap(maps.first);
     }
     return null;
+  }
+
+  @override
+  Future<void> deleteByServerAccountID(String serverAccountID) async{
+    await db.delete(tableName, where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
   }
 }

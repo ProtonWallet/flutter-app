@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
@@ -20,20 +21,23 @@ class DropdownButtonV2 extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
   final TextStyle? textStyle;
+  final bool canSearch;
 
-  const DropdownButtonV2(
-      {super.key,
-      required this.width,
-      required this.items,
-      required this.itemsText,
-      this.itemsTextForDisplay,
-      this.labelText,
-      this.backgroundColor,
-      this.defaultOption,
-      this.padding,
-      this.textStyle,
-      this.maxSuffixIconWidth = 24,
-      this.valueNotifier});
+  const DropdownButtonV2({
+    super.key,
+    required this.width,
+    required this.items,
+    required this.itemsText,
+    this.itemsTextForDisplay,
+    this.labelText,
+    this.backgroundColor,
+    this.defaultOption,
+    this.padding,
+    this.textStyle,
+    this.maxSuffixIconWidth = 24,
+    this.valueNotifier,
+    this.canSearch = false,
+  });
 
   @override
   DropdownButtonV2State createState() => DropdownButtonV2State();
@@ -124,6 +128,9 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   }
 
   void showOptionsInBottomSheet(BuildContext context) {
+    TextEditingController searchBoxController = TextEditingController();
+    FocusNode searchBoxFocusNode = FocusNode();
+    String keyWord = "";
     showModalBottomSheet(
       context: context,
       backgroundColor: ProtonColors.white,
@@ -131,99 +138,105 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
         minWidth: MediaQuery.of(context).size.width,
         maxHeight: MediaQuery.of(context).size.height / 3,
       ),
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-              padding: const EdgeInsets.only(
-                  bottom: defaultPadding,
-                  top: defaultPadding * 2,
-                  left: defaultPadding,
-                  right: defaultPadding),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          if (widget.canSearch) {
+            searchBoxController.addListener(() {
+              setState(() {
+                keyWord = searchBoxController.text;
+              });
+            });
+          }
+          return SafeArea(
+            child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: defaultPadding,
+                    top: defaultPadding * 2,
+                    left: defaultPadding,
+                    right: defaultPadding),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  if (widget.canSearch)
+                    TextFieldTextV2(
+                      borderColor: ProtonColors.textWeak,
+                      textController: searchBoxController,
+                      myFocusNode: searchBoxFocusNode,
+                      validation: (value) {
+                        return "";
+                      },
+                      prefixIcon: Icon(Icons.search_rounded,
+                          size: 20, color: ProtonColors.textWeak),
+                      paddingSize: 2,
+                      labelText: S.of(context).search,
+                    ),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        for (int index = 0;
-                            index < widget.items.length;
-                            index++)
-                          Container(
-                              height: 60,
-                              alignment: Alignment.center,
-                              child: Column(children: [
-                                ListTile(
-                                  trailing: selected == widget.items[index]
-                                      ? SvgPicture.asset(
-                                          "assets/images/icon/ic-checkmark.svg",
-                                          fit: BoxFit.fill,
-                                          width: 20,
-                                          height: 20)
-                                      : null,
-                                  title: Text(widget.itemsText[index],
-                                      style: FontManager.body2Regular(
-                                          ProtonColors.textNorm)),
-                                  onTap: () {
-                                    setState(() {
-                                      selected = widget.items[index];
-                                      int selectedIndex = max(
-                                          widget.items.indexOf(selected), 0);
-                                      _textEditingController.text =
-                                          getDisplayText(selectedIndex);
-                                      widget.valueNotifier?.value = selected;
-                                      Navigator.of(context).pop();
-                                    });
-                                  },
-                                ),
-                                const Divider(
-                                  thickness: 0.2,
-                                  height: 1,
-                                )
-                              ])),
-                        // ListView.separated(
-                        //     itemCount: widget.items.length,
-                        //     separatorBuilder: (context, _) {
-                        //       return const Divider(
-                        //         thickness: 0.2,
-                        //         height: 1,
-                        //       );
-                        //     },
-                        //     itemBuilder: (context, index) {
-                        //       return ListTile(
-                        //         trailing: selected == widget.items[index]
-                        //             ? SvgPicture.asset(
-                        //                 "assets/images/icon/ic-checkmark.svg",
-                        //                 fit: BoxFit.fill,
-                        //                 width: 20,
-                        //                 height: 20)
-                        //             : null,
-                        //         title: Text(
-                        //             widget.itemsText[index],
-                        //             style: FontManager.body2Regular(
-                        //                 ProtonColors.textNorm)),
-                        //         onTap: () {
-                        //           setState(() {
-                        //             selected = widget.items[index];
-                        //           });
-                        //         },
-                        //       );
-                        //     }),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            for (int index = 0;
+                                index < widget.items.length;
+                                index++)
+                              if (widget.itemsText[index]
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(keyWord.toLowerCase()))
+                                Container(
+                                    height: 60,
+                                    alignment: Alignment.center,
+                                    child: Column(children: [
+                                      ListTile(
+                                        trailing: selected ==
+                                                widget.items[index]
+                                            ? SvgPicture.asset(
+                                                "assets/images/icon/ic-checkmark.svg",
+                                                fit: BoxFit.fill,
+                                                width: 20,
+                                                height: 20)
+                                            : null,
+                                        title: Text(widget.itemsText[index],
+                                            style: FontManager.body2Regular(
+                                                ProtonColors.textNorm)),
+                                        onTap: () {
+                                          setState(() {
+                                            selected = widget.items[index];
+                                            int selectedIndex = max(
+                                                widget.items.indexOf(selected),
+                                                0);
+                                            _textEditingController.text =
+                                                getDisplayText(selectedIndex);
+                                            widget.valueNotifier?.value =
+                                                selected;
+                                            Navigator.of(context).pop();
+                                          });
+                                        },
+                                      ),
+                                      const Divider(
+                                        thickness: 0.2,
+                                        height: 1,
+                                      )
+                                    ])),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              )),
-        );
+                    ),
+                  )),
+                ])),
+          );
+        });
       },
     );
   }

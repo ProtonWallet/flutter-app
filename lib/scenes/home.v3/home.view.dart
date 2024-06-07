@@ -588,7 +588,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
                     ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          viewModel.move(NavID.natvieReportBugs);
+                        },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-bugreport.svg",
                             fit: BoxFit.fill,

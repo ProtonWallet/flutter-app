@@ -27,6 +27,8 @@ enum NavID {
   rampExternal,
   // upgrade
   nativeUpgrade,
+  // Report bugs
+  natvieReportBugs,
 
   // Security
   passphrase,
