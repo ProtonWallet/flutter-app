@@ -19,6 +19,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -26,6 +27,8 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -731,11 +734,19 @@ Widget getWalletAccountBalanceWidget(
   AccountModel accountModel,
   Color textColor,
 ) {
-  double esitmateValue = Provider.of<UserSettingProvider>(context)
-      .getNotionalInFiatCurrency(accountModel.balance.toInt());
+  FiatCurrency? fiatCurrency =
+      WalletManager.getAccountFiatCurrency(accountModel);
+  ProtonExchangeRate? exchangeRate =
+      ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
+  double estimateValue = Provider.of<UserSettingProvider>(context)
+      .getNotionalInFiatCurrency(accountModel.balance.toInt(),
+          exchangeRate: exchangeRate);
+  if (exchangeRate == null) {
+    fiatCurrency = null;
+  }
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+        "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.captionSemiBold(textColor)),
     Text(
         Provider.of<UserSettingProvider>(context)
