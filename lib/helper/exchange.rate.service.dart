@@ -20,6 +20,11 @@ class ExchangeRateService {
     return fiatCurrency2exchangeRate[key]!;
   }
 
+  static ProtonExchangeRate? getExchangeRateOrNull(FiatCurrency fiatCurrency){
+    String key = getKey(fiatCurrency, time: null);
+    return fiatCurrency2exchangeRate[key];
+  }
+
   static void clear() {
     fiatCurrency2exchangeRate.clear();
   }

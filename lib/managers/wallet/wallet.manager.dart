@@ -9,6 +9,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -1228,22 +1229,16 @@ class WalletManager implements Manager {
       AccountModel? accountModel = await DBHelper.accountDao
           ?.findDefaultAccountByWalletID(walletModel.id ?? 0);
       if (accountModel != null) {
-        return FiatCurrency.values.firstWhere(
-            (v) =>
-                v.name.toUpperCase() == accountModel.fiatCurrency.toUpperCase(),
-            orElse: () => defaultFiatCurrency);
+        return getAccountFiatCurrency(accountModel);
       }
     }
     return defaultFiatCurrency;
   }
 
-  static Future<FiatCurrency> getAccountFiatCurrency(
-      AccountModel? accountModel) async {
+  static FiatCurrency getAccountFiatCurrency(
+      AccountModel? accountModel) {
     if (accountModel != null) {
-      return FiatCurrency.values.firstWhere(
-          (v) =>
-              v.name.toUpperCase() == accountModel.fiatCurrency.toUpperCase(),
-          orElse: () => defaultFiatCurrency);
+      return CommonHelper.getFiatCurrencyByName(accountModel.fiatCurrency.toUpperCase());
     }
     return defaultFiatCurrency;
   }
