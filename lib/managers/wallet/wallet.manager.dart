@@ -111,6 +111,13 @@ class WalletManager implements Manager {
   static Future<void> deleteWallet(int walletID) async {
     WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
     await DBHelper.walletDao!.delete(walletID);
+    List<AccountModel> accounts =
+        (await DBHelper.accountDao!.findAllByWalletID(walletID))
+            .cast<AccountModel>();
+    for (AccountModel accountModel in accounts) {
+      await DBHelper.addressDao!
+          .deleteByServerAccountID(accountModel.serverAccountID);
+    }
     await DBHelper.accountDao!.deleteAccountsByWalletID(walletID);
     if (walletModel != null) {
       await Provider.of<ProtonWalletProvider>(
@@ -1206,6 +1213,8 @@ class WalletManager implements Manager {
         walletId: walletModel.serverWalletID,
         walletAccountId: accountModel.serverAccountID);
     await DBHelper.accountDao!
+        .deleteByServerAccountID(accountModel.serverAccountID);
+    await DBHelper.addressDao!
         .deleteByServerAccountID(accountModel.serverAccountID);
     await Provider.of<ProtonWalletProvider>(
             Coordinator.rootNavigatorKey.currentContext!,

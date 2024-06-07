@@ -46,6 +46,10 @@ class HomeCoordinator extends Coordinator {
     nativeViewChannel.switchToUpgrade(session);
   }
 
+  void showNativeReportBugs() {
+    nativeViewChannel.nativeReportBugs();
+  }
+
   void showSend(int walletID, int accountID) {
     var view = SendCoordinator(walletID, accountID).start();
     showInBottomSheet(view);
