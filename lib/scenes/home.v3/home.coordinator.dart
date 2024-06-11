@@ -121,18 +121,21 @@ class HomeCoordinator extends Coordinator {
     var wallet = serviceManager.get<ProtonWalletManager>();
     var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var dataProviderManager = serviceManager.get<DataProviderManager>();
-    //
-    var walletProvider = dataProviderManager.walletDataProvider;
-    var walletPassProvider = dataProviderManager.walletPassphraseProvider;
-    //
+
+    var walletBloc = WalletListBloc(
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.walletPassphraseProvider,
+      dataProviderManager.walletKeysProvider,
+      userManager,
+    );
     var viewModel = HomeViewModelImpl(
       this,
-      apiEnv,
       userManager,
       event,
       wallet,
       apiServiceManager,
-      WalletListBloc(walletProvider, walletPassProvider),
+      dataProviderManager,
+      walletBloc,
     );
     widget = HomeView(
       viewModel,

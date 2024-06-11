@@ -16,13 +16,6 @@ const int maxMemoTextCharSize = 256;
 const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
 
-const String userSettingsHideEmptyUsedAddresses =
-    "userSettings.hideEmptyUsedAddresses";
-const String userSettingsTwoFactorAmountThreshold =
-    "userSettings.twoFactorAmountThreshold";
-const String userSettingsShowWalletRecovery = "userSettings.showWalletRecovery";
-const String userSettingsFiatCurrency = "userSettings.fiatCurrency";
-const String userSettingsBitcoinUnit = "userSettings.bitcoinUnit";
 const String latestAddressIndex = "bitcoinAddress.latest";
 
 const BitcoinUnit defaultBitcoinUnit = BitcoinUnit.btc;

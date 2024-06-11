@@ -59,4 +59,10 @@ class SecureStorageManager implements Manager {
   Future<void> logout() async {
     await deleteAll();
   }
+
+  @override
+  Future<void> login(String userID) async {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
 }

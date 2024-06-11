@@ -99,8 +99,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
       if (init) {
-        _wallet = await WalletManager.loadWalletWithID(
-            walletModel!.id!, accountModel!.id!);
+        _wallet = (await WalletManager.loadWalletWithID(
+            walletModel!.id!, accountModel!.id!))!;
         List<String> emailIntegrationAddresses =
             await WalletManager.getAccountAddressIDs(
                 accountModel?.serverAccountID ?? "");

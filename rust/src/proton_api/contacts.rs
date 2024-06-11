@@ -1,21 +1,12 @@
-use andromeda_api::contacts::ApiContactEmails;
-#[derive(Debug)]
-pub struct ProtonContactEmails {
-    pub id: String,
-    pub name: String,
-    pub email: String,
-    pub canonical_email: String,
-    pub is_proton: u32,
-}
+pub use andromeda_api::contacts::ApiContactEmails;
+use flutter_rust_bridge::frb;
 
-impl From<ApiContactEmails> for ProtonContactEmails {
-    fn from(contact_emails: ApiContactEmails) -> Self {
-        ProtonContactEmails {
-            id: contact_emails.ID,
-            name: contact_emails.Name,
-            email: contact_emails.Email,
-            canonical_email: contact_emails.CanonicalEmail,
-            is_proton: contact_emails.IsProton,
-        }
-    }
+#[frb(mirror(ApiContactEmails))]
+#[allow(non_snake_case)]
+pub struct _ApiContactEmails {
+    pub ID: String,
+    pub Name: String,
+    pub Email: String,
+    pub CanonicalEmail: String,
+    pub IsProton: u32,
 }

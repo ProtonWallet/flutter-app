@@ -6,14 +6,14 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class ApiUserSettings {
+class ApiWalletUserSettings {
   final BitcoinUnit bitcoinUnit;
   final FiatCurrency fiatCurrency;
   final int hideEmptyUsedAddresses;
   final int showWalletRecovery;
   final int? twoFactorAmountThreshold;
 
-  const ApiUserSettings({
+  const ApiWalletUserSettings({
     required this.bitcoinUnit,
     required this.fiatCurrency,
     required this.hideEmptyUsedAddresses,
@@ -32,7 +32,7 @@ class ApiUserSettings {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ApiUserSettings &&
+      other is ApiWalletUserSettings &&
           runtimeType == other.runtimeType &&
           bitcoinUnit == other.bitcoinUnit &&
           fiatCurrency == other.fiatCurrency &&

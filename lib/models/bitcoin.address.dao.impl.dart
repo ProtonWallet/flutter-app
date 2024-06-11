@@ -24,10 +24,12 @@ abstract class BitcoinAddressDao extends BitcoinAddressDatabase
 
   Future<bool> isMine(int walletID, int accountID, String bitcoinAddress);
 
-  Future<List<BitcoinAddressModel>> findByWallet(int walletID, {String orderBy = "desc"});
+  Future<List<BitcoinAddressModel>> findByWallet(int walletID,
+      {String orderBy = "desc"});
 
   Future<List<BitcoinAddressModel>> findByWalletAccount(
-      int walletID, int accountID, {String orderBy = "desc"});
+      int walletID, int accountID,
+      {String orderBy = "desc"});
 }
 
 class BitcoinAddressDaoImpl extends BitcoinAddressDao {
@@ -153,7 +155,8 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<List<BitcoinAddressModel>> findByWallet(int walletID, {String orderBy = "desc"}) async {
+  Future<List<BitcoinAddressModel>> findByWallet(int walletID,
+      {String orderBy = "desc"}) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'walletID = ?',
         whereArgs: [walletID],
@@ -164,12 +167,19 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<List<BitcoinAddressModel>> findByWalletAccount(
-      int walletID, int accountID, {String orderBy = "desc"}) async {
+      int walletID, int accountID,
+      {String orderBy = "desc"}) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'walletID = ? and accountID = ?',
         whereArgs: [walletID, accountID],
         orderBy: 'bitcoinAddressIndex $orderBy');
     return List.generate(
         maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
+  }
+
+  @override
+  Future<void> deleteByServerID(String id) {
+    // TODO: implement deleteByServerID
+    throw UnimplementedError();
   }
 }

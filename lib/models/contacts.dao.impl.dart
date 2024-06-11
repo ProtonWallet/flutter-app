@@ -20,6 +20,11 @@ class ContactsDaoImpl extends ContactsDao {
   }
 
   @override
+  Future<void> deleteByServerID(String id) async {
+    await db.delete(tableName, where: 'serverContactID = ?', whereArgs: [id]);
+  }
+
+  @override
   Future<List> findAll() async {
     List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(

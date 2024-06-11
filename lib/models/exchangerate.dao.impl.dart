@@ -56,4 +56,10 @@ class ExchangeRateDaoImpl extends ExchangeRateDao {
     }
     return null;
   }
+
+  @override
+  Future<void> deleteByServerID(String id) {
+    // TODO: implement deleteByServerID
+    throw UnimplementedError();
+  }
 }

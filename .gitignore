@@ -141,3 +141,5 @@ untranslated_strings.txt
 
 # DevTools options
 devtools_options.yaml
+
+env.var.g.dart

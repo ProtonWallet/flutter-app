@@ -1,4 +1,7 @@
-use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
+use andromeda_api::contacts::ApiContactEmails;
+use andromeda_api::settings::{
+    FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings,
+};
 use andromeda_api::wallet::{ApiWallet, ApiWalletAccount, ApiWalletData};
 use andromeda_api::{
     transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
@@ -12,12 +15,10 @@ use std::sync::{Arc, RwLock};
 
 use crate::api::api_service::proton_api_service::ProtonAPIService;
 use crate::proton_api::{
-    contacts::ProtonContactEmails,
     errors::ApiError,
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
     proton_address::{AllKeyAddressKey, ProtonAddress},
-    user_settings::ApiUserSettings,
     wallet::{
         BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, WalletBitcoinAddress,
         WalletTransaction,
@@ -39,6 +40,7 @@ pub(crate) fn retrieve_proton_api() -> Arc<ProtonAPIService> {
 }
 
 pub(crate) fn set_proton_api(inner: Arc<ProtonAPIService>) {
+    info!("set_proton_api is called");
     let mut api_ref = PROTON_API.write().unwrap();
     *api_ref = Some(inner.clone());
 }
@@ -48,45 +50,7 @@ pub(crate) fn logout() {
     *api_ref = None;
 }
 
-// build functions
-pub async fn init_api_service(user_name: String, password: String) {
-    info!("start init_api_service");
-    info!("user_name: {}, password: {}", user_name, password);
-    // create a global proton api service
-    // let store = SimpleAuthStore::prod();
-    // let api = ProtonWalletApiClient::from_version(
-    //     "android-wallet@1.0.0".to_string(), //-dev
-    //     "ProtonWallet/1.0.0 (Android 12; test; motorola; en)".to_string(),
-    //     store,
-    // )
-    // .unwrap();
-    // api.login(&user_name, &password).await.unwrap();
-    // let mut api_ref = PROTON_API.write().unwrap();
-    // *api_ref = Some(Arc::new(api));
-}
-
-// #[frb(sync)]
-// // initapiserviceauthstore
-// pub fn init_api_service_auth_store(
-//     uid: String,
-//     access: String,
-//     refresh: String,
-//     scopes: Vec<String>,
-//     app_version: String,
-//     user_agent: String,
-//     store: ProtonWalletAuthStore,
-// ) -> Result<(), ApiError> {
-//     info!("start init_api_service");
-//     info!(
-//         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
-//         uid, access, refresh, scopes
-//     );
-//     let api = ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
-//     let mut api_ref = PROTON_API.write().unwrap();
-//     *api_ref = Some(Arc::new(api));
-//     Ok(())
-// }
-
+/// TODO:: slowly move to use api_service folder functions
 // wallets
 pub async fn get_wallets() -> Result<Vec<ApiWalletData>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
@@ -228,7 +192,8 @@ pub async fn delete_wallet_account(
     }
 }
 
-pub async fn get_user_settings() -> Result<ApiUserSettings, ApiError> {
+/// getUserSettings
+pub async fn get_user_settings() -> Result<ApiWalletUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -237,12 +202,12 @@ pub async fn get_user_settings() -> Result<ApiUserSettings, ApiError> {
         .get_user_settings()
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
 
-pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiUserSettings, ApiError> {
+pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiWalletUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -251,12 +216,12 @@ pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiUserSettings, ApiErr
         .bitcoin_unit(symbol)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
 
-pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiUserSettings, ApiError> {
+pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiWalletUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -265,12 +230,12 @@ pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiUserSettings, ApiE
         .fiat_currency(symbol)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
 
-pub async fn two_fa_threshold(amount: u64) -> Result<ApiUserSettings, ApiError> {
+pub async fn two_fa_threshold(amount: u64) -> Result<ApiWalletUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -279,14 +244,14 @@ pub async fn two_fa_threshold(amount: u64) -> Result<ApiUserSettings, ApiError> 
         .two_fa_threshold(amount)
         .await;
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
 
 pub async fn hide_empty_used_addresses(
     hide_empty_used_addresses: bool,
-) -> Result<ApiUserSettings, ApiError> {
+) -> Result<ApiWalletUserSettings, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -297,7 +262,7 @@ pub async fn hide_empty_used_addresses(
 
     info!("hide_empty_userd_addresses: {:?}", result);
     match result {
-        Ok(response) => Ok(response.into()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }
@@ -346,7 +311,7 @@ pub async fn collect_events(latest_event_id: String) -> Result<Vec<ProtonEvent>,
     }
 }
 
-pub async fn get_contacts() -> Result<Vec<ProtonContactEmails>, ApiError> {
+pub async fn get_contacts() -> Result<Vec<ApiContactEmails>, ApiError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result = proton_api
         .inner
@@ -355,7 +320,7 @@ pub async fn get_contacts() -> Result<Vec<ProtonContactEmails>, ApiError> {
         .get_contacts(Some(1000), Some(0))
         .await;
     match result {
-        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
+        Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
     }
 }

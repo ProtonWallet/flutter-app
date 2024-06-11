@@ -1,20 +1,25 @@
-import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/wallet.model.dart';
-
-class WalletListModel {
+class WalletMenuModel {
   /// state
   bool hasValidPassword = false;
+  String walletName = 'Proton Wallet';
+  int accountSize = 0;
+  // String icon;
 
-  ///
-  final WalletModel wallet;
-  final List<AccountModel> accounts;
-  WalletListModel({required this.wallet, required this.accounts});
+  List<AccountMenuModel> accounts = [];
 
-  static List<WalletListModel> fromWalletData(List<WalletData> items) {
-    return items
-        .map((item) =>
-            WalletListModel(wallet: item.wallet, accounts: item.accounts))
-        .toList();
-  }
+  // final WalletModel wallet;
+  // final List<AccountModel> accounts;
+  // WalletListModel({required this.wallet, required this.accounts});
+
+  // static List<WalletMenuModel> fromWalletData(List<WalletData> items) {
+  //   return items
+  //       .map((item) =>
+  //           WalletListModel(wallet: item.wallet, accounts: item.accounts))
+  //       .toList();
+  // }
+}
+
+class AccountMenuModel {
+  // String icon = "";
+  bool loading = true;
 }
