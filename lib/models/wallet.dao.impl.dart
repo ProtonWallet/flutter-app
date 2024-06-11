@@ -82,4 +82,10 @@ class WalletDaoImpl extends WalletDao {
     List<Map<String, dynamic>> maps = await db.query(tableName);
     return maps.length;
   }
+
+  @override
+  Future<void> deleteByServerID(String id) {
+    // TODO: implement deleteByServerID
+    throw UnimplementedError();
+  }
 }

@@ -73,6 +73,7 @@ class ProtonApiService extends RustOpaque {
   WalletClient getWalletClient({dynamic hint}) => RustLib.instance.api
       .protonApiServiceGetWalletClient(that: this, hint: hint);
 
+  /// clients
   Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
       RustLib.instance.api.protonApiServiceGetWallets(that: this, hint: hint);
 
@@ -117,6 +118,9 @@ class ProtonApiService extends RustOpaque {
   factory ProtonApiService(
           {required ProtonWalletAuthStore store, dynamic hint}) =>
       RustLib.instance.api.protonApiServiceNew(store: store, hint: hint);
+
+  Future<void> setProtonApi({dynamic hint}) =>
+      RustLib.instance.api.protonApiServiceSetProtonApi(that: this, hint: hint);
 
   Future<void> updateAuth(
           {required String uid,

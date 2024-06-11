@@ -10,6 +10,7 @@ import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -19,7 +20,6 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart'
     as proton_wallet_provider;
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -37,6 +37,9 @@ class EventLoop implements Manager {
   String latestEventId = "";
   late UserSettingProvider userSettingProvider;
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
+
+  // data providar used when events patch to db
+  late DataProviderManager dataProviderManager;
 
   EventLoop(this.protonWalletManager, this.userManager);
 
@@ -189,13 +192,11 @@ class EventLoop implements Manager {
           for (WalletSettingsEvent walletSettingEvent
               in event.walletSettingEvents!) {
             ApiWalletSettings? _ = walletSettingEvent.walletSettings;
-            // TODO::
           }
         }
         if (event.walletUserSettings != null) {
-          ApiUserSettings _ = event.walletUserSettings!;
-
-          // TODO::
+          ApiWalletUserSettings settings = event.walletUserSettings!;
+          dataProviderManager.userSettingsDataProvider.insertUpdate(settings);
         }
         if (event.walletTransactionEvents != null) {
           List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
@@ -214,12 +215,15 @@ class EventLoop implements Manager {
         }
 
         if (event.contactEmailEvents != null) {
-          for (ContactEmailEvent contactEmailEvent
-              in event.contactEmailEvents!) {
-            ProtonContactEmails? mail = contactEmailEvent.contactEmail;
+          for (ContactEmailEvent contactEvent in event.contactEmailEvents!) {
+            if (contactEvent.action == 0) {
+              String contactID = contactEvent.id;
+              await dataProviderManager.contactsDataProvider.delete(contactID);
+              continue;
+            }
+            var mail = contactEvent.contactEmail;
             if (mail != null) {
-              DBHelper.contactsDao!.insertOrUpdate(mail.id, mail.name,
-                  mail.email, mail.canonicalEmail, mail.isProton);
+              await dataProviderManager.contactsDataProvider.insertUpdate(mail);
             }
           }
         }
@@ -254,8 +258,9 @@ class EventLoop implements Manager {
           (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
               .cast<AccountModel>();
       for (AccountModel accountModel in accountModels) {
-        Wallet wallet = await WalletManager.loadWalletWithID(
+        Wallet? wallet = await WalletManager.loadWalletWithID(
             walletModel.id!, accountModel.id!);
+
         List<String> accountAddressIDs =
             await WalletManager.getAccountAddressIDs(
                 accountModel.serverAccountID);
@@ -264,14 +269,14 @@ class EventLoop implements Manager {
         }
 
         try {
-          await WalletManager.handleBitcoinAddressRequests(
-              wallet, walletModel.serverWalletID, accountModel.serverAccountID);
+          await WalletManager.handleBitcoinAddressRequests(wallet!,
+              walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("handleBitcoinAddressRequests error: ${e.toString()}");
         }
         try {
-          await WalletManager.bitcoinAddressPoolHealthCheck(
-              wallet, walletModel.serverWalletID, accountModel.serverAccountID);
+          await WalletManager.bitcoinAddressPoolHealthCheck(wallet!,
+              walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("bitcoinAddressPoolHealthCheck error: ${e.toString()}");
         }
@@ -292,5 +297,11 @@ class EventLoop implements Manager {
   @override
   Future<void> logout() async {
     stop();
+  }
+
+  @override
+  Future<void> login(String userID) async {
+    // TODO: implement login
+    throw UnimplementedError();
   }
 }

@@ -8,6 +8,7 @@ import 'package:ramp_flutter/ramp_flutter.dart';
 import 'package:ramp_flutter/send_crypto_payload.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
@@ -19,6 +20,7 @@ import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/buy/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
+import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/debug/bdk.test.dart';
@@ -39,10 +41,13 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   void toggleButtons();
   void sellbutton();
+
+  List<DropdownItem> payments = [];
+  List<DropdownItem> providers = [];
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
-  BuyBitcoinViewModelImpl(super.coordinator);
+  BuyBitcoinViewModelImpl(super.coordinator, this.userEmail);
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
   @override
@@ -53,7 +58,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   BuyBitcoinBloc myBloc = BuyBitcoinBloc();
 
   final int walletID = 1;
-  final String userEmail = "";
+  final String userEmail;
   final int accountID = 1;
 
   @override
@@ -68,6 +73,35 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   @override
   Future<void> loadData() async {
+    apiKey = Env.rampApiKey ?? "";
+
+    payments.add(DropdownItem(
+      icon: 'assets/images/credit-card.png',
+      title: 'Credit Card',
+      subtitle: 'Take minutes',
+    ));
+    payments.add(DropdownItem(
+      icon: 'assets/images/bank-transfer.png',
+      title: 'Bank Transfer',
+      subtitle: 'Take days',
+    ));
+    payments.add(DropdownItem(
+      icon: 'assets/images/apple-pay.png',
+      title: 'Apple Pay',
+      subtitle: 'Up to 2 business days',
+    ));
+
+    providers.add(DropdownItem(
+      icon: 'assets/images/coinbase.png',
+      title: 'Ramp',
+      subtitle: '0.00155 BTC',
+    ));
+    providers.add(DropdownItem(
+      icon: 'assets/images/binance.png',
+      title: 'Banxa',
+      subtitle: '0.00155 BTC',
+    ));
+
     bloc.add(const LoadAddressEvent());
     bloc.add(const LoadCountryEvent());
     EasyLoading.show(
@@ -222,15 +256,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void startLoading() {
-    bloc.add(const LoadCountryEvent());
-    bloc.add(const LoadAddressEvent());
+    // bloc.add(const LoadCountryEvent());
+    // bloc.add(const LoadAddressEvent());
     presentRamp();
-    isloading = true;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    // isloading = true;
+    // datasourceChangedStreamController.sinkAddSafe(this);
     // Simulate a network request or any async task
-    Future.delayed(const Duration(seconds: 3), () {
-      isloading = false;
-    });
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   isloading = false;
+    // });
   }
 
   void presentRamp() {

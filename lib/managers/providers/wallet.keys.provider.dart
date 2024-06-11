@@ -1,10 +1,11 @@
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 
-class WalletKeysProvider {
+class WalletKeysProvider implements DataProvider {
   final SecureStorageManager storage;
   final WalletClient walletClient;
   final key = "proton_wallet_k_provider_key";
@@ -92,4 +93,7 @@ class WalletKeysProvider {
     var keys = WalletKey.fromApiWalletKeys(items);
     saveWalletKeys(keys);
   }
+
+  @override
+  Future<void> clear() async {}
 }

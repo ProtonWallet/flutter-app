@@ -15,7 +15,7 @@ import 'wallet_settings.dart';
 class ContactEmailEvent {
   final String id;
   final int action;
-  final ProtonContactEmails? contactEmail;
+  final ApiContactEmails? contactEmail;
 
   const ContactEmailEvent({
     required this.id,
@@ -47,7 +47,7 @@ class ProtonEvent {
   final List<WalletKeyEvent>? walletKeyEvents;
   final List<WalletSettingsEvent>? walletSettingEvents;
   final List<WalletTransactionEvent>? walletTransactionEvents;
-  final ApiUserSettings? walletUserSettings;
+  final ApiWalletUserSettings? walletUserSettings;
 
   const ProtonEvent({
     required this.code,

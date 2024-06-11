@@ -139,4 +139,10 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> logout() async {}
+
+  @override
+  Future<void> login(String userID) async {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
 }

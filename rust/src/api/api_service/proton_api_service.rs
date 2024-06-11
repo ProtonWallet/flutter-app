@@ -1,3 +1,4 @@
+//proton_api_service.rs
 use super::address_client::AddressClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
@@ -67,7 +68,6 @@ impl ProtonAPIService {
             inner: Arc::new(inner_api),
             store: Arc::new(store),
         };
-        set_proton_api(Arc::new(api.clone()));
         Ok(api)
     }
 
@@ -78,7 +78,6 @@ impl ProtonAPIService {
     ) -> Result<AuthCredential, ApiError> {
         info!("start login ================> ");
         let login_result = self.inner.login(username.as_str(), password.as_str()).await;
-
         let user_data = match login_result {
             Ok(res) => Ok(res),
             Err(err) => Err(ApiError::Generic(err.to_string())),
@@ -119,7 +118,6 @@ impl ProtonAPIService {
         let ref_token = auth.ref_tok().unwrap().to_string();
         let scopes = auth.tokens().unwrap().scopes().unwrap();
         info!("session_id: {:?}", session_id);
-        set_proton_api(Arc::new(self.clone()));
         Ok(AuthCredential {
             session_id,
             user_id: user_data.user.id,
@@ -150,6 +148,10 @@ impl ProtonAPIService {
         info!("auth data is updated");
     }
 
+    pub fn set_proton_api(&mut self) {
+        set_proton_api(Arc::new(self.clone()));
+    }
+
     pub async fn logout(&mut self) {
         // self.store.clone().logout().await;
         info!("logout api service is loggin out");
@@ -173,10 +175,10 @@ impl ProtonAPIService {
             inner: Arc::new(inner_api),
             store: Arc::new(store),
         };
-        set_proton_api(Arc::new(api.clone()));
         Ok(api)
     }
 
+    /// clients
     pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, ApiError> {
         let result = self.inner.clients().wallet.get_wallets().await;
         match result {
@@ -205,6 +207,7 @@ impl ProtonAPIService {
         ProtonEmailAddressClient::new(&self)
     }
 
+    //getProtonContactsClient
     #[frb(sync)]
     pub fn get_proton_contacts_client(&self) -> ContactsClient {
         ContactsClient::new(&self)
@@ -238,7 +241,6 @@ impl ProtonAPIService {
 
 #[cfg(test)]
 mod test {
-    use andromeda_api::{network::NetworkClient, ProtonUsersClient};
 
     use crate::{
         api::api_service::{

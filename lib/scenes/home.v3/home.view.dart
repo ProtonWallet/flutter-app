@@ -1,3 +1,4 @@
+// home.view.dart
 import 'dart:math';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +13,15 @@ import 'package:wallet/components/custom.loading.with.icon.dart';
 import 'package:wallet/components/custom.todo.dart';
 import 'package:wallet/components/discover/discover.feeds.view.dart';
 import 'package:wallet/components/home/btc.actions.view.dart';
-import 'package:wallet/components/textfield.text.dart';
-import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exchange.rate.service.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -35,7 +32,6 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.old.dart';
@@ -63,7 +59,6 @@ class HomeView extends ViewBase<HomeViewModel> {
       },
       onDrawerChanged: (bool isOpen) {
         if (isOpen == false) {
-          viewModel.saveUserSettings();
           viewModel.updateDrawerStatus(WalletDrawerStatus.close);
         } else {
           viewModel.updateDrawerStatus(WalletDrawerStatus.openSetting);
@@ -469,7 +464,6 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     ),
                     // wallet
                     sidebarWalletItems(context, viewModel),
-                    // TODO:: enable this later wallet side bar.
                     // SidebarWalletItems(
                     //   walletListBloc: viewModel.walletBloc,
                     //   // select wallet

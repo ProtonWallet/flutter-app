@@ -53,21 +53,21 @@ class SidebarWalletItems extends StatelessWidget {
         if (state.initialized) {
           return Column(
             children: [
-              for (WalletListModel wlModel in state.walletsModel)
+              for (WalletMenuModel wlMenu in state.walletsModel)
                 ListTileTheme(
                   contentPadding:
                       const EdgeInsets.only(left: defaultPadding, right: 10),
                   child: ExpansionTile(
                     shape: const Border(),
-                    collapsedBackgroundColor: _isCurrentWallet(state, wlModel)
+                    collapsedBackgroundColor: _isCurrentWallet(state, wlMenu)
                         ? ProtonColors.drawerBackgroundHighlight
                         : Colors.transparent,
-                    backgroundColor: _isCurrentWallet(state, wlModel)
+                    backgroundColor: _isCurrentWallet(state, wlMenu)
                         ? ProtonColors.drawerBackgroundHighlight
                         : Colors.transparent,
-                    initiallyExpanded: wlModel.hasValidPassword,
+                    initiallyExpanded: wlMenu.hasValidPassword,
                     leading: SvgPicture.asset(
-                      "assets/images/icon/wallet-${state.walletsModel.indexOf(wlModel) % 4}.svg",
+                      "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
                       fit: BoxFit.fill,
                       width: 18,
                       height: 18,
@@ -76,7 +76,7 @@ class SidebarWalletItems extends StatelessWidget {
                       offset: const Offset(-8, 0),
                       // Build title
                       child:
-                          _buildTitle(context, walletListBloc, state, wlModel),
+                          _buildTitle(context, walletListBloc, state, wlMenu),
                     ),
                     iconColor: ProtonColors.textHint,
                     collapsedIconColor: ProtonColors.textHint,
@@ -84,7 +84,7 @@ class SidebarWalletItems extends StatelessWidget {
                       context,
                       walletListBloc,
                       state,
-                      wlModel,
+                      wlMenu,
                     ),
                   ),
                 ),
@@ -96,10 +96,10 @@ class SidebarWalletItems extends StatelessWidget {
     );
   }
 
-  bool _isCurrentWallet(WalletListState state, WalletListModel walletData) {
+  bool _isCurrentWallet(WalletListState state, WalletMenuModel walletData) {
     var currentWallet = state.currentWallet;
     if (currentWallet != null && state.currentAccount == null) {
-      return currentWallet.serverWalletID == walletData.wallet.serverWalletID;
+      // return currentWallet.serverWalletID == walletData.wallet.serverWalletID;
     }
     return false;
   }
@@ -108,7 +108,7 @@ class SidebarWalletItems extends StatelessWidget {
     BuildContext context,
     WalletListBloc bloc,
     WalletListState state,
-    WalletListModel wlModel,
+    WalletMenuModel wlModel,
   ) {
     if (wlModel.hasValidPassword) {
       return GestureDetector(
@@ -123,7 +123,7 @@ class SidebarWalletItems extends StatelessWidget {
                   width: min(MediaQuery.of(context).size.width - 180,
                       drawerMaxWidth - 110),
                   child: Text(
-                    wlModel.wallet.name,
+                    wlModel.walletName,
                     style: FontManager.captionSemiBold(
                       AvatarColorHelper.getTextColor(
                           state.walletsModel.indexOf(wlModel)),
@@ -145,7 +145,7 @@ class SidebarWalletItems extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              updatePassphrase?.call(wlModel.wallet);
+              // updatePassphrase?.call(wlModel.wallet);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -157,7 +157,7 @@ class SidebarWalletItems extends StatelessWidget {
                       width: min(MediaQuery.of(context).size.width - 250,
                           drawerMaxWidth - 180),
                       child: Text(
-                        wlModel.wallet.name,
+                        wlModel.walletName,
                         style: FontManager.captionSemiBold(
                           AvatarColorHelper.getTextColor(
                               state.walletsModel.indexOf(wlModel)),
@@ -184,7 +184,7 @@ class SidebarWalletItems extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              onDelete?.call(wlModel.wallet, false, true);
+              // onDelete?.call(wlModel.wallet, false, true);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -204,23 +204,23 @@ class SidebarWalletItems extends StatelessWidget {
     BuildContext context,
     WalletListBloc bloc,
     WalletListState state,
-    WalletListModel wlModel,
+    WalletMenuModel wlModel,
   ) {
     final List<Widget> children = [];
     if (wlModel.hasValidPassword) {
-      for (AccountModel accountModel in wlModel.accounts) {
+      for (AccountMenuModel accountModel in wlModel.accounts) {
         children.add(
           Material(
             color: ProtonColors.drawerBackground,
             child: ListTile(
-              tileColor: state.currentAccount == null
-                  ? null
-                  : accountModel.serverAccountID ==
-                          state.currentAccount!.serverAccountID
-                      ? ProtonColors.drawerBackgroundHighlight
-                      : ProtonColors.drawerBackground,
+              // tileColor: state.currentAccount == null
+              //     ? null
+              //     : accountModel.serverAccountID ==
+              //             state.currentAccount!.serverAccountID
+              //         ? ProtonColors.drawerBackgroundHighlight
+              //         : ProtonColors.drawerBackground,
               onTap: () {
-                selectAccount?.call(wlModel.wallet, accountModel);
+                // selectAccount?.call(wlModel.wallet, accountModel);
               },
               leading: Container(
                 margin: const EdgeInsets.only(left: 10),
@@ -240,8 +240,9 @@ class SidebarWalletItems extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          CommonHelper.getFirstNChar(
-                              accountModel.labelDecrypt, 20),
+                          "labelDecrypt",
+                          // CommonHelper.getFirstNChar(
+                          //     accountModel.labelDecrypt, 20),
                           style: FontManager.captionMedian(
                             AvatarColorHelper.getTextColor(
                                 state.walletsModel.indexOf(wlModel)),
@@ -269,7 +270,7 @@ class SidebarWalletItems extends StatelessWidget {
           child: ListTile(
             onTap: () {
               if (wlModel.accounts.length < freeUserWalletAccountLimit) {
-                addAccount?.call(wlModel.wallet);
+                // addAccount?.call(wlModel.wallet);
               } else {
                 CommonHelper.showSnackbar(
                   context,
@@ -313,18 +314,19 @@ class SidebarWalletItems extends StatelessWidget {
   // TODO:: build a balance bloc.
   Widget getWalletAccountBalanceWidget(
     BuildContext context,
-    AccountModel accountModel,
+    AccountMenuModel accountModel,
     Color textColor,
   ) {
-    double esitmateValue = Provider.of<UserSettingProvider>(context)
-        .getNotionalInFiatCurrency(accountModel.balance.toInt());
+    double esitmateValue = 100;
+    // Provider.of<UserSettingProvider>(context)
+    //     .getNotionalInFiatCurrency(accountModel.balance.toInt());
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.captionSemiBold(textColor)),
-      Text(
-          Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel(accountModel.balance.toInt()),
+      Text("",
+          // Provider.of<UserSettingProvider>(context)
+          //     .getBitcoinUnitLabel(accountModel.balance.toInt()),
           style: FontManager.overlineRegular(ProtonColors.textHint))
     ]);
   }

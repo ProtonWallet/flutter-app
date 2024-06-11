@@ -402,13 +402,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Api dco_decode_api(dynamic raw);
 
   @protected
+  ApiContactEmails dco_decode_api_contact_emails(dynamic raw);
+
+  @protected
   ApiEmailAddress dco_decode_api_email_address(dynamic raw);
 
   @protected
   ApiError dco_decode_api_error(dynamic raw);
-
-  @protected
-  ApiUserSettings dco_decode_api_user_settings(dynamic raw);
 
   @protected
   ApiWallet dco_decode_api_wallet(dynamic raw);
@@ -424,6 +424,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiWalletSettings dco_decode_api_wallet_settings(dynamic raw);
+
+  @protected
+  ApiWalletUserSettings dco_decode_api_wallet_user_settings(dynamic raw);
 
   @protected
   AuthCredential dco_decode_auth_credential(dynamic raw);
@@ -447,7 +450,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AddressIndex dco_decode_box_autoadd_address_index(dynamic raw);
 
   @protected
-  ApiUserSettings dco_decode_box_autoadd_api_user_settings(dynamic raw);
+  ApiContactEmails dco_decode_box_autoadd_api_contact_emails(dynamic raw);
 
   @protected
   ApiWallet dco_decode_box_autoadd_api_wallet(dynamic raw);
@@ -460,6 +463,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiWalletSettings dco_decode_box_autoadd_api_wallet_settings(dynamic raw);
+
+  @protected
+  ApiWalletUserSettings dco_decode_box_autoadd_api_wallet_user_settings(
+      dynamic raw);
 
   @protected
   BitcoinAddress dco_decode_box_autoadd_bitcoin_address(dynamic raw);
@@ -491,9 +498,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   OutPoint dco_decode_box_autoadd_out_point(dynamic raw);
-
-  @protected
-  ProtonContactEmails dco_decode_box_autoadd_proton_contact_emails(dynamic raw);
 
   @protected
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw);
@@ -588,6 +592,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<AllKeyAddressKey> dco_decode_list_all_key_address_key(dynamic raw);
 
   @protected
+  List<ApiContactEmails> dco_decode_list_api_contact_emails(dynamic raw);
+
+  @protected
   List<ApiEmailAddress> dco_decode_list_api_email_address(dynamic raw);
 
   @protected
@@ -622,9 +629,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ProtonAddressKey> dco_decode_list_proton_address_key(dynamic raw);
-
-  @protected
-  List<ProtonContactEmails> dco_decode_list_proton_contact_emails(dynamic raw);
 
   @protected
   List<ProtonEvent> dco_decode_list_proton_event(dynamic raw);
@@ -680,7 +684,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
-  ApiUserSettings? dco_decode_opt_box_autoadd_api_user_settings(dynamic raw);
+  ApiContactEmails? dco_decode_opt_box_autoadd_api_contact_emails(dynamic raw);
 
   @protected
   ApiWallet? dco_decode_opt_box_autoadd_api_wallet(dynamic raw);
@@ -696,14 +700,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  ApiWalletUserSettings? dco_decode_opt_box_autoadd_api_wallet_user_settings(
+      dynamic raw);
+
+  @protected
   BlockTime? dco_decode_opt_box_autoadd_block_time(dynamic raw);
 
   @protected
   double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
-
-  @protected
-  ProtonContactEmails? dco_decode_opt_box_autoadd_proton_contact_emails(
-      dynamic raw);
 
   @protected
   ProtonExchangeRate? dco_decode_opt_box_autoadd_proton_exchange_rate(
@@ -772,9 +776,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAddressKey dco_decode_proton_address_key(dynamic raw);
-
-  @protected
-  ProtonContactEmails dco_decode_proton_contact_emails(dynamic raw);
 
   @protected
   ProtonEvent dco_decode_proton_event(dynamic raw);
@@ -1139,13 +1140,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Api sse_decode_api(SseDeserializer deserializer);
 
   @protected
+  ApiContactEmails sse_decode_api_contact_emails(SseDeserializer deserializer);
+
+  @protected
   ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer);
 
   @protected
   ApiError sse_decode_api_error(SseDeserializer deserializer);
-
-  @protected
-  ApiUserSettings sse_decode_api_user_settings(SseDeserializer deserializer);
 
   @protected
   ApiWallet sse_decode_api_wallet(SseDeserializer deserializer);
@@ -1161,6 +1162,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiWalletSettings sse_decode_api_wallet_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  ApiWalletUserSettings sse_decode_api_wallet_user_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -1186,7 +1191,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  ApiUserSettings sse_decode_box_autoadd_api_user_settings(
+  ApiContactEmails sse_decode_box_autoadd_api_contact_emails(
       SseDeserializer deserializer);
 
   @protected
@@ -1202,6 +1207,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ApiWalletSettings sse_decode_box_autoadd_api_wallet_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  ApiWalletUserSettings sse_decode_box_autoadd_api_wallet_user_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -1239,10 +1248,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   OutPoint sse_decode_box_autoadd_out_point(SseDeserializer deserializer);
-
-  @protected
-  ProtonContactEmails sse_decode_box_autoadd_proton_contact_emails(
-      SseDeserializer deserializer);
 
   @protected
   ProtonExchangeRate sse_decode_box_autoadd_proton_exchange_rate(
@@ -1344,6 +1349,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<ApiContactEmails> sse_decode_list_api_contact_emails(
+      SseDeserializer deserializer);
+
+  @protected
   List<ApiEmailAddress> sse_decode_list_api_email_address(
       SseDeserializer deserializer);
 
@@ -1385,10 +1394,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ProtonAddressKey> sse_decode_list_proton_address_key(
-      SseDeserializer deserializer);
-
-  @protected
-  List<ProtonContactEmails> sse_decode_list_proton_contact_emails(
       SseDeserializer deserializer);
 
   @protected
@@ -1451,7 +1456,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
-  ApiUserSettings? sse_decode_opt_box_autoadd_api_user_settings(
+  ApiContactEmails? sse_decode_opt_box_autoadd_api_contact_emails(
       SseDeserializer deserializer);
 
   @protected
@@ -1471,15 +1476,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ApiWalletUserSettings? sse_decode_opt_box_autoadd_api_wallet_user_settings(
+      SseDeserializer deserializer);
+
+  @protected
   BlockTime? sse_decode_opt_box_autoadd_block_time(
       SseDeserializer deserializer);
 
   @protected
   double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
-
-  @protected
-  ProtonContactEmails? sse_decode_opt_box_autoadd_proton_contact_emails(
-      SseDeserializer deserializer);
 
   @protected
   ProtonExchangeRate? sse_decode_opt_box_autoadd_proton_exchange_rate(
@@ -1556,10 +1561,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonAddressKey sse_decode_proton_address_key(SseDeserializer deserializer);
-
-  @protected
-  ProtonContactEmails sse_decode_proton_contact_emails(
-      SseDeserializer deserializer);
 
   @protected
   ProtonEvent sse_decode_proton_event(SseDeserializer deserializer);
@@ -1938,15 +1939,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_api(Api self, SseSerializer serializer);
 
   @protected
+  void sse_encode_api_contact_emails(
+      ApiContactEmails self, SseSerializer serializer);
+
+  @protected
   void sse_encode_api_email_address(
       ApiEmailAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_error(ApiError self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_api_user_settings(
-      ApiUserSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_wallet(ApiWallet self, SseSerializer serializer);
@@ -1964,6 +1965,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_api_wallet_settings(
       ApiWalletSettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_wallet_user_settings(
+      ApiWalletUserSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_auth_credential(
@@ -1990,8 +1995,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       AddressIndex self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_api_user_settings(
-      ApiUserSettings self, SseSerializer serializer);
+  void sse_encode_box_autoadd_api_contact_emails(
+      ApiContactEmails self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_api_wallet(
@@ -2008,6 +2013,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_api_wallet_settings(
       ApiWalletSettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_api_wallet_user_settings(
+      ApiWalletUserSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_bitcoin_address(
@@ -2047,10 +2056,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_out_point(
       OutPoint self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_proton_contact_emails(
-      ProtonContactEmails self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_proton_exchange_rate(
@@ -2156,6 +2161,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<AllKeyAddressKey> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_api_contact_emails(
+      List<ApiContactEmails> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_api_email_address(
       List<ApiEmailAddress> self, SseSerializer serializer);
 
@@ -2200,10 +2209,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_proton_address_key(
       List<ProtonAddressKey> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_proton_contact_emails(
-      List<ProtonContactEmails> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_proton_event(
@@ -2267,8 +2272,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_box_autoadd_api_user_settings(
-      ApiUserSettings? self, SseSerializer serializer);
+  void sse_encode_opt_box_autoadd_api_contact_emails(
+      ApiContactEmails? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_api_wallet(
@@ -2287,15 +2292,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiWalletSettings? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_api_wallet_user_settings(
+      ApiWalletUserSettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_block_time(
       BlockTime? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_proton_contact_emails(
-      ProtonContactEmails? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_proton_exchange_rate(
@@ -2374,10 +2379,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_proton_address_key(
       ProtonAddressKey self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_proton_contact_emails(
-      ProtonContactEmails self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_event(ProtonEvent self, SseSerializer serializer);

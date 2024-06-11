@@ -16,6 +16,7 @@ import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -152,8 +153,14 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 }
 
 class SendViewModelImpl extends SendViewModel {
-  SendViewModelImpl(super.coordinator, super.walletID, super.accountID,
-      this.eventLoop, this.walletManger);
+  SendViewModelImpl(
+    super.coordinator,
+    super.walletID,
+    super.accountID,
+    this.eventLoop,
+    this.walletManger,
+    this.contactsDataProvider,
+  );
 
   // event loop
   final EventLoop eventLoop;
@@ -161,12 +168,15 @@ class SendViewModelImpl extends SendViewModel {
   // wallet manger
   final ProtonWalletManager walletManger;
 
+  // contact data provider
+  final ContactsDataProvider contactsDataProvider;
+
   ProtonExchangeRate? exchangeRate;
 
   final datasourceChangedStreamController =
       StreamController<SendViewModel>.broadcast();
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-  late Wallet _wallet;
+  late Wallet? _wallet;
   late Blockchain? _blockchain;
 
   @override
@@ -237,7 +247,7 @@ class SendViewModelImpl extends SendViewModel {
       datasourceChangedStreamController.sinkAddSafe(this);
       _blockchain = await _lib.initializeBlockchain(false);
       updateFeeRate();
-      contactsEmail = await WalletManager.getContacts();
+      contactsEmail = await contactsDataProvider.getContacts() ?? [];
       walletModel = await DBHelper.walletDao!.findById(walletID);
       if (accountID == 0) {
         accountModel = await DBHelper.accountDao!
@@ -252,7 +262,7 @@ class SendViewModelImpl extends SendViewModel {
       });
       updateWallet();
       logger.i(DateTime.now().toString());
-      await WalletManager.initContacts();
+      // await WalletManager.initContacts();
       logger.i(DateTime.now().toString());
     } catch (e) {
       errorMessage = e.toString();
@@ -302,8 +312,10 @@ class SendViewModelImpl extends SendViewModel {
         await WalletManager.loadWalletWithID(walletID, accountModel?.id ?? 0);
     accountAddressIDs = await WalletManager.getAccountAddressIDs(
         accountModel?.serverAccountID ?? "");
-    var walletBalance = await _wallet.getBalance();
-    balance = walletBalance.trustedPending + walletBalance.confirmed;
+    if (_wallet != null) {
+      var walletBalance = await _wallet!.getBalance();
+      balance = walletBalance.trustedPending + walletBalance.confirmed;
+    }
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -599,7 +611,7 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
       txBuilderResult =
-          await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet);
+          await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet!);
       estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
       totalAmountInSAT = txBuilderResult.txDetails.sent -
           (txBuilderResult.txDetails.fee ?? 0) -
@@ -677,7 +689,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       txid = await _lib.sendBitcoinWithAPI(
           _blockchain!,
-          _wallet,
+          _wallet!,
           walletModel!.serverWalletID,
           accountModel!.serverAccountID,
           txBuilderResult,
