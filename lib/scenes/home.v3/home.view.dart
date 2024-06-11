@@ -32,6 +32,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.old.dart';
@@ -454,11 +455,45 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: defaultPadding),
-                        child: Text(
-                          S.of(context).wallets,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textHint),
-                        )),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                S.of(context).wallets,
+                                style: FontManager.body2Regular(
+                                    ProtonColors.textHint),
+                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    if (Provider.of<ProtonWalletProvider>(
+                                                context,
+                                                listen: false)
+                                            .protonWallet
+                                            .wallets
+                                            .length <
+                                        freeUserWalletLimit) {
+                                      if (viewModel.currentSize ==
+                                          ViewSize.mobile) {
+                                        Navigator.of(context).pop();
+                                      }
+                                      viewModel.nameTextController.text = "";
+                                      viewModel.passphraseTextController.text =
+                                          "";
+                                      viewModel.passphraseConfirmTextController
+                                          .text = "";
+                                      OnboardingGuideSheet.show(
+                                          context, viewModel);
+                                    } else {
+                                      UpgradeIntroSheet.show(
+                                          context, viewModel);
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/ic-plus-circle.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20)),
+                            ])),
                     const SizedBox(
                       height: 10,
                     ),
@@ -507,14 +542,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             ])),
                     ListTile(
                         onTap: () async {
-                          if (viewModel.currentSize == ViewSize.mobile) {
-                            Navigator.of(context).pop();
-                          }
-                          EasyLoading.show(
-                              status: "child session..",
-                              maskType: EasyLoadingMaskType.black);
-                          await viewModel.move(NavID.nativeUpgrade);
-                          EasyLoading.dismiss();
+                          UpgradeIntroSheet.show(context, viewModel);
                         },
                         leading: SvgPicture.asset(
                             "assets/images/icon/ic-diamondwallet_plus.svg",
@@ -612,50 +640,6 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             child: Text(S.of(context).logout,
                                 style: FontManager.body2Median(
                                     ProtonColors.textHint)))),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: defaultPadding),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              ButtonV5(
-                                text: S.of(context).add_wallet,
-                                width: MediaQuery.of(context).size.width,
-                                backgroundColor:
-                                    ProtonColors.drawerButtonBackground,
-                                textStyle: FontManager.body1Median(
-                                    ProtonColors.protonBlue),
-                                height: 48,
-                                onPressed: () {
-                                  if (Provider.of<ProtonWalletProvider>(context,
-                                              listen: false)
-                                          .protonWallet
-                                          .wallets
-                                          .length <
-                                      freeUserWalletLimit) {
-                                    if (viewModel.currentSize ==
-                                        ViewSize.mobile) {
-                                      Navigator.of(context).pop();
-                                    }
-                                    viewModel.nameTextController.text = "";
-                                    viewModel.passphraseTextController.text =
-                                        "";
-                                    viewModel.passphraseConfirmTextController
-                                        .text = "";
-                                    OnboardingGuideSheet.show(
-                                        context, viewModel);
-                                  } else {
-                                    CommonHelper.showSnackbar(
-                                        context,
-                                        S.of(context).freeuser_wallet_limit(
-                                            freeUserWalletLimit));
-                                  }
-                                },
-                              )
-                            ])),
                     const SizedBox(
                       height: 20,
                     ),
@@ -672,7 +656,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                         child: Container(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
-                              "${S.of(context).app_name} 1.0.0 (29)",
+                              "${S.of(context).app_name} 1.0.0 (32)",
                               style: FontManager.captionRegular(
                                   ProtonColors.textHint),
                             ))),

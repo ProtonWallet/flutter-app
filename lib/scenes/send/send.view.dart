@@ -37,29 +37,9 @@ class SendView extends ViewBase<SendViewModel> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         backgroundColor: ProtonColors.backgroundProton,
-        title: viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction
-            ? Text(S.of(context).review_your_transaction,
-                style: FontManager.body2Median(ProtonColors.textNorm))
-            : null,
+        title: getTitleWidget(context),
         centerTitle: true,
-        leading: viewModel.sendFlowStatus != SendFlowStatus.addRecipient
-            ? IconButton(
-                icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
-                onPressed: () {
-                  if (viewModel.sendFlowStatus ==
-                      SendFlowStatus.reviewTransaction) {
-                    viewModel.updatePageStatus(SendFlowStatus.editAmount);
-                  } else {
-                    viewModel.updatePageStatus(SendFlowStatus.addRecipient);
-                  }
-                },
-              )
-            : IconButton(
-                icon: Icon(Icons.close, color: ProtonColors.textNorm),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
+        leading: getLeadingWidget(context),
         actions: [
           if (viewModel.sendFlowStatus == SendFlowStatus.editAmount)
             GestureDetector(
@@ -85,6 +65,36 @@ class SendView extends ViewBase<SendViewModel> {
     );
   }
 
+  Widget? getTitleWidget(BuildContext context) {
+    if (viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction) {
+      return Text(S.of(context).review_your_transaction,
+          style: FontManager.body2Median(ProtonColors.textNorm));
+    }
+    return null;
+  }
+
+  Widget getLeadingWidget(BuildContext context) {
+    if ([SendFlowStatus.addRecipient, SendFlowStatus.sendSuccess]
+        .contains(viewModel.sendFlowStatus)) {
+      return IconButton(
+        icon: Icon(Icons.close, color: ProtonColors.textNorm),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+    }
+    return IconButton(
+      icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
+      onPressed: () {
+        if (viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction) {
+          viewModel.updatePageStatus(SendFlowStatus.editAmount);
+        } else {
+          viewModel.updatePageStatus(SendFlowStatus.addRecipient);
+        }
+      },
+    );
+  }
+
   Widget buildMainView(BuildContext context) {
     switch (viewModel.sendFlowStatus) {
       case SendFlowStatus.addRecipient:
@@ -93,6 +103,8 @@ class SendView extends ViewBase<SendViewModel> {
         return buildEditAmount(context);
       case SendFlowStatus.reviewTransaction:
         return buildReviewContent(context);
+      case SendFlowStatus.sendSuccess:
+        return buildSuccessContent(context);
     }
   }
 
@@ -440,7 +452,9 @@ class SendView extends ViewBase<SendViewModel> {
                                                   Text(
                                                       S
                                                           .of(context)
-                                                          .message_to_recipient_optional,
+                                                          .message_to_recipient_optional(
+                                                              viewModel
+                                                                  .validRecipientCount()),
                                                       style: FontManager
                                                           .body2Median(
                                                               ProtonColors
@@ -455,7 +469,9 @@ class SendView extends ViewBase<SendViewModel> {
                                       child: TextFieldTextV2(
                                         labelText: S
                                             .of(context)
-                                            .message_to_recipient_optional,
+                                            .message_to_recipient_optional(
+                                                viewModel
+                                                    .validRecipientCount()),
                                         textController:
                                             viewModel.emailBodyController,
                                         myFocusNode:
@@ -583,8 +599,7 @@ class SendView extends ViewBase<SendViewModel> {
                     if (context.mounted && success) {
                       Provider.of<ProtonWalletProvider>(context, listen: false)
                           .syncWallet();
-                      viewModel.coordinator.end();
-                      Navigator.of(context).pop();
+                      viewModel.updatePageStatus(SendFlowStatus.sendSuccess);
                     } else if (context.mounted && success == false) {
                       LocalToast.showErrorToast(
                           context, viewModel.errorMessage);
@@ -645,101 +660,101 @@ class SendView extends ViewBase<SendViewModel> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                            const SizedBox(height: 20),
-                            Column(children: [
-                              ProtonMailAutoComplete(
-                                  labelText: S.of(context).send_to_recipient_s,
-                                  emails: viewModel.contactsEmail,
-                                  color: ProtonColors.white,
-                                  focusNode: viewModel.addressFocusNode,
-                                  textEditingController:
+                                const SizedBox(height: 20),
+                                Column(children: [
+                                  ProtonMailAutoComplete(
+                                      labelText: S.of(context).send_to_recipient_s,
+                                      emails: viewModel.contactsEmail,
+                                      color: ProtonColors.white,
+                                      focusNode: viewModel.addressFocusNode,
+                                      textEditingController:
                                       viewModel.recipientTextController,
-                                  callback: () {
-                                    viewModel.addressAutoCompleteCallback();
-                                  }),
-                              const SizedBox(height: 5),
-                              if (Provider.of<ProtonWalletProvider>(context)
-                                          .protonWallet
-                                          .currentAccount ==
+                                      callback: () {
+                                        viewModel.addressAutoCompleteCallback();
+                                      }),
+                                  const SizedBox(height: 5),
+                                  if (Provider.of<ProtonWalletProvider>(context)
+                                      .protonWallet
+                                      .currentAccount ==
                                       null &&
-                                  Provider.of<ProtonWalletProvider>(context)
+                                      Provider.of<ProtonWalletProvider>(context)
                                           .protonWallet
                                           .currentAccounts
                                           .length >
-                                      1)
-                                WalletAccountDropdown(
-                                    labelText: S.of(context).trans_from,
-                                    backgroundColor: ProtonColors.white,
-                                    width: MediaQuery.of(context).size.width -
-                                        defaultPadding * 2,
-                                    accounts: Provider.of<ProtonWalletProvider>(
+                                          1)
+                                    WalletAccountDropdown(
+                                        labelText: S.of(context).trans_from,
+                                        backgroundColor: ProtonColors.white,
+                                        width: MediaQuery.of(context).size.width -
+                                            defaultPadding * 2,
+                                        accounts: Provider.of<ProtonWalletProvider>(
                                             context)
-                                        .protonWallet
-                                        .currentAccounts,
-                                    valueNotifier: viewModel.initialized
-                                        ? viewModel.accountValueNotifier
-                                        : ValueNotifier(
+                                            .protonWallet
+                                            .currentAccounts,
+                                        valueNotifier: viewModel.initialized
+                                            ? viewModel.accountValueNotifier
+                                            : ValueNotifier(
                                             Provider.of<ProtonWalletProvider>(
-                                                    context)
+                                                context)
                                                 .protonWallet
                                                 .currentAccounts
                                                 .first)),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(width: defaultPadding),
-                                    Text(
-                                      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
-                                      style: FontManager.captionRegular(
-                                          ProtonColors.textWeak),
-                                    ),
-                                  ]),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ]),
-                            if (viewModel.recipients.isNotEmpty)
-                              Container(
-                                margin:
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: defaultPadding),
+                                        Text(
+                                          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                          style: FontManager.captionRegular(
+                                              ProtonColors.textWeak),
+                                        ),
+                                      ]),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ]),
+                                if (viewModel.recipients.isNotEmpty)
+                                  Container(
+                                    margin:
                                     const EdgeInsets.only(top: 20, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  S.of(context).recipients,
-                                  style: FontManager.captionMedian(
-                                      ProtonColors.textNorm),
-                                ),
-                              ),
-                            for (int index = 0;
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Text(
+                                      S.of(context).recipients,
+                                      style: FontManager.captionMedian(
+                                          ProtonColors.textNorm),
+                                    ),
+                                  ),
+                                for (int index = 0;
                                 index < viewModel.recipients.length;
                                 index++)
-                              RecipientDetail(
-                                name: viewModel.recipients[index].email,
-                                email: viewModel.recipients[index].email,
-                                bitcoinAddress: viewModel.bitcoinAddresses
+                                  RecipientDetail(
+                                    name: viewModel.recipients[index].email,
+                                    email: viewModel.recipients[index].email,
+                                    bitcoinAddress: viewModel.bitcoinAddresses
                                         .containsKey(
-                                            viewModel.recipients[index].email)
-                                    ? viewModel.bitcoinAddresses[viewModel
-                                            .recipients[index].email] ??
+                                        viewModel.recipients[index].email)
+                                        ? viewModel.bitcoinAddresses[viewModel
+                                        .recipients[index].email] ??
                                         ""
-                                    : "",
-                                isSignatureInvalid: viewModel
-                                            .bitcoinAddressesInvalidSignature[
-                                        viewModel.recipients[index].email] ??
-                                    false,
-                                isSelfBitcoinAddress:
+                                        : "",
+                                    isSignatureInvalid: viewModel
+                                        .bitcoinAddressesInvalidSignature[
+                                    viewModel.recipients[index].email] ??
+                                        false,
+                                    isSelfBitcoinAddress:
                                     viewModel.selfBitcoinAddresses.contains(
                                         viewModel.bitcoinAddresses[viewModel
-                                                .recipients[index].email] ??
+                                            .recipients[index].email] ??
                                             ""),
-                                callback: () {
-                                  viewModel.removeRecipient(index);
-                                },
-                              ),
-                          ]))))),
+                                    callback: () {
+                                      viewModel.removeRecipient(index);
+                                    },
+                                  ),
+                              ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
             Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -755,6 +770,72 @@ class SendView extends ViewBase<SendViewModel> {
                     backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),
                     height: 48)),
+        ]));
+  }
+
+  Widget buildSuccessContent(BuildContext context) {
+    return Container(
+        color: ProtonColors.backgroundProton,
+        child: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Center(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                    "assets/images/icon/send_success.svg",
+                                    fit: BoxFit.fill,
+                                    width: 240,
+                                    height: 240),
+                                Text(
+                                  S.of(context).send_success_title,
+                                  style: FontManager.titleHeadline(ProtonColors.textNorm),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  S.of(context).send_success_content,
+                                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 40),
+                                Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: defaultPadding),
+                                    child: Column(children: [
+                                      ButtonV5(
+                                          onPressed: () async {
+                                            viewModel.coordinator.end();
+                                            Navigator.of(context).pop();
+                                          },
+                                          text: S.of(context).done,
+                                          width: MediaQuery.of(context).size.width,
+                                          textStyle:
+                                          FontManager.body1Median(ProtonColors.white),
+                                          backgroundColor: ProtonColors.protonBlue,
+                                          borderColor: ProtonColors.protonBlue,
+                                          height: 48),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      ButtonV5(
+                                          onPressed: () async {
+                                            // TODO:: add invite friend dialog and api call here
+                                            LocalToast.showToast(context, "TODO");
+                                          },
+                                          text: S.of(context).invite_a_friend,
+                                          width: MediaQuery.of(context).size.width,
+                                          textStyle: FontManager.body1Median(
+                                              ProtonColors.textNorm),
+                                          backgroundColor: ProtonColors.textWeakPressed,
+                                          borderColor: ProtonColors.textWeakPressed,
+                                          height: 48),
+                                    ])),
+                              ]))))),
         ]));
   }
 }
