@@ -542,7 +542,7 @@ class ProtonWalletManager implements Manager {
           await _lib.getAddress(wallet, addressIndex: addressIndex);
       String bitcoinAddress = addressInfo.address;
       bitcoinAddressModel = await DBHelper.bitcoinAddressDao!
-          .findByBitcoinAddress(bitcoinAddress);
+          .findBitcoinAddressInAccount(bitcoinAddress, accountModel.id!);
       if (bitcoinAddressModel == null) {
         // only insert bitcoinAddress if it's not in db
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
@@ -607,7 +607,7 @@ class ProtonWalletManager implements Manager {
           String bitcoinAddress = recipientAddress.toString();
           BitcoinAddressModel? bitcoinAddressModel = await DBHelper
               .bitcoinAddressDao!
-              .findByBitcoinAddress(bitcoinAddress);
+              .findBitcoinAddressInAccount(bitcoinAddress, accountModel.id!);
           if (bitcoinAddressModel != null) {
             bitcoinAddressModel.used = 1;
             await DBHelper.bitcoinAddressDao!.update(bitcoinAddressModel);
@@ -763,7 +763,7 @@ class ProtonWalletManager implements Manager {
           exchangeRate: exchangeRate,
         );
         updateBitcoinAddressUsed(
-            txID); // update local bitcoin address to set used, TODO:: fix performance here
+            txID, accountModel); // update local bitcoin address to set used, TODO:: fix performance here
       }
 
       // get transactions from local db (transactions in progress, and not in synced bdk transactions)
@@ -926,7 +926,7 @@ class ProtonWalletManager implements Manager {
                   in transactionDetailFromBlockChain.recipients) {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
-                    .findByBitcoinAddress(recipient.bitcoinAddress);
+                    .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
                 if (bitcoinAddressModel != null) {
                   bitcoinAddressModel.used = 1;
                   await DBHelper.bitcoinAddressDao!.update(bitcoinAddressModel);
@@ -1040,7 +1040,7 @@ class ProtonWalletManager implements Manager {
     historyTransactionsAfterFilter = newHistoryTransactions;
   }
 
-  Future<void> updateBitcoinAddressUsed(String txID) async {
+  Future<void> updateBitcoinAddressUsed(String txID, AccountModel accountModel) async {
     TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
     for (int i = 0; i < 5; i++) {
       transactionDetailFromBlockChain =
@@ -1058,7 +1058,7 @@ class ProtonWalletManager implements Manager {
       for (Recipient recipient in transactionDetailFromBlockChain.recipients) {
         BitcoinAddressModel? bitcoinAddressModel = await DBHelper
             .bitcoinAddressDao!
-            .findByBitcoinAddress(recipient.bitcoinAddress);
+            .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
         if (bitcoinAddressModel != null) {
           bitcoinAddressModel.used = 1;
 
