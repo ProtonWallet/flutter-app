@@ -713,40 +713,10 @@ class ProtonWalletManager implements Manager {
           amountInSATS += transactionDetail.fee ?? 0;
         }
         String key = "$txID-${accountModel.serverAccountID}";
-        ProtonExchangeRate? exchangeRate;
-        if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
-          ExchangeRateModel? exchangeRateModel = await DBHelper.exchangeRateDao!
-              .findByServerID(transactionModel!.exchangeRateID);
-          if (exchangeRateModel != null) {
-            BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
-                (v) =>
-                    v.name.toUpperCase() ==
-                    exchangeRateModel.bitcoinUnit.toUpperCase(),
-                orElse: () => defaultBitcoinUnit);
-            FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
-                (v) =>
-                    v.name.toUpperCase() ==
-                    exchangeRateModel.fiatCurrency.toUpperCase(),
-                orElse: () => defaultFiatCurrency);
-            exchangeRate = ProtonExchangeRate(
-              id: exchangeRateModel.serverID,
-              bitcoinUnit: bitcoinUnit,
-              fiatCurrency: fiatCurrency,
-              exchangeRateTime: exchangeRateModel.exchangeRateTime,
-              exchangeRate: exchangeRateModel.exchangeRate,
-              cents: exchangeRateModel.cents,
-            );
-          }
-        }
-        exchangeRate ??= await ExchangeRateService.getExchangeRate(
-            Provider.of<UserSettingProvider>(
-                    Coordinator.rootNavigatorKey.currentContext!,
-                    listen: false)
-                .walletUserSetting
-                .fiatCurrency,
-            time: transactionModel?.transactionTime != null
-                ? int.parse(transactionModel?.transactionTime ?? "0")
-                : null);
+
+        ProtonExchangeRate exchangeRate =
+            await getExchangeRateFromTransactionModel(transactionModel);
+
         newHistoryTransactionsMap[key] = HistoryTransaction(
           txID: txID,
           createTimestamp: transactionDetail.confirmationTime?.timestamp,
@@ -857,39 +827,8 @@ class ProtonWalletManager implements Manager {
                 .feeInSATS; // all recipients have same fee since its same transaction
           }
 
-          ProtonExchangeRate? exchangeRate;
-          if (transactionModel.exchangeRateID.isNotEmpty) {
-            ExchangeRateModel? exchangeRateModel = await DBHelper
-                .exchangeRateDao!
-                .findByServerID(transactionModel.exchangeRateID);
-            if (exchangeRateModel != null) {
-              BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
-                  (v) =>
-                      v.name.toUpperCase() ==
-                      exchangeRateModel.bitcoinUnit.toUpperCase(),
-                  orElse: () => defaultBitcoinUnit);
-              FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
-                  (v) =>
-                      v.name.toUpperCase() ==
-                      exchangeRateModel.fiatCurrency.toUpperCase(),
-                  orElse: () => defaultFiatCurrency);
-              exchangeRate = ProtonExchangeRate(
-                id: exchangeRateModel.serverID,
-                bitcoinUnit: bitcoinUnit,
-                fiatCurrency: fiatCurrency,
-                exchangeRateTime: exchangeRateModel.exchangeRateTime,
-                exchangeRate: exchangeRateModel.exchangeRate,
-                cents: exchangeRateModel.cents,
-              );
-            }
-          }
-          exchangeRate ??= await ExchangeRateService.getExchangeRate(
-              Provider.of<UserSettingProvider>(
-                      Coordinator.rootNavigatorKey.currentContext!,
-                      listen: false)
-                  .walletUserSetting
-                  .fiatCurrency,
-              time: int.parse(transactionModel.transactionTime));
+          ProtonExchangeRate exchangeRate =
+              await getExchangeRateFromTransactionModel(transactionModel);
 
           newHistoryTransactionsMap[key] = HistoryTransaction(
             txID: txID,
@@ -950,6 +889,8 @@ class ProtonWalletManager implements Manager {
                 }
               }
               if (me != null) {
+                ProtonExchangeRate exchangeRate =
+                    await getExchangeRateFromTransactionModel(transactionModel);
                 newHistoryTransactionsMap[key] = HistoryTransaction(
                   txID: txID,
                   amountInSATS: me.amountInSATS,
@@ -960,7 +901,7 @@ class ProtonWalletManager implements Manager {
                   inProgress: true,
                   accountModel: accountModel,
                   body: body.isNotEmpty ? body : null,
-                  exchangeRate: null,
+                  exchangeRate: exchangeRate,
                 );
               } else {
                 // logger.i("Cannot find this tx, $txID");
@@ -996,6 +937,46 @@ class ProtonWalletManager implements Manager {
       logger.i("setCurrentTransactions finish()!");
     }
     // });
+  }
+
+  Future<ProtonExchangeRate> getExchangeRateFromTransactionModel(
+      TransactionModel? transactionModel) async {
+    ProtonExchangeRate? exchangeRate;
+    if (transactionModel != null &&
+        transactionModel.exchangeRateID.isNotEmpty) {
+      ExchangeRateModel? exchangeRateModel = await DBHelper.exchangeRateDao!
+          .findByServerID(transactionModel.exchangeRateID);
+      if (exchangeRateModel != null) {
+        BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
+            (v) =>
+                v.name.toUpperCase() ==
+                exchangeRateModel.bitcoinUnit.toUpperCase(),
+            orElse: () => defaultBitcoinUnit);
+        FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
+            (v) =>
+                v.name.toUpperCase() ==
+                exchangeRateModel.fiatCurrency.toUpperCase(),
+            orElse: () => defaultFiatCurrency);
+        exchangeRate = ProtonExchangeRate(
+          id: exchangeRateModel.serverID,
+          bitcoinUnit: bitcoinUnit,
+          fiatCurrency: fiatCurrency,
+          exchangeRateTime: exchangeRateModel.exchangeRateTime,
+          exchangeRate: exchangeRateModel.exchangeRate,
+          cents: exchangeRateModel.cents,
+        );
+      }
+    }
+    exchangeRate ??= await ExchangeRateService.getExchangeRate(
+        Provider.of<UserSettingProvider>(
+                Coordinator.rootNavigatorKey.currentContext!,
+                listen: false)
+            .walletUserSetting
+            .fiatCurrency,
+        time: transactionModel?.transactionTime != null
+            ? int.parse(transactionModel?.transactionTime ?? "0")
+            : null);
+    return exchangeRate;
   }
 
   int getAccountCounts(WalletModel walletModel) {
