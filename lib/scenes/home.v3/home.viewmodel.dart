@@ -263,7 +263,7 @@ class HomeViewModelImpl extends HomeViewModel {
     hideEmptyUsedAddressesController = TextEditingController();
     walletNameController = TextEditingController(text: "");
     twoFactorAmountThresholdController = TextEditingController(text: "3");
-    newAccountNameController = TextEditingController(text: "BTC Account");
+    newAccountNameController = TextEditingController(text: "My wallet account");
     newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
     walletRecoverPassphraseController = TextEditingController(text: "");
     passphraseTextController = TextEditingController(text: "");

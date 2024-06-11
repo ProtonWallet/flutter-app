@@ -30,116 +30,119 @@ class ProtonMailAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RawAutocomplete<ContactsModel>(
-        textEditingController: textEditingController,
-        focusNode: focusNode,
-        optionsBuilder: (TextEditingValue textEditingValue) {
-          if (textEditingValue.text == '') {
-            return emails;
-          }
-          return emails.where((ContactsModel protonContactEmail) {
-            return protonContactEmail.email
-                .contains(textEditingValue.text.toLowerCase());
-          });
-        },
-        onSelected: (ContactsModel selection) {
-          textEditingController.text = selection.email;
-          if (callback != null) {
-            callback!();
-          }
-          focusNode.unfocus();
-        },
-        optionsViewBuilder: (BuildContext context,
-            AutocompleteOnSelected<ContactsModel> onSelected,
-            Iterable<ContactsModel> options) {
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              width: MediaQuery.of(context).size.width - defaultPadding * 2,
-              constraints: const BoxConstraints(maxHeight: 320),
-              decoration: BoxDecoration(
-                color: ProtonColors.backgroundProton,
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                children: options.map((ContactsModel option) {
-                  return GestureDetector(
-                    onTap: () {
-                      onSelected(option);
-                    },
-                    child: Column(children: [
-                      ListTile(
-                        leading: getEmailAvatar(option.name),
-                        title: Text(option.name),
-                        subtitle: Text(option.email),
-                      ),
-                      const Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: defaultPadding),
-                          child: Divider(
-                            thickness: 0.2,
-                            height: 1,
-                          )),
-                    ]),
-                  );
-                }).toList(),
-              ),
-            ),
-          );
-        },
-        fieldViewBuilder: (BuildContext context,
-            TextEditingController textEditingController,
-            FocusNode focusNode,
-            VoidCallback onFieldSubmitted) {
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            decoration: BoxDecoration(
-                color: color,
-                borderRadius: const BorderRadius.all(Radius.circular(18.0)),
-                border: Border.all(
-                  width: 1.6,
-                  style: BorderStyle.solid,
-                  color: focusNode.hasFocus
-                      ? ProtonColors.interactionNorm
-                      : ProtonColors.textHint,
-                )),
-            child: TextFormField(
-              focusNode: focusNode,
-              controller: textEditingController,
-              style: FontManager.body1Median(ProtonColors.textNorm),
-              onFieldSubmitted: (value) {
-                if (callback != null) {
-                  callback!();
-                }
-              },
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    if (Platform.isAndroid || Platform.isIOS) {
-                      showQRScanBottomSheet(
-                          context, textEditingController, callback);
+    return LayoutBuilder(
+        builder: (context, constraints) => RawAutocomplete<ContactsModel>(
+            textEditingController: textEditingController,
+            focusNode: focusNode,
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return emails;
+              }
+              return emails.where((ContactsModel protonContactEmail) {
+                return protonContactEmail.email
+                    .contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (ContactsModel selection) {
+              textEditingController.text = selection.email;
+              if (callback != null) {
+                callback!();
+              }
+              focusNode.unfocus();
+            },
+            optionsViewBuilder: (BuildContext context,
+                AutocompleteOnSelected<ContactsModel> onSelected,
+                Iterable<ContactsModel> options) {
+              return Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 320,
+                    maxWidth: constraints.biggest.width,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ProtonColors.backgroundProton,
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: options.map((ContactsModel option) {
+                      return GestureDetector(
+                        onTap: () {
+                          onSelected(option);
+                        },
+                        child: Column(children: [
+                          ListTile(
+                            leading: getEmailAvatar(option.name),
+                            title: Text(option.name),
+                            subtitle: Text(option.email),
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
+                              child: Divider(
+                                thickness: 0.2,
+                                height: 1,
+                              )),
+                        ]),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+            },
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController textEditingController,
+                FocusNode focusNode,
+                VoidCallback onFieldSubmitted) {
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                    border: Border.all(
+                      width: 1.6,
+                      style: BorderStyle.solid,
+                      color: focusNode.hasFocus
+                          ? ProtonColors.interactionNorm
+                          : ProtonColors.textHint,
+                    )),
+                child: TextFormField(
+                  focusNode: focusNode,
+                  controller: textEditingController,
+                  style: FontManager.body1Median(ProtonColors.textNorm),
+                  onFieldSubmitted: (value) {
+                    if (callback != null) {
+                      callback!();
                     }
                   },
-                  icon: Icon(Icons.qr_code_rounded,
-                      size: 26, color: ProtonColors.textWeak),
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        if (Platform.isAndroid || Platform.isIOS) {
+                          showQRScanBottomSheet(
+                              context, textEditingController, callback);
+                        }
+                      },
+                      icon: Icon(Icons.qr_code_rounded,
+                          size: 26, color: ProtonColors.textWeak),
+                    ),
+                    labelText: labelText,
+                    labelStyle:
+                        FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                    contentPadding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 4, bottom: 16),
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    errorStyle: const TextStyle(height: 0),
+                    focusedErrorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
                 ),
-                labelText: labelText,
-                labelStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textWeak),
-                contentPadding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 4, bottom: 16),
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                border: InputBorder.none,
-                errorStyle: const TextStyle(height: 0),
-                focusedErrorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          );
-        });
+              );
+            }));
   }
 }
 
