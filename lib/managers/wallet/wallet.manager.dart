@@ -178,7 +178,7 @@ class WalletManager implements Manager {
   }
 
   static Future<void> autoCreateWallet() async {
-    String walletName = "Default Wallet";
+    String walletName = "My Wallet";
     Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
     await createWallet(walletName, mnemonic.asString(),
         WalletModel.createByProton, defaultFiatCurrency);
@@ -198,7 +198,7 @@ class WalletManager implements Manager {
     String encryptedMnemonic =
         await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
     String encryptedWalletName = await WalletKeyHelper.encrypt(
-        secretKey, walletName.isNotEmpty ? walletName : "Default Wallet");
+        secretKey, walletName.isNotEmpty ? walletName : "My Wallet");
     String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
         mnemonicStr,
         passphrase:
@@ -224,7 +224,7 @@ class WalletManager implements Manager {
         walletData, walletName, encryptedMnemonic, fingerprint, walletType);
     await WalletManager.setWalletKey([walletData.walletKey]);
     await WalletManager.addWalletAccount(
-        walletID, appConfig.scriptType, "BTC Account", fiatCurrency);
+        walletID, appConfig.scriptType, "My wallet account", fiatCurrency);
     WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
     if (walletModel != null && passphrase != null && passphrase.isNotEmpty) {
       await Provider.of<ProtonWalletProvider>(

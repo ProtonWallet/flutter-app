@@ -228,9 +228,14 @@ class EventLoop implements Manager {
           }
         }
       }
-      await polling();
     } catch (e) {
       logger.e("Event Loop error: ${e.toString()}");
+    }
+
+    try {
+      await polling();
+    } catch (e) {
+      logger.e("polling error: ${e.toString()}");
     }
   }
 
@@ -243,8 +248,10 @@ class EventLoop implements Manager {
     userSettingProvider.updateExchangeRate(exchangeRate);
 
     // fetch for account setting's exchange rate, used for sidebar balance
-    for (AccountModel accountModel in protonWalletProvider.protonWallet.accounts){
-      FiatCurrency fiatCurrency = WalletManager.getAccountFiatCurrency(accountModel);
+    for (AccountModel accountModel
+        in protonWalletProvider.protonWallet.accounts) {
+      FiatCurrency fiatCurrency =
+          WalletManager.getAccountFiatCurrency(accountModel);
       await ExchangeRateService.runOnce(fiatCurrency);
       // ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
     }
