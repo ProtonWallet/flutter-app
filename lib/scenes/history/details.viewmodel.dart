@@ -327,7 +327,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                   in transactionDetailFromBlockChain.recipients) {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
-                    .findByBitcoinAddress(recipient.bitcoinAddress);
+                    .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
                 if (bitcoinAddressModel != null) {
                   me = recipient;
                   break;
