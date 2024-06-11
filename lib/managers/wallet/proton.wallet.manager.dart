@@ -452,7 +452,7 @@ class ProtonWalletManager implements Manager {
     }
     for (AccountModel accountModel in accounts) {
       if (accountModel.walletID == deletedWalletModel.id) {
-        _accountID2IntegratedEmailIDs.remove(accountModel.id);
+        deleteWalletAccount(accountModel, rootWalletDeleted: true);
       }
     }
   }
@@ -487,7 +487,8 @@ class ProtonWalletManager implements Manager {
     await getCurrentWalletAccounts();
   }
 
-  Future<void> deleteWalletAccount(AccountModel deletedAccountModel) async {
+  Future<void> deleteWalletAccount(AccountModel deletedAccountModel,
+      {bool rootWalletDeleted = false}) async {
     int indexToDelete = -1;
     for (AccountModel accountModel in accounts) {
       if (deletedAccountModel.serverAccountID == accountModel.serverAccountID) {
@@ -499,13 +500,16 @@ class ProtonWalletManager implements Manager {
       accounts.removeAt(indexToDelete);
     }
     _accountID2IntegratedEmailIDs.remove(deletedAccountModel.id!);
-    await getCurrentWalletAccounts();
-    if (deletedAccountModel.serverAccountID ==
-        (currentAccount?.serverAccountID ?? "")) {
-      if (currentAccounts.isNotEmpty && currentWallet != null) {
-        await setWalletAccount(currentWallet!, currentAccounts.first);
-      } else {
-        await setDefaultWallet();
+
+    if (rootWalletDeleted == false) {
+      await getCurrentWalletAccounts();
+      if (deletedAccountModel.serverAccountID ==
+          (currentAccount?.serverAccountID ?? "")) {
+        if (currentAccounts.isNotEmpty && currentWallet != null) {
+          await setWalletAccount(currentWallet!, currentAccounts.first);
+        } else {
+          await setDefaultWallet();
+        }
       }
     }
   }
@@ -1162,7 +1166,7 @@ class ProtonWalletProvider with ChangeNotifier {
       WalletModel walletModel, AccountModel accountModel) async {
     await protonWallet.setWalletAccount(walletModel, accountModel);
     FiatCurrency fiatCurrency =
-        await WalletManager.getAccountFiatCurrency(protonWallet.currentAccount);
+        WalletManager.getAccountFiatCurrency(protonWallet.currentAccount);
     await updateFiatCurrencyInUserSettingProvider(fiatCurrency);
     await setCurrentTransactions();
     syncWallet();

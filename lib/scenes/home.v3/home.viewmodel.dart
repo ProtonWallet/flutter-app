@@ -12,6 +12,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
@@ -792,12 +793,7 @@ class HomeViewModelImpl extends HomeViewModel {
       List<AccountModel> userAccounts) {
     for (AccountModel accountModel in userAccounts) {
       if (accountFiatCurrencyNotifiers.containsKey(accountModel.id!) == false) {
-        ValueNotifier valueNotifier = ValueNotifier(FiatCurrency.values
-            .firstWhere(
-                (v) =>
-                    v.name.toUpperCase() ==
-                    accountModel.fiatCurrency.toUpperCase(),
-                orElse: () => defaultFiatCurrency));
+        ValueNotifier valueNotifier = ValueNotifier(WalletManager.getAccountFiatCurrency(accountModel));
         valueNotifier.addListener(() {
           updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
         });
