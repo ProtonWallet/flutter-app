@@ -27,21 +27,21 @@ class SettingsClient extends RustOpaque {
         RustLib.instance.api.rust_arc_decrement_strong_count_SettingsClientPtr,
   );
 
-  Future<ApiUserSettings> bitcoinUnit(
+  Future<ApiWalletUserSettings> bitcoinUnit(
           {required BitcoinUnit symbol, dynamic hint}) =>
       RustLib.instance.api
           .settingsClientBitcoinUnit(that: this, symbol: symbol, hint: hint);
 
-  Future<ApiUserSettings> fiatCurrency(
+  Future<ApiWalletUserSettings> fiatCurrency(
           {required FiatCurrency symbol, dynamic hint}) =>
       RustLib.instance.api
           .settingsClientFiatCurrency(that: this, symbol: symbol, hint: hint);
 
-  Future<ApiUserSettings> getUserSettings({dynamic hint}) =>
+  Future<ApiWalletUserSettings> getUserSettings({dynamic hint}) =>
       RustLib.instance.api
           .settingsClientGetUserSettings(that: this, hint: hint);
 
-  Future<ApiUserSettings> hideEmptyUsedAddresses(
+  Future<ApiWalletUserSettings> hideEmptyUsedAddresses(
           {required bool hideEmptyUsedAddresses, dynamic hint}) =>
       RustLib.instance.api.settingsClientHideEmptyUsedAddresses(
           that: this,
@@ -53,7 +53,8 @@ class SettingsClient extends RustOpaque {
           {required ProtonApiService service, dynamic hint}) =>
       RustLib.instance.api.settingsClientNew(service: service, hint: hint);
 
-  Future<ApiUserSettings> twoFaThreshold({required int amount, dynamic hint}) =>
+  Future<ApiWalletUserSettings> twoFaThreshold(
+          {required int amount, dynamic hint}) =>
       RustLib.instance.api
           .settingsClientTwoFaThreshold(that: this, amount: amount, hint: hint);
 }

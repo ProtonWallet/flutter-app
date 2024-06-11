@@ -1,5 +1,5 @@
 pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
-use andromeda_api::settings::UserSettings;
+pub use andromeda_api::settings::UserSettings as ApiWalletUserSettings;
 pub use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;
 
@@ -110,35 +110,12 @@ pub enum _BitcoinUnit {
     SATS,
 }
 
-#[derive(Debug)]
-pub struct ApiUserSettings {
-    pub bitcoin_unit: BitcoinUnit,
-    pub fiat_currency: FiatCurrency,
-    pub hide_empty_used_addresses: u8,
-    pub show_wallet_recovery: u8,
-    pub two_factor_amount_threshold: Option<u64>,
-}
-
-impl From<UserSettings> for ApiUserSettings {
-    fn from(value: UserSettings) -> Self {
-        ApiUserSettings {
-            bitcoin_unit: value.BitcoinUnit,
-            fiat_currency: value.FiatCurrency,
-            hide_empty_used_addresses: value.HideEmptyUsedAddresses,
-            show_wallet_recovery: value.ShowWalletRecovery,
-            two_factor_amount_threshold: value.TwoFactorAmountThreshold,
-        }
-    }
-}
-
-impl From<ApiUserSettings> for UserSettings {
-    fn from(value: ApiUserSettings) -> Self {
-        UserSettings {
-            BitcoinUnit: value.bitcoin_unit,
-            FiatCurrency: value.fiat_currency,
-            HideEmptyUsedAddresses: value.hide_empty_used_addresses,
-            ShowWalletRecovery: value.show_wallet_recovery,
-            TwoFactorAmountThreshold: value.two_factor_amount_threshold,
-        }
-    }
+#[frb(mirror(ApiWalletUserSettings))]
+#[allow(non_snake_case)]
+pub struct _ApiWalletUserSettings {
+    pub BitcoinUnit: BitcoinUnit,
+    pub FiatCurrency: FiatCurrency,
+    pub HideEmptyUsedAddresses: u8,
+    pub ShowWalletRecovery: u8,
+    pub TwoFactorAmountThreshold: Option<u64>,
 }

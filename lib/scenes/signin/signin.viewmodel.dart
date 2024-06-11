@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -19,8 +20,14 @@ abstract class SigninViewModel extends ViewModel<SigninCoordinator> {
 class SigninViewModelImpl extends SigninViewModel {
   final UserManager userManager;
   final ProtonApiService apiService;
+  final DataProviderManager dataProviderManager;
 
-  SigninViewModelImpl(super.coordinator, this.userManager, this.apiService);
+  SigninViewModelImpl(
+    super.coordinator,
+    this.userManager,
+    this.apiService,
+    this.dataProviderManager,
+  );
 
   bool hadLocallogin = false;
   final datasourceChangedStreamController =
@@ -50,7 +57,7 @@ class SigninViewModelImpl extends SigninViewModel {
       case NavID.nativeSignup:
         break;
       case NavID.home:
-        coordinator.showHome(env);
+        break;
       default:
         break;
     }
@@ -59,9 +66,12 @@ class SigninViewModelImpl extends SigninViewModel {
   @override
   Future<void> signIn(String username, String password) async {
     try {
-      var authCredential =
-          await apiService.login(username: username, password: password);
+      var authCredential = await apiService.login(
+        username: username,
+        password: password,
+      );
       userManager.flutterLogin(authCredential);
+      await dataProviderManager.login(authCredential.userId);
       coordinator.showHome(env);
     } catch (e) {
       errorMessage = e.toString();

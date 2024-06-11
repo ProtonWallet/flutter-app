@@ -1,6 +1,6 @@
-use crate::{contacts::ProtonContactEmails, errors::ApiError};
-
 use super::proton_api_service::ProtonAPIService;
+use crate::errors::ApiError;
+use andromeda_api::contacts::ApiContactEmails;
 use std::sync::Arc;
 
 pub struct ContactsClient {
@@ -16,10 +16,10 @@ impl ContactsClient {
         }
     }
 
-    pub async fn get_contacts(&self) -> Result<Vec<ProtonContactEmails>, ApiError> {
+    pub async fn get_contacts(&self) -> Result<Vec<ApiContactEmails>, ApiError> {
         let result = self.inner.get_contacts(Some(1000), Some(0)).await;
         match result {
-            Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
+            Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
         }
     }

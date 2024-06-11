@@ -28,7 +28,7 @@ class $UsersTableTable extends UsersTable
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 100),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _usedSpaceMeta =
@@ -43,7 +43,7 @@ class $UsersTableTable extends UsersTable
   late final GeneratedColumn<String> currency = GeneratedColumn<String>(
       'currency', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 10),
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _creditMeta = const VerificationMeta('credit');
@@ -807,10 +807,7 @@ class $UserKeysTableTable extends UserKeysTable
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
       'user_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES users_table (user_id)'));
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _versionMeta =
       const VerificationMeta('version');
   @override
@@ -1174,11 +1171,396 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
   }
 }
 
+class $WalletUserSettingsTableTable extends WalletUserSettingsTable
+    with TableInfo<$WalletUserSettingsTableTable, WalletUserSettings> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletUserSettingsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _bitcoinUnitMeta =
+      const VerificationMeta('bitcoinUnit');
+  @override
+  late final GeneratedColumn<String> bitcoinUnit = GeneratedColumn<String>(
+      'bitcoin_unit', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _fiatCurrencyMeta =
+      const VerificationMeta('fiatCurrency');
+  @override
+  late final GeneratedColumn<String> fiatCurrency = GeneratedColumn<String>(
+      'fiat_currency', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _hideEmptyUsedAddressesMeta =
+      const VerificationMeta('hideEmptyUsedAddresses');
+  @override
+  late final GeneratedColumn<bool> hideEmptyUsedAddresses =
+      GeneratedColumn<bool>('hide_empty_used_addresses', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("hide_empty_used_addresses" IN (0, 1))'));
+  static const VerificationMeta _showWalletRecoveryMeta =
+      const VerificationMeta('showWalletRecovery');
+  @override
+  late final GeneratedColumn<bool> showWalletRecovery = GeneratedColumn<bool>(
+      'show_wallet_recovery', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("show_wallet_recovery" IN (0, 1))'));
+  static const VerificationMeta _twoFactorAmountThresholdMeta =
+      const VerificationMeta('twoFactorAmountThreshold');
+  @override
+  late final GeneratedColumn<double> twoFactorAmountThreshold =
+      GeneratedColumn<double>('two_factor_amount_threshold', aliasedName, false,
+          type: DriftSqlType.double, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        userId,
+        bitcoinUnit,
+        fiatCurrency,
+        hideEmptyUsedAddresses,
+        showWalletRecovery,
+        twoFactorAmountThreshold
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallet_user_settings_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<WalletUserSettings> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('bitcoin_unit')) {
+      context.handle(
+          _bitcoinUnitMeta,
+          bitcoinUnit.isAcceptableOrUnknown(
+              data['bitcoin_unit']!, _bitcoinUnitMeta));
+    } else if (isInserting) {
+      context.missing(_bitcoinUnitMeta);
+    }
+    if (data.containsKey('fiat_currency')) {
+      context.handle(
+          _fiatCurrencyMeta,
+          fiatCurrency.isAcceptableOrUnknown(
+              data['fiat_currency']!, _fiatCurrencyMeta));
+    } else if (isInserting) {
+      context.missing(_fiatCurrencyMeta);
+    }
+    if (data.containsKey('hide_empty_used_addresses')) {
+      context.handle(
+          _hideEmptyUsedAddressesMeta,
+          hideEmptyUsedAddresses.isAcceptableOrUnknown(
+              data['hide_empty_used_addresses']!, _hideEmptyUsedAddressesMeta));
+    } else if (isInserting) {
+      context.missing(_hideEmptyUsedAddressesMeta);
+    }
+    if (data.containsKey('show_wallet_recovery')) {
+      context.handle(
+          _showWalletRecoveryMeta,
+          showWalletRecovery.isAcceptableOrUnknown(
+              data['show_wallet_recovery']!, _showWalletRecoveryMeta));
+    } else if (isInserting) {
+      context.missing(_showWalletRecoveryMeta);
+    }
+    if (data.containsKey('two_factor_amount_threshold')) {
+      context.handle(
+          _twoFactorAmountThresholdMeta,
+          twoFactorAmountThreshold.isAcceptableOrUnknown(
+              data['two_factor_amount_threshold']!,
+              _twoFactorAmountThresholdMeta));
+    } else if (isInserting) {
+      context.missing(_twoFactorAmountThresholdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId};
+  @override
+  WalletUserSettings map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WalletUserSettings(
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+      bitcoinUnit: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}bitcoin_unit'])!,
+      fiatCurrency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}fiat_currency'])!,
+      hideEmptyUsedAddresses: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}hide_empty_used_addresses'])!,
+      showWalletRecovery: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}show_wallet_recovery'])!,
+      twoFactorAmountThreshold: attachedDatabase.typeMapping.read(
+          DriftSqlType.double,
+          data['${effectivePrefix}two_factor_amount_threshold'])!,
+    );
+  }
+
+  @override
+  $WalletUserSettingsTableTable createAlias(String alias) {
+    return $WalletUserSettingsTableTable(attachedDatabase, alias);
+  }
+}
+
+class WalletUserSettings extends DataClass
+    implements Insertable<WalletUserSettings> {
+  final String userId;
+  final String bitcoinUnit;
+  final String fiatCurrency;
+  final bool hideEmptyUsedAddresses;
+  final bool showWalletRecovery;
+  final double twoFactorAmountThreshold;
+  const WalletUserSettings(
+      {required this.userId,
+      required this.bitcoinUnit,
+      required this.fiatCurrency,
+      required this.hideEmptyUsedAddresses,
+      required this.showWalletRecovery,
+      required this.twoFactorAmountThreshold});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['bitcoin_unit'] = Variable<String>(bitcoinUnit);
+    map['fiat_currency'] = Variable<String>(fiatCurrency);
+    map['hide_empty_used_addresses'] = Variable<bool>(hideEmptyUsedAddresses);
+    map['show_wallet_recovery'] = Variable<bool>(showWalletRecovery);
+    map['two_factor_amount_threshold'] =
+        Variable<double>(twoFactorAmountThreshold);
+    return map;
+  }
+
+  WalletUserSettingsTableCompanion toCompanion(bool nullToAbsent) {
+    return WalletUserSettingsTableCompanion(
+      userId: Value(userId),
+      bitcoinUnit: Value(bitcoinUnit),
+      fiatCurrency: Value(fiatCurrency),
+      hideEmptyUsedAddresses: Value(hideEmptyUsedAddresses),
+      showWalletRecovery: Value(showWalletRecovery),
+      twoFactorAmountThreshold: Value(twoFactorAmountThreshold),
+    );
+  }
+
+  factory WalletUserSettings.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WalletUserSettings(
+      userId: serializer.fromJson<String>(json['userId']),
+      bitcoinUnit: serializer.fromJson<String>(json['bitcoinUnit']),
+      fiatCurrency: serializer.fromJson<String>(json['fiatCurrency']),
+      hideEmptyUsedAddresses:
+          serializer.fromJson<bool>(json['hideEmptyUsedAddresses']),
+      showWalletRecovery: serializer.fromJson<bool>(json['showWalletRecovery']),
+      twoFactorAmountThreshold:
+          serializer.fromJson<double>(json['twoFactorAmountThreshold']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userId': serializer.toJson<String>(userId),
+      'bitcoinUnit': serializer.toJson<String>(bitcoinUnit),
+      'fiatCurrency': serializer.toJson<String>(fiatCurrency),
+      'hideEmptyUsedAddresses': serializer.toJson<bool>(hideEmptyUsedAddresses),
+      'showWalletRecovery': serializer.toJson<bool>(showWalletRecovery),
+      'twoFactorAmountThreshold':
+          serializer.toJson<double>(twoFactorAmountThreshold),
+    };
+  }
+
+  WalletUserSettings copyWith(
+          {String? userId,
+          String? bitcoinUnit,
+          String? fiatCurrency,
+          bool? hideEmptyUsedAddresses,
+          bool? showWalletRecovery,
+          double? twoFactorAmountThreshold}) =>
+      WalletUserSettings(
+        userId: userId ?? this.userId,
+        bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
+        fiatCurrency: fiatCurrency ?? this.fiatCurrency,
+        hideEmptyUsedAddresses:
+            hideEmptyUsedAddresses ?? this.hideEmptyUsedAddresses,
+        showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
+        twoFactorAmountThreshold:
+            twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('WalletUserSettings(')
+          ..write('userId: $userId, ')
+          ..write('bitcoinUnit: $bitcoinUnit, ')
+          ..write('fiatCurrency: $fiatCurrency, ')
+          ..write('hideEmptyUsedAddresses: $hideEmptyUsedAddresses, ')
+          ..write('showWalletRecovery: $showWalletRecovery, ')
+          ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(userId, bitcoinUnit, fiatCurrency,
+      hideEmptyUsedAddresses, showWalletRecovery, twoFactorAmountThreshold);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WalletUserSettings &&
+          other.userId == this.userId &&
+          other.bitcoinUnit == this.bitcoinUnit &&
+          other.fiatCurrency == this.fiatCurrency &&
+          other.hideEmptyUsedAddresses == this.hideEmptyUsedAddresses &&
+          other.showWalletRecovery == this.showWalletRecovery &&
+          other.twoFactorAmountThreshold == this.twoFactorAmountThreshold);
+}
+
+class WalletUserSettingsTableCompanion
+    extends UpdateCompanion<WalletUserSettings> {
+  final Value<String> userId;
+  final Value<String> bitcoinUnit;
+  final Value<String> fiatCurrency;
+  final Value<bool> hideEmptyUsedAddresses;
+  final Value<bool> showWalletRecovery;
+  final Value<double> twoFactorAmountThreshold;
+  final Value<int> rowid;
+  const WalletUserSettingsTableCompanion({
+    this.userId = const Value.absent(),
+    this.bitcoinUnit = const Value.absent(),
+    this.fiatCurrency = const Value.absent(),
+    this.hideEmptyUsedAddresses = const Value.absent(),
+    this.showWalletRecovery = const Value.absent(),
+    this.twoFactorAmountThreshold = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WalletUserSettingsTableCompanion.insert({
+    required String userId,
+    required String bitcoinUnit,
+    required String fiatCurrency,
+    required bool hideEmptyUsedAddresses,
+    required bool showWalletRecovery,
+    required double twoFactorAmountThreshold,
+    this.rowid = const Value.absent(),
+  })  : userId = Value(userId),
+        bitcoinUnit = Value(bitcoinUnit),
+        fiatCurrency = Value(fiatCurrency),
+        hideEmptyUsedAddresses = Value(hideEmptyUsedAddresses),
+        showWalletRecovery = Value(showWalletRecovery),
+        twoFactorAmountThreshold = Value(twoFactorAmountThreshold);
+  static Insertable<WalletUserSettings> custom({
+    Expression<String>? userId,
+    Expression<String>? bitcoinUnit,
+    Expression<String>? fiatCurrency,
+    Expression<bool>? hideEmptyUsedAddresses,
+    Expression<bool>? showWalletRecovery,
+    Expression<double>? twoFactorAmountThreshold,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (bitcoinUnit != null) 'bitcoin_unit': bitcoinUnit,
+      if (fiatCurrency != null) 'fiat_currency': fiatCurrency,
+      if (hideEmptyUsedAddresses != null)
+        'hide_empty_used_addresses': hideEmptyUsedAddresses,
+      if (showWalletRecovery != null)
+        'show_wallet_recovery': showWalletRecovery,
+      if (twoFactorAmountThreshold != null)
+        'two_factor_amount_threshold': twoFactorAmountThreshold,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WalletUserSettingsTableCompanion copyWith(
+      {Value<String>? userId,
+      Value<String>? bitcoinUnit,
+      Value<String>? fiatCurrency,
+      Value<bool>? hideEmptyUsedAddresses,
+      Value<bool>? showWalletRecovery,
+      Value<double>? twoFactorAmountThreshold,
+      Value<int>? rowid}) {
+    return WalletUserSettingsTableCompanion(
+      userId: userId ?? this.userId,
+      bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
+      fiatCurrency: fiatCurrency ?? this.fiatCurrency,
+      hideEmptyUsedAddresses:
+          hideEmptyUsedAddresses ?? this.hideEmptyUsedAddresses,
+      showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
+      twoFactorAmountThreshold:
+          twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (bitcoinUnit.present) {
+      map['bitcoin_unit'] = Variable<String>(bitcoinUnit.value);
+    }
+    if (fiatCurrency.present) {
+      map['fiat_currency'] = Variable<String>(fiatCurrency.value);
+    }
+    if (hideEmptyUsedAddresses.present) {
+      map['hide_empty_used_addresses'] =
+          Variable<bool>(hideEmptyUsedAddresses.value);
+    }
+    if (showWalletRecovery.present) {
+      map['show_wallet_recovery'] = Variable<bool>(showWalletRecovery.value);
+    }
+    if (twoFactorAmountThreshold.present) {
+      map['two_factor_amount_threshold'] =
+          Variable<double>(twoFactorAmountThreshold.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletUserSettingsTableCompanion(')
+          ..write('userId: $userId, ')
+          ..write('bitcoinUnit: $bitcoinUnit, ')
+          ..write('fiatCurrency: $fiatCurrency, ')
+          ..write('hideEmptyUsedAddresses: $hideEmptyUsedAddresses, ')
+          ..write('showWalletRecovery: $showWalletRecovery, ')
+          ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $UsersTableTable usersTable = $UsersTableTable(this);
   late final $UserKeysTableTable userKeysTable = $UserKeysTableTable(this);
+  late final $WalletUserSettingsTableTable walletUserSettingsTable =
+      $WalletUserSettingsTableTable(this);
   late final Index userIdIndex = Index(
       'user_id_index', 'CREATE INDEX user_id_index ON users_table (user_id)');
   @override
@@ -1186,7 +1568,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [usersTable, userKeysTable, userIdIndex];
+      [usersTable, userKeysTable, walletUserSettingsTable, userIdIndex];
 }
 
 typedef $$UsersTableTableInsertCompanionBuilder = UsersTableCompanion Function({
@@ -1425,19 +1807,6 @@ class $$UsersTableTableFilterComposer
       column: $state.table.displayName,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ComposableFilter userKeysTableRefs(
-      ComposableFilter Function($$UserKeysTableTableFilterComposer f) f) {
-    final $$UserKeysTableTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $state.db.userKeysTable,
-        getReferencedColumn: (t) => t.userId,
-        builder: (joinBuilder, parentComposers) =>
-            $$UserKeysTableTableFilterComposer(ComposerState($state.db,
-                $state.db.userKeysTable, joinBuilder, parentComposers)));
-    return f(composer);
-  }
 }
 
 class $$UsersTableTableOrderingComposer
@@ -1635,6 +2004,11 @@ class $$UserKeysTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<int> get version => $state.composableBuilder(
       column: $state.table.version,
       builder: (column, joinBuilders) =>
@@ -1659,18 +2033,6 @@ class $$UserKeysTableTableFilterComposer
       column: $state.table.primary,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
-
-  $$UsersTableTableFilterComposer get userId {
-    final $$UsersTableTableFilterComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $state.db.usersTable,
-        getReferencedColumn: (t) => t.userId,
-        builder: (joinBuilder, parentComposers) =>
-            $$UsersTableTableFilterComposer(ComposerState($state.db,
-                $state.db.usersTable, joinBuilder, parentComposers)));
-    return composer;
-  }
 }
 
 class $$UserKeysTableTableOrderingComposer
@@ -1678,6 +2040,11 @@ class $$UserKeysTableTableOrderingComposer
   $$UserKeysTableTableOrderingComposer(super.$state);
   ColumnOrderings<String> get keyId => $state.composableBuilder(
       column: $state.table.keyId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -1705,18 +2072,169 @@ class $$UserKeysTableTableOrderingComposer
       column: $state.table.primary,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+}
 
-  $$UsersTableTableOrderingComposer get userId {
-    final $$UsersTableTableOrderingComposer composer = $state.composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.userId,
-        referencedTable: $state.db.usersTable,
-        getReferencedColumn: (t) => t.userId,
-        builder: (joinBuilder, parentComposers) =>
-            $$UsersTableTableOrderingComposer(ComposerState($state.db,
-                $state.db.usersTable, joinBuilder, parentComposers)));
-    return composer;
-  }
+typedef $$WalletUserSettingsTableTableInsertCompanionBuilder
+    = WalletUserSettingsTableCompanion Function({
+  required String userId,
+  required String bitcoinUnit,
+  required String fiatCurrency,
+  required bool hideEmptyUsedAddresses,
+  required bool showWalletRecovery,
+  required double twoFactorAmountThreshold,
+  Value<int> rowid,
+});
+typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder
+    = WalletUserSettingsTableCompanion Function({
+  Value<String> userId,
+  Value<String> bitcoinUnit,
+  Value<String> fiatCurrency,
+  Value<bool> hideEmptyUsedAddresses,
+  Value<bool> showWalletRecovery,
+  Value<double> twoFactorAmountThreshold,
+  Value<int> rowid,
+});
+
+class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WalletUserSettingsTableTable,
+    WalletUserSettings,
+    $$WalletUserSettingsTableTableFilterComposer,
+    $$WalletUserSettingsTableTableOrderingComposer,
+    $$WalletUserSettingsTableTableProcessedTableManager,
+    $$WalletUserSettingsTableTableInsertCompanionBuilder,
+    $$WalletUserSettingsTableTableUpdateCompanionBuilder> {
+  $$WalletUserSettingsTableTableTableManager(
+      _$AppDatabase db, $WalletUserSettingsTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$WalletUserSettingsTableTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$WalletUserSettingsTableTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$WalletUserSettingsTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> userId = const Value.absent(),
+            Value<String> bitcoinUnit = const Value.absent(),
+            Value<String> fiatCurrency = const Value.absent(),
+            Value<bool> hideEmptyUsedAddresses = const Value.absent(),
+            Value<bool> showWalletRecovery = const Value.absent(),
+            Value<double> twoFactorAmountThreshold = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletUserSettingsTableCompanion(
+            userId: userId,
+            bitcoinUnit: bitcoinUnit,
+            fiatCurrency: fiatCurrency,
+            hideEmptyUsedAddresses: hideEmptyUsedAddresses,
+            showWalletRecovery: showWalletRecovery,
+            twoFactorAmountThreshold: twoFactorAmountThreshold,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String userId,
+            required String bitcoinUnit,
+            required String fiatCurrency,
+            required bool hideEmptyUsedAddresses,
+            required bool showWalletRecovery,
+            required double twoFactorAmountThreshold,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletUserSettingsTableCompanion.insert(
+            userId: userId,
+            bitcoinUnit: bitcoinUnit,
+            fiatCurrency: fiatCurrency,
+            hideEmptyUsedAddresses: hideEmptyUsedAddresses,
+            showWalletRecovery: showWalletRecovery,
+            twoFactorAmountThreshold: twoFactorAmountThreshold,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$WalletUserSettingsTableTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$AppDatabase,
+        $WalletUserSettingsTableTable,
+        WalletUserSettings,
+        $$WalletUserSettingsTableTableFilterComposer,
+        $$WalletUserSettingsTableTableOrderingComposer,
+        $$WalletUserSettingsTableTableProcessedTableManager,
+        $$WalletUserSettingsTableTableInsertCompanionBuilder,
+        $$WalletUserSettingsTableTableUpdateCompanionBuilder> {
+  $$WalletUserSettingsTableTableProcessedTableManager(super.$state);
+}
+
+class $$WalletUserSettingsTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $WalletUserSettingsTableTable> {
+  $$WalletUserSettingsTableTableFilterComposer(super.$state);
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get bitcoinUnit => $state.composableBuilder(
+      column: $state.table.bitcoinUnit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fiatCurrency => $state.composableBuilder(
+      column: $state.table.fiatCurrency,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get hideEmptyUsedAddresses => $state.composableBuilder(
+      column: $state.table.hideEmptyUsedAddresses,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get showWalletRecovery => $state.composableBuilder(
+      column: $state.table.showWalletRecovery,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get twoFactorAmountThreshold =>
+      $state.composableBuilder(
+          column: $state.table.twoFactorAmountThreshold,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$WalletUserSettingsTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $WalletUserSettingsTableTable> {
+  $$WalletUserSettingsTableTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get bitcoinUnit => $state.composableBuilder(
+      column: $state.table.bitcoinUnit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fiatCurrency => $state.composableBuilder(
+      column: $state.table.fiatCurrency,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get hideEmptyUsedAddresses => $state.composableBuilder(
+      column: $state.table.hideEmptyUsedAddresses,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get showWalletRecovery => $state.composableBuilder(
+      column: $state.table.showWalletRecovery,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get twoFactorAmountThreshold =>
+      $state.composableBuilder(
+          column: $state.table.twoFactorAmountThreshold,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
 class _$AppDatabaseManager {
@@ -1726,4 +2244,7 @@ class _$AppDatabaseManager {
       $$UsersTableTableTableManager(_db, _db.usersTable);
   $$UserKeysTableTableTableManager get userKeysTable =>
       $$UserKeysTableTableTableManager(_db, _db.userKeysTable);
+  $$WalletUserSettingsTableTableTableManager get walletUserSettingsTable =>
+      $$WalletUserSettingsTableTableTableManager(
+          _db, _db.walletUserSettingsTable);
 }

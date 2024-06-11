@@ -138,4 +138,10 @@ class AccountDaoImpl extends AccountDao {
         'DELETE FROM $tableName WHERE walletID = $walletID AND serverAccountID NOT IN ("$notIn")';
     await db.rawDelete(sql);
   }
+
+  @override
+  Future<void> deleteByServerID(String id) {
+    // TODO: implement deleteByServerID
+    throw UnimplementedError();
+  }
 }

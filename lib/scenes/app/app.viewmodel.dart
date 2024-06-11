@@ -9,6 +9,7 @@ import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -64,9 +65,6 @@ class AppViewModelImpl extends AppViewModel {
     /// inital hive
     await Hive.initFlutter();
 
-    /// sqlite db
-    await DBHelper.init();
-
     /// persistent storage
     var storage = SecureStorageManager(storage: SecureStorage());
     serviceManager.register(storage);
@@ -77,6 +75,15 @@ class AppViewModelImpl extends AppViewModel {
     var shared = PreferencesManager(hiveImpl);
     serviceManager.register(shared);
 
+    /// sqlite db
+    await DBHelper.init();
+
+    // TODO:: temp move to a cache managerment
+    shared.checkif("app_database_force_version", 2, () async {
+      await rebuildDatabase();
+    });
+    AppDatabase dbConnection = AppDatabase(shared);
+
     /// networking
     var apiServiceManager = ProtonApiServiceManager(apiEnv, storage: storage);
     await apiServiceManager.init();
@@ -86,8 +93,12 @@ class AppViewModelImpl extends AppViewModel {
     var userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
     serviceManager.register(userManager);
 
-    var dataProviderManager =
-        DataProviderManager(storage, apiServiceManager.getApiService());
+    /// data provider manager
+    var dataProviderManager = DataProviderManager(
+      storage,
+      apiServiceManager.getApiService(),
+      dbConnection,
+    );
     // dataProviderManager.init();
     serviceManager.register(dataProviderManager);
 
@@ -101,13 +112,14 @@ class AppViewModelImpl extends AppViewModel {
     WalletManager.apiEnv = apiEnv;
     WalletManager.userManager = userManager;
     WalletManager.protonWallet = protonWallet;
-    WalletManager.walletKeysProvider = dataProviderManager.walletKeysProvider;
 
     /// event loop
     serviceManager.register(EventLoop(protonWallet, userManager));
 
     if (await userManager.sessionExists()) {
       await userManager.tryRestoreUserInfo();
+      var userInfo = userManager.userInfo;
+      await dataProviderManager.login(userInfo.userId);
       coordinator.showHome(apiEnv);
     } else {
       coordinator.showWelcome(apiEnv);

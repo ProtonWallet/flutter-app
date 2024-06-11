@@ -1,3 +1,4 @@
+//home.viewmodel.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -9,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/helper.dart';
@@ -17,6 +17,7 @@ import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
@@ -24,6 +25,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -53,9 +55,7 @@ enum BodyListStatus {
 }
 
 abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
-  HomeViewModel(super.coordinator, this.apiEnv, this.walletBloc);
-
-  ApiEnv apiEnv;
+  HomeViewModel(super.coordinator, this.walletBloc);
 
   CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
 
@@ -96,8 +96,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String errorMessage = "";
   List<HistoryTransaction> historyTransactions = [];
 
-  void getUserSettings();
-
   Map<int, TextEditingController> getAccountNameControllers(
       List<AccountModel> userAccounts);
 
@@ -108,15 +106,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateBodyListStatus(BodyListStatus bodyListStatus);
 
-  void saveUserSettings();
-
   void setSearchHistoryTextField(bool show);
 
   Future<void> createWallet();
 
   Future<void> deleteWallet(WalletModel walletModel);
 
-  ApiUserSettings? userSettings;
+  // ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
   late TextEditingController walletNameController;
@@ -203,13 +199,14 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
 class HomeViewModelImpl extends HomeViewModel {
   HomeViewModelImpl(
-      super.coordinator,
-      super.apiEnv,
-      this.userManager,
-      this.eventLoop,
-      this.protonWalletManager,
-      this.apiServiceManager,
-      super.walletBloc);
+    super.coordinator,
+    this.userManager,
+    this.eventLoop,
+    this.protonWalletManager,
+    this.apiServiceManager,
+    this.dataProviderManager,
+    super.walletBloc,
+  );
 
   // user manager
   final UserManager userManager;
@@ -222,6 +219,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // networking
   final ProtonApiServiceManager apiServiceManager;
+
+  // Data provider manager
+  final DataProviderManager dataProviderManager;
 
   ///
   final datasourceChangedStreamController =
@@ -259,57 +259,76 @@ class HomeViewModelImpl extends HomeViewModel {
     cryptoPriceDataService.dispose();
   }
 
+  Future<void> initControllers() async {
+    hideEmptyUsedAddressesController = TextEditingController();
+    walletNameController = TextEditingController(text: "");
+    twoFactorAmountThresholdController = TextEditingController(text: "3");
+    newAccountNameController = TextEditingController(text: "BTC Account");
+    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
+    walletRecoverPassphraseController = TextEditingController(text: "");
+    passphraseTextController = TextEditingController(text: "");
+    passphraseConfirmTextController = TextEditingController(text: "");
+    nameTextController = TextEditingController();
+
+    walletRecoverPassphraseFocusNode = FocusNode();
+    newAccountNameFocusNode = FocusNode();
+    walletNameFocusNode = FocusNode();
+    passphraseFocusNode = FocusNode();
+    passphraseConfirmFocusNode = FocusNode();
+    nameFocusNode = FocusNode();
+  }
+
+  Future<void> initWallets() async {
+    await protonWalletProvider.init();
+    protonWalletProvider.setDefaultWallet();
+  }
+
+  Future<void> preloadSettings() async {
+    await dataProviderManager.userSettingsDataProvider.preLoad();
+    loadUserSettings();
+  }
+
   @override
   Future<void> loadData() async {
     // init network
     await apiServiceManager.initalOldApiService();
+
     // user
     var userInfo = userManager.userInfo;
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
-
-    // walletBloc.init(); move it after fetchWalletsFromServer since it has race condition
-    // TODO:: use walletBloc to replace fetchWalletsFromServer and other part
-    // wallets
-    // protonWalletManager.selectDefault();
+    protonWalletManager.login(userInfo.userId);
+    // build up the data provider. providers are used after login.
 
     // ----------------
     // settings
 
     // transactions
 
+    /// init services
     initServices();
+
+    /// init controllers
+    initControllers();
+
+    hasWallet = await WalletManager.hasWallet();
+    if (hasWallet == false) {
+      await WalletManager.fetchWalletsFromServer();
+      hasWallet = await WalletManager.hasWallet();
+    }
+
     EasyLoading.show(
-        status: "connecting to proton..", maskType: EasyLoadingMaskType.black);
+      status: "connecting to proton..",
+      maskType: EasyLoadingMaskType.black,
+    );
+
     try {
-      hideEmptyUsedAddressesController = TextEditingController();
-      walletNameController = TextEditingController(text: "");
-      twoFactorAmountThresholdController = TextEditingController(text: "3");
-      newAccountNameController = TextEditingController(text: "BTC Account");
-      newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
-      walletRecoverPassphraseController = TextEditingController(text: "");
-      passphraseTextController = TextEditingController(text: "");
-      passphraseConfirmTextController = TextEditingController(text: "");
-      nameTextController = TextEditingController();
-
-      walletRecoverPassphraseFocusNode = FocusNode();
-      newAccountNameFocusNode = FocusNode();
-      walletNameFocusNode = FocusNode();
-      passphraseFocusNode = FocusNode();
-      passphraseConfirmFocusNode = FocusNode();
-      nameFocusNode = FocusNode();
-
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
 
-      await getUserSettings();
-      hasWallet = await WalletManager.hasWallet();
-      if (hasWallet == false) {
-        await WalletManager.fetchWalletsFromServer();
-        hasWallet = await WalletManager.hasWallet();
-      }
-      walletBloc.init();
+      loadUserSettings();
+      // walletBloc.init();
       protonWalletProvider = Provider.of<ProtonWalletProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
@@ -318,13 +337,14 @@ class HomeViewModelImpl extends HomeViewModel {
         walletNameController.text =
             protonWalletProvider.protonWallet.currentWallet?.name ?? "";
       });
-      await protonWalletProvider.init();
-      protonWalletProvider.setDefaultWallet();
 
-      WalletManager.initContacts();
+      initWallets();
+
+      // async
+      dataProviderManager.contactsDataProvider.preLoad();
 
       cryptoPriceDataService.start(); //start service
-      checkNetwork();
+      // checkNetwork();
       loadDiscoverContents();
       checkProtonAddresses();
       fiatCurrencyNotifier.addListener(() async {
@@ -445,50 +465,25 @@ class HomeViewModelImpl extends HomeViewModel {
 
   Future<void> updateBtcPrice() async {}
 
-  @override
-  Future<void> getUserSettings() async {
-    userSettings = await proton_api.getUserSettings();
-    loadUserSettings();
-  }
-
-  void loadUserSettings() {
-    if (userSettings != null) {
-      bitcoinUnitNotifier.value = userSettings!.bitcoinUnit;
-      hideEmptyUsedAddresses = userSettings!.hideEmptyUsedAddresses == 1;
-      int twoFactorAmountThreshold =
-          userSettings!.twoFactorAmountThreshold ?? 1000;
+  Future<void> loadUserSettings() async {
+    var settings =
+        await dataProviderManager.userSettingsDataProvider.getSettings();
+    if (settings != null) {
+      bitcoinUnitNotifier.value = settings.bitcoinUnit.toBitcoinUnit();
+      hideEmptyUsedAddresses = settings.hideEmptyUsedAddresses;
       twoFactorAmountThresholdController.text =
-          twoFactorAmountThreshold.toString();
+          settings.twoFactorAmountThreshold.toString();
     }
     datasourceStreamSinkAdd();
   }
 
   @override
-  Future<void> saveUserSettings() async {
-    if (initialed) {
-      hideEmptyUsedAddresses = hideEmptyUsedAddressesController.text == "On";
-      int twoFactorAmountThreshold =
-          int.parse(twoFactorAmountThresholdController.text);
-      BitcoinUnit bitcoinUnit = bitcoinUnitNotifier.value;
-
-      userSettings = await proton_api.hideEmptyUsedAddresses(
-          hideEmptyUsedAddresses: hideEmptyUsedAddresses);
-      userSettings =
-          await proton_api.twoFaThreshold(amount: twoFactorAmountThreshold);
-      userSettings = await proton_api.bitcoinUnit(symbol: bitcoinUnit);
-      userSettings = await proton_api.fiatCurrency(
-          symbol: defaultFiatCurrency); // TODO:: remove this from user setting
-
-      loadUserSettings();
-      await WalletManager.saveUserSetting(userSettings!);
-    }
-  }
-
-  @override
   Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
     if (initialed) {
-      userSettings = await proton_api.bitcoinUnit(symbol: symbol);
-      datasourceStreamSinkAdd();
+      var userSettings = await proton_api.bitcoinUnit(symbol: symbol);
+      await dataProviderManager.userSettingsDataProvider
+          .insertUpdate(userSettings);
+      loadUserSettings();
     }
   }
 
@@ -625,13 +620,14 @@ class HomeViewModelImpl extends HomeViewModel {
         maskType: EasyLoadingMaskType.black);
     try {
       eventLoop.stop();
+      await protonWalletManager.logout();
       await userManager.logout();
       await WalletManager.cleanBDKCache();
-      await DBHelper.reset();
       protonWalletProvider.destroy();
       userSettingProvider.destroy();
       protonWalletManager.destroy();
       await WalletManager.cleanSharedPreference();
+      await DBHelper.reset();
       await Future.delayed(
           const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
     } catch (e) {

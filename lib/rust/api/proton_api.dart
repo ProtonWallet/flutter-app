@@ -18,11 +18,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // The type `PROTON_API` is not used by any `pub` functions, thus it is ignored.
 
-Future<void> initApiService(
-        {required String userName, required String password, dynamic hint}) =>
-    RustLib.instance.api
-        .initApiService(userName: userName, password: password, hint: hint);
-
+/// TODO:: slowly move to use api_service folder functions
 Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
     RustLib.instance.api.getWallets(hint: hint);
 
@@ -78,21 +74,23 @@ Future<void> deleteWalletAccount(
     RustLib.instance.api.deleteWalletAccount(
         walletId: walletId, walletAccountId: walletAccountId, hint: hint);
 
-Future<ApiUserSettings> getUserSettings({dynamic hint}) =>
+/// getUserSettings
+Future<ApiWalletUserSettings> getUserSettings({dynamic hint}) =>
     RustLib.instance.api.getUserSettings(hint: hint);
 
-Future<ApiUserSettings> bitcoinUnit(
+Future<ApiWalletUserSettings> bitcoinUnit(
         {required BitcoinUnit symbol, dynamic hint}) =>
     RustLib.instance.api.bitcoinUnit(symbol: symbol, hint: hint);
 
-Future<ApiUserSettings> fiatCurrency(
+Future<ApiWalletUserSettings> fiatCurrency(
         {required FiatCurrency symbol, dynamic hint}) =>
     RustLib.instance.api.fiatCurrency(symbol: symbol, hint: hint);
 
-Future<ApiUserSettings> twoFaThreshold({required int amount, dynamic hint}) =>
+Future<ApiWalletUserSettings> twoFaThreshold(
+        {required int amount, dynamic hint}) =>
     RustLib.instance.api.twoFaThreshold(amount: amount, hint: hint);
 
-Future<ApiUserSettings> hideEmptyUsedAddresses(
+Future<ApiWalletUserSettings> hideEmptyUsedAddresses(
         {required bool hideEmptyUsedAddresses, dynamic hint}) =>
     RustLib.instance.api.hideEmptyUsedAddresses(
         hideEmptyUsedAddresses: hideEmptyUsedAddresses, hint: hint);
@@ -110,7 +108,7 @@ Future<List<ProtonEvent>> collectEvents(
     RustLib.instance.api
         .collectEvents(latestEventId: latestEventId, hint: hint);
 
-Future<List<ProtonContactEmails>> getContacts({dynamic hint}) =>
+Future<List<ApiContactEmails>> getContacts({dynamic hint}) =>
     RustLib.instance.api.getContacts(hint: hint);
 
 Future<List<ProtonAddress>> getProtonAddress({dynamic hint}) =>

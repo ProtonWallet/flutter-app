@@ -27,7 +27,7 @@ class ContactsClient extends RustOpaque {
         RustLib.instance.api.rust_arc_decrement_strong_count_ContactsClientPtr,
   );
 
-  Future<List<ProtonContactEmails>> getContacts({dynamic hint}) =>
+  Future<List<ApiContactEmails>> getContacts({dynamic hint}) =>
       RustLib.instance.api.contactsClientGetContacts(that: this, hint: hint);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:wallet/helper/extension/strings.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.dao.impl.dart';
@@ -12,13 +13,16 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 
-class WalletData {
+class WalletData implements DataProvider {
   final WalletModel wallet;
   final List<AccountModel> accounts;
   WalletData({required this.wallet, required this.accounts});
+
+  @override
+  Future<void> clear() async {}
 }
 
-class WalletsDataProvider {
+class WalletsDataProvider implements DataProvider {
   final WalletClient walletClient;
   //
   final WalletDao walletDao;
@@ -207,4 +211,7 @@ class WalletsDataProvider {
       await addressDao.update(addressModel);
     }
   }
+
+  @override
+  Future<void> clear() async {}
 }

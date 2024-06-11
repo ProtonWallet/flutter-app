@@ -5,6 +5,7 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.state.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -20,8 +21,14 @@ abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
 class WelcomeViewModelImpl extends WelcomeViewModel {
   final NativeViewChannel nativeChannel;
   final UserManager userManager;
+  final DataProviderManager dataProviderManager;
 
-  WelcomeViewModelImpl(super.coordinator, this.nativeChannel, this.userManager);
+  WelcomeViewModelImpl(
+    super.coordinator,
+    this.nativeChannel,
+    this.userManager,
+    this.dataProviderManager,
+  );
 
   bool hadLocallogin = false;
 
@@ -47,7 +54,6 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     // setState(() {
     //   _appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
     // });
-
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -57,7 +63,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   Future<void> handleStateChanges(NativeLoginState state) async {
     if (state is NativeLoginSucess) {
-      await userManager.login(state.userInfo);
+      await userManager.nativeLogin(state.userInfo);
+      await dataProviderManager.login(state.userInfo.userId);
       coordinator.showHome(env);
     }
   }
@@ -75,8 +82,6 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
       case NavID.nativeSignup:
         if (mobile) {
           coordinator.showNativeSignup();
-        } else {
-          coordinator.showHome(env);
         }
         break;
       default:

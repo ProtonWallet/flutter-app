@@ -2,7 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 
@@ -39,7 +41,7 @@ class SelectAccount extends WalletListEvent {
 // Define the state
 class WalletListState extends Equatable {
   final bool initialized;
-  final List<WalletListModel> walletsModel;
+  final List<WalletMenuModel> walletsModel;
   final WalletModel? currentWallet;
   final AccountModel? currentAccount;
 
@@ -58,7 +60,7 @@ class WalletListState extends Equatable {
 extension WalletListStateCopyWith on WalletListState {
   WalletListState copyWith({
     bool? initialized,
-    List<WalletListModel>? walletsModel,
+    List<WalletMenuModel>? walletsModel,
     WalletModel? currentWallet,
     AccountModel? currentAccount,
   }) {
@@ -75,9 +77,13 @@ extension WalletListStateCopyWith on WalletListState {
 class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final WalletsDataProvider walletsDataProvider;
   final WalletPassphraseProvider walletPassProvider;
+  final WalletKeysProvider walletKeysProvider;
+  final UserManager userManager;
   WalletListBloc(
     this.walletsDataProvider,
     this.walletPassProvider,
+    this.walletKeysProvider,
+    this.userManager,
   ) : super(const WalletListState(
             initialized: false,
             walletsModel: [],
@@ -90,30 +96,41 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         emit(state.copyWith(initialized: true));
         return; // error;
       }
-
-      var walletsList = WalletListModel.fromWalletData(wallets);
-      for (var wallet in walletsList) {
+      List<WalletMenuModel> walletsModel = [];
+      for (WalletData wallet in wallets) {
         // check if wallet has password valid. no password is valid
-        Future<bool> hasValidPassphrase(WalletModel wallet,
-            WalletPassphraseProvider walletPassProvider) async {
-          // Check if the wallet requires a passphrase and if the passphrase is valid
-          if (wallet.passphrase == 1) {
-            final passphrase = await walletPassProvider.getWalletPassphrase(
-              wallet.serverWalletID,
-            );
-            return passphrase != null;
-          }
-          // Default to false if none of the above conditions are met
-          return true;
-        }
+        WalletMenuModel walletModel = WalletMenuModel();
 
-        // check passwords
-        wallet.hasValidPassword = await hasValidPassphrase(
-          wallet.wallet,
-          walletPassProvider,
-        );
+        walletModel.hasValidPassword =
+            await _hasValidPassphrase(wallet.wallet, walletPassProvider);
+        // var firstKey = userManager.getFirstKey();
+        walletModel.walletName = wallet.wallet.name;
+        walletModel.accountSize = wallet.accounts.length;
+
+        walletsModel.add(walletModel);
       }
-      emit(state.copyWith(initialized: true, walletsModel: walletsList));
+      // for (var wallet in walletsList) {
+      //   // check if wallet has password valid. no password is valid
+      //   Future<bool> hasValidPassphrase(WalletModel wallet,
+      //       WalletPassphraseProvider walletPassProvider) async {
+      //     // Check if the wallet requires a passphrase and if the passphrase is valid
+      //     if (wallet.passphrase == 1) {
+      //       final passphrase = await walletPassProvider.getWalletPassphrase(
+      //         wallet.serverWalletID,
+      //       );
+      //       return passphrase != null;
+      //     }
+      //     // Default to false if none of the above conditions are met
+      //     return true;
+      //   }
+
+      //   // check passwords
+      //   wallet.hasValidPassword = await hasValidPassphrase(
+      //     wallet.wallet,
+      //     walletPassProvider,
+      //   );
+      // }
+      emit(state.copyWith(initialized: true, walletsModel: walletsModel));
       // select first
       var firstWallet = wallets.first;
       var firstAccount = firstWallet.accounts.first;
@@ -126,5 +143,20 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
   void init() {
     add(StartLoading());
+  }
+
+  Future<bool> _hasValidPassphrase(
+    WalletModel wallet,
+    WalletPassphraseProvider walletPassProvider,
+  ) async {
+    // Check if the wallet requires a passphrase and if the passphrase is valid
+    if (wallet.passphrase == 1) {
+      final passphrase = await walletPassProvider.getWalletPassphrase(
+        wallet.serverWalletID,
+      );
+      return passphrase != null;
+    }
+    // Default to false if none of the above conditions are met
+    return true;
   }
 }

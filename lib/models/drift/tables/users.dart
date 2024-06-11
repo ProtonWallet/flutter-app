@@ -6,9 +6,9 @@ import 'package:wallet/models/drift/tables/table.extension.dart';
 @TableIndex(name: 'user_id_index', columns: {#userId})
 class UsersTable extends Table with AutoIncrementingPrimaryKey {
   TextColumn get userId => text()();
-  TextColumn get name => text().withLength(min: 1, max: 50)(); //username
+  TextColumn get name => text().withLength(min: 1, max: 100)(); //username
   IntColumn get usedSpace => integer()();
-  TextColumn get currency => text().withLength(min: 1, max: 10)();
+  TextColumn get currency => text().withLength(min: 1, max: 32)();
   IntColumn get credit => integer()();
   IntColumn get createTime => integer()();
   IntColumn get maxSpace => integer()();
