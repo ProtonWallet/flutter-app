@@ -22,14 +22,14 @@ final appConfigForTestNet = AppConfig(
     coinType: bitcoinTestnet,
     scriptType: ScriptType.nativeSegWit,
     apiEnv: ApiEnv.atlas(null),
-    esploraBaseUrl: "https://blockstream.info/testnet/",
+    esploraBaseUrl: "https://proton.me/wallet/explorer/testnet/",
     testMode: true);
 
 final appConfigForProduction = AppConfig(
     coinType: bitcoin,
     scriptType: ScriptType.nativeSegWit,
     apiEnv: const ApiEnv.prod(),
-    esploraBaseUrl: "https://blockstream.info/",
+    esploraBaseUrl: "https://proton.me/wallet/explorer/",
     testMode: false);
 
 final appConfig = appConfigForProduction;

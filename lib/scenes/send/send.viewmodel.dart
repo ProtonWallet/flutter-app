@@ -50,6 +50,7 @@ enum SendFlowStatus {
   addRecipient,
   editAmount,
   reviewTransaction,
+  sendSuccess,
 }
 
 class ProtonRecipient {
@@ -570,6 +571,9 @@ class SendViewModelImpl extends SendViewModel {
     if (index < recipients.length) {
       removeRecipientByEmail(recipients[index].email);
       datasourceChangedStreamController.sinkAddSafe(this);
+    }
+    if (validRecipientCount() == 0){
+      updatePageStatus(SendFlowStatus.addRecipient);
     }
   }
 

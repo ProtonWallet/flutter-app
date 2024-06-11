@@ -8,8 +8,9 @@
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
@@ -34,7 +35,10 @@ class $AssetsImagesGen {
   SvgGenImage get frameWordLogo =>
       const SvgGenImage('assets/images/frame_word_logo.svg');
 
+  /// Directory path: assets/images/icon
   $AssetsImagesIconGen get icon => const $AssetsImagesIconGen();
+
+  /// Directory path: assets/images/logos
   $AssetsImagesLogosGen get logos => const $AssetsImagesLogosGen();
 
   /// File path: assets/images/mail_integration.svg
@@ -44,8 +48,11 @@ class $AssetsImagesGen {
   /// File path: assets/images/wallet.png
   AssetGenImage get wallet => const AssetGenImage('assets/images/wallet.png');
 
+  /// Directory path: assets/images/wallet_creation
   $AssetsImagesWalletCreationGen get walletCreation =>
       const $AssetsImagesWalletCreationGen();
+
+  /// Directory path: assets/images/welcome
   $AssetsImagesWelcomeGen get welcome => const $AssetsImagesWelcomeGen();
 
   /// List of all assets
@@ -231,6 +238,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/send_2.svg
   SvgGenImage get send2 => const SvgGenImage('assets/images/icon/send_2.svg');
 
+  /// File path: assets/images/icon/send_success.svg
+  SvgGenImage get sendSuccess =>
+      const SvgGenImage('assets/images/icon/send_success.svg');
+
   /// File path: assets/images/icon/setup-preference.svg
   SvgGenImage get setupPreference =>
       const SvgGenImage('assets/images/icon/setup-preference.svg');
@@ -238,6 +249,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/transfer.svg
   SvgGenImage get transfer =>
       const SvgGenImage('assets/images/icon/transfer.svg');
+
+  /// File path: assets/images/icon/upgrade_intro.svg
+  SvgGenImage get upgradeIntro =>
+      const SvgGenImage('assets/images/icon/upgrade_intro.svg');
 
   /// File path: assets/images/icon/wallet-0.svg
   SvgGenImage get wallet0 =>
@@ -320,8 +335,10 @@ class $AssetsImagesIconGen {
         receive,
         send,
         send2,
+        sendSuccess,
         setupPreference,
         transfer,
+        upgradeIntro,
         wallet0,
         wallet1,
         wallet2,
@@ -430,9 +447,11 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName);
+  const AssetGenImage(this._assetName, {this.size = null});
 
   final String _assetName;
+
+  final Size? size;
 
   Image image({
     Key? key,
@@ -504,9 +523,20 @@ class AssetGenImage {
 }
 
 class SvgGenImage {
-  const SvgGenImage(this._assetName);
+  const SvgGenImage(
+    this._assetName, {
+    this.size = null,
+  }) : _isVecFormat = false;
+
+  const SvgGenImage.vec(
+    this._assetName, {
+    this.size = null,
+  }) : _isVecFormat = true;
 
   final String _assetName;
+
+  final Size? size;
+  final bool _isVecFormat;
 
   SvgPicture svg({
     Key? key,
@@ -521,19 +551,21 @@ class SvgGenImage {
     WidgetBuilder? placeholderBuilder,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
-    SvgTheme theme = const SvgTheme(),
+    SvgTheme? theme,
     ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
     @deprecated Color? color,
     @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
     @deprecated bool cacheColorFilter = false,
   }) {
-    return SvgPicture.asset(
-      _assetName,
+    return SvgPicture(
+      _isVecFormat
+          ? AssetBytesLoader(_assetName,
+              assetBundle: bundle, packageName: package)
+          : SvgAssetLoader(_assetName,
+              assetBundle: bundle, packageName: package),
       key: key,
       matchTextDirection: matchTextDirection,
-      bundle: bundle,
-      package: package,
       width: width,
       height: height,
       fit: fit,
@@ -543,9 +575,8 @@ class SvgGenImage {
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
       theme: theme,
-      colorFilter: colorFilter,
-      color: color,
-      colorBlendMode: colorBlendMode,
+      colorFilter: colorFilter ??
+          (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
     );

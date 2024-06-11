@@ -11,6 +11,7 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -59,6 +60,13 @@ class WalletSettingSheet {
       for (var item in userAccounts)
         item.id!: ValueNotifier(viewModel.protonAddresses.firstOrNull)
     };
+    int indexOfWallet =
+        Provider.of<ProtonWalletProvider>(context, listen: false)
+            .protonWallet
+            .wallets
+            .indexOf(Provider.of<ProtonWalletProvider>(context, listen: false)
+                .protonWallet
+                .currentWallet!);
     HomeModalBottomSheet.show(context, scrollController: scrollController,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -77,6 +85,18 @@ class WalletSettingSheet {
                 height: 20,
               ),
               TextFieldTextV2(
+                prefixIcon: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: CircleAvatar(
+                        backgroundColor: AvatarColorHelper.getBackgroundColor(
+                            indexOfWallet % 4),
+                        radius: 10,
+                        child: SvgPicture.asset(
+                          "assets/images/icon/wallet-${indexOfWallet % 4}.svg",
+                          fit: BoxFit.scaleDown,
+                          width: 16,
+                          height: 16,
+                        ))),
                 labelText: S.of(context).wallet_name,
                 textController: viewModel.walletNameController,
                 myFocusNode: viewModel.walletNameFocusNode,
@@ -364,7 +384,7 @@ class WalletSettingSheet {
                 shape: const Border(),
                 leading: SvgPicture.asset("assets/images/icon/ic-cog-wheel.svg",
                     fit: BoxFit.fill, width: 20, height: 20),
-                title: Text(S.of(context).advanced_options,
+                title: Text(S.of(context).advanced_settings,
                     style: FontManager.body2Median(ProtonColors.textNorm)),
                 onTap: () {
                   AdvanceWalletSettingSheet.show(context, viewModel);
