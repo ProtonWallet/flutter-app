@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -94,5 +95,10 @@ class CommonHelper {
       return true;
     }
     return false;
+  }
+
+  static FiatCurrency getFiatCurrencyByName(String name) {
+    return FiatCurrency.values.firstWhere((v) => v.name.toUpperCase() == name,
+        orElse: () => defaultFiatCurrency);
   }
 }

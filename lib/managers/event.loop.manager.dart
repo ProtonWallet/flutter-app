@@ -237,6 +237,13 @@ class EventLoop implements Manager {
     ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(
         userSettingProvider.walletUserSetting.fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
+
+    // fetch for account setting's exchange rate, used for sidebar balance
+    for (AccountModel accountModel in protonWalletProvider.protonWallet.accounts){
+      FiatCurrency fiatCurrency = WalletManager.getAccountFiatCurrency(accountModel);
+      await ExchangeRateService.runOnce(fiatCurrency);
+      // ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
+    }
   }
 
   Future<void> handleBitcoinAddress() async {

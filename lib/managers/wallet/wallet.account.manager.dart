@@ -1,4 +1,5 @@
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -10,10 +11,7 @@ class WalletAccountManager implements Manager {
   static Future<FiatCurrency> getAccountFiatCurrency(
       AccountModel? accountModel) async {
     if (accountModel != null) {
-      return FiatCurrency.values.firstWhere(
-          (v) =>
-              v.name.toUpperCase() == accountModel.fiatCurrency.toUpperCase(),
-          orElse: () => defaultFiatCurrency);
+      return CommonHelper.getFiatCurrencyByName(accountModel.fiatCurrency.toUpperCase());
     }
     return defaultFiatCurrency;
   }
