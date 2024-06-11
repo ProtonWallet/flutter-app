@@ -694,7 +694,12 @@ mod test {
     use std::{ops::Deref, str::FromStr};
 
     use crate::{
-        api::proton_api::{init_api_service, retrieve_proton_api},
+        api::{
+            api_service::{
+                proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
+            },
+            proton_api::retrieve_proton_api,
+        },
         bdk::{
             blockchain::{Blockchain, EsploraConfig},
             descriptor::BdkDescriptor,
@@ -728,11 +733,14 @@ mod test {
             super::DatabaseConfig::Memory,
         )
         .unwrap();
-
         let wallet = Wallet::retrieve_wallet(wallet_id);
+        let store = ProtonWalletAuthStore::new("altas").unwrap();
+        let mut api_service = ProtonAPIService::new(store).unwrap();
+        let _ = api_service
+            .login("pro".to_string(), "pro".to_string())
+            .await;
 
-        init_api_service("pro".to_string(), "pro".to_string()).await;
-
+        api_service.set_proton_api();
         let proton_api = retrieve_proton_api();
         let config = EsploraConfig {
             base_url: "https://blockstream.info/testnet/api".to_string(),
@@ -785,7 +793,12 @@ mod test {
 
         let wallet = Wallet::retrieve_wallet(wallet_id);
 
-        init_api_service("feng100".to_string(), "12345678".to_string()).await;
+        let store = ProtonWalletAuthStore::new("altas").unwrap();
+        let mut api_service = ProtonAPIService::new(store).unwrap();
+        let _ = api_service
+            .login("pro".to_string(), "pro".to_string())
+            .await;
+        api_service.set_proton_api();
 
         let proton_api = retrieve_proton_api();
         let config = EsploraConfig {

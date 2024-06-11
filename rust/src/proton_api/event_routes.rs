@@ -1,11 +1,11 @@
-use super::contacts::ProtonContactEmails;
-use super::user_settings::ApiUserSettings;
 use super::wallet::WalletTransaction;
 use andromeda_api::{
+    contacts::ApiContactEmails,
     event::{
         ApiContactsEmailEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
         ApiWalletSettingsEvent, ApiWalletTransactionsEvent,
     },
+    settings::UserSettings as ApiWalletUserSettings,
     wallet::{ApiWallet, ApiWalletAccount, ApiWalletKey, ApiWalletSettings},
 };
 
@@ -21,7 +21,7 @@ pub struct ProtonEvent {
     pub wallet_key_events: Option<Vec<WalletKeyEvent>>,
     pub wallet_setting_events: Option<Vec<WalletSettingsEvent>>,
     pub wallet_transaction_events: Option<Vec<WalletTransactionEvent>>,
-    pub wallet_user_settings: Option<ApiUserSettings>,
+    pub wallet_user_settings: Option<ApiWalletUserSettings>,
 }
 
 impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
@@ -49,7 +49,7 @@ impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
             wallet_setting_events: event
                 .WalletSettings
                 .map(|v| v.into_iter().map(|x| x.into()).collect()),
-            wallet_user_settings: event.WalletUserSettings.map(|v| v.into()),
+            wallet_user_settings: event.WalletUserSettings,
         }
     }
 }
@@ -143,7 +143,7 @@ impl From<ApiWalletTransactionsEvent> for WalletTransactionEvent {
 pub struct ContactEmailEvent {
     pub id: String,
     pub action: u32,
-    pub contact_email: Option<ProtonContactEmails>,
+    pub contact_email: Option<ApiContactEmails>,
 }
 
 impl From<ApiContactsEmailEvent> for ContactEmailEvent {
@@ -151,7 +151,7 @@ impl From<ApiContactsEmailEvent> for ContactEmailEvent {
         ContactEmailEvent {
             id: event.ID,
             action: event.Action,
-            contact_email: event.ContactEmail.map(|x| x.into()),
+            contact_email: event.ContactEmail,
         }
     }
 }

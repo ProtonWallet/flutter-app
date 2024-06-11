@@ -1,12 +1,10 @@
 // Define the User table
 import 'package:drift/drift.dart';
-import 'package:wallet/models/drift/tables/users.dart';
 
 @DataClassName('UserKey')
 class UserKeysTable extends Table {
   TextColumn get keyId => text()();
-  TextColumn get userId => text().references(UsersTable, #userId)();
-
+  TextColumn get userId => text()();
   IntColumn get version => integer()();
   TextColumn get privateKey => text()();
   TextColumn get token => text().nullable()();

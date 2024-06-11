@@ -43,28 +43,10 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     return await storage.get("sessionId") != "";
   }
 
-  Future<void> login(UserInfo userInfo) async {
-    this.userInfo = userInfo;
-    // save
-    await trySaveUserInfo();
-  }
-
-  Future<void> flutterLogin(AuthCredential auth) async {
-    userInfo = UserInfo.fromAuth(auth);
-    // save
-    await trySaveUserInfo();
-  }
-
   Future<void> firstRun() async {
     await shared.checkif('firstTimeEntry', false, () async {
       await storage.deleteAll();
     });
-    // check the app first time run
-    // if (shared.getBool('firstTimeEntry') ?? true) {
-    //   await storage.deleteAll();
-    //   await shared.setBool('firstTimeEntry', false);
-    // }
-
     // shared.checkAndRunLogic()
     // add more
   }
@@ -81,6 +63,21 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
         passphrase: "");
   }
 
+  //Flutter login must be call if use flutter login UI
+  Future<void> flutterLogin(AuthCredential auth) async {
+    userInfo = UserInfo.fromAuth(auth);
+    // save
+    await trySaveUserInfo();
+  }
+
+  // Native login must be call if use native login UI
+  Future<void> nativeLogin(UserInfo userInfo) async {
+    this.userInfo = userInfo;
+    // save
+    await trySaveUserInfo();
+  }
+
+  //
   Future<void> tryRestoreUserInfo() async {
     userInfo = UserInfo(
         userId: await storage.get("userId"),
@@ -130,5 +127,11 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   @override
   Future<void> logout() async {
     await storage.deleteAll();
+  }
+
+  @override
+  Future<void> login(String userID) {
+    // TODO: implement login
+    throw UnimplementedError();
   }
 }

@@ -122,7 +122,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           walletModel.serverWalletID, accountModel.serverAccountID);
 
       datasourceChangedStreamController.sinkAddSafe(this);
-      _wallet = await WalletManager.loadWalletWithID(walletID, accountID);
+      _wallet = (await WalletManager.loadWalletWithID(walletID, accountID))!;
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
       strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);

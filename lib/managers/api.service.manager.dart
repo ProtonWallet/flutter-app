@@ -79,6 +79,7 @@ class ProtonApiServiceManager implements Manager {
       _apiService = ProtonApiService.initApiServiceAuthStore(
           appVersion: appVersion, userAgent: userAgent, store: authStore);
     }
+    await _apiService?.setProtonApi();
   }
 
   ProtonApiService getApiService() {
@@ -113,5 +114,11 @@ class ProtonApiServiceManager implements Manager {
     // _apiService = null;
     // authStore = ProtonWalletAuthStore(env: env.toString());
     // await init();
+  }
+
+  @override
+  Future<void> login(String userID) {
+    // TODO: implement login
+    throw UnimplementedError();
   }
 }

@@ -151,9 +151,17 @@ class $AssetsImagesIconGen {
   SvgGenImage get icCheckmark =>
       const SvgGenImage('assets/images/icon/ic-checkmark.svg');
 
+  /// File path: assets/images/icon/ic-chevron-tiny-down.svg
+  SvgGenImage get icChevronTinyDown =>
+      const SvgGenImage('assets/images/icon/ic-chevron-tiny-down.svg');
+
   /// File path: assets/images/icon/ic-cog-wheel.svg
   SvgGenImage get icCogWheel =>
       const SvgGenImage('assets/images/icon/ic-cog-wheel.svg');
+
+  /// File path: assets/images/icon/ic-cross.svg
+  SvgGenImage get icCross =>
+      const SvgGenImage('assets/images/icon/ic-cross.svg');
 
   /// File path: assets/images/icon/ic-diamondwallet_plus.svg
   SvgGenImage get icDiamondwalletPlus =>
@@ -291,7 +299,9 @@ class $AssetsImagesIconGen {
         icArrowRotateRight,
         icBugreport,
         icCheckmark,
+        icChevronTinyDown,
         icCogWheel,
+        icCross,
         icDiamondwalletPlus,
         icListBullets,
         icLock2fa,

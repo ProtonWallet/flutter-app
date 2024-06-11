@@ -6,14 +6,14 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class ProtonContactEmails {
+class ApiContactEmails {
   final String id;
   final String name;
   final String email;
   final String canonicalEmail;
   final int isProton;
 
-  const ProtonContactEmails({
+  const ApiContactEmails({
     required this.id,
     required this.name,
     required this.email,
@@ -32,7 +32,7 @@ class ProtonContactEmails {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ProtonContactEmails &&
+      other is ApiContactEmails &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           name == other.name &&

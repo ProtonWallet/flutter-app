@@ -1,7 +1,8 @@
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 
-class WalletPassphraseProvider {
+class WalletPassphraseProvider implements DataProvider {
   final SecureStorageManager storage;
 
   List<WalletPassphrase>? walletPassphrases;
@@ -32,4 +33,7 @@ class WalletPassphraseProvider {
     }
     return [];
   }
+
+  @override
+  Future<void> clear() async {}
 }

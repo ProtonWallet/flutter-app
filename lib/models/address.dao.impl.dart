@@ -9,7 +9,6 @@ abstract class AddressDao extends AddressDatabase implements BaseDao {
   Future<List<AddressModel>> findByServerAccountID(String serverAccountID);
   Future<AddressModel?> findByServerID(String serverID);
 
-  Future<void> deleteByServerID(String serverID);
   Future<void> deleteByServerAccountID(String serverAccountID);
 }
 
@@ -84,7 +83,8 @@ class AddressDaoImpl extends AddressDao {
   }
 
   @override
-  Future<void> deleteByServerAccountID(String serverAccountID) async{
-    await db.delete(tableName, where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
+  Future<void> deleteByServerAccountID(String serverAccountID) async {
+    await db.delete(tableName,
+        where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
   }
 }

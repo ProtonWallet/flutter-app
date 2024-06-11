@@ -25,10 +25,8 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
-import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/proton_api/contacts.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -68,10 +66,12 @@ class WalletManager implements Manager {
 
   // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   // TODO:: return Wallet? to avoid issue, add try-catch here
-  static Future<Wallet> loadWalletWithID(int walletID, int accountID) async {
+  static Future<Wallet?> loadWalletWithID(int walletID, int accountID) async {
     late Wallet wallet;
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
 
+    //TODO:: this could be null. add handler
+    WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
+    if (walletModel == null) return null;
     String passphrase =
         await protonWallet.getPassphrase(walletModel.serverWalletID);
     Mnemonic mnemonic = await Mnemonic.fromString(
@@ -458,9 +458,10 @@ class WalletManager implements Manager {
   static Future<double> getWalletAccountBalance(
       int walletID, int walletAccountID) async {
     try {
-      Wallet wallet =
+      Wallet? wallet =
           await WalletManager.loadWalletWithID(walletID, walletAccountID);
-      Balance balance = await wallet.getBalance();
+      // TODO:: handle the !
+      Balance balance = await wallet!.getBalance();
       return (balance.trustedPending + balance.confirmed).toDouble();
     } catch (e) {
       logger.e(e.toString());
@@ -506,35 +507,8 @@ class WalletManager implements Manager {
     return exchangeRate;
   }
 
-  static Future<void> saveUserSetting(ApiUserSettings userSettings) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setInt(userSettingsHideEmptyUsedAddresses,
-        userSettings.hideEmptyUsedAddresses);
-    preferences.setInt(userSettingsTwoFactorAmountThreshold,
-        userSettings.twoFactorAmountThreshold ?? 0);
-    preferences.setInt(
-        userSettingsShowWalletRecovery, userSettings.showWalletRecovery);
-    preferences.setString(
-        userSettingsFiatCurrency, userSettings.fiatCurrency.name.toUpperCase());
-    preferences.setString(
-        userSettingsBitcoinUnit, userSettings.bitcoinUnit.name.toUpperCase());
-  }
-
   static int getCurrentTime() {
     return DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
-  }
-
-  static Future<void> initContacts() async {
-    List<ProtonContactEmails> mails = await proton_api.getContacts();
-    for (ProtonContactEmails mail in mails) {
-      DBHelper.contactsDao!.insertOrUpdate(
-          mail.id, mail.name, mail.email, mail.canonicalEmail, mail.isProton);
-    }
-  }
-
-  static Future<List<ContactsModel>> getContacts() async {
-    List contacts = await DBHelper.contactsDao!.findAll();
-    return contacts.cast<ContactsModel>();
   }
 
   static Future<List<String>> getAccountAddressIDs(
@@ -625,7 +599,6 @@ class WalletManager implements Manager {
       return;
     }
     isFetchingWallets = true;
-    // var authInfo = await fetchAuthInfo(userName: 'ProtonWallet');
     List<ApiWalletData> wallets = await proton_api.getWallets();
     for (ApiWalletData walletData in wallets.reversed) {
       WalletModel? walletModel = await DBHelper.walletDao!
@@ -1277,4 +1250,10 @@ class WalletManager implements Manager {
 
   @override
   Future<void> logout() async {}
+
+  @override
+  Future<void> login(String userID) async {
+    // TODO: implement login
+    throw UnimplementedError();
+  }
 }

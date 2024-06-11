@@ -1,5 +1,6 @@
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -39,7 +40,13 @@ class WelcomeCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> start() {
     var userManager = serviceManager.get<UserManager>();
-    var viewModel = WelcomeViewModelImpl(this, nativeViewChannel, userManager);
+    var dataManager = serviceManager.get<DataProviderManager>();
+    var viewModel = WelcomeViewModelImpl(
+      this,
+      nativeViewChannel,
+      userManager,
+      dataManager,
+    );
     widget = WelcomeView(
       viewModel,
     );

@@ -109,9 +109,11 @@ class ProtonWalletManager implements Manager {
       // sync all wallet accounts when init
       for (AccountModel accountModel in accounts) {
         if (accountModel.walletID == walletModel.id!) {
-          Wallet wallet = await WalletManager.loadWalletWithID(
+          Wallet? wallet = await WalletManager.loadWalletWithID(
               walletModel.id!, accountModel.id!);
-          syncWallet(wallet, walletModel, accountModel);
+          if (wallet != null) {
+            syncWallet(wallet, walletModel, accountModel);
+          }
         }
       }
     }
@@ -256,9 +258,11 @@ class ProtonWalletManager implements Manager {
       currentAccount = null;
       await getCurrentWalletAccounts();
       for (AccountModel accountModel in currentAccounts) {
-        Wallet wallet = await WalletManager.loadWalletWithID(
+        Wallet? wallet = await WalletManager.loadWalletWithID(
             currentWallet!.id!, accountModel.id!);
-        syncWallet(wallet, walletModel, accountModel);
+        if (wallet != null) {
+          syncWallet(wallet, walletModel, accountModel);
+        }
         initLocalBitcoinAddresses(walletModel, accountModel);
       }
       currentBitcoinAddresses = await DBHelper.bitcoinAddressDao!
@@ -276,8 +280,11 @@ class ProtonWalletManager implements Manager {
       if (currentAccount == null) {
         for (AccountModel accountModel in currentAccounts) {
           try {
-            Wallet wallet = await WalletManager.loadWalletWithID(
+            Wallet? wallet = await WalletManager.loadWalletWithID(
                 currentWallet!.id!, accountModel.id!);
+            if (wallet == null) {
+              continue;
+            }
             Balance balance = await wallet.getBalance();
             newBalance += balance.trustedPending + balance.confirmed;
           } catch (e) {
@@ -286,10 +293,12 @@ class ProtonWalletManager implements Manager {
         }
       } else {
         try {
-          Wallet wallet = await WalletManager.loadWalletWithID(
+          Wallet? wallet = await WalletManager.loadWalletWithID(
               currentWallet!.id!, currentAccount!.id!);
-          Balance balance = await wallet.getBalance();
-          newBalance += balance.trustedPending + balance.confirmed;
+          if (wallet != null) {
+            Balance balance = await wallet.getBalance();
+            newBalance += balance.trustedPending + balance.confirmed;
+          }
         } catch (e) {
           logger.e(e.toString());
         }
@@ -306,11 +315,12 @@ class ProtonWalletManager implements Manager {
       currentWallet = walletModel;
       currentAccount = accountModel;
       await getCurrentWalletAccounts();
-      Wallet wallet = await WalletManager.loadWalletWithID(
+      Wallet? wallet = await WalletManager.loadWalletWithID(
           currentWallet!.id!, currentAccount!.id!);
       currentBitcoinAddresses = await DBHelper.bitcoinAddressDao!
           .findByWalletAccount(currentWallet!.id!, currentAccount!.id!,
               orderBy: "asc");
+      if (wallet == null) return;
       syncWallet(wallet, walletModel, accountModel);
       initLocalBitcoinAddresses(walletModel, accountModel);
       await setBalance();
@@ -387,9 +397,11 @@ class ProtonWalletManager implements Manager {
     for (WalletModel walletModel in wallets) {
       for (AccountModel accountModel in accounts) {
         if (accountModel.walletID == walletModel.id!) {
-          Wallet wallet = await WalletManager.loadWalletWithID(
+          Wallet? wallet = await WalletManager.loadWalletWithID(
               walletModel.id!, accountModel.id!);
-          syncWallet(wallet, walletModel, accountModel);
+          if (wallet != null) {
+            syncWallet(wallet, walletModel, accountModel);
+          }
         }
       }
     }
@@ -404,8 +416,9 @@ class ProtonWalletManager implements Manager {
               false) {
             serverAccountID2BitcoinAddresses[accountModel.serverAccountID] =
                 CachedAccountBitcoinAddressInfo();
-            Wallet wallet = await WalletManager.loadWalletWithID(
+            Wallet? wallet = await WalletManager.loadWalletWithID(
                 walletModel.id!, accountModel.id!);
+            if (wallet == null) continue;
             for (int addressIndex = 0; addressIndex <= 100; addressIndex++) {
               var addressInfo =
                   await _lib.getAddress(wallet, addressIndex: addressIndex);
@@ -519,8 +532,10 @@ class ProtonWalletManager implements Manager {
     await WalletManager.syncBitcoinAddressIndex(
         walletModel.serverWalletID, accountModel.serverAccountID);
 
-    Wallet wallet =
+    Wallet? wallet =
         await WalletManager.loadWalletWithID(walletModel.id!, accountModel.id!);
+    //TODO:: double check this could be null if wallet is not loaded
+    if (wallet == null) return;
     BitcoinAddressModel? bitcoinAddressModel = await DBHelper.bitcoinAddressDao!
         .findLatestUnusedLocalBitcoinAddress(
             walletModel.id!, accountModel.id ?? 0);
@@ -561,9 +576,9 @@ class ProtonWalletManager implements Manager {
   }
 
   Future<void> setCurrentTransactions() async {
-    // await _lock.synchronized(() async {
+    if (!validState) return;
     bool bdkSynced = false;
-    Wallet wallet;
+    Wallet? wallet;
     List<AccountModel> accountsToCheckTransaction = [];
     WalletModel? oldWalletModel = currentWallet;
     AccountModel? oldAccountModel = currentAccount;
@@ -585,12 +600,18 @@ class ProtonWalletManager implements Manager {
     }
     List<HistoryTransaction> newHistoryTransactions = [];
     for (AccountModel accountModel in accountsToCheckTransaction) {
+      if (!validState) return;
       Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
       try {
         wallet = await WalletManager.loadWalletWithID(
-            oldWalletModel!.id!, accountModel.id!);
+          oldWalletModel!.id!,
+          accountModel.id!,
+        );
       } catch (e) {
         logger.e(e.toString());
+        continue;
+      }
+      if (wallet == null) {
         continue;
       }
       // get transactions from bdk
@@ -602,10 +623,12 @@ class ProtonWalletManager implements Manager {
           await WalletManager.getWalletKey(oldWalletModel.serverWalletID);
 
       for (TransactionDetails transactionDetail in transactionHistoryFromBDK) {
+        if (!validState) return;
         String txID = transactionDetail.txid;
         List<TxOut> output = await transactionDetail.transaction!.output();
         List<String> recipientBitcoinAddresses = [];
         for (TxOut txOut in output) {
+          if (!validState) return;
           Address recipientAddress =
               await _lib.addressFromScript(txOut.scriptPubkey);
           String bitcoinAddress = recipientAddress.toString();
@@ -736,14 +759,15 @@ class ProtonWalletManager implements Manager {
           body: body.isNotEmpty ? body : null,
           exchangeRate: exchangeRate,
         );
-        updateBitcoinAddressUsed(
-            txID, accountModel); // update local bitcoin address to set used, TODO:: fix performance here
+        updateBitcoinAddressUsed(txID,
+            accountModel); // update local bitcoin address to set used, TODO:: fix performance here
       }
 
       // get transactions from local db (transactions in progress, and not in synced bdk transactions)
       List<TransactionModel> transactionModels = await DBHelper.transactionDao!
           .findAllByServerAccountID(accountModel.serverAccountID);
       for (TransactionModel transactionModel in transactionModels) {
+        if (!validState) return;
         String userLabel = await WalletKeyHelper.decrypt(
             secretKey, utf8.decode(transactionModel.label));
 
@@ -762,6 +786,7 @@ class ProtonWalletManager implements Manager {
         String encryptedSender = transactionModel.sender ?? "";
         String encryptedBody = transactionModel.body ?? "";
         for (AddressKey addressKey in addressKeys) {
+          if (!validState) return;
           try {
             if (encryptedToList.isNotEmpty) {
               toList = addressKey.decrypt(encryptedToList);
@@ -824,6 +849,7 @@ class ProtonWalletManager implements Manager {
           int feeInSATS = 0;
           for (TransactionInfoModel transactionInfoModel
               in transactionInfoModels) {
+            if (!validState) return;
             amountInSATS += transactionInfoModel.isSend == 1
                 ? -transactionInfoModel.amountInSATS
                 : transactionInfoModel.amountInSATS;
@@ -869,7 +895,8 @@ class ProtonWalletManager implements Manager {
                   in transactionDetailFromBlockChain.recipients) {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
-                    .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
+                    .findBitcoinAddressInAccount(
+                        recipient.bitcoinAddress, accountModel.id!);
                 if (bitcoinAddressModel != null) {
                   bitcoinAddressModel.used = 1;
                   await DBHelper.bitcoinAddressDao!.update(bitcoinAddressModel);
@@ -1025,7 +1052,8 @@ class ProtonWalletManager implements Manager {
     historyTransactionsAfterFilter = newHistoryTransactions;
   }
 
-  Future<void> updateBitcoinAddressUsed(String txID, AccountModel accountModel) async {
+  Future<void> updateBitcoinAddressUsed(
+      String txID, AccountModel accountModel) async {
     TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
     for (int i = 0; i < 5; i++) {
       transactionDetailFromBlockChain =
@@ -1041,9 +1069,11 @@ class ProtonWalletManager implements Manager {
     }
     if (transactionDetailFromBlockChain != null) {
       for (Recipient recipient in transactionDetailFromBlockChain.recipients) {
-        BitcoinAddressModel? bitcoinAddressModel = await DBHelper
-            .bitcoinAddressDao!
-            .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
+        if (!validState) return;
+
+        BitcoinAddressModel? bitcoinAddressModel =
+            await DBHelper.bitcoinAddressDao!.findBitcoinAddressInAccount(
+                recipient.bitcoinAddress, accountModel.id!);
         if (bitcoinAddressModel != null) {
           bitcoinAddressModel.used = 1;
 
@@ -1082,9 +1112,16 @@ class ProtonWalletManager implements Manager {
   @override
   Future<void> dispose() async {}
 
+  bool validState = true;
+
   @override
   Future<void> logout() async {
-    // TODO:: clean up wallet data
+    // validState = false;
+  }
+
+  @override
+  Future<void> login(String userID) async {
+    validState = true;
   }
 }
 
@@ -1171,9 +1208,11 @@ class ProtonWalletProvider with ChangeNotifier {
 
     for (AccountModel accountModel in accountsToCheckTransaction) {
       try {
-        Wallet wallet = await WalletManager.loadWalletWithID(
+        Wallet? wallet = await WalletManager.loadWalletWithID(
             walletModel!.id!, accountModel.id!);
-        protonWallet.syncWallet(wallet, walletModel, accountModel);
+        if (wallet != null) {
+          protonWallet.syncWallet(wallet, walletModel, accountModel);
+        }
       } catch (e) {
         logger.e(e.toString());
       }

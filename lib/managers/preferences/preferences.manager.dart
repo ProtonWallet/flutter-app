@@ -13,9 +13,9 @@ class PreferencesManager implements Manager {
   /// function
   Future<void> deleteAll() async {}
 
-  Future<void> checkif(String key, bool value, Logic run) async {
+  Future<void> checkif(String key, dynamic value, Logic run) async {
     // Get the value
-    bool? checkValue = await storage.read(key);
+    dynamic checkValue = await storage.read(key);
     // Check if the value is false
     if (checkValue != value) {
       logger.d('Running logic because checkValue{$key} is not match');
@@ -33,5 +33,11 @@ class PreferencesManager implements Manager {
   @override
   Future<void> logout() async {
     await deleteAll();
+  }
+
+  @override
+  Future<void> login(String userID) async {
+    // TODO: implement login
+    throw UnimplementedError();
   }
 }

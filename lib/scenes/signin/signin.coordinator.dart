@@ -1,5 +1,6 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -23,7 +24,13 @@ class SigninCoordinator extends Coordinator {
     var userManager = serviceManager.get<UserManager>();
     var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var apiService = apiServiceManager.getApiService();
-    var viewModel = SigninViewModelImpl(this, userManager, apiService);
+    var dataProviderManager = serviceManager.get<DataProviderManager>();
+    var viewModel = SigninViewModelImpl(
+      this,
+      userManager,
+      apiService,
+      dataProviderManager,
+    );
     widget = SigninView(
       viewModel,
     );
