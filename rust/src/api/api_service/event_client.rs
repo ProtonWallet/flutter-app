@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use andromeda_api::core::ApiClient;
+
 use crate::{errors::ApiError, event_routes::ProtonEvent};
 
 use super::proton_api_service::ProtonAPIService;

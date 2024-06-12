@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
-use andromeda_api::wallet::{
-    ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody,
+use andromeda_api::{
+    core::ApiClient,
+    wallet::{ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody},
 };
 
 use crate::{

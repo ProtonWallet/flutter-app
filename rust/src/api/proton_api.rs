@@ -213,7 +213,7 @@ pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiWalletUserSettings, 
         .inner
         .clients()
         .settings
-        .bitcoin_unit(symbol)
+        .update_bitcoin_unit(symbol)
         .await;
     match result {
         Ok(response) => Ok(response),
@@ -227,7 +227,7 @@ pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiWalletUserSettings
         .inner
         .clients()
         .settings
-        .fiat_currency(symbol)
+        .update_fiat_currency(symbol)
         .await;
     match result {
         Ok(response) => Ok(response),
@@ -241,7 +241,7 @@ pub async fn two_fa_threshold(amount: u64) -> Result<ApiWalletUserSettings, ApiE
         .inner
         .clients()
         .settings
-        .two_fa_threshold(amount)
+        .update_two_fa_threshold(amount)
         .await;
     match result {
         Ok(response) => Ok(response),
@@ -257,7 +257,7 @@ pub async fn hide_empty_used_addresses(
         .inner
         .clients()
         .settings
-        .hide_empty_used_addresses(hide_empty_used_addresses)
+        .update_hide_empty_used_addresses(hide_empty_used_addresses)
         .await;
 
     info!("hide_empty_userd_addresses: {:?}", result);
