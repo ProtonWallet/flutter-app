@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -56,8 +57,12 @@ class CustomHomePageBox extends StatelessWidget {
                               duration: const Duration(milliseconds: 500),
                               prefix: Provider.of<UserSettingProvider>(context)
                                   .getFiatCurrencyName(),
-                              value: Provider.of<UserSettingProvider>(context)
-                                  .getNotionalInFiatCurrency(100000000),
+                              value:
+                                  ExchangeCalculator.getNotionalInFiatCurrency(
+                                      Provider.of<UserSettingProvider>(context)
+                                          .walletUserSetting
+                                          .exchangeRate,
+                                      100000000),
                               // value: price,
                               fractionDigits: defaultDisplayDigits,
                               textStyle: FontManager.body1Median(
