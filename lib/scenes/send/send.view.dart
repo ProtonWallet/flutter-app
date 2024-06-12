@@ -13,6 +13,8 @@ import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -128,7 +130,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 children: [
                                   const SizedBox(width: defaultPadding),
                                   Text(
-                                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
                                     style: FontManager.captionRegular(
                                         ProtonColors.textWeak),
                                   ),
@@ -136,14 +138,16 @@ class SendView extends ViewBase<SendViewModel> {
                                   GestureDetector(
                                     onTap: () {
                                       // TODO:: fix logic to remain more accurate fee
-                                      viewModel.amountTextController.text =
-                                          Provider.of<UserSettingProvider>(
-                                                  context,
-                                                  listen: false)
+                                      viewModel.amountTextController
+                                          .text = ExchangeCalculator
                                               .getNotionalInFiatCurrency(
+                                                  Provider.of<UserSettingProvider>(
+                                                          context)
+                                                      .walletUserSetting
+                                                      .exchangeRate,
                                                   viewModel.balance)
-                                              .toStringAsFixed(
-                                                  defaultDisplayDigits);
+                                          .toStringAsFixed(
+                                              defaultDisplayDigits);
                                       viewModel.splitAmountToRecipients();
                                     },
                                     child: Text(S.of(context).send_all,
@@ -166,15 +170,6 @@ class SendView extends ViewBase<SendViewModel> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^\d*\.?\d*$'))
                                 ],
-                                currency:
-                                    Provider.of<UserSettingProvider>(context)
-                                        .walletUserSetting
-                                        .fiatCurrency,
-                                currencyExchangeRate:
-                                    Provider.of<UserSettingProvider>(context)
-                                        .walletUserSetting
-                                        .exchangeRate
-                                        .exchangeRate,
                                 userSettingProvider:
                                     Provider.of<UserSettingProvider>(context),
                                 validation: (String value) {
@@ -356,10 +351,23 @@ class SendView extends ViewBase<SendViewModel> {
                                     content: protonRecipient.email,
                                     memo: viewModel.bitcoinAddresses[
                                         protonRecipient.email],
-                                    amountInSATS:
-                                        viewModel.recipients.length > 1
-                                            ? protonRecipient.amountInSATS
-                                            : null,
+                                    bitcoinAmount: viewModel.recipients.length >
+                                            1
+                                        ? BitcoinAmount(
+                                            amountInSatoshi:
+                                                protonRecipient.amountInSATS ??
+                                                    0,
+                                            bitcoinUnit: Provider.of<
+                                                        UserSettingProvider>(
+                                                    context)
+                                                .walletUserSetting
+                                                .bitcoinUnit,
+                                            exchangeRate: Provider.of<
+                                                        UserSettingProvider>(
+                                                    context)
+                                                .walletUserSetting
+                                                .exchangeRate)
+                                        : null,
                                   ),
                                   const Divider(
                                     thickness: 0.2,
@@ -376,9 +384,12 @@ class SendView extends ViewBase<SendViewModel> {
                                     context, viewModel);
                               },
                               content:
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
-                              memo: Provider.of<UserSettingProvider>(context)
-                                  .getBitcoinUnitLabel(estimatedFee),
+                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
+                              memo: ExchangeCalculator.getBitcoinUnitLabel(
+                                  Provider.of<UserSettingProvider>(context)
+                                      .walletUserSetting
+                                      .bitcoinUnit,
+                                  estimatedFee),
                             ),
                             const Divider(
                               thickness: 0.2,
@@ -625,25 +636,38 @@ class SendView extends ViewBase<SendViewModel> {
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
-          Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel(amountInSATS),
+          ExchangeCalculator.getBitcoinUnitLabel(
+              Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .bitcoinUnit,
+              amountInSATS),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
 
   Widget getTransactionTotalValueWidget(
       BuildContext context, SendViewModel viewModel, int estimatedFee) {
-    double estimatedFeeInNotional = Provider.of<UserSettingProvider>(context)
-        .getNotionalInFiatCurrency(estimatedFee);
+    double estimatedFeeInNotional =
+        ExchangeCalculator.getNotionalInFiatCurrency(
+            Provider.of<UserSettingProvider>(context)
+                .walletUserSetting
+                .exchangeRate,
+            estimatedFee);
     double estimatedTotalValueInNotional =
-        Provider.of<UserSettingProvider>(context)
-            .getNotionalInFiatCurrency(viewModel.totalAmountInSAT);
+        ExchangeCalculator.getNotionalInFiatCurrency(
+            Provider.of<UserSettingProvider>(context)
+                .walletUserSetting
+                .exchangeRate,
+            viewModel.totalAmountInSAT);
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
-      memo: Provider.of<UserSettingProvider>(context)
-          .getBitcoinUnitLabel((viewModel.totalAmountInSAT + estimatedFee)),
+      memo: ExchangeCalculator.getBitcoinUnitLabel(
+          Provider.of<UserSettingProvider>(context)
+              .walletUserSetting
+              .bitcoinUnit,
+          (viewModel.totalAmountInSAT + estimatedFee)),
     );
   }
 
@@ -660,101 +684,101 @@ class SendView extends ViewBase<SendViewModel> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const SizedBox(height: 20),
-                                Column(children: [
-                                  ProtonMailAutoComplete(
-                                      labelText: S.of(context).send_to_recipient_s,
-                                      emails: viewModel.contactsEmail,
-                                      color: ProtonColors.white,
-                                      focusNode: viewModel.addressFocusNode,
-                                      textEditingController:
+                            const SizedBox(height: 20),
+                            Column(children: [
+                              ProtonMailAutoComplete(
+                                  labelText: S.of(context).send_to_recipient_s,
+                                  emails: viewModel.contactsEmail,
+                                  color: ProtonColors.white,
+                                  focusNode: viewModel.addressFocusNode,
+                                  textEditingController:
                                       viewModel.recipientTextController,
-                                      callback: () {
-                                        viewModel.addressAutoCompleteCallback();
-                                      }),
-                                  const SizedBox(height: 5),
-                                  if (Provider.of<ProtonWalletProvider>(context)
-                                      .protonWallet
-                                      .currentAccount ==
+                                  callback: () {
+                                    viewModel.addressAutoCompleteCallback();
+                                  }),
+                              const SizedBox(height: 5),
+                              if (Provider.of<ProtonWalletProvider>(context)
+                                          .protonWallet
+                                          .currentAccount ==
                                       null &&
-                                      Provider.of<ProtonWalletProvider>(context)
+                                  Provider.of<ProtonWalletProvider>(context)
                                           .protonWallet
                                           .currentAccounts
                                           .length >
-                                          1)
-                                    WalletAccountDropdown(
-                                        labelText: S.of(context).trans_from,
-                                        backgroundColor: ProtonColors.white,
-                                        width: MediaQuery.of(context).size.width -
-                                            defaultPadding * 2,
-                                        accounts: Provider.of<ProtonWalletProvider>(
+                                      1)
+                                WalletAccountDropdown(
+                                    labelText: S.of(context).trans_from,
+                                    backgroundColor: ProtonColors.white,
+                                    width: MediaQuery.of(context).size.width -
+                                        defaultPadding * 2,
+                                    accounts: Provider.of<ProtonWalletProvider>(
                                             context)
-                                            .protonWallet
-                                            .currentAccounts,
-                                        valueNotifier: viewModel.initialized
-                                            ? viewModel.accountValueNotifier
-                                            : ValueNotifier(
+                                        .protonWallet
+                                        .currentAccounts,
+                                    valueNotifier: viewModel.initialized
+                                        ? viewModel.accountValueNotifier
+                                        : ValueNotifier(
                                             Provider.of<ProtonWalletProvider>(
-                                                context)
+                                                    context)
                                                 .protonWallet
                                                 .currentAccounts
                                                 .first)),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(width: defaultPadding),
-                                        Text(
-                                          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
-                                          style: FontManager.captionRegular(
-                                              ProtonColors.textWeak),
-                                        ),
-                                      ]),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ]),
-                                if (viewModel.recipients.isNotEmpty)
-                                  Container(
-                                    margin:
-                                    const EdgeInsets.only(top: 20, bottom: 10),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Text(
-                                      S.of(context).recipients,
-                                      style: FontManager.captionMedian(
-                                          ProtonColors.textNorm),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(width: defaultPadding),
+                                    Text(
+                                      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                      style: FontManager.captionRegular(
+                                          ProtonColors.textWeak),
                                     ),
-                                  ),
-                                for (int index = 0;
+                                  ]),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ]),
+                            if (viewModel.recipients.isNotEmpty)
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 20, bottom: 10),
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  S.of(context).recipients,
+                                  style: FontManager.captionMedian(
+                                      ProtonColors.textNorm),
+                                ),
+                              ),
+                            for (int index = 0;
                                 index < viewModel.recipients.length;
                                 index++)
-                                  RecipientDetail(
-                                    name: viewModel.recipients[index].email,
-                                    email: viewModel.recipients[index].email,
-                                    bitcoinAddress: viewModel.bitcoinAddresses
+                              RecipientDetail(
+                                name: viewModel.recipients[index].email,
+                                email: viewModel.recipients[index].email,
+                                bitcoinAddress: viewModel.bitcoinAddresses
                                         .containsKey(
-                                        viewModel.recipients[index].email)
-                                        ? viewModel.bitcoinAddresses[viewModel
-                                        .recipients[index].email] ??
+                                            viewModel.recipients[index].email)
+                                    ? viewModel.bitcoinAddresses[viewModel
+                                            .recipients[index].email] ??
                                         ""
-                                        : "",
-                                    isSignatureInvalid: viewModel
-                                        .bitcoinAddressesInvalidSignature[
-                                    viewModel.recipients[index].email] ??
-                                        false,
-                                    isSelfBitcoinAddress:
+                                    : "",
+                                isSignatureInvalid: viewModel
+                                            .bitcoinAddressesInvalidSignature[
+                                        viewModel.recipients[index].email] ??
+                                    false,
+                                isSelfBitcoinAddress:
                                     viewModel.selfBitcoinAddresses.contains(
                                         viewModel.bitcoinAddresses[viewModel
-                                            .recipients[index].email] ??
+                                                .recipients[index].email] ??
                                             ""),
-                                    callback: () {
-                                      viewModel.removeRecipient(index);
-                                    },
-                                  ),
-                              ]))))),
+                                callback: () {
+                                  viewModel.removeRecipient(index);
+                                },
+                              ),
+                          ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
             Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -786,56 +810,59 @@ class SendView extends ViewBase<SendViewModel> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                    "assets/images/icon/send_success.svg",
-                                    fit: BoxFit.fill,
-                                    width: 240,
-                                    height: 240),
-                                Text(
-                                  S.of(context).send_success_title,
-                                  style: FontManager.titleHeadline(ProtonColors.textNorm),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  S.of(context).send_success_content,
-                                  style: FontManager.body2Regular(ProtonColors.textWeak),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 40),
-                                Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: defaultPadding),
-                                    child: Column(children: [
-                                      ButtonV5(
-                                          onPressed: () async {
-                                            viewModel.coordinator.end();
-                                            Navigator.of(context).pop();
-                                          },
-                                          text: S.of(context).done,
-                                          width: MediaQuery.of(context).size.width,
-                                          textStyle:
-                                          FontManager.body1Median(ProtonColors.white),
-                                          backgroundColor: ProtonColors.protonBlue,
-                                          borderColor: ProtonColors.protonBlue,
-                                          height: 48),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      ButtonV5(
-                                          onPressed: () async {
-                                            // TODO:: add invite friend dialog and api call here
-                                            LocalToast.showToast(context, "TODO");
-                                          },
-                                          text: S.of(context).invite_a_friend,
-                                          width: MediaQuery.of(context).size.width,
-                                          textStyle: FontManager.body1Median(
-                                              ProtonColors.textNorm),
-                                          backgroundColor: ProtonColors.textWeakPressed,
-                                          borderColor: ProtonColors.textWeakPressed,
-                                          height: 48),
-                                    ])),
-                              ]))))),
+                            SvgPicture.asset(
+                                "assets/images/icon/send_success.svg",
+                                fit: BoxFit.fill,
+                                width: 240,
+                                height: 240),
+                            Text(
+                              S.of(context).send_success_title,
+                              style: FontManager.titleHeadline(
+                                  ProtonColors.textNorm),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              S.of(context).send_success_content,
+                              style: FontManager.body2Regular(
+                                  ProtonColors.textWeak),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 40),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding),
+                                child: Column(children: [
+                                  ButtonV5(
+                                      onPressed: () async {
+                                        viewModel.coordinator.end();
+                                        Navigator.of(context).pop();
+                                      },
+                                      text: S.of(context).done,
+                                      width: MediaQuery.of(context).size.width,
+                                      textStyle: FontManager.body1Median(
+                                          ProtonColors.white),
+                                      backgroundColor: ProtonColors.protonBlue,
+                                      borderColor: ProtonColors.protonBlue,
+                                      height: 48),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  ButtonV5(
+                                      onPressed: () async {
+                                        // TODO:: add invite friend dialog and api call here
+                                        LocalToast.showToast(context, "TODO");
+                                      },
+                                      text: S.of(context).invite_a_friend,
+                                      width: MediaQuery.of(context).size.width,
+                                      textStyle: FontManager.body1Median(
+                                          ProtonColors.textNorm),
+                                      backgroundColor:
+                                          ProtonColors.textWeakPressed,
+                                      borderColor: ProtonColors.textWeakPressed,
+                                      height: 48),
+                                ])),
+                          ]))))),
         ]));
   }
 }
@@ -982,9 +1009,10 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
       break;
   }
   String estimatedFeeInFiatCurrency =
-      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
-  String estimatedFeeInSATS = Provider.of<UserSettingProvider>(context)
-      .getBitcoinUnitLabel(estimatedFee);
+      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
+  String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
+      Provider.of<UserSettingProvider>(context).walletUserSetting.bitcoinUnit,
+      estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
     Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",

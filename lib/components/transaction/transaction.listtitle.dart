@@ -1,41 +1,33 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/custom.loading.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/theme/theme.font.dart';
-
-import '../../constants/constants.dart';
 
 class TransactionListTitle extends StatelessWidget {
   final double width;
   final String address;
-  final double amount;
+  final BitcoinAmount bitcoinAmount;
   final bool isSend;
   final int? timestamp;
   final VoidCallback? onTap;
   final String note;
   final String? body;
-  final ProtonExchangeRate? exchangeRate;
 
   const TransactionListTitle({
     super.key,
     required this.width,
     required this.address,
-    required this.amount,
     required this.isSend,
+    required this.bitcoinAmount,
     this.timestamp,
     this.note = "",
     this.onTap,
     this.body,
-    this.exchangeRate,
   });
 
   String parsetime(int timestemp) {
@@ -48,23 +40,6 @@ class TransactionListTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double notional = Provider.of<UserSettingProvider>(context)
-        .getNotionalInFiatCurrency(amount.toInt(), exchangeRate: exchangeRate);
-    String fiatCurrencyName =
-        Provider.of<UserSettingProvider>(context).getFiatCurrencySign();
-    int displayDigits = defaultDisplayDigits;
-    if (exchangeRate != null) {
-      fiatCurrencyName = Provider.of<UserSettingProvider>(context)
-          .getFiatCurrencyName(fiatCurrency: exchangeRate!.fiatCurrency);
-      displayDigits = (log(exchangeRate!.cents) / log(10)).round();
-    } else {
-      displayDigits = (log(Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .exchangeRate
-                  .cents) /
-              log(10))
-          .round();
-    }
     return GestureDetector(
         onTap: onTap,
         child: Container(
@@ -108,11 +83,11 @@ class TransactionListTitle extends StatelessWidget {
                         const SizedBox(width: 4),
                         isSend
                             ? Text(
-                                "-$fiatCurrencyName ${notional.abs().toStringAsFixed(displayDigits)}",
+                                "-${bitcoinAmount.toFiatCurrencyString()}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                             : Text(
-                                "+$fiatCurrencyName ${notional.toStringAsFixed(displayDigits)}",
+                                "+${bitcoinAmount.toFiatCurrencyString()}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                       ]),
@@ -138,12 +113,11 @@ class TransactionListTitle extends StatelessWidget {
                         const SizedBox(width: 4),
                         isSend
                             ? Text(
-                                Provider.of<UserSettingProvider>(context)
-                                    .getBitcoinUnitLabel(amount.toInt()),
+                                bitcoinAmount.toString(),
                                 style: FontManager.captionRegular(
                                     ProtonColors.signalError))
                             : Text(
-                                "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(amount.toInt())}",
+                                "+${bitcoinAmount.toString()}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.signalSuccess)),
                       ]),

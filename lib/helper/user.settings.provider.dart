@@ -45,40 +45,11 @@ class UserSettingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String getBitcoinUnitLabel(int amountInSatoshi) {
-    double amount = amountInSatoshi.toDouble();
-    switch (walletUserSetting.bitcoinUnit) {
-      case BitcoinUnit.btc:
-        amount = amountInSatoshi / 100000000;
-        return "${amount.toStringAsFixed(8)} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
-      case BitcoinUnit.mbtc:
-        amount = amountInSatoshi / 100000;
-        return "${amount.toStringAsFixed(5)} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
-      default:
-        break;
-    }
-    return "${amount.toInt()} ${walletUserSetting.bitcoinUnit.name.toUpperCase()}";
-  }
-
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
     walletUserSetting.exchangeRate = exchangeRate;
     notifyListeners();
     logger.i(
         "Updating exchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}");
-  }
-
-  double getNotionalInFiatCurrency(int amountInSATS,
-      {ProtonExchangeRate? exchangeRate}) {
-    exchangeRate ??= walletUserSetting.exchangeRate;
-    FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
-    if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
-      return exchangeRate.exchangeRate *
-          amountInSATS /
-          fiatCurrencyInfo.cents /
-          100000000;
-    }
-    return exchangeRate.exchangeRate * amountInSATS / 100000000;
   }
 
   double getNotionalInBTC(double amountInFiatCurrency) {
