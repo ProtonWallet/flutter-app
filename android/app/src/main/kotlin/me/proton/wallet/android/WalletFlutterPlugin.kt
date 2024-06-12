@@ -25,15 +25,15 @@ import io.flutter.plugin.common.MethodChannel
 
 object WalletFlutterPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
-    init {
-        System.loadLibrary("proton_wallet_common")
-    }
+    // init {
+    //     System.loadLibrary("proton_wallet_common")
+    // }
 
     external fun init_android(ctx: Context): Boolean
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        val ret = init_android(binding.applicationContext)
-        println("JNI init_android returned $ret")
+        // val ret = init_android(binding.applicationContext)
+        // println("JNI init_android returned $ret")
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}

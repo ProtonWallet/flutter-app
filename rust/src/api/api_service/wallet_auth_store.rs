@@ -1,7 +1,7 @@
 use std::{future::Future, pin::Pin, sync::Arc};
 
 use andromeda_api::{
-    Auth, ChildSession, EnvId, SimpleAuthStore, Store, StoreReadErr, StoreWriteErr, Tokens,
+    Auth, ChildSession, EnvId, Store, StoreReadErr, StoreWriteErr, Tokens, WalletAuthStore,
 };
 use flutter_rust_bridge::frb;
 use log::info;
@@ -19,7 +19,7 @@ lazy_static::lazy_static! {
 #[frb(opaque)]
 // Define a new struct that wraps WalletAuthStore
 pub struct ProtonWalletAuthStore {
-    pub(crate) inner: SimpleAuthStore,
+    pub(crate) inner: WalletAuthStore,
 }
 
 impl ProtonWalletAuthStore {
@@ -34,7 +34,7 @@ impl ProtonWalletAuthStore {
         env: &str,
         auth: Arc<std::sync::Mutex<Auth>>,
     ) -> Result<Self, ApiError> {
-        let store = SimpleAuthStore::from_env_str(env, auth);
+        let store = WalletAuthStore::from_env_str(env.to_string(), auth);
         Ok(Self { inner: store })
     }
 
