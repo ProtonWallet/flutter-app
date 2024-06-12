@@ -150,9 +150,10 @@ dependencies = [
  "bitcoin",
  "cfg-if",
  "log",
- "muon-v2",
+ "muon",
  "serde",
  "serde_json",
+ "serde_repr",
  "thiserror",
 ]
 
@@ -2605,9 +2606,9 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -2872,17 +2873,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "muon-proc"
-version = "0.1.0"
+name = "muon"
+version = "0.4.0"
+source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
+checksum = "379745827d455624dff60ee70b1ac758b990f19fdcc63ab44023806565be322f"
 dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.66",
+ "muon-impl",
+ "muon-proc",
 ]
 
 [[package]]
-name = "muon-v2"
-version = "0.1.0"
+name = "muon-impl"
+version = "0.2.0"
+source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
+checksum = "07fb410746b1cec8110abbc2e876fd39b6efb7b55b29e9c0e0095a0cc036f378"
 dependencies = [
  "async-channel 2.3.1",
  "async-executor",
@@ -2890,6 +2894,7 @@ dependencies = [
  "async-lock 3.3.0",
  "async-net",
  "async-trait",
+ "bytes",
  "cfg-if",
  "data-encoding",
  "derive_more",
@@ -2899,31 +2904,43 @@ dependencies = [
  "getrandom",
  "hickory-client",
  "hickory-proto",
+ "http 1.1.0",
+ "http-body 1.0.0",
  "hyper 1.3.1",
- "itertools 0.12.1",
- "jni 0.19.0",
+ "itertools 0.13.0",
  "lazy_static",
  "muon-proc",
  "num",
  "num_cpus",
- "paste",
  "pin-project",
  "proton-srp",
  "rand",
- "regex",
  "reqwest 0.12.4",
  "rustls-platform-verifier",
  "rustls-webpki",
  "semver",
  "serde",
  "serde_json",
- "serde_urlencoded",
  "sha2",
  "thiserror",
+ "tokio",
+ "tokio-native-tls",
+ "toml 0.8.13",
  "tracing",
  "url",
- "uuid",
  "x509-parser",
+]
+
+[[package]]
+name = "muon-proc"
+version = "0.2.0"
+source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
+checksum = "2277b67db14a7b2f21eb0437487636657b9b25cda7aea91e3cd2126766bc8202"
+dependencies = [
+ "cfg-if",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.66",
 ]
 
 [[package]]
@@ -4171,6 +4188,17 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "serde_repr"
+version = "0.1.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c64451ba24fc7a6a2d60fc75dd9c83c90903b19028d4eff35e88fc1e86564e9"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.66",
 ]
 
 [[package]]

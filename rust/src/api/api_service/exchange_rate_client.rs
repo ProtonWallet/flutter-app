@@ -1,6 +1,6 @@
 use super::proton_api_service::ProtonAPIService;
 use crate::{errors::ApiError, exchange_rate::ProtonExchangeRate};
-use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
+use andromeda_api::{core::ApiClient, settings::FiatCurrencySymbol as FiatCurrency};
 use std::sync::Arc;
 
 pub struct ExchangeRateClient {

@@ -1,4 +1,4 @@
-use andromeda_api::transaction::ExchangeRateOrTransactionTime;
+use andromeda_api::{core::ApiClient, transaction::ExchangeRateOrTransactionTime};
 use chrono::Utc;
 use log::info;
 use std::sync::Arc;

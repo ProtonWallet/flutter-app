@@ -1,7 +1,8 @@
 use super::proton_api_service::ProtonAPIService;
 use crate::errors::ApiError;
-use andromeda_api::settings::{
-    FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings,
+use andromeda_api::{
+    core::ApiClient,
+    settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},
 };
 use andromeda_common::BitcoinUnit;
 use std::sync::Arc;
@@ -31,7 +32,7 @@ impl SettingsClient {
         &self,
         symbol: BitcoinUnit,
     ) -> Result<ApiWalletUserSettings, ApiError> {
-        let result = self.inner.bitcoin_unit(symbol).await;
+        let result = self.inner.update_bitcoin_unit(symbol).await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
@@ -42,7 +43,7 @@ impl SettingsClient {
         &self,
         symbol: FiatCurrency,
     ) -> Result<ApiWalletUserSettings, ApiError> {
-        let result = self.inner.fiat_currency(symbol).await;
+        let result = self.inner.update_fiat_currency(symbol).await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
@@ -50,7 +51,7 @@ impl SettingsClient {
     }
 
     pub async fn two_fa_threshold(&self, amount: u64) -> Result<ApiWalletUserSettings, ApiError> {
-        let result = self.inner.two_fa_threshold(amount).await;
+        let result = self.inner.update_two_fa_threshold(amount).await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
@@ -62,7 +63,7 @@ impl SettingsClient {
     ) -> Result<ApiWalletUserSettings, ApiError> {
         let result = self
             .inner
-            .hide_empty_used_addresses(hide_empty_used_addresses)
+            .update_hide_empty_used_addresses(hide_empty_used_addresses)
             .await;
         match result {
             Ok(response) => Ok(response),

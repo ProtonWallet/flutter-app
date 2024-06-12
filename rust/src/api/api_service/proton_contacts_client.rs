@@ -1,6 +1,6 @@
 use super::proton_api_service::ProtonAPIService;
 use crate::errors::ApiError;
-use andromeda_api::contacts::ApiContactEmails;
+use andromeda_api::{contacts::ApiContactEmails, core::ApiClient};
 use std::sync::Arc;
 
 pub struct ContactsClient {
