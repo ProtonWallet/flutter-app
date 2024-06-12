@@ -30,6 +30,7 @@ abstract class WalletListEvent extends Equatable {
 
 class SelectWallet extends WalletListEvent {
   final WalletModel walletModel;
+
   SelectWallet(this.walletModel);
 
   @override
@@ -46,6 +47,7 @@ class StartLoading extends WalletListEvent {
 class SelectAccount extends WalletListEvent {
   final WalletModel walletModel;
   final AccountModel accountModel;
+
   SelectAccount(this.walletModel, this.accountModel);
 
   @override
@@ -185,14 +187,14 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           var fiatCurrency = WalletManager.getAccountFiatCurrency(account);
           ProtonExchangeRate? exchangeRate =
               await ExchangeRateService.getExchangeRate(fiatCurrency);
-          estimateValue = ExchangeCaculator.getNotionalInFiatCurrency(
-            balance.toInt(),
+          estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
             exchangeRate,
+            balance.toInt(),
           );
           var fiatName = fiatCurrency.name.toString().toUpperCase();
           accMenuModel.currencyBalance =
               "$fiatName ${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
-          accMenuModel.btcBalance = ExchangeCaculator.getBitcoinUnitLabel(
+          accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
             (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
             balance.toInt(),
           );

@@ -17,6 +17,7 @@ import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -95,21 +96,25 @@ class HomeView extends ViewBase<HomeViewModel> {
                     AnimatedFlipCounter(
                         prefix: Provider.of<UserSettingProvider>(context)
                             .getFiatCurrencyName(),
-                        value: Provider.of<UserSettingProvider>(context)
-                            .getNotionalInFiatCurrency(
-                                Provider.of<ProtonWalletProvider>(context)
-                                    .protonWallet
-                                    .currentBalance),
+                        value: ExchangeCalculator.getNotionalInFiatCurrency(
+                            Provider.of<UserSettingProvider>(context)
+                                .walletUserSetting
+                                .exchangeRate,
+                            Provider.of<ProtonWalletProvider>(context)
+                                .protonWallet
+                                .currentBalance),
                         fractionDigits: defaultDisplayDigits,
                         textStyle: FontManager.balanceInFiatCurrency(
                             ProtonColors.textNorm)),
                     Text(
-                        Provider.of<UserSettingProvider>(context)
-                            .getBitcoinUnitLabel(
-                                Provider.of<ProtonWalletProvider>(context)
-                                    .protonWallet
-                                    .currentBalance
-                                    .toInt()),
+                        ExchangeCalculator.getBitcoinUnitLabel(
+                            Provider.of<UserSettingProvider>(context)
+                                .walletUserSetting
+                                .bitcoinUnit,
+                            Provider.of<ProtonWalletProvider>(context)
+                                .protonWallet
+                                .currentBalance
+                                .toInt()),
                         style: FontManager.balanceInBTC(ProtonColors.textWeak))
                   ],
                 ),
@@ -724,9 +729,12 @@ Widget getWalletAccountBalanceWidget(
       WalletManager.getAccountFiatCurrency(accountModel);
   ProtonExchangeRate? exchangeRate =
       ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
-  double estimateValue = Provider.of<UserSettingProvider>(context)
-      .getNotionalInFiatCurrency(accountModel.balance.toInt(),
-          exchangeRate: exchangeRate);
+  double estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+      exchangeRate ??
+          Provider.of<UserSettingProvider>(context)
+              .walletUserSetting
+              .exchangeRate,
+      accountModel.balance.toInt());
   if (exchangeRate == null) {
     fiatCurrency = null;
   }
@@ -735,8 +743,11 @@ Widget getWalletAccountBalanceWidget(
         "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.captionSemiBold(textColor)),
     Text(
-        Provider.of<UserSettingProvider>(context)
-            .getBitcoinUnitLabel(accountModel.balance.toInt()),
+        ExchangeCalculator.getBitcoinUnitLabel(
+            Provider.of<UserSettingProvider>(context)
+                .walletUserSetting
+                .bitcoinUnit,
+            accountModel.balance.toInt()),
         style: FontManager.overlineRegular(ProtonColors.textHint))
   ]);
 }

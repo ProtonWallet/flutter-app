@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -108,15 +109,16 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
 
   Widget getWalletAccountBalanceWidget(
       BuildContext context, AccountModel accountModel) {
-    double esitmateValue = Provider.of<UserSettingProvider>(context)
-        .getNotionalInFiatCurrency(accountModel.balance.toInt());
+    double esitmateValue = ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, accountModel.balance.toInt());
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.captionSemiBold(ProtonColors.textNorm)),
       Text(
-          Provider.of<UserSettingProvider>(context)
-              .getBitcoinUnitLabel(accountModel.balance.toInt()),
+          ExchangeCalculator.getBitcoinUnitLabel(
+              Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .bitcoinUnit, accountModel.balance.toInt()),
           style: FontManager.overlineRegular(ProtonColors.textHint))
     ]);
   }
