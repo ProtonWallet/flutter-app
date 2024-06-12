@@ -8,7 +8,7 @@ import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
