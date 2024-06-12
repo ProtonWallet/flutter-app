@@ -1,4 +1,5 @@
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/scenes/buy/sample.webview.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -22,5 +23,9 @@ class BuyBitcoinCoordinator extends Coordinator {
       viewModel,
     );
     return widget;
+  }
+
+  void pushWebview() {
+    push(const WebViewExample());
   }
 }

@@ -17,13 +17,13 @@ import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -499,6 +499,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     ),
                     // wallet
                     sidebarWalletItems(context, viewModel),
+
+                    /// new side bar.
                     // SidebarWalletItems(
                     //   walletListBloc: viewModel.walletBloc,
                     //   // select wallet
@@ -507,6 +509,12 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                     //       Navigator.of(context).pop();
                     //     }
                     //     viewModel.selectAccount(wallet, account);
+                    //   },
+                    //   selectWallet: (wallet) {
+                    //     if (viewModel.currentSize == ViewSize.mobile) {
+                    //       Navigator.of(context).pop();
+                    //     }
+                    //     viewModel.selectWallet(wallet);
                     //   },
                     //   // delete wallet when un valid
                     //   onDelete: (wallet, hasBalance, isInvalidWallet) {

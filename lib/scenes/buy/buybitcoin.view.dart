@@ -10,6 +10,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/buy/dropdown.dialog.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.view.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 import 'buybitcoin.viewmodel.dart';
@@ -612,7 +613,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                 ),
               ),
 
-              /// pay button
+              /// pay button Ramp
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -620,9 +621,26 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                   children: [
                     SizedBoxes.box8,
                     ButtonV5(
-                        onPressed:
-                            viewModel.isloading ? null : viewModel.startLoading,
-                        text: "Buy with credit card",
+                        onPressed: () => {viewModel.move(NavID.rampExternal)},
+                        text: "Buy with Ramp",
+                        width: MediaQuery.of(context).size.width - 100,
+                        backgroundColor: ProtonColors.protonBlue,
+                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        height: 48),
+                  ],
+                ),
+              ),
+
+              /// pay button Banxa
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBoxes.box8,
+                    ButtonV5(
+                        onPressed: () => {viewModel.move(NavID.banaxExternal)},
+                        text: "Buy with Banax",
                         width: MediaQuery.of(context).size.width - 100,
                         backgroundColor: ProtonColors.protonBlue,
                         textStyle: FontManager.body1Median(ProtonColors.white),
