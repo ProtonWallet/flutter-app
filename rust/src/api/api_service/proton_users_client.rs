@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use super::proton_api_service::ProtonAPIService;
+use andromeda_api::core::ApiClient;
 pub use andromeda_api::ProtonUsersClient as InnerProtonUsersClient;
 
 pub struct ProtonUsersClient {

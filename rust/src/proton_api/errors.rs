@@ -41,12 +41,6 @@ impl From<Error> for ApiError {
     fn from(error: Error) -> Self {
         match error {
             Error::MuonError(me) => ApiError::Generic(format!("Muon error occurred: {}", me)),
-            // Error::MuonSessionError(mse) => {
-            //     ApiError::SessionError(format!("Muon session error occurred: {}", mse))
-            // }
-            // Error::MuonRequestError(mre) => {
-            //     ApiError::SessionError(format!("Muon request error: {}", mre))
-            // }
             Error::BitcoinDeserializeError(bde) => {
                 ApiError::Generic(format!("BitcoinDeserializeError occurred: {}", bde))
             }
@@ -61,9 +55,10 @@ impl From<Error> for ApiError {
             Error::DeserializeErr(err) => ApiError::Generic(err),
             Error::MuonApiVersion(err) => {
                 ApiError::SessionError(format!("Muon MuonApiVersion occurred: {}", err))
-            } // Error::MuonResponseError(err) => {
-              //     ApiError::SessionError(format!("Muon MuonResponseError occurred: {}", err))
-              // }
+            }
+            Error::MuonStatueError(err) => {
+                ApiError::SessionError(format!("Muon MuonStatueError occurred: {}", err))
+            }
         }
     }
 }
