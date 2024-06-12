@@ -1,14 +1,6 @@
-import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/wallet.model.dart';
-
-class WalletBDKData {
-  final WalletModel wallet;
-  final List<AccountModel> accounts;
-  WalletBDKData({required this.wallet, required this.accounts});
-}
+class WalletBDKData {}
 
 class WalletBdkDataProvider {
-  // final WalletClient walletClient;
   // final WalletDao walletDao;
   // final AccountDao accountDao;
   // final AddressDao addressDao;

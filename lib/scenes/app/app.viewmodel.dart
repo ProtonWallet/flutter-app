@@ -109,7 +109,6 @@ class AppViewModelImpl extends AppViewModel {
     serviceManager.register(protonWallet);
 
     // TODO:: fix me
-    WalletManager.apiEnv = apiEnv;
     WalletManager.userManager = userManager;
     WalletManager.protonWallet = protonWallet;
 

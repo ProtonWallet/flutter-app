@@ -11,7 +11,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';

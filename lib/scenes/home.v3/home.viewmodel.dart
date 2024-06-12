@@ -12,13 +12,13 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
@@ -27,6 +27,7 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -206,6 +207,7 @@ class HomeViewModelImpl extends HomeViewModel {
     this.apiServiceManager,
     this.dataProviderManager,
     super.walletBloc,
+    this.channel,
   );
 
   // user manager
@@ -222,6 +224,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // Data provider manager
   final DataProviderManager dataProviderManager;
+
+  /// native channel
+  final NativeViewChannel channel;
 
   ///
   final datasourceChangedStreamController =
@@ -288,6 +293,14 @@ class HomeViewModelImpl extends HomeViewModel {
     loadUserSettings();
   }
 
+  Future<void> loadwallet() async {
+    hasWallet = await WalletManager.hasWallet();
+    if (hasWallet == false) {
+      await WalletManager.fetchWalletsFromServer();
+      hasWallet = await WalletManager.hasWallet();
+    }
+  }
+
   @override
   Future<void> loadData() async {
     // init network
@@ -311,22 +324,16 @@ class HomeViewModelImpl extends HomeViewModel {
     /// init controllers
     initControllers();
 
-    hasWallet = await WalletManager.hasWallet();
-    if (hasWallet == false) {
-      await WalletManager.fetchWalletsFromServer();
-      hasWallet = await WalletManager.hasWallet();
-    }
-
     EasyLoading.show(
       status: "connecting to proton..",
       maskType: EasyLoadingMaskType.black,
     );
-
     try {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
 
+      loadwallet();
       loadUserSettings();
       // walletBloc.init();
       protonWalletProvider = Provider.of<ProtonWalletProvider>(
@@ -417,6 +424,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> selectWallet(WalletModel walletModel) async {
+    // walletBloc.setWallet(walletModel);
     if ((protonWalletProvider.protonWallet.currentWallet != null &&
             protonWalletProvider.protonWallet.currentWallet!.serverWalletID !=
                 walletModel.serverWalletID) ||
@@ -435,6 +443,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectAccount(
       WalletModel walletModel, AccountModel accountModel) async {
+    // walletBloc.setAccount(walletModel, accountModel);
     if ((protonWalletProvider.protonWallet.currentAccount != null &&
             protonWalletProvider.protonWallet.currentAccount!.serverAccountID !=
                 accountModel.serverAccountID) ||
@@ -491,10 +500,14 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> renameAccount(AccountModel accountModel, String newName) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
-    logger.i("currentWallet.name = ${currentWallet?.name}");
+    if (currentWallet == null) {
+      logger.w("currentWallet is null");
+      return;
+    }
     try {
+      logger.i("currentWallet.name = ${currentWallet.name}");
       SecretKey secretKey =
-          await WalletManager.getWalletKey(currentWallet!.serverWalletID);
+          await WalletManager.getWalletKey(currentWallet.serverWalletID);
       ApiWalletAccount walletAccount =
           await proton_api.updateWalletAccountLabel(
               walletId: currentWallet.serverWalletID,
@@ -533,17 +546,18 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> checkPreference({bool runOnce = false}) async {
     WalletModel? currentWallet =
         protonWalletProvider.protonWallet.currentWallet;
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (currentWallet != null) {
-      String serverWalletID = currentWallet.serverWalletID;
-      hadBackup =
-          preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
-      currentTodoStep = 0;
-      currentTodoStep += hadBackup ? 1 : 0;
-      currentTodoStep += hadBackupProtonAccount ? 1 : 0;
-      currentTodoStep += hadSetup2FA ? 1 : 0;
-      datasourceStreamSinkAdd();
+    if (currentWallet == null) {
+      logger.w("currentWallet is null");
+      return;
     }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String serverWalletID = currentWallet.serverWalletID;
+    hadBackup = preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
+    currentTodoStep = 0;
+    currentTodoStep += hadBackup ? 1 : 0;
+    currentTodoStep += hadBackupProtonAccount ? 1 : 0;
+    currentTodoStep += hadSetup2FA ? 1 : 0;
+    datasourceStreamSinkAdd();
 
     if (runOnce == false) {
       await Future.delayed(const Duration(seconds: 1));
@@ -638,6 +652,7 @@ class HomeViewModelImpl extends HomeViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
+    channel.nativeLogout();
     coordinator.logout();
   }
 
@@ -660,16 +675,24 @@ class HomeViewModelImpl extends HomeViewModel {
         protonWalletProvider.protonWallet.currentWallet;
     AccountModel? currentAccount =
         protonWalletProvider.protonWallet.currentAccount;
+
     switch (to) {
       case NavID.importWallet:
         coordinator.showImportWallet();
         break;
       case NavID.send:
-        coordinator.showSend(currentWallet!.id ?? 0, currentAccount?.id ?? 0);
+        if (currentWallet == null || currentAccount == null) {
+          logger.w("currentWallet and account are null");
+          return;
+        }
+        coordinator.showSend(currentWallet.id ?? 0, currentAccount.id ?? 0);
         break;
       case NavID.receive:
-        coordinator.showReceive(
-            currentWallet!.id ?? 0, currentAccount?.id ?? 0);
+        if (currentWallet == null || currentAccount == null) {
+          logger.w("currentWallet and account are null");
+          return;
+        }
+        coordinator.showReceive(currentWallet.id ?? 0, currentAccount.id ?? 0);
         break;
       case NavID.testWebsocket:
         coordinator.showWebSocket();
@@ -681,8 +704,12 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.logout();
         break;
       case NavID.historyDetails:
+        if (currentWallet == null) {
+          logger.w("currentWallet is null");
+          return;
+        }
         coordinator.showHistoryDetails(
-            currentWallet!.id ?? 0,
+            currentWallet.id ?? 0,
             historyAccountModel?.id ?? 0,
             selectedTXID,
             fiatCurrencyNotifier.value);
@@ -694,7 +721,11 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showTwoFactorAuthDisable();
         break;
       case NavID.setupBackup:
-        coordinator.showSetupBackup(currentWallet!.id ?? 0);
+        if (currentWallet == null) {
+          logger.w("currentWallet is null");
+          return;
+        }
+        coordinator.showSetupBackup(currentWallet.id ?? 0);
         break;
       case NavID.discover:
         coordinator.showDiscover();
@@ -789,7 +820,8 @@ class HomeViewModelImpl extends HomeViewModel {
       List<AccountModel> userAccounts) {
     for (AccountModel accountModel in userAccounts) {
       if (accountFiatCurrencyNotifiers.containsKey(accountModel.id!) == false) {
-        ValueNotifier valueNotifier = ValueNotifier(WalletManager.getAccountFiatCurrency(accountModel));
+        ValueNotifier valueNotifier =
+            ValueNotifier(WalletManager.getAccountFiatCurrency(accountModel));
         valueNotifier.addListener(() {
           updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
         });
