@@ -10,6 +10,8 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -103,18 +105,21 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     ),
                     viewModel.isSend
                         ? Text(
-                            Provider.of<UserSettingProvider>(context)
-                                .getBitcoinUnitLabel(viewModel.amount.toInt()),
+                            ExchangeCalculator.getBitcoinUnitLabel(
+                                Provider.of<UserSettingProvider>(context)
+                                    .walletUserSetting
+                                    .bitcoinUnit,
+                                viewModel.amount.toInt()),
                             style:
                                 FontManager.titleHero(ProtonColors.signalError))
                         : Text(
-                            "+${Provider.of<UserSettingProvider>(context).getBitcoinUnitLabel(viewModel.amount.toInt())}",
+                            "+${ExchangeCalculator.getBitcoinUnitLabel(Provider.of<UserSettingProvider>(context).walletUserSetting.bitcoinUnit, viewModel.amount.toInt())}",
                             style: FontManager.titleHero(
                                 ProtonColors.signalSuccess)),
                     Text(
                         viewModel.isSend
-                            ? "-$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}"
-                            : "+$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}",
+                            ? "-$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.amount.toInt()).abs().toStringAsFixed(displayDigits)}"
+                            : "+$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.amount.toInt()).abs().toStringAsFixed(displayDigits)}",
                         style: FontManager.titleSubHeadline(
                             ProtonColors.textHint)),
                     const SizedBox(height: 20),
@@ -237,9 +242,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               showNetworkFee(context);
                             },
                             content:
-                                "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(displayDigits)}",
-                            memo: Provider.of<UserSettingProvider>(context)
-                                .getBitcoinUnitLabel(viewModel.fee.toInt()),
+                                "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.fee.toInt()).toStringAsFixed(displayDigits)}",
+                            memo: ExchangeCalculator.getBitcoinUnitLabel(
+                                Provider.of<UserSettingProvider>(context)
+                                    .walletUserSetting
+                                    .bitcoinUnit,
+                                viewModel.fee.toInt()),
                           ),
                           const Divider(
                             thickness: 0.2,
@@ -248,18 +256,21 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                               title: S.of(context).trans_total,
                               content: viewModel.isSend
-                                  ? "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() - viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).abs().toStringAsFixed(displayDigits)}"
-                                  : "$fiatCurrencyName ${Provider.of<UserSettingProvider>(context).getNotionalInFiatCurrency(viewModel.amount.toInt() + viewModel.fee.toInt(), exchangeRate: viewModel.exchangeRate).toStringAsFixed(displayDigits)}",
+                                  ? "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}"
+                                  : "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).toStringAsFixed(displayDigits)}",
                               memo: viewModel.isSend
-                                  ? Provider.of<UserSettingProvider>(context)
-                                      .getBitcoinUnitLabel(
-                                          (viewModel.amount.toInt() -
-                                                  viewModel.fee.toInt())
-                                              .abs())
-                                  : Provider.of<UserSettingProvider>(context)
-                                      .getBitcoinUnitLabel(
-                                          viewModel.amount.toInt() +
-                                              viewModel.fee.toInt())),
+                                  ? ExchangeCalculator.getBitcoinUnitLabel(
+                                      Provider.of<UserSettingProvider>(context)
+                                          .walletUserSetting
+                                          .bitcoinUnit,
+                                      viewModel.amount.toInt() -
+                                          viewModel.fee.toInt().abs())
+                                  : ExchangeCalculator.getBitcoinUnitLabel(
+                                      Provider.of<UserSettingProvider>(context)
+                                          .walletUserSetting
+                                          .bitcoinUnit,
+                                      viewModel.amount.toInt() +
+                                          viewModel.fee.toInt())),
                           const SizedBox(height: 20),
                           ButtonV5(
                               onPressed: () {
@@ -306,7 +317,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   buildTransToInfo(context,
                       email: info.toEmail,
                       bitcoinAddress: info.toBitcoinAddress,
-                      amountInSATS: info.amountInSATS)
+                      amountInSatoshi: info.amountInSATS)
               ])
       ],
     );
@@ -316,20 +327,25 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       {String? email,
       String? bitcoinAddress,
       String? walletAccountName,
-      int? amountInSATS}) {
+      int? amountInSatoshi}) {
     return Column(children: [
       const Divider(
         thickness: 0.2,
         height: 1,
       ),
-      TransactionHistoryItem(
-        title: S.of(context).trans_to,
-        content: email ?? bitcoinAddress ?? "",
-        bitcoinAddress: bitcoinAddress,
-        walletAccountName: walletAccountName,
-        amountInSATS: amountInSATS,
-        exchangeRate: viewModel.exchangeRate,
-      )
+      if (viewModel.exchangeRate != null && amountInSatoshi != null)
+        TransactionHistoryItem(
+          title: S.of(context).trans_to,
+          content: email ?? bitcoinAddress ?? "",
+          bitcoinAddress: bitcoinAddress,
+          walletAccountName: walletAccountName,
+          bitcoinAmount: BitcoinAmount(
+              amountInSatoshi: amountInSatoshi,
+              bitcoinUnit: Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .bitcoinUnit,
+              exchangeRate: viewModel.exchangeRate!),
+        ),
     ]);
   }
 
@@ -350,8 +366,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         ),
         TransactionHistoryItem(
           title: S.of(context).trans_to,
-          content: viewModel.toEmail.isNotEmpty ?
-              "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)" : "",
+          content: viewModel.toEmail.isNotEmpty
+              ? "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)"
+              : "",
           walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
           bitcoinAddress: viewModel.selfBitcoinAddress,
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -17,8 +19,6 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final Function? onFinish;
   final bool checkOfErrorOnFocusChange;
   final Color? backgroundColor;
-  final FiatCurrency currency;
-  final int currencyExchangeRate;
   final UserSettingProvider userSettingProvider;
 
   const TextFieldSendBTCV2(
@@ -33,8 +33,6 @@ class TextFieldSendBTCV2 extends StatefulWidget {
       this.keyboardType,
       this.textInputAction,
       required this.validation,
-      required this.currency,
-      required this.currencyExchangeRate,
       required this.userSettingProvider,
       this.checkOfErrorOnFocusChange = true});
 
@@ -173,7 +171,11 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
           Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                  widget.userSettingProvider.getBitcoinUnitLabel(estimatedSATS),
+                  ExchangeCalculator.getBitcoinUnitLabel(
+                      Provider.of<UserSettingProvider>(context)
+                          .walletUserSetting
+                          .bitcoinUnit,
+                      estimatedSATS),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],

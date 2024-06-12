@@ -7,6 +7,8 @@ import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -87,53 +89,67 @@ class TransactionList extends StatelessWidget {
                       defaultTransactionPerPage);
           index++)
         TransactionListTitle(
-            width: MediaQuery.of(context).size.width,
-            address: WalletManager.getEmailFromWalletTransaction(
-                Provider.of<ProtonWalletProvider>(context).protonWallet.historyTransactionsAfterFilter[index].amountInSATS > 0
-                    ? Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .historyTransactionsAfterFilter[index]
-                        .sender
-                    : Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .historyTransactionsAfterFilter[index]
-                        .toList,
-                selfEmailAddresses:
-                    viewModel.protonAddresses.map((e) => e.email).toList()),
-            amount: Provider.of<ProtonWalletProvider>(context)
-                .protonWallet
-                .historyTransactionsAfterFilter[index]
-                .amountInSATS
-                .toDouble(),
-            note: Provider.of<ProtonWalletProvider>(context)
-                    .protonWallet
-                    .historyTransactionsAfterFilter[index]
-                    .label ??
-                "",
-            body: Provider.of<ProtonWalletProvider>(context)
-                    .protonWallet
-                    .historyTransactionsAfterFilter[index]
-                    .body ??
-                "",
-            onTap: () {
-              viewModel.selectedTXID =
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
+          width: MediaQuery.of(context).size.width,
+          address: WalletManager.getEmailFromWalletTransaction(
+              Provider.of<ProtonWalletProvider>(context)
+                          .protonWallet
+                          .historyTransactionsAfterFilter[index]
+                          .amountInSATS >
+                      0
+                  ? Provider.of<ProtonWalletProvider>(context)
                       .protonWallet
                       .historyTransactionsAfterFilter[index]
-                      .txID;
-              viewModel.historyAccountModel =
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
+                      .sender
+                  : Provider.of<ProtonWalletProvider>(context)
                       .protonWallet
                       .historyTransactionsAfterFilter[index]
-                      .accountModel;
-              viewModel.move(NavID.historyDetails);
-            },
-            timestamp: Provider.of<ProtonWalletProvider>(context)
-                .protonWallet
-                .historyTransactionsAfterFilter[index]
-                .createTimestamp,
-            isSend: Provider.of<ProtonWalletProvider>(context).protonWallet.historyTransactionsAfterFilter[index].amountInSATS < 0,
-            exchangeRate: Provider.of<ProtonWalletProvider>(context).protonWallet.historyTransactionsAfterFilter[index].exchangeRate),
+                      .toList,
+              selfEmailAddresses:
+                  viewModel.protonAddresses.map((e) => e.email).toList()),
+          bitcoinAmount: BitcoinAmount(
+              amountInSatoshi: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .historyTransactionsAfterFilter[index]
+                  .amountInSATS,
+              bitcoinUnit: Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .bitcoinUnit,
+              exchangeRate: Provider.of<UserSettingProvider>(context)
+                  .walletUserSetting
+                  .exchangeRate),
+          note: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .historyTransactionsAfterFilter[index]
+                  .label ??
+              "",
+          body: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .historyTransactionsAfterFilter[index]
+                  .body ??
+              "",
+          onTap: () {
+            viewModel.selectedTXID =
+                Provider.of<ProtonWalletProvider>(context, listen: false)
+                    .protonWallet
+                    .historyTransactionsAfterFilter[index]
+                    .txID;
+            viewModel.historyAccountModel =
+                Provider.of<ProtonWalletProvider>(context, listen: false)
+                    .protonWallet
+                    .historyTransactionsAfterFilter[index]
+                    .accountModel;
+            viewModel.move(NavID.historyDetails);
+          },
+          timestamp: Provider.of<ProtonWalletProvider>(context)
+              .protonWallet
+              .historyTransactionsAfterFilter[index]
+              .createTimestamp,
+          isSend: Provider.of<ProtonWalletProvider>(context)
+                  .protonWallet
+                  .historyTransactionsAfterFilter[index]
+                  .amountInSATS <
+              0,
+        ),
       if (Provider.of<ProtonWalletProvider>(context)
               .protonWallet
               .historyTransactionsAfterFilter
