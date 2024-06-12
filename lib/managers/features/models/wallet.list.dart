@@ -1,25 +1,32 @@
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/wallet.model.dart';
+
 class WalletMenuModel {
   /// state
   bool hasValidPassword = false;
   String walletName = 'Proton Wallet';
   int accountSize = 0;
-  // String icon;
+  bool isSignatureValid = true;
+  int currentIndex = 0;
 
+  bool isSelected = false;
   List<AccountMenuModel> accounts = [];
 
-  // final WalletModel wallet;
-  // final List<AccountModel> accounts;
-  // WalletListModel({required this.wallet, required this.accounts});
+  final WalletModel walletModel;
 
-  // static List<WalletMenuModel> fromWalletData(List<WalletData> items) {
-  //   return items
-  //       .map((item) =>
-  //           WalletListModel(wallet: item.wallet, accounts: item.accounts))
-  //       .toList();
-  // }
+  WalletMenuModel(this.walletModel);
 }
 
 class AccountMenuModel {
   // String icon = "";
   bool loading = true;
+  String label = "Default Account";
+  String currencyBalance = "";
+  String btcBalance = "";
+  int currentIndex = 0;
+
+  bool isSelected = false;
+  final AccountModel accountModel;
+
+  AccountMenuModel(this.accountModel);
 }

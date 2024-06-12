@@ -57,6 +57,7 @@ class DataProviderManager extends Manager {
 
     // TODO:: fix this
     WalletManager.walletKeysProvider = walletKeysProvider;
+    WalletManager.walletPassphraseProvider = walletPassphraseProvider;
   }
 
   @override

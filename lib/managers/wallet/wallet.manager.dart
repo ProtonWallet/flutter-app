@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
@@ -9,11 +10,14 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
+import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
+import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/rust/api/bdk_wallet.dart';
 import 'package:wallet/rust/bdk/types.dart';
@@ -21,7 +25,6 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
@@ -38,19 +41,54 @@ import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:http/http.dart' as http;
 
-import '../../helper/bdk/helper.dart';
-
 // this is service // per wallet account
 class WalletManager implements Manager {
   static final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   static bool isFetchingWallets = false;
-  static ApiEnv apiEnv = appConfig.apiEnv;
 
   //TODO:: fix me
   static late UserManager userManager;
   static late ProtonWalletManager protonWallet;
   static late WalletKeysProvider walletKeysProvider;
+  static late WalletPassphraseProvider walletPassphraseProvider;
 
+  ///
+  static HashMap<String, Wallet> wallets = HashMap<String, Wallet>();
+  // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
+  // TODO:: return Wallet? to avoid issue, add try-catch here
+  static Future<Wallet?> loadWalletWithID(int walletID, int accountID) async {
+    WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
+    if (walletModel == null) return null;
+    String passphrase = await walletPassphraseProvider
+            .getWalletPassphrase(walletModel.serverWalletID) ??
+        "";
+    Mnemonic mnemonic = await Mnemonic.fromString(
+        await WalletManager.getMnemonicWithID(walletID));
+    final DerivationPath derivationPath = await DerivationPath.create(
+        path: await getDerivationPathWithID(accountID));
+    final aliceDescriptor = await _lib.createDerivedDescriptor(
+      mnemonic,
+      derivationPath,
+      passphrase: passphrase,
+    );
+    String derivationPathClean =
+        derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
+    String dbName =
+        "${walletModel.serverWalletID.replaceAll('-', '_').replaceAll('=', '_')}_${derivationPathClean}_${passphrase.isNotEmpty}";
+
+    var found = wallets[dbName];
+    if (found != null) {
+      return found;
+    }
+    var wallet = await _lib.restoreWallet(
+      aliceDescriptor,
+      databaseName: dbName,
+    );
+    wallets[dbName] = wallet;
+    return wallet;
+  }
+
+  ///
   static Future<void> cleanBDKCache() async {
     _lib.clearLocalCache();
   }
@@ -62,31 +100,6 @@ class WalletManager implements Manager {
 
   static Future<List<ProtonAddress>> getProtonAddress() async {
     return await proton_api.getProtonAddress();
-  }
-
-  // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
-  // TODO:: return Wallet? to avoid issue, add try-catch here
-  static Future<Wallet?> loadWalletWithID(int walletID, int accountID) async {
-    late Wallet wallet;
-
-    //TODO:: this could be null. add handler
-    WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
-    if (walletModel == null) return null;
-    String passphrase =
-        await protonWallet.getPassphrase(walletModel.serverWalletID);
-    Mnemonic mnemonic = await Mnemonic.fromString(
-        await WalletManager.getMnemonicWithID(walletID));
-    final DerivationPath derivationPath = await DerivationPath.create(
-        path: await getDerivationPathWithID(accountID));
-    final aliceDescriptor = await _lib.createDerivedDescriptor(
-        mnemonic, derivationPath,
-        passphrase: passphrase);
-    String derivationPathClean =
-        derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
-    String dbName =
-        "${walletModel.serverWalletID.replaceAll('-', '_').replaceAll('=', '_')}_${derivationPathClean}_${passphrase.isNotEmpty}";
-    wallet = await _lib.restoreWallet(aliceDescriptor, databaseName: dbName);
-    return wallet;
   }
 
   static Future<void> deleteWalletByServerWalletID(
@@ -1208,10 +1221,10 @@ class WalletManager implements Manager {
     return defaultFiatCurrency;
   }
 
-  static FiatCurrency getAccountFiatCurrency(
-      AccountModel? accountModel) {
+  static FiatCurrency getAccountFiatCurrency(AccountModel? accountModel) {
     if (accountModel != null) {
-      return CommonHelper.getFiatCurrencyByName(accountModel.fiatCurrency.toUpperCase());
+      return CommonHelper.getFiatCurrencyByName(
+          accountModel.fiatCurrency.toUpperCase());
     }
     return defaultFiatCurrency;
   }

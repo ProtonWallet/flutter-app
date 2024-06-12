@@ -12,11 +12,12 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -327,7 +328,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                   in transactionDetailFromBlockChain.recipients) {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
-                    .findBitcoinAddressInAccount(recipient.bitcoinAddress, accountModel.id!);
+                    .findBitcoinAddressInAccount(
+                        recipient.bitcoinAddress, accountModel.id!);
                 if (bitcoinAddressModel != null) {
                   me = recipient;
                   break;

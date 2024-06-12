@@ -6,19 +6,19 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/exchange.rate.service.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.provider.dart'
+    as proton_wallet_provider;
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart'
-    as proton_wallet_provider;
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -307,8 +307,5 @@ class EventLoop implements Manager {
   }
 
   @override
-  Future<void> login(String userID) async {
-    // TODO: implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 }

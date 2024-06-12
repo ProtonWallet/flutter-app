@@ -159,7 +159,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   @override
   Future<void> move(NavID to) async {
     if (to == NavID.rampExternal) {
-      presentRamp();
+      ramp.showRamp(configuration);
+    } else if (to == NavID.banaxExternal) {
+      coordinator.pushWebview();
     }
   }
 
@@ -258,17 +260,13 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   void startLoading() {
     // bloc.add(const LoadCountryEvent());
     // bloc.add(const LoadAddressEvent());
-    presentRamp();
+    // presentRamp();
     // isloading = true;
     // datasourceChangedStreamController.sinkAddSafe(this);
     // Simulate a network request or any async task
     // Future.delayed(const Duration(seconds: 3), () {
     //   isloading = false;
     // });
-  }
-
-  void presentRamp() {
-    ramp.showRamp(configuration);
   }
 
   @override

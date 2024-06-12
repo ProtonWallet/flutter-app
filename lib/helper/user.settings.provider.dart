@@ -8,8 +8,7 @@ import 'package:wallet/rust/proton_api/user_settings.dart'
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class WalletUserSetting {
-  proton_user_setting.FiatCurrency fiatCurrency =
-      defaultFiatCurrency;
+  proton_user_setting.FiatCurrency fiatCurrency = defaultFiatCurrency;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
       id: 'default',
@@ -68,7 +67,8 @@ class UserSettingProvider with ChangeNotifier {
         "Updating exchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}");
   }
 
-  double getNotionalInFiatCurrency(int amountInSATS, {ProtonExchangeRate? exchangeRate}) {
+  double getNotionalInFiatCurrency(int amountInSATS,
+      {ProtonExchangeRate? exchangeRate}) {
     exchangeRate ??= walletUserSetting.exchangeRate;
     FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
@@ -78,19 +78,19 @@ class UserSettingProvider with ChangeNotifier {
           fiatCurrencyInfo.cents /
           100000000;
     }
-    return exchangeRate.exchangeRate *
-        amountInSATS /
-        100000000;
+    return exchangeRate.exchangeRate * amountInSATS / 100000000;
   }
-
 
   double getNotionalInBTC(double amountInFiatCurrency) {
     FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
-      return amountInFiatCurrency / (walletUserSetting.exchangeRate.exchangeRate / fiatCurrencyInfo.cents);
+      return amountInFiatCurrency /
+          (walletUserSetting.exchangeRate.exchangeRate /
+              fiatCurrencyInfo.cents);
     }
-    return amountInFiatCurrency / (walletUserSetting.exchangeRate.exchangeRate / 100);
+    return amountInFiatCurrency /
+        (walletUserSetting.exchangeRate.exchangeRate / 100);
   }
 
   String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
