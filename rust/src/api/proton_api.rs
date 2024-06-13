@@ -686,3 +686,71 @@ pub async fn fork() -> Result<ChildSession, ApiError> {
 //         Err(err) => Err(err.into()),
 //     }
 // }
+
+#[cfg(test)]
+mod test {
+
+    use crate::api::{
+        api_service::{
+            proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
+        },
+        proton_api::fork,
+    };
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_fork_session() {
+        let app_version = "android-wallet@1.0.0".to_string();
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+        let env = "atlas";
+
+        let store = ProtonWalletAuthStore::from_session(
+            env,
+            "aajxkia2ffiwjsm4gip5g2aahhra2gre".to_string(),
+            "ietv5s2jri4hmggjj7bv2dtw6sf3ilp7".to_string(),
+            "xwpffga6xbuitqw7sndtya5g2nk5xn4n".to_string(),
+            vec![
+                "full".to_string(),
+                "self".to_string(),
+                "payments".to_string(),
+                "keys".to_string(),
+                "parent".to_string(),
+                "user".to_string(),
+                "loggedin".to_string(),
+                "nondelinquent".to_string(),
+                "verified".to_string(),
+                "settings".to_string(),
+                "wallet".to_string(),
+            ],
+        )
+        .unwrap();
+        let mut client =
+            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
+        client.set_proton_api();
+        let forked_session = fork().await.unwrap();
+        println!("forked session: {:?}", forked_session);
+        assert!(!forked_session.access_token.is_empty())
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_login_fork_session() {
+        let app_version = "android-wallet@1.0.0".to_string();
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+        let env = "atlas";
+
+        let user = "feng100".to_string();
+        let pass = "12345678".to_string();
+
+        let store = ProtonWalletAuthStore::new(env).unwrap();
+        let mut client =
+            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
+        let auth_info = client.login(user, pass).await.unwrap();
+        assert!(!auth_info.access_token.is_empty());
+        client.set_proton_api();
+
+        let forked_session = fork().await.unwrap();
+        println!("forked session: {:?}", forked_session);
+        assert!(!forked_session.access_token.is_empty())
+    }
+}

@@ -77,36 +77,6 @@ class ProtonApiService extends RustOpaque {
   Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
       RustLib.instance.api.protonApiServiceGetWallets(that: this, hint: hint);
 
-  static ProtonApiService initApiServiceAuthStore(
-          {required String appVersion,
-          required String userAgent,
-          required ProtonWalletAuthStore store,
-          dynamic hint}) =>
-      RustLib.instance.api.protonApiServiceInitApiServiceAuthStore(
-          appVersion: appVersion,
-          userAgent: userAgent,
-          store: store,
-          hint: hint);
-
-  static Future<ProtonApiService> initWith(
-          {required String uid,
-          required String access,
-          required String refresh,
-          required List<String> scopes,
-          required String appVersion,
-          required String userAgent,
-          String? env,
-          dynamic hint}) =>
-      RustLib.instance.api.protonApiServiceInitWith(
-          uid: uid,
-          access: access,
-          refresh: refresh,
-          scopes: scopes,
-          appVersion: appVersion,
-          userAgent: userAgent,
-          env: env,
-          hint: hint);
-
   Future<AuthCredential> login(
           {required String username, required String password, dynamic hint}) =>
       RustLib.instance.api.protonApiServiceLogin(
@@ -116,8 +86,17 @@ class ProtonApiService extends RustOpaque {
       RustLib.instance.api.protonApiServiceLogout(that: this, hint: hint);
 
   factory ProtonApiService(
-          {required ProtonWalletAuthStore store, dynamic hint}) =>
-      RustLib.instance.api.protonApiServiceNew(store: store, hint: hint);
+          {required String env,
+          required String appVersion,
+          required String userAgent,
+          required ProtonWalletAuthStore store,
+          dynamic hint}) =>
+      RustLib.instance.api.protonApiServiceNew(
+          env: env,
+          appVersion: appVersion,
+          userAgent: userAgent,
+          store: store,
+          hint: hint);
 
   Future<void> setProtonApi({dynamic hint}) =>
       RustLib.instance.api.protonApiServiceSetProtonApi(that: this, hint: hint);
