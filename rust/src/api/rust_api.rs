@@ -734,8 +734,11 @@ mod test {
         )
         .unwrap();
         let wallet = Wallet::retrieve_wallet(wallet_id);
+        let app_version = "android-wallet@1.0.0".to_string();
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let store = ProtonWalletAuthStore::new("altas").unwrap();
-        let mut api_service = ProtonAPIService::new(store).unwrap();
+        let mut api_service =
+            ProtonAPIService::new("atlas".to_string(), app_version, user_agent, store).unwrap();
         let _ = api_service
             .login("pro".to_string(), "pro".to_string())
             .await;
@@ -793,8 +796,12 @@ mod test {
 
         let wallet = Wallet::retrieve_wallet(wallet_id);
 
-        let store = ProtonWalletAuthStore::new("altas").unwrap();
-        let mut api_service = ProtonAPIService::new(store).unwrap();
+        let app_version = "android-wallet@1.0.0".to_string();
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+        let env = "altas";
+        let store = ProtonWalletAuthStore::new(env).unwrap();
+        let mut api_service =
+            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
         let _ = api_service
             .login("pro".to_string(), "pro".to_string())
             .await;

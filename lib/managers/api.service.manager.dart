@@ -76,18 +76,31 @@ class ProtonApiServiceManager implements Manager {
           refresh: refreshToken,
           scopes: scopes.split(","));
       await authStore.setAuthDartCallback(callback: callback);
-      _apiService = ProtonApiService.initApiServiceAuthStore(
-          appVersion: appVersion, userAgent: userAgent, store: authStore);
+      _apiService = ProtonApiService(
+          env: env.toString(),
+          appVersion: appVersion,
+          userAgent: userAgent,
+          store: authStore);
     }
     await _apiService?.setProtonApi();
   }
 
   ProtonApiService getApiService() {
-    // final info = await PackageInfo.fromPlatform();
-    // final appVersion = '${info.version} (${info.buildNumber})';
-    // final userAgent =
-    //     'ProtonWallet/${info.version} (${Platform.operatingSystem}/${Platform.operatingSystemVersion}; ${Platform.localeName})';
-    _apiService ??= ProtonApiService(store: authStore);
+    String appVersion = "Other";
+    String userAgent = "None";
+    if (Platform.isAndroid) {
+      appVersion = "android-wallet@1.0.0";
+      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
+    }
+    if (Platform.isIOS) {
+      appVersion = "android-wallet@1.0.0";
+      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
+    }
+    _apiService ??= ProtonApiService(
+        env: env.toString(),
+        appVersion: appVersion,
+        userAgent: userAgent,
+        store: authStore);
     return _apiService!;
   }
 
@@ -103,7 +116,21 @@ class ProtonApiServiceManager implements Manager {
   @override
   Future<void> init() async {
     await authStore.setAuthDartCallback(callback: callback);
-    _apiService = ProtonApiService(store: authStore);
+    String appVersion = "Other";
+    String userAgent = "None";
+    if (Platform.isAndroid) {
+      appVersion = "android-wallet@1.0.0";
+      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
+    }
+    if (Platform.isIOS) {
+      appVersion = "android-wallet@1.0.0";
+      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
+    }
+    _apiService = ProtonApiService(
+        env: env.toString(),
+        appVersion: appVersion,
+        userAgent: userAgent,
+        store: authStore);
   }
 
   @override
