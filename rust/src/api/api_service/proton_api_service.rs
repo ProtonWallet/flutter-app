@@ -11,12 +11,12 @@ use super::{
 use crate::api::proton_api::{logout, set_proton_api};
 use crate::{auth_credential::AuthCredential, errors::ApiError};
 use andromeda_api::wallet::ApiWalletData;
-use andromeda_api::{Auth, ProtonWalletApiClient, Tokens};
+use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
 use bitcoin::base64::decode;
 use flutter_rust_bridge::frb;
 use log::info;
 use std::str;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct ProtonAPIService {
@@ -25,51 +25,83 @@ pub struct ProtonAPIService {
 }
 
 impl ProtonAPIService {
-    pub fn init_with(
-        uid: String,
-        access: String,
-        refresh: String,
-        scopes: Vec<String>,
-        app_version: String,
-        user_agent: String,
-        env: Option<String>,
-    ) -> Result<ProtonAPIService, ApiError> {
-        info!("start init_api_service");
-        info!(
-            "uid: {}, access: {}, refresh: {}, scopes: {:?}",
-            uid, access, refresh, scopes
-        );
-        let auth = Arc::new(Mutex::new(Auth::internal(
-            uid,
-            Tokens::access(access, refresh, scopes),
-        )));
-        let auth_store_env = env.unwrap_or("atlas".to_string());
-        let store = ProtonWalletAuthStore::from_auth(auth_store_env.as_str(), auth)?;
+    // pub fn init_with(
+    //     uid: String,
+    //     access: String,
+    //     refresh: String,
+    //     scopes: Vec<String>,
+    //     app_version: String,
+    //     user_agent: String,
+    //     env: Option<String>,
+    // ) -> Result<ProtonAPIService, ApiError> {
+    //     info!("start init_api_service");
+    //     info!(
+    //         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
+    //         uid, access, refresh, scopes
+    //     );
+    //     let auth = Arc::new(Mutex::new(Auth::internal(
+    //         uid,
+    //         Tokens::access(access, refresh, scopes),
+    //     )));
+    //     let auth_store_env = env.unwrap_or("atlas".to_string());
+    //     let store = ProtonWalletAuthStore::from_auth(auth_store_env.as_str(), auth)?;
+    //     let box_store = Box::new(store.clone());
+    //     let config = ApiConfig {
+    //         spec: Some((app_version, user_agent)),
+    //         auth: None,
+    //         url_prefix: None,
+    //         env: Some(auth_store_env),
+    //         store: Some(box_store),
+    //     };
 
-        let api = ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
-        Ok(ProtonAPIService {
-            inner: Arc::new(api),
-            store: Arc::new(store),
-        })
-    }
+    //     let api = ProtonWalletApiClient::from_config(config)?;
+    //     Ok(ProtonAPIService {
+    //         inner: Arc::new(api),
+    //         store: Arc::new(store),
+    //     })
+    // }
 
     // build functions
     #[frb(sync)]
-    pub fn new(store: ProtonWalletAuthStore) -> Result<ProtonAPIService, ApiError> {
+    pub fn new(
+        env: String,
+        app_version: String,
+        user_agent: String,
+        store: ProtonWalletAuthStore,
+    ) -> Result<ProtonAPIService, ApiError> {
         info!("start fresh api client");
-        let app_version = "android-wallet@1.0.0";
-        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
-        let inner_api = ProtonWalletApiClient::from_version(
-            app_version.to_string(),
-            user_agent.to_string(),
-            store.clone(),
-        )?;
+        let box_store = Box::new(store.clone());
+        let config = ApiConfig {
+            spec: Some((app_version, user_agent)),
+            auth: None,
+            url_prefix: None,
+            env: Some(env),
+            store: Some(box_store),
+        };
+
+        let inner_api = ProtonWalletApiClient::from_config(config)?;
         let api: ProtonAPIService = ProtonAPIService {
             inner: Arc::new(inner_api),
             store: Arc::new(store),
         };
         Ok(api)
     }
+
+    // #[frb(sync)]
+    // // fromStore
+    // pub fn from_store(store: ProtonWalletAuthStore) -> Result<ProtonAPIService, ApiError> {
+    //     info!("start init_api_service");
+    //     let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+
+    //     let app_version = "android-wallet@1.0.0".to_string();
+    //     let inner_api =
+    //         ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
+    //     let api: ProtonAPIService = ProtonAPIService {
+    //         inner: Arc::new(inner_api),
+    //         store: Arc::new(store),
+    //     };
+    //     Ok(api)
+    // }
 
     pub async fn login(
         &self,
@@ -161,22 +193,22 @@ impl ProtonAPIService {
         logout();
     }
 
-    #[frb(sync)]
-    // initapiserviceauthstore
-    pub fn init_api_service_auth_store(
-        app_version: String,
-        user_agent: String,
-        store: ProtonWalletAuthStore,
-    ) -> Result<ProtonAPIService, ApiError> {
-        info!("start init_api_service");
-        let inner_api =
-            ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
-        let api: ProtonAPIService = ProtonAPIService {
-            inner: Arc::new(inner_api),
-            store: Arc::new(store),
-        };
-        Ok(api)
-    }
+    // #[frb(sync)]
+    // // initapiserviceauthstore
+    // pub fn init_api_service_auth_store(
+    //     app_version: String,
+    //     user_agent: String,
+    //     store: ProtonWalletAuthStore,
+    // ) -> Result<ProtonAPIService, ApiError> {
+    //     info!("start init_api_service");
+    //     let inner_api =
+    //         ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
+    //     let api: ProtonAPIService = ProtonAPIService {
+    //         inner: Arc::new(inner_api),
+    //         store: Arc::new(store),
+    //     };
+    //     Ok(api)
+    // }
 
     /// clients
     pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, ApiError> {
@@ -255,8 +287,13 @@ mod test {
         let uid = "c6d5q57l7kiu7rmvz6x3u6c5nx5z6rx2";
         let access_token = "4hswkfyec64s6v735aa2otb5rktjlgyc";
         let refresh_token = "fslfmtvxzvun6djjanqk4cmjxb5425lo";
-        let store = ProtonWalletAuthStore::new("prod").unwrap();
-        let mut client = ProtonAPIService::new(store).unwrap();
+        let env = "prod";
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+        let app_version = "android-wallet@1.0.0".to_string();
+        let store = ProtonWalletAuthStore::new(env).unwrap();
+
+        let mut client =
+            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
 
         client
             .update_auth(
@@ -266,11 +303,6 @@ mod test {
                 vec!["wallet".to_string(), "account".to_string()],
             )
             .await;
-
-        // let network_client = ProtonUsersClient::new(client.inner.clone());
-
-        // let userinfo = network_client.get_user_settings().await.unwrap();
-
         let settings_client = client.get_settings_client();
         let res = settings_client.get_user_settings().await.unwrap();
 
@@ -279,16 +311,21 @@ mod test {
 
     #[tokio::test]
     async fn test_wallet() -> Result<(), ApiError> {
-        let user = "feng200";
+        let user = "feng100";
         let pass = "12345678";
-        let store = ProtonWalletAuthStore::new("prod")?;
-        let client = ProtonAPIService::new(store).unwrap();
+        let app_version = "android-wallet@1.0.0".to_string();
+        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
+        let env = "atlas";
+        let store = ProtonWalletAuthStore::new(env)?;
+
+        let client =
+            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
 
         let c = client.login(user.to_owned(), pass.to_owned()).await;
 
         match c {
             Ok(res) => {
-                println!("{:?}", res.event_id);
+                println!("{:?}", res.user_id);
             }
             Err(err) => {
                 println!("{:?}", err);
