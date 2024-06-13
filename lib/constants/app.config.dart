@@ -3,19 +3,23 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/script_type.dart';
 
 class AppConfig {
-  CoinType
-      coinType; // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
-  ScriptType
-      scriptType; // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
+  // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
+  CoinType coinType;
+  // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
+  ScriptType scriptType;
   ApiEnv apiEnv;
   String esploraBaseUrl;
-  bool testMode; // TODO:: use this flag to enable / disable test output
-  AppConfig(
-      {required this.coinType,
-      required this.scriptType,
-      required this.apiEnv,
-      required this.esploraBaseUrl,
-      required this.testMode});
+  // TODO:: use this flag to enable / disable test output
+  bool testMode;
+
+  ///
+  AppConfig({
+    required this.coinType,
+    required this.scriptType,
+    required this.apiEnv,
+    required this.esploraBaseUrl,
+    required this.testMode,
+  });
 }
 
 final appConfigForTestNet = AppConfig(
