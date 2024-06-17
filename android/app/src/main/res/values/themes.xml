@@ -30,17 +30,17 @@
         <!--<item name="brand_darken_10">@color/moody_blue</item>-->
         <item name="brand_darken_20">@color/victoria</item>
         <!--<item name="brand_darken_30">@color/meteorite</item>-->
-        <item name="brand_darken_40">@color/meteorite</item> <!-- NONE -->
+        <item name="brand_darken_40">@color/mirage</item>
         <!--<item name="brand_lighten_10">@color/lavender_mist</item>-->
         <item name="brand_lighten_20">@color/whisper_lila</item>
         <!--<item name="brand_lighten_30">@color/titan_white</item>-->
         <item name="brand_lighten_40">@color/titan_white</item>
 
-        <item name="proton_text_accent">?attr/brand_norm</item>
-        <item name="proton_icon_accent">?attr/brand_norm</item>
+        <item name="proton_text_accent">?attr/brand_lighten_20</item>
+        <item name="proton_icon_accent">?attr/brand_lighten_20</item>
 
         <item name="proton_interaction_norm">?attr/brand_norm</item>
-        <item name="proton_interaction_norm_pressed">@color/moody_blue</item>
+        <item name="proton_interaction_norm_pressed">?attr/brand_lighten_20</item>
         <item name="proton_interaction_norm_disabled">@color/titan_white</item>
 
         <item name="materialButtonStyle">@style/ProtonButton.Rounded</item>
