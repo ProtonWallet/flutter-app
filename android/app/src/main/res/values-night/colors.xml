@@ -19,26 +19,26 @@
 <resources>
 
     <color name="shade_100">@color/white</color>
-    <color name="shade_80">@color/cloud_veil</color>
-    <color name="shade_60">@color/cloud_veil</color>
-    <color name="shade_50">@color/frost_whisper</color>
-    <color name="shade_40">@color/mercury</color>
-    <color name="shade_20">@color/mischka</color>
-    <color name="shade_15">@color/misty_silver</color>
-    <color name="shade_10">@color/trout</color>
-    <color name="shade_0">@color/mirage</color>
+    <color name="shade_80">@color/manatee</color>
+    <color name="shade_60">@color/topaz</color>
+    <color name="shade_50">@color/mulled_wine</color>
+    <color name="shade_40">@color/blue_gun_powder</color>
+    <color name="shade_20">@color/blackcurrant</color>
+    <color name="shade_15">@color/bastille</color>
+    <color name="shade_10">@color/baltic_sea</color>
+    <color name="shade_0">@color/cinder</color>
 
     <color name="text_norm">@color/shade_100</color>
     <color name="text_weak">@color/shade_80</color>
     <color name="text_hint">@color/shade_60</color>
     <color name="text_disabled">@color/shade_50</color>
-    <color name="text_inverted">@color/shade_0</color>
+    <color name="text_inverted">@color/shade_10</color>
 
     <color name="icon_norm">@color/shade_100</color>
     <color name="icon_weak">@color/shade_80</color>
     <color name="icon_hint">@color/shade_60</color>
     <color name="icon_disabled">@color/shade_50</color>
-    <color name="icon_inverted">@color/shade_0</color>
+    <color name="icon_inverted">@color/shade_10</color>
 
     <color name="interaction_weak">@color/shade_0</color>
     <color name="interaction_weak_pressed">@color/shade_40</color>
@@ -47,15 +47,15 @@
     <color name="interaction_strong">@color/shade_100</color>
     <color name="interaction_strong_pressed">@color/shade_80</color>
 
-    <color name="background_norm">@color/shade_0</color>
-    <color name="background_secondary">@color/shade_10</color>
-    <color name="background_deep">@color/shade_20</color>
+    <color name="background_norm">@color/blue_cinder</color> <!-- shade10-->
+    <color name="background_secondary">@color/ebony_clay</color> <!-- mirage -->
+    <color name="background_deep">@color/shade_0</color>
 
     <color name="separator_norm">@color/shade_20</color>
 
-    <color name="notification_norm">@color/shade_100</color> <!-- brand_norm? -->
-    <color name="notification_error">@color/bittersweet</color>
-    <color name="notification_success">@color/mountain_meadow</color>
-    <color name="notification_warning">@color/tree_poppy</color>
+    <color name="notification_norm">@color/titan_white</color>
+    <color name="notification_error">@color/vivid_tangerine</color>
+    <color name="notification_success">@color/tara</color>
+    <color name="notification_warning">@color/texas_rose</color>
 
 </resources>
