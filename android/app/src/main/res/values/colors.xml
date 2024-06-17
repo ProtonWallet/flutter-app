@@ -29,10 +29,14 @@
     <color name="cloud_veil">#F3F5F6</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="blue_cinder">#161622</color>
     <color name="midnight_pulse">#222247</color>
     <color name="port_gore">#241C43</color>
+    <color name="ebony_clay">#272740</color>
+    <color name="blue_gun_powder">#403C50</color>
     <color name="mulled_wine">#524D68</color>
     <color name="topaz">#747088</color>
+    <color name="manatee">#9395A4</color>
     <color name="cadet_blue">#A7A4B5</color>
 
     <color name="meteorite">#372580</color>
@@ -44,6 +48,7 @@
     <color name="titan_white">#E0E2FF</color>
 
     <color name="bittersweet">#FF6464</color>
+    <color name="vivid_tangerine">#FF8A8A</color>
     <color name="tree_poppy">#F7931A</color>
     <color name="texas_rose">#FFC483</color>
     <color name="flamingo">#EB8DD6</color>
