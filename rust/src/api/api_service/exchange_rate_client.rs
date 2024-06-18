@@ -1,5 +1,5 @@
 use super::proton_api_service::ProtonAPIService;
-use crate::{errors::ApiError, exchange_rate::ProtonExchangeRate};
+use crate::{errors::BridgeError, exchange_rate::ProtonExchangeRate};
 use andromeda_api::{core::ApiClient, settings::FiatCurrencySymbol as FiatCurrency};
 use std::sync::Arc;
 
@@ -20,7 +20,7 @@ impl ExchangeRateClient {
         &self,
         fiat_currency: FiatCurrency,
         time: Option<u64>,
-    ) -> Result<ProtonExchangeRate, ApiError> {
+    ) -> Result<ProtonExchangeRate, BridgeError> {
         let result = self.inner.get_exchange_rate(fiat_currency, time).await;
         match result {
             Ok(response) => Ok(response.into()),

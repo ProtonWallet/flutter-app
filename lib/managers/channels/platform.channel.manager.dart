@@ -90,8 +90,9 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     }
     const envKey = "env-key";
     try {
-      await toNativeChannel.invokeMethod(
-          'native.initialize.core.environment', {envKey: env.toString()});
+      var strEnv = env.toString();
+      await toNativeChannel
+          .invokeMethod('native.initialize.core.environment', {envKey: strEnv});
     } on Exception catch (e) {
       logger.e("Failed to initialize native environment: '${e.toString()}'.");
     }

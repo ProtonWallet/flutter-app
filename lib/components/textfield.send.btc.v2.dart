@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldSendBTCV2 extends StatefulWidget {

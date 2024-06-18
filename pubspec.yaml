@@ -111,6 +111,10 @@ dependencies:
   dart_style: ^2.3.6
   envied: ^0.5.4+1
   webview_flutter: ^4.8.0
+  #
+  country_picker: ^2.0.26
+  currency_picker: ^2.0.21
+  card_loading: ^0.3.2
 
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)

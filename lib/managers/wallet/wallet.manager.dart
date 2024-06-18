@@ -667,7 +667,7 @@ class WalletManager implements Manager {
   static Future<void> handleBitcoinAddressRequests(
       Wallet wallet, String serverWalletID, String serverAccountID) async {
     // TODO:: compute signature!
-    List<WalletBitcoinAddress> walletBitcoinAddresses =
+    List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
@@ -676,7 +676,7 @@ class WalletManager implements Manager {
     AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerAccountID(serverAccountID);
     if (accountModel != null) {
-      for (WalletBitcoinAddress walletBitcoinAddress
+      for (ApiWalletBitcoinAddress walletBitcoinAddress
           in walletBitcoinAddresses) {
         if (walletBitcoinAddress.bitcoinAddress == null) {
           if (hasSyncedBitcoinAddressIndex == false) {
@@ -755,7 +755,7 @@ class WalletManager implements Manager {
       Wallet wallet, String serverWalletID, String serverAccountID) async {
 // TODO:: compute signature!
     int unFetchedBitcoinAddressCount = 0;
-    List<WalletBitcoinAddress> walletBitcoinAddresses =
+    List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
@@ -770,7 +770,7 @@ class WalletManager implements Manager {
     addressKeys = addressKeys
         .where((addressKey) => addressIDs.contains(addressKey.id))
         .toList();
-    for (WalletBitcoinAddress walletBitcoinAddress in walletBitcoinAddresses) {
+    for (var walletBitcoinAddress in walletBitcoinAddresses) {
       try {
         String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
         int addressIndex = walletBitcoinAddress.bitcoinAddressIndex ?? -1;
