@@ -84,8 +84,7 @@ class WalletDaoImpl extends WalletDao {
   }
 
   @override
-  Future<void> deleteByServerID(String id) {
-    // TODO: implement deleteByServerID
-    throw UnimplementedError();
+  Future<void> deleteByServerID(String id) async{
+    await db.delete(tableName, where: 'serverWalletID = ?', whereArgs: [id]);
   }
 }

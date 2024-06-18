@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -16,12 +17,12 @@ import 'package:wallet/components/home/btc.actions.view.dart';
 import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -31,12 +32,15 @@ import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
-import 'package:wallet/scenes/home.v3/sidebar.wallet.items.old.dart';
+import 'package:wallet/scenes/home.v3/sidebar.wallet.items.dart';
 import 'package:wallet/scenes/home.v3/transaction.list.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -72,280 +76,262 @@ class HomeView extends ViewBase<HomeViewModel> {
     );
   }
 
-  Center buildContent(BuildContext context) {
-    return Center(
-      child: ListView(scrollDirection: Axis.vertical, children: [
-        Container(
-            margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (Provider.of<ProtonWalletProvider>(context)
-                            .protonWallet
-                            .currentAccount ==
-                        null)
-                      Text(S.of(context).total_accounts,
-                          style: FontManager.captionSemiBold(
-                              ProtonColors.textNorm)),
-                    AnimatedFlipCounter(
-                        prefix: Provider.of<UserSettingProvider>(context)
-                            .getFiatCurrencyName(),
-                        value: ExchangeCalculator.getNotionalInFiatCurrency(
-                            Provider.of<UserSettingProvider>(context)
-                                .walletUserSetting
-                                .exchangeRate,
-                            Provider.of<ProtonWalletProvider>(context)
-                                .protonWallet
-                                .currentBalance),
-                        fractionDigits: defaultDisplayDigits,
-                        textStyle: FontManager.balanceInFiatCurrency(
-                            ProtonColors.textNorm)),
-                    Text(
-                        ExchangeCalculator.getBitcoinUnitLabel(
-                            Provider.of<UserSettingProvider>(context)
-                                .walletUserSetting
-                                .bitcoinUnit,
-                            Provider.of<ProtonWalletProvider>(context)
-                                .protonWallet
-                                .currentBalance
-                                .toInt()),
-                        style: FontManager.balanceInBTC(ProtonColors.textWeak))
-                  ],
-                ),
-                const SizedBox(width: 4),
-                Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .isSyncing()
-                    ? CustomLoadingWithIcon(
-                        icon: Icon(
-                          Icons.refresh_rounded,
-                          size: 22,
-                          color: ProtonColors.textWeak,
-                        ),
-                        durationInMilliSeconds: 800,
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          Provider.of<ProtonWalletProvider>(context,
-                                  listen: false)
-                              .syncWallet();
-                        },
-                        child: Icon(
-                          Icons.refresh_rounded,
-                          size: 22,
-                          color: ProtonColors.textWeak,
-                        ))
-              ]),
-              const SizedBox(
-                height: 20,
-              ),
-              BtcTitleActionsView(
-                  price: viewModel.btcPriceInfo.price,
-                  priceChange: viewModel.btcPriceInfo.priceChange24h,
-                  onSend: () {
-                    if (Provider.of<ProtonWalletProvider>(context,
-                                listen: false)
-                            .protonWallet
-                            .currentWallet !=
-                        null) {
-                      viewModel.move(NavID.send);
-                    } else {
-                      CommonHelper.showSnackbar(
-                          context, S.of(context).please_select_wallet_first);
-                    }
-                  },
-                  onBuy: () {
-                    if (Provider.of<ProtonWalletProvider>(context,
-                                listen: false)
-                            .protonWallet
-                            .currentAccount !=
-                        null) {
-                      viewModel.move(NavID.buy);
-                    } else {
-                      LocalToast.showErrorToast(context,
-                          "Will add it after add wallet account switch");
-                    }
-                  },
-                  onReceive: () {
-                    if (Provider.of<ProtonWalletProvider>(context,
-                                listen: false)
-                            .protonWallet
-                            .currentWallet !=
-                        null) {
-                      move(context, NavID.receive);
-                    } else {
-                      CommonHelper.showSnackbar(
-                          context, S.of(context).please_select_wallet_first);
-                    }
-                  }),
-              const SizedBox(
-                height: 10,
-              ),
-              if (Provider.of<ProtonWalletProvider>(context, listen: false)
-                  .protonWallet
-                  .historyTransactions
-                  .isEmpty)
-                Center(
-                    child: Underline(
-                        onTap: () {
-                          if (Provider.of<ProtonWalletProvider>(context,
-                                      listen: false)
-                                  .protonWallet
-                                  .currentWallet !=
-                              null) {
-                            SecureYourWalletSheet.show(context, viewModel);
-                          }
-                        },
-                        color: ProtonColors.brandLighten20,
-                        child: Text(S.of(context).secure_your_wallet,
-                            style: FontManager.body2Median(
-                                ProtonColors.brandLighten20)))),
-              if (viewModel.currentTodoStep < viewModel.totalTodoSteps &&
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
-                      .protonWallet
-                      .historyTransactions
-                      .isNotEmpty)
-                CustomExpansion(
-                    totalSteps: viewModel.totalTodoSteps,
-                    currentStep: viewModel.currentTodoStep,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomTodos(
-                          title: S.of(context).todos_backup_proton_account,
-                          checked: viewModel.hadBackupProtonAccount,
-                          callback: () {}),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomTodos(
-                          title: S.of(context).todos_backup_wallet_mnemonic,
-                          checked: viewModel.hadBackup,
-                          callback: () {
-                            move(context, NavID.setupBackup);
-                          }),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomTodos(
-                          title: S.of(context).todos_setup_2fa,
-                          checked: viewModel.hadSetup2FA,
-                          callback: () {}),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                    ]),
-              const SizedBox(
-                height: 20,
-              ),
+  Widget buildContent(BuildContext context) {
+    bool walletView = true;
+
+    /// TODO:: fix me
+    bool hasTransaction = true;
+
+    /// TODO:: fix me
+    return BlocBuilder<WalletTransactionBloc, WalletTransactionState>(
+        bloc: viewModel.walletTransactionBloc,
+        builder: (context, state) {
+          return Center(
+            child: ListView(scrollDirection: Axis.vertical, children: [
               Container(
-                  decoration: BoxDecoration(
-                    color: ProtonColors.white,
-                    borderRadius: BorderRadius.circular(24.0),
-                  ),
-                  padding: const EdgeInsets.only(bottom: 20, top: 10),
-                  child: Column(children: [
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                            onTap: () {
-                              viewModel.updateBodyListStatus(
-                                  BodyListStatus.transactionList);
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (walletView)
+                                    Text(S.of(context).total_accounts,
+                                        style: FontManager.captionSemiBold(
+                                            ProtonColors.textNorm)),
+                                  AnimatedFlipCounter(
+                                      prefix: Provider.of<UserSettingProvider>(
+                                              context)
+                                          .getFiatCurrencyName(),
+                                      value: ExchangeCalculator
+                                          .getNotionalInFiatCurrency(
+                                        Provider.of<UserSettingProvider>(
+                                                context)
+                                            .walletUserSetting
+                                            .exchangeRate,
+                                        state.balanceInSatoshi,
+                                      ),
+
+                                      /// TODO:: use actual balance
+                                      fractionDigits: defaultDisplayDigits,
+                                      textStyle:
+                                          FontManager.balanceInFiatCurrency(
+                                              ProtonColors.textNorm)),
+                                  Text(
+                                      ExchangeCalculator.getBitcoinUnitLabel(
+                                        Provider.of<UserSettingProvider>(
+                                                context)
+                                            .walletUserSetting
+                                            .bitcoinUnit,
+                                        state.balanceInSatoshi,
+                                      ),
+
+                                      /// TODO:: use actual balance
+                                      style: FontManager.balanceInBTC(
+                                          ProtonColors.textWeak))
+                                ],
+                              ),
+                              const SizedBox(width: 4),
+                              state.isSyncing
+                                  ? CustomLoadingWithIcon(
+                                      icon: Icon(
+                                        Icons.refresh_rounded,
+                                        size: 22,
+                                        color: ProtonColors.textWeak,
+                                      ),
+                                      durationInMilliSeconds: 800,
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        viewModel.walletTransactionBloc
+                                            .syncWallet();
+                                      },
+                                      child: Icon(
+                                        Icons.refresh_rounded,
+                                        size: 22,
+                                        color: ProtonColors.textWeak,
+                                      ))
+                            ]),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        BtcTitleActionsView(
+                            price: viewModel.btcPriceInfo.price,
+                            priceChange: viewModel.btcPriceInfo.priceChange24h,
+                            onSend: () {
+                              viewModel.move(NavID.send);
                             },
-                            child: Text(S.of(context).transactions,
-                                style: FontManager.body1Median(
-                                    ProtonColors.protonBlue))),
-                        const SizedBox(width: 10),
-                        Text("|",
-                            style:
-                                FontManager.body1Median(ProtonColors.textNorm)),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                            onTap: () {
-                              viewModel.updateBodyListStatus(
-                                  BodyListStatus.bitcoinAddressList);
+                            onBuy: () {
+                              viewModel.move(NavID.buy);
                             },
-                            child: Text(S.of(context).bitcoin_address,
-                                style: FontManager.body1Median(
-                                    ProtonColors.protonBlue))),
-                      ],
-                    ),
-                    viewModel.bodyListStatus == BodyListStatus.transactionList
-                        ? TransactionList(viewModel: viewModel)
-                        : BitcoinAddressList(viewModel: viewModel),
-                  ])),
-              if (Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter
-                  .isEmpty)
-                Column(children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    ButtonV5(
-                        onPressed: () {
-                          viewModel.move(NavID.receive);
-                        },
-                        backgroundColor: ProtonColors.white,
-                        text: S.of(context).receive,
-                        width: MediaQuery.of(context).size.width > 424
-                            ? 180
-                            : MediaQuery.of(context).size.width / 2 -
-                                defaultPadding * 2,
-                        textStyle:
-                            FontManager.body1Median(ProtonColors.protonBlue),
-                        height: 48),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    ButtonV5(
-                        onPressed: () {},
-                        backgroundColor: ProtonColors.backgroundBlack,
-                        text: S.of(context).buy,
-                        width: MediaQuery.of(context).size.width > 424
-                            ? 180
-                            : MediaQuery.of(context).size.width / 2 -
-                                defaultPadding * 2,
-                        textStyle: FontManager.body1Median(
-                            ProtonColors.backgroundSecondary),
-                        height: 48),
-                  ]),
-                ]),
-              const SizedBox(height: 20),
-              if (viewModel.protonFeedItems.isNotEmpty &&
-                  Provider.of<ProtonWalletProvider>(context)
-                      .protonWallet
-                      .historyTransactionsAfterFilter
-                      .isEmpty)
-                Text(S.of(context).explore_wallet,
-                    style: FontManager.body1Median(ProtonColors.textNorm)),
-              const SizedBox(height: 10),
-              if (Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter
-                  .isEmpty)
-                //Discover feeds
-                DiscoverFeedsView(
-                  onTap: (String link) {
-                    launchUrl(Uri.parse(link));
-                  },
-                  protonFeedItems: viewModel.protonFeedItems,
-                ),
-              const SizedBox(height: 40),
-            ])),
-      ]),
-    );
+                            onReceive: () {
+                              move(context, NavID.receive);
+                            }),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        if (hasTransaction == false)
+                          Center(
+                              child: Underline(
+                                  onTap: () {
+                                    SecureYourWalletSheet.show(
+                                        context, viewModel);
+                                  },
+                                  color: ProtonColors.brandLighten20,
+                                  child: Text(S.of(context).secure_your_wallet,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.brandLighten20)))),
+                        if (viewModel.currentTodoStep <
+                                viewModel.totalTodoSteps &&
+                            hasTransaction)
+                          CustomExpansion(
+                              totalSteps: viewModel.totalTodoSteps,
+                              currentStep: viewModel.currentTodoStep,
+                              children: [
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                CustomTodos(
+                                    title: S
+                                        .of(context)
+                                        .todos_backup_proton_account,
+                                    checked: viewModel.hadBackupProtonAccount,
+                                    callback: () {}),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                CustomTodos(
+                                    title: S
+                                        .of(context)
+                                        .todos_backup_wallet_mnemonic,
+                                    checked: viewModel.hadBackup,
+                                    callback: () {
+                                      move(context, NavID.setupBackup);
+                                    }),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                CustomTodos(
+                                    title: S.of(context).todos_setup_2fa,
+                                    checked: viewModel.hadSetup2FA,
+                                    callback: () {}),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                              ]),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: ProtonColors.white,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            padding: const EdgeInsets.only(bottom: 20, top: 10),
+                            child: Column(children: [
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        viewModel.updateBodyListStatus(
+                                            BodyListStatus.transactionList);
+                                      },
+                                      child: Text(S.of(context).transactions,
+                                          style: FontManager.body1Median(
+                                              ProtonColors.protonBlue))),
+                                  const SizedBox(width: 10),
+                                  Text("|",
+                                      style: FontManager.body1Median(
+                                          ProtonColors.textNorm)),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                      onTap: () {
+                                        viewModel.updateBodyListStatus(
+                                            BodyListStatus.bitcoinAddressList);
+                                      },
+                                      child: Text(S.of(context).bitcoin_address,
+                                          style: FontManager.body1Median(
+                                              ProtonColors.protonBlue))),
+                                ],
+                              ),
+                              viewModel.bodyListStatus ==
+                                      BodyListStatus.transactionList
+                                  ? TransactionList(viewModel: viewModel)
+                                  : BitcoinAddressList(viewModel: viewModel),
+                            ])),
+                        if (hasTransaction == false)
+                          Column(children: [
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ButtonV5(
+                                      onPressed: () {
+                                        viewModel.move(NavID.receive);
+                                      },
+                                      backgroundColor: ProtonColors.white,
+                                      text: S.of(context).receive,
+                                      width: MediaQuery.of(context).size.width >
+                                              424
+                                          ? 180
+                                          : MediaQuery.of(context).size.width /
+                                                  2 -
+                                              defaultPadding * 2,
+                                      textStyle: FontManager.body1Median(
+                                          ProtonColors.protonBlue),
+                                      height: 48),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  ButtonV5(
+                                      onPressed: () {},
+                                      backgroundColor:
+                                          ProtonColors.backgroundBlack,
+                                      text: S.of(context).buy,
+                                      width: MediaQuery.of(context).size.width >
+                                              424
+                                          ? 180
+                                          : MediaQuery.of(context).size.width /
+                                                  2 -
+                                              defaultPadding * 2,
+                                      textStyle: FontManager.body1Median(
+                                          ProtonColors.backgroundSecondary),
+                                      height: 48),
+                                ]),
+                          ]),
+                        const SizedBox(height: 20),
+                        if (viewModel.protonFeedItems.isNotEmpty &&
+                            hasTransaction == false)
+                          Text(S.of(context).explore_wallet,
+                              style: FontManager.body1Median(
+                                  ProtonColors.textNorm)),
+                        const SizedBox(height: 10),
+                        if (hasTransaction == false)
+                          //Discover feeds
+                          DiscoverFeedsView(
+                            onTap: (String link) {
+                              launchUrl(Uri.parse(link));
+                            },
+                            protonFeedItems: viewModel.protonFeedItems,
+                          ),
+                        const SizedBox(height: 40),
+                      ])),
+            ]),
+          );
+        });
   }
 
   Drawer buildDrawer(BuildContext context) {
@@ -374,25 +360,59 @@ class HomeView extends ViewBase<HomeViewModel> {
                 : Brightness.dark,
       ),
       backgroundColor: ProtonColors.backgroundProton,
-      title: Text(
-        Provider.of<ProtonWalletProvider>(context).getDisplayName() ??
-            S.of(context).proton_wallet,
-        style: FontManager.body2Median(ProtonColors.textNorm),
-      ),
+      title: BlocBuilder<WalletListBloc, WalletListState>(
+          bloc: viewModel.walletBloc,
+          builder: (context, state) {
+            String walletName = "";
+            if (state.initialized) {
+              for (WalletMenuModel walletMenuModel in state.walletsModel) {
+                if (walletMenuModel.isSelected) {
+                  walletName = walletMenuModel.walletName;
+                }
+                for (AccountMenuModel accountMenuModel
+                    in walletMenuModel.accounts) {
+                  if (accountMenuModel.isSelected) {
+                    if (walletMenuModel.accounts.length > 1) {
+                      walletName =
+                          "${walletMenuModel.walletName} - ${accountMenuModel.label}";
+                    } else {
+                      walletName = walletMenuModel.walletName;
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+            return Text(
+              walletName.isNotEmpty ? walletName : S.of(context).proton_wallet,
+              style: FontManager.body2Median(ProtonColors.textNorm),
+            );
+          }),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
-              fit: BoxFit.fill, width: 40, height: 40),
-          onPressed: () {
-            // TODO:: wallet settings could be a new View/view model. move to wallet settings.
-            /// temperay
-            var context = Coordinator.rootNavigatorKey.currentContext;
-            if (context != null) {
-              WalletSettingSheet.show(context, viewModel);
-            }
-          },
-        )
+        BlocBuilder<WalletListBloc, WalletListState>(
+            bloc: viewModel.walletBloc,
+            builder: (context, state) {
+              return IconButton(
+                icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
+                    fit: BoxFit.fill, width: 40, height: 40),
+                onPressed: () {
+                  // TODO:: wallet settings could be a new View/view model. move to wallet settings.
+                  /// temperay
+                  var context = Coordinator.rootNavigatorKey.currentContext;
+                  if (context != null) {
+                    for (WalletMenuModel walletMenuModel
+                        in state.walletsModel) {
+                      if (walletMenuModel.isSelected) {
+                        WalletSettingSheet.show(
+                            context, viewModel, walletMenuModel);
+                        break;
+                      }
+                    }
+                  }
+                },
+              );
+            }),
       ],
       leading: Builder(
         builder: (BuildContext context) {
@@ -416,264 +436,267 @@ class HomeView extends ViewBase<HomeViewModel> {
 
   void move(BuildContext context, NavID identifier) {
     if (context.mounted) {
-      if (CommonHelper.checkSelectWallet(context)) {
-        viewModel.move(identifier);
-      }
+      viewModel.move(identifier);
     }
   }
 }
 
 Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
-  return SafeArea(
-      child: SingleChildScrollView(
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 30),
-                    // logo section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset("assets/images/icon/logo_text.svg",
-                                fit: BoxFit.fill, width: 146.41, height: 18),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ]),
-                    ),
-                    //account info section
-                    AccountInfoV2(
-                        displayName: viewModel.displayName,
-                        userEmail: viewModel.userEmail),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(thickness: 0.2),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: defaultPadding),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                S.of(context).wallets,
-                                style: FontManager.body2Regular(
-                                    ProtonColors.textHint),
-                              ),
-                              GestureDetector(
-                                  onTap: () {
-                                    if (Provider.of<ProtonWalletProvider>(
-                                                context,
-                                                listen: false)
-                                            .protonWallet
-                                            .wallets
-                                            .length <
-                                        freeUserWalletLimit) {
-                                      if (viewModel.currentSize ==
-                                          ViewSize.mobile) {
-                                        Navigator.of(context).pop();
-                                      }
-                                      viewModel.nameTextController.text = "";
-                                      viewModel.passphraseTextController.text =
-                                          "";
-                                      viewModel.passphraseConfirmTextController
-                                          .text = "";
-                                      OnboardingGuideSheet.show(
-                                          context, viewModel);
-                                    } else {
-                                      UpgradeIntroSheet.show(
-                                          context, viewModel);
-                                    }
-                                  },
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/ic-plus-circle.svg",
+  /// TODO:: fixme
+  return BlocBuilder<WalletListBloc, WalletListState>(
+      bloc: viewModel.walletBloc,
+      builder: (context, state) {
+        return SafeArea(
+            child: SingleChildScrollView(
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(height: 30),
+                          // logo section
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                      "assets/images/icon/logo_text.svg",
                                       fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20)),
-                            ])),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // wallet
-                    sidebarWalletItems(context, viewModel),
-
-                    /// new side bar.
-                    // SidebarWalletItems(
-                    //   walletListBloc: viewModel.walletBloc,
-                    //   // select wallet
-                    //   selectAccount: (wallet, account) {
-                    //     if (viewModel.currentSize == ViewSize.mobile) {
-                    //       Navigator.of(context).pop();
-                    //     }
-                    //     viewModel.selectAccount(wallet, account);
-                    //   },
-                    //   selectWallet: (wallet) {
-                    //     if (viewModel.currentSize == ViewSize.mobile) {
-                    //       Navigator.of(context).pop();
-                    //     }
-                    //     viewModel.selectWallet(wallet);
-                    //   },
-                    //   // delete wallet when un valid
-                    //   onDelete: (wallet, hasBalance, isInvalidWallet) {
-                    //     DeleteWalletSheet.show(
-                    //         context, viewModel, wallet, false,
-                    //         isInvalidWallet: true);
-                    //   },
-                    //   // update passphrase
-                    //   updatePassphrase: (wallet) {
-                    //     PassphraseSheet.show(context, viewModel, wallet);
-                    //   },
-                    //   // add new account into wallet
-                    //   addAccount: (wallet) {
-                    //     AddWalletAccountSheet.show(context, viewModel, wallet);
-                    //   },
-                    // ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(thickness: 0.2),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: defaultPadding),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(S.of(context).more,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textHint)),
-                            ])),
-                    ListTile(
-                        onTap: () async {
-                          UpgradeIntroSheet.show(context, viewModel);
-                        },
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-diamondwallet_plus.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).wallet_plus,
-                                style: FontManager.body2Median(
-                                    ProtonColors.drawerWalletPlus)))),
-                    ListTile(
-                        onTap: () {
-                          if (viewModel.currentSize == ViewSize.mobile) {
-                            Navigator.of(context).pop();
-                          }
-                          viewModel.move(NavID.discover);
-                        },
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-squares-in-squarediscover.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).discover,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    ListTile(
-                        onTap: () {},
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-cog-wheel.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).settings_title,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    ListTile(
-                        onTap: () {
-                          if (viewModel.currentSize == ViewSize.mobile) {
-                            Navigator.of(context).pop();
-                          }
-                          viewModel.move(NavID.securitySetting);
-                        },
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-shield.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).security,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    ListTile(
-                        onTap: () {},
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-arrow-rotate-right.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).recovery,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    ListTile(
-                        onTap: () {
-                          viewModel.move(NavID.natvieReportBugs);
-                        },
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-bugreport.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).report_a_problem,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    ListTile(
-                        onTap: () async {
-                          await viewModel.logout();
-                        },
-                        leading: SvgPicture.asset(
-                            "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
-                            fit: BoxFit.fill,
-                            width: 20,
-                            height: 20),
-                        title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(S.of(context).logout,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint)))),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // TODO:: use packageinfo but need fix dependency issue
-                    //   Center(
-                    //       child: Container(
-                    //           padding: const EdgeInsets.only(bottom: 10),
-                    //           child: Text(
-                    //             "${S.of(context).app_name} ${viewModel.packageInfo!.version} (${viewModel.packageInfo!.buildNumber})",
-                    //             style: FontManager.captionRegular(
-                    //                 ProtonColors.textHint),
-                    //           ))),
-                    Center(
-                        child: Container(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              "${S.of(context).app_name} 1.0.0 (32)",
-                              style: FontManager.captionRegular(
-                                  ProtonColors.textHint),
-                            ))),
-                  ]))));
+                                      width: 146.41,
+                                      height: 18),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ]),
+                          ),
+                          //account info section
+                          AccountInfoV2(
+                              displayName: viewModel.displayName,
+                              userEmail: viewModel.userEmail),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Divider(thickness: 0.2),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      S.of(context).wallets,
+                                      style: FontManager.body2Regular(
+                                          ProtonColors.textHint),
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          if (state.walletsModel.length <
+                                              freeUserWalletLimit) {
+                                            if (viewModel.currentSize ==
+                                                ViewSize.mobile) {
+                                              Navigator.of(context).pop();
+                                            }
+                                            viewModel.nameTextController.text =
+                                                "";
+                                            viewModel.passphraseTextController
+                                                .text = "";
+                                            viewModel
+                                                .passphraseConfirmTextController
+                                                .text = "";
+                                            OnboardingGuideSheet.show(
+                                                context, viewModel);
+                                          } else {
+                                            UpgradeIntroSheet.show(
+                                                context, viewModel);
+                                          }
+                                        },
+                                        child: SvgPicture.asset(
+                                            "assets/images/icon/ic-plus-circle.svg",
+                                            fit: BoxFit.fill,
+                                            width: 20,
+                                            height: 20)),
+                                  ])),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // wallet
+                          SidebarWalletItems(
+                            walletListBloc: viewModel.walletBloc,
+                            // select wallet
+                            selectAccount: (wallet, account) {
+                              if (viewModel.currentSize == ViewSize.mobile) {
+                                Navigator.of(context).pop();
+                              }
+                              viewModel.selectAccount(wallet, account);
+                            },
+                            selectWallet: (wallet) {
+                              if (viewModel.currentSize == ViewSize.mobile) {
+                                Navigator.of(context).pop();
+                              }
+                              viewModel.selectWallet(wallet);
+                            },
+                            // delete wallet when un valid
+                            onDelete: (wallet, hasBalance, isInvalidWallet) {
+                              DeleteWalletSheet.show(
+                                  context, viewModel, wallet, false,
+                                  isInvalidWallet: true);
+                            },
+                            // update passphrase
+                            updatePassphrase: (wallet) {
+                              PassphraseSheet.show(
+                                  context, viewModel, wallet.walletModel);
+                            },
+                            // add new account into wallet
+                            addAccount: (wallet) {
+                              AddWalletAccountSheet.show(
+                                  context, viewModel, wallet.walletModel);
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Divider(thickness: 0.2),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(S.of(context).more,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textHint)),
+                                  ])),
+                          ListTile(
+                              onTap: () async {
+                                UpgradeIntroSheet.show(context, viewModel);
+                              },
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-diamondwallet_plus.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).wallet_plus,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.drawerWalletPlus)))),
+                          ListTile(
+                              onTap: () {
+                                if (viewModel.currentSize == ViewSize.mobile) {
+                                  Navigator.of(context).pop();
+                                }
+                                viewModel.move(NavID.discover);
+                              },
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-squares-in-squarediscover.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).discover,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          ListTile(
+                              onTap: () {},
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-cog-wheel.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).settings_title,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          ListTile(
+                              onTap: () {
+                                if (viewModel.currentSize == ViewSize.mobile) {
+                                  Navigator.of(context).pop();
+                                }
+                                viewModel.move(NavID.securitySetting);
+                              },
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-shield.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).security,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          ListTile(
+                              onTap: () {},
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-arrow-rotate-right.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).recovery,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          ListTile(
+                              onTap: () {
+                                viewModel.move(NavID.natvieReportBugs);
+                              },
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-bugreport.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).report_a_problem,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          ListTile(
+                              onTap: () async {
+                                await viewModel.logout();
+                              },
+                              leading: SvgPicture.asset(
+                                  "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
+                                  fit: BoxFit.fill,
+                                  width: 20,
+                                  height: 20),
+                              title: Transform.translate(
+                                  offset: const Offset(-8, 0),
+                                  child: Text(S.of(context).logout,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textHint)))),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // TODO:: use packageinfo but need fix dependency issue
+                          //   Center(
+                          //       child: Container(
+                          //           padding: const EdgeInsets.only(bottom: 10),
+                          //           child: Text(
+                          //             "${S.of(context).app_name} ${viewModel.packageInfo!.version} (${viewModel.packageInfo!.buildNumber})",
+                          //             style: FontManager.captionRegular(
+                          //                 ProtonColors.textHint),
+                          //           ))),
+                          Center(
+                              child: Container(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "${S.of(context).app_name} 1.0.0 (32)",
+                                    style: FontManager.captionRegular(
+                                        ProtonColors.textHint),
+                                  ))),
+                        ]))));
+      });
 }
 
 Widget showUpdateWalletPassphraseDialog(

@@ -29,6 +29,10 @@ abstract class TransactionInfoDao extends TransactionInfoDatabase
       Uint8List externalTransactionID,
       String serverWalletID,
       String serverAccountID);
+
+  Future<List<TransactionInfoModel>> findAllByServerAccountID(
+    String serverAccountID,
+  );
 }
 
 class TransactionInfoDaoImpl extends TransactionInfoDao {
@@ -151,6 +155,20 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
       return TransactionInfoModel.fromMap(maps.first);
     }
     return null;
+  }
+
+  @override
+  Future<List<TransactionInfoModel>> findAllByServerAccountID(
+      String serverAccountID) async {
+    List<TransactionInfoModel> results = [];
+    List<Map<String, dynamic>> maps = await db.query(tableName,
+        where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
+    if (maps.isNotEmpty) {
+      for (var map in maps) {
+        results.add(TransactionInfoModel.fromMap(map));
+      }
+    }
+    return results;
   }
 
   @override

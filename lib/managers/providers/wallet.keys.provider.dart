@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
@@ -12,6 +14,10 @@ class WalletKeysProvider implements DataProvider {
   List<WalletKey>? walletKeys;
 
   WalletKeysProvider(this.storage, this.walletClient);
+
+  @override
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
 
   Future<WalletKey?> getWalletKey(String walletID) async {
     if (walletKeys != null) {
@@ -95,5 +101,7 @@ class WalletKeysProvider implements DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    dataUpdateController.close();
+  }
 }

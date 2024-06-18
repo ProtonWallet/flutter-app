@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -32,16 +31,18 @@ import 'package:wallet/scenes/core/coordinator.dart';
 class EventLoop implements Manager {
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
+  final DataProviderManager dataProviderManager;
   static const int loopDuration = 10;
   bool _isRunning = false;
   String latestEventId = "";
   late UserSettingProvider userSettingProvider;
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
 
-  // data providar used when events patch to db
-  late DataProviderManager dataProviderManager;
-
-  EventLoop(this.protonWalletManager, this.userManager);
+  EventLoop(
+    this.protonWalletManager,
+    this.userManager,
+    this.dataProviderManager,
+  );
 
   Future<void> start() async {
     if (!_isRunning) {
@@ -93,8 +94,9 @@ class EventLoop implements Manager {
           for (WalletEvent walletEvent in event.walletEvents!) {
             if (walletEvent.action == 0) {
               String serverWalletID = walletEvent.id;
-              await WalletManager.deleteWalletByServerWalletID(
-                  serverWalletID); // Will also delete account
+              await dataProviderManager.walletDataProvider
+                  .deleteWalletByServerID(
+                      serverWalletID); // Will also delete account
               continue;
             }
             ApiWallet? walletData = walletEvent.wallet;
@@ -149,17 +151,19 @@ class EventLoop implements Manager {
               } catch (e) {
                 logger.e(e.toString());
               }
-              await WalletManager.insertOrUpdateWallet(
-                  userID: 0,
-                  name: decryptedWalletName,
-                  encryptedMnemonic: walletData.mnemonic!,
-                  passphrase: walletData.hasPassphrase,
-                  imported: walletData.isImported,
-                  priority: walletData.priority,
-                  status: status,
-                  type: walletData.type,
-                  fingerprint: walletData.fingerprint ?? "",
-                  serverWalletID: serverWalletID);
+              await dataProviderManager.walletDataProvider.insertOrUpdateWallet(
+                userID: 0,
+                name: decryptedWalletName,
+                encryptedMnemonic: walletData.mnemonic!,
+                passphrase: walletData.hasPassphrase,
+                imported: walletData.isImported,
+                priority: walletData.priority,
+                status: status,
+                type: walletData.type,
+                fingerprint: walletData.fingerprint ?? "",
+                serverWalletID: serverWalletID,
+                publickey: null,
+              );
             }
           }
         }
@@ -168,8 +172,8 @@ class EventLoop implements Manager {
               in event.walletAccountEvents!) {
             if (walletAccountEvent.action == 0) {
               String serverAccountID = walletAccountEvent.id;
-              await WalletManager.deleteWalletAccountByServerAccountID(
-                  serverAccountID);
+              await dataProviderManager.walletDataProvider
+                  .deleteWalletAccountByServerID(serverAccountID);
               continue;
             }
             ApiWalletAccount? account = walletAccountEvent.walletAccount;
@@ -177,14 +181,16 @@ class EventLoop implements Manager {
               int walletID = await WalletManager.getWalletIDByServerWalletID(
                   account.walletId);
               int internal = 0;
-              WalletManager.insertOrUpdateAccount(
-                  walletID,
-                  account.label,
-                  account.scriptType,
-                  "${account.derivationPath}/$internal",
-                  // Backend store m/$ScriptType/$CoinType/$accountIndex, we need m/$ScriptType/$CoinType/$accountIndex/$internal here
-                  account.id,
-                  account.fiatCurrency);
+              await dataProviderManager.walletDataProvider
+                  .insertOrUpdateAccount(
+                walletID,
+                account.label,
+                account.scriptType,
+                "${account.derivationPath}/$internal",
+                // Backend store m/$ScriptType/$CoinType/$accountIndex, we need m/$ScriptType/$CoinType/$accountIndex/$internal here
+                account.id,
+                account.fiatCurrency,
+              );
             }
           }
         }
@@ -196,10 +202,10 @@ class EventLoop implements Manager {
         }
         if (event.walletUserSettings != null) {
           ApiWalletUserSettings settings = event.walletUserSettings!;
-          dataProviderManager.userSettingsDataProvider.insertUpdate(settings);
+          await dataProviderManager.userSettingsDataProvider
+              .insertUpdate(settings);
         }
         if (event.walletTransactionEvents != null) {
-          List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
           for (WalletTransactionEvent walletTransactionEvent
               in event.walletTransactionEvents!) {
             WalletTransaction? walletTransaction =
@@ -207,9 +213,8 @@ class EventLoop implements Manager {
             WalletModel? walletModel = await DBHelper.walletDao!
                 .getWalletByServerWalletID(walletTransaction!.walletId);
             if (walletModel != null) {
-              await WalletManager.handleWalletTransaction(
-                  walletModel, addressKeys, walletTransaction);
-              protonWalletProvider.setCurrentTransactions();
+              await dataProviderManager.serverTransactionDataProvider
+                  .handleWalletTransaction(walletModel, walletTransaction);
             }
           }
         }
@@ -247,14 +252,15 @@ class EventLoop implements Manager {
         userSettingProvider.walletUserSetting.fiatCurrency);
     userSettingProvider.updateExchangeRate(exchangeRate);
 
+    /// TODO:: add logic here
     // fetch for account setting's exchange rate, used for sidebar balance
-    for (AccountModel accountModel
-        in protonWalletProvider.protonWallet.accounts) {
-      FiatCurrency fiatCurrency =
-          WalletManager.getAccountFiatCurrency(accountModel);
-      await ExchangeRateService.runOnce(fiatCurrency);
-      // ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
-    }
+    // for (AccountModel accountModel
+    //     in protonWalletProvider.protonWallet.accounts) {
+    //   FiatCurrency fiatCurrency =
+    //       WalletManager.getAccountFiatCurrency(accountModel);
+    //   await ExchangeRateService.runOnce(fiatCurrency);
+    //   // ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
+    // }
   }
 
   Future<void> handleBitcoinAddress() async {

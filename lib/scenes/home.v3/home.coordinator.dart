@@ -5,6 +5,7 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -131,6 +132,18 @@ class HomeCoordinator extends Coordinator {
       userManager,
       dataProviderManager.userSettingsDataProvider,
     );
+
+    var walletTransactionBloc = WalletTransactionBloc(
+      userManager,
+      dataProviderManager.localTransactionDataProvider,
+      dataProviderManager.bdkTransactionDataProvider,
+      dataProviderManager.serverTransactionDataProvider,
+      dataProviderManager.addressKeyProvider,
+      dataProviderManager.walletKeysProvider,
+      dataProviderManager.localBitcoinAddressDataProvider,
+      dataProviderManager.balanceDataProvider,
+    );
+
     var viewModel = HomeViewModelImpl(
       this,
       userManager,
@@ -139,6 +152,7 @@ class HomeCoordinator extends Coordinator {
       apiServiceManager,
       dataProviderManager,
       walletBloc,
+      walletTransactionBloc,
       channelManager,
     );
     widget = HomeView(

@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/add.button.v1.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
-import 'package:wallet/models/account.model.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class EmailIntegrationDropdownSheet {
-  static void show(
-      BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
-    List<String> usedEmailIDs =
-        Provider.of<ProtonWalletProvider>(context, listen: false)
-            .protonWallet
-            .getAllIntegratedEmailIDs();
+  static void show(BuildContext context, HomeViewModel viewModel,
+      WalletModel userWallet, AccountMenuModel accountMenuModel,
+      {VoidCallback? callback}) {
+    List<String> usedEmailIDs = accountMenuModel.emailIds;
+
+    /// TODO:: getAllIntegratedEmailIDs here
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -48,16 +47,16 @@ class EmailIntegrationDropdownSheet {
                         LocalToast.showErrorToast(context,
                             S.of(context).email_already_linked_to_wallet);
                       } else {
-                        setState(() {
-                          viewModel.addEmailAddressToWalletAccount(
-                              Provider.of<ProtonWalletProvider>(context,
-                                      listen: false)
-                                  .protonWallet
-                                  .currentWallet!
-                                  .serverWalletID,
-                              userAccount.serverAccountID,
-                              protonAddress.id);
+                        setState(() async {
                           Navigator.of(context).pop();
+                          await viewModel.addEmailAddressToWalletAccount(
+                              userWallet.serverWalletID,
+                              userWallet,
+                              accountMenuModel.accountModel,
+                              protonAddress.id);
+                          if (callback != null) {
+                            callback.call();
+                          }
                         });
                       }
                     },

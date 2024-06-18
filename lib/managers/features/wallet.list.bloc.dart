@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -37,8 +38,20 @@ class SelectWallet extends WalletListEvent {
   List<Object> get props => [walletModel];
 }
 
+class UpdateWalletName extends WalletListEvent {
+  final WalletModel walletModel;
+  final String newName;
+
+  UpdateWalletName(this.walletModel, this.newName);
+
+  @override
+  List<Object> get props => [walletModel, newName];
+}
+
 class StartLoading extends WalletListEvent {
-  StartLoading();
+  final VoidCallback? callback;
+
+  StartLoading({this.callback});
 
   @override
   List<Object> get props => [];
@@ -52,6 +65,50 @@ class SelectAccount extends WalletListEvent {
 
   @override
   List<Object> get props => [walletModel, accountModel];
+}
+
+class UpdateAccountName extends WalletListEvent {
+  final WalletModel walletModel;
+  final AccountModel accountModel;
+  final String newName;
+
+  UpdateAccountName(this.walletModel, this.accountModel, this.newName);
+
+  @override
+  List<Object> get props => [walletModel, accountModel, newName];
+}
+
+class AddEmailIntegration extends WalletListEvent {
+  final WalletModel walletModel;
+  final AccountModel accountModel;
+  final String emailID;
+
+  AddEmailIntegration(this.walletModel, this.accountModel, this.emailID);
+
+  @override
+  List<Object> get props => [walletModel, accountModel, emailID];
+}
+
+class RemoveEmailIntegration extends WalletListEvent {
+  final WalletModel walletModel;
+  final AccountModel accountModel;
+  final String emailID;
+
+  RemoveEmailIntegration(this.walletModel, this.accountModel, this.emailID);
+
+  @override
+  List<Object> get props => [walletModel, accountModel, emailID];
+}
+
+class UpdateAccountFiat extends WalletListEvent {
+  final WalletModel walletModel;
+  final AccountModel accountModel;
+  final String fiatName;
+
+  UpdateAccountFiat(this.walletModel, this.accountModel, this.fiatName);
+
+  @override
+  List<Object> get props => [walletModel, accountModel, fiatName];
 }
 
 // Define the state
@@ -95,11 +152,15 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.userManager,
     this.userSettingsDataProvider,
   ) : super(const WalletListState(initialized: false, walletsModel: [])) {
+    walletsDataProvider.dataUpdateController.stream.listen((onData) {
+      add(StartLoading());
+    });
     on<StartLoading>((event, emit) async {
       // loading wallet data
+      logger.i("StartLoading!!!!!");
       var wallets = await walletsDataProvider.getWallets();
       if (wallets == null) {
-        emit(state.copyWith(initialized: true));
+        emit(state.copyWith(initialized: true, walletsModel: []));
         return; // error;
       }
 
@@ -112,8 +173,13 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       int index = 0;
       for (WalletData wallet in wallets) {
         WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
-        if (index == 0) {
+        if (index == 0 && walletsDataProvider.selectedServerWalletID.isEmpty) {
           walletModel.isSelected = true;
+        } else {
+          if (walletModel.walletModel.serverWalletID ==
+              walletsDataProvider.selectedServerWalletID) {
+            walletModel.isSelected = true;
+          }
         }
         walletModel.currentIndex = index++;
 
@@ -167,12 +233,23 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         for (AccountModel account in wallet.accounts) {
           AccountMenuModel accMenuModel = AccountMenuModel(account);
 
+          if (walletModel.walletModel.serverWalletID ==
+                  walletsDataProvider.selectedServerWalletID &&
+              accMenuModel.accountModel.serverAccountID ==
+                  walletsDataProvider.selectedServerWalletAccountID) {
+            accMenuModel.isSelected = true;
+          }
+
           if (secretKey != null) {
             var encrypted = base64Encode(account.label);
-            accMenuModel.label = await WalletKeyHelper.decrypt(
-              secretKey,
-              encrypted,
-            );
+            try {
+              accMenuModel.label = await WalletKeyHelper.decrypt(
+                secretKey,
+                encrypted,
+              );
+            } catch (e) {
+              logger.e(e.toString());
+            }
           }
 
           // TODO:: fixme
@@ -181,6 +258,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             account.id!,
           );
 
+          accMenuModel.balance = balance.toInt();
           double estimateValue = 0.0;
           var settings = await userSettingsDataProvider.getSettings();
           // Tempary need to use providers
@@ -199,6 +277,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             balance.toInt(),
           );
 
+          accMenuModel.emailIds =
+              await WalletManager.getAccountAddressIDs(account.serverAccountID);
+
           ///
           walletModel.accounts.add(accMenuModel);
         }
@@ -209,12 +290,20 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
       ///
       emit(state.copyWith(initialized: true, walletsModel: walletsModel));
+      if (event.callback != null) {
+        event.callback!.call();
+      }
+      logger.i("StartLoading end!!!!!");
     });
 
     on<SelectWallet>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
         walletModel.isSelected = walletModel.walletModel.serverWalletID ==
             event.walletModel.serverWalletID;
+        if (walletModel.isSelected) {
+          walletsDataProvider.selectedServerWalletID =
+              event.walletModel.serverWalletID;
+        }
         for (AccountMenuModel account in walletModel.accounts) {
           account.isSelected = false;
         }
@@ -228,25 +317,167 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         if (walletModel.walletModel.serverWalletID ==
             event.walletModel.serverWalletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            account.isSelected =
-                account.accountModel.id == event.accountModel.id;
+            account.isSelected = account.accountModel.serverAccountID ==
+                event.accountModel.serverAccountID;
+            walletsDataProvider.selectedServerWalletID =
+                event.walletModel.serverWalletID;
+            walletsDataProvider.selectedServerWalletAccountID =
+                event.accountModel.serverAccountID;
           }
+        } else {
+          for (AccountMenuModel account in walletModel.accounts) {
+            account.isSelected = false;
+          }
+        }
+      }
+      emit(state.copyWith(walletsModel: state.walletsModel));
+    });
+
+    on<UpdateWalletName>((event, emit) async {
+      for (WalletMenuModel walletModel in state.walletsModel) {
+        if (walletModel.walletModel.serverWalletID ==
+            event.walletModel.serverWalletID) {
+          walletModel.walletName = event.newName;
+
+          /// TODO:: infomr data provider to update name? but this is WalletMenuModel only, data provider need walletMdoel
+          break;
+        }
+      }
+      emit(state.copyWith(walletsModel: state.walletsModel));
+    });
+
+    on<UpdateAccountFiat>((event, emit) async {
+      for (WalletMenuModel walletModel in state.walletsModel) {
+        if (walletModel.walletModel.serverWalletID ==
+            event.walletModel.serverWalletID) {
+          for (AccountMenuModel account in walletModel.accounts) {
+            if (account.accountModel.serverAccountID ==
+                event.accountModel.serverAccountID) {
+              account.accountModel.fiatCurrency = event.fiatName;
+              walletsDataProvider.updateWalletAccount(
+                  accountModel: event.accountModel);
+
+              double estimateValue = 0.0;
+              var settings = await userSettingsDataProvider.getSettings();
+
+              // TODO:: fixme
+              var balance = await WalletManager.getWalletAccountBalance(
+                walletModel.walletModel.id!,
+                account.accountModel.id!,
+              );
+              // Tempary need to use providers
+              var fiatCurrency =
+                  WalletManager.getAccountFiatCurrency(account.accountModel);
+              ProtonExchangeRate? exchangeRate =
+                  await ExchangeRateService.getExchangeRate(fiatCurrency);
+              estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+                exchangeRate,
+                balance.toInt(),
+              );
+
+              account.currencyBalance =
+                  "${event.fiatName} ${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
+              account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
+                (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
+                balance.toInt(),
+              );
+              break;
+            }
+          }
+          break;
+        }
+      }
+      emit(state.copyWith(walletsModel: state.walletsModel));
+    });
+
+    on<UpdateAccountName>((event, emit) async {
+      for (WalletMenuModel walletModel in state.walletsModel) {
+        if (walletModel.walletModel.serverWalletID ==
+            event.walletModel.serverWalletID) {
+          for (AccountMenuModel account in walletModel.accounts) {
+            if (account.accountModel.serverAccountID ==
+                event.accountModel.serverAccountID) {
+              account.label = event.newName;
+              break;
+            }
+          }
+          break;
+        }
+      }
+      emit(state.copyWith(walletsModel: state.walletsModel));
+    });
+
+    on<AddEmailIntegration>((event, emit) async {
+      for (WalletMenuModel walletModel in state.walletsModel) {
+        if (walletModel.walletModel.serverWalletID ==
+            event.walletModel.serverWalletID) {
+          for (AccountMenuModel account in walletModel.accounts) {
+            if (account.accountModel.serverAccountID ==
+                event.accountModel.serverAccountID) {
+              if (account.emailIds.contains(event.emailID) == false) {
+                account.emailIds.add(event.emailID);
+              }
+              break;
+            }
+          }
+          break;
+        }
+      }
+      emit(state.copyWith(walletsModel: state.walletsModel));
+    });
+
+    on<RemoveEmailIntegration>((event, emit) async {
+      for (WalletMenuModel walletModel in state.walletsModel) {
+        if (walletModel.walletModel.serverWalletID ==
+            event.walletModel.serverWalletID) {
+          for (AccountMenuModel account in walletModel.accounts) {
+            if (account.accountModel.serverAccountID ==
+                event.accountModel.serverAccountID) {
+              account.emailIds.remove(event.emailID);
+              break;
+            }
+          }
+          break;
         }
       }
       emit(state.copyWith(walletsModel: state.walletsModel));
     });
   }
 
-  void init() {
-    add(StartLoading());
+  void init({VoidCallback? callback}) {
+    add(StartLoading(callback: callback));
   }
 
-  void setWallet(WalletModel wallet) {
+  void selectWallet(WalletModel wallet) {
     add(SelectWallet(wallet));
   }
 
-  void setAccount(WalletModel wallet, AccountModel acct) {
+  void selectAccount(WalletModel wallet, AccountModel acct) {
     add(SelectAccount(wallet, acct));
+  }
+
+  void updateWalletName(WalletModel wallet, String newName) {
+    add(UpdateWalletName(wallet, newName));
+  }
+
+  void updateAccountName(
+      WalletModel wallet, AccountModel acct, String newName) {
+    add(UpdateAccountName(wallet, acct, newName));
+  }
+
+  void addEmailIntegration(
+      WalletModel wallet, AccountModel acct, String emailID) {
+    add(AddEmailIntegration(wallet, acct, emailID));
+  }
+
+  void removeEmailIntegration(
+      WalletModel wallet, AccountModel acct, String emailID) {
+    add(RemoveEmailIntegration(wallet, acct, emailID));
+  }
+
+  void updateAccountFiat(
+      WalletModel wallet, AccountModel acct, String fiatName) {
+    add(UpdateAccountFiat(wallet, acct, fiatName));
   }
 
   Future<bool> _hasValidPassphrase(
