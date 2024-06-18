@@ -26,7 +26,6 @@ import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/api/api_service/invite_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -68,14 +67,8 @@ class ProtonRecipient {
 }
 
 abstract class SendViewModel extends ViewModel<SendCoordinator> {
-  SendViewModel(
-    super.coordinator,
-    this.walletID,
-    this.accountID,
-    this.inviteClient,
-  );
+  SendViewModel(super.coordinator, this.walletID, this.accountID);
 
-  final InviteClient inviteClient;
   int walletID;
   int accountID;
   final int maxRecipientCount = 5;
@@ -149,8 +142,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   void splitAmountToRecipients();
 
-  Future<bool> sendInvite(String email);
-
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
   Future<bool> buildTransactionScript();
@@ -170,7 +161,6 @@ class SendViewModelImpl extends SendViewModel {
     this.eventLoop,
     this.walletManger,
     this.contactsDataProvider,
-    super.inviteClient,
   );
 
   // event loop
@@ -540,11 +530,9 @@ class SendViewModelImpl extends SendViewModel {
       } else {
         // not a valid bitcoinAddress, remove it
         removeRecipientByEmail(email);
-        if (showInvite == false) {
-          CommonHelper.showSnackbar(
-              context!, S.of(context!).incorrect_bitcoin_address,
-              isError: true);
-        }
+        CommonHelper.showSnackbar(
+            context!, S.of(context!).incorrect_bitcoin_address,
+            isError: true);
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -554,24 +542,25 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
+    if (isRecipientExists(email) == false && recipients.isEmpty) {
+      return;
+    }
     if (showInvite) {
       removeRecipientByEmail(email);
       BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        InviteSheet.show(context, this, email);
+        InviteSheet.show(context, email);
       }
-    }
-    if (isRecipientExists(email) == false && recipients.isEmpty) {
-      return;
-    }
-    bool isSelfBitcoinAddress =
-        selfBitcoinAddresses.contains(bitcoinAddresses[email]);
-    if (isSelfBitcoinAddress) {
-      if (context!.mounted) {
-        removeRecipientByEmail(email);
-        CommonHelper.showSnackbar(
-            context!, S.of(context!).error_you_can_not_send_to_self_account,
-            isError: true);
+    } else {
+      bool isSelfBitcoinAddress =
+          selfBitcoinAddresses.contains(bitcoinAddresses[email]);
+      if (isSelfBitcoinAddress) {
+        if (context!.mounted) {
+          removeRecipientByEmail(email);
+          CommonHelper.showSnackbar(
+              context!, S.of(context!).error_you_can_not_send_to_self_account,
+              isError: true);
+        }
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -842,26 +831,5 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
-  }
-
-  @override
-  Future<bool> sendInvite(String email) async {
-    bool result = await _sendInviteForNewComer(email);
-    if (result) {
-      return result;
-    }
-    result = await _sendInviteForEmailIntegration(email);
-    return result;
-  }
-
-  Future<bool> _sendInviteForEmailIntegration(String email) async {
-    int code =
-        await inviteClient.sendEmailIntegrationInvite(inviteeEmail: email);
-    return code == 1000;
-  }
-
-  Future<bool> _sendInviteForNewComer(String email) async {
-    int code = await inviteClient.sendNewcomerInvite(inviteeEmail: email);
-    return code == 1000;
   }
 }
