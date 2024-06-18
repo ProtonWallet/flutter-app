@@ -1,11 +1,8 @@
 use std::sync::Arc;
 
-use andromeda_api::core::ApiClient;
+use andromeda_api::{bitcoin_address::ApiWalletBitcoinAddress, core::ApiClient};
 
-use crate::{
-    errors::ApiError,
-    wallet::{BitcoinAddress, WalletBitcoinAddress},
-};
+use crate::{errors::BridgeError, wallet::BitcoinAddress};
 
 use super::proton_api_service::ProtonAPIService;
 
@@ -28,7 +25,7 @@ impl BitcoinAddressClient {
         wallet_account_id: String,
         wallet_account_bitcoin_address_id: String,
         bitcoin_address: BitcoinAddress,
-    ) -> Result<WalletBitcoinAddress, ApiError> {
+    ) -> Result<ApiWalletBitcoinAddress, BridgeError> {
         let result = self
             .inner
             .update_bitcoin_address(
@@ -38,10 +35,7 @@ impl BitcoinAddressClient {
                 bitcoin_address.into(),
             )
             .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+        Ok(result?)
     }
 
     pub async fn add_bitcoin_addresses(
@@ -49,7 +43,7 @@ impl BitcoinAddressClient {
         wallet_id: String,
         wallet_account_id: String,
         bitcoin_addresses: Vec<BitcoinAddress>,
-    ) -> Result<Vec<WalletBitcoinAddress>, ApiError> {
+    ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
         let result = self
             .inner
             .add_bitcoin_addresses(
@@ -58,39 +52,30 @@ impl BitcoinAddressClient {
                 bitcoin_addresses.into_iter().map(|v| v.into()).collect(),
             )
             .await;
-        match result {
-            Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
-            Err(err) => Err(err.into()),
-        }
+        Ok(result?)
     }
     pub async fn get_wallet_bitcoin_address(
         &self,
         wallet_id: String,
         wallet_account_id: String,
         only_request: Option<u8>,
-    ) -> Result<Vec<WalletBitcoinAddress>, ApiError> {
+    ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
         let result = self
             .inner
             .get_bitcoin_addresses(wallet_id, wallet_account_id, only_request)
             .await;
-        match result {
-            Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
-            Err(err) => Err(err.into()),
-        }
+        Ok(result?)
     }
 
     pub async fn get_bitcoin_address_latest_index(
         &self,
         wallet_id: String,
         wallet_account_id: String,
-    ) -> Result<u64, ApiError> {
+    ) -> Result<u64, BridgeError> {
         let result = self
             .inner
             .get_bitcoin_address_highest_index(wallet_id, wallet_account_id)
             .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        Ok(result?)
     }
 }

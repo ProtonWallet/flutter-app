@@ -9,6 +9,7 @@ use crate::api::api_service::bitcoin_address_client::*;
 use crate::api::api_service::email_integration_client::*;
 use crate::api::api_service::event_client::*;
 use crate::api::api_service::exchange_rate_client::*;
+use crate::api::api_service::onramp_gateway_client::*;
 use crate::api::api_service::proton_api_service::*;
 use crate::api::api_service::proton_contacts_client::*;
 use crate::api::api_service::proton_email_addr_client::*;
@@ -166,6 +167,20 @@ pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generat
     ptr: *const std::ffi::c_void,
 ) {
     MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ExchangeRateClient>>::decrement_strong_count(ptr as _);
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+    ptr: *const std::ffi::c_void,
+) {
+    MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>::increment_strong_count(ptr as _);
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+    ptr: *const std::ffi::c_void,
+) {
+    MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>::decrement_strong_count(ptr as _);
 }
 
 #[wasm_bindgen]

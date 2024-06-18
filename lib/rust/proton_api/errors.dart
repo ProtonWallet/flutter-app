@@ -9,16 +9,20 @@ import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'errors.freezed.dart';
 
 @freezed
-sealed class ApiError with _$ApiError implements FrbException {
-  const ApiError._();
+sealed class BridgeError with _$BridgeError implements FrbException {
+  const BridgeError._();
+
+  const factory BridgeError.andromedaApi(
+    String field0,
+  ) = BridgeError_AndromedaApi;
 
   /// Generic error
-  const factory ApiError.generic(
+  const factory BridgeError.generic(
     String field0,
-  ) = ApiError_Generic;
+  ) = BridgeError_Generic;
 
   /// Muon session error
-  const factory ApiError.sessionError(
+  const factory BridgeError.muonSession(
     String field0,
-  ) = ApiError_SessionError;
+  ) = BridgeError_MuonSession;
 }

@@ -3,7 +3,7 @@ use chrono::Utc;
 use log::info;
 use std::sync::Arc;
 
-use crate::{api::rust_api::Transaction, proton_api::errors::ApiError};
+use crate::{api::rust_api::Transaction, proton_api::errors::BridgeError};
 
 use super::proton_api_service::ProtonAPIService;
 
@@ -36,7 +36,7 @@ impl TransactionClient {
         address_id: Option<String>,
         subject: Option<String>,
         body: Option<String>,
-    ) -> Result<String, ApiError> {
+    ) -> Result<String, BridgeError> {
         let transaction: Transaction = signed_transaction_hex.into();
         let bdk_transaction: &bdkTransaction = &transaction.internal;
 
@@ -68,7 +68,7 @@ impl TransactionClient {
         }
     }
 
-    pub async fn get_raw_transaction(&self, txid: String) -> Result<bdkTransaction, ApiError> {
+    pub async fn get_raw_transaction(&self, txid: String) -> Result<bdkTransaction, BridgeError> {
         Ok(self.inner.get_raw_transaction(txid).await?)
     }
 }

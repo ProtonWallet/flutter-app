@@ -536,21 +536,21 @@ impl Api {
     // }
 
     //================Address============
-    pub fn create_address(address: String) -> anyhow::Result<String, Error> {
+    pub fn create_address(address: String) -> Result<String, Error> {
         Ok(Address::new(address)?.address.to_string())
     }
-    pub fn address_from_script(script: Script, network: Network) -> anyhow::Result<String, Error> {
+    pub fn address_from_script(script: Script, network: Network) -> Result<String, Error> {
         Ok(Address::from_script(script.into(), network)?
             .address
             .to_string())
     }
-    pub fn address_to_script_pubkey(address: String) -> anyhow::Result<Script, Error> {
+    pub fn address_to_script_pubkey(address: String) -> Result<Script, Error> {
         Ok(Address::new(address)?.script_pubkey())
     }
-    // pub fn payload(address: String) -> anyhow::Result<Payload, Error> {
+    // pub fn payload(address: String) -> Result<Payload, Error> {
     //     Ok(Address::new(address)?.payload())
     // }
-    pub fn address_network(address: String) -> anyhow::Result<Network, Error> {
+    pub fn address_network(address: String) -> Result<Network, Error> {
         Ok(Address::new(address)?.network())
     }
 

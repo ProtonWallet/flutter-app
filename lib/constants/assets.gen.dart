@@ -92,12 +92,24 @@ class $AssetsImagesIconGen {
   SvgGenImage get alertWarning =>
       const SvgGenImage('assets/images/icon/alert_warning.svg');
 
+  /// File path: assets/images/icon/apple_pay.svg
+  SvgGenImage get applePay =>
+      const SvgGenImage('assets/images/icon/apple_pay.svg');
+
+  /// File path: assets/images/icon/bank_transfer.svg
+  SvgGenImage get bankTransfer =>
+      const SvgGenImage('assets/images/icon/bank_transfer.svg');
+
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
 
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
+
+  /// File path: assets/images/icon/credit_card.svg
+  SvgGenImage get creditCard =>
+      const SvgGenImage('assets/images/icon/credit_card.svg');
 
   /// File path: assets/images/icon/delete_warning.svg
   SvgGenImage get deleteWarning =>
@@ -225,6 +237,9 @@ class $AssetsImagesIconGen {
   SvgGenImage get protect =>
       const SvgGenImage('assets/images/icon/protect.svg');
 
+  /// File path: assets/images/icon/ramp.svg
+  SvgGenImage get ramp => const SvgGenImage('assets/images/icon/ramp.svg');
+
   /// File path: assets/images/icon/receive.svg
   SvgGenImage get receive =>
       const SvgGenImage('assets/images/icon/receive.svg');
@@ -296,8 +311,11 @@ class $AssetsImagesIconGen {
         addAccount,
         alertInfo,
         alertWarning,
+        applePay,
+        bankTransfer,
         bitcoin,
         btc,
+        creditCard,
         deleteWarning,
         discoverPlaceholder0,
         discoverPlaceholder1,
@@ -330,6 +348,7 @@ class $AssetsImagesIconGen {
         noWalletFound,
         passphraseLock,
         protect,
+        ramp,
         receive,
         send,
         send2,

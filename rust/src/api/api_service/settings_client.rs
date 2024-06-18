@@ -1,5 +1,5 @@
 use super::proton_api_service::ProtonAPIService;
-use crate::errors::ApiError;
+use crate::errors::BridgeError;
 use andromeda_api::{
     core::ApiClient,
     settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},
@@ -20,7 +20,7 @@ impl SettingsClient {
         }
     }
 
-    pub async fn get_user_settings(&self) -> Result<ApiWalletUserSettings, ApiError> {
+    pub async fn get_user_settings(&self) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self.inner.get_user_settings().await;
         match result {
             Ok(response) => Ok(response),
@@ -31,7 +31,7 @@ impl SettingsClient {
     pub async fn bitcoin_unit(
         &self,
         symbol: BitcoinUnit,
-    ) -> Result<ApiWalletUserSettings, ApiError> {
+    ) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self.inner.update_bitcoin_unit(symbol).await;
         match result {
             Ok(response) => Ok(response),
@@ -42,7 +42,7 @@ impl SettingsClient {
     pub async fn fiat_currency(
         &self,
         symbol: FiatCurrency,
-    ) -> Result<ApiWalletUserSettings, ApiError> {
+    ) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self.inner.update_fiat_currency(symbol).await;
         match result {
             Ok(response) => Ok(response),
@@ -50,7 +50,7 @@ impl SettingsClient {
         }
     }
 
-    pub async fn two_fa_threshold(&self, amount: u64) -> Result<ApiWalletUserSettings, ApiError> {
+    pub async fn two_fa_threshold(&self, amount: u64) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self.inner.update_two_fa_threshold(amount).await;
         match result {
             Ok(response) => Ok(response),
@@ -60,7 +60,7 @@ impl SettingsClient {
     pub async fn hide_empty_used_addresses(
         &self,
         hide_empty_used_addresses: bool,
-    ) -> Result<ApiWalletUserSettings, ApiError> {
+    ) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self
             .inner
             .update_hide_empty_used_addresses(hide_empty_used_addresses)

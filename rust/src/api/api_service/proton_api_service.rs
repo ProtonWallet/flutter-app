@@ -1,5 +1,6 @@
 //proton_api_service.rs
 use super::address_client::AddressClient;
+use super::onramp_gateway_client::OnRampGatewayClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
     bitcoin_address_client::BitcoinAddressClient, email_integration_client::EmailIntegrationClient,
@@ -9,7 +10,7 @@ use super::{
     wallet_client::WalletClient,
 };
 use crate::api::proton_api::{logout, set_proton_api};
-use crate::{auth_credential::AuthCredential, errors::ApiError};
+use crate::{auth_credential::AuthCredential, errors::BridgeError};
 use andromeda_api::wallet::ApiWalletData;
 use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
 use bitcoin::base64::decode;
@@ -33,7 +34,7 @@ impl ProtonAPIService {
     //     app_version: String,
     //     user_agent: String,
     //     env: Option<String>,
-    // ) -> Result<ProtonAPIService, ApiError> {
+    // ) -> Result<ProtonAPIService, BridgeError> {
     //     info!("start init_api_service");
     //     info!(
     //         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
@@ -68,7 +69,7 @@ impl ProtonAPIService {
         app_version: String,
         user_agent: String,
         store: ProtonWalletAuthStore,
-    ) -> Result<ProtonAPIService, ApiError> {
+    ) -> Result<ProtonAPIService, BridgeError> {
         info!("start fresh api client");
         let box_store = Box::new(store.clone());
         let config = ApiConfig {
@@ -89,7 +90,7 @@ impl ProtonAPIService {
 
     // #[frb(sync)]
     // // fromStore
-    // pub fn from_store(store: ProtonWalletAuthStore) -> Result<ProtonAPIService, ApiError> {
+    // pub fn from_store(store: ProtonWalletAuthStore) -> Result<ProtonAPIService, BridgeError> {
     //     info!("start init_api_service");
     //     let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
 
@@ -107,12 +108,12 @@ impl ProtonAPIService {
         &self,
         username: String,
         password: String,
-    ) -> Result<AuthCredential, ApiError> {
+    ) -> Result<AuthCredential, BridgeError> {
         info!("start login ================> ");
         let login_result = self.inner.login(username.as_str(), password.as_str()).await;
         let user_data = match login_result {
             Ok(res) => Ok(res),
-            Err(err) => Err(ApiError::Generic(err.to_string())),
+            Err(err) => Err(BridgeError::Generic(err.to_string())),
         }?;
 
         let user_key = user_data.user.keys.first().unwrap();
@@ -199,7 +200,7 @@ impl ProtonAPIService {
     //     app_version: String,
     //     user_agent: String,
     //     store: ProtonWalletAuthStore,
-    // ) -> Result<ProtonAPIService, ApiError> {
+    // ) -> Result<ProtonAPIService, BridgeError> {
     //     info!("start init_api_service");
     //     let inner_api =
     //         ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
@@ -211,7 +212,7 @@ impl ProtonAPIService {
     // }
 
     /// clients
-    pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, ApiError> {
+    pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, BridgeError> {
         let result = self.inner.clients().wallet.get_wallets().await;
         match result {
             Ok(response) => Ok(response),
@@ -269,6 +270,11 @@ impl ProtonAPIService {
     pub fn get_address_client(&self) -> AddressClient {
         AddressClient::new(&self)
     }
+
+    #[frb(sync)]
+    pub fn get_on_ramp_gateway_client(&self) -> OnRampGatewayClient {
+        OnRampGatewayClient::new(&self)
+    }
 }
 
 #[cfg(test)]
@@ -278,7 +284,7 @@ mod test {
         api::api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        errors::ApiError,
+        errors::BridgeError,
     };
 
     #[tokio::test]
@@ -310,7 +316,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn test_wallet() -> Result<(), ApiError> {
+    async fn test_wallet() -> Result<(), BridgeError> {
         let user = "feng100";
         let pass = "12345678";
         let app_version = "android-wallet@1.0.0".to_string();
