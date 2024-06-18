@@ -6,11 +6,15 @@ class BitcoinAddressModel {
   int bitcoinAddressIndex;
   int inEmailIntegrationPool;
   int used;
+  String serverWalletID;
+  String serverAccountID;
 
   BitcoinAddressModel({
     required this.id,
     required this.walletID,
     required this.accountID,
+    required this.serverWalletID,
+    required this.serverAccountID,
     required this.bitcoinAddress,
     required this.bitcoinAddressIndex,
     required this.inEmailIntegrationPool,
@@ -22,6 +26,8 @@ class BitcoinAddressModel {
       'id': id,
       'walletID': walletID,
       'accountID': accountID,
+      'serverWalletID': serverWalletID,
+      'serverAccountID': serverAccountID,
       'bitcoinAddress': bitcoinAddress,
       'bitcoinAddressIndex': bitcoinAddressIndex,
       'inEmailIntegrationPool': inEmailIntegrationPool,
@@ -34,6 +40,8 @@ class BitcoinAddressModel {
       id: map['id'],
       walletID: map['walletID'],
       accountID: map['accountID'],
+      serverWalletID: map['serverWalletID'],
+      serverAccountID: map['serverAccountID'],
       bitcoinAddress: map['bitcoinAddress'],
       bitcoinAddressIndex: map['bitcoinAddressIndex'],
       inEmailIntegrationPool: map['inEmailIntegrationPool'],

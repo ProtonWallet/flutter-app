@@ -10,7 +10,6 @@ import 'package:wallet/components/recipient.detail.dart';
 import 'package:wallet/components/textfield.send.btc.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
-import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
@@ -18,7 +17,6 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -608,8 +606,7 @@ class SendView extends ViewBase<SendViewModel> {
                     // TODO:: Send bitcoin with Esplora client
                     bool success = await viewModel.sendCoin();
                     if (context.mounted && success) {
-                      Provider.of<ProtonWalletProvider>(context, listen: false)
-                          .syncWallet();
+                      /// TODO:: trigger bdk to sync wallet so can display the in progress transaction
                       viewModel.updatePageStatus(SendFlowStatus.sendSuccess);
                     } else if (context.mounted && success == false) {
                       LocalToast.showErrorToast(
@@ -697,32 +694,33 @@ class SendView extends ViewBase<SendViewModel> {
                                     viewModel.addressAutoCompleteCallback();
                                   }),
                               const SizedBox(height: 5),
-                              if (Provider.of<ProtonWalletProvider>(context)
-                                          .protonWallet
-                                          .currentAccount ==
-                                      null &&
-                                  Provider.of<ProtonWalletProvider>(context)
-                                          .protonWallet
-                                          .currentAccounts
-                                          .length >
-                                      1)
-                                WalletAccountDropdown(
-                                    labelText: S.of(context).trans_from,
-                                    backgroundColor: ProtonColors.white,
-                                    width: MediaQuery.of(context).size.width -
-                                        defaultPadding * 2,
-                                    accounts: Provider.of<ProtonWalletProvider>(
-                                            context)
-                                        .protonWallet
-                                        .currentAccounts,
-                                    valueNotifier: viewModel.initialized
-                                        ? viewModel.accountValueNotifier
-                                        : ValueNotifier(
-                                            Provider.of<ProtonWalletProvider>(
-                                                    context)
-                                                .protonWallet
-                                                .currentAccounts
-                                                .first)),
+                              /// TODO:: add account selector or use default one for wallet view
+                              // if (Provider.of<ProtonWalletProvider>(context)
+                              //             .protonWallet
+                              //             .currentAccount ==
+                              //         null &&
+                              //     Provider.of<ProtonWalletProvider>(context)
+                              //             .protonWallet
+                              //             .currentAccounts
+                              //             .length >
+                              //         1)
+                              //   WalletAccountDropdown(
+                              //       labelText: S.of(context).trans_from,
+                              //       backgroundColor: ProtonColors.white,
+                              //       width: MediaQuery.of(context).size.width -
+                              //           defaultPadding * 2,
+                              //       accounts: Provider.of<ProtonWalletProvider>(
+                              //               context)
+                              //           .protonWallet
+                              //           .currentAccounts,
+                              //       valueNotifier: viewModel.initialized
+                              //           ? viewModel.accountValueNotifier
+                              //           : ValueNotifier(
+                              //               Provider.of<ProtonWalletProvider>(
+                              //                       context)
+                              //                   .protonWallet
+                              //                   .currentAccounts
+                              //                   .first)),
                               const SizedBox(
                                 height: 4,
                               ),

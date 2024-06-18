@@ -13,6 +13,7 @@ class TransactionModel {
   String exchangeRateID;
   String serverWalletID;
   String serverAccountID;
+  String serverID;
   String? sender;
   String? tolist;
   String? subject;
@@ -31,6 +32,7 @@ class TransactionModel {
     required this.exchangeRateID,
     required this.serverWalletID,
     required this.serverAccountID,
+    required this.serverID,
     required this.sender,
     required this.tolist,
     required this.subject,
@@ -51,6 +53,7 @@ class TransactionModel {
       'exchangeRateID': exchangeRateID,
       'serverWalletID': serverWalletID,
       'serverAccountID': serverAccountID,
+      'serverID': serverID,
       'sender': sender,
       'tolist': tolist,
       'subject': subject,
@@ -72,6 +75,7 @@ class TransactionModel {
       exchangeRateID: map['exchangeRateID'],
       serverWalletID: map['serverWalletID'],
       serverAccountID: map['serverAccountID'],
+      serverID: map['serverID'],
       sender: map['sender'],
       tolist: map['tolist'],
       subject: map['subject'],

@@ -15,6 +15,8 @@ abstract class TransactionDao extends TransactionDatabase implements BaseDao {
 
   Future<TransactionModel?> find(Uint8List externalTransactionID,
       String serverWalletID, String serverAccountID);
+
+  Future<TransactionModel?> findByServerID(String serverID);
 }
 
 class TransactionDaoImpl extends TransactionDao {
@@ -69,10 +71,8 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<void> insertOrUpdate(TransactionModel transactionModel) async {
-    TransactionModel? transactionModelExists = await find(
-        transactionModel.externalTransactionID,
-        transactionModel.serverWalletID,
-        transactionModel.serverAccountID);
+    TransactionModel? transactionModelExists =
+        await findByServerID(transactionModel.serverID);
     //DateTime now = DateTime.now();
     if (transactionModelExists != null) {
       // data exist, need update db
@@ -90,6 +90,16 @@ class TransactionDaoImpl extends TransactionDao {
         where:
             'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
         whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
+    if (maps.isNotEmpty) {
+      return TransactionModel.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  @override
+  Future<TransactionModel?> findByServerID(String serverID) async {
+    List<Map<String, dynamic>> maps =
+        await db.query(tableName, where: 'serverID = ?', whereArgs: [serverID]);
     if (maps.isNotEmpty) {
       return TransactionModel.fromMap(maps.first);
     }

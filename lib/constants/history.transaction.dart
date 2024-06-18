@@ -7,7 +7,7 @@ class HistoryTransaction {
   final int? updateTimestamp;
   final int feeInSATS;
   final int amountInSATS;
-  final ProtonExchangeRate? exchangeRate;
+  final ProtonExchangeRate exchangeRate;
   final String? label;
   final String sender;
   final String toList;
@@ -21,7 +21,7 @@ class HistoryTransaction {
       this.updateTimestamp,
       required this.amountInSATS,
       required this.feeInSATS,
-      this.exchangeRate,
+      required this.exchangeRate,
       this.label,
       required this.sender,
       required this.toList,

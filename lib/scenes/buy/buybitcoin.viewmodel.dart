@@ -27,19 +27,27 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   BuyBitcoinViewModel(super.coordinator);
+
   late final Configuration configuration;
   late final RampFlutter ramp;
+
   bool get isTestEnv;
+
   bool get supportOffRamp;
+
   String receiveAddress = "";
 
   bool isloading = false;
+
   void startLoading();
+
   bool isBuying = true;
   int index = 0;
+
   BuyBitcoinBloc get bloc;
 
   void toggleButtons();
+
   void sellbutton();
 
   List<DropdownItem> payments = [];
@@ -48,8 +56,10 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   BuyBitcoinViewModelImpl(super.coordinator, this.userEmail);
+
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
@@ -66,11 +76,13 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   bool get isTestEnv => false;
+
   @override
   bool get supportOffRamp => false;
   String apiKey = '';
 
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
+
   @override
   Future<void> loadData() async {
     apiKey = Env.rampApiKey ?? "";
@@ -229,9 +241,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       }
 
       int addressIndex = 0;
-      BitcoinAddressModel? bitcoinAddressModel = await DBHelper
-          .bitcoinAddressDao!
-          .findLatestUnusedLocalBitcoinAddress(walletID, accountID);
+      BitcoinAddressModel? bitcoinAddressModel =
+          await DBHelper.bitcoinAddressDao!.findLatestUnusedLocalBitcoinAddress(
+              walletModel.serverWalletID, accountModel.serverAccountID);
       if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
         addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
       } else {
@@ -243,8 +255,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-            walletID: walletID,
-            accountID: accountID,
+            serverWalletID: walletModel.serverWalletID,
+            serverAccountID: accountModel.serverAccountID,
             bitcoinAddress: receiveAddress,
             bitcoinAddressIndex: addressIndex,
             inEmailIntegrationPool: 0,

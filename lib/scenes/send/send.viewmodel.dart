@@ -303,9 +303,9 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> updateWallet() async {
     selfBitcoinAddresses.clear();
-    List<BitcoinAddressModel> localBitcoinAddresses = await DBHelper
-        .bitcoinAddressDao!
-        .findByWalletAccount(walletID, accountModel?.id ?? 0);
+    List<BitcoinAddressModel> localBitcoinAddresses =
+        await DBHelper.bitcoinAddressDao!.findByWalletAccount(
+            walletModel!.serverWalletID, accountModel!.serverAccountID);
     selfBitcoinAddresses = localBitcoinAddresses.map((bitcoinAddressModel) {
       return bitcoinAddressModel.bitcoinAddress;
     }).toList();
@@ -572,7 +572,7 @@ class SendViewModelImpl extends SendViewModel {
       removeRecipientByEmail(recipients[index].email);
       datasourceChangedStreamController.sinkAddSafe(this);
     }
-    if (validRecipientCount() == 0){
+    if (validRecipientCount() == 0) {
       updatePageStatus(SendFlowStatus.addRecipient);
     }
   }
@@ -715,6 +715,7 @@ class SendViewModelImpl extends SendViewModel {
               bitcoinAddress = email;
             }
             if (selfBitcoinAddresses.contains(bitcoinAddress) == false) {
+              /// TODO:: insert with localTransactionDataProvider
               await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
                   id: null,
                   externalTransactionID: utf8.encode(txid),

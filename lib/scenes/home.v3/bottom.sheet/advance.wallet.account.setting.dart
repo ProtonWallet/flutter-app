@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/models/account.model.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.account.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AdvanceWalletAccountSettingSheet {
   static void show(
-      BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
+      BuildContext context, HomeViewModel viewModel, WalletModel userWallet, AccountMenuModel userAccount) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -29,7 +30,7 @@ class AdvanceWalletAccountSettingSheet {
                           FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 Navigator.of(context).pop();
-                DeleteAccountSheet.show(context, viewModel, userAccount);
+                DeleteAccountSheet.show(context, viewModel, userWallet, userAccount);
               }),
         ],
       );

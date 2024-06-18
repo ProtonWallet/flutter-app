@@ -12,12 +12,12 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
@@ -79,13 +79,15 @@ abstract class HistoryDetailViewModel
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   HistoryDetailViewModelImpl(
-      super.coordinator,
-      super.walletID,
-      super.accountID,
-      super.txid,
-      super.userFiatCurrency,
-      this.userManager,
-      this.protonWalletManager);
+    super.coordinator,
+    super.walletID,
+    super.accountID,
+    super.txid,
+    super.userFiatCurrency,
+    this.userManager,
+    this.protonWalletManager,
+    this.serverTransactionDataProvider,
+  );
 
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late Wallet _wallet;
@@ -94,6 +96,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
+  final ServerTransactionDataProvider serverTransactionDataProvider;
 
   @override
   void dispose() {
@@ -119,8 +122,38 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       SecretKey? secretKey =
           await WalletManager.getWalletKey(walletModel.serverWalletID);
       List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
-      transactionModel = await DBHelper.transactionDao!.find(utf8.encode(txid),
-          walletModel.serverWalletID, accountModel.serverAccountID);
+
+      ServerTransactionData serverTransactionData =
+          await serverTransactionDataProvider
+              .getServerTransactionDataByWalletAccount(
+        walletModel,
+        accountModel,
+      );
+      var userkey = await userManager.getFirstKey();
+      var userPrivateKey = userkey.privateKey;
+      var userPassphrase = userkey.passphrase;
+
+      for (TransactionModel transactionModel
+          in serverTransactionData.transactions) {
+        String _txid = proton_crypto.decrypt(
+            userPrivateKey, userPassphrase, transactionModel.transactionID);
+        if (_txid.isEmpty) {
+          for (AddressKey addressKey in addressKeys) {
+            try {
+              _txid = addressKey.decrypt(transactionModel.transactionID);
+            } catch (e) {
+              // logger.e(e.toString());
+            }
+            if (_txid.isNotEmpty) {
+              break;
+            }
+          }
+        }
+        transactionModel.externalTransactionID = utf8.encode(_txid);
+      }
+
+      transactionModel =
+          findServerTransactionByTXID(serverTransactionData.transactions, txid);
 
       datasourceChangedStreamController.sinkAddSafe(this);
       _wallet = (await WalletManager.loadWalletWithID(walletID, accountID))!;
@@ -241,7 +274,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               modifyTime: now.millisecondsSinceEpoch ~/ 1000,
               hashedTransactionID:
                   utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-              transactionID: walletTransaction.id,
+              transactionID: walletTransaction.transactionId,
+              serverID: walletTransaction.id,
               transactionTime: walletTransaction.transactionTime,
               exchangeRateID: exchangeRateID,
               serverWalletID: walletTransaction.walletId,
@@ -255,12 +289,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           if (e.toString().contains("Hashed TransactionId is already used") ||
               e.toString().contains("Code:2011")) {
             // TODO:: fix logic here, only fetch wallet transactions in account or specific hashedTransaction
-            await WalletManager.handleWalletTransactions(
-                walletModel, addressKeys);
-            transactionModel = await DBHelper.transactionDao!.find(
-                utf8.encode(txid),
-                walletModel.serverWalletID,
-                accountModel.serverAccountID);
             if (transactionModel == null) {
               rethrow;
             }
@@ -329,7 +357,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
                     .findBitcoinAddressInAccount(
-                        recipient.bitcoinAddress, accountModel.id!);
+                        recipient.bitcoinAddress, accountModel.serverAccountID);
                 if (bitcoinAddressModel != null) {
                   me = recipient;
                   break;
@@ -428,6 +456,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     initialized = true;
   }
 
+  TransactionModel? findServerTransactionByTXID(
+      List<TransactionModel> transactions, String txid) {
+    for (TransactionModel transactionModel in transactions) {
+      String transactionTXID =
+          utf8.decode(transactionModel.externalTransactionID);
+      if (transactionTXID == txid) {
+        return transactionModel;
+      }
+    }
+    return null;
+  }
+
   @override
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
@@ -451,10 +491,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             walletTransactionId: transactionModel!.transactionID,
             label: encryptedLabel,
           );
-          await Provider.of<ProtonWalletProvider>(
-                  Coordinator.rootNavigatorKey.currentContext!,
-                  listen: false)
-              .setCurrentTransactions();
         }
         isEditing = false;
       }

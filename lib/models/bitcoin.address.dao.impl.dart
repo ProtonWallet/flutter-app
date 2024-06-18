@@ -8,27 +8,36 @@ abstract class BitcoinAddressDao extends BitcoinAddressDatabase
   BitcoinAddressDao(super.db, super.tableName);
 
   Future<void> insertOrUpdate(
-      {required int walletID,
-      required int accountID,
+      {required String serverWalletID,
+      required String serverAccountID,
       required String bitcoinAddress,
       required int bitcoinAddressIndex,
       required int inEmailIntegrationPool,
       required int used});
 
-  Future<BitcoinAddressModel?> findBitcoinAddressInAccount(String bitcoinAddress, int accountID);
+  Future<BitcoinAddressModel?> findBitcoinAddressInAccount(
+    String bitcoinAddress,
+    String serverAccountID,
+  );
 
   Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
-      int walletID, int accountID);
+    String serverWalletID,
+    String serverAccountID,
+  );
 
-  Future<int> getUnusedPoolCount(int walletID, int accountID);
+  Future<int> getUnusedPoolCount(
+    String serverWalletID,
+    String serverAccountID,
+  );
 
-  Future<bool> isMine(int walletID, int accountID, String bitcoinAddress);
+  Future<bool> isMine(
+      String serverWalletID, String serverAccountID, String bitcoinAddress);
 
-  Future<List<BitcoinAddressModel>> findByWallet(int walletID,
+  Future<List<BitcoinAddressModel>> findByWallet(String serverWalletID,
       {String orderBy = "desc"});
 
   Future<List<BitcoinAddressModel>> findByWalletAccount(
-      int walletID, int accountID,
+      String serverWalletID, String serverAccountID,
       {String orderBy = "desc"});
 }
 
@@ -73,19 +82,19 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<void> insertOrUpdate(
-      {required int walletID,
-      required int accountID,
+      {required String serverWalletID,
+      required String serverAccountID,
       required String bitcoinAddress,
       required int bitcoinAddressIndex,
       required int inEmailIntegrationPool,
       required int used}) async {
     BitcoinAddressModel? bitcoinAddressModel =
-        await findBitcoinAddressInAccount(bitcoinAddress, accountID);
+        await findBitcoinAddressInAccount(bitcoinAddress, serverAccountID);
     if (bitcoinAddressModel != null) {
       await update({
         "id": bitcoinAddressModel.id,
-        "walletID": walletID,
-        "accountID": accountID,
+        "walletID": 0, // deprecated
+        "accountID": 0, // deprecated
         "bitcoinAddress": bitcoinAddress,
         "bitcoinAddressIndex": bitcoinAddressIndex,
         "inEmailIntegrationPool": inEmailIntegrationPool,
@@ -93,8 +102,10 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
       });
     } else {
       await insert({
-        "walletID": walletID,
-        "accountID": accountID,
+        "walletID": 0, // deprecated
+        "accountID": 0, // deprecated
+        "serverWalletID": serverWalletID,
+        "serverAccountID": serverAccountID,
         "bitcoinAddress": bitcoinAddress,
         "bitcoinAddressIndex": bitcoinAddressIndex,
         "inEmailIntegrationPool": inEmailIntegrationPool,
@@ -110,9 +121,12 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<BitcoinAddressModel?> findBitcoinAddressInAccount(
-      String bitcoinAddress, int accountID) async {
+    String bitcoinAddress,
+    String serverAccountID,
+  ) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'bitcoinAddress = ? and accountID = ?', whereArgs: [bitcoinAddress, accountID]);
+        where: 'bitcoinAddress = ? and serverAccountID = ?',
+        whereArgs: [bitcoinAddress, serverAccountID]);
     if (maps.isNotEmpty) {
       return BitcoinAddressModel.fromMap(maps.first);
     }
@@ -121,10 +135,13 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<BitcoinAddressModel?> findLatestUnusedLocalBitcoinAddress(
-      int walletID, int accountID) async {
+    String serverWalletID,
+    String serverAccountID,
+  ) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?',
-        whereArgs: [walletID, accountID, 0],
+        where:
+            'serverWalletID = ? and serverAccountID = ? and inEmailIntegrationPool = ?',
+        whereArgs: [serverWalletID, serverAccountID, 0],
         orderBy: 'bitcoinAddressIndex desc');
     if (maps.isNotEmpty) {
       return BitcoinAddressModel.fromMap(maps.first);
@@ -133,10 +150,14 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<int> getUnusedPoolCount(int walletID, int accountID) async {
+  Future<int> getUnusedPoolCount(
+    String serverWalletID,
+    String serverAccountID,
+  ) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ? and inEmailIntegrationPool = ?',
-        whereArgs: [walletID, accountID, 1],
+        where:
+            'serverWalletID = ? and serverAccountID = ? and inEmailIntegrationPool = ?',
+        whereArgs: [serverWalletID, serverAccountID, 1],
         orderBy: 'bitcoinAddressIndex desc');
     if (maps.isNotEmpty) {
       return maps.length;
@@ -145,21 +166,22 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   }
 
   @override
-  Future<bool> isMine(
-      int walletID, int accountID, String bitcoinAddress) async {
+  Future<bool> isMine(String serverWalletID, String serverAccountID,
+      String bitcoinAddress) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ? and bitcoinAddress = ?',
-        whereArgs: [walletID, accountID, bitcoinAddress],
+        where:
+            'serverWalletID = ? and serverAccountID = ? and bitcoinAddress = ?',
+        whereArgs: [serverWalletID, serverAccountID, bitcoinAddress],
         orderBy: 'bitcoinAddressIndex desc');
     return maps.isNotEmpty;
   }
 
   @override
-  Future<List<BitcoinAddressModel>> findByWallet(int walletID,
+  Future<List<BitcoinAddressModel>> findByWallet(String serverWalletID,
       {String orderBy = "desc"}) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ?',
-        whereArgs: [walletID],
+        where: 'serverWalletID = ?',
+        whereArgs: [serverWalletID],
         orderBy: 'bitcoinAddressIndex $orderBy');
     return List.generate(
         maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
@@ -167,11 +189,11 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<List<BitcoinAddressModel>> findByWalletAccount(
-      int walletID, int accountID,
+      String serverWalletID, String serverAccountID,
       {String orderBy = "desc"}) async {
     List<Map<String, dynamic>> maps = await db.query(tableName,
-        where: 'walletID = ? and accountID = ?',
-        whereArgs: [walletID, accountID],
+        where: 'serverWalletID = ? and serverAccountID = ?',
+        whereArgs: [serverWalletID, serverAccountID],
         orderBy: 'bitcoinAddressIndex $orderBy');
     return List.generate(
         maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));

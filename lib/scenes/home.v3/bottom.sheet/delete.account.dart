@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
@@ -8,15 +7,15 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
-import 'package:wallet/models/account.model.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class DeleteAccountSheet {
-  static void show(
-      BuildContext context, HomeViewModel viewModel, AccountModel userAccount) {
+  static void show(BuildContext context, HomeViewModel viewModel,
+      WalletModel userWallet, AccountMenuModel userAccount) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -43,7 +42,7 @@ class DeleteAccountSheet {
                           children: [
                             Text(
                               S.of(context).confirm_to_delete_wallet_account(
-                                  userAccount.labelDecrypt),
+                                  userAccount.label),
                               style: FontManager.titleHeadline(
                                   ProtonColors.textNorm),
                               textAlign: TextAlign.center,
@@ -80,11 +79,7 @@ class DeleteAccountSheet {
                             ButtonV5(
                                 onPressed: () async {
                                   await viewModel.deleteAccount(
-                                      Provider.of<ProtonWalletProvider>(context,
-                                              listen: false)
-                                          .protonWallet
-                                          .currentWallet!,
-                                      userAccount);
+                                      userWallet, userAccount.accountModel);
                                   if (context.mounted) {
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();

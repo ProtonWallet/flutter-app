@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -8,7 +9,8 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AdvanceWalletSettingSheet {
-  static void show(BuildContext context, HomeViewModel viewModel) {
+  static void show(
+      BuildContext context, HomeViewModel viewModel, WalletModel userWallet) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -27,7 +29,8 @@ class AdvanceWalletSettingSheet {
                       style: FontManager.body2Regular(ProtonColors.textNorm))),
               onTap: () {
                 Navigator.of(context).pop(); // pop this modalBottomSheet
-                Navigator.of(context).pop(); // pop wallet setting sheet or it will hide setupBackup view
+                Navigator.of(context)
+                    .pop(); // pop wallet setting sheet or it will hide setupBackup view
                 viewModel.move(NavID.setupBackup);
               }),
           const Divider(
@@ -44,11 +47,11 @@ class AdvanceWalletSettingSheet {
                           FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 DeleteWalletSheet.show(
-                    context,
-                    viewModel,
-                    viewModel.protonWalletProvider.protonWallet.currentWallet!,
-                    viewModel.protonWalletProvider.protonWallet.currentBalance >
-                        0, );
+                  context,
+                  viewModel,
+                  userWallet,
+                  userWallet.balance > 0,
+                );
               }),
         ],
       );

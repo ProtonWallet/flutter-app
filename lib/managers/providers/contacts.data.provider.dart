@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
@@ -9,11 +11,13 @@ import 'package:wallet/rust/proton_api/contacts.dart';
 class ContactsData {
   final WalletModel wallet;
   final List<AccountModel> accounts;
+
   ContactsData({required this.wallet, required this.accounts});
 }
 
 class ContactsDataProvider implements DataProvider {
   final ContactsClient contactClient;
+
   //
   final ContactsDao contactsDao;
   final String userID = ""; // need to add userid.
@@ -25,6 +29,10 @@ class ContactsDataProvider implements DataProvider {
     this.contactClient,
     this.contactsDao,
   );
+
+  @override
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
 
   Future<List<ContactsModel>?> _getFromDB() async {
     // try to find it fro cache
@@ -81,5 +89,7 @@ class ContactsDataProvider implements DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    dataUpdateController.close();
+  }
 }

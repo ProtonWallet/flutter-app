@@ -27,6 +27,7 @@ final appConfigForTestNet = AppConfig(
     scriptType: ScriptType.nativeSegWit,
     apiEnv: ApiEnv.atlas(null),
     esploraBaseUrl: "https://proton.me/wallet/explorer/testnet/",
+    // esploraBaseUrl: "https://blockstream.info/testnet/",
     testMode: true);
 
 final appConfigForProduction = AppConfig(
@@ -34,6 +35,7 @@ final appConfigForProduction = AppConfig(
     scriptType: ScriptType.nativeSegWit,
     apiEnv: const ApiEnv.prod(),
     esploraBaseUrl: "https://proton.me/wallet/explorer/",
+    // esploraBaseUrl: "https://blockstream.info/",
     testMode: false);
 
 final appConfig = appConfigForProduction;
