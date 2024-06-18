@@ -1,7 +1,10 @@
+pub mod address_client;
 pub mod bitcoin_address_client;
 pub mod email_integration_client;
 pub mod event_client;
 pub mod exchange_rate_client;
+pub mod invite_client;
+pub mod onramp_gateway_client;
 pub mod proton_api_service;
 pub mod proton_contacts_client;
 pub mod proton_email_addr_client;
@@ -10,5 +13,3 @@ pub mod settings_client;
 pub mod transaction_client;
 pub mod wallet_auth_store;
 pub mod wallet_client;
-pub mod address_client;
-pub mod onramp_gateway_client;

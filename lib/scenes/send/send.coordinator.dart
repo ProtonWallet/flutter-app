@@ -1,3 +1,4 @@
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -22,6 +23,7 @@ class SendCoordinator extends Coordinator {
     var eventLoop = serviceManager.get<EventLoop>();
     var walletManager = serviceManager.get<ProtonWalletManager>();
     var dataProvider = serviceManager.get<DataProviderManager>();
+    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var viewModel = SendViewModelImpl(
       this,
       walletID,
@@ -29,6 +31,7 @@ class SendCoordinator extends Coordinator {
       eventLoop,
       walletManager,
       dataProvider.contactsDataProvider,
+      apiServiceManager.getApiService().getInviteClient(),
     );
     widget = SendView(
       viewModel,
