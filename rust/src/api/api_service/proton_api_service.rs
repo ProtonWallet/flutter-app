@@ -5,9 +5,9 @@ use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
     bitcoin_address_client::BitcoinAddressClient, email_integration_client::EmailIntegrationClient,
     event_client::EventClient, exchange_rate_client::ExchangeRateClient,
-    proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
-    settings_client::SettingsClient, transaction_client::TransactionClient,
-    wallet_client::WalletClient,
+    invite_client::InviteClient, proton_contacts_client::ContactsClient,
+    proton_email_addr_client::ProtonEmailAddressClient, settings_client::SettingsClient,
+    transaction_client::TransactionClient, wallet_client::WalletClient,
 };
 use crate::api::proton_api::{logout, set_proton_api};
 use crate::{auth_credential::AuthCredential, errors::BridgeError};
@@ -238,6 +238,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_proton_email_addr_client(&self) -> ProtonEmailAddressClient {
         ProtonEmailAddressClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_invite_client(&self) -> InviteClient {
+        InviteClient::new(&self)
     }
 
     //getProtonContactsClient

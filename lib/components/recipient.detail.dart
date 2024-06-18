@@ -127,7 +127,7 @@ class RecipientDetail extends StatelessWidget {
                               ]))
                       : GestureDetector(
                           onTap: () {
-                            InviteSheet.show(context, email ?? "");
+
                           },
                           child: Row(children: [
                             Icon(Icons.info_rounded,
