@@ -10,16 +10,14 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-typedef WalletCallback = void Function(WalletModel wallet);
-typedef AccountCallback = void Function(AccountModel wallet);
+typedef WalletCallback = void Function(WalletMenuModel wallet);
 typedef SelectedCallback = void Function(
-  WalletModel wallet,
-  AccountModel account,
+  WalletMenuModel wallet,
+  AccountMenuModel account,
 );
 typedef DeleteCallback = void Function(
   WalletModel wallet,
@@ -91,7 +89,11 @@ class SidebarWalletItems extends StatelessWidget {
             ],
           );
         }
-        return const CircularProgressIndicator();
+        return Padding(
+            padding: const EdgeInsets.only(left: defaultPadding),
+            child: CircularProgressIndicator(
+              color: ProtonColors.white,
+            ));
       },
     );
   }
@@ -104,7 +106,7 @@ class SidebarWalletItems extends StatelessWidget {
   ) {
     if (wlModel.hasValidPassword) {
       return GestureDetector(
-        onTap: () => {selectWallet?.call(wlModel.walletModel)},
+        onTap: () => {selectWallet?.call(wlModel)},
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -210,7 +212,7 @@ class SidebarWalletItems extends StatelessWidget {
                   ? ProtonColors.drawerBackgroundHighlight
                   : ProtonColors.drawerBackground,
               onTap: () {
-                selectAccount?.call(wlModel.walletModel, actModel.accountModel);
+                selectAccount?.call(wlModel, actModel);
               },
 
               /// set wallet icon
@@ -259,7 +261,7 @@ class SidebarWalletItems extends StatelessWidget {
           child: ListTile(
             onTap: () {
               if (wlModel.accounts.length < freeUserWalletAccountLimit) {
-                addAccount?.call(wlModel.walletModel);
+                addAccount?.call(wlModel);
               } else {
                 CommonHelper.showSnackbar(
                   context,

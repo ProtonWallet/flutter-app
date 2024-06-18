@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TransactionFilterSheet {
   static void show(BuildContext context, HomeViewModel viewModel) {
     HomeModalBottomSheet.show(context, child:
-        StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+        StatefulBuilder(builder: (BuildContext context, StateSetter setState, {String filterBy = ""}) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,19 +22,14 @@ class TransactionFilterSheet {
                 height: 5,
               ),
               ListTile(
-                trailing: Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .transactionFilter
-                        .isEmpty
+                trailing: filterBy.isEmpty
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_all_transactions,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
-                      .applyHistoryTransactionFilterAndKeyword(
-                          "", viewModel.transactionSearchController.text);
+                  /// TODO:: apply transaction filter here
                   Navigator.of(context).pop();
                 },
               ),
@@ -45,19 +38,14 @@ class TransactionFilterSheet {
                 height: 1,
               ),
               ListTile(
-                trailing: Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .transactionFilter
-                        .contains("send")
+                trailing: filterBy.contains("send")
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_sent,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
-                      .applyHistoryTransactionFilterAndKeyword(
-                          "send", viewModel.transactionSearchController.text);
+                  /// TODO:: apply filter here
                   Navigator.of(context).pop();
                 },
               ),
@@ -66,19 +54,14 @@ class TransactionFilterSheet {
                 height: 1,
               ),
               ListTile(
-                trailing: Provider.of<ProtonWalletProvider>(context)
-                        .protonWallet
-                        .transactionFilter
-                        .contains("receive")
+                trailing: filterBy.contains("receive")
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_received,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  Provider.of<ProtonWalletProvider>(context, listen: false)
-                      .applyHistoryTransactionFilterAndKeyword("receive",
-                          viewModel.transactionSearchController.text);
+                  /// TODO:: apply filter here
                   Navigator.of(context).pop();
                 },
               ),

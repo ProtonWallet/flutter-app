@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/exchange_rate_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -8,6 +10,10 @@ class ExchangeDataProvider implements DataProvider {
   final ExchangeRateClient exchangeRateClient;
 
   ExchangeDataProvider({required this.exchangeRateClient});
+
+  @override
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
 
   Future<void> runOnce(FiatCurrency fiatCurrency, {int? time}) async {
     String key = getKey(fiatCurrency, time: time);
@@ -34,6 +40,7 @@ class ExchangeDataProvider implements DataProvider {
   @override
   Future<void> clear() async {
     fiatCurrency2exchangeRate.clear();
+    dataUpdateController.close();
   }
 
   String getKey(FiatCurrency fiatCurrency, {int? time}) {

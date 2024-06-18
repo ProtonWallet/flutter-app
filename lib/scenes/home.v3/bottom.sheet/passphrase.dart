@@ -66,14 +66,7 @@ class PassphraseSheet {
                             status: "apply passphrase to wallet",
                             maskType: EasyLoadingMaskType.black);
                         try {
-                          if (context.mounted) {
-                            Provider.of<ProtonWalletProvider>(context,
-                                    listen: false)
-                                .setPassphrase(walletModel, passphrase);
-                          } else {
-                            viewModel.errorMessage =
-                                "setPassphrase(): context.mounted == false";
-                          }
+                          /// TODO:: set wallet passphrase here
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }

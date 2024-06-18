@@ -16,5 +16,11 @@ class BitcoinAddressDatabase extends BaseDatabase {
     ''');
   }
 
+  Future<void> migration_1() async {
+    // Add column `fingerprint`
+    await addColumn("serverWalletID", "TEXT");
+    await addColumn("serverAccountID", "TEXT");
+  }
+
   BitcoinAddressDatabase(super.db, super.tableName);
 }

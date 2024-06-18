@@ -24,9 +24,11 @@ class AccountMenuModel {
   String currencyBalance = "";
   String btcBalance = "";
   int currentIndex = 0;
+  int balance = 0;
 
   bool isSelected = false;
   final AccountModel accountModel;
+  List<String> emailIds = [];
 
   AccountMenuModel(this.accountModel);
 }

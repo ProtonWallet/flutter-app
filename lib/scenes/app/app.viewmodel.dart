@@ -103,9 +103,7 @@ class AppViewModelImpl extends AppViewModel {
     serviceManager.register(dataProviderManager);
 
     /// proton wallet manager
-    var protonWallet = ProtonWalletManager(
-      storage: storage,
-    );
+    var protonWallet = ProtonWalletManager();
     serviceManager.register(protonWallet);
 
     // TODO:: fix me
@@ -113,7 +111,7 @@ class AppViewModelImpl extends AppViewModel {
     WalletManager.protonWallet = protonWallet;
 
     /// event loop
-    serviceManager.register(EventLoop(protonWallet, userManager));
+    serviceManager.register(EventLoop(protonWallet, userManager, dataProviderManager));
 
     if (await userManager.sessionExists()) {
       await userManager.tryRestoreUserInfo();
