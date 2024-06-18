@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
-  ImportViewModel(super.coordinator);
+  ImportViewModel(
+    super.coordinator,
+  );
 
   late TextEditingController mnemonicTextController;
   late TextEditingController nameTextController;
@@ -24,6 +25,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   bool isValidMnemonic = false;
 
   void switchToManualInputMode();
+
   void switchToPasteMode();
 
   void updateValidMnemonic(bool isValidMnemonic);
@@ -32,7 +34,9 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
 }
 
 class ImportViewModelImpl extends ImportViewModel {
-  ImportViewModelImpl(super.coordinator);
+  final DataProviderManager dataProviderManager;
+
+  ImportViewModelImpl(super.coordinator, this.dataProviderManager);
 
   final datasourceChangedStreamController =
       StreamController<ImportViewModel>.broadcast();
@@ -64,18 +68,12 @@ class ImportViewModelImpl extends ImportViewModel {
       // if (walletName.isEmpty) throw Exception("Wallet name cannot be empty");
       String strMnemonic = mnemonicTextController.text;
       String strPassphrase = passphraseTextController.text;
-      await WalletManager.createWallet(
+      await dataProviderManager.walletDataProvider.createWallet(
           walletName,
           strMnemonic,
           WalletModel.importByUser,
-          Provider.of<ProtonWalletProvider>(
-                  Coordinator.rootNavigatorKey.currentContext!,
-                  listen: false)
-              .protonWallet
-              .newAccountFiatCurrency,
+          defaultFiatCurrency,
           strPassphrase);
-
-      await WalletManager.autoBindEmailAddresses();
       await Future.delayed(
           const Duration(seconds: 1)); // wait for account show on sidebar
     } catch (e) {

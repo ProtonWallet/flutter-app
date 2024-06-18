@@ -32,4 +32,8 @@ class TransactionDatabase extends BaseDatabase {
     await addColumn('subject', 'TEXT NULL');
     await addColumn('body', 'TEXT NULL');
   }
+
+  Future<void> migration_3() async {
+    await addColumn('serverID', 'TEXT');
+  }
 }

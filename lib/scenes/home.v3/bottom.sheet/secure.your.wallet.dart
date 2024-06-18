@@ -41,9 +41,7 @@ class SecureYourWalletSheet {
                     color: ProtonColors.protonBlue, size: 14),
                 onTap: () {
                   Navigator.of(context).pop(); // pop this modalBottomSheet
-                  if (CommonHelper.checkSelectWallet(context)) {
-                    viewModel.move(NavID.setupBackup);
-                  }
+                  viewModel.move(NavID.setupBackup);
                 },
               ),
               const Divider(

@@ -22,7 +22,7 @@ import 'package:wallet/theme/theme.font.dart';
 //TODO:: refactor this to a sperate view and viewmodel. dont need to share the viewmodel with the home viewmodel
 class AddWalletAccountSheet {
   static void show(
-      BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+      BuildContext context, HomeViewModel viewModel, WalletModel userWallet) {
     Future.delayed(const Duration(milliseconds: 100), () {
       viewModel.newAccountNameFocusNode.requestFocus();
     });
@@ -51,15 +51,7 @@ class AddWalletAccountSheet {
                         myFocusNode: viewModel.newAccountNameFocusNode,
                         validation: (String newAccountName) {
                           bool accountNameExists = false;
-                          for (AccountModel accountModel
-                              in Provider.of<ProtonWalletProvider>(context,
-                                      listen: false)
-                                  .protonWallet
-                                  .getAccounts(walletModel)) {
-                            if (accountModel.labelDecrypt == newAccountName) {
-                              accountNameExists = true;
-                            }
-                          }
+                          /// TODO:: check if accountName already used
                           if (accountNameExists) {
                             return S.of(context).account_name_already_used;
                           }
@@ -121,20 +113,10 @@ class AddWalletAccountSheet {
                                   : S.of(context).default_account;
                               bool accountNameExists = false;
                               if (context.mounted) {
-                                for (AccountModel accountModel
-                                    in Provider.of<ProtonWalletProvider>(
-                                            context,
-                                            listen: false)
-                                        .protonWallet
-                                        .getAccounts(walletModel)) {
-                                  if (accountModel.labelDecrypt ==
-                                      newAccountName) {
-                                    accountNameExists = true;
-                                  }
-                                }
+                                /// TODO:: check if accountName already used
                                 if (accountNameExists == false) {
                                   await viewModel.addWalletAccount(
-                                      walletModel.id!,
+                                      userWallet.id!,
                                       viewModel
                                           .newAccountScriptTypeValueNotifier
                                           .value,

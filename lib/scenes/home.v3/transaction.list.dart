@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/textfield.text.dart';
@@ -10,6 +11,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
@@ -28,167 +30,133 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-          padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-          child: viewModel.showSearchHistoryTextField
-              ? TextFieldText(
-                  borderRadius: 20,
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  color: ProtonColors.backgroundSecondary,
-                  suffixIcon: const Icon(Icons.close, size: 16),
-                  prefixIcon: const Icon(Icons.search, size: 16),
-                  showSuffixIcon: true,
-                  suffixIconOnPressed: () {
-                    viewModel.setSearchHistoryTextField(false);
+    return BlocBuilder<WalletTransactionBloc, WalletTransactionState>(
+        bloc: viewModel.walletTransactionBloc,
+        builder: (context, state) {
+          return Column(children: [
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: viewModel.showSearchHistoryTextField
+                    ? TextFieldText(
+                        borderRadius: 20,
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        color: ProtonColors.backgroundSecondary,
+                        suffixIcon: const Icon(Icons.close, size: 16),
+                        prefixIcon: const Icon(Icons.search, size: 16),
+                        showSuffixIcon: true,
+                        suffixIconOnPressed: () {
+                          viewModel.setSearchHistoryTextField(false);
+                        },
+                        scrollPadding: EdgeInsets.only(
+                            bottom:
+                                MediaQuery.of(context).viewInsets.bottom + 100),
+                        controller: viewModel.transactionSearchController,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(children: [
+                                Text(
+                                  S.of(context).transactions,
+                                  style: FontManager.body1Median(
+                                      ProtonColors.textNorm),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ]),
+                              Row(children: [
+                                IconButton(
+                                    onPressed: () {
+                                      TransactionFilterSheet.show(
+                                          context, viewModel);
+                                    },
+                                    icon: SvgPicture.asset(
+                                        "assets/images/icon/setup-preference.svg",
+                                        fit: BoxFit.fill,
+                                        width: 16,
+                                        height: 16)),
+                                IconButton(
+                                    onPressed: () {
+                                      viewModel.setSearchHistoryTextField(true);
+                                    },
+                                    icon: Icon(Icons.search_rounded,
+                                        color: ProtonColors.textNorm, size: 16))
+                              ]),
+                            ]))),
+            for (int index = 0;
+                index <
+                    min(
+                        state.historyTransaction.length,
+                        defaultTransactionPerPage *
+                                viewModel.currentHistoryPage +
+                            defaultTransactionPerPage);
+                index++)
+              TransactionListTitle(
+                width: MediaQuery.of(context).size.width,
+                address: WalletManager.getEmailFromWalletTransaction(
+                    state.historyTransaction[index].amountInSATS > 0
+                        ? state.historyTransaction[index].sender
+                        : state.historyTransaction[index].toList,
+                    selfEmailAddresses:
+                        viewModel.protonAddresses.map((e) => e.email).toList()),
+                bitcoinAmount: BitcoinAmount(
+                  amountInSatoshi: state.historyTransaction[index].amountInSATS,
+                  bitcoinUnit: Provider.of<UserSettingProvider>(context)
+                      .walletUserSetting
+                      .bitcoinUnit,
+                  exchangeRate: state.historyTransaction[index].exchangeRate,
+                ),
+                note: state.historyTransaction[index].label ?? "",
+                body: state.historyTransaction[index].body ?? "",
+                onTap: () {
+                  viewModel.selectedTXID = state.historyTransaction[index].txID;
+                  viewModel.historyAccountModel =
+                      state.historyTransaction[index].accountModel;
+                  viewModel.move(NavID.historyDetails);
+                },
+                timestamp: state.historyTransaction[index].createTimestamp,
+                isSend: state.historyTransaction[index].amountInSATS < 0,
+              ),
+            if (state.historyTransaction.length >
+                defaultTransactionPerPage * viewModel.currentHistoryPage +
+                    defaultTransactionPerPage)
+              GestureDetector(
+                  onTap: () {
+                    viewModel.showMoreTransactionHistory();
                   },
-                  scrollPadding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom + 100),
-                  controller: viewModel.transactionSearchController,
-                )
-              : Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: [
-                          Text(
-                            S.of(context).transactions,
-                            style:
-                                FontManager.body1Median(ProtonColors.textNorm),
-                            textAlign: TextAlign.left,
-                          ),
-                        ]),
-                        Row(children: [
-                          IconButton(
-                              onPressed: () {
-                                TransactionFilterSheet.show(context, viewModel);
-                              },
-                              icon: SvgPicture.asset(
-                                  "assets/images/icon/setup-preference.svg",
-                                  fit: BoxFit.fill,
-                                  width: 16,
-                                  height: 16)),
-                          IconButton(
-                              onPressed: () {
-                                viewModel.setSearchHistoryTextField(true);
-                              },
-                              icon: Icon(Icons.search_rounded,
-                                  color: ProtonColors.textNorm, size: 16))
-                        ]),
-                      ]))),
-      for (int index = 0;
-          index <
-              min(
-                  Provider.of<ProtonWalletProvider>(context)
-                      .protonWallet
-                      .historyTransactionsAfterFilter
-                      .length,
-                  defaultTransactionPerPage * viewModel.currentHistoryPage +
-                      defaultTransactionPerPage);
-          index++)
-        TransactionListTitle(
-          width: MediaQuery.of(context).size.width,
-          address: WalletManager.getEmailFromWalletTransaction(
-              Provider.of<ProtonWalletProvider>(context)
-                          .protonWallet
-                          .historyTransactionsAfterFilter[index]
-                          .amountInSATS >
-                      0
-                  ? Provider.of<ProtonWalletProvider>(context)
-                      .protonWallet
-                      .historyTransactionsAfterFilter[index]
-                      .sender
-                  : Provider.of<ProtonWalletProvider>(context)
-                      .protonWallet
-                      .historyTransactionsAfterFilter[index]
-                      .toList,
-              selfEmailAddresses:
-                  viewModel.protonAddresses.map((e) => e.email).toList()),
-          bitcoinAmount: BitcoinAmount(
-              amountInSatoshi: Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter[index]
-                  .amountInSATS,
-              bitcoinUnit: Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .bitcoinUnit,
-              exchangeRate: Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .exchangeRate),
-          note: Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter[index]
-                  .label ??
-              "",
-          body: Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter[index]
-                  .body ??
-              "",
-          onTap: () {
-            viewModel.selectedTXID =
-                Provider.of<ProtonWalletProvider>(context, listen: false)
-                    .protonWallet
-                    .historyTransactionsAfterFilter[index]
-                    .txID;
-            viewModel.historyAccountModel =
-                Provider.of<ProtonWalletProvider>(context, listen: false)
-                    .protonWallet
-                    .historyTransactionsAfterFilter[index]
-                    .accountModel;
-            viewModel.move(NavID.historyDetails);
-          },
-          timestamp: Provider.of<ProtonWalletProvider>(context)
-              .protonWallet
-              .historyTransactionsAfterFilter[index]
-              .createTimestamp,
-          isSend: Provider.of<ProtonWalletProvider>(context)
-                  .protonWallet
-                  .historyTransactionsAfterFilter[index]
-                  .amountInSATS <
-              0,
-        ),
-      if (Provider.of<ProtonWalletProvider>(context)
-              .protonWallet
-              .historyTransactionsAfterFilter
-              .length >
-          defaultTransactionPerPage * viewModel.currentHistoryPage +
-              defaultTransactionPerPage)
-        GestureDetector(
-            onTap: () {
-              viewModel.showMoreTransactionHistory();
-            },
-            child: Container(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text("Show more",
-                    style: FontManager.body1Regular(ProtonColors.protonBlue)))),
-      if (Provider.of<ProtonWalletProvider>(context)
-          .protonWallet
-          .historyTransactionsAfterFilter
-          .isEmpty)
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Center(
-              child: SvgPicture.asset("assets/images/icon/do_transactions.svg",
-                  fit: BoxFit.fill, width: 26, height: 26)),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-              width: 280,
-              child: Text(
-                "Send and receive Bitcoin with your email.",
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
-                textAlign: TextAlign.center,
-              )),
-          const SizedBox(
-            height: 10,
-          ),
-        ]),
-    ]);
+                  child: Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text("Show more",
+                          style: FontManager.body1Regular(
+                              ProtonColors.protonBlue)))),
+            if (state.historyTransaction.isEmpty)
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                    child: SvgPicture.asset(
+                        "assets/images/icon/do_transactions.svg",
+                        fit: BoxFit.fill,
+                        width: 26,
+                        height: 26)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 280,
+                    child: Text(
+                      "Send and receive Bitcoin with your email.",
+                      style: FontManager.titleHeadline(ProtonColors.textNorm),
+                      textAlign: TextAlign.center,
+                    )),
+                const SizedBox(
+                  height: 10,
+                ),
+              ]),
+          ]);
+        });
   }
 }

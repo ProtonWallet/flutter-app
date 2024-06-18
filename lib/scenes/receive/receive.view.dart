@@ -104,35 +104,36 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: 10),
-                                  if (Provider.of<ProtonWalletProvider>(context)
-                                          .protonWallet
-                                          .currentAccount ==
-                                      null)
-                                    Column(children: [
-                                      WalletAccountDropdown(
-                                          labelText: S.of(context).receive_to,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              defaultPadding * 2,
-                                          accounts:
-                                              Provider.of<ProtonWalletProvider>(
-                                                      context)
-                                                  .protonWallet
-                                                  .currentAccounts,
-                                          valueNotifier: viewModel.initialized
-                                              ? viewModel.accountValueNotifier
-                                              : ValueNotifier(Provider.of<
-                                                          ProtonWalletProvider>(
-                                                      context)
-                                                  .protonWallet
-                                                  .currentAccounts
-                                                  .first)),
-                                      const Divider(
-                                        thickness: 0.2,
-                                        height: 1,
-                                      ),
-                                    ]),
+                                  /// TODO:: add walletAccount selector here
+                                  // if (Provider.of<ProtonWalletProvider>(context)
+                                  //         .protonWallet
+                                  //         .currentAccount ==
+                                  //     null)
+                                  //   Column(children: [
+                                  //     WalletAccountDropdown(
+                                  //         labelText: S.of(context).receive_to,
+                                  //         width: MediaQuery.of(context)
+                                  //                 .size
+                                  //                 .width -
+                                  //             defaultPadding * 2,
+                                  //         accounts:
+                                  //             Provider.of<ProtonWalletProvider>(
+                                  //                     context)
+                                  //                 .protonWallet
+                                  //                 .currentAccounts,
+                                  //         valueNotifier: viewModel.initialized
+                                  //             ? viewModel.accountValueNotifier
+                                  //             : ValueNotifier(Provider.of<
+                                  //                         ProtonWalletProvider>(
+                                  //                     context)
+                                  //                 .protonWallet
+                                  //                 .currentAccounts
+                                  //                 .first)),
+                                  //     const Divider(
+                                  //       thickness: 0.2,
+                                  //       height: 1,
+                                  //     ),
+                                  //   ]),
                                   Container(
                                     color: ProtonColors.white,
                                     padding: const EdgeInsets.all(10),

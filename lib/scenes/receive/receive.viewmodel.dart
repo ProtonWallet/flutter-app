@@ -100,36 +100,48 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     if (walletModel != null && accountModel != null) {
       if (init) {
         _wallet = (await WalletManager.loadWalletWithID(
-            walletModel!.id!, accountModel!.id!))!;
+          walletModel!.id!,
+          accountModel!.id!,
+        ))!;
         List<String> emailIntegrationAddresses =
             await WalletManager.getAccountAddressIDs(
-                accountModel?.serverAccountID ?? "");
+          accountModel?.serverAccountID ?? "",
+        );
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
         BitcoinAddressModel? bitcoinAddressModel = await DBHelper
             .bitcoinAddressDao!
             .findLatestUnusedLocalBitcoinAddress(
-                walletID, accountModel!.id ?? 0);
+          walletModel!.serverWalletID,
+          accountModel!.serverAccountID,
+        );
         if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
           addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
         } else {
           addressIndex = await WalletManager.getBitcoinAddressIndex(
-              walletModel!.serverWalletID, accountModel!.serverAccountID);
+            walletModel!.serverWalletID,
+            accountModel!.serverAccountID,
+          );
         }
       } else {
         addressIndex = await WalletManager.getBitcoinAddressIndex(
-            walletModel!.serverWalletID, accountModel!.serverAccountID);
+          walletModel!.serverWalletID,
+          accountModel!.serverAccountID,
+        );
       }
-      var addressInfo =
-          await _lib.getAddress(_wallet, addressIndex: addressIndex);
+      var addressInfo = await _lib.getAddress(
+        _wallet,
+        addressIndex: addressIndex,
+      );
       address = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-            walletID: walletID,
-            accountID: accountModel!.id ?? 0,
-            bitcoinAddress: address,
-            bitcoinAddressIndex: addressIndex,
-            inEmailIntegrationPool: 0,
-            used: 0);
+          serverWalletID: walletModel!.serverWalletID,
+          serverAccountID: accountModel!.serverAccountID,
+          bitcoinAddress: address,
+          bitcoinAddressIndex: addressIndex,
+          inEmailIntegrationPool: 0,
+          used: 0,
+        );
       } catch (e) {
         logger.e(e.toString());
       }

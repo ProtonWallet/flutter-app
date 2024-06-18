@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
@@ -8,6 +10,10 @@ class WalletPassphraseProvider implements DataProvider {
   List<WalletPassphrase>? walletPassphrases;
 
   WalletPassphraseProvider(this.storage);
+
+  @override
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
 
   Future<String?> getWalletPassphrase(String walletID) async {
     var passphrases = await _getWalletPassphrases();
@@ -35,5 +41,7 @@ class WalletPassphraseProvider implements DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    dataUpdateController.close();
+  }
 }
