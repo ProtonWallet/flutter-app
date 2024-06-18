@@ -27,7 +27,7 @@ class BitcoinAddressClient extends RustOpaque {
         .instance.api.rust_arc_decrement_strong_count_BitcoinAddressClientPtr,
   );
 
-  Future<List<WalletBitcoinAddress>> addBitcoinAddresses(
+  Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
           {required String walletId,
           required String walletAccountId,
           required List<BitcoinAddress> bitcoinAddresses,
@@ -49,7 +49,7 @@ class BitcoinAddressClient extends RustOpaque {
           walletAccountId: walletAccountId,
           hint: hint);
 
-  Future<List<WalletBitcoinAddress>> getWalletBitcoinAddress(
+  Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
           {required String walletId,
           required String walletAccountId,
           int? onlyRequest,
@@ -67,7 +67,7 @@ class BitcoinAddressClient extends RustOpaque {
       RustLib.instance.api
           .bitcoinAddressClientNew(service: service, hint: hint);
 
-  Future<WalletBitcoinAddress> updateBitcoinAddress(
+  Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
           {required String walletId,
           required String walletAccountId,
           required String walletAccountBitcoinAddressId,

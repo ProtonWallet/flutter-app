@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use andromeda_api::core::ApiClient;
 
-use crate::{errors::ApiError, event_routes::ProtonEvent};
+use crate::{errors::BridgeError, event_routes::ProtonEvent};
 
 use super::proton_api_service::ProtonAPIService;
 
@@ -19,18 +19,14 @@ impl EventClient {
         }
     }
 
-    pub async fn get_latest_event_id(&self) -> Result<String, ApiError> {
-        let result = self.inner.get_latest_event_id().await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+    pub async fn get_latest_event_id(&self) -> Result<String, BridgeError> {
+        Ok(self.inner.get_latest_event_id().await?)
     }
 
     pub async fn collect_events(
         &self,
         latest_event_id: String,
-    ) -> Result<Vec<ProtonEvent>, ApiError> {
+    ) -> Result<Vec<ProtonEvent>, BridgeError> {
         let result = self.inner.collect_events(latest_event_id).await;
         match result {
             Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
@@ -38,7 +34,7 @@ impl EventClient {
         }
     }
 
-    pub async fn is_valid_token(&self) -> Result<bool, ApiError> {
+    pub async fn is_valid_token(&self) -> Result<bool, BridgeError> {
         let result = self.get_latest_event_id().await;
         match result {
             Ok(_) => Ok(true),

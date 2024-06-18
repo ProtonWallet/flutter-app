@@ -6,7 +6,6 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -28,11 +27,8 @@ class UpgradeIntroSheet {
             Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  SvgPicture.asset(
-                      "assets/images/icon/upgrade_intro.svg",
-                      fit: BoxFit.fill,
-                      width: 240,
-                      height: 240),
+                  SvgPicture.asset("assets/images/icon/upgrade_intro.svg",
+                      fit: BoxFit.fill, width: 240, height: 240),
                   const SizedBox(height: 20),
                   Text(
                     S.of(context).upgrade_intro_title,

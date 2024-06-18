@@ -6,7 +6,7 @@ use andromeda_api::{
 use flutter_rust_bridge::frb;
 use log::info;
 
-use crate::errors::ApiError;
+use crate::errors::BridgeError;
 use tokio::sync::Mutex;
 pub type DartFnFuture<T> = Pin<Box<dyn Future<Output = T> + Send + 'static>>;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
@@ -24,7 +24,7 @@ pub struct ProtonWalletAuthStore {
 
 impl ProtonWalletAuthStore {
     #[frb(sync)]
-    pub fn new(env: &str) -> Result<Self, ApiError> {
+    pub fn new(env: &str) -> Result<Self, BridgeError> {
         let auth = Arc::new(std::sync::Mutex::new(Auth::None));
         ProtonWalletAuthStore::from_auth(env, auth)
     }
@@ -33,7 +33,7 @@ impl ProtonWalletAuthStore {
     pub(crate) fn from_auth(
         env: &str,
         auth: Arc<std::sync::Mutex<Auth>>,
-    ) -> Result<Self, ApiError> {
+    ) -> Result<Self, BridgeError> {
         let store = WalletAuthStore::from_env_str(env.to_string(), auth);
         Ok(Self { inner: store })
     }
@@ -45,7 +45,7 @@ impl ProtonWalletAuthStore {
         access: String,
         refresh: String,
         scopes: Vec<String>,
-    ) -> Result<Self, ApiError> {
+    ) -> Result<Self, BridgeError> {
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
         ProtonWalletAuthStore::from_auth(env, Arc::new(std::sync::Mutex::new(auth)))
     }
@@ -57,7 +57,7 @@ impl ProtonWalletAuthStore {
         access: String,
         refresh: String,
         scopes: Vec<String>,
-    ) -> Result<(), ApiError> {
+    ) -> Result<(), BridgeError> {
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
         let _ = self.inner.set_auth(auth)?;
         Ok(())
@@ -66,14 +66,14 @@ impl ProtonWalletAuthStore {
     pub async fn set_auth_dart_callback(
         &mut self,
         callback: impl Fn(ChildSession) -> DartFnFuture<String> + Send + Sync + 'static,
-    ) -> Result<(), ApiError> {
+    ) -> Result<(), BridgeError> {
         let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
         *cb = Some(Arc::new(callback));
         info!("set_auth_dart_callback ok");
         Ok(())
     }
 
-    pub async fn clear_auth_dart_callback(&self) -> Result<(), ApiError> {
+    pub async fn clear_auth_dart_callback(&self) -> Result<(), BridgeError> {
         let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
         *cb = None;
         info!("clear_auth_dart_callback ok");
@@ -126,7 +126,8 @@ impl Store for ProtonWalletAuthStore {
 
     fn set_auth(&mut self, auth: Auth) -> Result<Auth, StoreWriteErr> {
         info!("Custom set_auth: {:?}", auth.clone());
+        let result = self.inner.set_auth(auth.clone())?;
         self.refresh_auth_credential(auth.clone());
-        self.inner.set_auth(auth)
+        Ok(result)
     }
 }

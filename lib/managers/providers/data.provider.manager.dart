@@ -6,6 +6,7 @@ import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
+import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -71,13 +72,17 @@ class DataProviderManager extends Manager {
   late LocalTransactionDataProvider localTransactionDataProvider;
   late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   late BalanceDataProvider balanceDataProvider;
+  late GatewayDataProvider gatewayDataProvider;
 
   DataProviderManager(this.storage, this.apiService, this.dbConnection);
 
   @override
   Future<void> login(String userID) async {
+    //
     userDataProvider = UserDataProvider(appDatabase: dbConnection);
+    //
     walletPassphraseProvider = WalletPassphraseProvider(storage);
+    // wallets and accounts
     walletDataProvider = WalletsDataProvider(
       DBHelper.walletDao!,
       DBHelper.accountDao!,
@@ -90,18 +95,25 @@ class DataProviderManager extends Manager {
 
       /// TODO:: put selected wallet account server id here
     );
+    //
     walletKeysProvider = WalletKeysProvider(
       storage,
       apiService.getWalletClient(),
     );
+    //
     contactsDataProvider = ContactsDataProvider(
       apiService.getProtonContactsClient(),
       DBHelper.contactsDao!,
     );
+    //
     userSettingsDataProvider = UserSettingsDataProvider(
       userID,
       WalletUserSettingsQueries(dbConnection),
       apiService.getSettingsClient(),
+    );
+    // on ramp gateway
+    gatewayDataProvider = GatewayDataProvider(
+      apiService.getOnRampGatewayClient(),
     );
 
     addressKeyProvider =
@@ -147,6 +159,7 @@ class DataProviderManager extends Manager {
 
   @override
   Future<void> logout() async {
+    await gatewayDataProvider.clear();
     await userSettingsDataProvider.clear();
     await userDataProvider.clear();
     await walletDataProvider.clear();
