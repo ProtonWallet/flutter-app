@@ -1,5 +1,5 @@
 use super::proton_api_service::ProtonAPIService;
-use crate::errors::ApiError;
+use crate::errors::BridgeError;
 use andromeda_api::{contacts::ApiContactEmails, core::ApiClient};
 use std::sync::Arc;
 
@@ -16,7 +16,7 @@ impl ContactsClient {
         }
     }
 
-    pub async fn get_contacts(&self) -> Result<Vec<ApiContactEmails>, ApiError> {
+    pub async fn get_contacts(&self) -> Result<Vec<ApiContactEmails>, BridgeError> {
         let result = self.inner.get_contacts(Some(1000), Some(0)).await;
         match result {
             Ok(response) => Ok(response),

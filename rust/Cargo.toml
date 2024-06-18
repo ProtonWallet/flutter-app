@@ -13,7 +13,7 @@ hyper = "1.1.0"
 flutter_rust_bridge_codegen = { version = "2.0.0-dev.33" }
 
 [dependencies]
-rand = "0.8"
+thiserror = "1.0.61"
 bdk = { version = "0.29.0", default-features = false, features = [
   "std",
   "keys-bip39",
@@ -37,15 +37,13 @@ esplora-client = { version = "0.6.0", path = "../vendor/esplora-client", default
   "async-https",
 ] }
 
+rand = "0.8"
 tokio = { version = "1.28.0", features = ["full"] }
 flutter_rust_bridge = "=2.0.0-dev.33"
 serde = "1.0.89"
 serde_json = "1.0.96"
-anyhow = "1.0.68"
 lazy_static = "1.4.0"
-http = "1.0.0"
-hex = "0.4.3"
-chrono = "0.4.34"
+chrono = "0.4.38"
 ## flutter rust logger
 flutter_logger = { version = "0.6.1", features = ["panic"] }
 log = "0.4.19"
@@ -53,19 +51,16 @@ log = "0.4.19"
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
-proton-srp = { version = "0.4.0", default-features = false, registry = "proton_internal" }
+proton-srp = { version = "0.4.0", registry = "proton_internal" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
-jni = { version = "0.21.1" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2.12", features = ["js"] }
 openssl = { version = "*", features = ["vendored"] }
 
 # Platform-specific dependencies
-# bdk_esplora = { version = "0.4.0", default-features = false, features = ["async-https"] }
-# miniscript = { version = "10.0.0", default-features = false }
 # serde-wasm-bindgen = { version = "0.6.1", optional = true }
 # wasm-bindgen = { version = "0.2.88", features=["serde-serialize"], optional = true  }
 
@@ -92,3 +87,7 @@ esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
 # slow-timeout = { period = "30s", terminate-after = 10 }
 # [env] #not useable 
 # RUST_BACKTRACE = "1"
+
+[features]
+default = []
+test = []

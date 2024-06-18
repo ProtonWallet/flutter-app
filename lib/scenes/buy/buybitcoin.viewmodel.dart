@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ramp_flutter/configuration.dart';
 import 'package:ramp_flutter/offramp_sale.dart';
 import 'package:ramp_flutter/onramp_purchase.dart';
@@ -18,8 +18,11 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/scenes/buy/buybitcoin.bloc.dart';
+import 'package:wallet/rust/proton_api/payment_gateway.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -27,11 +30,6 @@ import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   BuyBitcoinViewModel(super.coordinator);
-
-  late final Configuration configuration;
-  late final RampFlutter ramp;
-
-  bool get isTestEnv;
 
   bool get supportOffRamp;
 
@@ -52,11 +50,20 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   List<DropdownItem> payments = [];
   List<DropdownItem> providers = [];
+
+  /// get prebuild country code
+  late List<String> favoriteCountryCode;
+
+  ///
+  void selectCountry(String code);
+  void selectCurrency(String code);
+  void selectAmount(String amount);
+
+  void pay(SelectedInfoModel selected);
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
-  BuyBitcoinViewModelImpl(super.coordinator, this.userEmail);
-
+  BuyBitcoinViewModelImpl(super.coordinator, this.userEmail, this.buyBloc);
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
 
@@ -65,17 +72,26 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     datasourceChangedStreamController.close();
   }
 
-  BuyBitcoinBloc myBloc = BuyBitcoinBloc();
+  /// features
+  final BuyBitcoinBloc buyBloc;
 
+  /// ramp
+  late final Configuration configuration;
+  late final RampFlutter ramp;
+
+  //
   final int walletID = 1;
   final String userEmail;
   final int accountID = 1;
 
   @override
-  BuyBitcoinBloc get bloc => myBloc;
+  List<String> get favoriteCountryCode {
+    var currentCode = PlatformDispatcher.instance.locale.countryCode ?? "US";
+    return [currentCode];
+  }
 
   @override
-  bool get isTestEnv => false;
+  BuyBitcoinBloc get bloc => buyBloc;
 
   @override
   bool get supportOffRamp => false;
@@ -114,11 +130,23 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       subtitle: '0.00155 BTC',
     ));
 
-    bloc.add(const LoadAddressEvent());
+    configuration = Configuration()
+      ..hostApiKey = apiKey
+      ..hostAppName = "Proton Wallet"
+      ..defaultFlow = "ONRAMP"
+      ..userAddress = receiveAddress
+      ..userEmailAddress = userEmail;
+
+    ramp = RampFlutter();
+    ramp.onOnrampPurchaseCreated = onOnrampPurchaseCreated;
+    ramp.onSendCryptoRequested = onSendCryptoRequested;
+    ramp.onOfframpSaleCreated = onOfframpSaleCreated;
+    ramp.onRampClosed = onRampClosed;
+
+    // bloc.add(const LoadCurrencyEvent());
     bloc.add(const LoadCountryEvent());
-    EasyLoading.show(
-        status: "syncing bitcoin address index..",
-        maskType: EasyLoadingMaskType.black);
+    // bloc.add(const GetQutoeEvent());
+
     try {
       WalletModel? walletModel;
       if (walletID == 0) {
@@ -128,8 +156,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       }
       AccountModel accountModel =
           await DBHelper.accountDao!.findById(accountID);
-      await WalletManager.syncBitcoinAddressIndex(
-          walletModel!.serverWalletID, accountModel.serverAccountID);
+      // await WalletManager.syncBitcoinAddressIndex(
+      //     walletModel!.serverWalletID, accountModel.serverAccountID);
       await getAddress(walletModel, accountModel, init: true);
     } catch (e) {
       logger.e(e);
@@ -137,31 +165,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
     datasourceChangedStreamController.sinkAddSafe(this);
 
-    configuration = Configuration()
-      ..hostApiKey = apiKey
-      ..hostAppName = "Proton Wallet"
-      ..defaultFlow = "ONRAMP"
-      ..userAddress = receiveAddress
-      ..userEmailAddress = userEmail;
-    configuration.hostLogoUrl =
-        "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
-    configuration.enabledFlows =
-        supportOffRamp ? ["ONRAMP", "OFFRAMP"] : ["ONRAMP"];
-
-    configuration.swapAsset = "BTC_BTC";
-    configuration.defaultAsset = "BTC";
-    configuration.fiatCurrency = "USD";
-    configuration.selectedCountryCode = "US";
-
-    configuration.variant = "auto";
-
-    ramp = RampFlutter();
-    ramp.onOnrampPurchaseCreated = onOnrampPurchaseCreated;
-    ramp.onSendCryptoRequested = onSendCryptoRequested;
-    ramp.onOfframpSaleCreated = onOfframpSaleCreated;
-    ramp.onRampClosed = onRampClosed;
-
-    EasyLoading.dismiss();
+    // EasyLoading.dismiss();
   }
 
   @override
@@ -291,5 +295,40 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   void sellbutton() {
     isBuying = false;
     datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  void selectCountry(String code) {
+    bloc.add(SelectCountryEvent(code));
+  }
+
+  @override
+  void selectCurrency(String code) {
+    bloc.add(SelectCurrencyEvent(code));
+  }
+
+  @override
+  void selectAmount(String amount) {
+    bloc.add(SelectAmountEvent(amount));
+  }
+
+  @override
+  void pay(SelectedInfoModel selected) {
+    if (selected.provider == GatewayProvider.ramp) {
+      configuration.hostLogoUrl =
+          "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
+      configuration.enabledFlows =
+          supportOffRamp ? ["ONRAMP", "OFFRAMP"] : ["ONRAMP"];
+
+      configuration.swapAsset = "BTC_BTC";
+      configuration.defaultAsset = "BTC";
+      configuration.fiatValue = selected.amount.toString();
+      configuration.fiatCurrency = selected.fiatCurrency.symbol;
+      configuration.selectedCountryCode = selected.country.code;
+
+      configuration.variant = "auto";
+
+      move(NavID.rampExternal);
+    }
   }
 }

@@ -136,7 +136,7 @@ Future<ApiWalletAccount> removeEmailAddress(
         addressId: addressId,
         hint: hint);
 
-Future<WalletBitcoinAddress> updateBitcoinAddress(
+Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
         {required String walletId,
         required String walletAccountId,
         required String walletAccountBitcoinAddressId,
@@ -149,7 +149,7 @@ Future<WalletBitcoinAddress> updateBitcoinAddress(
         bitcoinAddress: bitcoinAddress,
         hint: hint);
 
-Future<List<WalletBitcoinAddress>> addBitcoinAddresses(
+Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
         {required String walletId,
         required String walletAccountId,
         required List<BitcoinAddress> bitcoinAddresses,
@@ -164,7 +164,7 @@ Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
         {required String email, dynamic hint}) =>
     RustLib.instance.api.lookupBitcoinAddress(email: email, hint: hint);
 
-Future<List<WalletBitcoinAddress>> getWalletBitcoinAddress(
+Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
         {required String walletId,
         required String walletAccountId,
         int? onlyRequest,

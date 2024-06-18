@@ -9,6 +9,7 @@ import 'api/api_service/bitcoin_address_client.dart';
 import 'api/api_service/email_integration_client.dart';
 import 'api/api_service/event_client.dart';
 import 'api/api_service/exchange_rate_client.dart';
+import 'api/api_service/onramp_gateway_client.dart';
 import 'api/api_service/proton_api_service.dart';
 import 'api/api_service/proton_contacts_client.dart';
 import 'api/api_service/proton_email_addr_client.dart';
@@ -36,6 +37,7 @@ import 'proton_api/contacts.dart';
 import 'proton_api/errors.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
+import 'proton_api/payment_gateway.dart';
 import 'proton_api/proton_address.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
@@ -88,6 +90,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ExchangeRateClientPtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_OnRampGatewayClientPtr => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ProtonApiServicePtr => wire
@@ -169,6 +175,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic raw);
+
+  @protected
+  OnRampGatewayClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           dynamic raw);
 
   @protected
@@ -257,6 +268,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  OnRampGatewayClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic raw);
+
+  @protected
   ProtonApiService
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           dynamic raw);
@@ -292,6 +308,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Object dco_decode_DartOpaque(dynamic raw);
+
+  @protected
+  Map<GatewayProvider, List<ApiCountry>>
+      dco_decode_Map_gateway_provider_list_api_country(dynamic raw);
+
+  @protected
+  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
+      dco_decode_Map_gateway_provider_list_api_country_fiat_currency(
+          dynamic raw);
+
+  @protected
+  Map<GatewayProvider, List<PaymentMethod>>
+      dco_decode_Map_gateway_provider_list_payment_method(dynamic raw);
+
+  @protected
+  Map<GatewayProvider, List<Quote>> dco_decode_Map_gateway_provider_list_quote(
+      dynamic raw);
 
   @protected
   AddressBalance
@@ -341,6 +374,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic raw);
+
+  @protected
+  OnRampGatewayClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           dynamic raw);
 
   @protected
@@ -405,16 +443,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiContactEmails dco_decode_api_contact_emails(dynamic raw);
 
   @protected
-  ApiEmailAddress dco_decode_api_email_address(dynamic raw);
+  ApiCountry dco_decode_api_country(dynamic raw);
 
   @protected
-  ApiError dco_decode_api_error(dynamic raw);
+  ApiCountryFiatCurrency dco_decode_api_country_fiat_currency(dynamic raw);
+
+  @protected
+  ApiEmailAddress dco_decode_api_email_address(dynamic raw);
 
   @protected
   ApiWallet dco_decode_api_wallet(dynamic raw);
 
   @protected
   ApiWalletAccount dco_decode_api_wallet_account(dynamic raw);
+
+  @protected
+  ApiWalletBitcoinAddress dco_decode_api_wallet_bitcoin_address(dynamic raw);
 
   @protected
   ApiWalletData dco_decode_api_wallet_data(dynamic raw);
@@ -491,6 +535,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   double dco_decode_box_autoadd_f_32(dynamic raw);
 
   @protected
+  GatewayProvider dco_decode_box_autoadd_gateway_provider(dynamic raw);
+
+  @protected
   LocalUtxo dco_decode_box_autoadd_local_utxo(dynamic raw);
 
   @protected
@@ -498,6 +545,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   OutPoint dco_decode_box_autoadd_out_point(dynamic raw);
+
+  @protected
+  PaymentMethod dco_decode_box_autoadd_payment_method(dynamic raw);
 
   @protected
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw);
@@ -535,6 +585,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletTransaction dco_decode_box_autoadd_wallet_transaction(dynamic raw);
 
   @protected
+  BridgeError dco_decode_bridge_error(dynamic raw);
+
+  @protected
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
 
   @protected
@@ -569,6 +622,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   FiatCurrency dco_decode_fiat_currency(dynamic raw);
 
   @protected
+  GatewayProvider dco_decode_gateway_provider(dynamic raw);
+
+  @protected
   int dco_decode_i_32(dynamic raw);
 
   @protected
@@ -595,10 +651,21 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ApiContactEmails> dco_decode_list_api_contact_emails(dynamic raw);
 
   @protected
+  List<ApiCountry> dco_decode_list_api_country(dynamic raw);
+
+  @protected
+  List<ApiCountryFiatCurrency> dco_decode_list_api_country_fiat_currency(
+      dynamic raw);
+
+  @protected
   List<ApiEmailAddress> dco_decode_list_api_email_address(dynamic raw);
 
   @protected
   List<ApiWalletAccount> dco_decode_list_api_wallet_account(dynamic raw);
+
+  @protected
+  List<ApiWalletBitcoinAddress> dco_decode_list_api_wallet_bitcoin_address(
+      dynamic raw);
 
   @protected
   List<ApiWalletData> dco_decode_list_api_wallet_data(dynamic raw);
@@ -619,6 +686,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<OutPoint> dco_decode_list_out_point(dynamic raw);
 
   @protected
+  List<PaymentMethod> dco_decode_list_payment_method(dynamic raw);
+
+  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw);
 
   @protected
@@ -634,6 +704,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ProtonEvent> dco_decode_list_proton_event(dynamic raw);
 
   @protected
+  List<Quote> dco_decode_list_quote(dynamic raw);
+
+  @protected
+  List<(GatewayProvider, List<ApiCountry>)>
+      dco_decode_list_record_gateway_provider_list_api_country(dynamic raw);
+
+  @protected
+  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
+      dco_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+          dynamic raw);
+
+  @protected
+  List<(GatewayProvider, List<PaymentMethod>)>
+      dco_decode_list_record_gateway_provider_list_payment_method(dynamic raw);
+
+  @protected
+  List<(GatewayProvider, List<Quote>)>
+      dco_decode_list_record_gateway_provider_list_quote(dynamic raw);
+
+  @protected
   List<ScriptAmount> dco_decode_list_script_amount(dynamic raw);
 
   @protected
@@ -647,10 +737,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<WalletAccountEvent> dco_decode_list_wallet_account_event(dynamic raw);
-
-  @protected
-  List<WalletBitcoinAddress> dco_decode_list_wallet_bitcoin_address(
-      dynamic raw);
 
   @protected
   List<WalletEvent> dco_decode_list_wallet_event(dynamic raw);
@@ -708,6 +794,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
+
+  @protected
+  GatewayProvider? dco_decode_opt_box_autoadd_gateway_provider(dynamic raw);
+
+  @protected
+  PaymentMethod? dco_decode_opt_box_autoadd_payment_method(dynamic raw);
 
   @protected
   ProtonExchangeRate? dco_decode_opt_box_autoadd_proton_exchange_rate(
@@ -772,6 +864,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   OutPoint dco_decode_out_point(dynamic raw);
 
   @protected
+  PaymentMethod dco_decode_payment_method(dynamic raw);
+
+  @protected
   ProtonAddress dco_decode_proton_address(dynamic raw);
 
   @protected
@@ -787,7 +882,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PsbtSigHashType dco_decode_psbt_sig_hash_type(dynamic raw);
 
   @protected
+  Quote dco_decode_quote(dynamic raw);
+
+  @protected
   RbfValue dco_decode_rbf_value(dynamic raw);
+
+  @protected
+  (GatewayProvider, List<ApiCountry>)
+      dco_decode_record_gateway_provider_list_api_country(dynamic raw);
+
+  @protected
+  (GatewayProvider, List<ApiCountryFiatCurrency>)
+      dco_decode_record_gateway_provider_list_api_country_fiat_currency(
+          dynamic raw);
+
+  @protected
+  (GatewayProvider, List<PaymentMethod>)
+      dco_decode_record_gateway_provider_list_payment_method(dynamic raw);
+
+  @protected
+  (GatewayProvider, List<Quote>) dco_decode_record_gateway_provider_list_quote(
+      dynamic raw);
 
   @protected
   (OutPoint, String, int) dco_decode_record_out_point_string_usize(dynamic raw);
@@ -840,9 +955,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   WalletAccountEvent dco_decode_wallet_account_event(dynamic raw);
-
-  @protected
-  WalletBitcoinAddress dco_decode_wallet_bitcoin_address(dynamic raw);
 
   @protected
   WalletEvent dco_decode_wallet_event(dynamic raw);
@@ -910,6 +1022,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          SseDeserializer deserializer);
+
+  @protected
+  OnRampGatewayClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           SseDeserializer deserializer);
 
   @protected
@@ -998,6 +1115,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  OnRampGatewayClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonApiService
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           SseDeserializer deserializer);
@@ -1029,6 +1151,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
+
+  @protected
+  Map<GatewayProvider, List<ApiCountry>>
+      sse_decode_Map_gateway_provider_list_api_country(
+          SseDeserializer deserializer);
+
+  @protected
+  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
+      sse_decode_Map_gateway_provider_list_api_country_fiat_currency(
+          SseDeserializer deserializer);
+
+  @protected
+  Map<GatewayProvider, List<PaymentMethod>>
+      sse_decode_Map_gateway_provider_list_payment_method(
+          SseDeserializer deserializer);
+
+  @protected
+  Map<GatewayProvider, List<Quote>> sse_decode_Map_gateway_provider_list_quote(
+      SseDeserializer deserializer);
 
   @protected
   AddressBalance
@@ -1078,6 +1219,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          SseDeserializer deserializer);
+
+  @protected
+  OnRampGatewayClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           SseDeserializer deserializer);
 
   @protected
@@ -1143,16 +1289,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiContactEmails sse_decode_api_contact_emails(SseDeserializer deserializer);
 
   @protected
-  ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer);
+  ApiCountry sse_decode_api_country(SseDeserializer deserializer);
 
   @protected
-  ApiError sse_decode_api_error(SseDeserializer deserializer);
+  ApiCountryFiatCurrency sse_decode_api_country_fiat_currency(
+      SseDeserializer deserializer);
+
+  @protected
+  ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer);
 
   @protected
   ApiWallet sse_decode_api_wallet(SseDeserializer deserializer);
 
   @protected
   ApiWalletAccount sse_decode_api_wallet_account(SseDeserializer deserializer);
+
+  @protected
+  ApiWalletBitcoinAddress sse_decode_api_wallet_bitcoin_address(
+      SseDeserializer deserializer);
 
   @protected
   ApiWalletData sse_decode_api_wallet_data(SseDeserializer deserializer);
@@ -1240,6 +1394,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   double sse_decode_box_autoadd_f_32(SseDeserializer deserializer);
 
   @protected
+  GatewayProvider sse_decode_box_autoadd_gateway_provider(
+      SseDeserializer deserializer);
+
+  @protected
   LocalUtxo sse_decode_box_autoadd_local_utxo(SseDeserializer deserializer);
 
   @protected
@@ -1248,6 +1406,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   OutPoint sse_decode_box_autoadd_out_point(SseDeserializer deserializer);
+
+  @protected
+  PaymentMethod sse_decode_box_autoadd_payment_method(
+      SseDeserializer deserializer);
 
   @protected
   ProtonExchangeRate sse_decode_box_autoadd_proton_exchange_rate(
@@ -1288,6 +1450,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  BridgeError sse_decode_bridge_error(SseDeserializer deserializer);
+
+  @protected
   ChangeSpendPolicy sse_decode_change_spend_policy(
       SseDeserializer deserializer);
 
@@ -1325,6 +1490,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   FiatCurrency sse_decode_fiat_currency(SseDeserializer deserializer);
 
   @protected
+  GatewayProvider sse_decode_gateway_provider(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
@@ -1353,11 +1521,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<ApiCountry> sse_decode_list_api_country(SseDeserializer deserializer);
+
+  @protected
+  List<ApiCountryFiatCurrency> sse_decode_list_api_country_fiat_currency(
+      SseDeserializer deserializer);
+
+  @protected
   List<ApiEmailAddress> sse_decode_list_api_email_address(
       SseDeserializer deserializer);
 
   @protected
   List<ApiWalletAccount> sse_decode_list_api_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  List<ApiWalletBitcoinAddress> sse_decode_list_api_wallet_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
@@ -1383,6 +1562,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<OutPoint> sse_decode_list_out_point(SseDeserializer deserializer);
 
   @protected
+  List<PaymentMethod> sse_decode_list_payment_method(
+      SseDeserializer deserializer);
+
+  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer);
 
   @protected
@@ -1400,6 +1583,29 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ProtonEvent> sse_decode_list_proton_event(SseDeserializer deserializer);
 
   @protected
+  List<Quote> sse_decode_list_quote(SseDeserializer deserializer);
+
+  @protected
+  List<(GatewayProvider, List<ApiCountry>)>
+      sse_decode_list_record_gateway_provider_list_api_country(
+          SseDeserializer deserializer);
+
+  @protected
+  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
+      sse_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+          SseDeserializer deserializer);
+
+  @protected
+  List<(GatewayProvider, List<PaymentMethod>)>
+      sse_decode_list_record_gateway_provider_list_payment_method(
+          SseDeserializer deserializer);
+
+  @protected
+  List<(GatewayProvider, List<Quote>)>
+      sse_decode_list_record_gateway_provider_list_quote(
+          SseDeserializer deserializer);
+
+  @protected
   List<ScriptAmount> sse_decode_list_script_amount(
       SseDeserializer deserializer);
 
@@ -1415,10 +1621,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<WalletAccountEvent> sse_decode_list_wallet_account_event(
-      SseDeserializer deserializer);
-
-  @protected
-  List<WalletBitcoinAddress> sse_decode_list_wallet_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
@@ -1485,6 +1687,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
+  GatewayProvider? sse_decode_opt_box_autoadd_gateway_provider(
+      SseDeserializer deserializer);
+
+  @protected
+  PaymentMethod? sse_decode_opt_box_autoadd_payment_method(
+      SseDeserializer deserializer);
 
   @protected
   ProtonExchangeRate? sse_decode_opt_box_autoadd_proton_exchange_rate(
@@ -1557,6 +1767,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   OutPoint sse_decode_out_point(SseDeserializer deserializer);
 
   @protected
+  PaymentMethod sse_decode_payment_method(SseDeserializer deserializer);
+
+  @protected
   ProtonAddress sse_decode_proton_address(SseDeserializer deserializer);
 
   @protected
@@ -1573,7 +1786,29 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PsbtSigHashType sse_decode_psbt_sig_hash_type(SseDeserializer deserializer);
 
   @protected
+  Quote sse_decode_quote(SseDeserializer deserializer);
+
+  @protected
   RbfValue sse_decode_rbf_value(SseDeserializer deserializer);
+
+  @protected
+  (GatewayProvider, List<ApiCountry>)
+      sse_decode_record_gateway_provider_list_api_country(
+          SseDeserializer deserializer);
+
+  @protected
+  (GatewayProvider, List<ApiCountryFiatCurrency>)
+      sse_decode_record_gateway_provider_list_api_country_fiat_currency(
+          SseDeserializer deserializer);
+
+  @protected
+  (GatewayProvider, List<PaymentMethod>)
+      sse_decode_record_gateway_provider_list_payment_method(
+          SseDeserializer deserializer);
+
+  @protected
+  (GatewayProvider, List<Quote>) sse_decode_record_gateway_provider_list_quote(
+      SseDeserializer deserializer);
 
   @protected
   (OutPoint, String, int) sse_decode_record_out_point_string_usize(
@@ -1630,10 +1865,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   WalletAccountEvent sse_decode_wallet_account_event(
-      SseDeserializer deserializer);
-
-  @protected
-  WalletBitcoinAddress sse_decode_wallet_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
@@ -1705,6 +1936,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
           ExchangeRateClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          OnRampGatewayClient self, SseSerializer serializer);
 
   @protected
   void
@@ -1793,6 +2029,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          OnRampGatewayClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           ProtonApiService self, SseSerializer serializer);
 
@@ -1827,6 +2068,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_DartOpaque(Object self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_gateway_provider_list_api_country(
+      Map<GatewayProvider, List<ApiCountry>> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_gateway_provider_list_api_country_fiat_currency(
+      Map<GatewayProvider, List<ApiCountryFiatCurrency>> self,
+      SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_gateway_provider_list_payment_method(
+      Map<GatewayProvider, List<PaymentMethod>> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_gateway_provider_list_quote(
+      Map<GatewayProvider, List<Quote>> self, SseSerializer serializer);
 
   @protected
   void
@@ -1877,6 +2135,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
           ExchangeRateClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          OnRampGatewayClient self, SseSerializer serializer);
 
   @protected
   void
@@ -1943,11 +2206,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiContactEmails self, SseSerializer serializer);
 
   @protected
-  void sse_encode_api_email_address(
-      ApiEmailAddress self, SseSerializer serializer);
+  void sse_encode_api_country(ApiCountry self, SseSerializer serializer);
 
   @protected
-  void sse_encode_api_error(ApiError self, SseSerializer serializer);
+  void sse_encode_api_country_fiat_currency(
+      ApiCountryFiatCurrency self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_email_address(
+      ApiEmailAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_wallet(ApiWallet self, SseSerializer serializer);
@@ -1955,6 +2222,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_api_wallet_account(
       ApiWalletAccount self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_wallet_bitcoin_address(
+      ApiWalletBitcoinAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_wallet_data(ApiWalletData self, SseSerializer serializer);
@@ -2046,6 +2317,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_f_32(double self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_gateway_provider(
+      GatewayProvider self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_local_utxo(
       LocalUtxo self, SseSerializer serializer);
 
@@ -2056,6 +2331,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_out_point(
       OutPoint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_payment_method(
+      PaymentMethod self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_proton_exchange_rate(
@@ -2098,6 +2377,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       WalletTransaction self, SseSerializer serializer);
 
   @protected
+  void sse_encode_bridge_error(BridgeError self, SseSerializer serializer);
+
+  @protected
   void sse_encode_change_spend_policy(
       ChangeSpendPolicy self, SseSerializer serializer);
 
@@ -2137,6 +2419,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_fiat_currency(FiatCurrency self, SseSerializer serializer);
 
   @protected
+  void sse_encode_gateway_provider(
+      GatewayProvider self, SseSerializer serializer);
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
@@ -2165,12 +2451,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ApiContactEmails> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_api_country(
+      List<ApiCountry> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_api_country_fiat_currency(
+      List<ApiCountryFiatCurrency> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_api_email_address(
       List<ApiEmailAddress> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_api_wallet_account(
       List<ApiWalletAccount> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_api_wallet_bitcoin_address(
+      List<ApiWalletBitcoinAddress> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_api_wallet_data(
@@ -2196,6 +2494,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_out_point(List<OutPoint> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_payment_method(
+      List<PaymentMethod> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer);
 
   @protected
@@ -2215,6 +2517,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ProtonEvent> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_quote(List<Quote> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_gateway_provider_list_api_country(
+      List<(GatewayProvider, List<ApiCountry>)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_gateway_provider_list_api_country_fiat_currency(
+      List<(GatewayProvider, List<ApiCountryFiatCurrency>)> self,
+      SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_gateway_provider_list_payment_method(
+      List<(GatewayProvider, List<PaymentMethod>)> self,
+      SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_gateway_provider_list_quote(
+      List<(GatewayProvider, List<Quote>)> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_script_amount(
       List<ScriptAmount> self, SseSerializer serializer);
 
@@ -2231,10 +2554,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_wallet_account_event(
       List<WalletAccountEvent> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_wallet_bitcoin_address(
-      List<WalletBitcoinAddress> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_wallet_event(
@@ -2301,6 +2620,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_gateway_provider(
+      GatewayProvider? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_payment_method(
+      PaymentMethod? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_proton_exchange_rate(
@@ -2374,6 +2701,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_out_point(OutPoint self, SseSerializer serializer);
 
   @protected
+  void sse_encode_payment_method(PaymentMethod self, SseSerializer serializer);
+
+  @protected
   void sse_encode_proton_address(ProtonAddress self, SseSerializer serializer);
 
   @protected
@@ -2392,7 +2722,27 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       PsbtSigHashType self, SseSerializer serializer);
 
   @protected
+  void sse_encode_quote(Quote self, SseSerializer serializer);
+
+  @protected
   void sse_encode_rbf_value(RbfValue self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_gateway_provider_list_api_country(
+      (GatewayProvider, List<ApiCountry>) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_gateway_provider_list_api_country_fiat_currency(
+      (GatewayProvider, List<ApiCountryFiatCurrency>) self,
+      SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_gateway_provider_list_payment_method(
+      (GatewayProvider, List<PaymentMethod>) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_gateway_provider_list_quote(
+      (GatewayProvider, List<Quote>) self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_out_point_string_usize(
@@ -2450,10 +2800,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_wallet_account_event(
       WalletAccountEvent self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_wallet_bitcoin_address(
-      WalletBitcoinAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_event(WalletEvent self, SseSerializer serializer);
@@ -2601,6 +2947,18 @@ class RustLibWire implements BaseWire {
           dynamic ptr) =>
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+              ptr);
+
+  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
               ptr);
 
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
@@ -2790,6 +3148,14 @@ class RustLibWasmModule implements WasmModule {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic ptr);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           dynamic ptr);
 
   external void

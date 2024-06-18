@@ -3,10 +3,13 @@ use andromeda_api::wallet::{ApiWalletSettings, ApiWalletTransaction, CreateWalle
 
 pub use andromeda_api::wallet::{ApiWallet, ApiWalletData, ApiWalletKey};
 
-use andromeda_api::bitcoin_address::{ApiBitcoinAddressCreationPayload, ApiWalletBitcoinAddress};
+use andromeda_api::bitcoin_address::ApiBitcoinAddressCreationPayload;
 use flutter_rust_bridge::frb;
 
 use super::exchange_rate::ProtonExchangeRate;
+
+/// exposes
+pub use andromeda_api::bitcoin_address::ApiWalletBitcoinAddress;
 
 #[derive(Debug)]
 pub struct WalletTransaction {
@@ -56,30 +59,17 @@ impl From<ApiWalletBitcoinAddressLookup> for EmailIntegrationBitcoinAddress {
     }
 }
 
-#[derive(Debug)]
-pub struct WalletBitcoinAddress {
-    pub id: String,
-    pub wallet_id: String,
-    pub wallet_account_id: String,
-    pub fetched: u8,
-    pub used: u8,
-    pub bitcoin_address: Option<String>,
-    pub bitcoin_address_signature: Option<String>,
-    pub bitcoin_address_index: Option<u64>,
-}
-impl From<ApiWalletBitcoinAddress> for WalletBitcoinAddress {
-    fn from(wallet_bitcoin_address: ApiWalletBitcoinAddress) -> Self {
-        WalletBitcoinAddress {
-            id: wallet_bitcoin_address.ID,
-            wallet_id: wallet_bitcoin_address.WalletID,
-            wallet_account_id: wallet_bitcoin_address.WalletAccountID,
-            fetched: wallet_bitcoin_address.Fetched,
-            used: wallet_bitcoin_address.Used,
-            bitcoin_address: wallet_bitcoin_address.BitcoinAddress,
-            bitcoin_address_signature: wallet_bitcoin_address.BitcoinAddressSignature,
-            bitcoin_address_index: wallet_bitcoin_address.BitcoinAddressIndex,
-        }
-    }
+#[frb(mirror(ApiWalletBitcoinAddress))]
+#[allow(non_snake_case)]
+pub struct _ApiWalletBitcoinAddress {
+    pub ID: String,
+    pub WalletID: String,
+    pub WalletAccountID: String,
+    pub Fetched: u8,
+    pub Used: u8,
+    pub BitcoinAddress: Option<String>,
+    pub BitcoinAddressSignature: Option<String>,
+    pub BitcoinAddressIndex: Option<u64>,
 }
 
 #[derive(Debug)]

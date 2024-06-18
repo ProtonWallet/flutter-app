@@ -1,63 +1,66 @@
-use std::str::Utf8Error;
+use andromeda_api::error::Error as AndromedaApiError;
 
-use andromeda_api::{error::Error, StoreWriteErr};
-use proton_srp::MailboxHashError;
+#[derive(thiserror::Error, Debug)]
+pub enum BridgeError {
+    #[error("An error occurred in andromeda api: {0}")]
+    AndromedaApi(String),
 
-#[derive(Debug)]
-pub enum ApiError {
     /// Generic error
+    #[error("An generic error occurred: {0}")]
     Generic(String),
 
     /// Muon session error
-    #[allow(clippy::enum_variant_names)]
-    SessionError(String),
+    #[error("An error occurred in muon session: {0}")]
+    MuonSession(String),
 }
 
-impl From<String> for ApiError {
+impl From<String> for BridgeError {
     fn from(value: String) -> Self {
-        ApiError::Generic(value)
+        BridgeError::Generic(value)
     }
 }
 
-impl From<StoreWriteErr> for ApiError {
-    fn from(value: StoreWriteErr) -> Self {
-        ApiError::Generic(value.to_string())
+impl From<andromeda_api::StoreWriteErr> for BridgeError {
+    fn from(value: andromeda_api::StoreWriteErr) -> Self {
+        BridgeError::Generic(value.to_string())
     }
 }
 
-impl From<Utf8Error> for ApiError {
-    fn from(value: Utf8Error) -> Self {
-        ApiError::Generic(value.to_string())
+impl From<std::str::Utf8Error> for BridgeError {
+    fn from(value: std::str::Utf8Error) -> Self {
+        BridgeError::Generic(value.to_string())
     }
 }
 
-impl From<MailboxHashError> for ApiError {
-    fn from(value: MailboxHashError) -> Self {
-        ApiError::Generic(value.to_string())
+impl From<proton_srp::MailboxHashError> for BridgeError {
+    fn from(value: proton_srp::MailboxHashError) -> Self {
+        BridgeError::Generic(value.to_string())
     }
 }
 
-impl From<Error> for ApiError {
-    fn from(error: Error) -> Self {
+impl From<AndromedaApiError> for BridgeError {
+    fn from(error: AndromedaApiError) -> Self {
         match error {
-            Error::MuonError(me) => ApiError::Generic(format!("Muon error occurred: {}", me)),
-            Error::BitcoinDeserializeError(bde) => {
-                ApiError::Generic(format!("BitcoinDeserializeError occurred: {}", bde))
+            AndromedaApiError::MuonError(me) => {
+                BridgeError::Generic(format!("Muon error occurred: {}", me))
             }
-            Error::HexDecoding(hde) => {
-                ApiError::Generic(format!("HexDecoding error occurred: {}", hde))
+            AndromedaApiError::BitcoinDeserializeError(bde) => {
+                BridgeError::Generic(format!("BitcoinDeserializeError occurred: {}", bde))
             }
-            Error::HttpError => ApiError::Generic("HTTP error occurred".to_string()),
-            Error::ErrorCode(error) => ApiError::Generic(format!(
+            AndromedaApiError::HexDecoding(hde) => {
+                BridgeError::Generic(format!("HexDecoding error occurred: {}", hde))
+            }
+            AndromedaApiError::HttpError => BridgeError::Generic("HTTP error occurred".to_string()),
+            AndromedaApiError::ErrorCode(error) => BridgeError::Generic(format!(
                 "Response Code:{}\nError: {}\nDetails:{}",
                 error.Code, error.Error, error.Details
             )),
-            Error::DeserializeErr(err) => ApiError::Generic(err),
-            Error::MuonApiVersion(err) => {
-                ApiError::SessionError(format!("Muon MuonApiVersion occurred: {}", err))
+            AndromedaApiError::DeserializeErr(err) => BridgeError::Generic(err),
+            AndromedaApiError::MuonApiVersion(err) => {
+                BridgeError::MuonSession(format!("Muon MuonApiVersion occurred: {}", err))
             }
-            Error::MuonStatueError(err) => {
-                ApiError::SessionError(format!("Muon MuonStatueError occurred: {}", err))
+            AndromedaApiError::MuonStatueError(err) => {
+                BridgeError::MuonSession(format!("Muon MuonStatueError occurred: {}", err))
             }
         }
     }

@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use andromeda_api::core::ApiClient;
 
-use crate::{errors::ApiError, wallet::EmailIntegrationBitcoinAddress};
+use crate::{errors::BridgeError, wallet::EmailIntegrationBitcoinAddress};
 
 use super::proton_api_service::ProtonAPIService;
 
@@ -24,7 +24,7 @@ impl EmailIntegrationClient {
     pub async fn lookup_bitcoin_address(
         &self,
         email: String,
-    ) -> Result<EmailIntegrationBitcoinAddress, ApiError> {
+    ) -> Result<EmailIntegrationBitcoinAddress, BridgeError> {
         let result = self.inner.lookup_bitcoin_address(email).await;
         match result {
             Ok(response) => Ok(response.into()),

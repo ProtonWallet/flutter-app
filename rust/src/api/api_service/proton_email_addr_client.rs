@@ -3,7 +3,7 @@ use std::sync::Arc;
 use andromeda_api::core::ApiClient;
 
 use crate::{
-    errors::ApiError,
+    errors::BridgeError,
     proton_address::{AllKeyAddressKey, ProtonAddress},
 };
 
@@ -28,7 +28,7 @@ impl ProtonEmailAddressClient {
         &self,
         email: String,
         internal_only: u8,
-    ) -> Result<Vec<AllKeyAddressKey>, ApiError> {
+    ) -> Result<Vec<AllKeyAddressKey>, BridgeError> {
         let result = self
             .inner
             .get_all_public_keys(email, Some(internal_only))
@@ -39,7 +39,7 @@ impl ProtonEmailAddressClient {
         }
     }
 
-    pub async fn get_proton_address(&self) -> Result<Vec<ProtonAddress>, ApiError> {
+    pub async fn get_proton_address(&self) -> Result<Vec<ProtonAddress>, BridgeError> {
         let result = self.inner.get_proton_email_addresses().await;
         match result {
             Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),

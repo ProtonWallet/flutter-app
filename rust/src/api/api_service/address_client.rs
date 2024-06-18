@@ -3,7 +3,7 @@ use std::sync::Arc;
 pub use andromeda_api::address::{AddressBalance, ApiTx};
 pub use andromeda_api::core::ApiClient;
 
-use crate::errors::ApiError;
+use crate::errors::BridgeError;
 
 use super::proton_api_service::ProtonAPIService;
 
@@ -21,7 +21,10 @@ impl AddressClient {
     }
 
     /// Get recent block summaries, starting at tip or height if provided
-    pub async fn get_address_balance(&self, address: String) -> Result<AddressBalance, ApiError> {
+    pub async fn get_address_balance(
+        &self,
+        address: String,
+    ) -> Result<AddressBalance, BridgeError> {
         Ok(self.inner.get_address_balance(address).await?)
     }
 
@@ -29,7 +32,7 @@ impl AddressClient {
     pub async fn get_scripthash_transactions(
         &self,
         script_hash: String,
-    ) -> Result<Vec<ApiTx>, ApiError> {
+    ) -> Result<Vec<ApiTx>, BridgeError> {
         Ok(self.inner.get_scripthash_transactions(script_hash).await?)
     }
 
@@ -38,7 +41,7 @@ impl AddressClient {
         &self,
         script_hash: String,
         transaction_id: String,
-    ) -> Result<Vec<ApiTx>, ApiError> {
+    ) -> Result<Vec<ApiTx>, BridgeError> {
         Ok(self
             .inner
             .get_scripthash_transactions_at_transaction_id(script_hash, transaction_id)
