@@ -45,6 +45,18 @@ class BDKDataUpdated extends DataState {
   BDKDataUpdated();
 }
 
+class UserSettingDataUpdated extends DataState {
+  UserSettingDataUpdated();
+}
+
+class ExchangeRateDataUpdated extends DataState {
+  ExchangeRateDataUpdated();
+}
+
+class BitcoinUnitDataUpdated extends DataState {
+  BitcoinUnitDataUpdated();
+}
+
 class DataError extends DataState {
   final String message;
 

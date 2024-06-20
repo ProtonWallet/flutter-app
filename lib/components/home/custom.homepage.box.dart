@@ -1,11 +1,13 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/components/bitcoin.price.chart.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomHomePageBox extends StatelessWidget {
@@ -14,6 +16,7 @@ class CustomHomePageBox extends StatelessWidget {
   final double price;
   final double priceChange;
   final List<Widget> children;
+  final ProtonExchangeRate exchangeRate;
 
   const CustomHomePageBox({
     super.key,
@@ -22,6 +25,7 @@ class CustomHomePageBox extends StatelessWidget {
     this.price = 0,
     this.children = const [],
     this.priceChange = 0,
+    required this.exchangeRate,
   });
 
   @override
@@ -56,12 +60,10 @@ class CustomHomePageBox extends StatelessWidget {
                           AnimatedFlipCounter(
                               duration: const Duration(milliseconds: 500),
                               prefix: Provider.of<UserSettingProvider>(context)
-                                  .getFiatCurrencyName(),
+                                  .getFiatCurrencyName(fiatCurrency: exchangeRate.fiatCurrency),
                               value:
                                   ExchangeCalculator.getNotionalInFiatCurrency(
-                                      Provider.of<UserSettingProvider>(context)
-                                          .walletUserSetting
-                                          .exchangeRate,
+                                      exchangeRate,
                                       100000000),
                               // value: price,
                               fractionDigits: defaultDisplayDigits,
@@ -95,6 +97,9 @@ class CustomHomePageBox extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
+                const Divider(thickness: 0.4),
+                BitcoinPriceChart(
+                    exchangeRate: exchangeRate),
                 const Divider(thickness: 0.4),
                 const SizedBox(
                   height: 10,

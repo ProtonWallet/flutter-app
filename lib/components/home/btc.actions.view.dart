@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/components/home/custom.homepage.box.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/constants/proton.color.dart';
 
@@ -11,11 +12,13 @@ class BtcTitleActionsView extends StatelessWidget {
   final GestureTapCallback? onSend;
   final GestureTapCallback? onBuy;
   final GestureTapCallback? onReceive;
+  final ProtonExchangeRate exchangeRate;
 
   const BtcTitleActionsView({
     super.key,
     required this.price,
     required this.priceChange,
+    required this.exchangeRate,
     this.onSend,
     this.onBuy,
     this.onReceive,
@@ -30,6 +33,7 @@ class BtcTitleActionsView extends StatelessWidget {
           icon: Assets.images.icon.bitcoin,
           price: price,
           priceChange: priceChange,
+          exchangeRate: exchangeRate,
           children: buildActions(context),
         ),
       ),
