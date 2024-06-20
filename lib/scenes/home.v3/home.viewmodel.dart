@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -30,8 +31,10 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -60,6 +63,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     super.coordinator,
     this.walletBloc,
     this.walletTransactionBloc,
+    this.dataProviderManager,
   );
 
   CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
@@ -199,6 +203,15 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   //
   final WalletListBloc walletBloc;
   final WalletTransactionBloc walletTransactionBloc;
+  final DataProviderManager dataProviderManager;
+  BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
+  ProtonExchangeRate currentExchangeRate = const ProtonExchangeRate(
+      id: 'default',
+      bitcoinUnit: BitcoinUnit.btc,
+      fiatCurrency: defaultFiatCurrency,
+      exchangeRateTime: '',
+      exchangeRate: 1,
+      cents: 1);
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -208,7 +221,7 @@ class HomeViewModelImpl extends HomeViewModel {
     this.eventLoop,
     this.protonWalletManager,
     this.apiServiceManager,
-    this.dataProviderManager,
+    super.dataProviderManager,
     super.walletBloc,
     super.walletTransactionBloc,
     this.channel,
@@ -225,9 +238,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // networking
   final ProtonApiServiceManager apiServiceManager;
-
-  // Data provider manager
-  final DataProviderManager dataProviderManager;
 
   /// native channel
   final NativeViewChannel channel;
@@ -351,6 +361,16 @@ class HomeViewModelImpl extends HomeViewModel {
 
       // async
       dataProviderManager.contactsDataProvider.preLoad();
+      dataProviderManager.userSettingsDataProvider.preLoad();
+      dataProviderManager.userSettingsDataProvider.exchangeRateUpdateController.stream.listen((onData) {
+        currentExchangeRate = dataProviderManager.userSettingsDataProvider.exchangeRate;
+        datasourceStreamSinkAdd();
+      });
+
+      dataProviderManager.userSettingsDataProvider.bitcoinUnitUpdateController.stream.listen((onData) {
+        bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
+        datasourceStreamSinkAdd();
+      });
 
       cryptoPriceDataService.start(); //start service
       // checkNetwork();
