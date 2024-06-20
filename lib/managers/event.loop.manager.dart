@@ -35,7 +35,6 @@ class EventLoop implements Manager {
   static const int loopDuration = 10;
   bool _isRunning = false;
   String latestEventId = "";
-  late UserSettingProvider userSettingProvider;
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
 
   EventLoop(
@@ -47,9 +46,6 @@ class EventLoop implements Manager {
   Future<void> start() async {
     if (!_isRunning) {
       _isRunning = true;
-      userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.rootNavigatorKey.currentContext!,
-          listen: false);
       protonWalletProvider =
           Provider.of<proton_wallet_provider.ProtonWalletProvider>(
               Coordinator.rootNavigatorKey.currentContext!,
@@ -247,10 +243,10 @@ class EventLoop implements Manager {
   Future<void> polling() async {
     await handleBitcoinAddress();
     await ExchangeRateService.runOnce(
-        userSettingProvider.walletUserSetting.fiatCurrency);
+        dataProviderManager.userSettingsDataProvider.fiatCurrency);
     ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(
-        userSettingProvider.walletUserSetting.fiatCurrency);
-    userSettingProvider.updateExchangeRate(exchangeRate);
+        dataProviderManager.userSettingsDataProvider.fiatCurrency);
+    dataProviderManager.userSettingsDataProvider.updateExchangeRate(exchangeRate);
 
     /// TODO:: add logic here
     // fetch for account setting's exchange rate, used for sidebar balance

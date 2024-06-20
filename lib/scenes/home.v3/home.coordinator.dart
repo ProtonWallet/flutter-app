@@ -150,9 +150,9 @@ class HomeCoordinator extends Coordinator {
       event,
       wallet,
       apiServiceManager,
-      dataProviderManager,
       walletBloc,
       walletTransactionBloc,
+      dataProviderManager,
       channelManager,
     );
     widget = HomeView(

@@ -1,10 +1,15 @@
 import 'dart:async';
 
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/settings_client.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class UserSettingsDataProvider implements DataProvider {
@@ -25,9 +30,24 @@ class UserSettingsDataProvider implements DataProvider {
     this.settingsClient,
   );
 
-  @override
-  StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>();
+  ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
+      id: 'default',
+      bitcoinUnit: BitcoinUnit.btc,
+      fiatCurrency: defaultFiatCurrency,
+      exchangeRateTime: '',
+      exchangeRate: 1,
+      cents: 1);
+  BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
+  FiatCurrency fiatCurrency = FiatCurrency.usd;
+
+  StreamController<UserSettingDataUpdated> dataUpdateController =
+      StreamController<UserSettingDataUpdated>();
+
+  StreamController<ExchangeRateDataUpdated> exchangeRateUpdateController =
+      StreamController<ExchangeRateDataUpdated>();
+
+  StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
+      StreamController<BitcoinUnitDataUpdated>();
 
   Future<WalletUserSettings?> _getFromDB() async {
     var settings = settingsQueries.getWalletUserSettings(userID);
@@ -56,8 +76,37 @@ class UserSettingsDataProvider implements DataProvider {
     return null;
   }
 
+  void updateBitcoinUnit(BitcoinUnit bitcoinUnit) {
+    this.bitcoinUnit = bitcoinUnit;
+    bitcoinUnitUpdateController.add(BitcoinUnitDataUpdated());
+  }
+
+  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
+    if (this.fiatCurrency != fiatCurrency) {
+      this.fiatCurrency = fiatCurrency;
+      insertUpdate(ApiWalletUserSettings(
+        bitcoinUnit: settingsData!.bitcoinUnit.toBitcoinUnit(),
+        fiatCurrency: fiatCurrency,
+        hideEmptyUsedAddresses: settingsData!.hideEmptyUsedAddresses ? 1 : 0,
+        showWalletRecovery: settingsData!.showWalletRecovery ? 1 : 0,
+        twoFactorAmountThreshold:
+            settingsData!.twoFactorAmountThreshold.toInt(),
+      ));
+      ProtonExchangeRate exchangeRate =
+          await ExchangeRateService.getExchangeRate(fiatCurrency);
+      updateExchangeRate(exchangeRate);
+    }
+  }
+
+  void updateExchangeRate(ProtonExchangeRate exchangeRate) {
+    this.exchangeRate = exchangeRate;
+    logger.i(
+        "Updating exchangeRate in new user setting provider (${exchangeRate.fiatCurrency.name}) = ${exchangeRate.exchangeRate}");
+    exchangeRateUpdateController.add(ExchangeRateDataUpdated());
+  }
+
   Future<void> insertUpdate(ApiWalletUserSettings settings) async {
-    settingsQueries.insertOrUpdateItem(WalletUserSettings(
+    await settingsQueries.insertOrUpdateItem(WalletUserSettings(
       userId: userID,
       bitcoinUnit: settings.bitcoinUnit.enumToString(),
       fiatCurrency: settings.fiatCurrency.enumToString(),
@@ -67,6 +116,28 @@ class UserSettingsDataProvider implements DataProvider {
           (settings.twoFactorAmountThreshold ?? defaultTwoFactorAmountThreshold)
               .toDouble(),
     ));
+    settingsData = await _getFromDB();
+    dataUpdateController.add(UserSettingDataUpdated());
+  }
+
+  String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
+    if (settingsData != null) {
+      fiatCurrency ??= settingsData!.fiatCurrency.toFiatCurrency();
+    } else {
+      fiatCurrency ??= FiatCurrency.usd;
+    }
+    return fiatCurrency.name.toString().toUpperCase();
+  }
+
+  String getFiatCurrencySign({FiatCurrency? fiatCurrency}) {
+    if (settingsData != null) {
+      fiatCurrency ??= settingsData!.fiatCurrency.toFiatCurrency();
+    } else {
+      fiatCurrency ??= FiatCurrency.usd;
+    }
+    return fiatCurrency2Info.containsKey(fiatCurrency)
+        ? fiatCurrency2Info[fiatCurrency]!.sign
+        : "\$";
   }
 
   Future<void> preLoad() async {
@@ -78,5 +149,7 @@ class UserSettingsDataProvider implements DataProvider {
   Future<void> clear() async {
     settingsQueries.clearTable();
     dataUpdateController.close();
+    exchangeRateUpdateController.close();
+    bitcoinUnitUpdateController.close();
   }
 }
