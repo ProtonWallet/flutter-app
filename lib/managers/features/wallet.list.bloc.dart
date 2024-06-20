@@ -19,9 +19,11 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 
 // Define the events
 abstract class WalletListEvent extends Equatable {
@@ -319,10 +321,14 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           for (AccountMenuModel account in walletModel.accounts) {
             account.isSelected = account.accountModel.serverAccountID ==
                 event.accountModel.serverAccountID;
-            walletsDataProvider.selectedServerWalletID =
-                event.walletModel.serverWalletID;
-            walletsDataProvider.selectedServerWalletAccountID =
-                event.accountModel.serverAccountID;
+            if (account.isSelected) {
+              userSettingsDataProvider.updateFiatCurrency(
+                  account.accountModel.fiatCurrency.toFiatCurrency());
+              walletsDataProvider.selectedServerWalletID =
+                  event.walletModel.serverWalletID;
+              walletsDataProvider.selectedServerWalletAccountID =
+                  event.accountModel.serverAccountID;
+            }
           }
         } else {
           for (AccountMenuModel account in walletModel.accounts) {
@@ -353,6 +359,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           for (AccountMenuModel account in walletModel.accounts) {
             if (account.accountModel.serverAccountID ==
                 event.accountModel.serverAccountID) {
+              /// TODO:: handle wallet account view change here
+              if (account.isSelected) {
+                userSettingsDataProvider.updateFiatCurrency(event.fiatName.toFiatCurrency());
+              }
               account.accountModel.fiatCurrency = event.fiatName;
               walletsDataProvider.updateWalletAccount(
                   accountModel: event.accountModel);
