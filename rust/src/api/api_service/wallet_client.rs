@@ -2,7 +2,10 @@ use std::sync::Arc;
 
 use andromeda_api::{
     core::ApiClient,
-    wallet::{ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody},
+    wallet::{
+        ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody,
+        WalletTransactionFlag,
+    },
 };
 
 use crate::{
@@ -225,6 +228,113 @@ impl WalletClient {
             Err(err) => Err(err.into()),
         }
     }
+
+    pub async fn update_wallet_transaction_external_sender(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+        sender: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .update_wallet_transaction_external_sender(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                sender,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn set_wallet_transaction_private_flag(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .set_wallet_transaction_flag(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                WalletTransactionFlag::Private,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn set_wallet_transaction_suspicious_flag(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .set_wallet_transaction_flag(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                WalletTransactionFlag::Suspicious,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn delete_wallet_transaction_private_flag(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .delete_wallet_transaction_flag(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                WalletTransactionFlag::Private,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn delete_wallet_transaction_suspicious_flag(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .delete_wallet_transaction_flag(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                WalletTransactionFlag::Suspicious,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
+
     pub async fn delete_wallet_transactions(
         &self,
         wallet_id: String,

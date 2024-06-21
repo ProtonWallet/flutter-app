@@ -17,7 +17,6 @@ import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
-import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
@@ -97,13 +96,11 @@ class WalletTransactionState extends Equatable {
   final List<HistoryTransaction> historyTransaction;
   final List<BitcoinAddressModel> bitcoinAddresses;
   final bool isSyncing;
-  final int balanceInSatoshi;
 
   const WalletTransactionState({
     required this.historyTransaction,
     required this.bitcoinAddresses,
     required this.isSyncing,
-    required this.balanceInSatoshi,
   });
 
   @override
@@ -111,7 +108,6 @@ class WalletTransactionState extends Equatable {
         isSyncing,
         historyTransaction,
         bitcoinAddresses,
-        balanceInSatoshi,
       ];
 }
 
@@ -120,13 +116,11 @@ extension WalletTransactionStateCopyWith on WalletTransactionState {
     bool isSyncing = false,
     List<HistoryTransaction>? historyTransaction,
     List<BitcoinAddressModel>? bitcoinAddresses,
-    int? balanceInSatoshi,
   }) {
     return WalletTransactionState(
       isSyncing: isSyncing,
       bitcoinAddresses: bitcoinAddresses ?? this.bitcoinAddresses,
       historyTransaction: historyTransaction ?? this.historyTransaction,
-      balanceInSatoshi: balanceInSatoshi ?? 0,
     );
   }
 }
@@ -141,7 +135,6 @@ class WalletTransactionBloc
   final AddressKeyProvider addressKeyProvider;
   final WalletKeysProvider walletKeysProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
-  final BalanceDataProvider balanceDataProvider;
 
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
@@ -155,30 +148,22 @@ class WalletTransactionBloc
     this.addressKeyProvider,
     this.walletKeysProvider,
     this.localBitcoinAddressDataProvider,
-    this.balanceDataProvider,
   ) : super(const WalletTransactionState(
           isSyncing: false,
           historyTransaction: [],
           bitcoinAddresses: [],
-          balanceInSatoshi: 0,
         )) {
+    /// currentWalletModel and currentAccountModel are used to identify if the process need to be continue or not
+    /// for example, if user select Wallet A, then it will start generating transactions for wallet A
+    /// if user change to Wallet B immediately, then we need to stop the process that generating transactions for wallet A
+    /// we will compare the event.walletModel is equal to currentWalletModel or not
+    WalletModel? currentWalletModel;
+    AccountModel? currentAccountModel;
     bdkTransactionDataProvider.dataUpdateController.stream.listen((onData) {
-      if (lastEvent != null) {
-        if (lastEvent is SelectWallet) {
-          SelectWallet _selectWallet = (lastEvent as SelectWallet);
-          add(SelectWallet(
-            _selectWallet.walletMenuModel,
-            true,
-          ));
-        } else if (lastEvent is SelectAccount) {
-          SelectAccount _selectAccount = (lastEvent as SelectAccount);
-          add(SelectAccount(
-            _selectAccount.walletMenuModel,
-            _selectAccount.accountMenuModel,
-            true,
-          ));
-        }
-      }
+      handleTransactionDataProviderUpdate();
+    });
+    serverTransactionDataProvider.dataUpdateController.stream.listen((onData) {
+      handleTransactionDataProviderUpdate();
     });
     on<StartLoading>((event, emit) async {
       emit(state.copyWith(historyTransaction: []));
@@ -189,20 +174,29 @@ class WalletTransactionBloc
         isSyncing: true,
         historyTransaction: state.historyTransaction,
         bitcoinAddresses: state.bitcoinAddresses,
-        balanceInSatoshi: 0,
       ));
     });
 
     on<SelectWallet>((event, emit) async {
       logger.i("WalletTransactionBloc selectWallet() start");
+      if (currentWalletModel?.serverWalletID !=
+              event.walletMenuModel.walletModel.serverWalletID ||
+          currentAccountModel != null) {
+        emit(state.copyWith(
+          isSyncing: false,
+          historyTransaction: [],
+          bitcoinAddresses: [],
+        ));
+      }
+      currentWalletModel = event.walletMenuModel.walletModel;
+      currentAccountModel = null;
       lastEvent = event;
       if (event.triggerByDataProviderUpdate == false) {
         syncWallet();
       }
-      List<BitcoinAddressModel> bitcoinAddresses = [];
-      int balance = 0;
-      WalletModel walletModel = event.walletMenuModel.walletModel;
 
+      List<BitcoinAddressModel> bitcoinAddresses = [];
+      WalletModel walletModel = event.walletMenuModel.walletModel;
       SecretKey? secretKey =
           await getSecretKey(event.walletMenuModel.walletModel);
 
@@ -228,14 +222,11 @@ class WalletTransactionBloc
           accountMenuModel.accountModel,
         );
         bitcoinAddresses += localBitcoinAddressData.bitcoinAddresses;
-
-        // update account balance
-        BDKBalanceData bdkBalanceData =
-            await balanceDataProvider.getBDKBalanceDataByWalletAccount(
-          walletModel,
-          accountMenuModel.accountModel,
-        );
-        balance += await bdkBalanceData.getBalance();
+        if (currentAccountModel != null ||
+            currentWalletModel!.serverWalletID != walletModel.serverWalletID) {
+          /// skip process if user change to other wallet or wallet account
+          return;
+        }
       }
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
 
@@ -245,12 +236,15 @@ class WalletTransactionBloc
       List<HistoryTransaction> historyTransaction =
           applyHistoryTransactionFilterAndKeyword(
               filter, keyWord, newHistoryTransactions);
-
+      if (currentAccountModel != null ||
+          currentWalletModel!.serverWalletID != walletModel.serverWalletID) {
+        /// skip process if user change to other wallet or wallet account
+        return;
+      }
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
         bitcoinAddresses: bitcoinAddresses,
-        balanceInSatoshi: balance,
       ));
 
       logger.i("WalletTransactionBloc selectWallet() end");
@@ -258,15 +252,29 @@ class WalletTransactionBloc
 
     on<SelectAccount>((event, emit) async {
       logger.i("WalletTransactionBloc SelectAccount() start");
+      if (currentWalletModel?.serverWalletID !=
+              event.walletMenuModel.walletModel.serverWalletID ||
+          currentAccountModel?.serverAccountID !=
+              event.accountMenuModel.accountModel.serverAccountID) {
+        emit(state.copyWith(
+          isSyncing: false,
+          historyTransaction: [],
+          bitcoinAddresses: [],
+        ));
+      }
+      currentWalletModel = event.walletMenuModel.walletModel;
+      currentAccountModel = event.accountMenuModel.accountModel;
       lastEvent = event;
       if (event.triggerByDataProviderUpdate == false) {
         syncWallet();
       }
 
-      WalletModel walletModel = event.walletMenuModel.walletModel;
+      logger.i("WalletTransactionBloc SelectAccount() 1");
 
+      WalletModel walletModel = event.walletMenuModel.walletModel;
       SecretKey? secretKey =
           await getSecretKey(event.walletMenuModel.walletModel);
+      logger.i("WalletTransactionBloc SelectAccount() 2");
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
@@ -274,6 +282,7 @@ class WalletTransactionBloc
           await getHistoryTransactions(
               walletModel, event.accountMenuModel, secretKey);
       newHistoryTransactions += historyTransactionsInAccount;
+      logger.i("WalletTransactionBloc SelectAccount() 3");
 
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
       bool isSyncing = bdkTransactionDataProvider.isSyncing(
@@ -285,26 +294,45 @@ class WalletTransactionBloc
       List<HistoryTransaction> historyTransaction =
           applyHistoryTransactionFilterAndKeyword(
               filter, keyWord, newHistoryTransactions);
+      logger.i("WalletTransactionBloc SelectAccount() 4");
 
       LocalBitcoinAddressData localBitcoinAddressData =
           await localBitcoinAddressDataProvider.getDataByWalletAccount(
         walletModel,
         event.accountMenuModel.accountModel,
       );
-      BDKBalanceData bdkBalanceData =
-          await balanceDataProvider.getBDKBalanceDataByWalletAccount(
-        walletModel,
-        event.accountMenuModel.accountModel,
-      );
-      int balance = await bdkBalanceData.getBalance();
+      logger.i("WalletTransactionBloc SelectAccount() 6");
+      if (currentAccountModel!.serverAccountID !=
+          event.accountMenuModel.accountModel.serverAccountID) {
+        /// skip process if user change to other wallet or wallet account
+        return;
+      }
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
         bitcoinAddresses: localBitcoinAddressData.bitcoinAddresses,
-        balanceInSatoshi: balance,
       ));
       logger.i("WalletTransactionBloc SelectAccount() end");
     });
+  }
+
+  void handleTransactionDataProviderUpdate() {
+    if (lastEvent != null) {
+      if (lastEvent is SelectWallet) {
+        SelectWallet _selectWallet = (lastEvent as SelectWallet);
+        add(SelectWallet(
+          _selectWallet.walletMenuModel,
+          true,
+        ));
+      } else if (lastEvent is SelectAccount) {
+        SelectAccount _selectAccount = (lastEvent as SelectAccount);
+        add(SelectAccount(
+          _selectAccount.walletMenuModel,
+          _selectAccount.accountMenuModel,
+          true,
+        ));
+      }
+    }
   }
 
   TransactionModel? findServerTransactionByTXID(

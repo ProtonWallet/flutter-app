@@ -65,9 +65,13 @@ class UserSettingsDataProvider implements DataProvider {
     }
 
     // try to fetch from server:
-    ApiWalletUserSettings apiSettings = await settingsClient.getUserSettings();
-    insertUpdate(apiSettings);
-
+    try {
+      ApiWalletUserSettings apiSettings =
+          await settingsClient.getUserSettings();
+      insertUpdate(apiSettings);
+    } catch (e) {
+      logger.e(e.toString());
+    }
     settingsData = await _getFromDB();
     if (settingsData != null) {
       return settingsData;

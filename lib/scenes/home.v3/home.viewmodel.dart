@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -25,13 +24,13 @@ import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
-import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -63,6 +62,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     super.coordinator,
     this.walletBloc,
     this.walletTransactionBloc,
+    this.walletBalanceBloc,
     this.dataProviderManager,
   );
 
@@ -203,6 +203,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   //
   final WalletListBloc walletBloc;
   final WalletTransactionBloc walletTransactionBloc;
+  final WalletBalanceBloc walletBalanceBloc;
   final DataProviderManager dataProviderManager;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = const ProtonExchangeRate(
@@ -224,6 +225,7 @@ class HomeViewModelImpl extends HomeViewModel {
     super.dataProviderManager,
     super.walletBloc,
     super.walletTransactionBloc,
+    super.walletBalanceBloc,
     this.channel,
   );
 
@@ -341,6 +343,7 @@ class HomeViewModelImpl extends HomeViewModel {
       walletBloc.init(callback: () {
         for (WalletMenuModel walletMenuModel in walletBloc.state.walletsModel) {
           if (walletMenuModel.isSelected) {
+            walletBalanceBloc.selectWallet(walletMenuModel);
             walletTransactionBloc.selectWallet(walletMenuModel);
             break;
           }
@@ -348,6 +351,8 @@ class HomeViewModelImpl extends HomeViewModel {
           for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
             if (accountMenuModel.isSelected) {
               isSelectedAccount = true;
+              walletBalanceBloc.selectAccount(
+                  walletMenuModel, accountMenuModel);
               walletTransactionBloc.selectAccount(
                   walletMenuModel, accountMenuModel);
               break;
@@ -362,12 +367,17 @@ class HomeViewModelImpl extends HomeViewModel {
       // async
       dataProviderManager.contactsDataProvider.preLoad();
       dataProviderManager.userSettingsDataProvider.preLoad();
-      dataProviderManager.userSettingsDataProvider.exchangeRateUpdateController.stream.listen((onData) {
-        currentExchangeRate = dataProviderManager.userSettingsDataProvider.exchangeRate;
+      dataProviderManager
+          .userSettingsDataProvider.exchangeRateUpdateController.stream
+          .listen((onData) {
+        currentExchangeRate =
+            dataProviderManager.userSettingsDataProvider.exchangeRate;
         datasourceStreamSinkAdd();
       });
 
-      dataProviderManager.userSettingsDataProvider.bitcoinUnitUpdateController.stream.listen((onData) {
+      dataProviderManager
+          .userSettingsDataProvider.bitcoinUnitUpdateController.stream
+          .listen((onData) {
         bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
         datasourceStreamSinkAdd();
       });
@@ -440,6 +450,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectWallet(WalletMenuModel walletMenuModel) async {
     walletBloc.selectWallet(walletMenuModel.walletModel);
+    walletBalanceBloc.selectWallet(walletMenuModel);
     walletTransactionBloc.selectWallet(walletMenuModel);
   }
 
@@ -448,6 +459,7 @@ class HomeViewModelImpl extends HomeViewModel {
       AccountMenuModel accountMenuModel) async {
     walletBloc.selectAccount(
         walletMenuModel.walletModel, accountMenuModel.accountModel);
+    walletBalanceBloc.selectAccount(walletMenuModel, accountMenuModel);
     walletTransactionBloc.selectAccount(walletMenuModel, accountMenuModel);
   }
 
@@ -682,12 +694,15 @@ class HomeViewModelImpl extends HomeViewModel {
     AccountModel? selectedAccount;
     for (WalletMenuModel walletMenuModel in walletBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
+        // walletView
         selectedWallet = walletMenuModel.walletModel;
-        for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-          if (accountMenuModel.isSelected) {
-            selectedWallet = walletMenuModel.walletModel;
-            selectedAccount = accountMenuModel.accountModel;
-          }
+        selectedAccount = null;
+      }
+      for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
+        if (accountMenuModel.isSelected) {
+          // wallet account view
+          selectedWallet = walletMenuModel.walletModel;
+          selectedAccount = accountMenuModel.accountModel;
         }
       }
     }

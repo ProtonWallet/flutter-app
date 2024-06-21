@@ -83,7 +83,7 @@ class TransactionListTitle extends StatelessWidget {
                         const SizedBox(width: 4),
                         isSend
                             ? Text(
-                                "-${bitcoinAmount.toFiatCurrencyString()}",
+                                bitcoinAmount.toFiatCurrencyString(),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                             : Text(
