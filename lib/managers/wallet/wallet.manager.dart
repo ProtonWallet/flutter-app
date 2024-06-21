@@ -891,6 +891,15 @@ class WalletManager implements Manager {
 
   static String getEmailFromWalletTransaction(String jsonString,
       {List<String> selfEmailAddresses = const []}) {
+    if (jsonString.contains("isExternalTransaction")) {
+      var jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
+      String email = jsonMap["email"] ?? "";
+      String name = jsonMap["name"] ?? "";
+      if (email.isNotEmpty) {
+        return "$name ($email)";
+      }
+      return name;
+    }
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].values.first;

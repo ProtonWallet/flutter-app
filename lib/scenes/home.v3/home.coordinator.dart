@@ -4,6 +4,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -141,6 +142,10 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.addressKeyProvider,
       dataProviderManager.walletKeysProvider,
       dataProviderManager.localBitcoinAddressDataProvider,
+    );
+
+    var walletBalanceBloc = WalletBalanceBloc(
+      dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.balanceDataProvider,
     );
 
@@ -152,6 +157,7 @@ class HomeCoordinator extends Coordinator {
       apiServiceManager,
       walletBloc,
       walletTransactionBloc,
+      walletBalanceBloc,
       dataProviderManager,
       channelManager,
     );

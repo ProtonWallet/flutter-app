@@ -90,6 +90,30 @@ class WalletClient extends RustOpaque {
           walletAccountId: walletAccountId,
           hint: hint);
 
+  Future<WalletTransaction> deleteWalletTransactionPrivateFlag(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientDeleteWalletTransactionPrivateFlag(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          hint: hint);
+
+  Future<WalletTransaction> deleteWalletTransactionSuspiciousFlag(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientDeleteWalletTransactionSuspiciousFlag(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          hint: hint);
+
   Future<void> deleteWalletTransactions(
           {required String walletId,
           required String walletAccountId,
@@ -140,6 +164,30 @@ class WalletClient extends RustOpaque {
           addressId: addressId,
           hint: hint);
 
+  Future<WalletTransaction> setWalletTransactionPrivateFlag(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientSetWalletTransactionPrivateFlag(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          hint: hint);
+
+  Future<WalletTransaction> setWalletTransactionSuspiciousFlag(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientSetWalletTransactionSuspiciousFlag(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          hint: hint);
+
   Future<ApiWalletAccount> updateWalletAccountLabel(
           {required String walletId,
           required String walletAccountId,
@@ -156,6 +204,20 @@ class WalletClient extends RustOpaque {
           {required String walletId, required String newName, dynamic hint}) =>
       RustLib.instance.api.walletClientUpdateWalletName(
           that: this, walletId: walletId, newName: newName, hint: hint);
+
+  Future<WalletTransaction> updateWalletTransactionExternalSender(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          required String sender,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientUpdateWalletTransactionExternalSender(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          sender: sender,
+          hint: hint);
 
   Future<WalletTransaction> updateWalletTransactionLabel(
           {required String walletId,
