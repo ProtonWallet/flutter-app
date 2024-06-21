@@ -41,7 +41,7 @@ class ServerTransactionDataProvider implements DataProvider {
   );
 
   List<ServerTransactionData> serverTransactionDataList = [];
-  bool initialized =false;
+  bool initialized = false;
 
   Future<List<ServerTransactionData>> _getFromDB() async {
     List<ServerTransactionData> transactionDataList = [];
@@ -51,7 +51,8 @@ class ServerTransactionDataProvider implements DataProvider {
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
         List<AccountModel> accounts =
-            (await accountDao.findAllByWalletID(walletModel.id!)).cast<AccountModel>();
+            (await accountDao.findAllByWalletID(walletModel.id!))
+                .cast<AccountModel>();
         for (AccountModel accountModel in accounts) {
           List<TransactionModel> transactions = await transactionDao
               .findAllByServerAccountID(accountModel.serverAccountID);
@@ -65,10 +66,14 @@ class ServerTransactionDataProvider implements DataProvider {
     return [];
   }
 
-  Future<ServerTransactionData> getServerTransactionDataByWalletAccount(WalletModel walletModel, AccountModel accountModel) async {
-    List<ServerTransactionData> serverTransactionsData = await getServerTransactionData();
-    for (ServerTransactionData serverTransactionData in serverTransactionsData){
-      if (serverTransactionData.accountModel.serverAccountID == accountModel.serverAccountID){
+  Future<ServerTransactionData> getServerTransactionDataByWalletAccount(
+      WalletModel walletModel, AccountModel accountModel) async {
+    List<ServerTransactionData> serverTransactionsData =
+        await getServerTransactionData();
+    for (ServerTransactionData serverTransactionData
+        in serverTransactionsData) {
+      if (serverTransactionData.accountModel.serverAccountID ==
+          accountModel.serverAccountID) {
         return serverTransactionData;
       }
     }
@@ -101,7 +106,8 @@ class ServerTransactionDataProvider implements DataProvider {
   }
 
   Future<void> handleWalletTransaction(
-      WalletModel walletModel, WalletTransaction walletTransaction) async {
+      WalletModel walletModel, WalletTransaction walletTransaction,
+      {bool notifyDataUpdate = false}) async {
     DateTime now = DateTime.now();
 
     String exchangeRateID = "";
@@ -144,7 +150,18 @@ class ServerTransactionDataProvider implements DataProvider {
         tolist: walletTransaction.tolist,
         subject: walletTransaction.subject,
         body: walletTransaction.body);
+    await insertOrUpdate(
+      transactionModel,
+      notifyDataUpdate: notifyDataUpdate,
+    );
+  }
+
+  Future<void> insertOrUpdate(TransactionModel transactionModel,
+      {bool notifyDataUpdate = false}) async {
     await transactionDao.insertOrUpdate(transactionModel);
+    if (notifyDataUpdate){
+      dataUpdateController.add(DataUpdated(""));
+    }
   }
 
   @override

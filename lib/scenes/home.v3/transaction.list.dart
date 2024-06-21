@@ -12,7 +12,6 @@ import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';

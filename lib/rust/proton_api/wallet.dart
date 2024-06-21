@@ -296,6 +296,8 @@ class WalletTransaction {
   final String? label;
   final String transactionId;
   final String transactionTime;
+  final bool isSuspicious;
+  final bool isPrivate;
   final ProtonExchangeRate? exchangeRate;
   final String? hashedTransactionId;
   final String? subject;
@@ -310,6 +312,8 @@ class WalletTransaction {
     this.label,
     required this.transactionId,
     required this.transactionTime,
+    required this.isSuspicious,
+    required this.isPrivate,
     this.exchangeRate,
     this.hashedTransactionId,
     this.subject,
@@ -326,6 +330,8 @@ class WalletTransaction {
       label.hashCode ^
       transactionId.hashCode ^
       transactionTime.hashCode ^
+      isSuspicious.hashCode ^
+      isPrivate.hashCode ^
       exchangeRate.hashCode ^
       hashedTransactionId.hashCode ^
       subject.hashCode ^
@@ -344,6 +350,8 @@ class WalletTransaction {
           label == other.label &&
           transactionId == other.transactionId &&
           transactionTime == other.transactionTime &&
+          isSuspicious == other.isSuspicious &&
+          isPrivate == other.isPrivate &&
           exchangeRate == other.exchangeRate &&
           hashedTransactionId == other.hashedTransactionId &&
           subject == other.subject &&

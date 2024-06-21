@@ -210,7 +210,11 @@ class EventLoop implements Manager {
                 .getWalletByServerWalletID(walletTransaction!.walletId);
             if (walletModel != null) {
               await dataProviderManager.serverTransactionDataProvider
-                  .handleWalletTransaction(walletModel, walletTransaction);
+                  .handleWalletTransaction(
+                walletModel,
+                walletTransaction,
+                notifyDataUpdate: true,
+              );
             }
           }
         }
@@ -246,7 +250,8 @@ class EventLoop implements Manager {
         dataProviderManager.userSettingsDataProvider.fiatCurrency);
     ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(
         dataProviderManager.userSettingsDataProvider.fiatCurrency);
-    dataProviderManager.userSettingsDataProvider.updateExchangeRate(exchangeRate);
+    dataProviderManager.userSettingsDataProvider
+        .updateExchangeRate(exchangeRate);
 
     /// TODO:: add logic here
     // fetch for account setting's exchange rate, used for sidebar balance

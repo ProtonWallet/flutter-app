@@ -19,6 +19,7 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/history/bottom.sheet/edit.sender.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -354,12 +355,28 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TransactionHistoryItem(
-          title: S.of(context).trans_from,
-          content: viewModel.fromEmail.isNotEmpty
-              ? WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)
-              : "Unknown",
-        ),
+        Stack(children: [
+          TransactionHistoryItem(
+            title: S.of(context).trans_from,
+            content: viewModel.fromEmail.isNotEmpty
+                ? WalletManager.getEmailFromWalletTransaction(
+                    viewModel.fromEmail)
+                : "Unknown",
+          ),
+          Positioned(
+              top: 20,
+              right: defaultPadding,
+              child: GestureDetector(
+                  onTap: () {
+                    EditSenderSheet.show(context, viewModel);
+                  },
+                  child: SvgPicture.asset(
+                    "assets/images/icon/edit_unknown.svg",
+                    fit: BoxFit.fill,
+                    width: 40,
+                    height: 40,
+                  ))),
+        ]),
         const Divider(
           thickness: 0.2,
           height: 1,
