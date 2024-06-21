@@ -197,8 +197,11 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   String userEmail = "";
   String displayName = "";
+  String transactionListFilterBy = "";
 
   Future<void> updatePassphrase(String key, String passphrase);
+
+  void updateTransactionListFilterBy(String filterBy);
 
   //
   final WalletListBloc walletBloc;
@@ -390,6 +393,10 @@ class HomeViewModelImpl extends HomeViewModel {
       bitcoinUnitNotifier.addListener(() async {
         updateBitcoinUnit(bitcoinUnitNotifier.value);
         userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
+      });
+
+      transactionSearchController.addListener((){
+        datasourceStreamSinkAdd();
       });
 
       eventLoop.start();
@@ -903,6 +910,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void updateBodyListStatus(BodyListStatus bodyListStatus) {
     this.bodyListStatus = bodyListStatus;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void updateTransactionListFilterBy(String filterBy){
+    transactionListFilterBy = filterBy;
     datasourceStreamSinkAdd();
   }
 }

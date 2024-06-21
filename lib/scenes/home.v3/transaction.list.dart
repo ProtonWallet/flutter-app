@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/components/textfield.text.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
+import 'package:wallet/components/wallet.history.transaction.list.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
@@ -84,52 +85,22 @@ class TransactionList extends StatelessWidget {
                                         color: ProtonColors.textNorm, size: 16))
                               ]),
                             ]))),
-            for (int index = 0;
-                index <
-                    min(
-                        state.historyTransaction.length,
-                        defaultTransactionPerPage *
-                                viewModel.currentHistoryPage +
-                            defaultTransactionPerPage);
-                index++)
-              TransactionListTitle(
-                width: MediaQuery.of(context).size.width,
-                address: WalletManager.getEmailFromWalletTransaction(
-                    state.historyTransaction[index].amountInSATS > 0
-                        ? state.historyTransaction[index].sender
-                        : state.historyTransaction[index].toList,
-                    selfEmailAddresses:
-                        viewModel.protonAddresses.map((e) => e.email).toList()),
-                bitcoinAmount: BitcoinAmount(
-                  amountInSatoshi: state.historyTransaction[index].amountInSATS,
-                  bitcoinUnit: Provider.of<UserSettingProvider>(context)
-                      .walletUserSetting
-                      .bitcoinUnit,
-                  exchangeRate: state.historyTransaction[index].exchangeRate,
-                ),
-                note: state.historyTransaction[index].label ?? "",
-                body: state.historyTransaction[index].body ?? "",
-                onTap: () {
-                  viewModel.selectedTXID = state.historyTransaction[index].txID;
-                  viewModel.historyAccountModel =
-                      state.historyTransaction[index].accountModel;
-                  viewModel.move(NavID.historyDetails);
-                },
-                timestamp: state.historyTransaction[index].createTimestamp,
-                isSend: state.historyTransaction[index].amountInSATS < 0,
-              ),
-            if (state.historyTransaction.length >
-                defaultTransactionPerPage * viewModel.currentHistoryPage +
-                    defaultTransactionPerPage)
-              GestureDetector(
-                  onTap: () {
-                    viewModel.showMoreTransactionHistory();
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text("Show more",
-                          style: FontManager.body1Regular(
-                              ProtonColors.protonBlue)))),
+            WalletHistoryTransactionList(
+              transactions: state.historyTransaction,
+              currentPage: viewModel.currentHistoryPage,
+              showMoreCallback: () {
+                viewModel.showMoreTransactionHistory();
+              },
+              showDetailCallback: ((txid, accountModel) {
+                viewModel.selectedTXID = txid;
+                viewModel.historyAccountModel = accountModel;
+                viewModel.move(NavID.historyDetails);
+              }),
+              selfEmailAddresses:
+                  viewModel.protonAddresses.map((e) => e.email).toList(),
+              filter: viewModel.transactionListFilterBy,
+              keyWord: viewModel.transactionSearchController.text,
+            ),
             if (state.historyTransaction.isEmpty)
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const SizedBox(
