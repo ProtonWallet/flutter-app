@@ -46,7 +46,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 740389886;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1173463564;
 
 // Section: executor
 
@@ -2186,6 +2186,60 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
                     })().await)
                 } })
 }
+fn wire_WalletClient_delete_wallet_transaction_private_flag_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_delete_wallet_transaction_private_flag", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::delete_wallet_transaction_private_flag(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await
+                    })().await)
+                } })
+}
+fn wire_WalletClient_delete_wallet_transaction_suspicious_flag_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_delete_wallet_transaction_suspicious_flag", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::delete_wallet_transaction_suspicious_flag(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await
+                    })().await)
+                } })
+}
 fn wire_WalletClient_delete_wallet_transactions_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -2367,6 +2421,60 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
                     })().await)
                 } })
 }
+fn wire_WalletClient_set_wallet_transaction_private_flag_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_set_wallet_transaction_private_flag", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::set_wallet_transaction_private_flag(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await
+                    })().await)
+                } })
+}
+fn wire_WalletClient_set_wallet_transaction_suspicious_flag_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_set_wallet_transaction_suspicious_flag", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::set_wallet_transaction_suspicious_flag(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await
+                    })().await)
+                } })
+}
 fn wire_WalletClient_update_wallet_account_label_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -2417,6 +2525,34 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
         }
         let api_that = api_that_decoded.unwrap();
  crate::api::api_service::wallet_client::WalletClient::update_wallet_name(&api_that, api_wallet_id, api_new_name).await
+                    })().await)
+                } })
+}
+fn wire_WalletClient_update_wallet_transaction_external_sender_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_update_wallet_transaction_external_sender", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);
+let api_sender = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::update_wallet_transaction_external_sender(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id, api_sender).await
                     })().await)
                 } })
 }
@@ -9372,6 +9508,8 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
         let mut var_label = <Option<String>>::sse_decode(deserializer);
         let mut var_transactionId = <String>::sse_decode(deserializer);
         let mut var_transactionTime = <String>::sse_decode(deserializer);
+        let mut var_isSuspicious = <bool>::sse_decode(deserializer);
+        let mut var_isPrivate = <bool>::sse_decode(deserializer);
         let mut var_exchangeRate =
             <Option<crate::proton_api::exchange_rate::ProtonExchangeRate>>::sse_decode(
                 deserializer,
@@ -9388,6 +9526,8 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
             label: var_label,
             transaction_id: var_transactionId,
             transaction_time: var_transactionTime,
+            is_suspicious: var_isSuspicious,
+            is_private: var_isPrivate,
             exchange_rate: var_exchangeRate,
             hashed_transaction_id: var_hashedTransactionId,
             subject: var_subject,
@@ -9535,127 +9675,157 @@ fn pde_ffi_dispatcher_primary_impl(
         79 => wire_WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
         71 => wire_WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
         75 => wire_WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire_WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire_WalletClient_delete_wallet_transaction_private_flag_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        85 => wire_WalletClient_delete_wallet_transaction_suspicious_flag_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        86 => wire_WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
         72 => wire_WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
         78 => wire_WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
         68 => wire_WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
         67 => wire_WalletClient_new_impl(port, ptr, rust_vec_len, data_len),
         77 => wire_WalletClient_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire_WalletClient_set_wallet_transaction_private_flag_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        83 => wire_WalletClient_set_wallet_transaction_suspicious_flag_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
         74 => wire_WalletClient_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
         70 => wire_WalletClient_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+        81 => wire_WalletClient_update_wallet_transaction_external_sender_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
         80 => wire_WalletClient_update_wallet_transaction_label_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        82 => wire_BdkWalletManager_new_impl(port, ptr, rust_vec_len, data_len),
-        86 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
-        84 => wire_test_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire_test_one_impl(port, ptr, rust_vec_len, data_len),
-        111 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
-        108 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-        119 => wire_broadcast_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
-        105 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        94 => wire_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        116 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        92 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-        97 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        118 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        100 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        122 => wire_fork_impl(port, ptr, rust_vec_len, data_len),
-        120 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
-        114 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
-        106 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
-        103 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-        104 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
-        107 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-        93 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-        113 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        115 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        89 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        102 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-        121 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
-        112 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        109 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-        101 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-        110 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        96 => wire_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        95 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-        91 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-        117 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-        169 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-        171 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
-        170 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
-        127 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
-        148 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        145 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
-        168 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
-        165 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        149 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        167 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
-        159 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        123 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-        128 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
-        172 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-        162 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        157 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
-        156 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
-        166 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
-        164 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
-        163 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
-        160 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
-        126 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
-        161 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
-        142 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
-        187 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
-        186 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-        185 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-        173 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
-        177 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        125 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
-        184 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
-        124 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
-        175 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
-        183 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
-        179 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        138 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
-        133 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
-        134 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
-        135 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
-        174 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
-        146 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
-        182 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
-        178 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
-        137 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
-        158 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
-        150 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        151 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
-        152 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        153 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
-        154 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
-        155 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
-        139 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
-        144 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
-        143 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-        141 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
-        140 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
-        180 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
-        131 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
-        176 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
-        147 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
-        129 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
-        136 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
-        132 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
-        181 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
-        130 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
-        188 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
-        189 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
+        87 => wire_BdkWalletManager_new_impl(port, ptr, rust_vec_len, data_len),
+        91 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
+        90 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
+        89 => wire_test_impl(port, ptr, rust_vec_len, data_len),
+        92 => wire_add_two_impl(port, ptr, rust_vec_len, data_len),
+        93 => wire_test_one_impl(port, ptr, rust_vec_len, data_len),
+        116 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
+        113 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+        124 => wire_broadcast_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
+        110 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
+        95 => wire_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        121 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        97 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+        102 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        123 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        105 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        127 => wire_fork_impl(port, ptr, rust_vec_len, data_len),
+        125 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
+        119 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
+        111 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+        109 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+        112 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+        98 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+        118 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        120 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+        126 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
+        117 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        114 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+        115 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        101 => wire_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        100 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+        96 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+        122 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
+        174 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+        176 => wire_api_address_network_impl(port, ptr, rust_vec_len, data_len),
+        175 => wire_api_address_to_script_pubkey_impl(port, ptr, rust_vec_len, data_len),
+        132 => wire_api_broadcast_impl(port, ptr, rust_vec_len, data_len),
+        153 => wire_api_bump_fee_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        150 => wire_api_combine_psbt_impl(port, ptr, rust_vec_len, data_len),
+        173 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
+        170 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        154 => wire_api_create_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        172 => wire_api_create_descriptor_public_impl(port, ptr, rust_vec_len, data_len),
+        164 => wire_api_create_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        128 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+        133 => wire_api_create_transaction_impl(port, ptr, rust_vec_len, data_len),
+        177 => wire_api_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+        167 => wire_api_derive_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        162 => wire_api_descriptor_as_string_impl(port, ptr, rust_vec_len, data_len),
+        161 => wire_api_descriptor_as_string_private_impl(port, ptr, rust_vec_len, data_len),
+        171 => wire_api_descriptor_public_from_string_impl(port, ptr, rust_vec_len, data_len),
+        169 => wire_api_descriptor_secret_as_public_impl(port, ptr, rust_vec_len, data_len),
+        168 => wire_api_descriptor_secret_as_secret_bytes_impl(port, ptr, rust_vec_len, data_len),
+        165 => wire_api_descriptor_secret_from_string_impl(port, ptr, rust_vec_len, data_len),
+        131 => wire_api_estimate_fee_impl(port, ptr, rust_vec_len, data_len),
+        166 => wire_api_extend_descriptor_secret_impl(port, ptr, rust_vec_len, data_len),
+        147 => wire_api_extract_tx_impl(port, ptr, rust_vec_len, data_len),
+        192 => wire_api_generate_seed_from_entropy_impl(port, ptr, rust_vec_len, data_len),
+        191 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+        190 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+        178 => wire_api_get_address_impl(port, ptr, rust_vec_len, data_len),
+        182 => wire_api_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        130 => wire_api_get_blockchain_hash_impl(port, ptr, rust_vec_len, data_len),
+        189 => wire_api_get_descriptor_for_keychain_impl(port, ptr, rust_vec_len, data_len),
+        129 => wire_api_get_height_impl(port, ptr, rust_vec_len, data_len),
+        180 => wire_api_get_internal_address_impl(port, ptr, rust_vec_len, data_len),
+        188 => wire_api_get_psbt_input_impl(port, ptr, rust_vec_len, data_len),
+        184 => wire_api_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        143 => wire_api_input_impl(port, ptr, rust_vec_len, data_len),
+        138 => wire_api_is_coin_base_impl(port, ptr, rust_vec_len, data_len),
+        139 => wire_api_is_explicitly_rbf_impl(port, ptr, rust_vec_len, data_len),
+        140 => wire_api_is_lock_time_enabled_impl(port, ptr, rust_vec_len, data_len),
+        179 => wire_api_is_mine_impl(port, ptr, rust_vec_len, data_len),
+        151 => wire_api_json_serialize_impl(port, ptr, rust_vec_len, data_len),
+        187 => wire_api_list_unspent_impl(port, ptr, rust_vec_len, data_len),
+        183 => wire_api_list_unspent_outputs_impl(port, ptr, rust_vec_len, data_len),
+        142 => wire_api_lock_time_impl(port, ptr, rust_vec_len, data_len),
+        163 => wire_api_max_satisfaction_weight_impl(port, ptr, rust_vec_len, data_len),
+        155 => wire_api_new_bip44_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        156 => wire_api_new_bip44_public_impl(port, ptr, rust_vec_len, data_len),
+        157 => wire_api_new_bip49_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        158 => wire_api_new_bip49_public_impl(port, ptr, rust_vec_len, data_len),
+        159 => wire_api_new_bip84_descriptor_impl(port, ptr, rust_vec_len, data_len),
+        160 => wire_api_new_bip84_public_impl(port, ptr, rust_vec_len, data_len),
+        144 => wire_api_output_impl(port, ptr, rust_vec_len, data_len),
+        149 => wire_api_psbt_fee_amount_impl(port, ptr, rust_vec_len, data_len),
+        148 => wire_api_psbt_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+        146 => wire_api_psbt_txid_impl(port, ptr, rust_vec_len, data_len),
+        145 => wire_api_serialize_psbt_impl(port, ptr, rust_vec_len, data_len),
+        185 => wire_api_sign_impl(port, ptr, rust_vec_len, data_len),
+        136 => wire_api_size_impl(port, ptr, rust_vec_len, data_len),
+        181 => wire_api_sync_wallet_impl(port, ptr, rust_vec_len, data_len),
+        152 => wire_api_tx_builder_finish_impl(port, ptr, rust_vec_len, data_len),
+        134 => wire_api_tx_txid_impl(port, ptr, rust_vec_len, data_len),
+        141 => wire_api_version_impl(port, ptr, rust_vec_len, data_len),
+        137 => wire_api_vsize_impl(port, ptr, rust_vec_len, data_len),
+        186 => wire_api_wallet_network_impl(port, ptr, rust_vec_len, data_len),
+        135 => wire_api_weight_impl(port, ptr, rust_vec_len, data_len),
+        193 => wire_my_test_object_new_impl(port, ptr, rust_vec_len, data_len),
+        194 => wire_my_test_object_read_text_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -9685,7 +9855,7 @@ fn pde_ffi_dispatcher_sync_impl(
         62 => wire_ProtonWalletAuthStore_from_session_impl(ptr, rust_vec_len, data_len),
         61 => wire_ProtonWalletAuthStore_new_impl(ptr, rust_vec_len, data_len),
         63 => wire_ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
-        83 => wire_BdkWalletManager_fingerprint_impl(ptr, rust_vec_len, data_len),
+        88 => wire_BdkWalletManager_fingerprint_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -11532,6 +11702,8 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::WalletTransact
             self.label.into_into_dart().into_dart(),
             self.transaction_id.into_into_dart().into_dart(),
             self.transaction_time.into_into_dart().into_dart(),
+            self.is_suspicious.into_into_dart().into_dart(),
+            self.is_private.into_into_dart().into_dart(),
             self.exchange_rate.into_into_dart().into_dart(),
             self.hashed_transaction_id.into_into_dart().into_dart(),
             self.subject.into_into_dart().into_dart(),
@@ -13877,6 +14049,8 @@ impl SseEncode for crate::proton_api::wallet::WalletTransaction {
         <Option<String>>::sse_encode(self.label, serializer);
         <String>::sse_encode(self.transaction_id, serializer);
         <String>::sse_encode(self.transaction_time, serializer);
+        <bool>::sse_encode(self.is_suspicious, serializer);
+        <bool>::sse_encode(self.is_private, serializer);
         <Option<crate::proton_api::exchange_rate::ProtonExchangeRate>>::sse_encode(
             self.exchange_rate,
             serializer,

@@ -12,7 +12,9 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
@@ -27,6 +29,7 @@ import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
+import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -46,8 +49,13 @@ abstract class HistoryDetailViewModel
   String txid;
   String userLabel = "";
 
-  HistoryDetailViewModel(super.coordinator, this.walletID, this.accountID,
-      this.txid, this.userFiatCurrency);
+  HistoryDetailViewModel(
+    super.coordinator,
+    this.walletID,
+    this.accountID,
+    this.txid,
+    this.userFiatCurrency,
+  );
 
   String strWallet = "";
   String strAccount = "";
@@ -75,6 +83,11 @@ abstract class HistoryDetailViewModel
   String? selfBitcoinAddress;
 
   void editMemo();
+
+  Future<void> updateSender(
+    String senderName,
+    String senderEmail,
+  );
 }
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
@@ -87,6 +100,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.userManager,
     this.protonWalletManager,
     this.serverTransactionDataProvider,
+    this.walletClient,
+    this.walletKeysProvider,
   );
 
   final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
@@ -97,6 +112,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
   final ServerTransactionDataProvider serverTransactionDataProvider;
+  final WalletClient walletClient;
+  final WalletKeysProvider walletKeysProvider;
+
+  Uint8List? entropy;
+  SecretKey? secretKey;
+  List<AddressKey> addressKeys = [];
 
   @override
   void dispose() {
@@ -119,9 +140,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       AccountModel accountModel =
           await DBHelper.accountDao!.findById(accountID);
-      SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel.serverWalletID);
-      List<AddressKey> addressKeys = await WalletManager.getAddressKeys();
+      addressKeys = await WalletManager.getAddressKeys();
 
       ServerTransactionData serverTransactionData =
           await serverTransactionDataProvider
@@ -129,9 +148,26 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         walletModel,
         accountModel,
       );
-      var userkey = await userManager.getFirstKey();
-      var userPrivateKey = userkey.privateKey;
-      var userPassphrase = userkey.passphrase;
+
+      /// get user key
+      UserKey userkey = await userManager.getFirstKey();
+      String userPrivateKey = userkey.privateKey;
+      String userPassphrase = userkey.passphrase;
+      WalletKey? walletKey = await walletKeysProvider.getWalletKey(
+        walletModel.serverWalletID,
+      );
+
+      if (walletKey != null) {
+        var pgpEncryptedWalletKey = walletKey.walletKey;
+        entropy = proton_crypto.decryptBinaryPGP(
+          userPrivateKey,
+          userPassphrase,
+          pgpEncryptedWalletKey,
+        );
+        if (entropy != null) {
+          secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy!);
+        }
+      }
 
       for (TransactionModel transactionModel
           in serverTransactionData.transactions) {
@@ -158,7 +194,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       datasourceChangedStreamController.sinkAddSafe(this);
       _wallet = (await WalletManager.loadWalletWithID(walletID, accountID))!;
       List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
-      strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
 
       try {
@@ -236,10 +271,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       }
       logger.i("transactionModel == null ? ${transactionModel == null}");
-      if (transactionModel == null) {
+      if (transactionModel == null && secretKey != null) {
         String hashedTransactionID =
-            await WalletKeyHelper.getHmacHashedString(secretKey, txid);
-        String encryptedLabel = await WalletKeyHelper.encrypt(secretKey, "");
+            await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
+        String encryptedLabel = await WalletKeyHelper.encrypt(secretKey!, "");
 
         var key = await userManager.getFirstKey();
         String userPrivateKey = key.privateKey;
@@ -296,8 +331,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       }
       if (transactionModel!.label.isNotEmpty) {
-        userLabel = await WalletKeyHelper.decrypt(
-            secretKey, utf8.decode(transactionModel!.label));
+        if (secretKey != null) {
+          userLabel = await WalletKeyHelper.decrypt(
+              secretKey!, utf8.decode(transactionModel!.label));
+
+          strWallet = await WalletKeyHelper.decrypt(
+            secretKey!,
+            walletModel.name,
+          );
+        }
       }
       memoController.text = userLabel;
 
@@ -476,13 +518,11 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
     try {
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-      SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel.serverWalletID);
       if (!memoFocusNode.hasFocus) {
-        if (userLabel != memoController.text) {
+        if (userLabel != memoController.text && secretKey != null) {
           userLabel = memoController.text;
           String encryptedLabel =
-              await WalletKeyHelper.encrypt(secretKey, userLabel);
+              await WalletKeyHelper.encrypt(secretKey!, userLabel);
           transactionModel!.label = utf8.encode(encryptedLabel);
           DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
           await proton_api.updateWalletTransactionLabel(
@@ -513,5 +553,35 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     isEditing = true;
     memoFocusNode.requestFocus();
     datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  Future<void> updateSender(
+    String senderName,
+    String senderEmail,
+  ) async {
+    if (addressKeys.isNotEmpty) {
+      Map<String, dynamic> jsonMap = {
+        "isExternalTransaction": true,
+        "name": senderName,
+        "email": senderEmail,
+      };
+      String jsonString = jsonEncode(jsonMap);
+      String encryptedName = addressKeys.first.encrypt(jsonString);
+      transactionModel!.sender = encryptedName;
+      WalletTransaction _ =
+          await walletClient.updateWalletTransactionExternalSender(
+              walletId: transactionModel!.serverWalletID,
+              walletAccountId: transactionModel!.serverAccountID,
+              walletTransactionId: transactionModel!.serverID,
+              sender: encryptedName);
+      await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
+          notifyDataUpdate: true);
+
+      /// walletTransaction update event will trigger ServerTransactionDataProvider update
+      /// then it will notify wallet transaction bloc will update
+      fromEmail = jsonString;
+      datasourceChangedStreamController.sinkAddSafe(this);
+    }
   }
 }

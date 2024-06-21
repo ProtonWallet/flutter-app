@@ -231,7 +231,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             logger.e(e.toString());
           }
         }
-
+        bool hasUpdateUserSetting = false;
         for (AccountModel account in wallet.accounts) {
           AccountMenuModel accMenuModel = AccountMenuModel(account);
 
@@ -240,6 +240,14 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               accMenuModel.accountModel.serverAccountID ==
                   walletsDataProvider.selectedServerWalletAccountID) {
             accMenuModel.isSelected = true;
+            userSettingsDataProvider.updateFiatCurrency(
+                accMenuModel.accountModel.fiatCurrency.toFiatCurrency());
+          }
+
+          if (walletModel.isSelected && hasUpdateUserSetting == false) {
+            userSettingsDataProvider.updateFiatCurrency(
+                accMenuModel.accountModel.fiatCurrency.toFiatCurrency());
+            hasUpdateUserSetting = true;
           }
 
           if (secretKey != null) {
@@ -302,12 +310,20 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       for (WalletMenuModel walletModel in state.walletsModel) {
         walletModel.isSelected = walletModel.walletModel.serverWalletID ==
             event.walletModel.serverWalletID;
+        bool isSelectedWallet = false;
         if (walletModel.isSelected) {
           walletsDataProvider.selectedServerWalletID =
               event.walletModel.serverWalletID;
+          isSelectedWallet = true;
         }
+        bool hasUpdateUserSetting = false;
         for (AccountMenuModel account in walletModel.accounts) {
           account.isSelected = false;
+          if (isSelectedWallet && hasUpdateUserSetting == false) {
+            userSettingsDataProvider.updateFiatCurrency(
+                account.accountModel.fiatCurrency.toFiatCurrency());
+            hasUpdateUserSetting = true;
+          }
         }
       }
       emit(state.copyWith(walletsModel: state.walletsModel));
@@ -361,7 +377,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
                 event.accountModel.serverAccountID) {
               /// TODO:: handle wallet account view change here
               if (account.isSelected) {
-                userSettingsDataProvider.updateFiatCurrency(event.fiatName.toFiatCurrency());
+                userSettingsDataProvider
+                    .updateFiatCurrency(event.fiatName.toFiatCurrency());
               }
               account.accountModel.fiatCurrency = event.fiatName;
               walletsDataProvider.updateWalletAccount(
