@@ -18,16 +18,38 @@ import 'api/api_service/settings_client.dart';
 import 'api/api_service/transaction_client.dart';
 import 'api/api_service/wallet_auth_store.dart';
 import 'api/api_service/wallet_client.dart';
-import 'api/bdk_wallet.dart';
+import 'api/bdk_wallet/account.dart';
+import 'api/bdk_wallet/address.dart';
+import 'api/bdk_wallet/amount.dart';
+import 'api/bdk_wallet/balance.dart';
+import 'api/bdk_wallet/blockchain.dart';
+import 'api/bdk_wallet/derivation_path.dart';
+import 'api/bdk_wallet/local_output.dart';
+import 'api/bdk_wallet/mnemonic.dart';
+import 'api/bdk_wallet/payment_link.dart';
+import 'api/bdk_wallet/psbt.dart';
+import 'api/bdk_wallet/script_buf.dart';
+import 'api/bdk_wallet/sequence.dart';
+import 'api/bdk_wallet/storage.dart';
+import 'api/bdk_wallet/transaction_builder.dart';
+import 'api/bdk_wallet/transaction_details.dart';
+import 'api/bdk_wallet/transaction_details_txin.dart';
+import 'api/bdk_wallet/transaction_details_txop.dart';
+import 'api/bdk_wallet/transactions.dart';
+import 'api/bdk_wallet/wallet.dart';
 import 'api/flutter_logger.dart';
-import 'api/ldk_api.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
-import 'api/rust_objects.dart';
-import 'bdk/blockchain.dart';
-import 'bdk/error.dart';
-import 'bdk/types.dart';
-import 'bdk/wallet.dart';
+import 'common/address_info.dart';
+import 'common/change_spend_policy.dart';
+import 'common/coin_selection.dart';
+import 'common/errors.dart';
+import 'common/keychain_kind.dart';
+import 'common/network.dart';
+import 'common/pagination.dart';
+import 'common/script_type.dart';
+import 'common/transaction_time.dart';
+import 'common/word_count.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
@@ -35,7 +57,6 @@ import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 import 'proton_api/auth_credential.dart';
 import 'proton_api/contacts.dart';
-import 'proton_api/errors.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
 import 'proton_api/payment_gateway.dart';
@@ -69,10 +90,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcProtonAPIServicePtr;
 
   CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_BdkWalletManagerPtr => wire
-          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManagerPtr;
-
-  CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_BitcoinAddressClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClientPtr;
 
@@ -91,6 +108,72 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ExchangeRateClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClientPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbAccountPtr =>
+      wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccountPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbAddressPtr =>
+      wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbAmountPtr =>
+      wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmountPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbBalancePtr =>
+      wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalancePtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbBlockchainClientPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClientPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbDerivationPathPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPathPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbDetailledTxInPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxInPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbDetailledTxOutputPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutputPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbLocalOutputPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbMnemonicPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonicPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbPaymentLinkPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLinkPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbPsbtPtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbtPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbScriptBufPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBufPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbSequencePtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequencePtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbTransactionPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbTransactionDetailsPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetailsPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbTxBuilderPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilderPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbWalletPtr =>
+      wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_OnRampGatewayClientPtr => wire
@@ -149,11 +232,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  BdkWalletManager
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          dynamic raw);
-
-  @protected
   BitcoinAddressClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           dynamic raw);
@@ -176,6 +254,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic raw);
+
+  @protected
+  FrbAccount
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
+
+  @protected
+  FrbAddress
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          dynamic raw);
+
+  @protected
+  FrbAmount
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          dynamic raw);
+
+  @protected
+  FrbBalance
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          dynamic raw);
+
+  @protected
+  FrbBlockchainClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          dynamic raw);
+
+  @protected
+  FrbDerivationPath
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          dynamic raw);
+
+  @protected
+  FrbDetailledTxIn
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          dynamic raw);
+
+  @protected
+  FrbDetailledTxOutput
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          dynamic raw);
+
+  @protected
+  FrbLocalOutput
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  FrbMnemonic
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          dynamic raw);
+
+  @protected
+  FrbPaymentLink
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          dynamic raw);
+
+  @protected
+  FrbPsbt
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          dynamic raw);
+
+  @protected
+  FrbScriptBuf
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          dynamic raw);
+
+  @protected
+  FrbSequence
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          dynamic raw);
+
+  @protected
+  FrbTransaction
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          dynamic raw);
+
+  @protected
+  FrbTransactionDetails
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          dynamic raw);
+
+  @protected
+  FrbTxBuilder
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          dynamic raw);
+
+  @protected
+  FrbWallet
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           dynamic raw);
 
   @protected
@@ -224,6 +392,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  FrbAccount
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
+
+  @protected
+  FrbBlockchainClient
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          dynamic raw);
+
+  @protected
+  FrbPsbt
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          dynamic raw);
+
+  @protected
+  FrbWallet
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          dynamic raw);
+
+  @protected
   ProtonApiService
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           dynamic raw);
@@ -236,11 +424,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   AddressClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAddressClient(
-          dynamic raw);
-
-  @protected
-  BdkWalletManager
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
           dynamic raw);
 
   @protected
@@ -266,6 +449,81 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic raw);
+
+  @protected
+  FrbAccount
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
+
+  @protected
+  FrbAddress
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          dynamic raw);
+
+  @protected
+  FrbBalance
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          dynamic raw);
+
+  @protected
+  FrbBlockchainClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          dynamic raw);
+
+  @protected
+  FrbDerivationPath
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          dynamic raw);
+
+  @protected
+  FrbDetailledTxOutput
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          dynamic raw);
+
+  @protected
+  FrbMnemonic
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          dynamic raw);
+
+  @protected
+  FrbPaymentLink
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          dynamic raw);
+
+  @protected
+  FrbPsbt
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          dynamic raw);
+
+  @protected
+  FrbScriptBuf
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          dynamic raw);
+
+  @protected
+  FrbSequence
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          dynamic raw);
+
+  @protected
+  FrbTransaction
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          dynamic raw);
+
+  @protected
+  FrbTransactionDetails
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          dynamic raw);
+
+  @protected
+  FrbTxBuilder
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          dynamic raw);
+
+  @protected
+  FrbWallet
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           dynamic raw);
 
   @protected
@@ -311,6 +569,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
+  Map<String, double> dco_decode_Map_String_f_64(dynamic raw);
+
+  @protected
   Map<GatewayProvider, List<ApiCountry>>
       dco_decode_Map_gateway_provider_list_api_country(dynamic raw);
 
@@ -348,11 +609,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  BdkWalletManager
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          dynamic raw);
-
-  @protected
   BitcoinAddressClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           dynamic raw);
@@ -375,6 +631,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          dynamic raw);
+
+  @protected
+  FrbAccount
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
+
+  @protected
+  FrbAddress
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          dynamic raw);
+
+  @protected
+  FrbAmount
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          dynamic raw);
+
+  @protected
+  FrbBalance
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          dynamic raw);
+
+  @protected
+  FrbBlockchainClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          dynamic raw);
+
+  @protected
+  FrbDerivationPath
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          dynamic raw);
+
+  @protected
+  FrbDetailledTxIn
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          dynamic raw);
+
+  @protected
+  FrbDetailledTxOutput
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          dynamic raw);
+
+  @protected
+  FrbLocalOutput
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  FrbMnemonic
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          dynamic raw);
+
+  @protected
+  FrbPaymentLink
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          dynamic raw);
+
+  @protected
+  FrbPsbt
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          dynamic raw);
+
+  @protected
+  FrbScriptBuf
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          dynamic raw);
+
+  @protected
+  FrbSequence
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          dynamic raw);
+
+  @protected
+  FrbTransaction
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          dynamic raw);
+
+  @protected
+  FrbTransactionDetails
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          dynamic raw);
+
+  @protected
+  FrbTxBuilder
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          dynamic raw);
+
+  @protected
+  FrbWallet
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           dynamic raw);
 
   @protected
@@ -429,12 +775,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
-  AddressIndex dco_decode_address_index(dynamic raw);
-
-  @protected
-  AddressInfo dco_decode_address_info(dynamic raw);
-
-  @protected
   AllKeyAddressKey dco_decode_all_key_address_key(dynamic raw);
 
   @protected
@@ -477,22 +817,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AuthCredential dco_decode_auth_credential(dynamic raw);
 
   @protected
-  Balance dco_decode_balance(dynamic raw);
-
-  @protected
   BitcoinAddress dco_decode_bitcoin_address(dynamic raw);
 
   @protected
   BitcoinUnit dco_decode_bitcoin_unit(dynamic raw);
 
   @protected
-  BlockTime dco_decode_block_time(dynamic raw);
-
-  @protected
   bool dco_decode_bool(dynamic raw);
 
   @protected
-  AddressIndex dco_decode_box_autoadd_address_index(dynamic raw);
+  FrbAccount
+      dco_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
 
   @protected
   ApiContactEmails dco_decode_box_autoadd_api_contact_emails(dynamic raw);
@@ -517,7 +853,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BitcoinAddress dco_decode_box_autoadd_bitcoin_address(dynamic raw);
 
   @protected
-  BlockTime dco_decode_box_autoadd_block_time(dynamic raw);
+  bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
   CreateWalletAccountReq dco_decode_box_autoadd_create_wallet_account_req(
@@ -527,25 +863,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw);
 
   @protected
-  DatabaseConfig dco_decode_box_autoadd_database_config(dynamic raw);
-
-  @protected
-  EsploraConfig dco_decode_box_autoadd_esplora_config(dynamic raw);
-
-  @protected
-  double dco_decode_box_autoadd_f_32(dynamic raw);
-
-  @protected
   GatewayProvider dco_decode_box_autoadd_gateway_provider(dynamic raw);
 
   @protected
-  LocalUtxo dco_decode_box_autoadd_local_utxo(dynamic raw);
+  OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
 
   @protected
-  MyTestObject dco_decode_box_autoadd_my_test_object(dynamic raw);
-
-  @protected
-  OutPoint dco_decode_box_autoadd_out_point(dynamic raw);
+  Pagination dco_decode_box_autoadd_pagination(dynamic raw);
 
   @protected
   PaymentMethod dco_decode_box_autoadd_payment_method(dynamic raw);
@@ -554,24 +878,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw);
 
   @protected
-  PsbtSigHashType dco_decode_box_autoadd_psbt_sig_hash_type(dynamic raw);
-
-  @protected
-  RbfValue dco_decode_box_autoadd_rbf_value(dynamic raw);
-
-  @protected
-  (OutPoint, String, int) dco_decode_box_autoadd_record_out_point_string_usize(
-      dynamic raw);
-
-  @protected
-  Script dco_decode_box_autoadd_script(dynamic raw);
-
-  @protected
-  SignOptions dco_decode_box_autoadd_sign_options(dynamic raw);
-
-  @protected
-  SqliteDbConfiguration dco_decode_box_autoadd_sqlite_db_configuration(
-      dynamic raw);
+  SortOrder dco_decode_box_autoadd_sort_order(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -581,6 +888,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int dco_decode_box_autoadd_u_8(dynamic raw);
+
+  @protected
+  int dco_decode_box_autoadd_usize(dynamic raw);
 
   @protected
   WalletTransaction dco_decode_box_autoadd_wallet_transaction(dynamic raw);
@@ -595,6 +905,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ChildSession dco_decode_child_session(dynamic raw);
 
   @protected
+  CoinSelection dco_decode_coin_selection(dynamic raw);
+
+  @protected
   ContactEmailEvent dco_decode_contact_email_event(dynamic raw);
 
   @protected
@@ -604,23 +917,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CreateWalletReq dco_decode_create_wallet_req(dynamic raw);
 
   @protected
-  DatabaseConfig dco_decode_database_config(dynamic raw);
-
-  @protected
   EmailIntegrationBitcoinAddress dco_decode_email_integration_bitcoin_address(
       dynamic raw);
 
   @protected
-  Error dco_decode_error(dynamic raw);
-
-  @protected
-  EsploraConfig dco_decode_esplora_config(dynamic raw);
-
-  @protected
-  double dco_decode_f_32(dynamic raw);
+  double dco_decode_f_64(dynamic raw);
 
   @protected
   FiatCurrency dco_decode_fiat_currency(dynamic raw);
+
+  @protected
+  FrbAddressInfo dco_decode_frb_address_info(dynamic raw);
+
+  @protected
+  FrbOutPoint dco_decode_frb_out_point(dynamic raw);
 
   @protected
   GatewayProvider dco_decode_gateway_provider(dynamic raw);
@@ -640,6 +950,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<ApiTx>
       dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
+          dynamic raw);
+
+  @protected
+  List<FrbDetailledTxIn>
+      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          dynamic raw);
+
+  @protected
+  List<FrbDetailledTxOutput>
+      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          dynamic raw);
+
+  @protected
+  List<FrbLocalOutput>
+      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  List<FrbTransactionDetails>
+      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
           dynamic raw);
 
   @protected
@@ -678,13 +1008,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ContactEmailEvent> dco_decode_list_contact_email_event(dynamic raw);
 
   @protected
-  List<Uint8List> dco_decode_list_list_prim_u_8_strict(dynamic raw);
-
-  @protected
-  List<LocalUtxo> dco_decode_list_local_utxo(dynamic raw);
-
-  @protected
-  List<OutPoint> dco_decode_list_out_point(dynamic raw);
+  List<FrbOutPoint> dco_decode_list_frb_out_point(dynamic raw);
 
   @protected
   List<PaymentMethod> dco_decode_list_payment_method(dynamic raw);
@@ -725,16 +1049,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_list_record_gateway_provider_list_quote(dynamic raw);
 
   @protected
-  List<ScriptAmount> dco_decode_list_script_amount(dynamic raw);
-
-  @protected
-  List<TransactionDetails> dco_decode_list_transaction_details(dynamic raw);
-
-  @protected
-  List<TxIn> dco_decode_list_tx_in(dynamic raw);
-
-  @protected
-  List<TxOut> dco_decode_list_tx_out(dynamic raw);
+  List<(String, double)> dco_decode_list_record_string_f_64(dynamic raw);
 
   @protected
   List<WalletAccountEvent> dco_decode_list_wallet_account_event(dynamic raw);
@@ -756,19 +1071,21 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  LocalUtxo dco_decode_local_utxo(dynamic raw);
-
-  @protected
   LogEntry dco_decode_log_entry(dynamic raw);
-
-  @protected
-  MyTestObject dco_decode_my_test_object(dynamic raw);
 
   @protected
   Network dco_decode_network(dynamic raw);
 
   @protected
+  OnchainStoreFactory dco_decode_onchain_store_factory(dynamic raw);
+
+  @protected
   String? dco_decode_opt_String(dynamic raw);
+
+  @protected
+  FrbAccount?
+      dco_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          dynamic raw);
 
   @protected
   ApiContactEmails? dco_decode_opt_box_autoadd_api_contact_emails(dynamic raw);
@@ -791,13 +1108,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  BlockTime? dco_decode_opt_box_autoadd_block_time(dynamic raw);
-
-  @protected
-  double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
 
   @protected
   GatewayProvider? dco_decode_opt_box_autoadd_gateway_provider(dynamic raw);
+
+  @protected
+  Pagination? dco_decode_opt_box_autoadd_pagination(dynamic raw);
 
   @protected
   PaymentMethod? dco_decode_opt_box_autoadd_payment_method(dynamic raw);
@@ -807,20 +1124,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  PsbtSigHashType? dco_decode_opt_box_autoadd_psbt_sig_hash_type(dynamic raw);
-
-  @protected
-  RbfValue? dco_decode_opt_box_autoadd_rbf_value(dynamic raw);
-
-  @protected
-  (OutPoint, String, int)?
-      dco_decode_opt_box_autoadd_record_out_point_string_usize(dynamic raw);
-
-  @protected
-  Script? dco_decode_opt_box_autoadd_script(dynamic raw);
-
-  @protected
-  SignOptions? dco_decode_opt_box_autoadd_sign_options(dynamic raw);
+  SortOrder? dco_decode_opt_box_autoadd_sort_order(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
@@ -830,6 +1134,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int? dco_decode_opt_box_autoadd_u_8(dynamic raw);
+
+  @protected
+  int? dco_decode_opt_box_autoadd_usize(dynamic raw);
 
   @protected
   WalletTransaction? dco_decode_opt_box_autoadd_wallet_transaction(dynamic raw);
@@ -862,7 +1169,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  OutPoint dco_decode_out_point(dynamic raw);
+  Pagination dco_decode_pagination(dynamic raw);
 
   @protected
   PaymentMethod dco_decode_payment_method(dynamic raw);
@@ -880,13 +1187,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonExchangeRate dco_decode_proton_exchange_rate(dynamic raw);
 
   @protected
-  PsbtSigHashType dco_decode_psbt_sig_hash_type(dynamic raw);
-
-  @protected
   Quote dco_decode_quote(dynamic raw);
-
-  @protected
-  RbfValue dco_decode_rbf_value(dynamic raw);
 
   @protected
   (GatewayProvider, List<ApiCountry>)
@@ -906,35 +1207,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  (OutPoint, String, int) dco_decode_record_out_point_string_usize(dynamic raw);
+  (String, double) dco_decode_record_string_f_64(dynamic raw);
 
   @protected
-  (String, Network) dco_decode_record_string_network(dynamic raw);
+  ScriptType dco_decode_script_type(dynamic raw);
 
   @protected
-  (String, TransactionDetails) dco_decode_record_string_transaction_details(
-      dynamic raw);
+  SortOrder dco_decode_sort_order(dynamic raw);
 
   @protected
-  Script dco_decode_script(dynamic raw);
-
-  @protected
-  ScriptAmount dco_decode_script_amount(dynamic raw);
-
-  @protected
-  SignOptions dco_decode_sign_options(dynamic raw);
-
-  @protected
-  SqliteDbConfiguration dco_decode_sqlite_db_configuration(dynamic raw);
-
-  @protected
-  TransactionDetails dco_decode_transaction_details(dynamic raw);
-
-  @protected
-  TxIn dco_decode_tx_in(dynamic raw);
-
-  @protected
-  TxOut dco_decode_tx_out(dynamic raw);
+  TransactionTime dco_decode_transaction_time(dynamic raw);
 
   @protected
   int dco_decode_u_16(dynamic raw);
@@ -996,11 +1278,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  BdkWalletManager
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          SseDeserializer deserializer);
-
-  @protected
   BitcoinAddressClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           SseDeserializer deserializer);
@@ -1023,6 +1300,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAccount
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAddress
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAmount
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBalance
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBlockchainClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDerivationPath
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDetailledTxIn
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDetailledTxOutput
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbLocalOutput
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbMnemonic
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPaymentLink
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPsbt
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbScriptBuf
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbSequence
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransaction
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransactionDetails
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTxBuilder
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbWallet
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           SseDeserializer deserializer);
 
   @protected
@@ -1071,6 +1438,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  FrbAccount
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBlockchainClient
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPsbt
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbWallet
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonApiService
       sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           SseDeserializer deserializer);
@@ -1083,11 +1470,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   AddressClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAddressClient(
-          SseDeserializer deserializer);
-
-  @protected
-  BdkWalletManager
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
           SseDeserializer deserializer);
 
   @protected
@@ -1113,6 +1495,81 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAccount
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAddress
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBalance
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBlockchainClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDerivationPath
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDetailledTxOutput
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbMnemonic
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPaymentLink
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPsbt
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbScriptBuf
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbSequence
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransaction
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransactionDetails
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTxBuilder
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbWallet
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           SseDeserializer deserializer);
 
   @protected
@@ -1154,6 +1611,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
 
   @protected
+  Map<String, double> sse_decode_Map_String_f_64(SseDeserializer deserializer);
+
+  @protected
   Map<GatewayProvider, List<ApiCountry>>
       sse_decode_Map_gateway_provider_list_api_country(
           SseDeserializer deserializer);
@@ -1193,11 +1653,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  BdkWalletManager
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          SseDeserializer deserializer);
-
-  @protected
   BitcoinAddressClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           SseDeserializer deserializer);
@@ -1220,6 +1675,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ExchangeRateClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAccount
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAddress
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbAmount
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBalance
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbBlockchainClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDerivationPath
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDetailledTxIn
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbDetailledTxOutput
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbLocalOutput
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbMnemonic
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPaymentLink
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbPsbt
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbScriptBuf
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbSequence
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransaction
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTransactionDetails
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbTxBuilder
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbWallet
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           SseDeserializer deserializer);
 
   @protected
@@ -1275,12 +1820,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
-  AddressIndex sse_decode_address_index(SseDeserializer deserializer);
-
-  @protected
-  AddressInfo sse_decode_address_info(SseDeserializer deserializer);
-
-  @protected
   AllKeyAddressKey sse_decode_all_key_address_key(SseDeserializer deserializer);
 
   @protected
@@ -1327,23 +1866,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AuthCredential sse_decode_auth_credential(SseDeserializer deserializer);
 
   @protected
-  Balance sse_decode_balance(SseDeserializer deserializer);
-
-  @protected
   BitcoinAddress sse_decode_bitcoin_address(SseDeserializer deserializer);
 
   @protected
   BitcoinUnit sse_decode_bitcoin_unit(SseDeserializer deserializer);
 
   @protected
-  BlockTime sse_decode_block_time(SseDeserializer deserializer);
-
-  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
-  AddressIndex sse_decode_box_autoadd_address_index(
-      SseDeserializer deserializer);
+  FrbAccount
+      sse_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
 
   @protected
   ApiContactEmails sse_decode_box_autoadd_api_contact_emails(
@@ -1373,7 +1907,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  BlockTime sse_decode_box_autoadd_block_time(SseDeserializer deserializer);
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
   CreateWalletAccountReq sse_decode_box_autoadd_create_wallet_account_req(
@@ -1384,29 +1918,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  DatabaseConfig sse_decode_box_autoadd_database_config(
-      SseDeserializer deserializer);
-
-  @protected
-  EsploraConfig sse_decode_box_autoadd_esplora_config(
-      SseDeserializer deserializer);
-
-  @protected
-  double sse_decode_box_autoadd_f_32(SseDeserializer deserializer);
-
-  @protected
   GatewayProvider sse_decode_box_autoadd_gateway_provider(
       SseDeserializer deserializer);
 
   @protected
-  LocalUtxo sse_decode_box_autoadd_local_utxo(SseDeserializer deserializer);
-
-  @protected
-  MyTestObject sse_decode_box_autoadd_my_test_object(
+  OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
       SseDeserializer deserializer);
 
   @protected
-  OutPoint sse_decode_box_autoadd_out_point(SseDeserializer deserializer);
+  Pagination sse_decode_box_autoadd_pagination(SseDeserializer deserializer);
 
   @protected
   PaymentMethod sse_decode_box_autoadd_payment_method(
@@ -1417,25 +1937,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  PsbtSigHashType sse_decode_box_autoadd_psbt_sig_hash_type(
-      SseDeserializer deserializer);
-
-  @protected
-  RbfValue sse_decode_box_autoadd_rbf_value(SseDeserializer deserializer);
-
-  @protected
-  (OutPoint, String, int) sse_decode_box_autoadd_record_out_point_string_usize(
-      SseDeserializer deserializer);
-
-  @protected
-  Script sse_decode_box_autoadd_script(SseDeserializer deserializer);
-
-  @protected
-  SignOptions sse_decode_box_autoadd_sign_options(SseDeserializer deserializer);
-
-  @protected
-  SqliteDbConfiguration sse_decode_box_autoadd_sqlite_db_configuration(
-      SseDeserializer deserializer);
+  SortOrder sse_decode_box_autoadd_sort_order(SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
@@ -1445,6 +1947,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_u_8(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
   WalletTransaction sse_decode_box_autoadd_wallet_transaction(
@@ -1461,6 +1966,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ChildSession sse_decode_child_session(SseDeserializer deserializer);
 
   @protected
+  CoinSelection sse_decode_coin_selection(SseDeserializer deserializer);
+
+  @protected
   ContactEmailEvent sse_decode_contact_email_event(
       SseDeserializer deserializer);
 
@@ -1472,23 +1980,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CreateWalletReq sse_decode_create_wallet_req(SseDeserializer deserializer);
 
   @protected
-  DatabaseConfig sse_decode_database_config(SseDeserializer deserializer);
-
-  @protected
   EmailIntegrationBitcoinAddress sse_decode_email_integration_bitcoin_address(
       SseDeserializer deserializer);
 
   @protected
-  Error sse_decode_error(SseDeserializer deserializer);
-
-  @protected
-  EsploraConfig sse_decode_esplora_config(SseDeserializer deserializer);
-
-  @protected
-  double sse_decode_f_32(SseDeserializer deserializer);
+  double sse_decode_f_64(SseDeserializer deserializer);
 
   @protected
   FiatCurrency sse_decode_fiat_currency(SseDeserializer deserializer);
+
+  @protected
+  FrbAddressInfo sse_decode_frb_address_info(SseDeserializer deserializer);
+
+  @protected
+  FrbOutPoint sse_decode_frb_out_point(SseDeserializer deserializer);
 
   @protected
   GatewayProvider sse_decode_gateway_provider(SseDeserializer deserializer);
@@ -1508,6 +2013,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<ApiTx>
       sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
+          SseDeserializer deserializer);
+
+  @protected
+  List<FrbDetailledTxIn>
+      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          SseDeserializer deserializer);
+
+  @protected
+  List<FrbDetailledTxOutput>
+      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  List<FrbLocalOutput>
+      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  List<FrbTransactionDetails>
+      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
           SseDeserializer deserializer);
 
   @protected
@@ -1553,14 +2078,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  List<Uint8List> sse_decode_list_list_prim_u_8_strict(
-      SseDeserializer deserializer);
-
-  @protected
-  List<LocalUtxo> sse_decode_list_local_utxo(SseDeserializer deserializer);
-
-  @protected
-  List<OutPoint> sse_decode_list_out_point(SseDeserializer deserializer);
+  List<FrbOutPoint> sse_decode_list_frb_out_point(SseDeserializer deserializer);
 
   @protected
   List<PaymentMethod> sse_decode_list_payment_method(
@@ -1607,18 +2125,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  List<ScriptAmount> sse_decode_list_script_amount(
+  List<(String, double)> sse_decode_list_record_string_f_64(
       SseDeserializer deserializer);
-
-  @protected
-  List<TransactionDetails> sse_decode_list_transaction_details(
-      SseDeserializer deserializer);
-
-  @protected
-  List<TxIn> sse_decode_list_tx_in(SseDeserializer deserializer);
-
-  @protected
-  List<TxOut> sse_decode_list_tx_out(SseDeserializer deserializer);
 
   @protected
   List<WalletAccountEvent> sse_decode_list_wallet_account_event(
@@ -1644,19 +2152,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  LocalUtxo sse_decode_local_utxo(SseDeserializer deserializer);
-
-  @protected
   LogEntry sse_decode_log_entry(SseDeserializer deserializer);
-
-  @protected
-  MyTestObject sse_decode_my_test_object(SseDeserializer deserializer);
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
 
   @protected
+  OnchainStoreFactory sse_decode_onchain_store_factory(
+      SseDeserializer deserializer);
+
+  @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  FrbAccount?
+      sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          SseDeserializer deserializer);
 
   @protected
   ApiContactEmails? sse_decode_opt_box_autoadd_api_contact_emails(
@@ -1683,14 +2194,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  BlockTime? sse_decode_opt_box_autoadd_block_time(
-      SseDeserializer deserializer);
-
-  @protected
-  double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
   GatewayProvider? sse_decode_opt_box_autoadd_gateway_provider(
+      SseDeserializer deserializer);
+
+  @protected
+  Pagination? sse_decode_opt_box_autoadd_pagination(
       SseDeserializer deserializer);
 
   @protected
@@ -1702,22 +2213,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  PsbtSigHashType? sse_decode_opt_box_autoadd_psbt_sig_hash_type(
-      SseDeserializer deserializer);
-
-  @protected
-  RbfValue? sse_decode_opt_box_autoadd_rbf_value(SseDeserializer deserializer);
-
-  @protected
-  (OutPoint, String, int)?
-      sse_decode_opt_box_autoadd_record_out_point_string_usize(
-          SseDeserializer deserializer);
-
-  @protected
-  Script? sse_decode_opt_box_autoadd_script(SseDeserializer deserializer);
-
-  @protected
-  SignOptions? sse_decode_opt_box_autoadd_sign_options(
+  SortOrder? sse_decode_opt_box_autoadd_sort_order(
       SseDeserializer deserializer);
 
   @protected
@@ -1728,6 +2224,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int? sse_decode_opt_box_autoadd_u_8(SseDeserializer deserializer);
+
+  @protected
+  int? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
   WalletTransaction? sse_decode_opt_box_autoadd_wallet_transaction(
@@ -1765,7 +2264,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  OutPoint sse_decode_out_point(SseDeserializer deserializer);
+  Pagination sse_decode_pagination(SseDeserializer deserializer);
 
   @protected
   PaymentMethod sse_decode_payment_method(SseDeserializer deserializer);
@@ -1784,13 +2283,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  PsbtSigHashType sse_decode_psbt_sig_hash_type(SseDeserializer deserializer);
-
-  @protected
   Quote sse_decode_quote(SseDeserializer deserializer);
-
-  @protected
-  RbfValue sse_decode_rbf_value(SseDeserializer deserializer);
 
   @protected
   (GatewayProvider, List<ApiCountry>)
@@ -1812,39 +2305,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  (OutPoint, String, int) sse_decode_record_out_point_string_usize(
-      SseDeserializer deserializer);
+  (String, double) sse_decode_record_string_f_64(SseDeserializer deserializer);
 
   @protected
-  (String, Network) sse_decode_record_string_network(
-      SseDeserializer deserializer);
+  ScriptType sse_decode_script_type(SseDeserializer deserializer);
 
   @protected
-  (String, TransactionDetails) sse_decode_record_string_transaction_details(
-      SseDeserializer deserializer);
+  SortOrder sse_decode_sort_order(SseDeserializer deserializer);
 
   @protected
-  Script sse_decode_script(SseDeserializer deserializer);
-
-  @protected
-  ScriptAmount sse_decode_script_amount(SseDeserializer deserializer);
-
-  @protected
-  SignOptions sse_decode_sign_options(SseDeserializer deserializer);
-
-  @protected
-  SqliteDbConfiguration sse_decode_sqlite_db_configuration(
-      SseDeserializer deserializer);
-
-  @protected
-  TransactionDetails sse_decode_transaction_details(
-      SseDeserializer deserializer);
-
-  @protected
-  TxIn sse_decode_tx_in(SseDeserializer deserializer);
-
-  @protected
-  TxOut sse_decode_tx_out(SseDeserializer deserializer);
+  TransactionTime sse_decode_transaction_time(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_16(SseDeserializer deserializer);
@@ -1910,11 +2380,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          BdkWalletManager self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           BitcoinAddressClient self, SseSerializer serializer);
 
@@ -1937,6 +2402,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
           ExchangeRateClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          FrbAddress self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          FrbAmount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          FrbBalance self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          FrbBlockchainClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          FrbDerivationPath self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          FrbDetailledTxIn self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          FrbDetailledTxOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          FrbLocalOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          FrbMnemonic self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          FrbPaymentLink self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          FrbPsbt self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          FrbScriptBuf self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          FrbSequence self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          FrbTransaction self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          FrbTransactionDetails self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          FrbTxBuilder self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          FrbWallet self, SseSerializer serializer);
 
   @protected
   void
@@ -1985,6 +2540,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          FrbBlockchainClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          FrbPsbt self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          FrbWallet self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           ProtonApiService self, SseSerializer serializer);
 
@@ -1997,11 +2572,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAddressClient(
           AddressClient self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          BdkWalletManager self, SseSerializer serializer);
 
   @protected
   void
@@ -2027,6 +2597,81 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
           ExchangeRateClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          FrbAddress self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          FrbBalance self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          FrbBlockchainClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          FrbDerivationPath self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          FrbDetailledTxOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          FrbMnemonic self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          FrbPaymentLink self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          FrbPsbt self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          FrbScriptBuf self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          FrbSequence self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          FrbTransaction self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          FrbTransactionDetails self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          FrbTxBuilder self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          FrbWallet self, SseSerializer serializer);
 
   @protected
   void
@@ -2071,6 +2716,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_DartOpaque(Object self, SseSerializer serializer);
 
   @protected
+  void sse_encode_Map_String_f_64(
+      Map<String, double> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_Map_gateway_provider_list_api_country(
       Map<GatewayProvider, List<ApiCountry>> self, SseSerializer serializer);
 
@@ -2109,11 +2758,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-          BdkWalletManager self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
           BitcoinAddressClient self, SseSerializer serializer);
 
@@ -2136,6 +2780,96 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient(
           ExchangeRateClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+          FrbAddress self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+          FrbAmount self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+          FrbBalance self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+          FrbBlockchainClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+          FrbDerivationPath self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          FrbDetailledTxIn self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          FrbDetailledTxOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          FrbLocalOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+          FrbMnemonic self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+          FrbPaymentLink self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+          FrbPsbt self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+          FrbScriptBuf self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+          FrbSequence self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+          FrbTransaction self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          FrbTransactionDetails self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          FrbTxBuilder self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+          FrbWallet self, SseSerializer serializer);
 
   @protected
   void
@@ -2190,12 +2924,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_address_index(AddressIndex self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_address_info(AddressInfo self, SseSerializer serializer);
-
-  @protected
   void sse_encode_all_key_address_key(
       AllKeyAddressKey self, SseSerializer serializer);
 
@@ -2247,9 +2975,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       AuthCredential self, SseSerializer serializer);
 
   @protected
-  void sse_encode_balance(Balance self, SseSerializer serializer);
-
-  @protected
   void sse_encode_bitcoin_address(
       BitcoinAddress self, SseSerializer serializer);
 
@@ -2257,14 +2982,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bitcoin_unit(BitcoinUnit self, SseSerializer serializer);
 
   @protected
-  void sse_encode_block_time(BlockTime self, SseSerializer serializer);
-
-  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_address_index(
-      AddressIndex self, SseSerializer serializer);
+  void
+      sse_encode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_api_contact_emails(
@@ -2295,8 +3018,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BitcoinAddress self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_block_time(
-      BlockTime self, SseSerializer serializer);
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_create_wallet_account_req(
@@ -2307,31 +3029,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       CreateWalletReq self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_database_config(
-      DatabaseConfig self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_esplora_config(
-      EsploraConfig self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_f_32(double self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_gateway_provider(
       GatewayProvider self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_local_utxo(
-      LocalUtxo self, SseSerializer serializer);
+  void sse_encode_box_autoadd_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_my_test_object(
-      MyTestObject self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_out_point(
-      OutPoint self, SseSerializer serializer);
+  void sse_encode_box_autoadd_pagination(
+      Pagination self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_payment_method(
@@ -2342,27 +3049,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonExchangeRate self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_psbt_sig_hash_type(
-      PsbtSigHashType self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_rbf_value(
-      RbfValue self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_record_out_point_string_usize(
-      (OutPoint, String, int) self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_script(Script self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_sign_options(
-      SignOptions self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_sqlite_db_configuration(
-      SqliteDbConfiguration self, SseSerializer serializer);
+  void sse_encode_box_autoadd_sort_order(
+      SortOrder self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
@@ -2372,6 +3060,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_u_8(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_usize(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_wallet_transaction(
@@ -2388,6 +3079,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_child_session(ChildSession self, SseSerializer serializer);
 
   @protected
+  void sse_encode_coin_selection(CoinSelection self, SseSerializer serializer);
+
+  @protected
   void sse_encode_contact_email_event(
       ContactEmailEvent self, SseSerializer serializer);
 
@@ -2400,24 +3094,21 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       CreateWalletReq self, SseSerializer serializer);
 
   @protected
-  void sse_encode_database_config(
-      DatabaseConfig self, SseSerializer serializer);
-
-  @protected
   void sse_encode_email_integration_bitcoin_address(
       EmailIntegrationBitcoinAddress self, SseSerializer serializer);
 
   @protected
-  void sse_encode_error(Error self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_esplora_config(EsploraConfig self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_f_32(double self, SseSerializer serializer);
+  void sse_encode_f_64(double self, SseSerializer serializer);
 
   @protected
   void sse_encode_fiat_currency(FiatCurrency self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_frb_address_info(
+      FrbAddressInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_frb_out_point(FrbOutPoint self, SseSerializer serializer);
 
   @protected
   void sse_encode_gateway_provider(
@@ -2439,6 +3130,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
           List<ApiTx> self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+          List<FrbDetailledTxIn> self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+          List<FrbDetailledTxOutput> self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          List<FrbLocalOutput> self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+          List<FrbTransactionDetails> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
@@ -2484,15 +3195,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ContactEmailEvent> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_list_prim_u_8_strict(
-      List<Uint8List> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_local_utxo(
-      List<LocalUtxo> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_out_point(List<OutPoint> self, SseSerializer serializer);
+  void sse_encode_list_frb_out_point(
+      List<FrbOutPoint> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_payment_method(
@@ -2539,18 +3243,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(GatewayProvider, List<Quote>)> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_script_amount(
-      List<ScriptAmount> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_transaction_details(
-      List<TransactionDetails> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_tx_in(List<TxIn> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_tx_out(List<TxOut> self, SseSerializer serializer);
+  void sse_encode_list_record_string_f_64(
+      List<(String, double)> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_wallet_account_event(
@@ -2577,19 +3271,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<WalletTransactionEvent> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_local_utxo(LocalUtxo self, SseSerializer serializer);
-
-  @protected
   void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_my_test_object(MyTestObject self, SseSerializer serializer);
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
 
   @protected
+  void sse_encode_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+          FrbAccount? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_api_contact_emails(
@@ -2616,15 +3313,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiWalletUserSettings? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_box_autoadd_block_time(
-      BlockTime? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_gateway_provider(
       GatewayProvider? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_pagination(
+      Pagination? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_payment_method(
@@ -2635,24 +3332,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonExchangeRate? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_box_autoadd_psbt_sig_hash_type(
-      PsbtSigHashType? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_rbf_value(
-      RbfValue? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_record_out_point_string_usize(
-      (OutPoint, String, int)? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_script(
-      Script? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_sign_options(
-      SignOptions? self, SseSerializer serializer);
+  void sse_encode_opt_box_autoadd_sort_order(
+      SortOrder? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
@@ -2662,6 +3343,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_u_8(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_usize(int? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_wallet_transaction(
@@ -2699,7 +3383,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<WalletTransactionEvent>? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_out_point(OutPoint self, SseSerializer serializer);
+  void sse_encode_pagination(Pagination self, SseSerializer serializer);
 
   @protected
   void sse_encode_payment_method(PaymentMethod self, SseSerializer serializer);
@@ -2719,14 +3403,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonExchangeRate self, SseSerializer serializer);
 
   @protected
-  void sse_encode_psbt_sig_hash_type(
-      PsbtSigHashType self, SseSerializer serializer);
-
-  @protected
   void sse_encode_quote(Quote self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_rbf_value(RbfValue self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_gateway_provider_list_api_country(
@@ -2746,39 +3423,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       (GatewayProvider, List<Quote>) self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_out_point_string_usize(
-      (OutPoint, String, int) self, SseSerializer serializer);
+  void sse_encode_record_string_f_64(
+      (String, double) self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_string_network(
-      (String, Network) self, SseSerializer serializer);
+  void sse_encode_script_type(ScriptType self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_string_transaction_details(
-      (String, TransactionDetails) self, SseSerializer serializer);
+  void sse_encode_sort_order(SortOrder self, SseSerializer serializer);
 
   @protected
-  void sse_encode_script(Script self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_script_amount(ScriptAmount self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_sign_options(SignOptions self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_sqlite_db_configuration(
-      SqliteDbConfiguration self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_transaction_details(
-      TransactionDetails self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_tx_in(TxIn self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_tx_out(TxOut self, SseSerializer serializer);
+  void sse_encode_transaction_time(
+      TransactionTime self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_16(int self, SseSerializer serializer);
@@ -2968,38 +3624,6 @@ class RustLibWire implements BaseWire {
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManagerPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager');
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager =
-      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManagerPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManagerPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager');
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManager =
-      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBdkWalletManagerPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  void
       rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBitcoinAddressClient(
     ffi.Pointer<ffi.Void> ptr,
   ) {
@@ -3157,6 +3781,582 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClient =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerExchangeRateClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccountPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccountPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccountPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccountPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmountPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmountPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmountPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmount =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAmountPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalancePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalancePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalancePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalancePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClient =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBlockchainClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPathPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPathPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPathPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPathPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxInPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxInPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxInPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxInPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutputPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutputPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutputPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutputPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonicPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonicPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonicPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonicPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLinkPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLinkPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLinkPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLink =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPaymentLinkPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbtPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbtPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbtPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbtPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBufPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBufPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBufPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBuf =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbScriptBufPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequencePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequencePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequencePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequence =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbSequencePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransaction =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetailsPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetailsPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetailsPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetailsPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilderPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilderPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilderPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilderPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

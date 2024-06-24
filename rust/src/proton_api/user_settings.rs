@@ -116,6 +116,5 @@ pub struct _ApiWalletUserSettings {
     pub BitcoinUnit: BitcoinUnit,
     pub FiatCurrency: FiatCurrency,
     pub HideEmptyUsedAddresses: u8,
-    pub ShowWalletRecovery: u8,
     pub TwoFactorAmountThreshold: Option<u64>,
 }

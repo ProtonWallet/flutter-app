@@ -5,13 +5,12 @@ import 'package:wallet/rust/api/api_service/exchange_rate_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
-class ExchangeDataProvider implements DataProvider {
+class ExchangeDataProvider extends DataProvider {
   Map<String, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
   final ExchangeRateClient exchangeRateClient;
 
   ExchangeDataProvider({required this.exchangeRateClient});
 
-  @override
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 

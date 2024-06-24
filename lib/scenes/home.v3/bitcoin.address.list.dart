@@ -155,8 +155,8 @@ class BitcoinAddressList extends StatelessWidget {
                                   ProtonColors.textNorm),
                               textAlign: TextAlign.center,
                             )),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                        const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 4),
                             child: Column(
                               children: [
                                 /// TODO:: get transaction ID from bitcoinaddress

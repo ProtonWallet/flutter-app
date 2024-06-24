@@ -8,8 +8,7 @@ import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
-class AddressKeyProvider implements DataProvider {
-  @override
+class AddressKeyProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
   final ProtonEmailAddressClient protonEmailAddressClient;
@@ -27,9 +26,9 @@ class AddressKeyProvider implements DataProvider {
         await protonEmailAddressClient.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
-    var key = await WalletManager.userManager.getFirstKey();
-    String userPrivateKey = key.privateKey;
-    String userPassphrase = key.passphrase;
+    var firstUserkey = await WalletManager.userManager.getFirstKey();
+    String userPrivateKey = firstUserkey.privateKey;
+    String userPassphrase = firstUserkey.passphrase;
 
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {

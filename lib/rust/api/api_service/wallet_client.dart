@@ -3,8 +3,8 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
-import '../../proton_api/errors.dart';
 import '../../proton_api/exchange_rate.dart';
 import '../../proton_api/user_settings.dart';
 import '../../proton_api/wallet.dart';
@@ -188,6 +188,18 @@ class WalletClient extends RustOpaque {
           walletTransactionId: walletTransactionId,
           hint: hint);
 
+  Future<ApiWalletAccount> updateWalletAccountFiatCurrency(
+          {required String walletId,
+          required String walletAccountId,
+          required FiatCurrency newFiatCurrency,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientUpdateWalletAccountFiatCurrency(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          newFiatCurrency: newFiatCurrency,
+          hint: hint);
+
   Future<ApiWalletAccount> updateWalletAccountLabel(
           {required String walletId,
           required String walletAccountId,
@@ -204,20 +216,6 @@ class WalletClient extends RustOpaque {
           {required String walletId, required String newName, dynamic hint}) =>
       RustLib.instance.api.walletClientUpdateWalletName(
           that: this, walletId: walletId, newName: newName, hint: hint);
-
-  Future<WalletTransaction> updateWalletTransactionExternalSender(
-          {required String walletId,
-          required String walletAccountId,
-          required String walletTransactionId,
-          required String sender,
-          dynamic hint}) =>
-      RustLib.instance.api.walletClientUpdateWalletTransactionExternalSender(
-          that: this,
-          walletId: walletId,
-          walletAccountId: walletAccountId,
-          walletTransactionId: walletTransactionId,
-          sender: sender,
-          hint: hint);
 
   Future<WalletTransaction> updateWalletTransactionLabel(
           {required String walletId,

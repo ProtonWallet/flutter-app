@@ -3,10 +3,10 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../common/errors.dart';
 import '../frb_generated.dart';
 import '../proton_api/auth_credential.dart';
 import '../proton_api/contacts.dart';
-import '../proton_api/errors.dart';
 import '../proton_api/event_routes.dart';
 import '../proton_api/exchange_rate.dart';
 import '../proton_api/proton_address.dart';
@@ -22,10 +22,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 Future<List<ApiWalletData>> getWallets({dynamic hint}) =>
     RustLib.instance.api.getWallets(hint: hint);
 
-Future<ApiWalletData> createWallet(
-        {required CreateWalletReq walletReq, dynamic hint}) =>
-    RustLib.instance.api.createWallet(walletReq: walletReq, hint: hint);
-
 Future<ApiWallet> updateWalletName(
         {required String walletId, required String newName, dynamic hint}) =>
     RustLib.instance.api
@@ -38,13 +34,6 @@ Future<List<ApiWalletAccount>> getWalletAccounts(
         {required String walletId, dynamic hint}) =>
     RustLib.instance.api.getWalletAccounts(walletId: walletId, hint: hint);
 
-Future<ApiWalletAccount> createWalletAccount(
-        {required String walletId,
-        required CreateWalletAccountReq req,
-        dynamic hint}) =>
-    RustLib.instance.api
-        .createWalletAccount(walletId: walletId, req: req, hint: hint);
-
 Future<ApiWalletAccount> updateWalletAccountLabel(
         {required String walletId,
         required String walletAccountId,
@@ -54,17 +43,6 @@ Future<ApiWalletAccount> updateWalletAccountLabel(
         walletId: walletId,
         walletAccountId: walletAccountId,
         newLabel: newLabel,
-        hint: hint);
-
-Future<ApiWalletAccount> updateWalletAccountFiatCurrency(
-        {required String walletId,
-        required String walletAccountId,
-        required FiatCurrency newFiatCurrency,
-        dynamic hint}) =>
-    RustLib.instance.api.updateWalletAccountFiatCurrency(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        newFiatCurrency: newFiatCurrency,
         hint: hint);
 
 Future<void> deleteWalletAccount(
@@ -234,29 +212,6 @@ Future<void> deleteWalletTransactions(
         walletId: walletId,
         walletAccountId: walletAccountId,
         walletTransactionId: walletTransactionId,
-        hint: hint);
-
-Future<String> broadcastRawTransaction(
-        {required String signedTransactionHex,
-        required String walletId,
-        required String walletAccountId,
-        String? label,
-        String? exchangeRateId,
-        String? transactionTime,
-        String? addressId,
-        String? subject,
-        String? body,
-        dynamic hint}) =>
-    RustLib.instance.api.broadcastRawTransaction(
-        signedTransactionHex: signedTransactionHex,
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        label: label,
-        exchangeRateId: exchangeRateId,
-        transactionTime: transactionTime,
-        addressId: addressId,
-        subject: subject,
-        body: body,
         hint: hint);
 
 Future<List<AllKeyAddressKey>> getAllPublicKeys(

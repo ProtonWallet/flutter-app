@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use andromeda_api::{bitcoin_address::ApiWalletBitcoinAddress, core::ApiClient};
 
-use crate::{errors::BridgeError, wallet::BitcoinAddress};
+use crate::{wallet::BitcoinAddress, BridgeError};
 
 use super::proton_api_service::ProtonAPIService;
 

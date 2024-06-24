@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use andromeda_api::core::ApiClient;
 
-use crate::{errors::BridgeError, event_routes::ProtonEvent};
+use crate::{event_routes::ProtonEvent, BridgeError};
 
 use super::proton_api_service::ProtonAPIService;
 

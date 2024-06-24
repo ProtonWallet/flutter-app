@@ -1,19 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/underline.dart';
-import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
@@ -104,6 +101,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: 10),
+
                                   /// TODO:: add walletAccount selector here
                                   // if (Provider.of<ProtonWalletProvider>(context)
                                   //         .protonWallet

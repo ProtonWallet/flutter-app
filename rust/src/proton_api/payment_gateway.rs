@@ -1,10 +1,9 @@
-use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
 use flutter_rust_bridge::frb;
 
 //
 pub use andromeda_api::payment_gateway::{
-    ApiCountry, ApiFiatCurrency as ApiCountryFiatCurrency, CountriesByProvider, GatewayProvider,
-    PaymentMethod, Quote,
+    ApiCountry, ApiSimpleFiatCurrency as ApiCountryFiatCurrency, CountriesByProvider,
+    GatewayProvider, PaymentMethod, Quote,
 };
 
 #[frb(mirror(GatewayProvider))]
@@ -44,7 +43,7 @@ pub struct _ApiCountryFiatCurrency {
 pub struct _Quote {
     pub BitcoinAmount: String,
     pub FiatAmount: String,
-    pub FiatCurrencySymbol: FiatCurrency,
+    pub FiatCurrencySymbol: String,
     pub NetworkFee: String,
     pub PaymentGatewayFee: String,
     pub PaymentMethod: PaymentMethod,

@@ -219,8 +219,9 @@ impl BdkDescriptor {
 }
 #[cfg(test)]
 mod test {
+    use crate::api::bdk_wallet::mnemonic::FrbMnemonic;
     use crate::bdk::descriptor::BdkDescriptor;
-    use crate::bdk::key::{DerivationPath, DescriptorSecretKey, Mnemonic};
+    use crate::bdk::key::{DerivationPath, DescriptorSecretKey};
     use assert_matches::assert_matches;
     use bdk::bitcoin::Network;
     use bdk::descriptor::DescriptorError::Key;
@@ -230,7 +231,7 @@ mod test {
     use std::sync::Arc;
 
     fn get_descriptor_secret_key() -> DescriptorSecretKey {
-        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect").unwrap();
+        let mnemonic = FrbMnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect").unwrap();
         DescriptorSecretKey::new(Network::Testnet, mnemonic, None).unwrap()
     }
 

@@ -13,6 +13,9 @@ use std::str::FromStr;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use crate::api::bdk_wallet::mnemonic::FrbMnemonic;
+use crate::BridgeError;
+
 pub struct DerivationPath {
     pub derivation_path_mutex: Mutex<BdkDerivationPath>,
 }
@@ -29,42 +32,6 @@ impl DerivationPath {
         self.derivation_path_mutex.lock().await.to_string()
     }
 }
-pub struct Mnemonic {
-    pub internal: BdkMnemonic,
-}
-
-impl Mnemonic {
-    /// Generates Mnemonic with a random entropy
-    pub fn new(word_count: WordCount) -> Self {
-        let generated_key: GeneratedKey<_, BareCtx> =
-            BdkMnemonic::generate((word_count, Language::English)).unwrap();
-        let mnemonic = BdkMnemonic::parse_in(Language::English, generated_key.to_string()).unwrap();
-        Mnemonic { internal: mnemonic }
-    }
-
-    /// Create a new Mnemonic in the specified language from the given entropy.
-    /// Entropy must be a multiple of 32 bits (4 bytes) and 128-256 bits in length.
-    pub fn from_entropy(entropy: Vec<u8>) -> Result<Self, BdkError> {
-        BdkMnemonic::from_entropy(entropy.as_slice())
-            .map(|m| Mnemonic { internal: m })
-            .map_err(|e| BdkError::Generic(e.to_string()))
-    }
-
-    /// Returns Mnemonic as string
-    pub fn as_string(&self) -> String {
-        self.internal.to_string()
-    }
-}
-
-impl FromStr for Mnemonic {
-    type Err = BdkError;
-    /// Parse a Mnemonic with given string
-    fn from_str(mnemonic: &str) -> Result<Self, BdkError> {
-        BdkMnemonic::from_str(mnemonic)
-            .map(|m| Mnemonic { internal: m })
-            .map_err(|e| BdkError::Generic(e.to_string()))
-    }
-}
 
 #[derive(Debug)]
 pub(crate) struct DescriptorSecretKey {
@@ -73,10 +40,10 @@ pub(crate) struct DescriptorSecretKey {
 impl DescriptorSecretKey {
     pub fn new(
         network: bdk::bitcoin::Network,
-        mnemonic: Mnemonic,
+        mnemonic: FrbMnemonic,
         password: Option<String>,
-    ) -> Result<Self, BdkError> {
-        let mnemonic = mnemonic.internal.clone();
+    ) -> Result<Self, BridgeError> {
+        let mnemonic = mnemonic.clone_inner();
         let xkey: ExtendedKey = (mnemonic, password).into_extended_key().unwrap();
         let descriptor_secret_key = BdkDescriptorSecretKey::XPrv(DescriptorXKey {
             origin: None,
@@ -255,15 +222,17 @@ impl DescriptorPublicKey {
 }
 #[cfg(test)]
 mod test {
-    use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey, Mnemonic};
+    use crate::api::bdk_wallet::mnemonic::FrbMnemonic;
+    use crate::bdk::key::{DerivationPath, DescriptorPublicKey, DescriptorSecretKey};
+    use crate::BridgeError;
     // use bdk::bitcoin::hashes::hex::ToHex;
     use bdk::bitcoin::Network;
     use bdk::Error as BdkError;
     use std::str::FromStr;
     use std::sync::Arc;
 
-    fn get_descriptor_secret_key() -> Result<DescriptorSecretKey, BdkError> {
-        let mnemonic = Mnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect")?;
+    fn get_descriptor_secret_key() -> Result<DescriptorSecretKey, BridgeError> {
+        let mnemonic = FrbMnemonic::from_str("chaos fabric time speed sponsor all flat solution wisdom trophy crack object robot pave observe combine where aware bench orient secret primary cable detect")?;
         DescriptorSecretKey::new(Network::Testnet, mnemonic, None)
     }
 

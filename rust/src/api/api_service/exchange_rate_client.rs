@@ -1,5 +1,5 @@
 use super::proton_api_service::ProtonAPIService;
-use crate::{errors::BridgeError, exchange_rate::ProtonExchangeRate};
+use crate::{exchange_rate::ProtonExchangeRate, BridgeError};
 use andromeda_api::{core::ApiClient, settings::FiatCurrencySymbol as FiatCurrency};
 use std::sync::Arc;
 

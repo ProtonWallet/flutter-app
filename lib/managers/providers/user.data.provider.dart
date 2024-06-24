@@ -6,7 +6,7 @@ import 'package:wallet/models/drift/user.keys.queries.dart';
 import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 
-class UserDataProvider implements DataProvider {
+class UserDataProvider extends DataProvider {
   final AppDatabase appDatabase;
 
   //
@@ -21,7 +21,6 @@ class UserDataProvider implements DataProvider {
     _userKeysQueries = UserKeysQueries(appDatabase);
   }
 
-  @override
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 

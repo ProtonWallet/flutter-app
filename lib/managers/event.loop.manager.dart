@@ -3,12 +3,10 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -18,6 +16,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -97,10 +96,9 @@ class EventLoop implements Manager {
             }
             ApiWallet? walletData = walletEvent.wallet;
 
-            UserKey firstKey = await userManager.getFirstKey();
-
-            String userPrivateKey = firstKey.privateKey;
-            String userPassphrase = firstKey.passphrase;
+            var firstUserKey = await userManager.getFirstKey();
+            String userPrivateKey = firstUserKey.privateKey;
+            String userPassphrase = firstUserKey.passphrase;
             Uint8List entropy = Uint8List(0);
             if (walletData != null) {
               String serverWalletID = walletData.id;
@@ -176,13 +174,14 @@ class EventLoop implements Manager {
             if (account != null) {
               int walletID = await WalletManager.getWalletIDByServerWalletID(
                   account.walletId);
-              int internal = 0;
+              // int internal = 0;
               await dataProviderManager.walletDataProvider
                   .insertOrUpdateAccount(
                 walletID,
                 account.label,
                 account.scriptType,
-                "${account.derivationPath}/$internal",
+                account.derivationPath,
+                // "${account.derivationPath}/$internal",
                 // Backend store m/$ScriptType/$CoinType/$accountIndex, we need m/$ScriptType/$CoinType/$accountIndex/$internal here
                 account.id,
                 account.fiatCurrency,
@@ -233,14 +232,16 @@ class EventLoop implements Manager {
           }
         }
       }
-    } catch (e) {
-      logger.e("Event Loop error: ${e.toString()}");
+    } catch (e, stacktrace) {
+      logger.e(
+          "Event Loop error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
     }
 
     try {
       await polling();
-    } catch (e) {
-      logger.e("polling error: ${e.toString()}");
+    } catch (e, stacktrace) {
+      logger.e(
+          "polling error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
     }
   }
 
@@ -264,6 +265,7 @@ class EventLoop implements Manager {
     // }
   }
 
+  /// TODO:: fix me handle the !
   Future<void> handleBitcoinAddress() async {
     List<WalletModel> walletModels =
         (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
@@ -272,8 +274,10 @@ class EventLoop implements Manager {
           (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
               .cast<AccountModel>();
       for (AccountModel accountModel in accountModels) {
-        Wallet? wallet = await WalletManager.loadWalletWithID(
-            walletModel.id!, accountModel.id!);
+        FrbAccount? account = await WalletManager.loadWalletWithID(
+          walletModel.id!,
+          accountModel.id!,
+        );
 
         List<String> accountAddressIDs =
             await WalletManager.getAccountAddressIDs(
@@ -283,13 +287,13 @@ class EventLoop implements Manager {
         }
 
         try {
-          await WalletManager.handleBitcoinAddressRequests(wallet!,
+          await WalletManager.handleBitcoinAddressRequests(account!,
               walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("handleBitcoinAddressRequests error: ${e.toString()}");
         }
         try {
-          await WalletManager.bitcoinAddressPoolHealthCheck(wallet!,
+          await WalletManager.bitcoinAddressPoolHealthCheck(account!,
               walletModel.serverWalletID, accountModel.serverAccountID);
         } catch (e) {
           logger.e("bitcoinAddressPoolHealthCheck error: ${e.toString()}");

@@ -1,4 +1,4 @@
-import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/common/network.dart';
 
 class CoinType {
   String name;
