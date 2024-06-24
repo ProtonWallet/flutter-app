@@ -5,10 +5,11 @@ import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class InviteSheet {
-  static void show(BuildContext context, String email) {
+  static void show(BuildContext context, SendViewModel viewModel, String email) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -30,7 +31,7 @@ class InviteSheet {
             textStyle: FontManager.body1Median(ProtonColors.white),
             height: 48,
             onPressed: () {
-              CommonHelper.showSnackbar(context, "TODO");
+              viewModel.sendInvite(email);
               Navigator.of(context).pop();
             },
           ),

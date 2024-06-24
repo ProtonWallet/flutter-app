@@ -26,6 +26,7 @@ import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/api_service/invite_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
@@ -70,8 +71,14 @@ class ProtonRecipient {
 }
 
 abstract class SendViewModel extends ViewModel<SendCoordinator> {
-  SendViewModel(super.coordinator, this.walletID, this.accountID,
-      this.userSettingsDataProvider, this.localTransactionDataProvider,);
+  SendViewModel(
+    super.coordinator,
+    this.walletID,
+    this.accountID,
+    this.userSettingsDataProvider,
+    this.localTransactionDataProvider,
+    this.inviteClient,
+  );
 
   int walletID;
   int accountID;
@@ -148,6 +155,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   Future<bool> buildTransactionScript();
 
+  Future<bool> sendInvite(String email);
+
   List<ContactsModel> contactsEmail = [];
 
   late FrbTxBuilder txBuilder;
@@ -169,6 +178,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   // local transaction data provider
   final LocalTransactionDataProvider localTransactionDataProvider;
+
+  final InviteClient inviteClient;
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -180,7 +191,8 @@ class SendViewModelImpl extends SendViewModel {
     this.walletManger,
     this.contactsDataProvider,
     super.userSettingsDataProvider,
-      super.localTransactionDataProvider,
+    super.localTransactionDataProvider,
+    super.inviteClient,
   );
 
   // event loop
@@ -528,9 +540,11 @@ class SendViewModelImpl extends SendViewModel {
       } else {
         // not a valid bitcoinAddress, remove it
         removeRecipientByEmail(email);
-        CommonHelper.showSnackbar(
-            context!, S.of(context!).incorrect_bitcoin_address,
-            isError: true);
+        if (showInvite == false) {
+          CommonHelper.showSnackbar(
+              context!, S.of(context!).incorrect_bitcoin_address,
+              isError: true);
+        }
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -540,25 +554,25 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    if (isRecipientExists(email) == false && recipients.isEmpty) {
-      return;
-    }
+
     if (showInvite) {
       removeRecipientByEmail(email);
       BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        InviteSheet.show(context, email);
+        InviteSheet.show(context, this, email);
       }
-    } else {
-      bool isSelfBitcoinAddress =
-          selfBitcoinAddresses.contains(bitcoinAddresses[email]);
-      if (isSelfBitcoinAddress) {
-        if (context!.mounted) {
-          removeRecipientByEmail(email);
-          CommonHelper.showSnackbar(
-              context!, S.of(context!).error_you_can_not_send_to_self_account,
-              isError: true);
-        }
+    }
+    if (isRecipientExists(email) == false && recipients.isEmpty) {
+      return;
+    }
+    bool isSelfBitcoinAddress =
+        selfBitcoinAddresses.contains(bitcoinAddresses[email]);
+    if (isSelfBitcoinAddress) {
+      if (context!.mounted) {
+        removeRecipientByEmail(email);
+        CommonHelper.showSnackbar(
+            context!, S.of(context!).error_you_can_not_send_to_self_account,
+            isError: true);
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -725,7 +739,8 @@ class SendViewModelImpl extends SendViewModel {
         exchangeRateId: exchangeRate.id,
         transactionTime: null,
         addressId: emailAddressID,
-        subject: null, // subject is deprecated, set to default null
+        subject: null,
+        // subject is deprecated, set to default null
         body: encryptedMessage,
       );
       try {
@@ -856,5 +871,20 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  @override
+  Future<bool> sendInvite(String email) async {
+    await _sendInviteForNewComer(email);
+    await _sendInviteForEmailIntegration(email);
+    return true;
+  }
+
+  Future<void> _sendInviteForEmailIntegration(String email) async {
+    await inviteClient.sendEmailIntegrationInvite(inviteeEmail: email);
+  }
+
+  Future<void> _sendInviteForNewComer(String email) async {
+    await inviteClient.sendNewcomerInvite(inviteeEmail: email);
   }
 }
