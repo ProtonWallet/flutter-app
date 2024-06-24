@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/wallet.model.dart';

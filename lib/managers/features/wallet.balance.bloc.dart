@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
@@ -61,6 +63,7 @@ extension WalletTransactionStateCopyWith on WalletBalanceState {
 
 /// Define the Bloc
 class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
+  StreamSubscription? subscription;
   final BalanceDataProvider balanceDataProvider;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
 
@@ -72,20 +75,22 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   ) : super(const WalletBalanceState(
           balanceInSatoshi: 0,
         )) {
-    bdkTransactionDataProvider.dataUpdateController.stream.listen((onData) {
-      // need reload balance after bdk synced
-      if (lastEvent != null) {
-        if (lastEvent is SelectWallet) {
-          SelectWallet _selectWallet = (lastEvent as SelectWallet);
-          add(SelectWallet(
-            _selectWallet.walletMenuModel,
-          ));
-        } else if (lastEvent is SelectAccount) {
-          SelectAccount _selectAccount = (lastEvent as SelectAccount);
-          add(SelectAccount(
-            _selectAccount.walletMenuModel,
-            _selectAccount.accountMenuModel,
-          ));
+    /// Listen to the data update
+    subscription = bdkTransactionDataProvider.stream.listen((state) {
+      if (state is BDKDataUpdated) {
+        if (lastEvent != null) {
+          if (lastEvent is SelectWallet) {
+            SelectWallet selectWallet = (lastEvent as SelectWallet);
+            add(SelectWallet(
+              selectWallet.walletMenuModel,
+            ));
+          } else if (lastEvent is SelectAccount) {
+            SelectAccount selectAccount = (lastEvent as SelectAccount);
+            add(SelectAccount(
+              selectAccount.walletMenuModel,
+              selectAccount.accountMenuModel,
+            ));
+          }
         }
       }
     });
@@ -132,10 +137,18 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   }
 
   void selectAccount(
-      WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel) {
+    WalletMenuModel walletMenuModel,
+    AccountMenuModel accountMenuModel,
+  ) {
     add(SelectAccount(
       walletMenuModel,
       accountMenuModel,
     ));
+  }
+
+  @override
+  Future<void> close() {
+    subscription?.cancel();
+    return super.close();
   }
 }

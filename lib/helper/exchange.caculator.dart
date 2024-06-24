@@ -10,10 +10,11 @@ class ExchangeCalculator {
     FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
-      return exchangeRate.exchangeRate *
+      var outValue = exchangeRate.exchangeRate *
           amountInSatoshi /
           fiatCurrencyInfo.cents /
           100000000;
+      return outValue;
     }
     return exchangeRate.exchangeRate * amountInSatoshi / 100000000;
   }
@@ -34,5 +35,18 @@ class ExchangeCalculator {
         break;
     }
     return "${amount.toInt()} ${bitcoinUnit.name.toUpperCase()}";
+  }
+
+  static double getNotionalInBTC(
+    ProtonExchangeRate exchangeRate,
+    double amountInFiatCurrency,
+  ) {
+    FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+    if (fiatCurrency2Info.containsKey(fiatCurrency)) {
+      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      return amountInFiatCurrency /
+          (exchangeRate.exchangeRate / fiatCurrencyInfo.cents);
+    }
+    return amountInFiatCurrency / (exchangeRate.exchangeRate / 100);
   }
 }

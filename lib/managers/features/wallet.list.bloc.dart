@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
@@ -19,11 +20,9 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 
 // Define the events
 abstract class WalletListEvent extends Equatable {
@@ -32,12 +31,12 @@ abstract class WalletListEvent extends Equatable {
 }
 
 class SelectWallet extends WalletListEvent {
-  final WalletModel walletModel;
+  final String walletID;
 
-  SelectWallet(this.walletModel);
+  SelectWallet(this.walletID);
 
   @override
-  List<Object> get props => [walletModel];
+  List<Object> get props => [walletID];
 }
 
 class UpdateWalletName extends WalletListEvent {
@@ -59,14 +58,21 @@ class StartLoading extends WalletListEvent {
   List<Object> get props => [];
 }
 
-class SelectAccount extends WalletListEvent {
-  final WalletModel walletModel;
-  final AccountModel accountModel;
-
-  SelectAccount(this.walletModel, this.accountModel);
+class UpdateBalance extends WalletListEvent {
+  UpdateBalance();
 
   @override
-  List<Object> get props => [walletModel, accountModel];
+  List<Object> get props => [];
+}
+
+class SelectAccount extends WalletListEvent {
+  final String walletID;
+  final String accountID;
+
+  SelectAccount(this.walletID, this.accountID);
+
+  @override
+  List<Object> get props => [walletID, accountID];
 }
 
 class UpdateAccountName extends WalletListEvent {
@@ -146,6 +152,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final WalletKeysProvider walletKeysProvider;
   final UserSettingsDataProvider userSettingsDataProvider;
   final UserManager userManager;
+  final BDKTransactionDataProvider bdkTransactionDataProvider;
 
   WalletListBloc(
     this.walletsDataProvider,
@@ -153,10 +160,20 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.walletKeysProvider,
     this.userManager,
     this.userSettingsDataProvider,
+    this.bdkTransactionDataProvider,
   ) : super(const WalletListState(initialized: false, walletsModel: [])) {
     walletsDataProvider.dataUpdateController.stream.listen((onData) {
+      //TODO:: improve me
       add(StartLoading());
     });
+
+    bdkTransactionDataProvider.stream.listen((state) {
+      //TODO:: improve me. only update the balance
+      if (state is BDKDataUpdated) {
+        add(UpdateBalance());
+      }
+    });
+
     on<StartLoading>((event, emit) async {
       // loading wallet data
       logger.i("StartLoading!!!!!");
@@ -167,9 +184,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       }
 
       /// get user key
-      var userkey = await userManager.getFirstKey();
-      var userPrivateKey = userkey.privateKey;
-      var userPassphrase = userkey.passphrase;
+      var firstUserKey = await userManager.getFirstKey();
+      var userPrivateKey = firstUserKey.privateKey;
+      var userPassphrase = firstUserKey.passphrase;
 
       List<WalletMenuModel> walletsModel = [];
       int index = 0;
@@ -307,13 +324,13 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<SelectWallet>((event, emit) async {
+      final walletID = event.walletID;
       for (WalletMenuModel walletModel in state.walletsModel) {
-        walletModel.isSelected = walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID;
+        walletModel.isSelected =
+            walletModel.walletModel.serverWalletID == walletID;
         bool isSelectedWallet = false;
         if (walletModel.isSelected) {
-          walletsDataProvider.selectedServerWalletID =
-              event.walletModel.serverWalletID;
+          walletsDataProvider.selectedServerWalletID = walletID;
           isSelectedWallet = true;
         }
         bool hasUpdateUserSetting = false;
@@ -326,24 +343,24 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           }
         }
       }
+      walletsDataProvider.updateSelected(walletID, null);
       emit(state.copyWith(walletsModel: state.walletsModel));
     });
 
     on<SelectAccount>((event, emit) async {
+      final walletID = event.walletID;
+      final accountID = event.accountID;
+
       for (WalletMenuModel walletModel in state.walletsModel) {
         walletModel.isSelected = false;
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.serverWalletID == walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            account.isSelected = account.accountModel.serverAccountID ==
-                event.accountModel.serverAccountID;
+            account.isSelected =
+                account.accountModel.serverAccountID == accountID;
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
                   account.accountModel.fiatCurrency.toFiatCurrency());
-              walletsDataProvider.selectedServerWalletID =
-                  event.walletModel.serverWalletID;
-              walletsDataProvider.selectedServerWalletAccountID =
-                  event.accountModel.serverAccountID;
+              walletsDataProvider.updateSelected("", accountID);
             }
           }
         } else {
@@ -469,6 +486,38 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       }
       emit(state.copyWith(walletsModel: state.walletsModel));
     });
+
+    on<UpdateBalance>((event, emit) async {
+      var wallets = state.walletsModel;
+      for (WalletMenuModel walletModel in wallets) {
+        for (AccountMenuModel account in walletModel.accounts) {
+          var balance = await WalletManager.getWalletAccountBalance(
+            walletModel.walletModel.id!,
+            account.accountModel.id!,
+          );
+          account.balance = balance.toInt();
+          double estimateValue = 0.0;
+          var settings = await userSettingsDataProvider.getSettings();
+          // Tempary need to use providers
+          var fiatCurrency =
+              WalletManager.getAccountFiatCurrency(account.accountModel);
+          ProtonExchangeRate? exchangeRate =
+              await ExchangeRateService.getExchangeRate(fiatCurrency);
+          estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+            exchangeRate,
+            balance.toInt(),
+          );
+          var fiatName = fiatCurrency.name.toString().toUpperCase();
+          account.currencyBalance =
+              "$fiatName ${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
+          account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
+            (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
+            balance.toInt(),
+          );
+        }
+      }
+      emit(state.copyWith(walletsModel: wallets));
+    });
   }
 
   void init({VoidCallback? callback}) {
@@ -476,11 +525,11 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   }
 
   void selectWallet(WalletModel wallet) {
-    add(SelectWallet(wallet));
+    add(SelectWallet(wallet.serverWalletID));
   }
 
   void selectAccount(WalletModel wallet, AccountModel acct) {
-    add(SelectAccount(wallet, acct));
+    add(SelectAccount(wallet.serverWalletID, acct.serverAccountID));
   }
 
   void updateWalletName(WalletModel wallet, String newName) {
@@ -513,7 +562,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   ) async {
     // Check if the wallet requires a passphrase and if the passphrase is valid
     if (wallet.passphrase == 1) {
-      final passphrase = await walletPassProvider.getWalletPassphrase(
+      final passphrase = await walletPassProvider.getPassphrase(
         wallet.serverWalletID,
       );
       return passphrase != null;

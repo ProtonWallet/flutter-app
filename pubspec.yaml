@@ -95,7 +95,7 @@ dependencies:
   ramp_flutter: ^3.0.0
   # json serializable depends on this
   json_annotation: ^4.9.0
-  flutter_bloc: ^8.1.5
+  flutter_bloc: ^8.1.6
   equatable: ^2.0.3 # better use with flutter bloc
   animated_flip_counter: ^0.3.4
   sqlite3_flutter_libs: ^0.5.24

@@ -1,4 +1,4 @@
-use super::types::{Network, OutPoint};
+use super::types::OutPoint;
 use bdk::miniscript::descriptor::DescriptorKeyParseError;
 
 /// Errors that can be thrown by the [`Wallet`](crate::wallet::Wallet)
@@ -61,13 +61,6 @@ pub enum Error {
     InvalidPolicyPathError(String),
     /// Signing error
     Signer(String),
-    /// Invalid network
-    InvalidNetwork {
-        /// requested network, for example what is given as bdk-cli option
-        requested: Network,
-        /// found network, for example the network of the bitcoin node
-        found: Network,
-    },
 
     /// Requested outpoint doesn't exist in the tx (vout greater than available outputs)
     InvalidOutpoint(OutPoint),
@@ -144,10 +137,6 @@ impl From<bdk::Error> for Error {
             bdk::Error::SpendingPolicyRequired(e) => Error::SpendingPolicyRequired(e.into()),
             bdk::Error::InvalidPolicyPathError(e) => Error::InvalidPolicyPathError(e.to_string()),
             bdk::Error::Signer(e) => Error::Signer(e.to_string()),
-            bdk::Error::InvalidNetwork { requested, found } => Error::InvalidNetwork {
-                requested: requested.into(),
-                found: found.into(),
-            },
             bdk::Error::InvalidOutpoint(e) => Error::InvalidOutpoint(e.into()),
             bdk::Error::Descriptor(e) => Error::Descriptor(e.to_string()),
             bdk::Error::Encode(e) => Error::Encode(e.to_string()),

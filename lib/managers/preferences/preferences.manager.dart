@@ -11,7 +11,9 @@ class PreferencesManager implements Manager {
   PreferencesManager(this.storage);
 
   /// function
-  Future<void> deleteAll() async {}
+  Future<void> deleteAll() async {
+    await storage.deleteAll();
+  }
 
   Future<void> checkif(String key, dynamic value, Logic run) async {
     // Get the value
@@ -22,6 +24,14 @@ class PreferencesManager implements Manager {
       await run.call();
       await storage.write(key, value);
     }
+  }
+
+  Future<dynamic> read(String key) async {
+    return await storage.read(key);
+  }
+
+  Future<void> write(String key, dynamic value) async {
+    await storage.write(key, value);
   }
 
   @override

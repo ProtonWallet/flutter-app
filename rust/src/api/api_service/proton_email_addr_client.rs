@@ -3,7 +3,7 @@ use std::sync::Arc;
 use andromeda_api::core::ApiClient;
 
 use crate::{
-    errors::BridgeError,
+    BridgeError,
     proton_address::{AllKeyAddressKey, ProtonAddress},
 };
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
@@ -12,8 +11,6 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -51,6 +48,7 @@ class AddWalletAccountSheet {
                         myFocusNode: viewModel.newAccountNameFocusNode,
                         validation: (String newAccountName) {
                           bool accountNameExists = false;
+
                           /// TODO:: check if accountName already used
                           if (accountNameExists) {
                             return S.of(context).account_name_already_used;
@@ -84,8 +82,8 @@ class AddWalletAccountSheet {
                               labelText: S.of(context).script_type,
                               width: MediaQuery.of(context).size.width -
                                   defaultPadding * 4,
-                              items: ScriptType.scripts,
-                              itemsText: ScriptType.scripts
+                              items: ScriptTypeInfo.scripts,
+                              itemsText: ScriptTypeInfo.scripts
                                   .map((v) => v.name)
                                   .toList(),
                               valueNotifier:
@@ -117,6 +115,7 @@ class AddWalletAccountSheet {
                                 if (accountNameExists == false) {
                                   await viewModel.addWalletAccount(
                                       userWallet.id!,
+                                      userWallet.serverWalletID,
                                       viewModel
                                           .newAccountScriptTypeValueNotifier
                                           .value,

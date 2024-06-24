@@ -12,7 +12,28 @@ import 'package:wallet/rust/api/api_service/settings_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
-class UserSettingsDataProvider implements DataProvider {
+class UserSettingDataUpdated extends DataState {
+  UserSettingDataUpdated();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ExchangeRateDataUpdated extends DataState {
+  ExchangeRateDataUpdated();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class BitcoinUnitDataUpdated extends DataState {
+  BitcoinUnitDataUpdated();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class UserSettingsDataProvider extends DataProvider {
   final String userID;
   final SettingsClient settingsClient;
 
@@ -92,7 +113,6 @@ class UserSettingsDataProvider implements DataProvider {
         bitcoinUnit: settingsData!.bitcoinUnit.toBitcoinUnit(),
         fiatCurrency: fiatCurrency,
         hideEmptyUsedAddresses: settingsData!.hideEmptyUsedAddresses ? 1 : 0,
-        showWalletRecovery: settingsData!.showWalletRecovery ? 1 : 0,
         twoFactorAmountThreshold:
             settingsData!.twoFactorAmountThreshold.toInt(),
       ));
@@ -115,7 +135,7 @@ class UserSettingsDataProvider implements DataProvider {
       bitcoinUnit: settings.bitcoinUnit.enumToString(),
       fiatCurrency: settings.fiatCurrency.enumToString(),
       hideEmptyUsedAddresses: settings.hideEmptyUsedAddresses == 1,
-      showWalletRecovery: settings.showWalletRecovery == 1,
+      showWalletRecovery: false,
       twoFactorAmountThreshold:
           (settings.twoFactorAmountThreshold ?? defaultTwoFactorAmountThreshold)
               .toDouble(),

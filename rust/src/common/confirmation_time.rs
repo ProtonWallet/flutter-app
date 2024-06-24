@@ -1,0 +1,20 @@
+// confirmation_time.rs
+use flutter_rust_bridge::frb;
+
+pub use andromeda_bitcoin::ConfirmationTime;
+
+#[frb(mirror(ConfirmationTime))]
+pub enum _ConfirmationTime {
+    /// The transaction is confirmed
+    Confirmed {
+        /// Confirmation height.
+        height: u32,
+        /// Confirmation time in unix seconds.
+        time: u64,
+    },
+    /// The transaction is unconfirmed
+    Unconfirmed {
+        /// The last-seen timestamp in unix seconds.
+        last_seen: u64,
+    },
+}

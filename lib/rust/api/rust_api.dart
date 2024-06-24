@@ -3,11 +3,14 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../bdk/blockchain.dart';
-import '../bdk/error.dart';
-import '../bdk/types.dart';
-import '../bdk/wallet.dart';
+import '../common/errors.dart';
+import '../common/network.dart';
+import '../common/word_count.dart';
 import '../frb_generated.dart';
+import 'bdk_wallet/address.dart';
+import 'bdk_wallet/blockchain.dart';
+import 'bdk_wallet/derivation_path.dart';
+import 'bdk_wallet/script_buf.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // The type `RUNTIME` is not used by any `pub` functions, thus it is ignored.
@@ -15,418 +18,42 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 class Api {
   const Api();
 
-  static Future<String> addressFromScript(
-          {required Script script, required Network network, dynamic hint}) =>
+  static Future<FrbAddress> addressFromScript(
+          {required FrbScriptBuf script,
+          required Network network,
+          dynamic hint}) =>
       RustLib.instance.api
           .apiAddressFromScript(script: script, network: network, hint: hint);
 
-  static Future<Network> addressNetwork(
-          {required String address, dynamic hint}) =>
-      RustLib.instance.api.apiAddressNetwork(address: address, hint: hint);
-
-  static Future<Script> addressToScriptPubkey(
-          {required String address, dynamic hint}) =>
+  static Future<FrbAddress> createAddress(
+          {required String address, required Network network, dynamic hint}) =>
       RustLib.instance.api
-          .apiAddressToScriptPubkey(address: address, hint: hint);
+          .apiCreateAddress(address: address, network: network, hint: hint);
 
-  static Future<String> broadcast(
-          {required String tx, required String blockchainId, dynamic hint}) =>
-      RustLib.instance.api
-          .apiBroadcast(tx: tx, blockchainId: blockchainId, hint: hint);
-
-  static Future<(String, TransactionDetails)> bumpFeeTxBuilderFinish(
-          {required String txid,
-          required double feeRate,
-          String? allowShrinking,
-          required String walletId,
-          required bool enableRbf,
-          int? nSequence,
-          dynamic hint}) =>
-      RustLib.instance.api.apiBumpFeeTxBuilderFinish(
-          txid: txid,
-          feeRate: feeRate,
-          allowShrinking: allowShrinking,
-          walletId: walletId,
-          enableRbf: enableRbf,
-          nSequence: nSequence,
-          hint: hint);
-
-  static Future<String> combinePsbt(
-          {required String psbtStr, required String other, dynamic hint}) =>
-      RustLib.instance.api
-          .apiCombinePsbt(psbtStr: psbtStr, other: other, hint: hint);
-
-  static Future<String> createAddress(
-          {required String address, dynamic hint}) =>
-      RustLib.instance.api.apiCreateAddress(address: address, hint: hint);
-
-  static Future<String> createDerivationPath(
+  static Future<FrbDerivationPath> createDerivationPath(
           {required String path, dynamic hint}) =>
       RustLib.instance.api.apiCreateDerivationPath(path: path, hint: hint);
 
-  static Future<String> createDescriptor(
-          {required String descriptor,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiCreateDescriptor(
-          descriptor: descriptor, network: network, hint: hint);
-
-  static Future<String> createDescriptorPublic(
-          {String? xpub,
-          required String path,
-          required bool derive,
-          dynamic hint}) =>
-      RustLib.instance.api.apiCreateDescriptorPublic(
-          xpub: xpub, path: path, derive: derive, hint: hint);
-
-  static Future<String> createDescriptorSecret(
-          {required Network network,
-          required String mnemonic,
-          String? password,
-          dynamic hint}) =>
-      RustLib.instance.api.apiCreateDescriptorSecret(
-          network: network, mnemonic: mnemonic, password: password, hint: hint);
-
   /// create esplora blockchain with proton api
-  static Future<String> createEsploraBlockchainWithApi(
-          {required EsploraConfig config, dynamic hint}) =>
+  static Future<FrbBlockchainClient> createEsploraBlockchainWithApi(
+          {dynamic hint}) =>
+      RustLib.instance.api.apiCreateEsploraBlockchainWithApi(hint: hint);
+
+  static Future<FrbScriptBuf> createScript(
+          {required List<int> rawOutputScript, dynamic hint}) =>
       RustLib.instance.api
-          .apiCreateEsploraBlockchainWithApi(config: config, hint: hint);
-
-  static Future<String> createTransaction(
-          {required List<int> tx, dynamic hint}) =>
-      RustLib.instance.api.apiCreateTransaction(tx: tx, hint: hint);
-
-  static Future<String> createWallet(
-          {required String descriptor,
-          String? changeDescriptor,
-          required Network network,
-          required DatabaseConfig databaseConfig,
-          dynamic hint}) =>
-      RustLib.instance.api.apiCreateWallet(
-          descriptor: descriptor,
-          changeDescriptor: changeDescriptor,
-          network: network,
-          databaseConfig: databaseConfig,
-          hint: hint);
-
-  static Future<String> deriveDescriptorSecret(
-          {required String secret, required String path, dynamic hint}) =>
-      RustLib.instance.api
-          .apiDeriveDescriptorSecret(secret: secret, path: path, hint: hint);
-
-  static Future<String> descriptorAsString(
-          {required String descriptor,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiDescriptorAsString(
-          descriptor: descriptor, network: network, hint: hint);
-
-  static Future<String> descriptorAsStringPrivate(
-          {required String descriptor,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiDescriptorAsStringPrivate(
-          descriptor: descriptor, network: network, hint: hint);
-
-  static Future<String> descriptorPublicFromString(
-          {required String publicKey, dynamic hint}) =>
-      RustLib.instance.api
-          .apiDescriptorPublicFromString(publicKey: publicKey, hint: hint);
-
-  static Future<String> descriptorSecretAsPublic(
-          {required String secret, dynamic hint}) =>
-      RustLib.instance.api
-          .apiDescriptorSecretAsPublic(secret: secret, hint: hint);
-
-  static Future<Uint8List> descriptorSecretAsSecretBytes(
-          {required String secret, dynamic hint}) =>
-      RustLib.instance.api
-          .apiDescriptorSecretAsSecretBytes(secret: secret, hint: hint);
-
-  static Future<String> descriptorSecretFromString(
-          {required String secret, dynamic hint}) =>
-      RustLib.instance.api
-          .apiDescriptorSecretFromString(secret: secret, hint: hint);
-
-  static Future<double> estimateFee(
-          {required int target, required String blockchainId, dynamic hint}) =>
-      RustLib.instance.api.apiEstimateFee(
-          target: target, blockchainId: blockchainId, hint: hint);
-
-  static Future<String> extendDescriptorSecret(
-          {required String secret, required String path, dynamic hint}) =>
-      RustLib.instance.api
-          .apiExtendDescriptorSecret(secret: secret, path: path, hint: hint);
-
-  static Future<String> extractTx({required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiExtractTx(psbtStr: psbtStr, hint: hint);
-
-  static Future<String> generateSeedFromEntropy(
-          {required List<int> entropy, dynamic hint}) =>
-      RustLib.instance.api
-          .apiGenerateSeedFromEntropy(entropy: entropy, hint: hint);
+          .apiCreateScript(rawOutputScript: rawOutputScript, hint: hint);
 
   static Future<String> generateSeedFromString(
           {required String mnemonic, dynamic hint}) =>
       RustLib.instance.api
           .apiGenerateSeedFromString(mnemonic: mnemonic, hint: hint);
 
+  ///================== Mnemonic ==========
   static Future<String> generateSeedFromWordCount(
           {required WordCount wordCount, dynamic hint}) =>
       RustLib.instance.api
           .apiGenerateSeedFromWordCount(wordCount: wordCount, hint: hint);
-
-  static Future<AddressInfo> getAddress(
-          {required String walletId,
-          required AddressIndex addressIndex,
-          dynamic hint}) =>
-      RustLib.instance.api.apiGetAddress(
-          walletId: walletId, addressIndex: addressIndex, hint: hint);
-
-  static Future<Balance> getBalance({required String walletId, dynamic hint}) =>
-      RustLib.instance.api.apiGetBalance(walletId: walletId, hint: hint);
-
-  static Future<String> getBlockchainHash(
-          {required int blockchainHeight,
-          required String blockchainId,
-          dynamic hint}) =>
-      RustLib.instance.api.apiGetBlockchainHash(
-          blockchainHeight: blockchainHeight,
-          blockchainId: blockchainId,
-          hint: hint);
-
-  static Future<(String, Network)> getDescriptorForKeychain(
-          {required String walletId,
-          required KeychainKind keychain,
-          dynamic hint}) =>
-      RustLib.instance.api.apiGetDescriptorForKeychain(
-          walletId: walletId, keychain: keychain, hint: hint);
-
-  static Future<int> getHeight({required String blockchainId, dynamic hint}) =>
-      RustLib.instance.api.apiGetHeight(blockchainId: blockchainId, hint: hint);
-
-  static Future<AddressInfo> getInternalAddress(
-          {required String walletId,
-          required AddressIndex addressIndex,
-          dynamic hint}) =>
-      RustLib.instance.api.apiGetInternalAddress(
-          walletId: walletId, addressIndex: addressIndex, hint: hint);
-
-  /// get the corresponding PSBT Input for a LocalUtxo
-  static Future<String> getPsbtInput(
-          {required String walletId,
-          required LocalUtxo utxo,
-          required bool onlyWitnessUtxo,
-          PsbtSigHashType? psbtSighashType,
-          dynamic hint}) =>
-      RustLib.instance.api.apiGetPsbtInput(
-          walletId: walletId,
-          utxo: utxo,
-          onlyWitnessUtxo: onlyWitnessUtxo,
-          psbtSighashType: psbtSighashType,
-          hint: hint);
-
-  static Future<List<TransactionDetails>> getTransactions(
-          {required String walletId, required bool includeRaw, dynamic hint}) =>
-      RustLib.instance.api.apiGetTransactions(
-          walletId: walletId, includeRaw: includeRaw, hint: hint);
-
-  static Future<List<TxIn>> input({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiInput(tx: tx, hint: hint);
-
-  static Future<bool> isCoinBase({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiIsCoinBase(tx: tx, hint: hint);
-
-  static Future<bool> isExplicitlyRbf({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiIsExplicitlyRbf(tx: tx, hint: hint);
-
-  static Future<bool> isLockTimeEnabled({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiIsLockTimeEnabled(tx: tx, hint: hint);
-
-  static Future<bool> isMine(
-          {required Script script, required String walletId, dynamic hint}) =>
-      RustLib.instance.api
-          .apiIsMine(script: script, walletId: walletId, hint: hint);
-
-  static Future<String> jsonSerialize(
-          {required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiJsonSerialize(psbtStr: psbtStr, hint: hint);
-
-  static Future<List<LocalUtxo>> listUnspent(
-          {required String walletId, dynamic hint}) =>
-      RustLib.instance.api.apiListUnspent(walletId: walletId, hint: hint);
-
-  static Future<List<LocalUtxo>> listUnspentOutputs(
-          {required String walletId, dynamic hint}) =>
-      RustLib.instance.api
-          .apiListUnspentOutputs(walletId: walletId, hint: hint);
-
-  static Future<int> lockTime({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiLockTime(tx: tx, hint: hint);
-
-  static Future<int> maxSatisfactionWeight(
-          {required String descriptor,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiMaxSatisfactionWeight(
-          descriptor: descriptor, network: network, hint: hint);
-
-  static Future<String> newBip44Descriptor(
-          {required KeychainKind keyChainKind,
-          required String secretKey,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip44Descriptor(
-          keyChainKind: keyChainKind,
-          secretKey: secretKey,
-          network: network,
-          hint: hint);
-
-  static Future<String> newBip44Public(
-          {required KeychainKind keyChainKind,
-          required String publicKey,
-          required Network network,
-          required String fingerprint,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip44Public(
-          keyChainKind: keyChainKind,
-          publicKey: publicKey,
-          network: network,
-          fingerprint: fingerprint,
-          hint: hint);
-
-  static Future<String> newBip49Descriptor(
-          {required KeychainKind keyChainKind,
-          required String secretKey,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip49Descriptor(
-          keyChainKind: keyChainKind,
-          secretKey: secretKey,
-          network: network,
-          hint: hint);
-
-  static Future<String> newBip49Public(
-          {required KeychainKind keyChainKind,
-          required String publicKey,
-          required Network network,
-          required String fingerprint,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip49Public(
-          keyChainKind: keyChainKind,
-          publicKey: publicKey,
-          network: network,
-          fingerprint: fingerprint,
-          hint: hint);
-
-  static Future<String> newBip84Descriptor(
-          {required KeychainKind keyChainKind,
-          required String secretKey,
-          required Network network,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip84Descriptor(
-          keyChainKind: keyChainKind,
-          secretKey: secretKey,
-          network: network,
-          hint: hint);
-
-  static Future<String> newBip84Public(
-          {required KeychainKind keyChainKind,
-          required String publicKey,
-          required Network network,
-          required String fingerprint,
-          dynamic hint}) =>
-      RustLib.instance.api.apiNewBip84Public(
-          keyChainKind: keyChainKind,
-          publicKey: publicKey,
-          network: network,
-          fingerprint: fingerprint,
-          hint: hint);
-
-  static Future<List<TxOut>> output({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiOutput(tx: tx, hint: hint);
-
-  static Future<int?> psbtFeeAmount({required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiPsbtFeeAmount(psbtStr: psbtStr, hint: hint);
-
-  static Future<double?> psbtFeeRate({required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiPsbtFeeRate(psbtStr: psbtStr, hint: hint);
-
-  static Future<String> psbtTxid({required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiPsbtTxid(psbtStr: psbtStr, hint: hint);
-
-  static Future<String> serializePsbt(
-          {required String psbtStr, dynamic hint}) =>
-      RustLib.instance.api.apiSerializePsbt(psbtStr: psbtStr, hint: hint);
-
-  static Future<String?> sign(
-          {required String walletId,
-          required String psbtStr,
-          SignOptions? signOptions,
-          dynamic hint}) =>
-      RustLib.instance.api.apiSign(
-          walletId: walletId,
-          psbtStr: psbtStr,
-          signOptions: signOptions,
-          hint: hint);
-
-  static Future<int> size({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiSize(tx: tx, hint: hint);
-
-  static Future<void> syncWallet(
-          {required String walletId,
-          required String blockchainId,
-          dynamic hint}) =>
-      RustLib.instance.api.apiSyncWallet(
-          walletId: walletId, blockchainId: blockchainId, hint: hint);
-
-  static Future<(String, TransactionDetails)> txBuilderFinish(
-          {required String walletId,
-          required List<ScriptAmount> recipients,
-          required List<OutPoint> utxos,
-          (OutPoint, String, int)? foreignUtxo,
-          required List<OutPoint> unspendable,
-          required ChangeSpendPolicy changePolicy,
-          required bool manuallySelectedOnly,
-          double? feeRate,
-          int? feeAbsolute,
-          required bool drainWallet,
-          Script? drainTo,
-          RbfValue? rbf,
-          required List<int> data,
-          dynamic hint}) =>
-      RustLib.instance.api.apiTxBuilderFinish(
-          walletId: walletId,
-          recipients: recipients,
-          utxos: utxos,
-          foreignUtxo: foreignUtxo,
-          unspendable: unspendable,
-          changePolicy: changePolicy,
-          manuallySelectedOnly: manuallySelectedOnly,
-          feeRate: feeRate,
-          feeAbsolute: feeAbsolute,
-          drainWallet: drainWallet,
-          drainTo: drainTo,
-          rbf: rbf,
-          data: data,
-          hint: hint);
-
-  static Future<String> txTxid({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiTxTxid(tx: tx, hint: hint);
-
-  static Future<int> version({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiVersion(tx: tx, hint: hint);
-
-  static Future<int> vsize({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiVsize(tx: tx, hint: hint);
-
-  static Future<Network> walletNetwork(
-          {required String walletId, dynamic hint}) =>
-      RustLib.instance.api.apiWalletNetwork(walletId: walletId, hint: hint);
-
-  static Future<int> weight({required String tx, dynamic hint}) =>
-      RustLib.instance.api.apiWeight(tx: tx, hint: hint);
 
   @override
   int get hashCode => 0;

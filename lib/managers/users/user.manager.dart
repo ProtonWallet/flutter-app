@@ -140,10 +140,18 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   Future<UserKey> getFirstKey() async {
+    var userKeyID = userInfo.userKeyID;
+    var privateKey = userInfo.userPrivateKey;
+    var passphrase = userInfo.userPassphrase;
+    if (userKeyID == "" || privateKey == "" || passphrase == "") {
+      throw Exception(
+          "First key is null, cannot decrypt wallet key. relogin  or debug.");
+    }
     return UserKey(
-        keyID: userInfo.userKeyID,
-        privateKey: userInfo.userPrivateKey,
-        passphrase: userInfo.userPassphrase);
+      keyID: userKeyID,
+      privateKey: privateKey,
+      passphrase: passphrase,
+    );
   }
 
   /// wallet operation

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -22,12 +22,15 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class OnboardingGuideSheet {
-  static void show(BuildContext context, HomeViewModel viewModel,
-      {bool firstWallet = false}) {
+  static void show(
+    BuildContext context,
+    HomeViewModel viewModel, {
+    bool firstWallet = false,
+  }) {
     bool passphraseConfirmed = true;
     HomeModalBottomSheet.show(context,
         child: BlocBuilder<WalletListBloc, WalletListState>(
-            bloc: viewModel.walletBloc,
+            bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
@@ -43,9 +46,11 @@ class OnboardingGuideSheet {
                       Transform.translate(
                           offset: const Offset(0, -20),
                           child: Column(children: [
-                            Text(S.of(context).wallet_setup,
-                                style: FontManager.titleHeadline(
-                                    ProtonColors.textNorm)),
+                            Text(
+                              S.of(context).wallet_setup,
+                              style: FontManager.titleHeadline(
+                                  ProtonColors.textNorm),
+                            ),
                             Text(
                               S.of(context).wallet_setup_desc,
                               style: FontManager.body2Regular(
@@ -99,11 +104,12 @@ class OnboardingGuideSheet {
                                         PassphraseTutorialSheet.show(context);
                                       },
                                       canClose: false,
-                                      leadingWidget: SvgPicture.asset(
-                                          "assets/images/icon/alert_info.svg",
-                                          fit: BoxFit.fill,
-                                          width: 22,
-                                          height: 22),
+                                      leadingWidget:
+                                          Assets.images.icon.alertInfo.svg(
+                                        fit: BoxFit.fill,
+                                        width: 22,
+                                        height: 22,
+                                      ),
                                       border: Border.all(
                                         color: Colors.transparent,
                                         width: 0,
@@ -230,18 +236,19 @@ class OnboardingGuideSheet {
                                       height: 48),
                                   SizedBoxes.box8,
                                   ButtonV5(
-                                      onPressed: () {
-                                        viewModel.move(NavID.importWallet);
-                                        Navigator.of(context).pop();
-                                      },
-                                      text: S.of(context).import_your_wallet,
-                                      width: MediaQuery.of(context).size.width,
-                                      textStyle: FontManager.body1Median(
-                                          ProtonColors.textNorm),
-                                      backgroundColor:
-                                          ProtonColors.textWeakPressed,
-                                      borderColor: ProtonColors.textWeakPressed,
-                                      height: 48),
+                                    onPressed: () {
+                                      viewModel.move(NavID.importWallet);
+                                      Navigator.of(context).pop();
+                                    },
+                                    text: S.of(context).import_your_wallet,
+                                    width: MediaQuery.of(context).size.width,
+                                    textStyle: FontManager.body1Median(
+                                        ProtonColors.textNorm),
+                                    backgroundColor:
+                                        ProtonColors.textWeakPressed,
+                                    borderColor: ProtonColors.textWeakPressed,
+                                    height: 48,
+                                  ),
                                 ])),
                           ]))
                     ]);

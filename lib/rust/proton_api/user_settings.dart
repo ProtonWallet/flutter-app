@@ -10,14 +10,12 @@ class ApiWalletUserSettings {
   final BitcoinUnit bitcoinUnit;
   final FiatCurrency fiatCurrency;
   final int hideEmptyUsedAddresses;
-  final int showWalletRecovery;
   final int? twoFactorAmountThreshold;
 
   const ApiWalletUserSettings({
     required this.bitcoinUnit,
     required this.fiatCurrency,
     required this.hideEmptyUsedAddresses,
-    required this.showWalletRecovery,
     this.twoFactorAmountThreshold,
   });
 
@@ -26,7 +24,6 @@ class ApiWalletUserSettings {
       bitcoinUnit.hashCode ^
       fiatCurrency.hashCode ^
       hideEmptyUsedAddresses.hashCode ^
-      showWalletRecovery.hashCode ^
       twoFactorAmountThreshold.hashCode;
 
   @override
@@ -37,7 +34,6 @@ class ApiWalletUserSettings {
           bitcoinUnit == other.bitcoinUnit &&
           fiatCurrency == other.fiatCurrency &&
           hideEmptyUsedAddresses == other.hideEmptyUsedAddresses &&
-          showWalletRecovery == other.showWalletRecovery &&
           twoFactorAmountThreshold == other.twoFactorAmountThreshold;
 }
 

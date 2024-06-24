@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
@@ -22,53 +25,80 @@ import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 
 import 'package:wallet/models/drift/db/app.database.dart';
 
-abstract class DataState {}
+/// data state
+abstract class DataState extends Equatable {}
 
-class DataInitial extends DataState {}
+class DataInitial extends DataState {
+  @override
+  List<Object?> get props => [];
+}
 
-class DataLoading extends DataState {}
+abstract class DataLoading extends DataState {}
 
-class DataLoaded extends DataState {
+abstract class DataLoaded extends DataState {
   final String data;
 
   DataLoaded(this.data);
 }
 
-class DataUpdated extends DataState {
-  /// TODO:: maybe specify data update?
-  final String updatedData;
+abstract class DataCreated extends DataState {}
 
+class DataUpdated<T> extends DataState {
+  final T updatedData;
   DataUpdated(this.updatedData);
+  @override
+  List<Object?> get props => [updatedData];
 }
 
-class BDKDataUpdated extends DataState {
-  BDKDataUpdated();
-}
-
-class UserSettingDataUpdated extends DataState {
-  UserSettingDataUpdated();
-}
-
-class ExchangeRateDataUpdated extends DataState {
-  ExchangeRateDataUpdated();
-}
-
-class BitcoinUnitDataUpdated extends DataState {
-  BitcoinUnitDataUpdated();
-}
+abstract class DataDeleted extends DataState {}
 
 class DataError extends DataState {
   final String message;
 
   DataError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
-abstract class DataProvider {
+///
+abstract class DataEvent extends Equatable {}
+
+abstract class DataLoad extends DataEvent {}
+
+abstract class DataCreate extends DataEvent {}
+
+abstract class DataUpdate extends DataEvent {}
+
+abstract class DataDelete extends DataEvent {}
+
+class DirectEmitEvent extends DataEvent {
+  final DataState state;
+
+  DirectEmitEvent(this.state);
+  @override
+  List<Object?> get props => [state];
+}
+
+abstract class DataProvider extends Bloc<DataEvent, DataState> {
+  DataProvider() : super(DataInitial()) {
+    on<DirectEmitEvent>((event, emit) => emit(event.state));
+  }
+
+  void emitState(DataState state) {
+    add(DirectEmitEvent(state));
+  }
+
   Future<void> clear();
 }
 
+// abstract class DataProvider {
+//   Future<void> clear();
+// }
+
 class DataProviderManager extends Manager {
   final SecureStorageManager storage;
+  final PreferencesManager shared;
   final ProtonApiService apiService;
   final AppDatabase dbConnection;
 
@@ -86,7 +116,12 @@ class DataProviderManager extends Manager {
   late BalanceDataProvider balanceDataProvider;
   late GatewayDataProvider gatewayDataProvider;
 
-  DataProviderManager(this.storage, this.apiService, this.dbConnection);
+  DataProviderManager(
+    this.storage,
+    this.shared,
+    this.apiService,
+    this.dbConnection,
+  );
 
   @override
   Future<void> login(String userID) async {
@@ -139,8 +174,11 @@ class DataProviderManager extends Manager {
       DBHelper.transactionDao!,
     );
 
-    bdkTransactionDataProvider =
-        BDKTransactionDataProvider(DBHelper.accountDao!);
+    bdkTransactionDataProvider = BDKTransactionDataProvider(
+      DBHelper.accountDao!,
+      apiService,
+      shared,
+    );
     localTransactionDataProvider = LocalTransactionDataProvider(
       apiService.getWalletClient(),
       DBHelper.walletDao!,

@@ -1,15 +1,16 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
-import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -17,10 +18,8 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/exchangerate.model.dart';
-import 'package:wallet/rust/api/bdk_wallet.dart';
-import 'package:wallet/rust/bdk/types.dart';
-import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/balance.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -28,19 +27,21 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/storage.dart';
+import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 
 // this is service // per wallet account
 class WalletManager implements Manager {
-  static final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
+  static final BdkLibrary bdkLib = BdkLibrary();
   static bool isFetchingWallets = false;
 
   //TODO:: fix me
@@ -50,45 +51,73 @@ class WalletManager implements Manager {
   static late WalletPassphraseProvider walletPassphraseProvider;
 
   ///
-  static HashMap<String, Wallet> wallets = HashMap<String, Wallet>();
+  static HashMap<String, FrbWallet> frbWallets = HashMap<String, FrbWallet>();
 
   // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
   // TODO:: return Wallet? to avoid issue, add try-catch here
-  static Future<Wallet?> loadWalletWithID(int walletID, int accountID) async {
+  static Future<FrbAccount?> loadWalletWithID(
+    int walletID,
+    int accountID,
+  ) async {
     WalletModel? walletModel = await DBHelper.walletDao!.findById(walletID);
     if (walletModel == null) return null;
-    String passphrase = await walletPassphraseProvider
-            .getWalletPassphrase(walletModel.serverWalletID) ??
-        "";
-    Mnemonic mnemonic = await Mnemonic.fromString(
-        await WalletManager.getMnemonicWithID(walletID));
-    final DerivationPath derivationPath = await DerivationPath.create(
-        path: await getDerivationPathWithID(accountID));
-    final aliceDescriptor = await _lib.createDerivedDescriptor(
-      mnemonic,
-      derivationPath,
-      passphrase: passphrase,
-    );
-    String derivationPathClean =
-        derivationPath.toString().replaceAll("'", "_").replaceAll('/', '_');
-    String dbName =
-        "${walletModel.serverWalletID.replaceAll('-', '_').replaceAll('=', '_')}_${derivationPathClean}_${passphrase.isNotEmpty}";
+    var walletServerID = walletModel.serverWalletID;
 
-    var found = wallets[dbName];
+    var frbWallet = frbWallets[walletServerID];
+    if (frbWallet == null) {
+      // try restore wallet first;
+      var passphrase = await walletPassphraseProvider.getPassphrase(
+        walletServerID,
+      );
+      var mnemonic = await WalletManager.getMnemonicWithID(walletID);
+      frbWallet = FrbWallet(
+        network: appConfig.coinType.network,
+        bip39Mnemonic: mnemonic,
+        bip38Passphrase: passphrase,
+      );
+      frbWallets[walletModel.serverWalletID] = frbWallet;
+    }
+
+    final String derivationPath = await getDerivationPathWithID(accountID);
+    var found = frbWallet.getAccount(derivationPath: derivationPath);
     if (found != null) {
       return found;
     }
-    var wallet = await _lib.restoreWallet(
-      aliceDescriptor,
-      databaseName: dbName,
-    );
-    wallets[dbName] = wallet;
-    return wallet;
+
+    var dbPath = await _getDatabaseFolderPath();
+    var storage = OnchainStoreFactory(folderPath: dbPath);
+
+    var account = frbWallet.addAccount(
+        scriptType: appConfig.scriptTypeInfo.type,
+        derivationPath: derivationPath,
+        storageFactory: storage);
+
+    return account;
+  }
+
+  /// TODO:: fix me .temp move to better place
+  static Future<Directory> _getDatabaseFolder() async {
+    const dbFolder = "databases";
+    final appDocumentsDir = await getApplicationDocumentsDirectory();
+    final folderPath = Directory(p.join(appDocumentsDir.path, dbFolder));
+
+    if (!await folderPath.exists()) {
+      await folderPath.create(recursive: true);
+    }
+    return folderPath;
+  }
+
+  /// TODO:: fix me .temp move to better place
+  static Future<String> _getDatabaseFolderPath() async {
+    var folder = await _getDatabaseFolder();
+    return folder.path;
   }
 
   ///
   static Future<void> cleanBDKCache() async {
-    _lib.clearLocalCache();
+    frbWallets.clear();
+    bdkLib.clearLocalCache();
+    // TODO:: add clear cache to bdk library
   }
 
   static Future<void> cleanSharedPreference() async {
@@ -140,64 +169,64 @@ class WalletManager implements Manager {
 
   static Future<String> getFingerPrintFromMnemonic(String strMnemonic,
       {String? passphrase}) async {
-    BdkWalletManager wallet = await BdkWalletManager.newInstance(
+    final wallet = FrbWallet(
         network: appConfig.coinType.network,
         bip39Mnemonic: strMnemonic,
         bip38Passphrase: passphrase);
-    String fingerprint = wallet.fingerprint;
+    String fingerprint = wallet.getFingerprint();
     logger.i("fingerprint = $fingerprint");
     return fingerprint;
   }
 
-  static Future<void> autoCreateWallet() async {
-    String walletName = "My Wallet";
-    Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
-    await createWallet(walletName, mnemonic.asString(),
-        WalletModel.createByProton, defaultFiatCurrency);
-  }
+  // static Future<void> autoCreateWallet() async {
+  //   String walletName = "My Wallet";
+  //   var mnemonic = FrbMnemonic(wordCount: WordCount.words12);
+  //   await createWallet(walletName, mnemonic.asString(),
+  //       WalletModel.createByProton, defaultFiatCurrency);
+  // }
 
-  static Future<void> createWallet(String walletName, String mnemonicStr,
-      int walletType, FiatCurrency fiatCurrency,
-      [String? passphrase]) async {
-    SecretKey secretKey = WalletKeyHelper.generateSecretKey();
+  // static Future<void> createWallet(String walletName, String mnemonicStr,
+  //     int walletType, FiatCurrency fiatCurrency,
+  //     [String? passphrase]) async {
+  //   SecretKey secretKey = WalletKeyHelper.generateSecretKey();
 
-    var key = await userManager.getFirstKey();
+  //   var key = await userManager.getFirstKey();
 
-    String userPrivateKey = key.privateKey;
-    String userKeyID = key.keyID;
+  //   String userPrivateKey = key.privateKey;
+  //   String userKeyID = key.keyID;
 
-    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-    String encryptedMnemonic =
-        await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
-    String encryptedWalletName = await WalletKeyHelper.encrypt(
-        secretKey, walletName.isNotEmpty ? walletName : "My Wallet");
-    String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
-        mnemonicStr,
-        passphrase:
-            passphrase != null && passphrase.isNotEmpty ? passphrase : null);
-    String encryptedWalletKey =
-        proton_crypto.encryptBinaryArmor(userPrivateKey, entropy);
-    String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
-        userPrivateKey, key.passphrase, entropy, gpgContextWalletKey);
-    CreateWalletReq walletReq = buildWalletRequest(
-        encryptedWalletName,
-        walletType,
-        encryptedMnemonic,
-        fingerprint,
-        userPrivateKey,
-        userKeyID,
-        encryptedWalletKey,
-        walletKeySignature,
-        passphrase != null && passphrase.isNotEmpty);
+  //   Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+  //   String encryptedMnemonic =
+  //       await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
+  //   String encryptedWalletName = await WalletKeyHelper.encrypt(
+  //       secretKey, walletName.isNotEmpty ? walletName : "My Wallet");
+  //   String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
+  //       mnemonicStr,
+  //       passphrase:
+  //           passphrase != null && passphrase.isNotEmpty ? passphrase : null);
+  //   String encryptedWalletKey =
+  //       proton_crypto.encryptBinaryArmor(userPrivateKey, entropy);
+  //   String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
+  //       userPrivateKey, key.passphrase, entropy, gpgContextWalletKey);
+  //   CreateWalletReq walletReq = buildWalletRequest(
+  //       encryptedWalletName,
+  //       walletType,
+  //       encryptedMnemonic,
+  //       fingerprint,
+  //       userPrivateKey,
+  //       userKeyID,
+  //       encryptedWalletKey,
+  //       walletKeySignature,
+  //       passphrase != null && passphrase.isNotEmpty);
 
-    ApiWalletData walletData =
-        await proton_api.createWallet(walletReq: walletReq);
-    int walletID = await processWalletData(
-        walletData, walletName, encryptedMnemonic, fingerprint, walletType);
-    await WalletManager.setWalletKey([walletData.walletKey]);
-    await WalletManager.addWalletAccount(
-        walletID, appConfig.scriptType, "My wallet account", fiatCurrency);
-  }
+  //   ApiWalletData walletData =
+  //       await proton_api.createWallet(walletReq: walletReq);
+  //   int walletID = await processWalletData(
+  //       walletData, walletName, encryptedMnemonic, fingerprint, walletType);
+  //   await WalletManager.setWalletKey([walletData.walletKey]);
+  //   await WalletManager.addWalletAccount(
+  //       walletID, appConfig.scriptTypeInfo, "My wallet account", fiatCurrency);
+  // }
 
   static CreateWalletReq buildWalletRequest(
       String encryptedName,
@@ -223,20 +252,20 @@ class WalletManager implements Manager {
     );
   }
 
-  static Future<int> processWalletData(ApiWalletData data, String walletName,
-      String encMnemonic, String fingerprint, int type) async {
-    return await WalletManager.insertOrUpdateWallet(
-        userID: 0,
-        name: walletName,
-        encryptedMnemonic: encMnemonic,
-        passphrase: data.wallet.hasPassphrase,
-        imported: data.wallet.isImported,
-        priority: data.wallet.priority,
-        status: data.wallet.status,
-        type: data.wallet.type,
-        fingerprint: fingerprint,
-        serverWalletID: data.wallet.id);
-  }
+  // static Future<int> processWalletData(ApiWalletData data, String walletName,
+  //     String encMnemonic, String fingerprint, int type) async {
+  //   return await WalletManager.insertOrUpdateWallet(
+  //       userID: 0,
+  //       name: walletName,
+  //       encryptedMnemonic: encMnemonic,
+  //       passphrase: data.wallet.hasPassphrase,
+  //       imported: data.wallet.isImported,
+  //       priority: data.wallet.priority,
+  //       status: data.wallet.status,
+  //       type: data.wallet.type,
+  //       fingerprint: fingerprint,
+  //       serverWalletID: data.wallet.id);
+  // }
 
   static Future<void> insertOrUpdateAccount(
       int walletID,
@@ -278,46 +307,46 @@ class WalletManager implements Manager {
     }
   }
 
-  static Future<int> insertOrUpdateWallet(
-      {required int userID,
-      required String name,
-      required String encryptedMnemonic,
-      required int passphrase,
-      required int imported,
-      required int priority,
-      required int status,
-      required int type,
-      required String serverWalletID,
-      required String fingerprint}) async {
-    WalletModel? wallet =
-        await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
+  // static Future<int> insertOrUpdateWallet(
+  //     {required int userID,
+  //     required String name,
+  //     required String encryptedMnemonic,
+  //     required int passphrase,
+  //     required int imported,
+  //     required int priority,
+  //     required int status,
+  //     required int type,
+  //     required String serverWalletID,
+  //     required String fingerprint}) async {
+  //   WalletModel? wallet =
+  //       await DBHelper.walletDao!.getWalletByServerWalletID(serverWalletID);
 
-    DateTime now = DateTime.now();
-    if (wallet == null) {
-      wallet = WalletModel(
-          id: null,
-          userID: userID,
-          name: name,
-          mnemonic: base64Decode(encryptedMnemonic),
-          passphrase: passphrase,
-          publicKey: Uint8List(0),
-          imported: imported,
-          priority: priority,
-          status: status,
-          type: type,
-          fingerprint: fingerprint,
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          serverWalletID: serverWalletID);
-      int walletID = await DBHelper.walletDao!.insert(wallet);
-      wallet.id = walletID;
-    } else {
-      wallet.name = name;
-      wallet.status = status;
-      await DBHelper.walletDao!.update(wallet);
-    }
-    return wallet.id!;
-  }
+  //   DateTime now = DateTime.now();
+  //   if (wallet == null) {
+  //     wallet = WalletModel(
+  //         id: null,
+  //         userID: userID,
+  //         name: name,
+  //         mnemonic: base64Decode(encryptedMnemonic),
+  //         passphrase: passphrase,
+  //         publicKey: Uint8List(0),
+  //         imported: imported,
+  //         priority: priority,
+  //         status: status,
+  //         type: type,
+  //         fingerprint: fingerprint,
+  //         createTime: now.millisecondsSinceEpoch ~/ 1000,
+  //         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+  //         serverWalletID: serverWalletID);
+  //     int walletID = await DBHelper.walletDao!.insert(wallet);
+  //     wallet.id = walletID;
+  //   } else {
+  //     wallet.name = name;
+  //     wallet.status = status;
+  //     await DBHelper.walletDao!.update(wallet);
+  //   }
+  //   return wallet.id!;
+  // }
 
   static Future<int> getAccountCount(int walletID) async {
     return DBHelper.accountDao!.getAccountCount(walletID);
@@ -327,54 +356,54 @@ class WalletManager implements Manager {
     return await DBHelper.walletDao!.counts() > 0;
   }
 
-  static Future<void> addWalletAccount(int walletID, ScriptType scriptType,
-      String label, FiatCurrency fiatCurrency,
-      {int internal = 0}) async {
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    String serverWalletID = walletModel.serverWalletID;
-    SecretKey? secretKey = await getWalletKey(serverWalletID);
-    String derivationPath = await getNewDerivationPath(
-        scriptType, walletID, appConfig.coinType,
-        internal: internal);
-    CreateWalletAccountReq req = CreateWalletAccountReq(
-        label: await WalletKeyHelper.encrypt(secretKey, label),
-        derivationPath: derivationPath,
-        scriptType: appConfig.scriptType.index);
-    ApiWalletAccount walletAccount = await proton_api.createWalletAccount(
-      walletId: serverWalletID,
-      req: req,
-    );
+  // static Future<void> addWalletAccount(int walletID, ScriptTypeInfo scriptType,
+  //     String label, FiatCurrency fiatCurrency,
+  //     {int internal = 0}) async {
+  //   WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+  //   String serverWalletID = walletModel.serverWalletID;
+  //   SecretKey? secretKey = await getWalletKey(serverWalletID);
+  //   String derivationPath = await getNewDerivationPath(
+  //       scriptType, walletID, appConfig.coinType,
+  //       internal: internal);
+  //   CreateWalletAccountReq req = CreateWalletAccountReq(
+  //       label: await WalletKeyHelper.encrypt(secretKey, label),
+  //       derivationPath: derivationPath,
+  //       scriptType: appConfig.scriptTypeInfo.index);
+  //   ApiWalletAccount walletAccount = await proton_api.createWalletAccount(
+  //     walletId: serverWalletID,
+  //     req: req,
+  //   );
 
-    // TODO:: ask backend to add fiatcurrency parameter when create wallet account
-    walletAccount = await proton_api.updateWalletAccountFiatCurrency(
-        walletId: serverWalletID,
-        walletAccountId: walletAccount.id,
-        newFiatCurrency: fiatCurrency);
+  //   // TODO:: ask backend to add fiatcurrency parameter when create wallet account
+  //   walletAccount = await proton_api.updateWalletAccountFiatCurrency(
+  //       walletId: serverWalletID,
+  //       walletAccountId: walletAccount.id,
+  //       newFiatCurrency: fiatCurrency);
 
-    await insertOrUpdateAccount(
-        walletID,
-        walletAccount.label,
-        scriptType.index,
-        "$derivationPath/$internal",
-        walletAccount.id,
-        walletAccount.fiatCurrency);
-  }
+  //   await insertOrUpdateAccount(
+  //       walletID,
+  //       walletAccount.label,
+  //       scriptType.index,
+  //       "$derivationPath/$internal",
+  //       walletAccount.id,
+  //       walletAccount.fiatCurrency);
+  // }
 
-  static Future<String> getNewDerivationPath(
-      ScriptType scriptType, int walletID, CoinType coinType,
-      {int internal = 0}) async {
-    int accountIndex = 0;
-    while (true) {
-      String newDerivationPath =
-          "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
-      var result = await DBHelper.accountDao!
-          .findByDerivationPath(walletID, "$newDerivationPath/$internal");
-      if (result == null) {
-        return newDerivationPath;
-      }
-      accountIndex++;
-    }
-  }
+  // static Future<String> getNewDerivationPath(
+  //     ScriptTypeInfo scriptType, int walletID, CoinType coinType,
+  //     {int internal = 0}) async {
+  //   int accountIndex = 0;
+  //   while (true) {
+  //     String newDerivationPath =
+  //         "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
+  //     var result = await DBHelper.accountDao!
+  //         .findByDerivationPath(walletID, "$newDerivationPath/$internal");
+  //     if (result == null) {
+  //       return newDerivationPath;
+  //     }
+  //     accountIndex++;
+  //   }
+  // }
 
   static Future<String> getDerivationPathWithID(int accountID) async {
     AccountModel accountModel = await DBHelper.accountDao!.findById(accountID);
@@ -402,18 +431,25 @@ class WalletManager implements Manager {
     return name;
   }
 
-  static Future<double> getWalletAccountBalance(
-      int walletID, int walletAccountID) async {
+  static Future<int> getWalletAccountBalance(
+    int walletID,
+    int walletAccountID,
+  ) async {
     try {
-      Wallet? wallet =
+      FrbAccount? frbAccount =
           await WalletManager.loadWalletWithID(walletID, walletAccountID);
-      // TODO:: handle the !
-      Balance balance = await wallet!.getBalance();
-      return (balance.trustedPending + balance.confirmed).toDouble();
+      if (frbAccount == null) {
+        logger.e("getWalletAccountBalance account is null");
+        return 0;
+      }
+
+      FrbBalance balance = await frbAccount.getBalance();
+
+      return balance.trustedSpendable().toSat();
     } catch (e) {
       logger.e(e.toString());
     }
-    return 0.0;
+    return 0;
   }
 
   static Future<double> getWalletBalance(int walletID) async {
@@ -428,7 +464,7 @@ class WalletManager implements Manager {
   static Future<String> getMnemonicWithID(int walletID) async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
 
-    var firstKey = await userManager.getFirstKey();
+    var firstUserKey = await userManager.getFirstKey();
     var walletKey =
         await walletKeysProvider.getWalletKey(walletModel.serverWalletID);
     if (walletKey == null) {
@@ -437,7 +473,10 @@ class WalletManager implements Manager {
     var pgpBinaryMessage = walletKey.walletKey;
     // var signature = walletKey.walletKeySignature;
     var entropy = proton_crypto.decryptBinaryPGP(
-        firstKey.privateKey, firstKey.passphrase, pgpBinaryMessage);
+      firstUserKey.privateKey,
+      firstUserKey.passphrase,
+      pgpBinaryMessage,
+    );
 
     var secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
     // SecretKey? secretKey =
@@ -509,9 +548,10 @@ class WalletManager implements Manager {
 
   static Future<Uint8List> decryptBinaryWithUserKeys(
       String encodedEncryptedBinary) async {
-    var key = await userManager.getFirstKey();
-    String userPrivateKey = key.privateKey;
-    String userPassphrase = key.passphrase;
+    // get user key
+    var firstUserKey = await userManager.getFirstKey();
+    String userPrivateKey = firstUserKey.privateKey;
+    String userPassphrase = firstUserKey.passphrase;
 
     Uint8List result = Uint8List(0);
     try {
@@ -524,9 +564,9 @@ class WalletManager implements Manager {
   }
 
   static Future<String> decryptWithUserKeys(String encryptedMessage) async {
-    var key = await userManager.getFirstKey();
-    String userPrivateKey = key.privateKey;
-    String userPassphrase = key.passphrase;
+    var firstUserKey = await userManager.getFirstKey();
+    String userPrivateKey = firstUserKey.privateKey;
+    String userPassphrase = firstUserKey.passphrase;
     String result = "";
     try {
       result = proton_crypto.decrypt(
@@ -563,9 +603,9 @@ class WalletManager implements Manager {
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
-    var key = await userManager.getFirstKey();
-    String userPrivateKey = key.privateKey;
-    String userPassphrase = key.passphrase;
+    var firstUserKey = await userManager.getFirstKey();
+    String userPrivateKey = firstUserKey.privateKey;
+    String userPassphrase = firstUserKey.passphrase;
 
     List<AddressKey> addressKeys = [];
 
@@ -609,9 +649,9 @@ class WalletManager implements Manager {
       }
     }
     if (txid.isEmpty) {
-      var key = await userManager.getFirstKey();
-      String userPrivateKey = key.privateKey;
-      String userPassphrase = key.passphrase;
+      var firstUserKey = await userManager.getFirstKey();
+      String userPrivateKey = firstUserKey.privateKey;
+      String userPassphrase = firstUserKey.passphrase;
       txid = proton_crypto.decrypt(
           userPrivateKey, userPassphrase, walletTransaction.transactionId);
     }
@@ -665,8 +705,10 @@ class WalletManager implements Manager {
   }
 
   static Future<void> handleBitcoinAddressRequests(
-      Wallet wallet, String serverWalletID, String serverAccountID) async {
-    // TODO:: compute signature!
+    FrbAccount account,
+    String serverWalletID,
+    String serverAccountID,
+  ) async {
     List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
             walletId: serverWalletID,
@@ -685,8 +727,8 @@ class WalletManager implements Manager {
           }
           int addressIndex =
               await getBitcoinAddressIndex(serverWalletID, serverAccountID);
-          var addressInfo =
-              await _lib.getAddress(wallet, addressIndex: addressIndex);
+
+          var addressInfo = await account.getAddress(index: addressIndex);
           String address = addressInfo.address;
           String signature = await getSignature(
               accountModel, address, gpgContextWalletBitcoinAddress);
@@ -752,8 +794,10 @@ class WalletManager implements Manager {
   }
 
   static Future<void> bitcoinAddressPoolHealthCheck(
-      Wallet wallet, String serverWalletID, String serverAccountID) async {
-// TODO:: compute signature!
+    FrbAccount account,
+    String serverWalletID,
+    String serverAccountID,
+  ) async {
     int unFetchedBitcoinAddressCount = 0;
     List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
@@ -829,8 +873,8 @@ class WalletManager implements Manager {
           await getBitcoinAddressIndex(serverWalletID, serverAccountID);
       logger.i(
           "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID");
-      var addressInfo =
-          await _lib.getAddress(wallet, addressIndex: addressIndex);
+
+      var addressInfo = await account.getAddress(index: addressIndex);
       String address = addressInfo.address;
       String signature = await getSignature(
           accountModel!, address, gpgContextWalletBitcoinAddress);
@@ -974,12 +1018,15 @@ class WalletManager implements Manager {
     return null;
   }
 
-  static Future<bool> isMineBitcoinAddress(Wallet wallet, String bitcoinAddress,
-      {int maxIter = 1000}) async {
+  static Future<bool> isMineBitcoinAddress(
+    FrbAccount account,
+    String bitcoinAddress, {
+    int maxIter = 1000,
+  }) async {
     // TODO:: use bdk to check bitcoin address is mine
+    // return  account.isMine(address: );
     for (int addressIndex = 0; addressIndex < maxIter; addressIndex++) {
-      var addressInfo =
-          await _lib.getAddress(wallet, addressIndex: addressIndex);
+      var addressInfo = await account.getAddress(index: addressIndex);
       if (addressInfo.address == bitcoinAddress) {
         return true;
       }
@@ -1012,7 +1059,7 @@ class WalletManager implements Manager {
   /// trying to get wallet key from secrue store and decrypt it use userkey
   /// TODO:: remove the static
   static Future<SecretKey> getWalletKey(String serverWalletID) async {
-    var firstKey = await userManager.getFirstKey();
+    var firstUserKey = await userManager.getFirstKey();
     var walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
@@ -1020,7 +1067,7 @@ class WalletManager implements Manager {
     var pgpBinaryMessage = walletKey.walletKey;
     // var signature = walletKey.walletKeySignature;
     var entropy = proton_crypto.decryptBinaryPGP(
-        firstKey.privateKey, firstKey.passphrase, pgpBinaryMessage);
+        firstUserKey.privateKey, firstUserKey.passphrase, pgpBinaryMessage);
 
     var secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
     return secretKey;

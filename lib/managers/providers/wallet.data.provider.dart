@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/strings.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.dao.impl.dart';
@@ -23,10 +23,10 @@ class WalletData {
   WalletData({required this.wallet, required this.accounts});
 }
 
-class WalletsDataProvider implements DataProvider {
-  @override
+class WalletsDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
+
   final WalletClient walletClient;
 
   //
@@ -91,36 +91,16 @@ class WalletsDataProvider implements DataProvider {
     for (ApiWalletData apiWalletData in apiWallets.reversed) {
       // update and insert wallet
       String serverWalletID = apiWalletData.wallet.id;
-      int walletID = await insertOrUpdateWallet(
-        userID: 0,
-        // this need a string userID
-        name: apiWalletData.wallet.name,
-        encryptedMnemonic: apiWalletData.wallet.mnemonic!,
-        passphrase: apiWalletData.wallet.hasPassphrase,
-        imported: apiWalletData.wallet.isImported,
-        priority: apiWalletData.wallet.priority,
-        status: apiWalletData.wallet.status,
-        type: apiWalletData.wallet.type,
-        fingerprint: apiWalletData.wallet.fingerprint ?? "",
-        publickey: apiWalletData.wallet.publicKey,
-        serverWalletID: serverWalletID,
-        initialize: true,
-      );
+
+      int walletID = await _processApiWalletData(apiWalletData);
 
       List<ApiWalletAccount> apiWalletAccts =
           await walletClient.getWalletAccounts(
               walletId: apiWalletData.wallet.id); // this id is serverWalletID
       for (ApiWalletAccount apiWalletAcct in apiWalletAccts) {
         String serverAccountID = apiWalletAcct.id;
-        await insertOrUpdateAccount(
-          walletID, //use server wallet id
-          apiWalletAcct.label,
-          apiWalletAcct.scriptType,
-          "${apiWalletAcct.derivationPath}/0",
-          apiWalletAcct.id,
-          apiWalletAcct.fiatCurrency,
-          initialize: true,
-        );
+        await _processApiWalletAccountData(walletID, apiWalletAcct);
+
         for (ApiEmailAddress address in apiWalletAcct.addresses) {
           _addEmailAddressToWalletAccount(
               serverWalletID, serverAccountID, address);
@@ -135,31 +115,124 @@ class WalletsDataProvider implements DataProvider {
     return null;
   }
 
-  Future<void> createWallet(String walletName, String mnemonicStr,
-      int walletType, FiatCurrency fiatCurrency,
-      [String? passphrase]) async {
-    /// TODO:: replace WalletManager
-    await WalletManager.createWallet(walletName, mnemonicStr,
-        WalletModel.importByUser, fiatCurrency, passphrase);
-
-    await WalletManager.autoBindEmailAddresses();
-
-    /// update cache,
-    /// TODO:: improve performance here
-    walletsData = await _getFromDB();
-    dataUpdateController.add(DataUpdated("some data Updated"));
+  Future<WalletData?> getWallet(String walletID) async {
+    var wallets = await getWallets();
+    if (wallets != null) {
+      for (WalletData walletData in wallets) {
+        if (walletData.wallet.serverWalletID == walletID) {
+          return walletData;
+        }
+      }
+    }
+    return null;
   }
 
-  Future<void> createWalletAccount(int walletID, ScriptType scriptType,
-      String label, FiatCurrency fiatCurrency,
-      {int internal = 0}) async {
-    await WalletManager.addWalletAccount(
-        walletID, scriptType, label, fiatCurrency);
+  // Future<void> createWallet(String walletName, String mnemonicStr,
+  //     int walletType, FiatCurrency fiatCurrency,
+  //     [String? passphrase]) async {
+  //   /// TODO:: replace WalletManager
+  //   await WalletManager.createWallet(walletName, mnemonicStr,
+  //       WalletModel.importByUser, fiatCurrency, passphrase);
 
-    /// update cache,
-    /// TODO:: improve performance here
-    walletsData = await _getFromDB();
-    dataUpdateController.add(DataUpdated("some data Updated"));
+  //   await WalletManager.autoBindEmailAddresses();
+
+  /// update cache,
+  //   walletsData = await _getFromDB();
+  //   dataUpdateController.add(DataUpdated("some data Updated"));
+  // }
+
+  Future<ApiWalletData> createWallet(CreateWalletReq request) async {
+    // api calls if failed throw error
+    ApiWalletData walletData =
+        await walletClient.createWallet(walletReq: request);
+
+    await _processApiWalletData(walletData);
+
+    return walletData;
+  }
+
+  Future<String> getNewDerivationPath(
+    int walletID,
+    ScriptTypeInfo scriptType,
+    CoinType coinType, {
+    int internal = 0,
+  }) async {
+    int accountIndex = 0;
+    while (true) {
+      String newDerivationPath =
+          "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
+      var result = await accountDao.findByDerivationPath(
+          walletID, "$newDerivationPath/$internal");
+      if (result == null) {
+        return newDerivationPath;
+      }
+      accountIndex++;
+    }
+  }
+
+  Future<String> getNewDerivationPathBy(
+    String walletID,
+    ScriptTypeInfo scriptType,
+    CoinType coinType,
+  ) async {
+    int accountIndex = 0;
+    var wallet = await getWallet(walletID);
+    if (wallet == null) {
+      throw Exception("Wallet not found");
+    }
+    String derivationPath =
+        "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
+    while (true) {
+      if (_isDerivationPathExist(wallet.accounts, derivationPath)) {
+        accountIndex++;
+      } else {
+        return derivationPath;
+      }
+    }
+  }
+
+  bool _isDerivationPathExist(
+    List<AccountModel> accounts,
+    String derivationPath,
+  ) {
+    for (var element in accounts) {
+      var left = element.derivationPath;
+      if (left == derivationPath) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Future<void> createWalletAccount(int walletID, ScriptTypeInfo scriptType,
+  //     String label, FiatCurrency fiatCurrency,
+  //     {int internal = 0}) async {
+  //   await WalletManager.addWalletAccount(
+  //       walletID, scriptType, label, fiatCurrency);
+
+  //   /// update cache,
+  //   walletsData = await _getFromDB();
+  //   dataUpdateController.add(DataUpdated("some data Updated"));
+  // }
+
+  Future<ApiWalletAccount> createWalletAccount(
+    String walletID,
+    CreateWalletAccountReq request,
+    FiatCurrency fiatCurrency,
+  ) async {
+    var walletAccount = await walletClient.createWalletAccount(
+        walletId: walletID, req: request);
+
+    walletAccount = await walletClient.updateWalletAccountFiatCurrency(
+      walletId: walletID,
+      walletAccountId: walletAccount.id,
+      newFiatCurrency: fiatCurrency,
+    );
+    // TODO:: fix me
+    var wallet = await getWallet(walletID);
+    _processApiWalletAccountData(wallet!.wallet.id!, walletAccount);
+
+    return walletAccount;
   }
 
   Future<void> updateWallet({required WalletModel wallet}) async {
@@ -224,47 +297,74 @@ class WalletsDataProvider implements DataProvider {
     }
   }
 
-  Future<int> insertOrUpdateAccount(
-    int walletID,
-    String labelEncrypted,
-    int scriptType,
-    String derivationPath,
-    String serverAccountID,
-    FiatCurrency fiatCurrency, {
-    bool initialize = false,
-  }) async {
-    int accountID = -1;
-    AccountModel? account =
-        await accountDao.findByServerAccountID(serverAccountID);
-    DateTime now = DateTime.now();
-    if (account != null) {
-      accountID = account.id ?? -1;
-      account.walletID = walletID;
-      account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
-      account.scriptType = scriptType;
-      account.fiatCurrency = fiatCurrency.name.toUpperCase();
-      await accountDao.update(account);
-    } else {
-      account = AccountModel(
-          id: null,
-          walletID: walletID,
-          derivationPath: derivationPath,
-          label: labelEncrypted.base64decode(),
-          scriptType: scriptType,
-          fiatCurrency: fiatCurrency.name.toUpperCase(),
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          serverAccountID: serverAccountID);
-      accountID = await accountDao.insert(account);
-    }
+  void updateSelected(String? serverWalletID, String? serverAccountID) {
+    selectedServerWalletID = serverWalletID ?? "";
+    selectedServerWalletAccountID = serverAccountID ?? "";
+    // dataUpdateController.add(DataUpdated("some data Updated"));
+  }
 
-    if (initialize == false) {
-      /// update cache,
-      /// TODO:: improve performance here
-      walletsData = await _getFromDB();
-      dataUpdateController.add(DataUpdated("some data Updated"));
+  ///# DB operations
+
+  /// process wallet data received from Api response, save it
+  Future<int> _processApiWalletData(ApiWalletData apiWalletData) async {
+    String serverWalletID = apiWalletData.wallet.id;
+    return await insertOrUpdateWallet(
+      userID: 0,
+      // this need a string userID
+      name: apiWalletData.wallet.name,
+      encryptedMnemonic: apiWalletData.wallet.mnemonic!,
+      passphrase: apiWalletData.wallet.hasPassphrase,
+      imported: apiWalletData.wallet.isImported,
+      priority: apiWalletData.wallet.priority,
+      status: apiWalletData.wallet.status,
+      type: apiWalletData.wallet.type,
+      fingerprint: apiWalletData.wallet.fingerprint ?? "",
+      publickey: apiWalletData.wallet.publicKey,
+      serverWalletID: serverWalletID,
+      initialize: true,
+    );
+  }
+
+  /// process wallet account data received from Api response, save it
+  Future<int> _processApiWalletAccountData(
+    int walletID,
+    ApiWalletAccount apiWalletAcct,
+  ) async {
+    return await insertOrUpdateAccount(
+      walletID, //use server wallet id
+      apiWalletAcct.label,
+      apiWalletAcct.scriptType,
+      apiWalletAcct.derivationPath,
+      // "${apiWalletAcct.derivationPath}/0",
+      apiWalletAcct.id,
+      apiWalletAcct.fiatCurrency,
+      initialize: true,
+    );
+  }
+
+  /// add email address to wallet account
+  Future<void> _addEmailAddressToWalletAccount(
+    String serverWalletID,
+    String serverAccountID,
+    ApiEmailAddress address,
+  ) async {
+    AddressModel? addressModel = await addressDao.findByServerID(address.id);
+    if (addressModel == null) {
+      addressModel = AddressModel(
+        id: null,
+        email: address.email,
+        serverID: address.id,
+        serverWalletID: serverWalletID,
+        serverAccountID: serverAccountID,
+      );
+      await addressDao.insert(addressModel);
+    } else {
+      addressModel.email = address.email;
+      addressModel.serverID = address.id;
+      addressModel.serverWalletID = serverWalletID;
+      addressModel.serverAccountID = serverAccountID;
+      await addressDao.update(addressModel);
     }
-    return accountID;
   }
 
   Future<int> insertOrUpdateWallet({
@@ -320,25 +420,47 @@ class WalletsDataProvider implements DataProvider {
     return walletID;
   }
 
-  Future<void> _addEmailAddressToWalletAccount(String serverWalletID,
-      String serverAccountID, ApiEmailAddress address) async {
-    AddressModel? addressModel = await addressDao.findByServerID(address.id);
-    if (addressModel == null) {
-      addressModel = AddressModel(
-        id: null,
-        email: address.email,
-        serverID: address.id,
-        serverWalletID: serverWalletID,
-        serverAccountID: serverAccountID,
-      );
-      await addressDao.insert(addressModel);
+  Future<int> insertOrUpdateAccount(
+    int walletID,
+    String labelEncrypted,
+    int scriptType,
+    String derivationPath,
+    String serverAccountID,
+    FiatCurrency fiatCurrency, {
+    bool initialize = false,
+  }) async {
+    int accountID = -1;
+    AccountModel? account =
+        await accountDao.findByServerAccountID(serverAccountID);
+    DateTime now = DateTime.now();
+    if (account != null) {
+      accountID = account.id ?? -1;
+      account.walletID = walletID;
+      account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
+      account.scriptType = scriptType;
+      account.fiatCurrency = fiatCurrency.name.toUpperCase();
+      await accountDao.update(account);
     } else {
-      addressModel.email = address.email;
-      addressModel.serverID = address.id;
-      addressModel.serverWalletID = serverWalletID;
-      addressModel.serverAccountID = serverAccountID;
-      await addressDao.update(addressModel);
+      account = AccountModel(
+          id: null,
+          walletID: walletID,
+          derivationPath: derivationPath,
+          label: labelEncrypted.base64decode(),
+          scriptType: scriptType,
+          fiatCurrency: fiatCurrency.name.toUpperCase(),
+          createTime: now.millisecondsSinceEpoch ~/ 1000,
+          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+          serverAccountID: serverAccountID);
+      accountID = await accountDao.insert(account);
     }
+
+    if (initialize == false) {
+      /// update cache,
+      /// TODO:: improve performance here
+      walletsData = await _getFromDB();
+      dataUpdateController.add(DataUpdated("some data Updated"));
+    }
+    return accountID;
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
@@ -16,7 +15,6 @@ import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -128,7 +126,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 children: [
                                   const SizedBox(width: defaultPadding),
                                   Text(
-                                    "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
                                     style: FontManager.captionRegular(
                                         ProtonColors.textWeak),
                                   ),
@@ -136,16 +134,13 @@ class SendView extends ViewBase<SendViewModel> {
                                   GestureDetector(
                                     onTap: () {
                                       // TODO:: fix logic to remain more accurate fee
-                                      viewModel.amountTextController
-                                          .text = ExchangeCalculator
-                                              .getNotionalInFiatCurrency(
-                                                  Provider.of<UserSettingProvider>(
-                                                          context)
-                                                      .walletUserSetting
-                                                      .exchangeRate,
-                                                  viewModel.balance)
-                                          .toStringAsFixed(
-                                              defaultDisplayDigits);
+                                      viewModel.amountTextController.text =
+                                          ExchangeCalculator
+                                                  .getNotionalInFiatCurrency(
+                                                      viewModel.exchangeRate,
+                                                      viewModel.balance)
+                                              .toStringAsFixed(
+                                                  defaultDisplayDigits);
                                       viewModel.splitAmountToRecipients();
                                     },
                                     child: Text(S.of(context).send_all,
@@ -161,6 +156,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 labelText: S.of(context).amount,
                                 textController: viewModel.amountTextController,
                                 myFocusNode: viewModel.amountFocusNode,
+                                exchangeRate: viewModel.exchangeRate,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: true),
@@ -168,8 +164,8 @@ class SendView extends ViewBase<SendViewModel> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^\d*\.?\d*$'))
                                 ],
-                                userSettingProvider:
-                                    Provider.of<UserSettingProvider>(context),
+                                bitcoinUnit: viewModel
+                                    .userSettingsDataProvider.bitcoinUnit,
                                 validation: (String value) {
                                   return "";
                                 },
@@ -355,16 +351,11 @@ class SendView extends ViewBase<SendViewModel> {
                                             amountInSatoshi:
                                                 protonRecipient.amountInSATS ??
                                                     0,
-                                            bitcoinUnit: Provider.of<
-                                                        UserSettingProvider>(
-                                                    context)
-                                                .walletUserSetting
+                                            bitcoinUnit: viewModel
+                                                .userSettingsDataProvider
                                                 .bitcoinUnit,
-                                            exchangeRate: Provider.of<
-                                                        UserSettingProvider>(
-                                                    context)
-                                                .walletUserSetting
-                                                .exchangeRate)
+                                            exchangeRate:
+                                                viewModel.exchangeRate)
                                         : null,
                                   ),
                                   const Divider(
@@ -382,11 +373,10 @@ class SendView extends ViewBase<SendViewModel> {
                                     context, viewModel);
                               },
                               content:
-                                  "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
+                                  "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
                               memo: ExchangeCalculator.getBitcoinUnitLabel(
-                                  Provider.of<UserSettingProvider>(context)
-                                      .walletUserSetting
-                                      .bitcoinUnit,
+                                  viewModel
+                                      .userSettingsDataProvider.bitcoinUnit,
                                   estimatedFee),
                             ),
                             const Divider(
@@ -630,14 +620,11 @@ class SendView extends ViewBase<SendViewModel> {
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
+          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       Text(
           ExchangeCalculator.getBitcoinUnitLabel(
-              Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .bitcoinUnit,
-              amountInSATS),
+              viewModel.userSettingsDataProvider.bitcoinUnit, amountInSATS),
           style: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
@@ -646,24 +633,16 @@ class SendView extends ViewBase<SendViewModel> {
       BuildContext context, SendViewModel viewModel, int estimatedFee) {
     double estimatedFeeInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
-            Provider.of<UserSettingProvider>(context)
-                .walletUserSetting
-                .exchangeRate,
-            estimatedFee);
+            viewModel.exchangeRate, estimatedFee);
     double estimatedTotalValueInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
-            Provider.of<UserSettingProvider>(context)
-                .walletUserSetting
-                .exchangeRate,
-            viewModel.totalAmountInSAT);
+            viewModel.exchangeRate, viewModel.totalAmountInSAT);
     return TransactionHistoryItem(
       title: S.of(context).trans_total,
       content:
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
+          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
       memo: ExchangeCalculator.getBitcoinUnitLabel(
-          Provider.of<UserSettingProvider>(context)
-              .walletUserSetting
-              .bitcoinUnit,
+          viewModel.userSettingsDataProvider.bitcoinUnit,
           (viewModel.totalAmountInSAT + estimatedFee)),
     );
   }
@@ -694,6 +673,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     viewModel.addressAutoCompleteCallback();
                                   }),
                               const SizedBox(height: 5),
+
                               /// TODO:: add account selector or use default one for wallet view
                               // if (Provider.of<ProtonWalletProvider>(context)
                               //             .protonWallet
@@ -730,7 +710,7 @@ class SendView extends ViewBase<SendViewModel> {
                                   children: [
                                     const SizedBox(width: defaultPadding),
                                     Text(
-                                      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()} ${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
                                       style: FontManager.captionRegular(
                                           ProtonColors.textWeak),
                                     ),
@@ -1007,10 +987,9 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
       break;
   }
   String estimatedFeeInFiatCurrency =
-      "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
+      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
   String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
-      Provider.of<UserSettingProvider>(context).walletUserSetting.bitcoinUnit,
-      estimatedFee);
+      viewModel.userSettingsDataProvider.bitcoinUnit, estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
     Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",
