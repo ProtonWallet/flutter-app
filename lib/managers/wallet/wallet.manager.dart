@@ -988,7 +988,7 @@ class WalletManager implements Manager {
 
   static Future<TransactionDetailFromBlockChain?>
       getTransactionDetailsFromBlockStream(String txid) async {
-    String baseUrl = "${appConfig.esploraBaseUrl}api";
+    String baseUrl = "${appConfig.esploraApiUrl}api";
     try {
       final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
       if (response.statusCode == 200) {

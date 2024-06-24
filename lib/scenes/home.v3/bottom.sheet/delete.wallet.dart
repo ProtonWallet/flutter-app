@@ -11,14 +11,14 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class DeleteWalletSheet {
   static void show(BuildContext context, HomeViewModel viewModel,
-      WalletModel walletModel, bool hasBalance,
+      WalletMenuModel walletMenuModel, bool hasBalance,
       {bool isInvalidWallet = false}) {
     HomeModalBottomSheet.show(context,
         child: Column(
@@ -46,7 +46,7 @@ class DeleteWalletSheet {
                             Text(
                               S
                                   .of(context)
-                                  .confirm_to_delete_wallet(walletModel.name),
+                                  .confirm_to_delete_wallet(walletMenuModel.walletName),
                               style: FontManager.titleHeadline(
                                   ProtonColors.textNorm),
                               textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ class DeleteWalletSheet {
                                   Clipboard.setData(ClipboardData(
                                           text: await WalletManager
                                               .getMnemonicWithID(
-                                                  walletModel.id!)))
+                                              walletMenuModel.walletModel.id!)))
                                       .then((_) {
                                     if (context.mounted) {
                                       logger.i(S.of(context).copied_mnemonic);
@@ -114,7 +114,7 @@ class DeleteWalletSheet {
                                   Navigator.of(context)
                                       .pop(); // pop up this bottomSheet
                                 }
-                                await viewModel.deleteWallet(walletModel);
+                                await viewModel.deleteWallet(walletMenuModel.walletModel);
                                 if (context.mounted) {
                                   CommonHelper.showSnackbar(
                                       context, S.of(context).wallet_deleted);

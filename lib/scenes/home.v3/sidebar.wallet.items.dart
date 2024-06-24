@@ -10,7 +10,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
-import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -20,7 +19,7 @@ typedef SelectedCallback = void Function(
   AccountMenuModel account,
 );
 typedef DeleteCallback = void Function(
-  WalletModel wallet,
+  WalletMenuModel wallet,
   bool hasBalance,
   bool isInvalidWallet,
 );
@@ -184,7 +183,7 @@ class SidebarWalletItems extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              // onDelete?.call(wlModel.wallet, false, true);
+              onDelete?.call(wlModel, false, true);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

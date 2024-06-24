@@ -426,7 +426,7 @@ class WalletSettingSheet {
                               FontManager.body2Median(ProtonColors.textNorm)),
                       onTap: () {
                         AdvanceWalletSettingSheet.show(
-                            context, viewModel, userWallet);
+                            context, viewModel, walletMenuModel);
                       },
                       iconColor: ProtonColors.textHint,
                     ),
