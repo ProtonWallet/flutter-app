@@ -397,10 +397,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
       bitcoinUnitNotifier.addListener(() async {
         updateBitcoinUnit(bitcoinUnitNotifier.value);
-        userSettingProvider.updateBitcoinUnit(bitcoinUnitNotifier.value);
       });
 
-      transactionSearchController.addListener((){
+      transactionSearchController.addListener(() {
         datasourceStreamSinkAdd();
       });
 
@@ -521,6 +520,7 @@ class HomeViewModelImpl extends HomeViewModel {
       var userSettings = await proton_api.bitcoinUnit(symbol: symbol);
       await dataProviderManager.userSettingsDataProvider
           .insertUpdate(userSettings);
+      dataProviderManager.userSettingsDataProvider.updateBitcoinUnit(symbol);
       loadUserSettings();
     }
   }
@@ -960,7 +960,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateTransactionListFilterBy(String filterBy){
+  void updateTransactionListFilterBy(String filterBy) {
     transactionListFilterBy = filterBy;
     datasourceStreamSinkAdd();
   }

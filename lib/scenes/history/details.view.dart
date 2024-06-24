@@ -276,7 +276,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           ButtonV5(
                               onPressed: () {
                                 launchUrl(Uri.parse(
-                                    "${appConfig.esploraBaseUrl}search?q=${viewModel.txid}"));
+                                    "${appConfig.esploraWebpageUrl}search?q=${viewModel.txid}"));
                               },
                               text: S.of(context).view_on_blockstream,
                               width: MediaQuery.of(context).size.width,

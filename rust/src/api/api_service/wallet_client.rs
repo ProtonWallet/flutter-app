@@ -246,27 +246,27 @@ impl WalletClient {
         }
     }
 
-    // pub async fn update_wallet_transaction_external_sender(
-    //     &self,
-    //     wallet_id: String,
-    //     wallet_account_id: String,
-    //     wallet_transaction_id: String,
-    //     sender: String,
-    // ) -> Result<WalletTransaction, BridgeError> {
-    //     let result = self
-    //         .inner
-    //         .update_wallet_transaction_external_sender(
-    //             wallet_id,
-    //             wallet_account_id,
-    //             wallet_transaction_id,
-    //             sender,
-    //         )
-    //         .await;
-    //     match result {
-    //         Ok(response) => Ok(response.into()),
-    //         Err(err) => Err(err.into()),
-    //     }
-    // }
+    pub async fn update_external_wallet_transaction_sender(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        wallet_transaction_id: String,
+        sender: String,
+    ) -> Result<WalletTransaction, BridgeError> {
+        let result = self
+            .inner
+            .update_external_wallet_transaction_sender(
+                wallet_id,
+                wallet_account_id,
+                wallet_transaction_id,
+                sender,
+            )
+            .await;
+        match result {
+            Ok(response) => Ok(response.into()),
+            Err(err) => Err(err.into()),
+        }
+    }
 
     pub async fn set_wallet_transaction_private_flag(
         &self,

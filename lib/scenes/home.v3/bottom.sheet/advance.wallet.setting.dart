@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -10,7 +10,7 @@ import 'package:wallet/theme/theme.font.dart';
 
 class AdvanceWalletSettingSheet {
   static void show(
-      BuildContext context, HomeViewModel viewModel, WalletModel userWallet) {
+      BuildContext context, HomeViewModel viewModel, WalletMenuModel walletMenuModel) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -49,8 +49,8 @@ class AdvanceWalletSettingSheet {
                 DeleteWalletSheet.show(
                   context,
                   viewModel,
-                  userWallet,
-                  userWallet.balance > 0,
+                  walletMenuModel,
+                  walletMenuModel.walletModel.balance > 0,
                 );
               }),
         ],

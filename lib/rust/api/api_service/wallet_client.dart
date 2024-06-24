@@ -188,6 +188,20 @@ class WalletClient extends RustOpaque {
           walletTransactionId: walletTransactionId,
           hint: hint);
 
+  Future<WalletTransaction> updateExternalWalletTransactionSender(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId,
+          required String sender,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientUpdateExternalWalletTransactionSender(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          walletTransactionId: walletTransactionId,
+          sender: sender,
+          hint: hint);
+
   Future<ApiWalletAccount> updateWalletAccountFiatCurrency(
           {required String walletId,
           required String walletAccountId,
