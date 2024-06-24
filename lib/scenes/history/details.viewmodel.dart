@@ -6,10 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
@@ -30,14 +28,14 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
-import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
@@ -104,8 +102,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.walletKeysProvider,
   );
 
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-  late Wallet _wallet;
+  // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
+  late FrbAccount _frbAccount;
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();
 
@@ -150,9 +148,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       );
 
       /// get user key
-      UserKey userkey = await userManager.getFirstKey();
-      String userPrivateKey = userkey.privateKey;
-      String userPassphrase = userkey.passphrase;
+      var firstUserKey = await userManager.getFirstKey();
+      String userPrivateKey = firstUserKey.privateKey;
+      String userPassphrase = firstUserKey.passphrase;
       WalletKey? walletKey = await walletKeysProvider.getWalletKey(
         walletModel.serverWalletID,
       );
@@ -171,29 +169,31 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       for (TransactionModel transactionModel
           in serverTransactionData.transactions) {
-        String _txid = proton_crypto.decrypt(
+        String txid = proton_crypto.decrypt(
             userPrivateKey, userPassphrase, transactionModel.transactionID);
-        if (_txid.isEmpty) {
+        if (txid.isEmpty) {
           for (AddressKey addressKey in addressKeys) {
             try {
-              _txid = addressKey.decrypt(transactionModel.transactionID);
+              txid = addressKey.decrypt(transactionModel.transactionID);
             } catch (e) {
               // logger.e(e.toString());
             }
-            if (_txid.isNotEmpty) {
+            if (txid.isNotEmpty) {
               break;
             }
           }
         }
-        transactionModel.externalTransactionID = utf8.encode(_txid);
+        transactionModel.externalTransactionID = utf8.encode(txid);
       }
 
       transactionModel =
           findServerTransactionByTXID(serverTransactionData.transactions, txid);
 
       datasourceChangedStreamController.sinkAddSafe(this);
-      _wallet = (await WalletManager.loadWalletWithID(walletID, accountID))!;
-      List<TransactionDetails> history = await _lib.getAllTransactions(_wallet);
+      _frbAccount =
+          (await WalletManager.loadWalletWithID(walletID, accountID))!;
+      List<FrbTransactionDetails> history = await _frbAccount.getTransactions();
+      strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
 
       try {
@@ -208,14 +208,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
         if (transaction.txid == txid) {
-          blockConfirmTimestamp = transaction.confirmationTime?.timestamp;
+          /// TODO:: fix me
+          blockConfirmTimestamp = 0; //transaction.confirmationTime?.timestamp;
           amount =
               transaction.received.toDouble() - transaction.sent.toDouble();
-          fee = transaction.fee!.toDouble();
+          fee = transaction.fees!.toDouble();
           isSend = amount < 0;
           // bdk sent include fee, so need add back to make display send amount without fee
           if (isSend) {
-            amount += transaction.fee ?? 0;
+            amount += transaction.fees ?? 0;
           }
           foundedInBDKHistory = true;
 
@@ -231,7 +232,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                     in transactionDetailFromBlockChain.recipients) {
                   if (hasFindMineBitcoinAddress == false) {
                     if (await WalletManager.isMineBitcoinAddress(
-                        _wallet, recipient.bitcoinAddress)) {
+                        _frbAccount, recipient.bitcoinAddress)) {
                       hasFindMineBitcoinAddress = true;
                       continue;
                     }
@@ -259,7 +260,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               for (Recipient recipient
                   in transactionDetailFromBlockChain.recipients) {
                 if (await WalletManager.isMineBitcoinAddress(
-                    _wallet, recipient.bitcoinAddress)) {
+                    _frbAccount, recipient.bitcoinAddress)) {
                   selfBitcoinAddress = recipient.bitcoinAddress;
                   break;
                 }
@@ -276,8 +277,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
         String encryptedLabel = await WalletKeyHelper.encrypt(secretKey!, "");
 
-        var key = await userManager.getFirstKey();
-        String userPrivateKey = key.privateKey;
+        var firstUserKey = await userManager.getFirstKey();
+        String userPrivateKey = firstUserKey.privateKey;
 
         String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
         DateTime now = DateTime.now();
@@ -569,18 +570,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String jsonString = jsonEncode(jsonMap);
     String encryptedName = userkey.encrypt(jsonString);
     transactionModel!.sender = encryptedName;
-    WalletTransaction _ =
-        await walletClient.updateWalletTransactionExternalSender(
-            walletId: transactionModel!.serverWalletID,
-            walletAccountId: transactionModel!.serverAccountID,
-            walletTransactionId: transactionModel!.serverID,
-            sender: encryptedName);
-    await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
-        notifyDataUpdate: true);
+    // WalletTransaction _ =
+    //     await walletClient.updateWalletTransactionExternalSender(
+    //         walletId: transactionModel!.serverWalletID,
+    //         walletAccountId: transactionModel!.serverAccountID,
+    //         walletTransactionId: transactionModel!.serverID,
+    //         sender: encryptedName);
+    // await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
+    //     notifyDataUpdate: true);
 
-    /// walletTransaction update event will trigger ServerTransactionDataProvider update
-    /// then it will notify wallet transaction bloc will update
-    fromEmail = jsonString;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    // /// walletTransaction update event will trigger ServerTransactionDataProvider update
+    // /// then it will notify wallet transaction bloc will update
+    // fromEmail = jsonString;
+    // datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';

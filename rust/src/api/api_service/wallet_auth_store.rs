@@ -6,7 +6,7 @@ use andromeda_api::{
 use flutter_rust_bridge::frb;
 use log::info;
 
-use crate::errors::BridgeError;
+use crate::BridgeError;
 use tokio::sync::Mutex;
 pub type DartFnFuture<T> = Pin<Box<dyn Future<Output = T> + Send + 'static>>;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;

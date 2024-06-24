@@ -296,8 +296,8 @@ class WalletTransaction {
   final String? label;
   final String transactionId;
   final String transactionTime;
-  final bool isSuspicious;
-  final bool isPrivate;
+  final int isSuspicious;
+  final int isPrivate;
   final ProtonExchangeRate? exchangeRate;
   final String? hashedTransactionId;
   final String? subject;

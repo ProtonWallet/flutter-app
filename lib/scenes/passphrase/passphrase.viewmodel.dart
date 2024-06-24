@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -43,7 +46,13 @@ abstract class SetupPassPhraseViewModel
 }
 
 class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
-  SetupPassPhraseViewModelImpl(super.coordinator, super.strMnemonic);
+  SetupPassPhraseViewModelImpl(
+    super.coordinator,
+    super.strMnemonic,
+    this.createWalletBloc,
+  );
+
+  final CreateWalletBloc createWalletBloc;
 
   final datasourceChangedStreamController =
       StreamController<SetupPassPhraseViewModel>.broadcast();
@@ -143,12 +152,22 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     try {
       String walletName = nameTextController.text;
       String strPassphrase = passphraseTextController.text;
-      await WalletManager.createWallet(
-          walletName,
-          strMnemonic,
-          WalletModel.importByUser,
-          defaultFiatCurrency, /// TODO:: use fiatCurrency from creation selected
-          strPassphrase);
+      ScriptTypeInfo scriptTypeInfo = appConfig.scriptTypeInfo;
+
+      var apiWallet = await createWalletBloc.createWallet(
+        walletName,
+        strMnemonic,
+        appConfig.coinType.network,
+        WalletModel.importByUser,
+        strPassphrase,
+      );
+
+      await createWalletBloc.createWalletAccount(
+        apiWallet.wallet.id,
+        scriptTypeInfo,
+        "My wallet account",
+        defaultFiatCurrency,
+      );
 
       await WalletManager.autoBindEmailAddresses();
       await Future.delayed(

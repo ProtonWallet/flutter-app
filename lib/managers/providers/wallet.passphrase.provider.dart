@@ -4,18 +4,17 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 
-class WalletPassphraseProvider implements DataProvider {
+class WalletPassphraseProvider extends DataProvider {
   final SecureStorageManager storage;
 
   List<WalletPassphrase>? walletPassphrases;
 
   WalletPassphraseProvider(this.storage);
 
-  @override
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 
-  Future<String?> getWalletPassphrase(String walletID) async {
+  Future<String?> getPassphrase(String walletID) async {
     var passphrases = await _getWalletPassphrases();
     var pwd = passphrases
         .where((passphrase) => passphrase.walletID == walletID)

@@ -18,8 +18,7 @@ class LocalTransactionData {
   });
 }
 
-class LocalTransactionDataProvider implements DataProvider {
-  @override
+class LocalTransactionDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
   final WalletClient walletClient;
@@ -44,7 +43,8 @@ class LocalTransactionDataProvider implements DataProvider {
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
         List<AccountModel> accounts =
-            (await accountDao.findAllByWalletID(walletModel.id!)).cast<AccountModel>();
+            (await accountDao.findAllByWalletID(walletModel.id!))
+                .cast<AccountModel>();
         for (AccountModel accountModel in accounts) {
           List<TransactionInfoModel> transactions = await transactionInfoDao
               .findAllByServerAccountID(accountModel.serverAccountID);
@@ -62,8 +62,9 @@ class LocalTransactionDataProvider implements DataProvider {
       WalletModel walletModel, AccountModel accountModel) async {
     List<LocalTransactionData> localTransactionsData =
         await getLocalTransactionData();
-    for(LocalTransactionData localTransactionData in localTransactionsData){
-      if (localTransactionData.accountModel.serverAccountID == accountModel.serverAccountID){
+    for (LocalTransactionData localTransactionData in localTransactionsData) {
+      if (localTransactionData.accountModel.serverAccountID ==
+          accountModel.serverAccountID) {
         return localTransactionData;
       }
     }
@@ -82,8 +83,8 @@ class LocalTransactionDataProvider implements DataProvider {
   Future<void> insert(TransactionInfoModel transactionInfoModel) async {
     await transactionInfoDao.insert(transactionInfoModel);
     transactionDataList = await _getFromDB();
-
-    /// TODO:: broadcast the change to features
+    // dataUpdateController.add(DataUpdated("Local transaction data update"));
+    // /// TODO:: enhance performance
   }
 
   @override

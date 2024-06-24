@@ -3,9 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
 import '../../proton_api/auth_credential.dart';
-import '../../proton_api/errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // The type `GLOBAL_SESSION_DART_CALLBACK` is not used by any `pub` functions, thus it is ignored.

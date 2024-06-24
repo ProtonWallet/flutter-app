@@ -96,6 +96,7 @@ class AppViewModelImpl extends AppViewModel {
     /// data provider manager
     var dataProviderManager = DataProviderManager(
       storage,
+      shared,
       apiServiceManager.getApiService(),
       dbConnection,
     );
@@ -111,7 +112,8 @@ class AppViewModelImpl extends AppViewModel {
     WalletManager.protonWallet = protonWallet;
 
     /// event loop
-    serviceManager.register(EventLoop(protonWallet, userManager, dataProviderManager));
+    serviceManager
+        .register(EventLoop(protonWallet, userManager, dataProviderManager));
 
     if (await userManager.sessionExists()) {
       await userManager.tryRestoreUserInfo();

@@ -5,7 +5,6 @@
 
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'user_settings.dart';
 
 class ApiCountry {
   final String code;
@@ -73,7 +72,7 @@ enum PaymentMethod {
 class Quote {
   final String bitcoinAmount;
   final String fiatAmount;
-  final FiatCurrency fiatCurrencySymbol;
+  final String fiatCurrencySymbol;
   final String networkFee;
   final String paymentGatewayFee;
   final PaymentMethod paymentMethod;

@@ -7,7 +7,7 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 
-class WalletKeysProvider implements DataProvider {
+class WalletKeysProvider extends DataProvider {
   final SecureStorageManager storage;
   final WalletClient walletClient;
   final key = "proton_wallet_k_provider_key";
@@ -15,38 +15,28 @@ class WalletKeysProvider implements DataProvider {
 
   WalletKeysProvider(this.storage, this.walletClient);
 
-  @override
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 
   Future<WalletKey?> getWalletKey(String walletID) async {
-    if (walletKeys != null) {
-      var key = walletKeys
-          ?.where((key) => key.walletId == walletID)
-          .toList()
-          .firstOrNull;
-      return key;
+    var walletKey = _findFromMemory(walletID);
+    if (walletKey != null) {
+      return walletKey;
     }
 
     walletKeys = await _getWalletKeys();
-    if (walletKeys != null) {
-      var key = walletKeys
-          ?.where((key) => key.walletId == walletID)
-          .toList()
-          .firstOrNull;
-      return key;
+    walletKey = _findFromMemory(walletID);
+    if (walletKey != null) {
+      return walletKey;
     }
 
-    // fetch from server
-    List<ApiWalletData> apiWallets = await walletClient.getWallets();
-    List<WalletKey> tmpKeys = [];
-    for (var apiWallet in apiWallets) {
-      var key = WalletKey.fromApiWalletKey(apiWallet.walletKey);
-      tmpKeys.add(key);
-    }
-    await saveWalletKeys(tmpKeys);
+    await _fetchFromServer();
 
     walletKeys = await _getWalletKeys();
+    return _findFromMemory(walletID);
+  }
+
+  WalletKey? _findFromMemory(String walletID) {
     if (walletKeys != null) {
       var key = walletKeys
           ?.where((key) => key.walletId == walletID)
@@ -57,6 +47,18 @@ class WalletKeysProvider implements DataProvider {
     return null;
   }
 
+  /// fetch from server
+  Future<void> _fetchFromServer() async {
+    List<ApiWalletData> apiWallets = await walletClient.getWallets();
+    List<WalletKey> tmpKeys = [];
+    for (var apiWallet in apiWallets) {
+      var key = WalletKey.fromApiWalletKey(apiWallet.walletKey);
+      tmpKeys.add(key);
+    }
+    await saveWalletKeys(tmpKeys);
+  }
+
+  /// fetch from local cache
   Future<List<WalletKey>?> _getWalletKeys() async {
     if (walletKeys != null) {
       return walletKeys!;
@@ -72,6 +74,7 @@ class WalletKeysProvider implements DataProvider {
     return null;
   }
 
+  /// save the wallet key to local cache, and refresh the memery cache
   Future<void> saveWalletKeys(List<WalletKey> keys) async {
     if (keys.isEmpty) {
       logger.e("walle keys is empty");

@@ -143,3 +143,7 @@ untranslated_strings.txt
 devtools_options.yaml
 env.var.g.dart
 .env
+
+
+# tmp databases
+*.sqlite

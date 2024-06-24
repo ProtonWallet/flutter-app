@@ -143,6 +143,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get drawerMenu =>
       const SvgGenImage('assets/images/icon/drawer_menu.svg');
 
+  /// File path: assets/images/icon/edit_unknown.svg
+  SvgGenImage get editUnknown =>
+      const SvgGenImage('assets/images/icon/edit_unknown.svg');
+
   /// File path: assets/images/icon/ic-arrow-out-from-rectanglesignout.svg
   SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
       'assets/images/icon/ic-arrow-out-from-rectanglesignout.svg');
@@ -324,6 +328,7 @@ class $AssetsImagesIconGen {
         discoverPlaceholder4,
         doTransactions,
         drawerMenu,
+        editUnknown,
         icArrowOutFromRectanglesignout,
         icArrowRightArrowLeft,
         icArrowRotateRight,

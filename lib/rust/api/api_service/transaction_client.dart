@@ -3,8 +3,8 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
-import '../../proton_api/errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_api_service.dart';
 
@@ -25,30 +25,6 @@ class TransactionClient extends RustOpaque {
     rustArcDecrementStrongCountPtr: RustLib
         .instance.api.rust_arc_decrement_strong_count_TransactionClientPtr,
   );
-
-  Future<String> broadcastRawTransaction(
-          {required String signedTransactionHex,
-          required String walletId,
-          required String walletAccountId,
-          String? label,
-          String? exchangeRateId,
-          String? transactionTime,
-          String? addressId,
-          String? subject,
-          String? body,
-          dynamic hint}) =>
-      RustLib.instance.api.transactionClientBroadcastRawTransaction(
-          that: this,
-          signedTransactionHex: signedTransactionHex,
-          walletId: walletId,
-          walletAccountId: walletAccountId,
-          label: label,
-          exchangeRateId: exchangeRateId,
-          transactionTime: transactionTime,
-          addressId: addressId,
-          subject: subject,
-          body: body,
-          hint: hint);
 
   Future<BdkTransaction> getRawTransaction(
           {required String txid, dynamic hint}) =>

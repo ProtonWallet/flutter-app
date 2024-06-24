@@ -6,10 +6,8 @@ import 'package:ramp_flutter/offramp_sale.dart';
 import 'package:ramp_flutter/onramp_purchase.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 import 'package:ramp_flutter/send_crypto_payload.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/env.var.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
@@ -18,6 +16,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
@@ -26,7 +25,6 @@ import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart'
 import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   BuyBitcoinViewModel(super.coordinator);
@@ -56,7 +54,7 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   ///
   void selectCountry(String code);
-  void selectCurrency(String code);
+  void selectCurrency(String fiatCurrency);
   void selectAmount(String amount);
 
   void pay(SelectedInfoModel selected);
@@ -96,8 +94,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   @override
   bool get supportOffRamp => false;
   String apiKey = '';
-
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
   @override
   Future<void> loadData() async {
@@ -238,9 +234,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> getAddress(WalletModel? walletModel, AccountModel? accountModel,
       {bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      Wallet? wallet;
+      FrbAccount? account;
       if (init) {
-        wallet = await WalletManager.loadWalletWithID(
+        account = await WalletManager.loadWalletWithID(
             walletModel.id!, accountModel.id!);
       }
 
@@ -254,8 +250,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         addressIndex = await WalletManager.getBitcoinAddressIndex(
             walletModel.serverWalletID, accountModel.serverAccountID);
       }
-      var addressInfo =
-          await _lib.getAddress(wallet!, addressIndex: addressIndex);
+      var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
@@ -303,8 +298,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   @override
-  void selectCurrency(String code) {
-    bloc.add(SelectCurrencyEvent(code));
+  void selectCurrency(String fiatCurrency) {
+    bloc.add(SelectCurrencyEvent(fiatCurrency));
   }
 
   @override

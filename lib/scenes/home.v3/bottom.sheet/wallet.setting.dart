@@ -39,7 +39,7 @@ class WalletSettingSheet {
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return BlocBuilder<WalletListBloc, WalletListState>(
-          bloc: viewModel.walletBloc,
+          bloc: viewModel.walletListBloc,
           builder: (context, state) {
             /// TODO:: change to walletMenuModel
 
@@ -187,7 +187,7 @@ class WalletSettingSheet {
                       height: defaultPadding,
                     ),
                     BlocBuilder<WalletListBloc, WalletListState>(
-                        bloc: viewModel.walletBloc,
+                        bloc: viewModel.walletListBloc,
                         builder: (context, state) {
                           return Column(children: [
                             for (WalletMenuModel walletMenuModel2

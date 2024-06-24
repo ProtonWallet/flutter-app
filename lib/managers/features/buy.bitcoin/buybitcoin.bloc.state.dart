@@ -6,6 +6,7 @@ class BuyBitcoinState extends Equatable {
   final bool isCountryLoaded;
   final bool isCurrencyLoaded;
   final bool isQutueLoaded;
+  final bool isQutueFailed;
 
   /// selected
   final SelectedInfoModel selectedModel;
@@ -28,6 +29,7 @@ class BuyBitcoinState extends Equatable {
     this.isCountryLoaded = false,
     this.isCurrencyLoaded = false,
     this.isQutueLoaded = false,
+    this.isQutueFailed = false,
     this.currencyNames = const [],
     this.quotes = const [],
   });
@@ -35,11 +37,12 @@ class BuyBitcoinState extends Equatable {
   BuyBitcoinState copyWith({
     bool? isCountryLoaded,
     bool? isCurrencyLoaded,
-    bool? isQutueLoaded,
     List<String>? countryCodes,
     List<String>? currencyNames,
     List<Quote>? quotes,
     SelectedInfoModel? selectedModel,
+    bool? isQutueFailed,
+    bool? isQutueLoaded,
   }) {
     return BuyBitcoinState(
       selectedModel: selectedModel ?? this.selectedModel,
@@ -49,6 +52,7 @@ class BuyBitcoinState extends Equatable {
       quotes: quotes ?? this.quotes,
       isCurrencyLoaded: isCurrencyLoaded ?? this.isCurrencyLoaded,
       isQutueLoaded: isQutueLoaded ?? this.isQutueLoaded,
+      isQutueFailed: isQutueFailed ?? this.isQutueFailed,
     );
   }
 

@@ -5,7 +5,7 @@ use bdk::blockchain::Blockchain as BdkBlockchain;
 use bdk::blockchain::{AnyBlockchain, GetBlockHash, GetHeight};
 use bdk::esplora_client::Builder;
 use bdk::{Error as BdkError, FeeRate};
-use esplora_client::AsyncClient;
+// use esplora_client::AsyncClient;
 use lazy_static::lazy_static;
 use log::debug;
 use std::collections::HashMap;
@@ -62,24 +62,26 @@ impl Blockchain {
         api: Arc<ProtonWalletApiClient>,
     ) -> Result<String, BdkError> {
         debug!("Creating new blockchain with api");
-        let async_client: AsyncClient = AsyncClient::from_client(esplora_config.base_url, api);
-        let mut esplora_blockchain = EsploraBlockchain::from_client(
-            async_client,
-            usize::try_from(esplora_config.stop_gap).unwrap(),
-        );
-        if let Some(concurrency) = esplora_config.concurrency {
-            esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
-        }
+        // let async_client: AsyncClient = AsyncClient::from_client(esplora_config.base_url, api);
+        // let mut esplora_blockchain = EsploraBlockchain::from_client(
+        //     async_client,
+        //     usize::try_from(esplora_config.stop_gap).unwrap(),
+        // );
+        // if let Some(concurrency) = esplora_config.concurrency {
+        //     esplora_blockchain = esplora_blockchain.with_concurrency(concurrency);
+        // }
 
-        let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
-        let id = rand::random::<char>().to_string();
-        persist_blockchain(
-            id.clone(),
-            Blockchain {
-                blockchain_mutex: Mutex::new(blockchain),
-            },
-        );
-        Ok(id)
+        // let blockchain = AnyBlockchain::Esplora(Box::new(esplora_blockchain));
+        // let id = rand::random::<char>().to_string();
+        // persist_blockchain(
+        //     id.clone(),
+        //     Blockchain {
+        //         blockchain_mutex: Mutex::new(blockchain),
+        //     },
+        // );
+        // Ok(id)
+
+        Ok("()".to_string())
     }
 
     // retrieve a blockchain by id

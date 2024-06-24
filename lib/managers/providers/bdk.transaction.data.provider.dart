@@ -1,29 +1,33 @@
+// bdk.transaction.data.provider.dart
 import 'dart:async';
-import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/helper/bdk/helper.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/bdk/types.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
+import 'package:wallet/rust/api/api_service/proton_api_service.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/api/rust_api.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;
   final AccountModel accountModel;
-  final Wallet wallet;
+  final FrbAccount account;
 
   BDKWalletData({
     required this.walletModel,
     required this.accountModel,
-    required this.wallet,
+    required this.account,
   });
 }
 
 class BDKTransactionData {
   final AccountModel accountModel;
-  List<TransactionDetails> transactions = [];
+  List<FrbTransactionDetails> transactions = [];
 
   BDKTransactionData({
     required this.accountModel,
@@ -31,17 +35,27 @@ class BDKTransactionData {
   });
 }
 
-class BDKTransactionDataProvider implements DataProvider {
-  StreamController<BDKDataUpdated> dataUpdateController =
-      StreamController<BDKDataUpdated>.broadcast();
+class BDKDataUpdated extends DataState {
+  final String accountID;
+
+  BDKDataUpdated(this.accountID);
+
+  @override
+  List<Object?> get props => [accountID];
+}
+
+class BDKTransactionDataProvider extends DataProvider {
   final AccountDao accountDao;
 
-  /// TODO:: maybe use singleton?
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-  Blockchain? blockchain;
+  FrbBlockchainClient? blockchain;
+  final ProtonApiService apiService;
+
+  final PreferencesManager shared;
 
   BDKTransactionDataProvider(
     this.accountDao,
+    this.apiService,
+    this.shared,
   );
 
   List<BDKTransactionData> bdkTransactionDataList = [];
@@ -55,19 +69,23 @@ class BDKTransactionDataProvider implements DataProvider {
               .cast<AccountModel>();
       for (AccountModel accountModel in accounts) {
         syncWallet(walletModel, accountModel);
-        bdkTransactionDataList
-            .add(await _getBDKTransactionData(walletModel, accountModel));
+        bdkTransactionDataList.add(await _getBDKTransactionData(
+          walletModel,
+          accountModel,
+        ));
       }
     }
   }
 
   Future<BDKTransactionData> _getBDKTransactionData(
-      WalletModel walletModel, AccountModel accountModel) async {
-    Wallet? wallet =
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
+    FrbAccount? account =
         await WalletManager.loadWalletWithID(walletModel.id!, accountModel.id!);
-    List<TransactionDetails> transactions = [];
-    if (wallet != null) {
-      transactions = await _lib.getAllTransactions(wallet);
+    List<FrbTransactionDetails> transactions = [];
+    if (account != null) {
+      transactions = await account.getTransactions();
     }
     return BDKTransactionData(
         accountModel: accountModel, transactions: transactions);
@@ -93,23 +111,51 @@ class BDKTransactionDataProvider implements DataProvider {
   }
 
   Future<void> syncWallet(
-      WalletModel walletModel, AccountModel accountModel) async {
-    bool isSyncing = isWalletSyncing.containsKey(accountModel.serverAccountID) ? isWalletSyncing[accountModel.serverAccountID]! : false;
+    WalletModel walletModel,
+    AccountModel accountModel, [
+    bool forceSync = false,
+  ]) async {
+    bool isSyncing = isWalletSyncing.containsKey(accountModel.serverAccountID)
+        ? isWalletSyncing[accountModel.serverAccountID]!
+        : false;
     if (isSyncing == false) {
-      blockchain ??= await _lib.initializeBlockchain(false);
-      isWalletSyncing[accountModel.serverAccountID] = true;
-      Wallet? wallet = await WalletManager.loadWalletWithID(
-          walletModel.id!, accountModel.id!);
-      if (wallet != null) {
-        await _lib.syncWallet(blockchain!, wallet);
+      try {
+        isWalletSyncing[accountModel.serverAccountID] = true;
+        blockchain ??= await Api.createEsploraBlockchainWithApi();
+
+        String serverWalletID = walletModel.serverWalletID;
+        String serverAccountID = accountModel.serverAccountID;
+        String syncCheckID =
+            "is_wallet_full_synced_${serverWalletID}_$serverAccountID";
+
+        FrbAccount? account = await WalletManager.loadWalletWithID(
+            walletModel.id!, accountModel.id!);
+        if (account != null) {
+          bool isSynced = await shared.read(syncCheckID) ?? false;
+          if (!isSynced || forceSync) {
+            logger.i("Bdk wallet full sync Started");
+            await blockchain?.fullSync(account: account);
+            await shared.write(syncCheckID, true);
+            logger.i("Bdk wallet full sync End");
+          } else {
+            logger.i("Bdk wallet partial sync check");
+            if (await blockchain!.shouldSync(account: account)) {
+              logger.i("Bdk wallet partial sync Started");
+              await blockchain!.partialSync(account: account);
+              logger.i("Bdk wallet partial sync End");
+            }
+          }
+        }
+        emitState(BDKDataUpdated(serverAccountID));
+      } catch (e, stacktrace) {
+        logger.e(
+            "Bdk wallet full sync error: ${e.toString()} \nstacktrace: ${stacktrace.toString()}");
+      } finally {
+        isWalletSyncing[accountModel.serverAccountID] = false;
       }
-      isWalletSyncing[accountModel.serverAccountID] = false;
-      dataUpdateController.add(BDKDataUpdated());
     }
   }
 
   @override
-  Future<void> clear() async {
-    dataUpdateController.close();
-  }
+  Future<void> clear() async {}
 }

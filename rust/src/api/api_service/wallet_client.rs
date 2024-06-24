@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use andromeda_api::{
     core::ApiClient,
+    settings::FiatCurrencySymbol as FiatCurrency,
     wallet::{
         ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody,
         WalletTransactionFlag,
@@ -9,9 +10,9 @@ use andromeda_api::{
 };
 
 use crate::{
-    errors::BridgeError,
     wallet::{CreateWalletReq, WalletTransaction},
     wallet_account::CreateWalletAccountReq,
+    BridgeError,
 };
 
 use super::proton_api_service::ProtonAPIService;
@@ -106,6 +107,22 @@ impl WalletClient {
         let result = self
             .inner
             .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
+            .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn update_wallet_account_fiat_currency(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        new_fiat_currency: FiatCurrency,
+    ) -> Result<ApiWalletAccount, BridgeError> {
+        let result = self
+            .inner
+            .update_wallet_account_fiat_currency(wallet_id, wallet_account_id, new_fiat_currency)
             .await;
         match result {
             Ok(response) => Ok(response),
@@ -229,27 +246,27 @@ impl WalletClient {
         }
     }
 
-    pub async fn update_wallet_transaction_external_sender(
-        &self,
-        wallet_id: String,
-        wallet_account_id: String,
-        wallet_transaction_id: String,
-        sender: String,
-    ) -> Result<WalletTransaction, BridgeError> {
-        let result = self
-            .inner
-            .update_wallet_transaction_external_sender(
-                wallet_id,
-                wallet_account_id,
-                wallet_transaction_id,
-                sender,
-            )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
-    }
+    // pub async fn update_wallet_transaction_external_sender(
+    //     &self,
+    //     wallet_id: String,
+    //     wallet_account_id: String,
+    //     wallet_transaction_id: String,
+    //     sender: String,
+    // ) -> Result<WalletTransaction, BridgeError> {
+    //     let result = self
+    //         .inner
+    //         .update_wallet_transaction_external_sender(
+    //             wallet_id,
+    //             wallet_account_id,
+    //             wallet_transaction_id,
+    //             sender,
+    //         )
+    //         .await;
+    //     match result {
+    //         Ok(response) => Ok(response.into()),
+    //         Err(err) => Err(err.into()),
+    //     }
+    // }
 
     pub async fn set_wallet_transaction_private_flag(
         &self,

@@ -3,9 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
 import '../../proton_api/auth_credential.dart';
-import '../../proton_api/errors.dart';
 import '../../proton_api/wallet.dart';
 import '../../proton_api/wallet_settings.dart';
 import 'address_client.dart';

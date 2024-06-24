@@ -1,9 +1,10 @@
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/onramp_gateway_client.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
-class GatewayDataProvider implements DataProvider {
+class GatewayDataProvider extends DataProvider {
   // api client
   final OnRampGatewayClient onRampGatewayClient;
 
@@ -82,14 +83,14 @@ class GatewayDataProvider implements DataProvider {
 
   ApiCountryFiatCurrency getApiCountryFiatCurrency(
     GatewayProvider provider,
-    String fiatName,
+    String fiatCurrency,
   ) {
     ApiCountryFiatCurrency? apiCountry;
 
     var countryFiatCurrencies = fiatCurrencies[provider];
     if (countryFiatCurrencies != null) {
       for (var country in countryFiatCurrencies) {
-        if (country.symbol.toLowerCase() == fiatName.toLowerCase()) {
+        if (country.symbol == fiatCurrency) {
           apiCountry = country;
         }
       }
@@ -97,21 +98,22 @@ class GatewayDataProvider implements DataProvider {
 
     return apiCountry ??
         ApiCountryFiatCurrency(
-          name: fiatName,
-          symbol: fiatName,
+          name: fiatCurrency,
+          symbol: fiatCurrency,
         );
   }
 
   Future<void> getPaymentMethods(FiatCurrency fiatCurrency) async {
     paymentMethods = await onRampGatewayClient.getPaymentMethods(
-      fiatSymbol: fiatCurrency,
+      fiatSymbol: fiatCurrency.enumToString(),
     );
   }
 
-  Future<Map<GatewayProvider, List<Quote>>> getQutoe(FiatCurrency fiatCurrency,
-      String amount, GatewayProvider provider) async {
+  Future<Map<GatewayProvider, List<Quote>>> getQutoe(
+      String fiatCurrency, String amount, GatewayProvider provider) async {
+    var doubleAmount = double.parse(amount);
     var quote = await onRampGatewayClient.getQuotes(
-        amount: amount, fiatCurrency: fiatCurrency, provider: provider);
+        amount: doubleAmount, fiatCurrency: fiatCurrency, provider: provider);
     return quote;
   }
 

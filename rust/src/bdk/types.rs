@@ -3,10 +3,9 @@ use bdk::bitcoin::address::WitnessVersion as BdkWitnessVersion;
 use bdk::bitcoin::blockdata::transaction::TxIn as BdkTxIn;
 use bdk::bitcoin::blockdata::transaction::TxOut as BdkTxOut;
 use bdk::bitcoin::psbt::Input;
-use bdk::bitcoin::{Address as BdkAddress, OutPoint as BdkOutPoint, Txid};
+use bdk::bitcoin::{OutPoint as BdkOutPoint, Txid};
 use bdk::blockchain::Progress as BdkProgress;
 use bdk::{Balance as BdkBalance, Error as BdkError};
-use bitcoin::script::Error;
 use bitcoin::ScriptBuf;
 use bitcoin_internals::hex::exts::DisplayHex;
 use serde::{Deserialize, Serialize};
@@ -17,7 +16,7 @@ use std::str::FromStr;
 #[derive(Debug, Clone)]
 pub struct TxIn {
     pub previous_output: OutPoint,
-    pub script_sig: Script,
+    pub script_sig: ScriptBuf,
     pub sequence: u32,
     pub witness: Vec<Vec<u8>>,
 }
@@ -42,7 +41,7 @@ pub struct TxOut {
     /// The value of the output, in satoshis.
     pub value: u64,
     /// The address of the output.
-    pub script_pubkey: Script,
+    pub script_pubkey: ScriptBuf,
 }
 impl From<&BdkTxOut> for TxOut {
     fn from(x: &BdkTxOut) -> Self {
@@ -225,7 +224,7 @@ impl From<bdk::BlockTime> for BlockTime {
 
 /// A output script and an amount of satoshis.
 pub struct ScriptAmount {
-    pub script: Script,
+    pub script: ScriptBuf,
     pub amount: u64,
 }
 
@@ -259,152 +258,6 @@ impl From<KeychainKind> for bdk::KeychainKind {
         }
     }
 }
-
-#[derive(Debug, Clone, Default)]
-///The cryptocurrency to act on
-pub enum Network {
-    ///Bitcoin’s testnet
-    #[default]
-    Testnet,
-    ///Bitcoin’s regtest
-    Regtest,
-    ///Classic Bitcoin
-    Bitcoin,
-    ///Bitcoin’s signet
-    Signet,
-}
-
-impl From<Network> for andromeda_common::Network {
-    fn from(network: Network) -> Self {
-        match network {
-            Network::Signet => andromeda_common::Network::Signet,
-            Network::Testnet => andromeda_common::Network::Testnet,
-            Network::Regtest => andromeda_common::Network::Regtest,
-            Network::Bitcoin => andromeda_common::Network::Bitcoin,
-        }
-    }
-}
-
-impl From<Network> for bdk::bitcoin::Network {
-    fn from(network: Network) -> Self {
-        match network {
-            Network::Signet => bdk::bitcoin::Network::Signet,
-            Network::Testnet => bdk::bitcoin::Network::Testnet,
-            Network::Regtest => bdk::bitcoin::Network::Regtest,
-            Network::Bitcoin => bdk::bitcoin::Network::Bitcoin,
-        }
-    }
-}
-impl From<bdk::bitcoin::Network> for Network {
-    fn from(network: bdk::bitcoin::Network) -> Self {
-        match network {
-            bdk::bitcoin::Network::Signet => Network::Signet,
-            bdk::bitcoin::Network::Testnet => Network::Testnet,
-            bdk::bitcoin::Network::Regtest => Network::Regtest,
-            bdk::bitcoin::Network::Bitcoin => Network::Bitcoin,
-            _ => todo!(),
-        }
-    }
-}
-
-///Type describing entropy length (aka word count) in the mnemonic
-pub enum WordCount {
-    ///12 words mnemonic (128 bits entropy)
-    Words12,
-    ///18 words mnemonic (192 bits entropy)
-    Words18,
-    ///24 words mnemonic (256 bits entropy)
-    Words24,
-}
-impl From<WordCount> for bdk::keys::bip39::WordCount {
-    fn from(word_count: WordCount) -> Self {
-        match word_count {
-            WordCount::Words12 => bdk::keys::bip39::WordCount::Words12,
-            WordCount::Words18 => bdk::keys::bip39::WordCount::Words18,
-            WordCount::Words24 => bdk::keys::bip39::WordCount::Words24,
-        }
-    }
-}
-pub struct Address {
-    pub address: BdkAddress,
-}
-impl Address {
-    pub fn new(address: String) -> Result<Self, BdkError> {
-        BdkAddress::from_str(address.as_str())
-            .map(|a| Address {
-                address: a.assume_checked(),
-            })
-            .map_err(|e| BdkError::Generic(e.to_string()))
-    }
-
-    pub fn from_script(script: ScriptBuf, network: Network) -> Result<Self, BdkError> {
-        BdkAddress::from_script(&script, network.into())
-            .map(|a| Address { address: a })
-            .map_err(|e| BdkError::Generic(e.to_string()))
-    }
-    // pub fn payload(&self) -> Payload {
-    //     match &self.address.payload.clone() {
-    //         BdkPayload::PubkeyHash(pubkey_hash) => Payload::PubkeyHash {
-    //             pubkey_hash: pubkey_hash.to_vec(),
-    //         },
-    //         BdkPayload::ScriptHash(script_hash) => Payload::ScriptHash {
-    //             script_hash: script_hash.to_vec(),
-    //         },
-    //         BdkPayload::WitnessProgram(witness) => Payload::WitnessProgram {
-    //             version: witness.version(),
-    //             program: witness.program().to_vec(),
-    //         },
-    //         _ => todo!(),
-    //     }
-    // }
-
-    pub fn network(&self) -> Network {
-        self.address.network.into()
-    }
-
-    pub fn script_pubkey(&self) -> Script {
-        self.address.script_pubkey().into()
-    }
-}
-/// A Bitcoin script.
-#[derive(Clone, Default, Debug)]
-pub struct Script {
-    pub internal: Vec<u8>,
-}
-impl Script {
-    pub fn new(raw_output_script: Vec<u8>) -> Result<Script, Error> {
-        let script = bdk::bitcoin::ScriptBuf::from(raw_output_script);
-        Ok(Script {
-            internal: script.into_bytes(),
-        })
-    }
-}
-
-impl From<Script> for bdk::bitcoin::ScriptBuf {
-    fn from(value: Script) -> Self {
-        bdk::bitcoin::ScriptBuf::from_bytes(value.internal)
-    }
-}
-impl From<bdk::bitcoin::ScriptBuf> for Script {
-    fn from(value: bdk::bitcoin::ScriptBuf) -> Self {
-        Script {
-            internal: value.into_bytes(),
-        }
-    }
-}
-
-// impl From<Script> for bdk::bitcoin::Script {
-//     fn from(value: Script) -> Self {
-//         bdk::bitcoin::Script::from(value.internal)
-//     }
-// }
-// impl From<bdk::bitcoin::Script> for Script {
-//     fn from(value: bdk::bitcoin::Script) -> Self {
-//         Script {
-//             internal: value.into_bytes(),
-//         }
-//     }
-// }
 
 #[derive(Debug, Clone)]
 pub enum WitnessVersion {

@@ -22,8 +22,7 @@ class ServerTransactionData {
   });
 }
 
-class ServerTransactionDataProvider implements DataProvider {
-  @override
+class ServerTransactionDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
   final WalletClient walletClient;
@@ -159,7 +158,10 @@ class ServerTransactionDataProvider implements DataProvider {
   Future<void> insertOrUpdate(TransactionModel transactionModel,
       {bool notifyDataUpdate = false}) async {
     await transactionDao.insertOrUpdate(transactionModel);
-    if (notifyDataUpdate){
+    /// refresh cache
+    /// TODO:: improve performance
+    serverTransactionDataList = await _getFromDB();
+    if (notifyDataUpdate) {
       dataUpdateController.add(DataUpdated(""));
     }
   }

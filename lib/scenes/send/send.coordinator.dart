@@ -29,6 +29,8 @@ class SendCoordinator extends Coordinator {
       eventLoop,
       walletManager,
       dataProvider.contactsDataProvider,
+      dataProvider.userSettingsDataProvider,
+      dataProvider.localTransactionDataProvider,
     );
     widget = SendView(
       viewModel,

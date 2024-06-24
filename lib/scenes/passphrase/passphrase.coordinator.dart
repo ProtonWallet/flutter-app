@@ -1,3 +1,6 @@
+import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/passphrase/passphrase.view.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -15,7 +18,19 @@ class SetupPassPhraseCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = SetupPassPhraseViewModelImpl(this, strMnemonic);
+    var userManager = serviceManager.get<UserManager>();
+    var dataProviderManager = serviceManager.get<DataProviderManager>();
+    var createWalletBloc = CreateWalletBloc(
+      userManager,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.walletKeysProvider,
+    );
+
+    var viewModel = SetupPassPhraseViewModelImpl(
+      this,
+      strMnemonic,
+      createWalletBloc,
+    );
     widget = SetupPassPhraseView(
       viewModel,
     );

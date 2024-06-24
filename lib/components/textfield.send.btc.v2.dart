@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldSendBTCV2 extends StatefulWidget {
@@ -18,7 +18,8 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final Function? onFinish;
   final bool checkOfErrorOnFocusChange;
   final Color? backgroundColor;
-  final UserSettingProvider userSettingProvider;
+  final BitcoinUnit bitcoinUnit;
+  final ProtonExchangeRate exchangeRate;
 
   const TextFieldSendBTCV2(
       {super.key,
@@ -32,7 +33,8 @@ class TextFieldSendBTCV2 extends StatefulWidget {
       this.keyboardType,
       this.textInputAction,
       required this.validation,
-      required this.userSettingProvider,
+      required this.bitcoinUnit,
+      required this.exchangeRate,
       this.checkOfErrorOnFocusChange = true});
 
   @override
@@ -46,6 +48,17 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
 
   getBorderColor(isFocus) {
     return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
+  }
+
+  @override
+  void didUpdateWidget(covariant TextFieldSendBTCV2 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.exchangeRate.id != widget.exchangeRate.id ||
+        oldWidget.bitcoinUnit.name != widget.bitcoinUnit.name) {
+      setState(() {
+        updateEstimateSATS();
+      });
+    }
   }
 
   @override
@@ -171,10 +184,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
               padding: const EdgeInsets.only(left: 16),
               child: Text(
                   ExchangeCalculator.getBitcoinUnitLabel(
-                      Provider.of<UserSettingProvider>(context)
-                          .walletUserSetting
-                          .bitcoinUnit,
-                      estimatedSATS),
+                      widget.bitcoinUnit, estimatedSATS),
                   textAlign: TextAlign.start,
                   style: FontManager.captionRegular(ProtonColors.textWeak))),
         ],
@@ -189,7 +199,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     } catch (e) {
       amount = 0.0;
     }
-    double btcAmount = widget.userSettingProvider.getNotionalInBTC(amount);
+    double btcAmount =
+        ExchangeCalculator.getNotionalInBTC(widget.exchangeRate, amount);
     setState(() {
       estimatedSATS = (btcAmount * 100000000).ceil();
     });

@@ -10,10 +10,12 @@ use super::{
     wallet_client::WalletClient,
 };
 use crate::api::proton_api::{logout, set_proton_api};
-use crate::{auth_credential::AuthCredential, errors::BridgeError};
+use crate::{auth_credential::AuthCredential, BridgeError};
 use andromeda_api::wallet::ApiWalletData;
 use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
-use bitcoin::base64::decode;
+use base64::prelude::BASE64_STANDARD;
+use base64::Engine;
+// use bitcoin::base64::decode;
 use flutter_rust_bridge::frb;
 use log::info;
 use std::str;
@@ -26,42 +28,6 @@ pub struct ProtonAPIService {
 }
 
 impl ProtonAPIService {
-    // pub fn init_with(
-    //     uid: String,
-    //     access: String,
-    //     refresh: String,
-    //     scopes: Vec<String>,
-    //     app_version: String,
-    //     user_agent: String,
-    //     env: Option<String>,
-    // ) -> Result<ProtonAPIService, BridgeError> {
-    //     info!("start init_api_service");
-    //     info!(
-    //         "uid: {}, access: {}, refresh: {}, scopes: {:?}",
-    //         uid, access, refresh, scopes
-    //     );
-    //     let auth = Arc::new(Mutex::new(Auth::internal(
-    //         uid,
-    //         Tokens::access(access, refresh, scopes),
-    //     )));
-    //     let auth_store_env = env.unwrap_or("atlas".to_string());
-    //     let store = ProtonWalletAuthStore::from_auth(auth_store_env.as_str(), auth)?;
-    //     let box_store = Box::new(store.clone());
-    //     let config = ApiConfig {
-    //         spec: Some((app_version, user_agent)),
-    //         auth: None,
-    //         url_prefix: None,
-    //         env: Some(auth_store_env),
-    //         store: Some(box_store),
-    //     };
-
-    //     let api = ProtonWalletApiClient::from_config(config)?;
-    //     Ok(ProtonAPIService {
-    //         inner: Arc::new(api),
-    //         store: Arc::new(store),
-    //     })
-    // }
-
     // build functions
     #[frb(sync)]
     pub fn new(
@@ -88,22 +54,6 @@ impl ProtonAPIService {
         Ok(api)
     }
 
-    // #[frb(sync)]
-    // // fromStore
-    // pub fn from_store(store: ProtonWalletAuthStore) -> Result<ProtonAPIService, BridgeError> {
-    //     info!("start init_api_service");
-    //     let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
-
-    //     let app_version = "android-wallet@1.0.0".to_string();
-    //     let inner_api =
-    //         ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
-    //     let api: ProtonAPIService = ProtonAPIService {
-    //         inner: Arc::new(inner_api),
-    //         store: Arc::new(store),
-    //     };
-    //     Ok(api)
-    // }
-
     pub async fn login(
         &self,
         username: String,
@@ -127,8 +77,10 @@ impl ProtonAPIService {
             .clone()
             .unwrap();
 
-        let mailbox_pwd =
-            proton_srp::mailbox_password_hash(password.as_str(), decode(salt).unwrap().as_slice())?;
+        let mailbox_pwd = proton_srp::mailbox_password_hash(
+            password.as_str(),
+            BASE64_STANDARD.decode(salt).unwrap().as_slice(),
+        )?;
 
         let password: Vec<u8> = mailbox_pwd.as_bytes().to_vec();
 
@@ -193,23 +145,6 @@ impl ProtonAPIService {
         info!("reset auth data");
         logout();
     }
-
-    // #[frb(sync)]
-    // // initapiserviceauthstore
-    // pub fn init_api_service_auth_store(
-    //     app_version: String,
-    //     user_agent: String,
-    //     store: ProtonWalletAuthStore,
-    // ) -> Result<ProtonAPIService, BridgeError> {
-    //     info!("start init_api_service");
-    //     let inner_api =
-    //         ProtonWalletApiClient::from_version(app_version, user_agent, store.clone())?;
-    //     let api: ProtonAPIService = ProtonAPIService {
-    //         inner: Arc::new(inner_api),
-    //         store: Arc::new(store),
-    //     };
-    //     Ok(api)
-    // }
 
     /// clients
     pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, BridgeError> {
@@ -284,7 +219,7 @@ mod test {
         api::api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        errors::BridgeError,
+        BridgeError,
     };
 
     #[tokio::test]
