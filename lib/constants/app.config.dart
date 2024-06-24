@@ -6,7 +6,7 @@ class AppConfig {
   // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
   CoinType coinType;
   // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
-  ScriptType scriptType;
+  ScriptTypeInfo scriptTypeInfo;
   ApiEnv apiEnv;
   String esploraBaseUrl;
   // TODO:: use this flag to enable / disable test output
@@ -15,7 +15,7 @@ class AppConfig {
   ///
   AppConfig({
     required this.coinType,
-    required this.scriptType,
+    required this.scriptTypeInfo,
     required this.apiEnv,
     required this.esploraBaseUrl,
     required this.testMode,
@@ -24,7 +24,7 @@ class AppConfig {
 
 final appConfigForTestNet = AppConfig(
     coinType: bitcoinTestnet,
-    scriptType: ScriptType.nativeSegWit,
+    scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
     apiEnv: ApiEnv.atlas(null),
     esploraBaseUrl: "https://proton.me/wallet/explorer/testnet/",
     // esploraBaseUrl: "https://blockstream.info/testnet/",
@@ -32,7 +32,7 @@ final appConfigForTestNet = AppConfig(
 
 final appConfigForProduction = AppConfig(
     coinType: bitcoin,
-    scriptType: ScriptType.nativeSegWit,
+    scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
     apiEnv: const ApiEnv.prod(),
     esploraBaseUrl: "https://proton.me/wallet/explorer/",
     // esploraBaseUrl: "https://blockstream.info/",

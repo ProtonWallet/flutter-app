@@ -34,11 +34,11 @@ class SelectCountryEvent extends BuyBitcoinEvent {
 }
 
 class SelectCurrencyEvent extends BuyBitcoinEvent {
-  final String code;
-  const SelectCurrencyEvent(this.code);
+  final String fiatCurrency;
+  const SelectCurrencyEvent(this.fiatCurrency);
 
   @override
-  List<Object?> get props => [code];
+  List<Object?> get props => [fiatCurrency];
 }
 
 class SelectAmountEvent extends BuyBitcoinEvent {

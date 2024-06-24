@@ -3,10 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
-import '../../proton_api/errors.dart';
 import '../../proton_api/payment_gateway.dart';
-import '../../proton_api/user_settings.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_api_service.dart';
 
@@ -31,7 +30,7 @@ class OnRampGatewayClient extends RustOpaque {
   Future<String> createOnRampCheckout(
           {required String amount,
           required String btcAddress,
-          required FiatCurrency fiatCurrency,
+          required String fiatCurrency,
           required PaymentMethod payMethod,
           required GatewayProvider provider,
           dynamic hint}) =>
@@ -54,13 +53,13 @@ class OnRampGatewayClient extends RustOpaque {
           .onRampGatewayClientGetFiatCurrencies(that: this, hint: hint);
 
   Future<Map<GatewayProvider, List<PaymentMethod>>> getPaymentMethods(
-          {required FiatCurrency fiatSymbol, dynamic hint}) =>
+          {required String fiatSymbol, dynamic hint}) =>
       RustLib.instance.api.onRampGatewayClientGetPaymentMethods(
           that: this, fiatSymbol: fiatSymbol, hint: hint);
 
   Future<Map<GatewayProvider, List<Quote>>> getQuotes(
-          {required String amount,
-          required FiatCurrency fiatCurrency,
+          {required double amount,
+          required String fiatCurrency,
           PaymentMethod? payMethod,
           GatewayProvider? provider,
           dynamic hint}) =>

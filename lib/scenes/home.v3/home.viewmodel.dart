@@ -1,4 +1,4 @@
-//home.viewmodel.dart
+// home.viewmodel.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -12,7 +12,6 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -23,6 +22,7 @@ import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
@@ -32,8 +32,9 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/bdk/types.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
+import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -60,10 +61,11 @@ enum BodyListStatus {
 abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   HomeViewModel(
     super.coordinator,
-    this.walletBloc,
+    this.walletListBloc,
     this.walletTransactionBloc,
     this.walletBalanceBloc,
     this.dataProviderManager,
+    this.createWalletBloc,
   );
 
   CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
@@ -135,8 +137,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void showMoreTransactionHistory();
 
-  Future<void> addWalletAccount(
-      int walletID, ScriptType scriptType, String label);
+  Future<void> addWalletAccount(int walletID, String serverWalletID,
+      ScriptTypeInfo scriptType, String label);
 
   void checkPreference(WalletModel walletModel);
 
@@ -204,10 +206,11 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void updateTransactionListFilterBy(String filterBy);
 
   //
-  final WalletListBloc walletBloc;
+  final WalletListBloc walletListBloc;
   final WalletTransactionBloc walletTransactionBloc;
   final WalletBalanceBloc walletBalanceBloc;
   final DataProviderManager dataProviderManager;
+  final CreateWalletBloc createWalletBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = const ProtonExchangeRate(
       id: 'default',
@@ -229,6 +232,7 @@ class HomeViewModelImpl extends HomeViewModel {
     super.walletBloc,
     super.walletTransactionBloc,
     super.walletBalanceBloc,
+    super.createWalletBloc,
     this.channel,
   );
 
@@ -287,7 +291,7 @@ class HomeViewModelImpl extends HomeViewModel {
     hideEmptyUsedAddressesController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController(text: "3");
     newAccountNameController = TextEditingController(text: "My wallet account");
-    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptType);
+    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptTypeInfo);
     walletRecoverPassphraseController = TextEditingController(text: "");
     passphraseTextController = TextEditingController(text: "");
     passphraseConfirmTextController = TextEditingController(text: "");
@@ -343,8 +347,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
       loadwallet();
       loadUserSettings();
-      walletBloc.init(callback: () {
-        for (WalletMenuModel walletMenuModel in walletBloc.state.walletsModel) {
+      walletListBloc.init(callback: () {
+        for (WalletMenuModel walletMenuModel
+            in walletListBloc.state.walletsModel) {
           if (walletMenuModel.isSelected) {
             walletBalanceBloc.selectWallet(walletMenuModel);
             walletTransactionBloc.selectWallet(walletMenuModel);
@@ -428,11 +433,15 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   void checkProtonAddresses() async {
-    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-    protonAddresses =
-        addresses.where((element) => element.status == 1).toList();
-    emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
-    datasourceStreamSinkAdd();
+    try {
+      List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+      protonAddresses =
+          addresses.where((element) => element.status == 1).toList();
+      emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
+      datasourceStreamSinkAdd();
+    } catch (e) {
+      errorMessage = e.toString();
+    }
   }
 
   @override
@@ -456,7 +465,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> selectWallet(WalletMenuModel walletMenuModel) async {
-    walletBloc.selectWallet(walletMenuModel.walletModel);
+    walletListBloc.selectWallet(walletMenuModel.walletModel);
     walletBalanceBloc.selectWallet(walletMenuModel);
     walletTransactionBloc.selectWallet(walletMenuModel);
   }
@@ -464,10 +473,18 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectAccount(WalletMenuModel walletMenuModel,
       AccountMenuModel accountMenuModel) async {
-    walletBloc.selectAccount(
-        walletMenuModel.walletModel, accountMenuModel.accountModel);
-    walletBalanceBloc.selectAccount(walletMenuModel, accountMenuModel);
-    walletTransactionBloc.selectAccount(walletMenuModel, accountMenuModel);
+    walletListBloc.selectAccount(
+      walletMenuModel.walletModel,
+      accountMenuModel.accountModel,
+    );
+    walletBalanceBloc.selectAccount(
+      walletMenuModel,
+      accountMenuModel,
+    );
+    walletTransactionBloc.selectAccount(
+      walletMenuModel,
+      accountMenuModel,
+    );
   }
 
   @override
@@ -516,7 +533,7 @@ class HomeViewModelImpl extends HomeViewModel {
       String encryptedName = await WalletKeyHelper.encrypt(secretKey, newName);
       await proton_api.updateWalletName(
           walletId: walletModel.serverWalletID, newName: encryptedName);
-      walletBloc.updateWalletName(walletModel, newName);
+      walletListBloc.updateWalletName(walletModel, newName);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -540,7 +557,7 @@ class HomeViewModelImpl extends HomeViewModel {
       accountModel.label = base64Decode(walletAccount.label);
       accountModel.labelDecrypt = newName;
       await DBHelper.accountDao!.update(accountModel);
-      walletBloc.updateAccountName(walletModel, accountModel, newName);
+      walletListBloc.updateAccountName(walletModel, accountModel, newName);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -638,7 +655,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       if (deleted) {
         await WalletManager.deleteAddress(serverAddressID);
-        walletBloc.removeEmailIntegration(
+        walletListBloc.removeEmailIntegration(
             walletModel, accountModel, serverAddressID);
       }
     } catch (e) {
@@ -699,7 +716,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> move(NavID to) async {
     WalletModel? selectedWallet;
     AccountModel? selectedAccount;
-    for (WalletMenuModel walletMenuModel in walletBloc.state.walletsModel) {
+    for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
         // walletView
         selectedWallet = walletMenuModel.walletModel;
@@ -717,7 +734,8 @@ class HomeViewModelImpl extends HomeViewModel {
     /// TODO:: pass wallet server id and wallet account server id
     switch (to) {
       case NavID.importWallet:
-        coordinator.showImportWallet();
+        var preInputName = nameTextController.text;
+        coordinator.showImportWallet(preInputName);
         break;
       case NavID.send:
         coordinator.showSend(selectedWallet?.id ?? 0, selectedAccount?.id ?? 0);
@@ -771,12 +789,23 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> addWalletAccount(
-      int walletID, ScriptType scriptType, String label) async {
+    int walletID,
+    String serverWalletID,
+    ScriptTypeInfo scriptType,
+    String label,
+  ) async {
     EasyLoading.show(
         status: "Adding account..", maskType: EasyLoadingMaskType.black);
     try {
-      await dataProviderManager.walletDataProvider.createWalletAccount(
-          walletID, scriptType, label, fiatCurrencyNotifier.value);
+      await createWalletBloc.createWalletAccount(
+        serverWalletID,
+        scriptType,
+        label,
+        fiatCurrencyNotifier.value,
+      );
+
+      // await dataProviderManager.walletDataProvider.createWalletAccount(
+      //     walletID, scriptType, label, fiatCurrencyNotifier.value);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -802,7 +831,7 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       await WalletManager.addEmailAddress(
           serverWalletID, accountModel.serverAccountID, serverAddressID);
-      walletBloc.addEmailIntegration(
+      walletListBloc.addEmailIntegration(
           walletModel, accountModel, serverAddressID);
     } catch (e) {
       errorMessage = e.toString();
@@ -849,14 +878,21 @@ class HomeViewModelImpl extends HomeViewModel {
       AccountModel accountModel, FiatCurrency newFiatCurrency) async {
     WalletModel walletModel =
         await DBHelper.walletDao!.findById(accountModel.walletID);
-    ApiWalletAccount walletAccount =
-        await proton_api.updateWalletAccountFiatCurrency(
-            walletId: walletModel.serverWalletID,
-            walletAccountId: accountModel.serverAccountID,
-            newFiatCurrency: newFiatCurrency);
+
+    var walletClient = apiServiceManager.getWalletClient();
+    var walletAccount = await walletClient.updateWalletAccountFiatCurrency(
+      walletId: walletModel.serverWalletID,
+      walletAccountId: accountModel.serverAccountID,
+      newFiatCurrency: newFiatCurrency,
+    );
+    // ApiWalletAccount walletAccount =
+    //     await proton_api.updateWalletAccountFiatCurrency(
+    //         walletId: walletModel.serverWalletID,
+    //         walletAccountId: accountModel.serverAccountID,
+    //         newFiatCurrency: newFiatCurrency);
     accountModel.fiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
     await DBHelper.accountDao!.update(accountModel);
-    walletBloc.updateAccountFiat(
+    walletListBloc.updateAccountFiat(
         walletModel, accountModel, newFiatCurrency.name.toUpperCase());
   }
 
@@ -888,20 +924,30 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> createWallet() async {
     try {
-      Mnemonic mnemonic = await Mnemonic.create(WordCount.words12);
+      FrbMnemonic mnemonic = FrbMnemonic(wordCount: WordCount.words12);
       String strMnemonic = mnemonic.asString();
       String walletName = nameTextController.text;
       String strPassphrase = passphraseTextController.text;
-      await dataProviderManager.walletDataProvider.createWallet(
-          walletName,
-          strMnemonic,
-          WalletModel.importByUser,
-          defaultFiatCurrency,
 
-          /// TODO:: use fiat from user selection
-          strPassphrase);
+      var apiWallet = await createWalletBloc.createWallet(
+        walletName,
+        strMnemonic,
+        appConfig.coinType.network,
+        WalletModel.importByUser,
+        strPassphrase,
+      );
+
+      await createWalletBloc.createWalletAccount(
+        apiWallet.wallet.id,
+        appConfig.scriptTypeInfo,
+        "My wallet account",
+        defaultFiatCurrency,
+      );
+
+      // TODO:: fix me remove this
       await Future.delayed(
-          const Duration(seconds: 1)); // wait for account show on sidebar
+        const Duration(seconds: 1),
+      ); // wait for account show on sidebar
     } catch (e) {
       errorMessage = e.toString();
     }

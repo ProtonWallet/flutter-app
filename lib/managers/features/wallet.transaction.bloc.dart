@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -6,11 +7,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -32,11 +31,14 @@ import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart';
+import 'package:wallet/rust/common/address_info.dart';
+import 'package:wallet/rust/common/transaction_time.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 
 // Define the events
 abstract class WalletTransactionEvent extends Equatable {
@@ -136,7 +138,10 @@ class WalletTransactionBloc
   final WalletKeysProvider walletKeysProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
 
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
+  StreamSubscription? serverTransactionDataSubscription;
+  StreamSubscription? localTransactionDataSubscription;
+
+  // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
   WalletTransactionEvent? lastEvent;
 
@@ -159,10 +164,18 @@ class WalletTransactionBloc
     /// we will compare the event.walletModel is equal to currentWalletModel or not
     WalletModel? currentWalletModel;
     AccountModel? currentAccountModel;
-    bdkTransactionDataProvider.dataUpdateController.stream.listen((onData) {
+    // bdkTransactionDataProvider.dataUpdateController.stream.listen((onData) {
+    //   handleTransactionDataProviderUpdate();
+    // });
+    serverTransactionDataSubscription = serverTransactionDataProvider
+        .dataUpdateController.stream
+        .listen((onData) {
       handleTransactionDataProviderUpdate();
     });
-    serverTransactionDataProvider.dataUpdateController.stream.listen((onData) {
+
+    localTransactionDataSubscription = localTransactionDataProvider
+        .dataUpdateController.stream
+        .listen((onData) {
       handleTransactionDataProviderUpdate();
     });
     on<StartLoading>((event, emit) async {
@@ -319,16 +332,16 @@ class WalletTransactionBloc
   void handleTransactionDataProviderUpdate() {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
-        SelectWallet _selectWallet = (lastEvent as SelectWallet);
+        SelectWallet selectWallet = (lastEvent as SelectWallet);
         add(SelectWallet(
-          _selectWallet.walletMenuModel,
+          selectWallet.walletMenuModel,
           true,
         ));
       } else if (lastEvent is SelectAccount) {
-        SelectAccount _selectAccount = (lastEvent as SelectAccount);
+        SelectAccount selectAccount = (lastEvent as SelectAccount);
         add(SelectAccount(
-          _selectAccount.walletMenuModel,
-          _selectAccount.accountMenuModel,
+          selectAccount.walletMenuModel,
+          selectAccount.accountMenuModel,
           true,
         ));
       }
@@ -459,16 +472,16 @@ class WalletTransactionBloc
     );
 
     /// TODO:: replace it
-    Wallet? wallet = await WalletManager.loadWalletWithID(
+    FrbAccount? account = await WalletManager.loadWalletWithID(
         walletModel.id!, accountMenuModel.accountModel.id!);
 
-    Map<String, AddressInfo> selfBitcoinAddressInfo =
+    Map<String, FrbAddressInfo> selfBitcoinAddressInfo =
         await localBitcoinAddressDataProvider.getBitcoinAddress(
-            walletModel, accountMenuModel.accountModel, wallet);
+            walletModel, accountMenuModel.accountModel, account);
 
-    var userkey = await userManager.getFirstKey();
-    var userPrivateKey = userkey.privateKey;
-    var userPassphrase = userkey.passphrase;
+    var firstUserkey = await userManager.getFirstKey();
+    var userPrivateKey = firstUserkey.privateKey;
+    var userPassphrase = firstUserkey.passphrase;
 
     for (TransactionModel transactionModel
         in serverTransactionData.transactions) {
@@ -490,15 +503,13 @@ class WalletTransactionBloc
     }
 
     /// checking transactions from bdk
-    for (TransactionDetails transactionDetail
+    for (FrbTransactionDetails transactionDetail
         in bdkTransactionData.transactions) {
       String txID = transactionDetail.txid;
-      List<TxOut> output = await transactionDetail.transaction!.output();
+      List<FrbDetailledTxOutput> output = transactionDetail.outputs;
       List<String> recipientBitcoinAddresses = [];
-      for (TxOut txOut in output) {
-        Address recipientAddress =
-            await _lib.addressFromScript(txOut.scriptPubkey);
-        String bitcoinAddress = recipientAddress.toString();
+      for (FrbDetailledTxOutput txOut in output) {
+        String bitcoinAddress = txOut.address;
 
         BitcoinAddressModel? bitcoinAddressModel =
             await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
@@ -558,24 +569,38 @@ class WalletTransactionBloc
       int amountInSATS = transactionDetail.received - transactionDetail.sent;
       if (amountInSATS < 0) {
         // bdk sent include fee, so need add back to make display send amount without fee
-        amountInSATS += transactionDetail.fee ?? 0;
+        amountInSATS += transactionDetail.fees ?? 0;
       }
       String key = "$txID-${accountModel.serverAccountID}";
 
       ProtonExchangeRate exchangeRate =
           await getExchangeRateFromTransactionModel(transactionModel);
 
+      TransactionTime transactionTime = transactionDetail.time;
+      var time = 0;
+      transactionTime.when(
+        confirmed: (confirmationTime) {
+          logger.d('Confirmed transaction time: $confirmationTime');
+          time = confirmationTime;
+        },
+        unconfirmed: (lastSeen) {
+          logger.d('Unconfirmed transaction last seen: $lastSeen');
+          time = lastSeen;
+        },
+      );
+
       newHistoryTransactionsMap[key] = HistoryTransaction(
         txID: txID,
-        createTimestamp: transactionDetail.confirmationTime?.timestamp,
-        updateTimestamp: transactionDetail.confirmationTime?.timestamp,
+        createTimestamp: time,
+        updateTimestamp: time,
         amountInSATS: amountInSATS,
         sender: sender.isNotEmpty ? sender : "Unknown",
         toList:
             toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
-        feeInSATS: transactionDetail.fee ?? 0,
+        feeInSATS: transactionDetail.fees ?? 0,
         label: userLabel,
-        inProgress: transactionDetail.confirmationTime == null,
+        inProgress: false,
+        //transactionDetail.confirmationTime == null,
         accountModel: accountModel,
         body: body.isNotEmpty ? body : null,
         exchangeRate: exchangeRate,
@@ -735,9 +760,8 @@ class WalletTransactionBloc
 
   List<TransactionInfoModel> getLocalTransactionsByTXID(
       List<TransactionInfoModel> localTransactions, String txid) {
-    Uint8List externalTransactionID = utf8.encode(txid);
     return localTransactions
-        .where((e) => e.externalTransactionID == externalTransactionID)
+        .where((e) => utf8.decode(e.externalTransactionID) == txid)
         .toList();
   }
 
@@ -816,9 +840,9 @@ class WalletTransactionBloc
 
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
     /// get user key
-    var userkey = await userManager.getFirstKey();
-    var userPrivateKey = userkey.privateKey;
-    var userPassphrase = userkey.passphrase;
+    var firstUserKey = await userManager.getFirstKey();
+    var userPrivateKey = firstUserKey.privateKey;
+    var userPassphrase = firstUserKey.passphrase;
 
     /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
     var walletKey = await walletKeysProvider.getWalletKey(
@@ -845,28 +869,33 @@ class WalletTransactionBloc
   }
 
   void selectWallet(WalletMenuModel walletMenuModel) {
-    for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-      bdkTransactionDataProvider.syncWallet(
-          walletMenuModel.walletModel, accountMenuModel.accountModel);
-    }
     add(SelectWallet(
       walletMenuModel,
       false,
     ));
+    for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
+      bdkTransactionDataProvider.syncWallet(
+          walletMenuModel.walletModel, accountMenuModel.accountModel);
+    }
   }
 
   void selectAccount(
-      WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel) {
-    bdkTransactionDataProvider.syncWallet(
-        walletMenuModel.walletModel, accountMenuModel.accountModel);
+    WalletMenuModel walletMenuModel,
+    AccountMenuModel accountMenuModel,
+  ) {
+    // select wallet first. unblock account
     add(SelectAccount(
       walletMenuModel,
       accountMenuModel,
       false,
     ));
+    bdkTransactionDataProvider.syncWallet(
+      walletMenuModel.walletModel,
+      accountMenuModel.accountModel,
+    );
   }
 
-  void syncWallet() {
+  void syncWallet([bool forceSync = false]) {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
         WalletMenuModel walletMenuModel =
@@ -882,9 +911,19 @@ class WalletTransactionBloc
         AccountMenuModel accountMenuModel =
             (lastEvent as SelectAccount).accountMenuModel;
         bdkTransactionDataProvider.syncWallet(
-            walletMenuModel.walletModel, accountMenuModel.accountModel);
+          walletMenuModel.walletModel,
+          accountMenuModel.accountModel,
+          forceSync,
+        );
         add(SyncWallet());
       }
     }
+  }
+
+  @override
+  Future<void> close() {
+    serverTransactionDataSubscription?.cancel();
+    localTransactionDataSubscription?.cancel();
+    return super.close();
   }
 }

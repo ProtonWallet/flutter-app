@@ -167,8 +167,9 @@ class ImportView extends ViewBase<ImportViewModel> {
         myFocusNode: viewModel.mnemonicFocusNode,
         maxLines: 6,
         validation: (String strMnemonic) {
-          if (verifyMnemonic(strMnemonic) == false) {
-            return S.of(context).not_a_valid_mnemonic;
+          var check = viewModel.mnemonicValidation(strMnemonic);
+          if (check.$1 == false) {
+            return S.of(context).not_a_valid_mnemonic + check.$2;
           }
           return "";
         },
@@ -176,8 +177,9 @@ class ImportView extends ViewBase<ImportViewModel> {
         onFinish: () {
           viewModel.mnemonicTextController.text =
               viewModel.mnemonicTextController.text.trim();
-          viewModel.updateValidMnemonic(
-              verifyMnemonic(viewModel.mnemonicTextController.text));
+          var check = viewModel
+              .mnemonicValidation(viewModel.mnemonicTextController.text);
+          viewModel.updateValidMnemonic(check.$1);
         },
       ),
     ]);

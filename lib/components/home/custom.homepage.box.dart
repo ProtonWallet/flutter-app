@@ -60,11 +60,11 @@ class CustomHomePageBox extends StatelessWidget {
                           AnimatedFlipCounter(
                               duration: const Duration(milliseconds: 500),
                               prefix: Provider.of<UserSettingProvider>(context)
-                                  .getFiatCurrencyName(fiatCurrency: exchangeRate.fiatCurrency),
+                                  .getFiatCurrencyName(
+                                      fiatCurrency: exchangeRate.fiatCurrency),
                               value:
                                   ExchangeCalculator.getNotionalInFiatCurrency(
-                                      exchangeRate,
-                                      100000000),
+                                      exchangeRate, 100000000),
                               // value: price,
                               fractionDigits: defaultDisplayDigits,
                               textStyle: FontManager.body1Median(
@@ -98,8 +98,9 @@ class CustomHomePageBox extends StatelessWidget {
                   height: 10,
                 ),
                 const Divider(thickness: 0.4),
-                BitcoinPriceChart(
-                    exchangeRate: exchangeRate),
+
+                /// bitcoin price chart
+                BitcoinPriceChart(exchangeRate: exchangeRate),
                 const Divider(thickness: 0.4),
                 const SizedBox(
                   height: 10,

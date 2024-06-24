@@ -1,5 +1,5 @@
 use super::proton_api_service::ProtonAPIService;
-use crate::errors::BridgeError;
+use crate::BridgeError;
 use andromeda_api::{
     core::ApiClient,
     settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},

@@ -15,7 +15,7 @@ class ContactsData {
   ContactsData({required this.wallet, required this.accounts});
 }
 
-class ContactsDataProvider implements DataProvider {
+class ContactsDataProvider extends DataProvider {
   final ContactsClient contactClient;
 
   //
@@ -30,7 +30,6 @@ class ContactsDataProvider implements DataProvider {
     this.contactsDao,
   );
 
-  @override
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 

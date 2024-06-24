@@ -1,5 +1,4 @@
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class SelectedInfoModel {
   final GatewayProvider provider;
@@ -23,14 +22,14 @@ class SelectedInfoModel {
     ),
     this.fiatCurrency = const ApiCountryFiatCurrency(
       name: 'United States',
-      symbol: 'USD',
+      symbol: "USD",
     ),
     this.paymentMethod = PaymentMethod.applePay,
     this.amount = "100",
     this.selectedQuote = const Quote(
       bitcoinAmount: "0.001",
       fiatAmount: "100",
-      fiatCurrencySymbol: FiatCurrency.usd,
+      fiatCurrencySymbol: "USD",
       networkFee: "10",
       paymentGatewayFee: "20",
       paymentMethod: PaymentMethod.card,

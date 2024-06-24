@@ -8,36 +8,16 @@ assert_matches = "1.5"
 env_logger = "0.11.0"
 mockall = "0.12.1"
 hyper = "1.1.0"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
 
 [build-dependencies]
 flutter_rust_bridge_codegen = { version = "2.0.0-dev.33" }
 
 [dependencies]
 thiserror = "1.0.61"
-bdk = { version = "0.29.0", default-features = false, features = [
-  "std",
-  "keys-bip39",
-  "use-esplora-reqwest",
-  "reqwest-default-tls",
-  "async-interface",
-  "sqlite-bundled",
-  "sqlite",
-] }
-bitcoin = { version = "0.30.2", default-features = false, features = [
-  "std",
-  "serde",
-  "secp-recovery",
-  "rand",
-] }
-bitcoin-internals = { version = "0.1.0", features = ["alloc"] }
-miniscript = { version = "10.0.0", default-features = false, features = [
-  "std",
-] }
-esplora-client = { version = "0.6.0", path = "../vendor/esplora-client", default-features = false, features = [
-  "async-https",
-] }
-
 rand = "0.8"
+base64 = "0.22.0"
 tokio = { version = "1.28.0", features = ["full"] }
 flutter_rust_bridge = "=2.0.0-dev.33"
 serde = "1.0.89"
@@ -52,6 +32,7 @@ andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
 proton-srp = { version = "0.4.0", registry = "proton_internal" }
+bdk_sqlite = { version = "=0.2.0" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
@@ -79,7 +60,7 @@ panic = "abort"
 build_targets = ["aarch64-apple-ios"]
 
 [patch.crates-io]
-esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
+# esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
 # muon = { version = "0.2.0", path = "../vendor/muon" }
 
 # [profile.default]
@@ -90,4 +71,4 @@ esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
 
 [features]
 default = []
-test = []
+test = ["andromeda-api/allow-dangerous-env"]

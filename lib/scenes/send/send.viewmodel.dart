@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/bdk/exceptions.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -26,6 +26,11 @@ import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
+import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_builder.dart';
+import 'package:wallet/rust/api/rust_api.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -33,8 +38,6 @@ import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -67,7 +70,8 @@ class ProtonRecipient {
 }
 
 abstract class SendViewModel extends ViewModel<SendCoordinator> {
-  SendViewModel(super.coordinator, this.walletID, this.accountID);
+  SendViewModel(super.coordinator, this.walletID, this.accountID,
+      this.userSettingsDataProvider, this.localTransactionDataProvider,);
 
   int walletID;
   int accountID;
@@ -79,7 +83,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController amountTextController;
   Map<String, String> bitcoinAddresses = {};
   Map<String, bool> bitcoinAddressesInvalidSignature = {};
-  late UserSettingProvider userSettingProvider;
 
   Map<String, AddressPublicKey> email2AddressKey = {};
   List<AddressPublicKey> addressPublicKeys = [];
@@ -88,11 +91,11 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<String> selfBitcoinAddresses = [];
   List<String> accountAddressIDs = [];
   int balance = 0;
-  double feeRateHighPriority = 2.0;
+  double feeRateHighPriority = 20.0;
   List<AddressKey> addressKeys = [];
-  double feeRateMedianPriority = 2.0;
-  double feeRateLowPriority = 2.0;
-  double feeRateSatPerVByte = 2.0;
+  double feeRateMedianPriority = 15.0;
+  double feeRateLowPriority = 10.0;
+  double feeRateSatPerVByte = 15.0;
   double baseFeeInSAT = 0;
   int estimatedFeeInSAT = 0;
   int amountInSATS = 0; // per recipient
@@ -118,7 +121,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late TextEditingController memoController;
   late FocusNode emailBodyFocusNode;
   late FocusNode memoFocusNode;
-  FiatCurrency originFiatCurrency = defaultFiatCurrency;
 
   String txid = "";
 
@@ -147,10 +149,26 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Future<bool> buildTransactionScript();
 
   List<ContactsModel> contactsEmail = [];
-  late TxBuilder txBuilder;
-  late TxBuilderResult txBuilderResult;
+
+  late FrbTxBuilder txBuilder;
+  late FrbPsbt frbPsbt;
+
+  // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
+  ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
+      id: 'default',
+      bitcoinUnit: BitcoinUnit.btc,
+      fiatCurrency: defaultFiatCurrency,
+      exchangeRateTime: '',
+      exchangeRate: 1,
+      cents: 1);
+
+  // user-setting data provider
+  final UserSettingsDataProvider userSettingsDataProvider;
+
+  // local transaction data provider
+  final LocalTransactionDataProvider localTransactionDataProvider;
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -161,6 +179,8 @@ class SendViewModelImpl extends SendViewModel {
     this.eventLoop,
     this.walletManger,
     this.contactsDataProvider,
+    super.userSettingsDataProvider,
+      super.localTransactionDataProvider,
   );
 
   // event loop
@@ -172,23 +192,13 @@ class SendViewModelImpl extends SendViewModel {
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
 
-  ProtonExchangeRate? exchangeRate;
-
   final datasourceChangedStreamController =
       StreamController<SendViewModel>.broadcast();
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-  late Wallet? _wallet;
-  late Blockchain? _blockchain;
+  late FrbAccount? _frbAccount;
+  FrbBlockchainClient? blockClient;
 
   @override
   Future<void> dispose() async {
-    userSettingProvider.removeListener(userSettingProviderCallback);
-    if (userSettingProvider.walletUserSetting.fiatCurrency.name !=
-        originFiatCurrency.name) {
-      Future.delayed(Duration.zero, () {
-        updateUserSettingProvider(originFiatCurrency);
-      });
-    }
     datasourceChangedStreamController.close();
   }
 
@@ -207,7 +217,7 @@ class SendViewModelImpl extends SendViewModel {
       recipientTextController = TextEditingController(text: "");
       memoTextController = TextEditingController();
       amountTextController = TextEditingController();
-      txBuilder = TxBuilder();
+      txBuilder = FrbTxBuilder();
 
       addressFocusNode.addListener(() {
         if (addressFocusNode.hasFocus == false) {
@@ -229,24 +239,19 @@ class SendViewModelImpl extends SendViewModel {
         }
       });
 
-      userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.rootNavigatorKey.currentContext!,
-          listen: false);
-      userSettingProvider.addListener(userSettingProviderCallback);
       addressKeys = await WalletManager.getAddressKeys();
-      exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
-      fiatCurrencyNotifier.value =
-          userSettingProvider.walletUserSetting.fiatCurrency;
-      originFiatCurrency = userSettingProvider.walletUserSetting.fiatCurrency;
+      await userSettingsDataProvider.preLoad();
+      exchangeRate = userSettingsDataProvider.exchangeRate;
+      fiatCurrencyNotifier.value = userSettingsDataProvider.fiatCurrency;
       fiatCurrencyNotifier.addListener(() async {
-        updateUserSettingProvider(fiatCurrencyNotifier.value);
+        updateExchangeRate(fiatCurrencyNotifier.value);
       });
       amountFocusNode.addListener(() {
         splitAmountToRecipients();
       });
 
       datasourceChangedStreamController.sinkAddSafe(this);
-      _blockchain = await _lib.initializeBlockchain(false);
+      blockClient = await Api.createEsploraBlockchainWithApi();
       updateFeeRate();
       contactsEmail = await contactsDataProvider.getContacts() ?? [];
       walletModel = await DBHelper.walletDao!.findById(walletID);
@@ -262,8 +267,6 @@ class SendViewModelImpl extends SendViewModel {
         await updateWallet();
       });
       updateWallet();
-      logger.i(DateTime.now().toString());
-      // await WalletManager.initContacts();
       logger.i(DateTime.now().toString());
     } catch (e) {
       errorMessage = e.toString();
@@ -291,16 +294,6 @@ class SendViewModelImpl extends SendViewModel {
     return count;
   }
 
-  void userSettingProviderCallback() {
-    if (exchangeRate != null && sendFlowStatus == SendFlowStatus.editAmount) {
-      if (userSettingProvider.walletUserSetting.exchangeRate.id !=
-          exchangeRate!.id) {
-        exchangeRate = userSettingProvider.walletUserSetting.exchangeRate;
-        buildTransactionScript();
-      }
-    }
-  }
-
   Future<void> updateWallet() async {
     selfBitcoinAddresses.clear();
     List<BitcoinAddressModel> localBitcoinAddresses =
@@ -309,13 +302,13 @@ class SendViewModelImpl extends SendViewModel {
     selfBitcoinAddresses = localBitcoinAddresses.map((bitcoinAddressModel) {
       return bitcoinAddressModel.bitcoinAddress;
     }).toList();
-    _wallet =
+    _frbAccount =
         await WalletManager.loadWalletWithID(walletID, accountModel?.id ?? 0);
     accountAddressIDs = await WalletManager.getAccountAddressIDs(
         accountModel?.serverAccountID ?? "");
-    if (_wallet != null) {
-      var walletBalance = await _wallet!.getBalance();
-      balance = walletBalance.trustedPending + walletBalance.confirmed;
+    if (_frbAccount != null) {
+      var walletBalance = await _frbAccount!.getBalance();
+      balance = walletBalance.trustedSpendable().toSat();
     }
     datasourceChangedStreamController.sinkAddSafe(this);
   }
@@ -363,10 +356,15 @@ class SendViewModelImpl extends SendViewModel {
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
-  Future<void> updateUserSettingProvider(FiatCurrency fiatCurrency) async {
-    userSettingProvider.updateFiatCurrency(fiatCurrency);
-    exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
-    userSettingProvider.updateExchangeRate(exchangeRate!);
+  Future<void> updateExchangeRate(FiatCurrency fiatCurrency) async {
+    if (exchangeRate.fiatCurrency != fiatCurrency) {
+      exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
+    }
+    if (sendFlowStatus == SendFlowStatus.editAmount) {
+      exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
+      buildTransactionScript();
+    }
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   Future<void> loadBitcoinAddresses() async {
@@ -584,8 +582,11 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<bool> buildTransactionScript() async {
     try {
-      txBuilder = TxBuilder();
-
+      if (_frbAccount == null) {
+        throw Exception("Account is not loaded");
+      }
+      txBuilder = await _frbAccount!.buildTx();
+      totalAmountInSAT = 0;
       for (ProtonRecipient protonRecipient in recipients) {
         if (protonRecipient.amountController.text.isNotEmpty) {
           double amount = 0.0;
@@ -594,7 +595,8 @@ class SendViewModelImpl extends SendViewModel {
           } catch (e) {
             amount = 0.0;
           }
-          double btcAmount = userSettingProvider.getNotionalInBTC(amount);
+          double btcAmount =
+              ExchangeCalculator.getNotionalInBTC(exchangeRate, amount);
           amountInSATS = (btcAmount * 100000000).ceil();
           String email = protonRecipient.email;
           String bitcoinAddress = "";
@@ -606,41 +608,55 @@ class SendViewModelImpl extends SendViewModel {
           if (CommonHelper.isBitcoinAddress(bitcoinAddress) &&
               selfBitcoinAddresses.contains(bitcoinAddress) == false) {
             logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
-            Address address = await Address.create(address: bitcoinAddress);
 
-            final script = await address.scriptPubKey();
-            txBuilder = txBuilder.addRecipient(script, amountInSATS);
+            txBuilder = txBuilder.addRecipient(
+              addressStr: bitcoinAddress,
+              amount: amountInSATS,
+            );
             protonRecipient.amountInSATS = amountInSATS;
+            totalAmountInSAT += amountInSATS;
           }
         }
       }
-      txBuilderResult =
-          await txBuilder.feeRate(feeRateSatPerVByte).finish(_wallet!);
-      estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
-      totalAmountInSAT = txBuilderResult.txDetails.sent -
-          (txBuilderResult.txDetails.fee ?? 0) -
-          txBuilderResult.txDetails.received;
+      var network = appConfig.coinType.network;
+      txBuilder =
+          await txBuilder.setFeeRate(satPerVb: feeRateSatPerVByte.toInt());
+
+      frbPsbt = await txBuilder.createPbst(network: network);
+
+      estimatedFeeInSAT = frbPsbt.fee().toSat();
+
       baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
+      // txBuilderResult =
+      //     .createDraftPsbt();
+      // .finish(_wallet!);
+      // /TODO:: fix me
+      // estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
+      // totalAmountInSAT = txBuilderResult.txDetails.sent -
+      //     (txBuilderResult.txDetails.fee ?? 0) -
+      //     txBuilderResult.txDetails.received;
+      // baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
     } catch (e) {
-      if (e is InsufficientFundsException) {
-        if (Coordinator.rootNavigatorKey.currentContext != null) {
-          if (context != null && context!.mounted) {
-            CommonHelper.showSnackbar(
-                context!, S.of(context!).error_you_dont_have_sufficient_balance,
-                isError: true);
-          }
-        }
-      } else if (e is NoRecipientsException) {
-        // amount is 0, or no recipients
-        return true;
-      } else {
-        errorMessage = e.toString();
-        if (errorMessage.isNotEmpty) {
-          CommonHelper.showErrorDialog(
-              "buildTransactionScript error: $errorMessage");
-          errorMessage = "";
-        }
+      // TODO: fix me to handle exceptions
+      // if (e is InsufficientFundsException) {
+      //   if (Coordinator.rootNavigatorKey.currentContext != null) {
+      //     if (context != null && context!.mounted) {
+      //       CommonHelper.showSnackbar(
+      //           context!, S.of(context!).error_you_dont_have_sufficient_balance,
+      //           isError: true);
+      //     }
+      //   }
+      // } else if (e is NoRecipientsException) {
+      //   // amount is 0, or no recipients
+      //   return true;
+      // } else {
+      errorMessage = e.toString();
+      if (errorMessage.isNotEmpty) {
+        CommonHelper.showErrorDialog(
+            "buildTransactionScript error: $errorMessage");
+        errorMessage = "";
       }
+      // }
       return false;
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -691,16 +707,27 @@ class SendViewModelImpl extends SendViewModel {
         encryptedMessage = AddressPublicKey.encryptWithKeys(
             addressPublicKeys, emailBodyController.text);
       }
-      txid = await _lib.sendBitcoinWithAPI(
-          _blockchain!,
-          _wallet!,
-          walletModel!.serverWalletID,
-          accountModel!.serverAccountID,
-          txBuilderResult,
-          emailAddressID: emailAddressID,
-          exchangeRateID: userSettingProvider.walletUserSetting.exchangeRate.id,
-          encryptedLabel: encryptedLabel,
-          encryptedMessage: encryptedMessage);
+
+      if (_frbAccount == null) {
+        throw Exception("Account is not loaded");
+      }
+      var network = appConfig.coinType.network;
+      frbPsbt = await _frbAccount!.sign(
+        psbt: frbPsbt,
+        network: network,
+      );
+
+      txid = await blockClient!.broadcastPsbt(
+        psbt: frbPsbt,
+        walletId: walletModel!.serverWalletID,
+        walletAccountId: accountModel!.serverAccountID,
+        label: encryptedLabel,
+        exchangeRateId: exchangeRate.id,
+        transactionTime: null,
+        addressId: emailAddressID,
+        subject: null, // subject is deprecated, set to default null
+        body: encryptedMessage,
+      );
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
@@ -715,8 +742,7 @@ class SendViewModelImpl extends SendViewModel {
               bitcoinAddress = email;
             }
             if (selfBitcoinAddresses.contains(bitcoinAddress) == false) {
-              /// TODO:: insert with localTransactionDataProvider
-              await DBHelper.transactionInfoDao!.insert(TransactionInfoModel(
+              await localTransactionDataProvider.insert(TransactionInfoModel(
                   id: null,
                   externalTransactionID: utf8.encode(txid),
                   amountInSATS: protonRecipient.amountInSATS ?? 0,
@@ -756,19 +782,18 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> updateFeeRate() async {
-    FeeRate feeRate_ = await _lib.estimateFeeRate(1, _blockchain!);
-    feeRateHighPriority = feeRate_.asSatPerVb();
-    feeRate_ = await _lib.estimateFeeRate(6, _blockchain!);
-    feeRateMedianPriority = feeRate_.asSatPerVb();
-    feeRate_ = await _lib.estimateFeeRate(15, _blockchain!);
-    feeRateLowPriority = feeRate_.asSatPerVb();
-    // feeRateLowPriority = 2.0;
+    var fees = await blockClient?.getFeesEstimation();
+    if (fees == null) {
+      return;
+    }
+    feeRateHighPriority = fees["1"] ?? 0;
+    feeRateMedianPriority = fees["6"] ?? 0;
+    feeRateLowPriority = fees["15"] ?? 0;
     try {
       datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
       logger.e(e.toString());
     }
-    // TODO:: fixme to avoid crash after coordinate pop
     // Future.delayed(const Duration(seconds: 5), () {
     //   updateFeeRate();
     // });

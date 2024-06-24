@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart' as crypto;
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:cryptography/cryptography.dart';
+import 'package:wallet/managers/providers/models/wallet.key.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 
 class WalletKeyHelper {
   static SecretKey generateSecretKey() {
@@ -65,5 +68,16 @@ class WalletKeyHelper {
         await AesGcm.with256bits().decrypt(secretBox, secretKey: secretKey);
     String plaintext = utf8.decode(decrypted);
     return plaintext;
+  }
+
+  static SecretKey decryptWalletKey(
+    UserKey userKey,
+    WalletKey walletKey,
+  ) {
+    var pgpBinaryMessage = walletKey.walletKey;
+    var entropy = proton_crypto.decryptBinaryPGP(
+        userKey.privateKey, userKey.passphrase, pgpBinaryMessage);
+    var secretKey = restoreSecretKeyFromEntropy(entropy);
+    return secretKey;
   }
 }

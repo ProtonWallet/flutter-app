@@ -1,85 +1,93 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/helper/bdk/helper.dart';
-import 'package:wallet/helper/bdk/mnemonic.dart';
-import 'package:wallet/rust/bdk/types.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
+import 'package:wallet/rust/api/bdk_wallet/storage.dart';
+import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
+import 'package:wallet/rust/common/address_info.dart';
+import 'package:wallet/rust/common/network.dart';
+import 'package:wallet/rust/common/script_type.dart';
+import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/frb_generated.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 
-final BdkLibrary lib = BdkLibrary(coinType: appConfig.coinType);
+// final BdkLibrary lib = BdkLibrary(coinType: appConfig.coinType);
 
-Future<Wallet> prepareWallet(
-    String strMnemonic, String strDerivationPath) async {
-  Wallet wallet;
-  Mnemonic mnemonic = await Mnemonic.fromString(strMnemonic);
-  final DerivationPath derivationPath =
-      await DerivationPath.create(path: strDerivationPath);
-  final aliceDescriptor =
-      await lib.createDerivedDescriptor(mnemonic, derivationPath);
-  wallet = await lib.restoreWalletInMemory(aliceDescriptor);
-  return wallet;
+FrbAccount prepareWallet(
+  String strMnemonic,
+  String strDerivationPath,
+) {
+  var wallet = FrbWallet(
+    bip39Mnemonic: strMnemonic,
+    network: Network.testnet,
+  );
+  var storageFactory = OnchainStoreFactory(folderPath: "./");
+  var account = wallet.addAccount(
+    scriptType: ScriptType.nativeSegwit,
+    derivationPath: strDerivationPath,
+    storageFactory: storageFactory,
+  );
+  return account;
 }
 
 Future<void> main() async {
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     return;
   }
-  Mnemonic? mnemonic12;
-  Mnemonic? mnemonic18;
-  Mnemonic? mnemonic24;
+  FrbMnemonic? mnemonic12;
+  FrbMnemonic? mnemonic18;
+  FrbMnemonic? mnemonic24;
 
-  Wallet? wallet1;
-  Wallet? wallet2;
-  AddressInfo addressinfo;
+  FrbAccount? wallet1;
+  FrbAccount? wallet2;
+  FrbAddressInfo addressinfo;
   setUpAll(() async {
     await RustLib.init();
-    wallet1 = await prepareWallet(
+    wallet1 = prepareWallet(
         "ability hair dune bubble science thumb aware cruel cube decide enlist evidence",
         "m/84'/1'/0'/0");
 
-    wallet2 = await prepareWallet(
+    wallet2 = prepareWallet(
         "debris tool angle nation wage stand jealous lamp reflect lecture luggage ecology",
         "m/84'/1'/168'/0");
 
-    mnemonic12 = await Mnemonic.create(WordCount.words12);
-    mnemonic18 = await Mnemonic.create(WordCount.words18);
-    mnemonic24 = await Mnemonic.create(WordCount.words24);
+    mnemonic12 = FrbMnemonic(wordCount: WordCount.words12);
+    mnemonic18 = FrbMnemonic(wordCount: WordCount.words18);
+    mnemonic24 = FrbMnemonic(wordCount: WordCount.words24);
   });
 
   group('Bdk functions', () {
     test('getAddress case 1', () async {
-      addressinfo = await lib.getAddress(wallet1!, addressIndex: 0);
+      addressinfo = await wallet1!.getAddress(index: 0);
       expect(addressinfo.address,
           equals("tb1q3vp8n7tqmtttl4qjaaq0wzvjahgwwjxsecg447"));
 
-      addressinfo = await lib.getAddress(wallet1!, addressIndex: 1);
+      addressinfo = await wallet1!.getAddress(index: 1);
       expect(addressinfo.address,
           equals("tb1qx6xqmj2fz7chmm9nmg4mfw4nraaktq40lj2esj"));
 
-      addressinfo = await lib.getAddress(wallet1!, addressIndex: 2);
+      addressinfo = await wallet1!.getAddress(index: 2);
       expect(addressinfo.address,
           equals("tb1q8ck8exngh0cedpl6t6lsp5u3azfq49t356jw3a"));
     });
 
     test('getAddress case 2', () async {
-      addressinfo = await lib.getAddress(wallet2!, addressIndex: 11);
+      addressinfo = await wallet2!.getAddress(index: 11);
       expect(addressinfo.address,
           equals("tb1qtqg9xy8c9zxmz7l3p9chz6pa8vwa9satudq4cg"));
 
-      addressinfo = await lib.getAddress(wallet2!, addressIndex: 12);
+      addressinfo = await wallet2!.getAddress(index: 12);
       expect(addressinfo.address,
           equals("tb1qjwavecdtylmk5grdd3aln4jczkjfj0hffep8wu"));
 
-      addressinfo = await lib.getAddress(wallet2!, addressIndex: 13);
+      addressinfo = await wallet2!.getAddress(index: 13);
       expect(addressinfo.address,
           equals("tb1qxxt62rks07r9302gfmf5h80mmjt28mhg0qee20"));
     });
 
     test('getBalance case 1', () async {
-      expect((await lib.getBalance(wallet1!)).total, equals(0));
-      expect((await lib.getBalance(wallet2!)).total, equals(0));
+      expect((await wallet1!.getBalance()).total().toSat(), equals(0));
+      expect((await wallet2!.getBalance()).total().toSat(), equals(0));
     });
 
     test('createMnemonic case 1', () {

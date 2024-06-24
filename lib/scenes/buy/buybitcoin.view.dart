@@ -427,92 +427,102 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               ),
                               child: !state.isQutueLoaded
                                   ? const CardLoading(height: 44)
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (!state.isQutueLoaded)
-                                                const CardLoading(height: 50),
-                                              const Text(
-                                                'You receive',
-                                                style: TextStyle(
-                                                  color: Color(0xFF535964),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter',
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 2),
-                                              Text(
-                                                '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
-                                                style: const TextStyle(
-                                                  color: Color(0xFF191C32),
-                                                  fontSize: 16,
-                                                  fontFamily: 'Inter',
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        BlocSelector<BuyBitcoinBloc,
-                                            BuyBitcoinState, BuyBitcoinState>(
-                                          selector: (state) {
-                                            return state;
-                                          },
-                                          builder: (context, state) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Assets.images.icon.ramp.svg(
-                                                  fit: BoxFit.fill,
-                                                  width: 24,
-                                                  height: 24,
-                                                ),
-                                                // const SizedBox(
-                                                //   width: 20,
-                                                //   height: 20,
-                                                //   child: FlutterLogo(),
-                                                // ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  state.providerModel
-                                                      .providerInfo.name,
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF191C32),
-                                                    fontSize: 16,
-                                                    fontFamily:
-                                                        'SF Pro Display',
-                                                    fontWeight: FontWeight.w500,
+                                  : state.isQutueFailed
+                                      ? const Text(
+                                          "Ramp Qutue Failed empty state")
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  if (!state.isQutueLoaded)
+                                                    const CardLoading(
+                                                        height: 50),
+                                                  const Text(
+                                                    'You receive',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF535964),
+                                                      fontSize: 14,
+                                                      fontFamily: 'Inter',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                                   ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Assets.images.icon
-                                                    .icChevronTinyDown
-                                                    .svg(
-                                                  fit: BoxFit.fill,
-                                                  width: 24,
-                                                  height: 24,
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF191C32),
+                                                      fontSize: 16,
+                                                      fontFamily: 'Inter',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            BlocSelector<
+                                                BuyBitcoinBloc,
+                                                BuyBitcoinState,
+                                                BuyBitcoinState>(
+                                              selector: (state) {
+                                                return state;
+                                              },
+                                              builder: (context, state) {
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Assets.images.icon.ramp.svg(
+                                                      fit: BoxFit.fill,
+                                                      width: 24,
+                                                      height: 24,
+                                                    ),
+                                                    // const SizedBox(
+                                                    //   width: 20,
+                                                    //   height: 20,
+                                                    //   child: FlutterLogo(),
+                                                    // ),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      state.providerModel
+                                                          .providerInfo.name,
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF191C32),
+                                                        fontSize: 16,
+                                                        fontFamily:
+                                                            'SF Pro Display',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Assets.images.icon
+                                                        .icChevronTinyDown
+                                                        .svg(
+                                                      fit: BoxFit.fill,
+                                                      width: 24,
+                                                      height: 24,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
                             ),
                           );
                         },
@@ -790,7 +800,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     },
                     builder: (context, state) {
                       return ButtonV5(
-                          onPressed: () => {viewModel.pay(state.selectedModel)},
+                          onPressed: state.isQutueLoaded && !state.isQutueFailed
+                              ? () => {viewModel.pay(state.selectedModel)}
+                              : null,
                           text:
                               "Buy with ${state.providerModel.providerInfo.name}",
                           width: MediaQuery.of(context).size.width - 100,

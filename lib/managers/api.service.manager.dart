@@ -7,6 +7,7 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_auth_store.dart';
+import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/proton_api/auth_credential.dart';
 
 class ProtonApiServiceManager implements Manager {
@@ -104,10 +105,6 @@ class ProtonApiServiceManager implements Manager {
     return _apiService!;
   }
 
-  Future<ProtonEmailAddressClient> getUserApiClient() async {
-    return getApiService().getProtonEmailAddrClient();
-  }
-
   Future<void> buildAndRestore() async {}
 
   @override
@@ -147,5 +144,17 @@ class ProtonApiServiceManager implements Manager {
   Future<void> login(String userID) {
     // TODO: implement login
     throw UnimplementedError();
+  }
+
+  /// # get clients
+
+  /// get user api client
+  ProtonEmailAddressClient getUserApiClient() {
+    return getApiService().getProtonEmailAddrClient();
+  }
+
+  /// get wallet api client
+  WalletClient getWalletClient() {
+    return getApiService().getWalletClient();
   }
 }

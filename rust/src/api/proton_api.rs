@@ -4,30 +4,20 @@ use andromeda_api::settings::{
     FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings,
 };
 use andromeda_api::wallet::{ApiWallet, ApiWalletAccount, ApiWalletData};
-use andromeda_api::{
-    transaction::ExchangeRateOrTransactionTime, wallet::CreateWalletTransactionRequestBody,
-    ChildSession,
-};
+use andromeda_api::{wallet::CreateWalletTransactionRequestBody, ChildSession};
 use andromeda_common::BitcoinUnit;
-use chrono::Utc;
 use lazy_static::lazy_static;
 use log::info;
 use std::sync::{Arc, RwLock};
 
 use crate::api::api_service::proton_api_service::ProtonAPIService;
-use crate::errors::BridgeError;
 use crate::proton_api::{
     event_routes::ProtonEvent,
     exchange_rate::ProtonExchangeRate,
     proton_address::{AllKeyAddressKey, ProtonAddress},
-    wallet::{BitcoinAddress, CreateWalletReq, EmailIntegrationBitcoinAddress, WalletTransaction},
-    wallet_account::CreateWalletAccountReq,
+    wallet::{BitcoinAddress, EmailIntegrationBitcoinAddress, WalletTransaction},
 };
-
-use crate::bdk::psbt::Transaction;
-use bdk::bitcoin::consensus::serialize;
-use bdk::bitcoin::Transaction as bdkTransaction;
-use bitcoin_internals::hex::display::DisplayHex;
+use crate::BridgeError;
 
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);
@@ -54,20 +44,6 @@ pub async fn get_wallets() -> Result<Vec<ApiWalletData>, BridgeError> {
     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
     let result: Result<Vec<andromeda_api::wallet::ApiWalletData>, andromeda_api::error::Error> =
         proton_api.inner.clients().wallet.get_wallets().await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-pub async fn create_wallet(wallet_req: CreateWalletReq) -> Result<ApiWalletData, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .create_wallet(wallet_req.into())
-        .await;
     match result {
         Ok(response) => Ok(response),
         Err(err) => Err(err.into()),
@@ -120,23 +96,6 @@ pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<ApiWalletAccou
     }
 }
 
-pub async fn create_wallet_account(
-    wallet_id: String,
-    req: CreateWalletAccountReq,
-) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .create_wallet_account(wallet_id, req.into())
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
 pub async fn update_wallet_account_label(
     wallet_id: String,
     wallet_account_id: String,
@@ -148,24 +107,6 @@ pub async fn update_wallet_account_label(
         .clients()
         .wallet
         .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-pub async fn update_wallet_account_fiat_currency(
-    wallet_id: String,
-    wallet_account_id: String,
-    new_fiat_currency: FiatCurrency,
-) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .update_wallet_account_fiat_currency(wallet_id, wallet_account_id, new_fiat_currency)
         .await;
     match result {
         Ok(response) => Ok(response),
@@ -555,51 +496,6 @@ pub async fn delete_wallet_transactions(
         .clients()
         .wallet
         .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-#[allow(clippy::too_many_arguments)]
-pub async fn broadcast_raw_transaction(
-    signed_transaction_hex: String,
-    wallet_id: String,
-    wallet_account_id: String,
-    label: Option<String>,
-    exchange_rate_id: Option<String>,
-    transaction_time: Option<String>,
-    address_id: Option<String>,
-    subject: Option<String>,
-    body: Option<String>,
-) -> Result<String, BridgeError> {
-    let transaction: Transaction = signed_transaction_hex.into();
-    let bdk_transaction: &bdkTransaction = &transaction.internal;
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
-    let signed_transaction_hex = serialize(bdk_transaction).to_lower_hex_string();
-    println!("signed_transaction_hex: {}", signed_transaction_hex);
-    let exchange_rate_or_transaction_time = if let Some(exchange_rate_id) = exchange_rate_id {
-        ExchangeRateOrTransactionTime::ExchangeRate(exchange_rate_id)
-    } else if let Some(transaction_time) = transaction_time {
-        ExchangeRateOrTransactionTime::TransactionTime(transaction_time)
-    } else {
-        ExchangeRateOrTransactionTime::TransactionTime(Utc::now().timestamp().to_string())
-    };
-    let result = proton_api
-        .inner
-        .clients()
-        .transaction
-        .broadcast_raw_transaction(
-            signed_transaction_hex,
-            wallet_id,
-            wallet_account_id,
-            label,
-            exchange_rate_or_transaction_time,
-            address_id,
-            subject,
-            body,
-        )
         .await;
     match result {
         Ok(response) => Ok(response),

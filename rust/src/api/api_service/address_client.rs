@@ -1,9 +1,11 @@
 use std::sync::Arc;
 
-pub use andromeda_api::address::{AddressBalance, ApiTx};
-pub use andromeda_api::core::ApiClient;
+pub use andromeda_api::{
+    address::{AddressBalance, ApiTx},
+    core::ApiClient,
+};
 
-use crate::errors::BridgeError;
+use crate::BridgeError;
 
 use super::proton_api_service::ProtonAPIService;
 

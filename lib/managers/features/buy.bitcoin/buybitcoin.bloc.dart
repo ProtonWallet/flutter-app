@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
@@ -79,11 +78,11 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// select currency
     on<SelectCurrencyEvent>((event, emit) async {
-      var selectedCode = event.code;
+      var fiatCurrency = event.fiatCurrency;
       var selectedProvider = state.selectedModel.provider;
       // var selectedCountry = state.selectedModel.country;
       var apiCountry = gatewayDataProvider.getApiCountryFiatCurrency(
-          selectedProvider, selectedCode);
+          selectedProvider, fiatCurrency);
       emit(state.copyWith(
           selectedModel:
               state.selectedModel.copyWith(fiatCurrency: apiCountry)));
@@ -107,10 +106,9 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// get qutoe event
     on<GetQutoeEvent>((event, emit) async {
-      emit(state.copyWith(isQutueLoaded: false));
+      emit(state.copyWith(isQutueLoaded: false, isQutueFailed: false));
       var amount = state.selectedModel.amount.toString();
-      var fiatCurrency =
-          state.selectedModel.fiatCurrency.symbol.toFiatCurrency();
+      var fiatCurrency = state.selectedModel.fiatCurrency.symbol;
       var provider = state.selectedModel.provider;
       var qutoes = await gatewayDataProvider.getQutoe(
         fiatCurrency,
@@ -120,6 +118,10 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
       var qutoe = qutoes[provider];
       if (qutoe == null) {
+        emit(state.copyWith(
+          isQutueLoaded: true,
+          isQutueFailed: true,
+        ));
         return;
       }
       for (var item in qutoe) {

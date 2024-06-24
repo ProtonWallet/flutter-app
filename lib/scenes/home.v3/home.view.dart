@@ -158,7 +158,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         : GestureDetector(
                                             onTap: () {
                                               viewModel.walletTransactionBloc
-                                                  .syncWallet();
+                                                  .syncWallet(true);
                                             },
                                             child: Icon(
                                               Icons.refresh_rounded,
@@ -390,7 +390,7 @@ class HomeView extends ViewBase<HomeViewModel> {
       ),
       backgroundColor: ProtonColors.backgroundProton,
       title: BlocBuilder<WalletListBloc, WalletListState>(
-          bloc: viewModel.walletBloc,
+          bloc: viewModel.walletListBloc,
           builder: (context, state) {
             String walletName = "";
             if (state.initialized) {
@@ -420,7 +420,7 @@ class HomeView extends ViewBase<HomeViewModel> {
       centerTitle: true,
       actions: [
         BlocBuilder<WalletListBloc, WalletListState>(
-            bloc: viewModel.walletBloc,
+            bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return IconButton(
                 icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
@@ -488,7 +488,7 @@ class HomeView extends ViewBase<HomeViewModel> {
 Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
   /// TODO:: fixme
   return BlocBuilder<WalletListBloc, WalletListState>(
-      bloc: viewModel.walletBloc,
+      bloc: viewModel.walletListBloc,
       builder: (context, state) {
         return SafeArea(
             child: SingleChildScrollView(
@@ -571,7 +571,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                           ),
                           // wallet
                           SidebarWalletItems(
-                            walletListBloc: viewModel.walletBloc,
+                            walletListBloc: viewModel.walletListBloc,
                             // select wallet
                             selectAccount: (wallet, account) {
                               if (viewModel.currentSize == ViewSize.mobile) {

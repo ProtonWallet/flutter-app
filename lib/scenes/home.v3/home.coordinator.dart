@@ -4,6 +4,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
@@ -112,8 +113,8 @@ class HomeCoordinator extends Coordinator {
     pushReplacement(view);
   }
 
-  void showImportWallet() {
-    var view = ImportCoordinator().start();
+  void showImportWallet(String preInputName) {
+    var view = ImportCoordinator(preInputName).start();
     showInBottomSheet(view);
   }
 
@@ -132,6 +133,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.walletKeysProvider,
       userManager,
       dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.bdkTransactionDataProvider,
     );
 
     var walletTransactionBloc = WalletTransactionBloc(
@@ -149,6 +151,12 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.balanceDataProvider,
     );
 
+    var createWalletBloc = CreateWalletBloc(
+      userManager,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.walletKeysProvider,
+    );
+
     var viewModel = HomeViewModelImpl(
       this,
       userManager,
@@ -159,6 +167,9 @@ class HomeCoordinator extends Coordinator {
       walletTransactionBloc,
       walletBalanceBloc,
       dataProviderManager,
+      createWalletBloc,
+
+      ///
       channelManager,
     );
     widget = HomeView(

@@ -53,8 +53,10 @@ class SidebarWalletItems extends StatelessWidget {
             children: [
               for (WalletMenuModel wlMenu in state.walletsModel)
                 ListTileTheme(
-                  contentPadding:
-                      const EdgeInsets.only(left: defaultPadding, right: 10),
+                  contentPadding: const EdgeInsets.only(
+                    left: defaultPadding,
+                    right: 10,
+                  ),
                   child: ExpansionTile(
                     shape: const Border(),
                     collapsedBackgroundColor: wlMenu.isSelected
@@ -73,8 +75,12 @@ class SidebarWalletItems extends StatelessWidget {
                     title: Transform.translate(
                       offset: const Offset(-8, 0),
                       // Build title
-                      child:
-                          _buildTitle(context, walletListBloc, state, wlMenu),
+                      child: _buildTitle(
+                        context,
+                        walletListBloc,
+                        state,
+                        wlMenu,
+                      ),
                     ),
                     iconColor: ProtonColors.textHint,
                     collapsedIconColor: ProtonColors.textHint,

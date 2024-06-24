@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/helper/bdk/helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
@@ -12,9 +10,9 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 
 abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
@@ -43,8 +41,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 class ReceiveViewModelImpl extends ReceiveViewModel {
   ReceiveViewModelImpl(super.coordinator, super.walletID, super.accountID);
 
-  final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-  late Wallet _wallet;
+  late FrbAccount _frbAccount;
   final datasourceChangedStreamController =
       StreamController<ReceiveViewModel>.broadcast();
 
@@ -99,7 +96,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
       if (init) {
-        _wallet = (await WalletManager.loadWalletWithID(
+        _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.id!,
           accountModel!.id!,
         ))!;
@@ -128,10 +125,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           accountModel!.serverAccountID,
         );
       }
-      var addressInfo = await _lib.getAddress(
-        _wallet,
-        addressIndex: addressIndex,
-      );
+      var addressInfo = await _frbAccount.getAddress(index: addressIndex);
       address = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(

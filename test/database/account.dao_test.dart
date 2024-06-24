@@ -24,7 +24,7 @@ Future<void> main() async {
           derivationPath: "m/84'/1'/0'/0",
           label: Uint8List(0),
           fiatCurrency: "USD",
-          scriptType: ScriptType.legacy.index,
+          scriptType: ScriptTypeInfo.legacy.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverAccountID: ""));
@@ -35,7 +35,7 @@ Future<void> main() async {
           derivationPath: "m/84'/1'/0'/0",
           label: Uint8List(0),
           fiatCurrency: "USD",
-          scriptType: ScriptType.nativeSegWit.index,
+          scriptType: ScriptTypeInfo.nativeSegWit.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverAccountID: ""));
@@ -47,7 +47,7 @@ Future<void> main() async {
           derivationPath: "m/84'/1'/168'/0",
           label: Uint8List(0),
           fiatCurrency: "USD",
-          scriptType: ScriptType.nestedSegWit.index,
+          scriptType: ScriptTypeInfo.nestedSegWit.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           serverAccountID: ""));
@@ -70,21 +70,21 @@ Future<void> main() async {
       expect(results[0].id, 1);
       expect(results[0].walletID, 1);
       expect(results[0].derivationPath, "m/84'/1'/0'/0");
-      expect(results[0].scriptType, ScriptType.legacy.index);
+      expect(results[0].scriptType, ScriptTypeInfo.legacy.index);
       expect(results[0].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
 
       expect(results[1].id, 2);
       expect(results[1].walletID, 12);
       expect(results[1].derivationPath, "m/84'/1'/0'/0");
-      expect(results[1].scriptType, ScriptType.nativeSegWit.index);
+      expect(results[1].scriptType, ScriptTypeInfo.nativeSegWit.index);
       expect(results[1].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[1].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
 
       expect(results[2].id, 3);
       expect(results[2].walletID, 12);
       expect(results[2].derivationPath, "m/84'/1'/168'/0");
-      expect(results[2].scriptType, ScriptType.nestedSegWit.index);
+      expect(results[2].scriptType, ScriptTypeInfo.nestedSegWit.index);
       expect(results[2].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[2].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -95,7 +95,7 @@ Future<void> main() async {
       expect(accountModel.id, 3);
       expect(accountModel.walletID, 12);
       expect(accountModel.derivationPath, "m/84'/1'/168'/0");
-      expect(accountModel.scriptType, ScriptType.nestedSegWit.index);
+      expect(accountModel.scriptType, ScriptTypeInfo.nestedSegWit.index);
       expect(accountModel.createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(accountModel.modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -122,14 +122,14 @@ Future<void> main() async {
       expect(results[0].id, 1);
       expect(results[0].walletID, 1);
       expect(results[0].derivationPath, "m/84'/1'/0'/0");
-      expect(results[0].scriptType, ScriptType.legacy.index);
+      expect(results[0].scriptType, ScriptTypeInfo.legacy.index);
       expect(results[0].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
 
       expect(results[1].id, 3);
       expect(results[1].walletID, 12);
       expect(results[1].derivationPath, "m/84'/1'/168'/0");
-      expect(results[1].scriptType, ScriptType.nestedSegWit.index);
+      expect(results[1].scriptType, ScriptTypeInfo.nestedSegWit.index);
       expect(results[1].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[1].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
     });
@@ -141,7 +141,7 @@ Future<void> main() async {
           derivationPath: "m/84'/1'/12'/0",
           label: Uint8List(0),
           fiatCurrency: "USD",
-          scriptType: ScriptType.taproot.index,
+          scriptType: ScriptTypeInfo.taproot.index,
           createTime: now.millisecondsSinceEpoch ~/ 1000 + 1234567,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000 + 55688,
           serverAccountID: ""));
@@ -149,7 +149,7 @@ Future<void> main() async {
       expect(accountModel.id, 3);
       expect(accountModel.walletID, 112);
       expect(accountModel.derivationPath, "m/84'/1'/12'/0");
-      expect(accountModel.scriptType, ScriptType.taproot.index);
+      expect(accountModel.scriptType, ScriptTypeInfo.taproot.index);
       expect(accountModel.createTime,
           now.millisecondsSinceEpoch ~/ 1000 + 1234567);
       expect(
