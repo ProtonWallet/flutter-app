@@ -560,28 +560,27 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String senderName,
     String senderEmail,
   ) async {
-    if (addressKeys.isNotEmpty) {
-      Map<String, dynamic> jsonMap = {
-        "isExternalTransaction": true,
-        "name": senderName,
-        "email": senderEmail,
-      };
-      String jsonString = jsonEncode(jsonMap);
-      String encryptedName = addressKeys.first.encrypt(jsonString);
-      transactionModel!.sender = encryptedName;
-      WalletTransaction _ =
-          await walletClient.updateWalletTransactionExternalSender(
-              walletId: transactionModel!.serverWalletID,
-              walletAccountId: transactionModel!.serverAccountID,
-              walletTransactionId: transactionModel!.serverID,
-              sender: encryptedName);
-      await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
-          notifyDataUpdate: true);
+    UserKey userkey = await userManager.getFirstKey();
+    Map<String, dynamic> jsonMap = {
+      "isExternalTransaction": true,
+      "name": senderName,
+      "email": senderEmail,
+    };
+    String jsonString = jsonEncode(jsonMap);
+    String encryptedName = userkey.encrypt(jsonString);
+    transactionModel!.sender = encryptedName;
+    WalletTransaction _ =
+        await walletClient.updateWalletTransactionExternalSender(
+            walletId: transactionModel!.serverWalletID,
+            walletAccountId: transactionModel!.serverAccountID,
+            walletTransactionId: transactionModel!.serverID,
+            sender: encryptedName);
+    await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
+        notifyDataUpdate: true);
 
-      /// walletTransaction update event will trigger ServerTransactionDataProvider update
-      /// then it will notify wallet transaction bloc will update
-      fromEmail = jsonString;
-      datasourceChangedStreamController.sinkAddSafe(this);
-    }
+    /// walletTransaction update event will trigger ServerTransactionDataProvider update
+    /// then it will notify wallet transaction bloc will update
+    fromEmail = jsonString;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }
