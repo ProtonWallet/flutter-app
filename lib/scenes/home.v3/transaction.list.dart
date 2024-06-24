@@ -100,6 +100,7 @@ class TransactionList extends StatelessWidget {
                   viewModel.protonAddresses.map((e) => e.email).toList(),
               filter: viewModel.transactionListFilterBy,
               keyWord: viewModel.transactionSearchController.text,
+              bitcoinUnit: viewModel.bitcoinUnit,
             ),
             if (state.historyTransaction.isEmpty)
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [

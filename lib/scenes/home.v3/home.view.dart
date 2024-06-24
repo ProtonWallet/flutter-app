@@ -735,7 +735,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               child: Container(
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: Text(
-                                    "${S.of(context).app_name} 1.0.0 (32)",
+                                    "${S.of(context).app_name} 1.0.0 (33)",
                                     style: FontManager.captionRegular(
                                         ProtonColors.textHint),
                                   ))),
