@@ -1,16 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 typedef ShowDetailCallback = void Function(
@@ -26,6 +24,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
   final List<String> selfEmailAddresses;
   final String filter;
   final String keyWord;
+  final BitcoinUnit bitcoinUnit;
 
   const WalletHistoryTransactionList({
     super.key,
@@ -36,6 +35,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
     required this.selfEmailAddresses,
     required this.filter,
     required this.keyWord,
+    required this.bitcoinUnit,
   });
 
   @override
@@ -84,9 +84,7 @@ class WalletHistoryTransactionListState
                 selfEmailAddresses: widget.selfEmailAddresses),
             bitcoinAmount: BitcoinAmount(
               amountInSatoshi: transactionsFiltered[index].amountInSATS,
-              bitcoinUnit: Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .bitcoinUnit,
+              bitcoinUnit: widget.bitcoinUnit,
               exchangeRate: transactionsFiltered[index].exchangeRate,
             ),
             note: transactionsFiltered[index].label ?? "",
@@ -131,6 +129,7 @@ List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(String filter,
   }
 
   if (keyword.isNotEmpty) {
+    keyword = keyword.toLowerCase();
     newHistoryTransactions = newHistoryTransactions.where((t) {
       if ((t.label ?? "").toLowerCase().contains(keyword)) {
         return true;
@@ -139,6 +138,9 @@ List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(String filter,
         return true;
       }
       if (t.toList.toLowerCase().contains(keyword)) {
+        return true;
+      }
+      if (t.body != null && t.body!.toLowerCase().contains(keyword)) {
         return true;
       }
       return false;

@@ -518,7 +518,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   Future<void> userFinishMemo() async {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
     try {
-      WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+      WalletModel _ = await DBHelper.walletDao!.findById(walletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text && secretKey != null) {
           userLabel = memoController.text;
@@ -570,18 +570,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String jsonString = jsonEncode(jsonMap);
     String encryptedName = userkey.encrypt(jsonString);
     transactionModel!.sender = encryptedName;
-    // WalletTransaction _ =
-    //     await walletClient.updateWalletTransactionExternalSender(
-    //         walletId: transactionModel!.serverWalletID,
-    //         walletAccountId: transactionModel!.serverAccountID,
-    //         walletTransactionId: transactionModel!.serverID,
-    //         sender: encryptedName);
-    // await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
-    //     notifyDataUpdate: true);
+    WalletTransaction _ =
+        await walletClient.updateExternalWalletTransactionSender(
+            walletId: transactionModel!.serverWalletID,
+            walletAccountId: transactionModel!.serverAccountID,
+            walletTransactionId: transactionModel!.serverID,
+            sender: encryptedName);
+    await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
+        notifyDataUpdate: true);
 
-    // /// walletTransaction update event will trigger ServerTransactionDataProvider update
-    // /// then it will notify wallet transaction bloc will update
-    // fromEmail = jsonString;
-    // datasourceChangedStreamController.sinkAddSafe(this);
+    /// walletTransaction update event will trigger ServerTransactionDataProvider update
+    /// then it will notify wallet transaction bloc will update
+    fromEmail = jsonString;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }
