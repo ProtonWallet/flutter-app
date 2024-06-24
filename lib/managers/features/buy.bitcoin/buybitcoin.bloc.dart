@@ -31,7 +31,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
       /// load currency
       add(const LoadCurrencyEvent());
-      add(const GetQutoeEvent());
+      add(const GetQuoteEvent());
     });
 
     /// load currency
@@ -73,7 +73,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
       /// load currency
       add(const LoadCurrencyEvent());
-      add(const GetQutoeEvent());
+      add(const GetQuoteEvent());
     });
 
     /// select currency
@@ -101,34 +101,34 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
         ),
       ));
 
-      add(const GetQutoeEvent());
+      add(const GetQuoteEvent());
     });
 
-    /// get qutoe event
-    on<GetQutoeEvent>((event, emit) async {
-      emit(state.copyWith(isQutueLoaded: false, isQutueFailed: false));
+    /// get quote event
+    on<GetQuoteEvent>((event, emit) async {
+      emit(state.copyWith(isQuoteLoaded: false, isQuoteFailed: false));
       var amount = state.selectedModel.amount.toString();
       var fiatCurrency = state.selectedModel.fiatCurrency.symbol;
       var provider = state.selectedModel.provider;
-      var qutoes = await gatewayDataProvider.getQutoe(
+      var quotes = await gatewayDataProvider.getQuote(
         fiatCurrency,
         amount,
         provider,
       );
 
-      var qutoe = qutoes[provider];
-      if (qutoe == null) {
+      var quote = quotes[provider];
+      if (quote == null) {
         emit(state.copyWith(
-          isQutueLoaded: true,
-          isQutueFailed: true,
+          isQuoteLoaded: true,
+          isQuoteFailed: true,
         ));
         return;
       }
-      for (var item in qutoe) {
+      for (var item in quote) {
         if (item.paymentMethod == state.selectedModel.paymentMethod) {
           emit(state.copyWith(
-            isQutueLoaded: true,
-            quotes: qutoe,
+            isQuoteLoaded: true,
+            quotes: quote,
             selectedModel: state.selectedModel.copyWith(quote: item),
           ));
         }

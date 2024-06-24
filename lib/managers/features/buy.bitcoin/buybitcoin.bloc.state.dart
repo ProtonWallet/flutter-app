@@ -5,8 +5,8 @@ import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart'
 class BuyBitcoinState extends Equatable {
   final bool isCountryLoaded;
   final bool isCurrencyLoaded;
-  final bool isQutueLoaded;
-  final bool isQutueFailed;
+  final bool isQuoteLoaded;
+  final bool isQuoteFailed;
 
   /// selected
   final SelectedInfoModel selectedModel;
@@ -28,8 +28,8 @@ class BuyBitcoinState extends Equatable {
     this.countryCodes = const [],
     this.isCountryLoaded = false,
     this.isCurrencyLoaded = false,
-    this.isQutueLoaded = false,
-    this.isQutueFailed = false,
+    this.isQuoteLoaded = false,
+    this.isQuoteFailed = false,
     this.currencyNames = const [],
     this.quotes = const [],
   });
@@ -41,8 +41,8 @@ class BuyBitcoinState extends Equatable {
     List<String>? currencyNames,
     List<Quote>? quotes,
     SelectedInfoModel? selectedModel,
-    bool? isQutueFailed,
-    bool? isQutueLoaded,
+    bool? isQuoteFailed,
+    bool? isQuoteLoaded,
   }) {
     return BuyBitcoinState(
       selectedModel: selectedModel ?? this.selectedModel,
@@ -51,8 +51,8 @@ class BuyBitcoinState extends Equatable {
       currencyNames: currencyNames ?? this.currencyNames,
       quotes: quotes ?? this.quotes,
       isCurrencyLoaded: isCurrencyLoaded ?? this.isCurrencyLoaded,
-      isQutueLoaded: isQutueLoaded ?? this.isQutueLoaded,
-      isQutueFailed: isQutueFailed ?? this.isQutueFailed,
+      isQuoteLoaded: isQuoteLoaded ?? this.isQuoteLoaded,
+      isQuoteFailed: isQuoteFailed ?? this.isQuoteFailed,
     );
   }
 
@@ -60,7 +60,7 @@ class BuyBitcoinState extends Equatable {
   List<Object> get props => [
         isCountryLoaded,
         isCurrencyLoaded,
-        isQutueLoaded,
+        isQuoteLoaded,
         BuyBitcoinState,
         countryCodes,
         currencyNames,

@@ -425,104 +425,101 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   ),
                                 ),
                               ),
-                              child: !state.isQutueLoaded
+                              child: !state.isQuoteLoaded
                                   ? const CardLoading(height: 44)
-                                  : state.isQutueFailed
-                                      ? const Text(
-                                          "Ramp Qutue Failed empty state")
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  if (!state.isQutueLoaded)
-                                                    const CardLoading(
-                                                        height: 50),
-                                                  const Text(
-                                                    'You receive',
-                                                    style: TextStyle(
-                                                      color: Color(0xFF535964),
-                                                      fontSize: 14,
-                                                      fontFamily: 'Inter',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 2),
-                                                  Text(
-                                                    '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
-                                                    style: const TextStyle(
-                                                      color: Color(0xFF191C32),
-                                                      fontSize: 16,
-                                                      fontFamily: 'Inter',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ],
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (!state.isQuoteLoaded)
+                                                const CardLoading(height: 50),
+                                              const Text(
+                                                'You receive',
+                                                style: TextStyle(
+                                                  color: Color(0xFF535964),
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            BlocSelector<
-                                                BuyBitcoinBloc,
-                                                BuyBitcoinState,
-                                                BuyBitcoinState>(
-                                              selector: (state) {
-                                                return state;
-                                              },
-                                              builder: (context, state) {
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Assets.images.icon.ramp.svg(
-                                                      fit: BoxFit.fill,
-                                                      width: 24,
-                                                      height: 24,
-                                                    ),
-                                                    // const SizedBox(
-                                                    //   width: 20,
-                                                    //   height: 20,
-                                                    //   child: FlutterLogo(),
-                                                    // ),
-                                                    const SizedBox(width: 8),
-                                                    Text(
-                                                      state.providerModel
-                                                          .providerInfo.name,
+                                              const SizedBox(height: 2),
+                                              state.isQuoteFailed
+                                                  ? const CardLoading(
+                                                      height: 22,
+                                                      width: 80,
+                                                    )
+                                                  : Text(
+                                                      '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
                                                       style: const TextStyle(
                                                         color:
                                                             Color(0xFF191C32),
                                                         fontSize: 16,
-                                                        fontFamily:
-                                                            'SF Pro Display',
+                                                        fontFamily: 'Inter',
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 8),
-                                                    Assets.images.icon
-                                                        .icChevronTinyDown
-                                                        .svg(
-                                                      fit: BoxFit.fill,
-                                                      width: 24,
-                                                      height: 24,
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
+                                        const SizedBox(width: 8),
+                                        BlocSelector<BuyBitcoinBloc,
+                                            BuyBitcoinState, BuyBitcoinState>(
+                                          selector: (state) {
+                                            return state;
+                                          },
+                                          builder: (context, state) {
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Assets.images.icon.ramp.svg(
+                                                  fit: BoxFit.fill,
+                                                  width: 24,
+                                                  height: 24,
+                                                ),
+                                                // const SizedBox(
+                                                //   width: 20,
+                                                //   height: 20,
+                                                //   child: FlutterLogo(),
+                                                // ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  state.providerModel
+                                                      .providerInfo.name,
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF191C32),
+                                                    fontSize: 16,
+                                                    fontFamily:
+                                                        'SF Pro Display',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Assets.images.icon
+                                                    .icChevronTinyDown
+                                                    .svg(
+                                                  fit: BoxFit.fill,
+                                                  width: 24,
+                                                  height: 24,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                             ),
                           );
                         },
@@ -554,18 +551,29 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (!state.isQutueLoaded)
+                                          if (!state.isQuoteLoaded)
                                             const CardLoading(
                                               margin: EdgeInsets.only(top: 4),
                                               height: 15,
                                               width: 300,
                                             ),
-                                          if (state.isQutueLoaded)
+                                          if (state.isQuoteLoaded)
                                             Text(
                                               "${state.selectedModel.amount} ${state.selectedModel.fiatCurrency.symbol} is all you need to pay",
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 color: Color(0xFF9294A3),
+                                                fontSize: 12,
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          if (state.isQuoteFailed)
+                                            Text(
+                                              "Quote is not a vailable but you can still try to buy",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: ProtonColors.signalError,
                                                 fontSize: 12,
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w500,
@@ -586,13 +594,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (!state.isQutueLoaded)
+                                          if (!state.isQuoteLoaded ||
+                                              state.isQuoteFailed)
                                             const CardLoading(
                                               margin: EdgeInsets.only(top: 4),
                                               height: 15,
                                               width: 300,
                                             ),
-                                          if (state.isQutueLoaded)
+                                          if (state.isQuoteLoaded &&
+                                              !state.isQuoteFailed)
                                             Text(
                                               "${state.selectedModel.provider.enumToString()} fee",
                                               textAlign: TextAlign.center,
@@ -603,7 +613,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                          if (state.isQutueLoaded)
+                                          if (state.isQuoteLoaded &&
+                                              !state.isQuoteFailed)
                                             Text(
                                               "${state.selectedModel.selectedQuote.paymentGatewayFee} ${state.selectedModel.fiatCurrency.symbol}",
                                               textAlign: TextAlign.center,
@@ -628,13 +639,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (!state.isQutueLoaded)
+                                          if (!state.isQuoteLoaded ||
+                                              state.isQuoteFailed)
                                             const CardLoading(
                                               margin: EdgeInsets.only(top: 4),
                                               height: 15,
                                               width: 300,
                                             ),
-                                          if (state.isQutueLoaded)
+                                          if (state.isQuoteLoaded &&
+                                              !state.isQuoteFailed)
                                             const Text(
                                               "network fee",
                                               textAlign: TextAlign.center,
@@ -645,7 +658,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                          if (state.isQutueLoaded)
+                                          if (state.isQuoteLoaded &&
+                                              !state.isQuoteFailed)
                                             Text(
                                               "${state.selectedModel.selectedQuote.networkFee} ${state.selectedModel.fiatCurrency.symbol}",
                                               textAlign: TextAlign.center,
@@ -712,7 +726,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: !state.isQutueLoaded
+                    child: !state.isQuoteLoaded
                         ? const CardLoading(height: 44)
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -800,7 +814,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     },
                     builder: (context, state) {
                       return ButtonV5(
-                          onPressed: state.isQutueLoaded && !state.isQutueFailed
+                          onPressed: state.isQuoteLoaded
                               ? () => {viewModel.pay(state.selectedModel)}
                               : null,
                           text:
