@@ -49,8 +49,8 @@ class SelectAmountEvent extends BuyBitcoinEvent {
   List<Object?> get props => [amount];
 }
 
-class GetQutoeEvent extends BuyBitcoinEvent {
-  const GetQutoeEvent();
+class GetQuoteEvent extends BuyBitcoinEvent {
+  const GetQuoteEvent();
 
   @override
   List<Object?> get props => [];

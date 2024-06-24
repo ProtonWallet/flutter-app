@@ -13,11 +13,22 @@ class GatewayDataProvider extends DataProvider {
   Map<GatewayProvider, List<ApiCountryFiatCurrency>> fiatCurrencies = {};
   Map<GatewayProvider, List<PaymentMethod>> paymentMethods = {};
 
+  // find the list of available providers
+  List<GatewayProvider> providers = [];
+
   /// constructor
   GatewayDataProvider(this.onRampGatewayClient);
 
   Future<List<String>> getCountries(GatewayProvider provider) async {
+    // read from cache
+
     countries = await onRampGatewayClient.getCountries();
+
+    //
+    for (var element in countries.keys) {
+      providers.add(element);
+    }
+
     //set default country
     Set<String> uniqueCodesSet = {"US", "CA"};
     var providerCountries = countries[provider];
@@ -109,7 +120,7 @@ class GatewayDataProvider extends DataProvider {
     );
   }
 
-  Future<Map<GatewayProvider, List<Quote>>> getQutoe(
+  Future<Map<GatewayProvider, List<Quote>>> getQuote(
       String fiatCurrency, String amount, GatewayProvider provider) async {
     var doubleAmount = double.parse(amount);
     var quote = await onRampGatewayClient.getQuotes(

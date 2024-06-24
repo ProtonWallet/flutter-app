@@ -141,7 +141,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
     // bloc.add(const LoadCurrencyEvent());
     bloc.add(const LoadCountryEvent());
-    // bloc.add(const GetQutoeEvent());
+    // bloc.add(const GetquoteEvent());
 
     try {
       WalletModel? walletModel;
