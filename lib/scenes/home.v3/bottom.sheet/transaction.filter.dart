@@ -9,7 +9,7 @@ import 'package:wallet/theme/theme.font.dart';
 class TransactionFilterSheet {
   static void show(BuildContext context, HomeViewModel viewModel) {
     HomeModalBottomSheet.show(context, child:
-        StatefulBuilder(builder: (BuildContext context, StateSetter setState, {String filterBy = ""}) {
+        StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,14 +22,14 @@ class TransactionFilterSheet {
                 height: 5,
               ),
               ListTile(
-                trailing: filterBy.isEmpty
+                trailing: viewModel.transactionListFilterBy.isEmpty
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_all_transactions,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  /// TODO:: apply transaction filter here
+                  viewModel.updateTransactionListFilterBy("");
                   Navigator.of(context).pop();
                 },
               ),
@@ -38,14 +38,14 @@ class TransactionFilterSheet {
                 height: 1,
               ),
               ListTile(
-                trailing: filterBy.contains("send")
+                trailing: viewModel.transactionListFilterBy.contains("send")
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_sent,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  /// TODO:: apply filter here
+                  viewModel.updateTransactionListFilterBy("send");
                   Navigator.of(context).pop();
                 },
               ),
@@ -54,14 +54,14 @@ class TransactionFilterSheet {
                 height: 1,
               ),
               ListTile(
-                trailing: filterBy.contains("receive")
+                trailing: viewModel.transactionListFilterBy.contains("receive")
                     ? SvgPicture.asset("assets/images/icon/ic-checkmark.svg",
                         fit: BoxFit.fill, width: 20, height: 20)
                     : null,
                 title: Text(S.of(context).transaction_filter_received,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  /// TODO:: apply filter here
+                  viewModel.updateTransactionListFilterBy("receive");
                   Navigator.of(context).pop();
                 },
               ),
