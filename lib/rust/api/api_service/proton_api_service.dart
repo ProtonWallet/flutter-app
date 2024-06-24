@@ -13,6 +13,7 @@ import 'bitcoin_address_client.dart';
 import 'email_integration_client.dart';
 import 'event_client.dart';
 import 'exchange_rate_client.dart';
+import 'invite_client.dart';
 import 'onramp_gateway_client.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_contacts_client.dart';
@@ -57,6 +58,9 @@ class ProtonApiService extends RustOpaque {
   ExchangeRateClient getExchangeRateClient({dynamic hint}) =>
       RustLib.instance.api
           .protonApiServiceGetExchangeRateClient(that: this, hint: hint);
+
+  InviteClient getInviteClient({dynamic hint}) => RustLib.instance.api
+      .protonApiServiceGetInviteClient(that: this, hint: hint);
 
   OnRampGatewayClient getOnRampGatewayClient({dynamic hint}) =>
       RustLib.instance.api
