@@ -3,6 +3,7 @@ pub mod bitcoin_address_client;
 pub mod email_integration_client;
 pub mod event_client;
 pub mod exchange_rate_client;
+pub mod invite_client;
 pub mod onramp_gateway_client;
 pub mod proton_api_service;
 pub mod proton_contacts_client;

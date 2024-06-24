@@ -1,5 +1,6 @@
 //proton_api_service.rs
 use super::address_client::AddressClient;
+use super::invite_client::InviteClient;
 use super::onramp_gateway_client::OnRampGatewayClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
@@ -209,6 +210,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_on_ramp_gateway_client(&self) -> OnRampGatewayClient {
         OnRampGatewayClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_invite_client(&self) -> InviteClient {
+        InviteClient::new(&self)
     }
 }
 
