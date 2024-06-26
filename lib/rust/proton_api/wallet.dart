@@ -224,6 +224,10 @@ class CreateWalletReq {
   final String? fingerprint;
   final String walletKeySignature;
 
+  /// Flag that indicates the wallet is created from auto creation. 0 for no,
+  /// 1 for yes
+  final int? isAutoCreated;
+
   const CreateWalletReq({
     required this.name,
     required this.isImported,
@@ -235,6 +239,7 @@ class CreateWalletReq {
     this.publicKey,
     this.fingerprint,
     required this.walletKeySignature,
+    this.isAutoCreated,
   });
 
   @override
@@ -248,7 +253,8 @@ class CreateWalletReq {
       mnemonic.hashCode ^
       publicKey.hashCode ^
       fingerprint.hashCode ^
-      walletKeySignature.hashCode;
+      walletKeySignature.hashCode ^
+      isAutoCreated.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -264,7 +270,8 @@ class CreateWalletReq {
           mnemonic == other.mnemonic &&
           publicKey == other.publicKey &&
           fingerprint == other.fingerprint &&
-          walletKeySignature == other.walletKeySignature;
+          walletKeySignature == other.walletKeySignature &&
+          isAutoCreated == other.isAutoCreated;
 }
 
 class EmailIntegrationBitcoinAddress {
