@@ -9515,14 +9515,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_String(raw[1]),
         );
       case 2:
-        return BridgeError_MuonSession(
+        return BridgeError_MuonAuthSession(
           dco_decode_String(raw[1]),
         );
       case 3:
-        return BridgeError_AndromedaBitcoin(
+        return BridgeError_MuonAuthRefresh(
           dco_decode_String(raw[1]),
         );
       case 4:
+        return BridgeError_MuonClient(
+          dco_decode_String(raw[1]),
+        );
+      case 5:
+        return BridgeError_MuonSession(
+          dco_decode_String(raw[1]),
+        );
+      case 6:
+        return BridgeError_AndromedaBitcoin(
+          dco_decode_String(raw[1]),
+        );
+      case 7:
         return BridgeError_ApiResponse(
           dco_decode_String(raw[1]),
         );
@@ -11947,11 +11959,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return BridgeError_Generic(var_field0);
       case 2:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_MuonSession(var_field0);
+        return BridgeError_MuonAuthSession(var_field0);
       case 3:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_AndromedaBitcoin(var_field0);
+        return BridgeError_MuonAuthRefresh(var_field0);
       case 4:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_MuonClient(var_field0);
+      case 5:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_MuonSession(var_field0);
+      case 6:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_AndromedaBitcoin(var_field0);
+      case 7:
         var var_field0 = sse_decode_String(deserializer);
         return BridgeError_ApiResponse(var_field0);
       default:
@@ -14550,14 +14571,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case BridgeError_Generic(field0: final field0):
         sse_encode_i_32(1, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_MuonSession(field0: final field0):
+      case BridgeError_MuonAuthSession(field0: final field0):
         sse_encode_i_32(2, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_AndromedaBitcoin(field0: final field0):
+      case BridgeError_MuonAuthRefresh(field0: final field0):
         sse_encode_i_32(3, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_ApiResponse(field0: final field0):
+      case BridgeError_MuonClient(field0: final field0):
         sse_encode_i_32(4, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_MuonSession(field0: final field0):
+        sse_encode_i_32(5, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_AndromedaBitcoin(field0: final field0):
+        sse_encode_i_32(6, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_ApiResponse(field0: final field0):
+        sse_encode_i_32(7, serializer);
         sse_encode_String(field0, serializer);
     }
   }

@@ -9002,13 +9002,25 @@ impl SseDecode for crate::common::errors::BridgeError {
             }
             2 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::common::errors::BridgeError::MuonSession(var_field0);
+                return crate::common::errors::BridgeError::MuonAuthSession(var_field0);
             }
             3 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::common::errors::BridgeError::AndromedaBitcoin(var_field0);
+                return crate::common::errors::BridgeError::MuonAuthRefresh(var_field0);
             }
             4 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::common::errors::BridgeError::MuonClient(var_field0);
+            }
+            5 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::common::errors::BridgeError::MuonSession(var_field0);
+            }
+            6 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::common::errors::BridgeError::AndromedaBitcoin(var_field0);
+            }
+            7 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::common::errors::BridgeError::ApiResponse(var_field0);
             }
@@ -11986,14 +11998,23 @@ impl flutter_rust_bridge::IntoDart for crate::common::errors::BridgeError {
             crate::common::errors::BridgeError::Generic(field0) => {
                 [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::common::errors::BridgeError::MuonSession(field0) => {
+            crate::common::errors::BridgeError::MuonAuthSession(field0) => {
                 [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::common::errors::BridgeError::AndromedaBitcoin(field0) => {
+            crate::common::errors::BridgeError::MuonAuthRefresh(field0) => {
                 [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::common::errors::BridgeError::ApiResponse(field0) => {
+            crate::common::errors::BridgeError::MuonClient(field0) => {
                 [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::common::errors::BridgeError::MuonSession(field0) => {
+                [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::common::errors::BridgeError::AndromedaBitcoin(field0) => {
+                [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::common::errors::BridgeError::ApiResponse(field0) => {
+                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
         }
     }
@@ -13886,16 +13907,28 @@ impl SseEncode for crate::common::errors::BridgeError {
                 <i32>::sse_encode(1, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::common::errors::BridgeError::MuonSession(field0) => {
+            crate::common::errors::BridgeError::MuonAuthSession(field0) => {
                 <i32>::sse_encode(2, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::common::errors::BridgeError::AndromedaBitcoin(field0) => {
+            crate::common::errors::BridgeError::MuonAuthRefresh(field0) => {
                 <i32>::sse_encode(3, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::common::errors::BridgeError::ApiResponse(field0) => {
+            crate::common::errors::BridgeError::MuonClient(field0) => {
                 <i32>::sse_encode(4, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::common::errors::BridgeError::MuonSession(field0) => {
+                <i32>::sse_encode(5, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::common::errors::BridgeError::AndromedaBitcoin(field0) => {
+                <i32>::sse_encode(6, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::common::errors::BridgeError::ApiResponse(field0) => {
+                <i32>::sse_encode(7, serializer);
                 <String>::sse_encode(field0, serializer);
             }
         }
