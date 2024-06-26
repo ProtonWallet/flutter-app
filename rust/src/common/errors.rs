@@ -13,6 +13,18 @@ pub enum BridgeError {
     #[error("An generic error occurred: {0}")]
     Generic(String),
 
+    /// Muon auth session error
+    #[error("A muon auth session error occurred: {0}")]
+    MuonAuthSession(String),
+
+    /// Muon auth refresh error
+    #[error("A muon auth refresh error occurred: {0}")]
+    MuonAuthRefresh(String),
+
+    /// Muon client error
+    #[error("An error occurred in muon client: {0}")]
+    MuonClient(String),
+
     /// Muon session error
     #[error("An error occurred in muon session: {0}")]
     MuonSession(String),
@@ -71,9 +83,16 @@ impl From<AndromedaBitcoinError> for BridgeError {
 impl From<AndromedaApiError> for BridgeError {
     fn from(error: AndromedaApiError) -> Self {
         match error {
-            AndromedaApiError::MuonError(me) => {
-                BridgeError::Generic(format!("Muon error occurred: {:?}", me.source()))
-            }
+            AndromedaApiError::AuthSession(kind) => BridgeError::MuonAuthSession(format!(
+                "AuthSession: A muon {kind} error was caused by a non-existent auth session"
+            )),
+            AndromedaApiError::AuthRefresh(kind) => BridgeError::MuonAuthRefresh(format!(
+                "AuthRefresh: A muon {kind} error was caused by a failed auth refresh"
+            )),
+            AndromedaApiError::MuonError(me) => BridgeError::MuonClient(format!(
+                "MuonError: {me} (caused by: {source:?})",
+                source = me.source(),
+            )),
             AndromedaApiError::BitcoinDeserialize(bde) => BridgeError::Generic(format!(
                 "BitcoinDeserializeError occurred: {:?}",
                 bde.source()
@@ -92,12 +111,12 @@ impl From<AndromedaApiError> for BridgeError {
                 error.Code, error.Error, error.Details
             )),
             AndromedaApiError::Deserialize(err) => BridgeError::Generic(err),
-            AndromedaApiError::MuonApiVersion(err) => BridgeError::MuonSession(format!(
-                "Muon MuonApiVersion occurred: {:?}",
+            AndromedaApiError::MuonAppVersion(err) => BridgeError::MuonSession(format!(
+                "Muon MuonAppVersion occurred: {:?}",
                 err.source()
             )),
             AndromedaApiError::MuonStatus(err) => BridgeError::MuonSession(format!(
-                "Muon MuonStatueError occurred: {:?}",
+                "Muon MuonStatusError occurred: {:?}",
                 err.source()
             )),
         }

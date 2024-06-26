@@ -21,6 +21,21 @@ sealed class BridgeError with _$BridgeError implements FrbException {
     String field0,
   ) = BridgeError_Generic;
 
+  /// Muon auth session error
+  const factory BridgeError.muonAuthSession(
+    String field0,
+  ) = BridgeError_MuonAuthSession;
+
+  /// Muon auth refresh error
+  const factory BridgeError.muonAuthRefresh(
+    String field0,
+  ) = BridgeError_MuonAuthRefresh;
+
+  /// Muon client error
+  const factory BridgeError.muonClient(
+    String field0,
+  ) = BridgeError_MuonClient;
+
   /// Muon session error
   const factory BridgeError.muonSession(
     String field0,
