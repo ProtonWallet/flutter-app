@@ -1,24 +1,25 @@
-import UIKit
-import ProtonCoreServices
-import ProtonCoreChallenge
-import ProtonCoreDataModel
-import ProtonCoreFoundations
-import ProtonCoreLoginUI
-import ProtonCoreLogin
-import ProtonCoreAuthentication
-import ProtonCoreHumanVerification
-import ProtonCoreUIFoundations
-import ProtonCoreFoundations
-import ProtonCoreNetworking
-import ProtonCorePayments
-import ProtonCoreSettings
-import Flutter
-import flutter_local_notifications
-import ProtonCoreLog
-import ProtonCoreCryptoGoInterface
-import ProtonCoreCryptoGoImplementation
 import CommonCrypto
 import CryptoKit
+import Flutter
+import ProtonCoreAuthentication
+import ProtonCoreChallenge
+import ProtonCoreCryptoGoImplementation
+import ProtonCoreCryptoGoInterface
+import ProtonCoreDataModel
+import ProtonCoreFeatureFlags
+import ProtonCoreFoundations
+import ProtonCoreFoundations
+import ProtonCoreHumanVerification
+import ProtonCoreLog
+import ProtonCoreLogin
+import ProtonCoreLoginUI
+import ProtonCoreNetworking
+import ProtonCorePayments
+import ProtonCoreServices
+import ProtonCoreSettings
+import ProtonCoreUIFoundations
+import UIKit
+import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SimpleViewDelegate {
@@ -64,6 +65,7 @@ import CryptoKit
                     let environment = Environment(from: arguments)
                     PMLog.setEnvironment(environment: environment.type.title)
                     self.initAPIService(env: environment)
+                    self.fetchUnauthFeatureFlags()
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS",
                                         message: "Can't parse arguments. \"native.initialize.core.environment\" missing environment parameter.",
@@ -123,6 +125,22 @@ import CryptoKit
         apiService.humanDelegate = humanVerificationDelegate
 
         self.apiService = apiService
+    }
+
+    private func fetchUnauthFeatureFlags() {
+        guard let apiService = self.apiService else {
+            PMLog.error("APIService not set.")
+            return
+        }
+        FeatureFlagsRepository.shared.setApiService(apiService)
+
+        Task {
+            do {
+                try await FeatureFlagsRepository.shared.fetchFlags()
+            } catch {
+                PMLog.error(error)
+            }
+        }
     }
 
     func initLoginAndSignup() {
