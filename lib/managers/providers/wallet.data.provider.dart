@@ -170,25 +170,55 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
-  Future<String> getNewDerivationPathBy(
-    String walletID,
-    ScriptTypeInfo scriptType,
-    CoinType coinType,
-  ) async {
-    int accountIndex = 0;
+  Future<int> getNewDerivationAccountIndex(
+      String walletID, ScriptTypeInfo scriptType, CoinType coinType) async {
+    String derivationPath = "";
+    int newAccountIndex = 0;
     var wallet = await getWallet(walletID);
     if (wallet == null) {
       throw Exception("Wallet not found");
     }
-    String derivationPath =
-        "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
     while (true) {
+      derivationPath = formatDerivationPath(
+        scriptType,
+        coinType,
+        newAccountIndex,
+      );
       if (_isDerivationPathExist(wallet.accounts, derivationPath)) {
-        accountIndex++;
+        newAccountIndex++;
       } else {
-        return derivationPath;
+        return newAccountIndex;
       }
     }
+  }
+
+  Future<String> getNewDerivationPathBy(
+      String walletID, ScriptTypeInfo scriptType, CoinType coinType,
+      {int? accountIndex}) async {
+    String derivationPath = "";
+    int newAccountIndex = 0;
+    if (accountIndex != null) {
+      newAccountIndex = accountIndex;
+    } else {
+      newAccountIndex = await getNewDerivationAccountIndex(
+        walletID,
+        scriptType,
+        coinType,
+      );
+    }
+    derivationPath = formatDerivationPath(
+      scriptType,
+      coinType,
+      newAccountIndex,
+    );
+    return derivationPath;
+  }
+
+  String formatDerivationPath(
+      ScriptTypeInfo scriptType, CoinType coinType, int accountIndex) {
+    String derivationPath =
+        "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
+    return derivationPath;
   }
 
   bool _isDerivationPathExist(
@@ -461,6 +491,26 @@ class WalletsDataProvider extends DataProvider {
       dataUpdateController.add(DataUpdated("some data Updated"));
     }
     return accountID;
+  }
+
+  Future<WalletData?> getFirstPriorityWallet() async {
+    List<WalletData>? walletDataList = await getWallets();
+    if (walletDataList != null && walletDataList.isNotEmpty) {
+      return walletDataList.first;
+    }
+    return null;
+  }
+
+  Future<WalletData?> getWalletByServerWalletID(String serverWalletID) async {
+    List<WalletData>? walletDataList = await getWallets();
+    if (walletDataList != null) {
+      for (WalletData walletData in walletDataList) {
+        if (walletData.wallet.serverWalletID == serverWalletID) {
+          return walletData;
+        }
+      }
+    }
+    return null;
   }
 
   @override

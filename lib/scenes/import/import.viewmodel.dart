@@ -99,6 +99,7 @@ class ImportViewModelImpl extends ImportViewModel {
         scriptTypeInfo,
         "My wallet account",
         defaultFiatCurrency,
+        0, // default wallet account index
       );
 
       await Future.delayed(

@@ -162,15 +162,14 @@ class WalletSettingSheet {
                     ),
                     AlertCustom(
                       content:
-                          S.of(context).receive_email_integration_alert_content,
-                      learnMore: Underline(
+                          S.of(context).bitcoin_via_email_desc,
+                      learnMore: GestureDetector(
                           onTap: () {
                             CustomPlaceholder.show(context);
                           },
-                          color: ProtonColors.orange1Text,
                           child: Text(S.of(context).learn_more,
                               style: FontManager.body2Median(
-                                  ProtonColors.orange1Text))),
+                                  ProtonColors.textNorm))),
                       leadingWidget: SvgPicture.asset(
                           "assets/images/icon/send_2.svg",
                           fit: BoxFit.fill,
@@ -180,8 +179,8 @@ class WalletSettingSheet {
                         color: Colors.transparent,
                         width: 0,
                       ),
-                      backgroundColor: ProtonColors.orange1Background,
-                      color: ProtonColors.orange1Text,
+                      backgroundColor: ProtonColors.alertEnableBackground,
+                      color: ProtonColors.textNorm,
                     ),
                     const SizedBox(
                       height: defaultPadding,

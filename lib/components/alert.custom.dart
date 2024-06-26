@@ -106,8 +106,11 @@ class AlertCustomState extends State<AlertCustom> {
                                   isClose = true;
                                 });
                               },
-                              child: Icon(Icons.close_rounded,
-                                  size: 16, color: ProtonColors.textHint)))
+                              child: Icon(
+                                Icons.close_rounded,
+                                size: 16,
+                                color: ProtonColors.textNorm,
+                              )))
                   ],
                 )));
   }

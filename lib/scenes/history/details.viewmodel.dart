@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
@@ -12,11 +11,11 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -33,7 +32,6 @@ import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
@@ -53,6 +51,7 @@ abstract class HistoryDetailViewModel
     this.accountID,
     this.txid,
     this.userFiatCurrency,
+    this.userSettingsDataProvider,
   );
 
   String strWallet = "";
@@ -75,10 +74,10 @@ abstract class HistoryDetailViewModel
   int lastExchangeRateTime = 0;
   FiatCurrency userFiatCurrency;
   ProtonExchangeRate? exchangeRate;
-  late UserSettingProvider userSettingProvider;
   String errorMessage = "";
   bool isRecipientsFromBlockChain = false;
   String? selfBitcoinAddress;
+  final UserSettingsDataProvider userSettingsDataProvider;
 
   void editMemo();
 
@@ -100,6 +99,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.serverTransactionDataProvider,
     this.walletClient,
     this.walletKeysProvider,
+    super.userSettingsDataProvider,
   );
 
   // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
@@ -132,9 +132,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       memoFocusNode.addListener(() {
         userFinishMemo();
       });
-      userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.rootNavigatorKey.currentContext!,
-          listen: false);
       WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
       AccountModel accountModel =
           await DBHelper.accountDao!.findById(accountID);
@@ -290,14 +287,14 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             transactionId: transactionId,
             hashedTransactionId: hashedTransactionID,
             label: encryptedLabel,
-            exchangeRateId: userSettingProvider.walletUserSetting.exchangeRate
-                .id, // TODO:: fix it after finalize logic
+            exchangeRateId: userSettingsDataProvider
+                .exchangeRate.id, // TODO:: fix it after finalize logic
             // transactionTime: blockConfirmTimestamp != null
             //     ? blockConfirmTimestamp.toString()
             //     : (now.millisecondsSinceEpoch ~/ 1000).toString(),
           );
 
-          String exchangeRateID = "";
+          String exchangeRateID = userSettingsDataProvider.exchangeRate.id;
           if (walletTransaction.exchangeRate != null) {
             exchangeRateID = walletTransaction.exchangeRate!.id;
           }
@@ -331,16 +328,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
         }
       }
-      if (transactionModel!.label.isNotEmpty) {
-        if (secretKey != null) {
+      if (secretKey != null) {
+        if (transactionModel!.label.isNotEmpty) {
           userLabel = await WalletKeyHelper.decrypt(
               secretKey!, utf8.decode(transactionModel!.label));
-
-          strWallet = await WalletKeyHelper.decrypt(
-            secretKey!,
-            walletModel.name,
-          );
         }
+        strWallet = await WalletKeyHelper.decrypt(
+          secretKey!,
+          walletModel.name,
+        );
       }
       memoController.text = userLabel;
 
@@ -476,11 +472,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       }
       exchangeRate ??= await ExchangeRateService.getExchangeRate(
-          Provider.of<UserSettingProvider>(
-                  Coordinator.rootNavigatorKey.currentContext!,
-                  listen: false)
-              .walletUserSetting
-              .fiatCurrency,
+          userSettingsDataProvider.fiatCurrency,
           time: transactionModel?.transactionTime != null
               ? int.parse(transactionModel?.transactionTime ?? "0")
               : null);
@@ -525,13 +517,14 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           String encryptedLabel =
               await WalletKeyHelper.encrypt(secretKey!, userLabel);
           transactionModel!.label = utf8.encode(encryptedLabel);
-          DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
           await proton_api.updateWalletTransactionLabel(
             walletId: transactionModel!.serverWalletID,
             walletAccountId: transactionModel!.serverAccountID,
-            walletTransactionId: transactionModel!.transactionID,
+            walletTransactionId: transactionModel!.serverID,
             label: encryptedLabel,
           );
+          await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
+              notifyDataUpdate: true);
         }
         isEditing = false;
       }

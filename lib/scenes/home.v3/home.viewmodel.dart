@@ -137,8 +137,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void showMoreTransactionHistory();
 
-  Future<void> addWalletAccount(int walletID, String serverWalletID,
-      ScriptTypeInfo scriptType, String label);
+  Future<bool> addWalletAccount(
+    int walletID,
+    String serverWalletID,
+    ScriptTypeInfo scriptType,
+    String label,
+    int accountIndex,
+  );
 
   void checkPreference(WalletModel walletModel);
 
@@ -175,12 +180,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
 
-  late FocusNode newAccountNameFocusNode;
   late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
-  late TextEditingController newAccountNameController;
   late TextEditingController walletRecoverPassphraseController;
-  late ValueNotifier newAccountScriptTypeValueNotifier;
 
   late FocusNode passphraseFocusNode;
   late FocusNode passphraseConfirmFocusNode;
@@ -290,15 +292,12 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> initControllers() async {
     hideEmptyUsedAddressesController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController(text: "3");
-    newAccountNameController = TextEditingController(text: "My wallet account");
-    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptTypeInfo);
     walletRecoverPassphraseController = TextEditingController(text: "");
     passphraseTextController = TextEditingController(text: "");
     passphraseConfirmTextController = TextEditingController(text: "");
     nameTextController = TextEditingController();
 
     walletRecoverPassphraseFocusNode = FocusNode();
-    newAccountNameFocusNode = FocusNode();
     passphraseFocusNode = FocusNode();
     passphraseConfirmFocusNode = FocusNode();
     nameFocusNode = FocusNode();
@@ -716,17 +715,20 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> move(NavID to) async {
     WalletModel? selectedWallet;
     AccountModel? selectedAccount;
+    bool isWalletView = false;
     for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
         // walletView
         selectedWallet = walletMenuModel.walletModel;
         selectedAccount = null;
+        isWalletView = true;
       }
       for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
         if (accountMenuModel.isSelected) {
           // wallet account view
           selectedWallet = walletMenuModel.walletModel;
           selectedAccount = accountMenuModel.accountModel;
+          isWalletView = false;
         }
       }
     }
@@ -738,11 +740,17 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showImportWallet(preInputName);
         break;
       case NavID.send:
-        coordinator.showSend(selectedWallet?.id ?? 0, selectedAccount?.id ?? 0);
+        coordinator.showSend(
+          selectedWallet?.id ?? 0,
+          selectedAccount?.id ?? 0,
+        );
         break;
       case NavID.receive:
         coordinator.showReceive(
-            selectedWallet?.id ?? 0, selectedAccount?.id ?? 0);
+          selectedWallet?.serverWalletID ?? "",
+          selectedAccount?.serverAccountID ?? "",
+          isWalletView,
+        );
         break;
       case NavID.testWebsocket:
         coordinator.showWebSocket();
@@ -755,10 +763,11 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.historyDetails:
         coordinator.showHistoryDetails(
-            selectedWallet?.id ?? 0,
-            historyAccountModel?.id ?? 0,
-            selectedTXID,
-            fiatCurrencyNotifier.value);
+          selectedWallet?.id ?? 0,
+          historyAccountModel?.id ?? 0,
+          selectedTXID,
+          fiatCurrencyNotifier.value,
+        );
         break;
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
@@ -767,7 +776,9 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showTwoFactorAuthDisable();
         break;
       case NavID.setupBackup:
-        coordinator.showSetupBackup(selectedWallet?.id ?? 0);
+        coordinator.showSetupBackup(
+          selectedWallet?.id ?? 0,
+        );
         break;
       case NavID.discover:
         coordinator.showDiscover();
@@ -788,20 +799,20 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> addWalletAccount(
+  Future<bool> addWalletAccount(
     int walletID,
     String serverWalletID,
     ScriptTypeInfo scriptType,
     String label,
+    int accountIndex,
   ) async {
-    EasyLoading.show(
-        status: "Adding account..", maskType: EasyLoadingMaskType.black);
     try {
       await createWalletBloc.createWalletAccount(
         serverWalletID,
         scriptType,
         label,
         fiatCurrencyNotifier.value,
+        accountIndex,
       );
 
       // await dataProviderManager.walletDataProvider.createWalletAccount(
@@ -815,8 +826,9 @@ class HomeViewModelImpl extends HomeViewModel {
         CommonHelper.showSnackbar(context, errorMessage, isError: true);
       }
       errorMessage = "";
+      return false;
     }
-    EasyLoading.dismiss();
+    return true;
   }
 
   @override
@@ -942,6 +954,7 @@ class HomeViewModelImpl extends HomeViewModel {
         appConfig.scriptTypeInfo,
         "My wallet account",
         defaultFiatCurrency,
+        0, // default wallet account index
       );
 
       // TODO:: fix me remove this

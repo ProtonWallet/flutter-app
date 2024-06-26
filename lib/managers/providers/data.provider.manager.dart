@@ -12,6 +12,7 @@ import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
@@ -45,7 +46,9 @@ abstract class DataCreated extends DataState {}
 
 class DataUpdated<T> extends DataState {
   final T updatedData;
+
   DataUpdated(this.updatedData);
+
   @override
   List<Object?> get props => [updatedData];
 }
@@ -76,6 +79,7 @@ class DirectEmitEvent extends DataEvent {
   final DataState state;
 
   DirectEmitEvent(this.state);
+
   @override
   List<Object?> get props => [state];
 }
@@ -115,6 +119,7 @@ class DataProviderManager extends Manager {
   late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   late BalanceDataProvider balanceDataProvider;
   late GatewayDataProvider gatewayDataProvider;
+  late ProtonAddressProvider protonAddressProvider;
 
   DataProviderManager(
     this.storage,
@@ -194,6 +199,10 @@ class DataProviderManager extends Manager {
 
     balanceDataProvider = BalanceDataProvider(
       DBHelper.accountDao!,
+    );
+
+    protonAddressProvider = ProtonAddressProvider(
+      DBHelper.addressDao!,
     );
 
     // TODO:: fix this
