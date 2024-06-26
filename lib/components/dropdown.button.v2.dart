@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/custom.tooltip.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -14,6 +16,7 @@ class DropdownButtonV2 extends StatefulWidget {
   final List items;
   final List itemsText;
   final List? itemsTextForDisplay;
+  final List? itemsMoreDetail;
   final ValueNotifier? valueNotifier;
   final String? defaultOption;
   final String? labelText;
@@ -29,6 +32,7 @@ class DropdownButtonV2 extends StatefulWidget {
     required this.items,
     required this.itemsText,
     this.itemsTextForDisplay,
+    this.itemsMoreDetail,
     this.labelText,
     this.backgroundColor,
     this.defaultOption,
@@ -206,6 +210,17 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                                 fit: BoxFit.fill,
                                                 width: 20,
                                                 height: 20)
+                                            : null,
+                                        leading: widget.itemsMoreDetail != null
+                                            ? CustomTooltip(
+                                                message: widget
+                                                    .itemsMoreDetail![index],
+                                                child: SvgPicture.asset(
+                                                    "assets/images/icon/ic-info-circle.svg",
+                                                    fit: BoxFit.fill,
+                                                    width: 16,
+                                                    height: 16),
+                                              )
                                             : null,
                                         title: Text(widget.itemsText[index],
                                             style: FontManager.body2Regular(

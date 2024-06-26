@@ -64,8 +64,8 @@ class HomeCoordinator extends Coordinator {
     push(view, fullscreenDialog: false);
   }
 
-  void showReceive(int walletID, int accountID) {
-    var view = ReceiveCoordinator(walletID, accountID).start();
+  void showReceive(String serverWalletID, String serverAccountID, bool isWalletView) {
+    var view = ReceiveCoordinator(serverWalletID, serverAccountID, isWalletView).start();
     showInBottomSheet(view);
   }
 

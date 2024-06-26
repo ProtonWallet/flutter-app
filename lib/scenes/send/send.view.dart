@@ -38,19 +38,6 @@ class SendView extends ViewBase<SendViewModel> {
         title: getTitleWidget(context),
         centerTitle: true,
         leading: getLeadingWidget(context),
-        actions: [
-          if (viewModel.sendFlowStatus == SendFlowStatus.editAmount)
-            GestureDetector(
-                onTap: () {
-                  viewModel.updatePageStatus(SendFlowStatus.addRecipient);
-                },
-                child: Padding(
-                    padding: const EdgeInsets.only(right: defaultPadding),
-                    child: Text(
-                      S.of(context).add_recipient,
-                      style: FontManager.body2Median(ProtonColors.protonBlue),
-                    )))
-        ],
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
@@ -66,6 +53,14 @@ class SendView extends ViewBase<SendViewModel> {
   Widget? getTitleWidget(BuildContext context) {
     if (viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction) {
       return Text(S.of(context).review_your_transaction,
+          style: FontManager.body2Median(ProtonColors.textNorm));
+    }
+    if (viewModel.sendFlowStatus == SendFlowStatus.addRecipient) {
+      return Text(S.of(context).send_step_who_are_you_sending_to,
+          style: FontManager.body2Median(ProtonColors.textNorm));
+    }
+    if (viewModel.sendFlowStatus == SendFlowStatus.editAmount) {
+      return Text(S.of(context).send_step_how_much_are_you_sending,
           style: FontManager.body2Median(ProtonColors.textNorm));
     }
     return null;
@@ -201,16 +196,29 @@ class SendView extends ViewBase<SendViewModel> {
                                           viewModel.fiatCurrencyNotifier)),
                             ]),
                             if (viewModel.recipients.isNotEmpty)
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 20, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  S.of(context).recipients,
-                                  style: FontManager.captionMedian(
-                                      ProtonColors.textNorm),
-                                ),
-                              ),
+                              Row(children: [
+                                Expanded(
+                                    child: Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 20, bottom: 10),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    S.of(context).recipients,
+                                    style: FontManager.captionMedian(
+                                        ProtonColors.textNorm),
+                                  ),
+                                )),
+                                GestureDetector(
+                                    onTap: () {
+                                      viewModel.updatePageStatus(
+                                          SendFlowStatus.addRecipient);
+                                    },
+                                    child: Text(
+                                      S.of(context).add_recipient,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.protonBlue),
+                                    ))
+                              ]),
                             for (int index = 0;
                                 index < viewModel.recipients.length;
                                 index++)
@@ -364,10 +372,8 @@ class SendView extends ViewBase<SendViewModel> {
                                   ),
                                 ]),
                             TransactionHistoryItem(
-                              title: S.of(context).trans_metworkFee,
-                              titleCallback: () {
-                                CustomPlaceholder.show(context);
-                              },
+                              title: S.of(context).trans_metwork_fee,
+                              titleTooltip: S.of(context).trans_metwork_fee_desc,
                               titleOptionsCallback: () {
                                 showSelectTransactionFeeMode(
                                     context, viewModel);
@@ -476,7 +482,9 @@ class SendView extends ViewBase<SendViewModel> {
                                         myFocusNode:
                                             viewModel.emailBodyFocusNode,
                                         paddingSize: 7,
-                                        maxLines: 3,
+                                        maxLines: null,
+                                        maxLength: maxMemoTextCharSize,
+                                        showCounterText: true,
                                         scrollPadding: EdgeInsets.only(
                                             bottom: MediaQuery.of(context)
                                                     .viewInsets
@@ -569,7 +577,9 @@ class SendView extends ViewBase<SendViewModel> {
                                           viewModel.memoTextController,
                                       myFocusNode: viewModel.memoFocusNode,
                                       paddingSize: 7,
-                                      maxLines: 3,
+                                      maxLines: null,
+                                      maxLength: maxMemoTextCharSize,
+                                      showCounterText: true,
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                                   .viewInsets
@@ -605,7 +615,7 @@ class SendView extends ViewBase<SendViewModel> {
                     }
                   },
                   backgroundColor: ProtonColors.protonBlue,
-                  text: S.of(context).submit,
+                  text: S.of(context).confirm_and_send,
                   width: MediaQuery.of(context).size.width,
                   textStyle: FontManager.body1Median(ProtonColors.white),
                   height: 48),
@@ -767,7 +777,7 @@ class SendView extends ViewBase<SendViewModel> {
                       viewModel.updatePageStatus(SendFlowStatus.editAmount);
                     },
                     enable: viewModel.validRecipientCount() > 0,
-                    text: S.of(context).confirm,
+                    text: S.of(context).continue_buttion,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.protonBlue,
                     textStyle: FontManager.body1Median(ProtonColors.white),

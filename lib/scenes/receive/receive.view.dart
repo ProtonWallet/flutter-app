@@ -6,7 +6,8 @@ import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
-import 'package:wallet/components/underline.dart';
+import 'package:wallet/components/custom.tooltip.dart';
+import 'package:wallet/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -58,35 +59,60 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               FontManager.body2Regular(ProtonColors.textWeak),
                           textAlign: TextAlign.center,
                         ),
-                        if (viewModel.hasEmailIntegration == true)
-                          Column(children: [
-                            const SizedBox(height: 10),
-                            AlertCustom(
-                              content: S
-                                  .of(context)
-                                  .receive_email_integration_alert_content,
-                              learnMore: Underline(
-                                  onTap: () {
-                                    CustomPlaceholder.show(context);
-                                  },
-                                  color: ProtonColors.purple1Text,
-                                  child: Text(S.of(context).learn_more,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.purple1Text))),
-                              leadingWidget: SvgPicture.asset(
-                                  "assets/images/icon/send_2.svg",
-                                  fit: BoxFit.fill,
-                                  width: 30,
-                                  height: 30),
-                              border: Border.all(
-                                color: Colors.transparent,
-                                width: 0,
-                              ),
-                              backgroundColor: ProtonColors.purple1Background,
-                              color: ProtonColors.purple1Text,
-                            ),
-                            const SizedBox(height: 10),
-                          ]),
+                        Column(children: [
+                          const SizedBox(height: 10),
+                          viewModel.hasEmailIntegration
+                              ? AlertCustom(
+                                  content: S
+                                      .of(context)
+                                      .receive_email_integration_alert_content(
+                                          viewModel.bitcoinViaEmailAddress),
+                                  learnMore: GestureDetector(
+                                      onTap: () {
+                                        CustomPlaceholder.show(context);
+                                      },
+                                      child: Text(S.of(context).learn_more,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textNorm))),
+                                  leadingWidget: SvgPicture.asset(
+                                      "assets/images/icon/send_2.svg",
+                                      fit: BoxFit.fill,
+                                      width: 30,
+                                      height: 30),
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                    width: 0,
+                                  ),
+                                  backgroundColor:
+                                      ProtonColors.alertEnableBackground,
+                                  color: ProtonColors.textNorm,
+                                )
+                              : AlertCustom(
+                                  content: S
+                                      .of(context)
+                                      .bitcoin_via_email_not_active_desc,
+                                  learnMore: GestureDetector(
+                                      onTap: () {
+                                        CustomPlaceholder.show(context);
+                                      },
+                                      child: Text(S.of(context).learn_more,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textNorm))),
+                                  leadingWidget: SvgPicture.asset(
+                                      "assets/images/icon/send_2.svg",
+                                      fit: BoxFit.fill,
+                                      width: 30,
+                                      height: 30),
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                    width: 0,
+                                  ),
+                                  backgroundColor:
+                                      ProtonColors.alertDisableBackground,
+                                  color: ProtonColors.textNorm,
+                                ),
+                          const SizedBox(height: 10),
+                        ]),
                         const SizedBox(height: 14),
                         Container(
                             width: MediaQuery.of(context).size.width,
@@ -101,37 +127,26 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   const SizedBox(height: 10),
-
-                                  /// TODO:: add walletAccount selector here
-                                  // if (Provider.of<ProtonWalletProvider>(context)
-                                  //         .protonWallet
-                                  //         .currentAccount ==
-                                  //     null)
-                                  //   Column(children: [
-                                  //     WalletAccountDropdown(
-                                  //         labelText: S.of(context).receive_to,
-                                  //         width: MediaQuery.of(context)
-                                  //                 .size
-                                  //                 .width -
-                                  //             defaultPadding * 2,
-                                  //         accounts:
-                                  //             Provider.of<ProtonWalletProvider>(
-                                  //                     context)
-                                  //                 .protonWallet
-                                  //                 .currentAccounts,
-                                  //         valueNotifier: viewModel.initialized
-                                  //             ? viewModel.accountValueNotifier
-                                  //             : ValueNotifier(Provider.of<
-                                  //                         ProtonWalletProvider>(
-                                  //                     context)
-                                  //                 .protonWallet
-                                  //                 .currentAccounts
-                                  //                 .first)),
-                                  //     const Divider(
-                                  //       thickness: 0.2,
-                                  //       height: 1,
-                                  //     ),
-                                  //   ]),
+                                  if (viewModel.isWalletView &&
+                                      viewModel.initialized &&
+                                      viewModel.accountsCount > 1)
+                                    Column(children: [
+                                      WalletAccountDropdown(
+                                          labelText: S.of(context).receive_to,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              defaultPadding * 2,
+                                          accounts:
+                                              viewModel.walletData?.accounts ??
+                                                  [],
+                                          valueNotifier:
+                                              viewModel.accountValueNotifier),
+                                      const Divider(
+                                        thickness: 0.2,
+                                        height: 1,
+                                      ),
+                                    ]),
                                   Container(
                                     color: ProtonColors.white,
                                     padding: const EdgeInsets.all(10),
@@ -142,6 +157,32 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                       data: viewModel.address,
                                       version: QrVersions.auto,
                                     ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        S.of(context).bitcoin_address,
+                                        style: FontManager.body2Median(
+                                            ProtonColors.textNorm),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Transform.translate(
+                                          offset: const Offset(0, 1),
+                                          child: CustomTooltip(
+                                            message: S
+                                                .of(context)
+                                                .bitcoin_address_desc,
+                                            child: SvgPicture.asset(
+                                                "assets/images/icon/ic-info-circle-dark.svg",
+                                                fit: BoxFit.fill,
+                                                width: 16,
+                                                height: 16),
+                                          )),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 6,
                                   ),
                                   Row(
                                       crossAxisAlignment:
@@ -203,21 +244,17 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 FontManager.body1Median(ProtonColors.white),
                             height: 48),
                         SizedBoxes.box12,
-                        GestureDetector(
-                          onTap: () {
-                            viewModel.getAddress();
-                          },
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 5),
-                              width: MediaQuery.of(context).size.width,
-                              height: 48,
-                              child: Text(
-                                S.of(context).generate_new_address,
-                                style: FontManager.body1Median(
-                                    ProtonColors.textWeak),
-                                textAlign: TextAlign.center,
-                              )),
-                        ),
+                        ButtonV5(
+                            onPressed: () async {
+                              viewModel.getAddress();
+                            },
+                            text: S.of(context).generate_new_address,
+                            width: MediaQuery.of(context).size.width,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.textNorm),
+                            backgroundColor: ProtonColors.textWeakPressed,
+                            borderColor: ProtonColors.textWeakPressed,
+                            height: 48),
                       ],
                     ),
                   )),

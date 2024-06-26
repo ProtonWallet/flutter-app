@@ -33,6 +33,17 @@ class FontManager {
         color: color);
   }
 
+
+
+  static TextStyle transactionHistoryAmountTitle(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 32,
+        // lineHeight = 34
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
+
   static TextStyle titleHero(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

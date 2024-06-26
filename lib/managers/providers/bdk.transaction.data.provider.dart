@@ -1,5 +1,6 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -12,6 +13,7 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/rust_api.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;
@@ -148,8 +150,14 @@ class BDKTransactionDataProvider extends DataProvider {
         }
         emitState(BDKDataUpdated(serverAccountID));
       } catch (e, stacktrace) {
-        logger.e(
-            "Bdk wallet full sync error: ${e.toString()} \nstacktrace: ${stacktrace.toString()}");
+        String errorMessage =
+            "Bdk wallet full sync error: ${e.toString()} \nstacktrace: ${stacktrace.toString()}";
+        logger.e(errorMessage);
+
+        /// TODO:: remove this debug message
+        CommonHelper.showErrorDialog(
+          errorMessage,
+        );
       } finally {
         isWalletSyncing[accountModel.serverAccountID] = false;
       }

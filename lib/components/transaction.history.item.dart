@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:wallet/components/custom.tooltip.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
@@ -13,7 +15,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final String? memo;
   final String? bitcoinAddress;
   final String? walletAccountName;
-  final VoidCallback? titleCallback; // display after title
+  final String? titleTooltip;
   final VoidCallback? titleOptionsCallback; // display at far right of title
   final Color? contentColor;
   final BitcoinAmount? bitcoinAmount;
@@ -24,7 +26,7 @@ class TransactionHistoryItem extends StatelessWidget {
     required this.content,
     this.memo,
     this.titleOptionsCallback,
-    this.titleCallback,
+    this.titleTooltip,
     this.contentColor,
     this.bitcoinAmount,
     this.bitcoinAddress,
@@ -52,11 +54,17 @@ class TransactionHistoryItem extends StatelessWidget {
                           style:
                               FontManager.body2Median(ProtonColors.textWeak)),
                       const SizedBox(width: 2),
-                      if (titleCallback != null)
-                        GestureDetector(
-                            onTap: titleCallback,
-                            child: Icon(Icons.info_rounded,
-                                color: ProtonColors.textHint, size: 14))
+                      if (titleTooltip != null)
+                        Transform.translate(
+                          offset: const Offset(0, 1),
+                          child: CustomTooltip(
+                              message: titleTooltip ?? "",
+                              child: SvgPicture.asset(
+                                  "assets/images/icon/ic-info-circle.svg",
+                                  fit: BoxFit.fill,
+                                  width: 16,
+                                  height: 16)),
+                        )
                     ]),
                 if (titleOptionsCallback != null)
                   GestureDetector(
