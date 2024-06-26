@@ -21,6 +21,9 @@ mixin _$BridgeError {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -30,6 +33,9 @@ mixin _$BridgeError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -39,6 +45,9 @@ mixin _$BridgeError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -49,6 +58,11 @@ mixin _$BridgeError {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -59,6 +73,9 @@ mixin _$BridgeError {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -68,6 +85,9 @@ mixin _$BridgeError {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
@@ -184,6 +204,9 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -196,6 +219,9 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -208,6 +234,9 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -224,6 +253,11 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -237,6 +271,9 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -249,6 +286,9 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
@@ -343,6 +383,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -355,6 +398,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -367,6 +413,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -383,6 +432,11 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -396,6 +450,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -408,6 +465,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
@@ -431,6 +491,549 @@ abstract class BridgeError_Generic extends BridgeError {
   @JsonKey(ignore: true)
   _$$BridgeError_GenericImplCopyWith<_$BridgeError_GenericImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_MuonAuthSessionImplCopyWith<$Res>
+    implements $BridgeErrorCopyWith<$Res> {
+  factory _$$BridgeError_MuonAuthSessionImplCopyWith(
+          _$BridgeError_MuonAuthSessionImpl value,
+          $Res Function(_$BridgeError_MuonAuthSessionImpl) then) =
+      __$$BridgeError_MuonAuthSessionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_MuonAuthSessionImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_MuonAuthSessionImpl>
+    implements _$$BridgeError_MuonAuthSessionImplCopyWith<$Res> {
+  __$$BridgeError_MuonAuthSessionImplCopyWithImpl(
+      _$BridgeError_MuonAuthSessionImpl _value,
+      $Res Function(_$BridgeError_MuonAuthSessionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_MuonAuthSessionImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
+  const _$BridgeError_MuonAuthSessionImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.muonAuthSession(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_MuonAuthSessionImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_MuonAuthSessionImplCopyWith<_$BridgeError_MuonAuthSessionImpl>
+      get copyWith => __$$BridgeError_MuonAuthSessionImplCopyWithImpl<
+          _$BridgeError_MuonAuthSessionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(String field0) apiResponse,
+  }) {
+    return muonAuthSession(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(String field0)? apiResponse,
+  }) {
+    return muonAuthSession?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(String field0)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonAuthSession != null) {
+      return muonAuthSession(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+  }) {
+    return muonAuthSession(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+  }) {
+    return muonAuthSession?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonAuthSession != null) {
+      return muonAuthSession(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_MuonAuthSession extends BridgeError {
+  const factory BridgeError_MuonAuthSession(final String field0) =
+      _$BridgeError_MuonAuthSessionImpl;
+  const BridgeError_MuonAuthSession._() : super._();
+
+  @override
+  String get field0;
+  @override
+  @JsonKey(ignore: true)
+  _$$BridgeError_MuonAuthSessionImplCopyWith<_$BridgeError_MuonAuthSessionImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_MuonAuthRefreshImplCopyWith<$Res>
+    implements $BridgeErrorCopyWith<$Res> {
+  factory _$$BridgeError_MuonAuthRefreshImplCopyWith(
+          _$BridgeError_MuonAuthRefreshImpl value,
+          $Res Function(_$BridgeError_MuonAuthRefreshImpl) then) =
+      __$$BridgeError_MuonAuthRefreshImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_MuonAuthRefreshImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_MuonAuthRefreshImpl>
+    implements _$$BridgeError_MuonAuthRefreshImplCopyWith<$Res> {
+  __$$BridgeError_MuonAuthRefreshImplCopyWithImpl(
+      _$BridgeError_MuonAuthRefreshImpl _value,
+      $Res Function(_$BridgeError_MuonAuthRefreshImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_MuonAuthRefreshImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
+  const _$BridgeError_MuonAuthRefreshImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.muonAuthRefresh(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_MuonAuthRefreshImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_MuonAuthRefreshImplCopyWith<_$BridgeError_MuonAuthRefreshImpl>
+      get copyWith => __$$BridgeError_MuonAuthRefreshImplCopyWithImpl<
+          _$BridgeError_MuonAuthRefreshImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(String field0) apiResponse,
+  }) {
+    return muonAuthRefresh(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(String field0)? apiResponse,
+  }) {
+    return muonAuthRefresh?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(String field0)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonAuthRefresh != null) {
+      return muonAuthRefresh(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+  }) {
+    return muonAuthRefresh(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+  }) {
+    return muonAuthRefresh?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonAuthRefresh != null) {
+      return muonAuthRefresh(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_MuonAuthRefresh extends BridgeError {
+  const factory BridgeError_MuonAuthRefresh(final String field0) =
+      _$BridgeError_MuonAuthRefreshImpl;
+  const BridgeError_MuonAuthRefresh._() : super._();
+
+  @override
+  String get field0;
+  @override
+  @JsonKey(ignore: true)
+  _$$BridgeError_MuonAuthRefreshImplCopyWith<_$BridgeError_MuonAuthRefreshImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_MuonClientImplCopyWith<$Res>
+    implements $BridgeErrorCopyWith<$Res> {
+  factory _$$BridgeError_MuonClientImplCopyWith(
+          _$BridgeError_MuonClientImpl value,
+          $Res Function(_$BridgeError_MuonClientImpl) then) =
+      __$$BridgeError_MuonClientImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_MuonClientImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_MuonClientImpl>
+    implements _$$BridgeError_MuonClientImplCopyWith<$Res> {
+  __$$BridgeError_MuonClientImplCopyWithImpl(
+      _$BridgeError_MuonClientImpl _value,
+      $Res Function(_$BridgeError_MuonClientImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_MuonClientImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
+  const _$BridgeError_MuonClientImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.muonClient(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_MuonClientImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_MuonClientImplCopyWith<_$BridgeError_MuonClientImpl>
+      get copyWith => __$$BridgeError_MuonClientImplCopyWithImpl<
+          _$BridgeError_MuonClientImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(String field0) apiResponse,
+  }) {
+    return muonClient(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(String field0)? apiResponse,
+  }) {
+    return muonClient?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(String field0)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonClient != null) {
+      return muonClient(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+  }) {
+    return muonClient(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+  }) {
+    return muonClient?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    required TResult orElse(),
+  }) {
+    if (muonClient != null) {
+      return muonClient(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_MuonClient extends BridgeError {
+  const factory BridgeError_MuonClient(final String field0) =
+      _$BridgeError_MuonClientImpl;
+  const BridgeError_MuonClient._() : super._();
+
+  @override
+  String get field0;
+  @override
+  @JsonKey(ignore: true)
+  _$$BridgeError_MuonClientImplCopyWith<_$BridgeError_MuonClientImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -504,6 +1107,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -516,6 +1122,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -528,6 +1137,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -544,6 +1156,11 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -557,6 +1174,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -569,6 +1189,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
@@ -666,6 +1289,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -678,6 +1304,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -690,6 +1319,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -706,6 +1338,11 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -719,6 +1356,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -731,6 +1371,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
@@ -828,6 +1471,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) andromedaApi,
     required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
@@ -840,6 +1486,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? andromedaApi,
     TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
@@ -852,6 +1501,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? andromedaApi,
     TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
@@ -868,6 +1520,11 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult map<TResult extends Object?>({
     required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
     required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
     required TResult Function(BridgeError_MuonSession value) muonSession,
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
@@ -881,6 +1538,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
@@ -893,6 +1553,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
     TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
