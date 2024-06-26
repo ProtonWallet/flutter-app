@@ -63,6 +63,9 @@ class ProtonColors {
 
   static Color launchBackground = const Color(0xff191927);
 
+  static Color alertEnableBackground = const Color(0XFF88CD89);
+  static Color alertDisableBackground = const Color(0XFFFF8383);
+
   static void updateLightTheme() {
     interactionNorm = const Color(0xFF6D4AFF);
     white = Colors.white;

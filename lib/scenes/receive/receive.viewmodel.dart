@@ -1,37 +1,60 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/providers/proton.address.provider.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.keys.provider.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
-  ReceiveViewModel(super.coordinator, this.walletID, this.accountID);
+  ReceiveViewModel(
+    super.coordinator,
+    this.serverWalletID,
+    this.serverAccountID,
+    this.isWalletView,
+  );
 
-  int walletID;
-  int accountID;
+  String serverWalletID;
+  String serverAccountID;
   int addressIndex = -1;
+
+  bool isWalletView;
 
   String address = "";
   String errorMessage = "";
   var selectedWallet = 1;
+  int accountsCount = 0;
   bool initialized = false;
 
+  WalletData? walletData;
   WalletModel? walletModel;
   bool hasEmailIntegration = false;
   AccountModel? accountModel;
   late ProtonWalletProvider protonWalletProvider;
   late ValueNotifier accountValueNotifier;
+
+  List<String> emailIntegrationAddresses = [];
+
+  String bitcoinViaEmailAddress = "";
 
   void getAddress();
 
@@ -39,11 +62,27 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 }
 
 class ReceiveViewModelImpl extends ReceiveViewModel {
-  ReceiveViewModelImpl(super.coordinator, super.walletID, super.accountID);
+  ReceiveViewModelImpl(
+    super.coordinator,
+    super.serverWalletID,
+    super.serverAccountID,
+    super.isWalletView,
+    this.userManager,
+    this.walletDataProvider,
+    this.protonAddressProvider,
+    this.walletKeysProvider,
+  );
 
   late FrbAccount _frbAccount;
   final datasourceChangedStreamController =
       StreamController<ReceiveViewModel>.broadcast();
+
+  SecretKey? secretKey;
+
+  final UserManager userManager;
+  final WalletsDataProvider walletDataProvider;
+  final ProtonAddressProvider protonAddressProvider;
+  final WalletKeysProvider walletKeysProvider;
 
   @override
   void dispose() {
@@ -56,17 +95,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         status: "syncing bitcoin address index..",
         maskType: EasyLoadingMaskType.black);
     try {
-      if (walletID == 0) {
-        walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
-      } else {
-        walletModel = await DBHelper.walletDao!.findById(walletID);
+      walletData =
+          await walletDataProvider.getWalletByServerWalletID(serverWalletID);
+      walletModel = walletData?.wallet;
+      for (AccountModel accModel in walletData?.accounts ?? []) {
+        if (accModel.serverAccountID == serverAccountID) {
+          accountModel = accModel;
+          break;
+        }
       }
-      if (accountID == 0) {
-        accountModel = await DBHelper.accountDao!
-            .findDefaultAccountByWalletID(walletModel?.id ?? 0);
-      } else {
-        accountModel = await DBHelper.accountDao!.findById(accountID);
-      }
+      accountsCount = walletData?.accounts.length ?? 0;
+      accountModel ??= walletData?.accounts.firstOrNull;
       if (walletModel == null || accountModel == null) {
         errorMessage = "[Error-404] Can not load wallet or walletAccount";
       } else {
@@ -100,10 +139,16 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           walletModel!.id!,
           accountModel!.id!,
         ))!;
-        List<String> emailIntegrationAddresses =
-            await WalletManager.getAccountAddressIDs(
+        emailIntegrationAddresses = await WalletManager.getAccountAddressIDs(
           accountModel?.serverAccountID ?? "",
         );
+        if (emailIntegrationAddresses.isNotEmpty) {
+          AddressModel? addressModel = await protonAddressProvider
+              .getAddressModel(emailIntegrationAddresses.first);
+          if (addressModel != null) {
+            bitcoinViaEmailAddress = addressModel.email;
+          }
+        }
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
         BitcoinAddressModel? bitcoinAddressModel = await DBHelper
             .bitcoinAddressDao!
@@ -143,6 +188,41 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     }
   }
 
+  Future<String> decryptAccountName(String encryptedName) async {
+    if (secretKey == null) {
+      var firstUserKey = await userManager.getFirstKey();
+      var userPrivateKey = firstUserKey.privateKey;
+      var userPassphrase = firstUserKey.passphrase;
+
+      var walletKey = await walletKeysProvider.getWalletKey(
+        serverWalletID,
+      );
+      Uint8List? entropy;
+      if (walletKey != null) {
+        var pgpEncryptedWalletKey = walletKey.walletKey;
+        // decrypt wallet key
+        entropy = proton_crypto.decryptBinaryPGP(
+          userPrivateKey,
+          userPassphrase,
+          pgpEncryptedWalletKey,
+        );
+        secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
+      }
+    }
+    String decryptedName = "Default Wallet Account";
+    if (secretKey != null) {
+      try {
+        decryptedName = await WalletKeyHelper.decrypt(
+          secretKey!,
+          encryptedName,
+        );
+      } catch (e) {
+        logger.e(e.toString());
+      }
+    }
+    return decryptedName;
+  }
+
   @override
   Future<void> move(NavID to) async {}
 
@@ -153,6 +233,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         maskType: EasyLoadingMaskType.black);
     try {
       accountModel = newAccountModel;
+      accountModel?.labelDecrypt =
+          await decryptAccountName(base64Encode(accountModel!.label));
       await WalletManager.syncBitcoinAddressIndex(
           walletModel!.serverWalletID, accountModel!.serverAccountID);
       await getAddress(init: true);

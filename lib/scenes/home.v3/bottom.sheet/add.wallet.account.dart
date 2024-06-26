@@ -1,30 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/underline.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 //TODO:: refactor this to a sperate view and viewmodel. dont need to share the viewmodel with the home viewmodel
 class AddWalletAccountSheet {
-  static void show(
-      BuildContext context, HomeViewModel viewModel, WalletModel userWallet) {
+  static Future<void> show(BuildContext context, HomeViewModel viewModel,
+      WalletMenuModel walletMenuModel) async {
+    int accountIndex = await viewModel.dataProviderManager.walletDataProvider
+        .getNewDerivationAccountIndex(
+            walletMenuModel.walletModel.serverWalletID,
+            appConfig.scriptTypeInfo,
+            appConfig.coinType);
+    ValueNotifier newAccountScriptTypeValueNotifier =
+        ValueNotifier(appConfig.scriptTypeInfo);
+    TextEditingController newAccountNameController = TextEditingController(
+        text: "My wallet account ${accountIndex.toString()}");
+    TextEditingController newAccountIndexController =
+        TextEditingController(text: accountIndex.toString());
+
+    FocusNode newAccountNameFocusNode = FocusNode();
+    FocusNode newAccountIndexFocusNode = FocusNode();
     Future.delayed(const Duration(milliseconds: 100), () {
-      viewModel.newAccountNameFocusNode.requestFocus();
+      newAccountNameFocusNode.requestFocus();
     });
-    HomeModalBottomSheet.show(context,
-        child: Column(
+    if (context.mounted) {
+      HomeModalBottomSheet.show(context, child: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        newAccountScriptTypeValueNotifier.addListener(() async {
+          int accountIndex = await viewModel
+              .dataProviderManager.walletDataProvider
+              .getNewDerivationAccountIndex(
+                  walletMenuModel.walletModel.serverWalletID,
+                  newAccountScriptTypeValueNotifier.value,
+                  appConfig.coinType);
+          newAccountIndexController.text = accountIndex.toString();
+        });
+        return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -37,15 +65,27 @@ class AddWalletAccountSheet {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Text(S.of(context).add_wallet_account,
+                        style: FontManager.body1Median(ProtonColors.textNorm)),
+                    const SizedBox(height: 5),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: defaultPadding),
+                        child: Text(
+                          S.of(context).add_wallet_account_desc,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textWeak),
+                          textAlign: TextAlign.center,
+                        )),
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: TextFieldTextV2(
-                        labelText: S.of(context).account_label,
+                        labelText: S.of(context).name,
                         maxLength: maxWalletNameSize,
-                        textController: viewModel.newAccountNameController,
-                        myFocusNode: viewModel.newAccountNameFocusNode,
+                        textController: newAccountNameController,
+                        myFocusNode: newAccountNameFocusNode,
                         validation: (String newAccountName) {
                           bool accountNameExists = false;
 
@@ -60,35 +100,119 @@ class AddWalletAccountSheet {
                     ExpansionTile(
                         shape: const Border(),
                         initiallyExpanded: false,
-                        title: Text(S.of(context).advanced_options,
+                        title: Text(S.of(context).advanced_settings,
                             style:
                                 FontManager.body2Median(ProtonColors.textWeak)),
                         iconColor: ProtonColors.textHint,
                         collapsedIconColor: ProtonColors.textHint,
                         children: [
+                          // DropdownButtonV2(
+                          //     labelText:
+                          //         S.of(context).setting_fiat_currency_label,
+                          //     width: MediaQuery.of(context).size.width -
+                          //         defaultPadding * 4,
+                          //     items: fiatCurrencies,
+                          //     canSearch: true,
+                          //     itemsText: fiatCurrencies
+                          //         .map((v) => FiatCurrencyHelper.getFullName(v))
+                          //         .toList(),
+                          //     valueNotifier: viewModel.fiatCurrencyNotifier),
+                          // const SizedBox(height: 12),
+                          Text(S.of(context).script_type,
+                              style: FontManager.body1Median(
+                                  ProtonColors.textNorm)),
+                          const SizedBox(height: 5),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
+                              child: Text(
+                                S.of(context).wallet_account_script_type_desc,
+                                style: FontManager.body2Regular(
+                                    ProtonColors.textWeak),
+                                textAlign: TextAlign.center,
+                              )),
+                          const SizedBox(height: 20),
                           DropdownButtonV2(
-                              labelText:
-                                  S.of(context).setting_fiat_currency_label,
-                              width: MediaQuery.of(context).size.width -
-                                  defaultPadding * 4,
-                              items: fiatCurrencies,
-                              canSearch: true,
-                              itemsText: fiatCurrencies
-                                  .map((v) => FiatCurrencyHelper.getFullName(v))
-                                  .toList(),
-                              valueNotifier: viewModel.fiatCurrencyNotifier),
-                          const SizedBox(height: 12),
-                          DropdownButtonV2(
-                              labelText: S.of(context).script_type,
-                              width: MediaQuery.of(context).size.width -
-                                  defaultPadding * 4,
-                              items: ScriptTypeInfo.scripts,
-                              itemsText: ScriptTypeInfo.scripts
-                                  .map((v) => v.name)
-                                  .toList(),
-                              valueNotifier:
-                                  viewModel.newAccountScriptTypeValueNotifier),
+                            labelText: S.of(context).script_type,
+                            width: MediaQuery.of(context).size.width -
+                                defaultPadding * 4,
+                            items: ScriptTypeInfo.scripts,
+                            itemsText: ScriptTypeInfo.scripts
+                                .map((v) => v.name)
+                                .toList(),
+                            itemsMoreDetail: ScriptTypeInfo.scripts.map((v) {
+                              switch (v.bipVersion) {
+                                case 44:
+                                  return S
+                                      .of(context)
+                                      .wallet_account_script_type_desc_bip44;
+                                case 49:
+                                  return S
+                                      .of(context)
+                                      .wallet_account_script_type_desc_bip49;
+                                case 84:
+                                  return S
+                                      .of(context)
+                                      .wallet_account_script_type_desc_bip84;
+                                case 86:
+                                  return S
+                                      .of(context)
+                                      .wallet_account_script_type_desc_bip86;
+                                default:
+                                  return "TODO";
+                              }
+                            }).toList(),
+                            valueNotifier: newAccountScriptTypeValueNotifier,
+                          ),
                           const SizedBox(height: 4),
+                          Underline(
+                              onTap: () {
+                                CustomPlaceholder.show(context);
+                              },
+                              color: ProtonColors.protonBlue,
+                              child: Text(S.of(context).learn_more,
+                                  style: FontManager.body2Median(
+                                      ProtonColors.protonBlue))),
+                          const SizedBox(height: 20),
+                          Text(S.of(context).wallet_account_index,
+                              style: FontManager.body1Median(
+                                  ProtonColors.textNorm)),
+                          const SizedBox(height: 5),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: defaultPadding),
+                              child: Text(
+                                S.of(context).wallet_account_index_desc,
+                                style: FontManager.body2Regular(
+                                    ProtonColors.textWeak),
+                                textAlign: TextAlign.center,
+                              )),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding),
+                            child: TextFieldTextV2(
+                              labelText: S.of(context).wallet_account_index,
+                              maxLength: maxWalletNameSize,
+                              textController: newAccountIndexController,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^[0-9]\d*')),
+                              ],
+                              myFocusNode: newAccountIndexFocusNode,
+                              validation: (String newAccountName) {
+                                bool accountNameExists = false;
+
+                                /// TODO:: check if accountName already used
+                                if (accountNameExists) {
+                                  return S
+                                      .of(context)
+                                      .account_name_already_used;
+                                }
+                                return "";
+                              },
+                            ),
+                          ),
                           Underline(
                               onTap: () {
                                 CustomPlaceholder.show(context);
@@ -103,42 +227,73 @@ class AddWalletAccountSheet {
                         padding: const EdgeInsets.only(top: 20),
                         margin: const EdgeInsets.symmetric(
                             horizontal: defaultButtonPadding),
-                        child: ButtonV5(
-                            onPressed: () async {
-                              String newAccountName = viewModel
-                                      .newAccountNameController.text.isNotEmpty
-                                  ? viewModel.newAccountNameController.text
-                                  : S.of(context).default_account;
-                              bool accountNameExists = false;
-                              if (context.mounted) {
-                                /// TODO:: check if accountName already used
-                                if (accountNameExists == false) {
-                                  await viewModel.addWalletAccount(
-                                      userWallet.id!,
-                                      userWallet.serverWalletID,
-                                      viewModel
-                                          .newAccountScriptTypeValueNotifier
-                                          .value,
-                                      viewModel.newAccountNameController.text
-                                              .isNotEmpty
-                                          ? viewModel
-                                              .newAccountNameController.text
-                                          : S.of(context).default_account);
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                    CommonHelper.showSnackbar(
-                                        context, S.of(context).account_created);
+                        child: Column(children: [
+                          ButtonV5(
+                              onPressed: () async {
+                                String newAccountName =
+                                    newAccountNameController.text.isNotEmpty
+                                        ? newAccountNameController.text
+                                        : S.of(context).default_account;
+                                int newAccountIndex = 0;
+                                try {
+                                  newAccountIndex =
+                                      int.parse(newAccountIndexController.text);
+                                } catch (e) {
+                                  // parse newAccountIndex failed, use default one
+                                }
+                                bool accountNameExists = false;
+                                if (context.mounted) {
+                                  /// TODO:: check if accountName already used
+                                  if (accountNameExists == false) {
+                                    EasyLoading.show(
+                                        status: "Adding account..",
+                                        maskType: EasyLoadingMaskType.black);
+                                    bool isSuccess =
+                                        await viewModel.addWalletAccount(
+                                      walletMenuModel.walletModel.id!,
+                                      walletMenuModel
+                                          .walletModel.serverWalletID,
+                                      newAccountScriptTypeValueNotifier.value,
+                                      newAccountNameController.text.isNotEmpty
+                                          ? newAccountNameController.text
+                                          : S.of(context).default_account,
+                                      newAccountIndex,
+                                    );
+
+                                    EasyLoading.dismiss();
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
+                                      if (isSuccess) {
+                                        CommonHelper.showSnackbar(context,
+                                            S.of(context).account_created);
+                                      }
+                                    }
                                   }
                                 }
-                              }
-                            },
-                            backgroundColor: ProtonColors.protonBlue,
-                            text: S.of(context).add_account,
-                            width: MediaQuery.of(context).size.width,
-                            textStyle: FontManager.body1Median(
-                                ProtonColors.backgroundSecondary),
-                            height: 48)),
+                              },
+                              backgroundColor: ProtonColors.protonBlue,
+                              text: S.of(context).create_wallet_account,
+                              width: MediaQuery.of(context).size.width,
+                              textStyle: FontManager.body1Median(
+                                  ProtonColors.backgroundSecondary),
+                              height: 48),
+                          SizedBoxes.box8,
+                          ButtonV5(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              text: S.of(context).cancel,
+                              width: MediaQuery.of(context).size.width,
+                              textStyle: FontManager.body1Median(
+                                  ProtonColors.textNorm),
+                              backgroundColor: ProtonColors.textWeakPressed,
+                              borderColor: ProtonColors.textWeakPressed,
+                              height: 48),
+                          SizedBoxes.box8,
+                        ])),
                   ])
-            ]));
+            ]);
+      }));
+    }
   }
 }

@@ -167,6 +167,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         scriptTypeInfo,
         "My wallet account",
         defaultFiatCurrency,
+        0, // default wallet account index
       );
 
       await WalletManager.autoBindEmailAddresses();

@@ -1,4 +1,3 @@
-
 name: wallet
 description: "Proton Wallet for Bitcoin"
 # The following line prevents the package from being accidentally published to
@@ -100,6 +99,7 @@ dependencies:
   animated_flip_counter: ^0.3.4
   sqlite3_flutter_libs: ^0.5.24
   chips_choice: ^3.0.1
+  just_the_tooltip: ^0.0.12
 
   ### database
   drift: ^2.18.0
