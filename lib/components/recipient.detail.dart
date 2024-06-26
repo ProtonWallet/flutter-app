@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 import 'bottom.sheets/base.dart';
@@ -44,7 +44,8 @@ class RecipientDetail extends StatelessWidget {
       padding:
           const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
       decoration: BoxDecoration(
-          color: ProtonColors.backgroundProton, borderRadius: BorderRadius.circular(12.0)),
+          color: ProtonColors.backgroundProton,
+          borderRadius: BorderRadius.circular(12.0)),
       child: buildContent(context, CommonHelper.isBitcoinAddress(name ?? "")),
     );
   }
@@ -213,7 +214,13 @@ class RecipientDetail extends StatelessWidget {
                     ))
                 : GestureDetector(
                     onTap: () {
-                      showDetail(context, isBitcoinAddress);
+                      RecipientDetailSheet.show(
+                        context,
+                        name,
+                        email,
+                        bitcoinAddress,
+                        isBitcoinAddress,
+                      );
                     },
                     child: Icon(Icons.expand_more_rounded,
                         size: 20, color: ProtonColors.textHint)),
@@ -221,73 +228,5 @@ class RecipientDetail extends StatelessWidget {
         )
       ],
     );
-  }
-
-  void showDetail(BuildContext context, bool isBitcoinAddress) {
-    HomeModalBottomSheet.show(context,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            isBitcoinAddress
-                ? CircleAvatar(
-                    backgroundColor: ProtonColors.protonBlue,
-                    radius: 16,
-                    child: Text(
-                      "B",
-                      style: FontManager.captionSemiBold(ProtonColors.white),
-                    ),
-                  )
-                : CircleAvatar(
-                    backgroundColor: ProtonColors.protonBlue,
-                    radius: 16,
-                    child: Text(
-                      name != null
-                          ? CommonHelper.getFirstNChar(name!, 1).toUpperCase()
-                          : "",
-                      style: FontManager.captionSemiBold(ProtonColors.white),
-                    ),
-                  ),
-            if (name != null)
-              Text(name!,
-                  style: FontManager.body1Median(ProtonColors.textNorm)),
-            if (email != null && name != email && !isBitcoinAddress)
-              Text(email!,
-                  style: FontManager.body2Regular(ProtonColors.textNorm)),
-            const SizedBox(height: defaultPadding),
-            if (bitcoinAddress.isNotEmpty)
-              Column(
-                children: [
-                  Text(S.of(context).bitcoin_address,
-                      style: FontManager.captionRegular(ProtonColors.textWeak)),
-                  GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: bitcoinAddress))
-                            .then((_) {
-                          if (context.mounted) {
-                            LocalToast.showToast(
-                                context, S.of(context).copied_address);
-                          }
-                        });
-                      },
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                width: min(240,
-                                    MediaQuery.of(context).size.width - 200),
-                                child: Text(bitcoinAddress,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.textNorm))),
-                            Icon(Icons.copy_rounded,
-                                color: ProtonColors.textWeak, size: 14)
-                          ])),
-                  const SizedBox(height: 10),
-                ],
-              )
-          ],
-        ));
   }
 }

@@ -18,6 +18,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final Color? borderColor;
   final bool isPassword;
   final double? paddingSize;
+  final bool showCounterText;
   final int? maxLines;
   final EdgeInsets? scrollPadding;
   final String? hintText;
@@ -32,6 +33,7 @@ class TextFieldTextV2 extends StatefulWidget {
     this.backgroundColor,
     this.borderColor,
     this.autofocus = false,
+    this.showCounterText = false,
     required this.textController,
     required this.myFocusNode,
     this.inputFormatters = const [],
@@ -40,7 +42,7 @@ class TextFieldTextV2 extends StatefulWidget {
     required this.validation,
     this.isPassword = false,
     this.paddingSize,
-    this.maxLines,
+    this.maxLines = 1,
     this.checkOfErrorOnFocusChange = true,
     this.scrollPadding,
     this.hintText,
@@ -130,7 +132,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   keyboardType: widget.keyboardType,
                   textInputAction: widget.textInputAction,
                   inputFormatters: widget.inputFormatters,
-                  maxLines: widget.maxLines ?? 1,
+                  maxLines: widget.maxLines,
                   maxLength: widget.maxLength,
                   validator: (string) {
                     if (widget
@@ -176,7 +178,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                                         color: ProtonColors.textWeak))
                                 : null
                             : null,
-                    counterText: "",
+                    counterText: widget.showCounterText ? null : "",
                     hintText: widget.hintText,
                     hintStyle:
                         FontManager.textFieldLabelStyle(ProtonColors.textHint),

@@ -946,18 +946,23 @@ class WalletManager implements Manager {
     }
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
-      return jsonList[0].values.first;
+      List<String> emails = [];
+      for (var item in jsonList){
+        emails.add(item.values);
+      }
+      return emails.join(", ");
     } catch (e) {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
+        List<String> emails = [];
         for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
           // bitcoinAddress as key, emailAddress as value
           if (selfEmailAddresses.contains(keyValues.value)) {
             continue;
           }
-          return keyValues.value;
+          emails.add(keyValues.value);
         }
-        return "";
+        return emails.join(", ");
       } catch (e) {
         return jsonString;
       }

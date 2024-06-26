@@ -22,13 +22,13 @@ class ScriptTypeInfo {
       bipVersion: 44,
       type: ScriptType.legacy);
   static final ScriptTypeInfo nestedSegWit = ScriptTypeInfo(
-      name: "NestedSegWit",
+      name: "Legacy Segwit",
       index: 2,
       desc: "BIP-0049, P2SH",
       bipVersion: 49,
       type: ScriptType.nestedSegwit);
   static final ScriptTypeInfo nativeSegWit = ScriptTypeInfo(
-      name: "NativeSegWit",
+      name: "Native Segwit",
       index: 3,
       desc: "BIP-0084, P2WPKH",
       bipVersion: 84,

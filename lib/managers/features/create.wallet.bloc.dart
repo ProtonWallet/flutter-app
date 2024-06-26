@@ -134,9 +134,9 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     String walletID,
     ScriptTypeInfo scriptType,
     String label,
-    FiatCurrency fiatCurrency, {
-    int internal = 0,
-  }) async {
+    FiatCurrency fiatCurrency,
+    int accountIndex,
+  ) async {
     String serverWalletID = walletID;
 
     var firstUserKey = await userManager.getFirstKey();
@@ -152,6 +152,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
       serverWalletID,
       scriptType,
       appConfig.coinType,
+      accountIndex: accountIndex,
     );
 
     CreateWalletAccountReq request = CreateWalletAccountReq(
