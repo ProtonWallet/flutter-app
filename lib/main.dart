@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/flutter_logger.dart';
 import 'package:wallet/rust/frb_generated.dart';
@@ -30,6 +31,7 @@ Future setupLogger() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AppConfig.initAppEnv();
   await RustLib.init();
   setupLogger();
 
