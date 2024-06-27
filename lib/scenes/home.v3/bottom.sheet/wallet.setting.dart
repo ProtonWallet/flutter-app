@@ -8,7 +8,6 @@ import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/close.button.v1.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
-import 'package:wallet/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
@@ -161,8 +160,7 @@ class WalletSettingSheet {
                       height: defaultPadding,
                     ),
                     AlertCustom(
-                      content:
-                          S.of(context).bitcoin_via_email_desc,
+                      content: S.of(context).bitcoin_via_email_desc,
                       learnMore: GestureDetector(
                           onTap: () {
                             CustomPlaceholder.show(context);

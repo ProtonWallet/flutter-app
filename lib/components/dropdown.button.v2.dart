@@ -6,7 +6,6 @@ import 'package:wallet/components/custom.tooltip.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';

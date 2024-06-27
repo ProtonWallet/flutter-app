@@ -13,7 +13,6 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/rust_api.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;

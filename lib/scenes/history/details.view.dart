@@ -9,7 +9,6 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/components/transaction.history.send.item.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/exchange.caculator.dart';

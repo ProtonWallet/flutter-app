@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/components/button.v5.dart';
 import 'package:wallet/components/dropdown.button.v2.dart';
 import 'package:wallet/components/protonmail.autocomplete.dart';
@@ -373,7 +372,8 @@ class SendView extends ViewBase<SendViewModel> {
                                 ]),
                             TransactionHistoryItem(
                               title: S.of(context).trans_metwork_fee,
-                              titleTooltip: S.of(context).trans_metwork_fee_desc,
+                              titleTooltip:
+                                  S.of(context).trans_metwork_fee_desc,
                               titleOptionsCallback: () {
                                 showSelectTransactionFeeMode(
                                     context, viewModel);

@@ -1,48 +1,54 @@
 import Foundation
+import ProtonCoreLog
+
 
 class AppVersionHeader {
     
-    private let appNamePrefix: String
-    private let defaults = UserDefaults.standard
+    static var shared: AppVersionHeader = { return AppVersionHeader() }()
     
-    init(appNamePrefix: String) {
-        self.appNamePrefix = appNamePrefix
+    private let appNamePrefix: String = "ios-wallet@"
+    private var flutterAppVersion: String = "ios-wallet@1.0.0";
+    private var flutterUserAgent: String = "ProtonWallet/1.0.0 (iOS 14.0; iPhone8,1)"
+    private var flutterLocal: String = Locale.autoupdatingCurrent.identifier
+    
+    private init() { }
+    
+    func getLocale() -> String {
+        flutterLocal
     }
     
     func getVersionHeader() -> String {
-        return "android-wallet@1.0.0"
-        
-//        let version = readVersion() ?? getDefaultVersion()
-//        return appNamePrefix + version + "-dev"
+        flutterAppVersion
     }
     
-    func getVersion() -> String? {
-        return readVersion()
+    func getUserAgent() -> String {
+        flutterUserAgent
+    }
+    
+    func getDefaultVersioHeader() -> String {
+        return appNamePrefix + getDefaultVersion()
     }
     
     func getDefaultVersion() -> String {
         return Bundle.main.majorVersion
     }
-    
-    func setVersion(version: String?) {
-        guard let version = version else {
-            resetVersion()
-            return
+
+    func parseFlutterData(from dictionary: [String: Any]) {
+        let appVersionKey = "app-version";
+        let userAgentKey = "user-agent";
+        if let version = dictionary[appVersionKey] as? String {
+            flutterAppVersion = version
+        } else {
+            flutterAppVersion = getDefaultVersioHeader()
         }
-        writeVersion(version: version)
+        if let agent = dictionary[userAgentKey] as? String {
+            flutterUserAgent = agent
+        } else {
+            flutterUserAgent = "ProtonWallet/" + getDefaultVersion() + " (Flutter 3.22; iPhone8,1)"
+        }
+        
+        print("appVersionKey" + flutterAppVersion)
+        print("userAgentKey" + flutterUserAgent)
     }
     
-    func resetVersion() {
-        defaults.removeObject(forKey: appNamePrefix)
-    }
-    
-    // MARK: Private interface
-    
-    private func readVersion() -> String? {
-        return defaults.object(forKey: appNamePrefix) as? String
-    }
-    
-    private func writeVersion(version: String) {
-        defaults.set(version, forKey: appNamePrefix)
-    }
 }

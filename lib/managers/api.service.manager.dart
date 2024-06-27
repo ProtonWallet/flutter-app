@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
@@ -14,14 +13,14 @@ class ProtonApiServiceManager implements Manager {
   final SecureStorageManager storage;
   final ApiEnv env;
 
-  final String version = "flutter-wallet@1.0.0";
-  final String agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
+  String version = "macos-wallet@1.0.0";
+  String agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
 
-  //
+  ///
   ProtonApiService? _apiService;
   late ProtonWalletAuthStore authStore;
 
-  // add networking service here
+  /// add networking service here
   ProtonApiServiceManager(this.env, {required this.storage}) {
     authStore = ProtonWalletAuthStore(env: env.toString());
   }
@@ -47,19 +46,8 @@ class ProtonApiServiceManager implements Manager {
     String uid = await storage.get("sessionId");
     String accessToken = await storage.get("accessToken");
     String refreshToken = await storage.get("refreshToken");
-    String appVersion = "Other";
-    String userAgent = "None";
-    logger.i("uid = '$uid';");
     logger.i("accessToken = '$accessToken';");
     logger.i("refreshToken = '$refreshToken';");
-    if (Platform.isAndroid) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
-    }
-    if (Platform.isIOS) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
-    }
 
     var apiService = _apiService;
     if (apiService != null) {
@@ -79,28 +67,18 @@ class ProtonApiServiceManager implements Manager {
       await authStore.setAuthDartCallback(callback: callback);
       _apiService = ProtonApiService(
           env: env.toString(),
-          appVersion: appVersion,
-          userAgent: userAgent,
+          appVersion: version,
+          userAgent: agent,
           store: authStore);
     }
     await _apiService?.setProtonApi();
   }
 
   ProtonApiService getApiService() {
-    String appVersion = "Other";
-    String userAgent = "None";
-    if (Platform.isAndroid) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
-    }
-    if (Platform.isIOS) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
-    }
     _apiService ??= ProtonApiService(
         env: env.toString(),
-        appVersion: appVersion,
-        userAgent: userAgent,
+        appVersion: version,
+        userAgent: agent,
         store: authStore);
     return _apiService!;
   }
@@ -113,20 +91,15 @@ class ProtonApiServiceManager implements Manager {
   @override
   Future<void> init() async {
     await authStore.setAuthDartCallback(callback: callback);
-    String appVersion = "Other";
-    String userAgent = "None";
-    if (Platform.isAndroid) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (Android 12; test; motorola; en)";
-    }
-    if (Platform.isIOS) {
-      appVersion = "android-wallet@1.0.0";
-      userAgent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
-    }
+
+    final UserAgent userAgent = UserAgent();
+    version = await userAgent.appVersion;
+    agent = await userAgent.ua;
+
     _apiService = ProtonApiService(
         env: env.toString(),
-        appVersion: appVersion,
-        userAgent: userAgent,
+        appVersion: version,
+        userAgent: agent,
         store: authStore);
   }
 
