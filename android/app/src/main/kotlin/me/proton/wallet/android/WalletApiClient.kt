@@ -22,13 +22,18 @@ import android.os.Build
 import me.proton.core.network.domain.ApiClient
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 open class WalletApiClient @Inject constructor() : ApiClient {
 
     private val appName = "android-wallet"
     private val productName = "ProtonWallet"
-    private val versionName = BuildConfig.VERSION_NAME
-    private val versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
+    private var versionName = BuildConfig.VERSION_NAME
+    private var versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
+
+    private var versionHeader = "$appName@$versionName$versionSuffix"
+    private var userAgentHeader = defaultAgent
 
     /**
      * Tells the lib if DoH should be used in a given moment (based e.g. on user setting or whether
@@ -39,23 +44,14 @@ open class WalletApiClient @Inject constructor() : ApiClient {
     /**
      * Client's value for 'x-pm-appversion' header.
      */
-    override val appVersionHeader: String = "$appName@$versionName$versionSuffix"
+    override val appVersionHeader: String
+        get() = versionHeader
 
     /**
      * Client's value for 'User-Agent' header.
      */
     override val userAgent: String
-        get() = String.format(
-            Locale.US,
-            "%s/%s (Android %s; %s; %s %s; %s)",
-            productName,
-            versionName,
-            Build.VERSION.RELEASE,
-            Build.MODEL,
-            Build.BRAND,
-            Build.DEVICE,
-            Locale.getDefault().language
-        )
+        get() = userAgentHeader
 
     /**
      * Enables debug logging in the underlying HTTP library.
@@ -69,5 +65,32 @@ open class WalletApiClient @Inject constructor() : ApiClient {
      */
     override fun forceUpdate(errorMessage: String) {
         // dummy example, not implemented for now
+    }
+
+    private val defaultAgent: String
+        get() = String.format(
+            Locale.US,
+            "%s/%s (Android %s; %s; %s %s; %s)",
+            productName,
+            versionName,
+            Build.VERSION.RELEASE,
+            Build.MODEL,
+            Build.BRAND,
+            Build.DEVICE,
+            Locale.getDefault().language
+        )
+
+    public fun updateVersion(version: String?, agent: String?) {
+        if (version != null) {
+            this.versionHeader = version
+        } else {
+            this.versionHeader = "$appName@$versionName$versionSuffix"
+        }
+
+        if (agent != null) {
+            this.userAgentHeader = agent
+        } else {
+            this.userAgentHeader = defaultAgent
+        }
     }
 }

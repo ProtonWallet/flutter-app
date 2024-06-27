@@ -37,7 +37,6 @@ abstract class Service<T> {
 
   Future<void> _runTasks() async {
     while (_isRunning && !_isPaused) {
-      await onUpdate();
       try {
         await onUpdate().then((value) {
           _dataController.sinkAddSafe(value);

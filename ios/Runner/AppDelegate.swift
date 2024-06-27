@@ -62,6 +62,7 @@ import CryptoKit
                 print("native.initialize.core.environment data:", call.arguments ?? "")
                 if let arguments = call.arguments as? [String: Any] {
                     let environment = Environment(from: arguments)
+                    AppVersionHeader.shared.parseFlutterData(from: arguments)
                     PMLog.setEnvironment(environment: environment.type.title)
                     self.initAPIService(env: environment)
                 } else {
@@ -108,7 +109,7 @@ import CryptoKit
 
     func initAPIService(env: Environment) {
         PMAPIService.noTrustKit = true
-        let challengeParametersProvider = ChallengeParametersProvider.forAPIService(clientApp: .mail, // TODO: fix, use .wallet
+        let challengeParametersProvider = ChallengeParametersProvider.forAPIService(clientApp: .wallet,
                                                                                     challenge: PMChallenge())
         let apiService = PMAPIService.createAPIServiceWithoutSession(
             environment: env.toCoreEnv(),
@@ -117,7 +118,7 @@ import CryptoKit
         self.authManager = AuthHelper()
         self.humanVerificationDelegate = HumanCheckHelper(apiService: apiService,
                                                           inAppTheme: getInAppTheme,
-                                                          clientApp: .mail) // TODO: fix, use .wallet
+                                                          clientApp: .wallet)
         apiService.authDelegate = authManager
         apiService.serviceDelegate = serviceDelegate
         apiService.humanDelegate = humanVerificationDelegate
@@ -134,7 +135,7 @@ import CryptoKit
         let appName = "Proton Wallet"
         login = LoginAndSignup(
             appName: appName,
-            clientApp: .mail, // TODO: fix, use .wallet
+            clientApp: .wallet,
             apiService: apiService,
             minimumAccountType: .internal,
             isCloseButtonAvailable: true,
@@ -163,15 +164,6 @@ import CryptoKit
                 flowCompletion(.success(()))
             }
         }
-    }
-    
-    private var getCustomErrorPresenter: LoginErrorPresenter? {
-        // guard alternativeErrorPresenterSwitch.isOn else { return nil }
-        return AlternativeLoginErrorPresenter()
-    }
-    
-    private func initialLoginError() -> String? {
-        nil
     }
     
     private var getHelpDecorator: ([[HelpItem]]) -> [[HelpItem]] {
@@ -263,9 +255,7 @@ import CryptoKit
         login?.presentLoginFlow(over: rootViewController,
                                 customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
-                                    customErrorPresenter: getCustomErrorPresenter,
-                                    initialError: initialLoginError(),
-                                    helpDecorator: getHelpDecorator,
+                                    // helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
                                 ), updateBlock: processLoginResult)
     }
@@ -281,9 +271,7 @@ import CryptoKit
         login?.presentSignupFlow(over: rootViewController,
                                  customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
-                                    customErrorPresenter: getCustomErrorPresenter,
-                                    initialError: initialLoginError(),
-                                    helpDecorator: getHelpDecorator,
+                                    // helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
                                  ), updateBlock: processLoginResult)
     }
@@ -316,99 +304,5 @@ import CryptoKit
             email: email
         )
         rootViewController.present(viewController, animated: true)
-    }
-}
-
-struct SomeVeryObscureInternalError: Error {}
-
-final class AlternativeLoginErrorPresenter: LoginErrorPresenter {
-    
-    func showAlert(message: String, over: UIViewController) {
-        let alert = UIAlertController(title: "The magnificent alternative error presenter proudly presents", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Well, that's a shame", style: .cancel, handler: { action in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        over.present(alert, animated: true, completion: nil)
-    }
-    
-    func willPresentError(error: LoginError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInLogin, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: SignupError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInLogin, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: AvailabilityError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.localizedDescription, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: SetUsernameError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInLogin, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: CreateAddressError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInLogin, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: CreateAddressKeysError, from viewController: UIViewController) -> Bool {
-        if case .generic(_, _, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInLogin, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: StoreKitManagerErrors, from viewController: UIViewController) -> Bool {
-        if case .unknown(_, let originalError) = error, originalError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.userFacingMessageInPayments, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: ResponseError, from viewController: UIViewController) -> Bool {
-        if error.underlyingError is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.localizedDescription, over: viewController)
-        return true
-    }
-    
-    func willPresentError(error: Error, from viewController: UIViewController) -> Bool {
-        if error is SomeVeryObscureInternalError {
-            showAlert(message: "Internal error coming from additional work closure", over: viewController)
-            return true
-        }
-        showAlert(message: error.localizedDescription, over: viewController)
-        return true
     }
 }

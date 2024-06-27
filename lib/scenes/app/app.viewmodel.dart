@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/helper/firebase_messaging_helper.dart';
 import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/local_notification.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
@@ -59,8 +60,14 @@ class AppViewModelImpl extends AppViewModel {
     await platform.init();
     serviceManager.register(platform);
 
+    var userAgent = UserAgent();
+
     /// notify native initalized
-    platform.initalNativeApiEnv(apiEnv);
+    platform.initalNativeApiEnv(
+      apiEnv,
+      await userAgent.appVersion,
+      await userAgent.ua,
+    );
 
     /// inital hive
     await Hive.initFlutter();

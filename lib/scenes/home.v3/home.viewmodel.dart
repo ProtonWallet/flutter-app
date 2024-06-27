@@ -16,6 +16,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
@@ -221,6 +222,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       exchangeRateTime: '',
       exchangeRate: 1,
       cents: 1);
+
+  /// app version
+  String appVersion = "Proton Wallet";
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -320,6 +324,9 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> loadData() async {
     // init network
     await apiServiceManager.initalOldApiService();
+
+    // read app version
+    appVersion = await UserAgent().display;
 
     // user
     var userInfo = userManager.userInfo;

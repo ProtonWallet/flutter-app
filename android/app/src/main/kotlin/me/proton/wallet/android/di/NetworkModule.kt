@@ -87,4 +87,11 @@ abstract class NetworkBindsModule {
     @Binds
     @Singleton
     abstract fun provideApiClient(walletApiClient: WalletApiClient): ApiClient
+    companion object {
+        @Provides
+        @Singleton
+        fun provideWalletApiClient(): WalletApiClient {
+            return WalletApiClient()
+        }
+    }
 }
