@@ -30,9 +30,8 @@ open class WalletApiClient @Inject constructor() : ApiClient {
     private val appName = "android-wallet"
     private val productName = "ProtonWallet"
     private var versionName = BuildConfig.VERSION_NAME
-    private var versionSuffix = if (BuildConfig.DEBUG) "-dev" else ""
 
-    private var versionHeader = "$appName@$versionName$versionSuffix"
+    private var versionHeader = "$appName@$versionName"
     private var userAgentHeader = defaultAgent
 
     /**
@@ -84,7 +83,7 @@ open class WalletApiClient @Inject constructor() : ApiClient {
         if (version != null) {
             this.versionHeader = version
         } else {
-            this.versionHeader = "$appName@$versionName$versionSuffix"
+            this.versionHeader = "$appName@$versionName"
         }
 
         if (agent != null) {

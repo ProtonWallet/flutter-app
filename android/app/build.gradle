@@ -32,6 +32,9 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def walletHost = System.getenv('WALLET_HOST')
+if (walletHost == null) { walletHost = 'proton.me' }
+
 def sentryAccountDSN = System.getenv('SENTRY_ACCOUNT_ANDROID_DSN')
 if (sentryAccountDSN == null) { sentryAccountDSN = '' }
 
@@ -77,6 +80,7 @@ android {
 
         buildConfigField("String", "SENTRY_ACCOUNT_DSN", "\"$sentryAccountDSN\"")
         buildConfigField("String", "SENTRY_WALLET_DSN", "\"$sentryWalletDSN\"")
+        buildConfigField("String", "WALLET_HOST", "\"$walletHost\"")
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -119,7 +123,17 @@ android {
     packagingOptions{
         pickFirst '**'
     }
-
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            versionNameSuffix '-dev'
+            applicationIdSuffix '.dev'
+        }
+        prod {
+            dimension "default"
+        }
+    }
     buildTypes {
         debug {
             debuggable true
