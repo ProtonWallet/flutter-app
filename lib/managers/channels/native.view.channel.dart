@@ -6,7 +6,11 @@ abstract class NativeViewChannel {
   Future<void> switchToNativeSignup();
   Future<void> switchToNativeLogin();
   Future<void> restartNative();
-  Future<void> initalNativeApiEnv(ApiEnv env);
+  Future<void> initalNativeApiEnv(
+    ApiEnv env,
+    String appVersion,
+    String userAgent,
+  );
 
   /// Add more methods here
   Future<void> switchToUpgrade(FlutterSession session);

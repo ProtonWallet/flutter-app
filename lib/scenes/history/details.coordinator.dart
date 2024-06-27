@@ -1,6 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -18,7 +17,11 @@ class HistoryDetailCoordinator extends Coordinator {
   final FiatCurrency userFiatCurrency;
 
   HistoryDetailCoordinator(
-      this.walletID, this.accountID, this.txID, this.userFiatCurrency,);
+    this.walletID,
+    this.accountID,
+    this.txID,
+    this.userFiatCurrency,
+  );
 
   @override
   void end() {}
@@ -27,7 +30,8 @@ class HistoryDetailCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     var userManager = serviceManager.get<UserManager>();
     var walletManager = serviceManager.get<ProtonWalletManager>();
-    var serverTransactionDataProvider = serviceManager.get<DataProviderManager>().serverTransactionDataProvider;
+    var serverTransactionDataProvider =
+        serviceManager.get<DataProviderManager>().serverTransactionDataProvider;
     var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var dataProviderManager = serviceManager.get<DataProviderManager>();
     var viewModel = HistoryDetailViewModelImpl(

@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
-
-import 'bottom.sheets/base.dart';
 
 class RecipientDetail extends StatelessWidget {
   final String? name;

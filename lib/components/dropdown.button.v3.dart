@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 class DropdownButtonV3 extends StatefulWidget {
   const DropdownButtonV3({super.key});
   @override
-  _CurrencyInputExampleState createState() => _CurrencyInputExampleState();
+  CurrencyInputExampleState createState() => CurrencyInputExampleState();
 }
 
-class _CurrencyInputExampleState extends State<DropdownButtonV3> {
+class CurrencyInputExampleState extends State<DropdownButtonV3> {
   // final _formKey = GlobalKey<FormState>();
   // final _moneyController = TextEditingController();
   // final String _selectedRecommendation = 'Ramp';

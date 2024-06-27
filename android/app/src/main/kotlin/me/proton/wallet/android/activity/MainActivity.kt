@@ -30,11 +30,17 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 import me.proton.core.domain.entity.UserId
+import me.proton.wallet.android.WalletApiClient
+import me.proton.wallet.android.channel.VersionHeader
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FlutterFragmentActivity(), NativeCallHandler {
 
     private val viewModel: MainActivityViewModel by viewModels()
+
+    @Inject
+    lateinit var walletApiClient: WalletApiClient
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
@@ -87,5 +93,9 @@ class MainActivity : FlutterFragmentActivity(), NativeCallHandler {
 
     override fun logout(userId: UserId?) {
         viewModel.logout(userId)
+    }
+
+    override fun setWalletApiClientHeader(versionHeader: VersionHeader) {
+        walletApiClient.updateVersion(versionHeader.version, versionHeader.agent)
     }
 }

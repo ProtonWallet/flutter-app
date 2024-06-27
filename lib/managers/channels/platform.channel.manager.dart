@@ -84,15 +84,24 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   }
 
   @override
-  Future<void> initalNativeApiEnv(ApiEnv env) async {
+  Future<void> initalNativeApiEnv(
+    ApiEnv env,
+    String appVersion,
+    String userAgent,
+  ) async {
     if (PlatformExtension.desktop) {
       return logger.i("initalNativeApiEnv is mobile only feature");
     }
     const envKey = "env-key";
+    const appVersionKey = "app-version";
+    const userAgentKey = "user-agent";
     try {
       var strEnv = env.toString();
-      await toNativeChannel
-          .invokeMethod('native.initialize.core.environment', {envKey: strEnv});
+      await toNativeChannel.invokeMethod('native.initialize.core.environment', {
+        envKey: strEnv,
+        appVersionKey: appVersion,
+        userAgentKey: userAgent,
+      });
     } on Exception catch (e) {
       logger.e("Failed to initialize native environment: '${e.toString()}'.");
     }
