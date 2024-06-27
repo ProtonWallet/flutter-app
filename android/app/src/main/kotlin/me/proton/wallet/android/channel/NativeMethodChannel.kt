@@ -43,11 +43,17 @@ interface NativeCallHandler {
     fun restartActivity()
     fun restartApplication()
     fun logout(userId: UserId?)
+    fun setWalletApiClientHeader(versionHeader: VersionHeader)
 }
 
 data class AccountSession(
     val account: Account,
     val session: Session
+)
+
+data class VersionHeader(
+    val version: String?,
+    val agent: String?
 )
 
 class NativeMethodChannel(
@@ -65,6 +71,9 @@ class NativeMethodChannel(
                 val account = getAccountOrNull(arguments)
                 val session = getSessionOrNull(arguments)
                 when (call.method) {
+                    "native.initialize.core.environment" -> callHandler.setWalletApiClientHeader(
+                        getVersionHeader(arguments)
+                    )
                     "native.navigation.login" -> callHandler.startLogin()
                     "native.navigation.signup" -> callHandler.startSignUp()
                     "native.navigation.report" -> callHandler.startReport()
@@ -98,6 +107,15 @@ class NativeMethodChannel(
                 }
             )
         }
+    }
+
+    private fun getVersionHeader(arguments: Map<String, Any>): VersionHeader {
+        val appVersionKey = "app-version"
+        val userAgentKey = "user-agent"
+        return VersionHeader(
+            version = arguments[appVersionKey] as String?,
+            agent = arguments[userAgentKey] as String?,
+        )
     }
 
     private fun getAccountSession(

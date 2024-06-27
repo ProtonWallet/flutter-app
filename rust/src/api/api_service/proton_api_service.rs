@@ -37,7 +37,10 @@ impl ProtonAPIService {
         user_agent: String,
         store: ProtonWalletAuthStore,
     ) -> Result<ProtonAPIService, BridgeError> {
-        info!("start fresh api client");
+        info!(
+            "start fresh api client: app version:{} user_agent:{}",
+            app_version, user_agent
+        );
         let box_store = Box::new(store.clone());
         let config = ApiConfig {
             spec: Some((app_version, user_agent)),
