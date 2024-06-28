@@ -54,12 +54,10 @@ class RecipientDetailSheet {
                 children: [
                   Text(S.of(context).bitcoin_address,
                       style: FontManager.captionRegular(ProtonColors.textWeak)),
-                  SizedBox(
-                      width: min(240, MediaQuery.of(context).size.width - 200),
-                      child: Text(bitcoinAddress,
+                  Text(bitcoinAddress,
                           overflow: TextOverflow.ellipsis,
                           style:
-                              FontManager.body2Regular(ProtonColors.textNorm))),
+                              FontManager.body2Regular(ProtonColors.textNorm)),
                   const SizedBox(height: 20),
                   ButtonV5(
                       onPressed: () async {

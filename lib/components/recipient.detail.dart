@@ -40,7 +40,7 @@ class RecipientDetail extends StatelessWidget {
       padding:
           const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
       decoration: BoxDecoration(
-          color: ProtonColors.backgroundProton,
+          color: ProtonColors.white,
           borderRadius: BorderRadius.circular(12.0)),
       child: buildContent(context, CommonHelper.isBitcoinAddress(name ?? "")),
     );
@@ -196,7 +196,7 @@ class RecipientDetail extends StatelessWidget {
                       textController: amountController!,
                       paddingSize: 2,
                       myFocusNode: amountFocusNode ?? FocusNode(),
-                      backgroundColor: ProtonColors.white,
+                      backgroundColor: ProtonColors.backgroundProton,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [

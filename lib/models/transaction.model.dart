@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 class TransactionModel {
   int? id;
+  int type;
   int walletID;
   Uint8List label;
   Uint8List externalTransactionID;
@@ -21,6 +22,7 @@ class TransactionModel {
 
   TransactionModel({
     required this.id,
+    required this.type,
     required this.walletID,
     required this.label,
     required this.externalTransactionID,
@@ -42,6 +44,7 @@ class TransactionModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'type': type,
       'walletID': walletID,
       'label': label,
       'externalTransactionID': externalTransactionID,
@@ -64,6 +67,7 @@ class TransactionModel {
   factory TransactionModel.fromMap(Map<String, dynamic> map) {
     return TransactionModel(
       id: map['id'],
+      type: map['type'],
       walletID: map['walletID'],
       label: map['label'],
       externalTransactionID: map['externalTransactionID'],

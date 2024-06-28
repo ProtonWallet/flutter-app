@@ -103,9 +103,12 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   double feeRateMedianPriority = 15.0;
   double feeRateLowPriority = 10.0;
   double feeRateSatPerVByte = 15.0;
-  double baseFeeInSAT = 0;
   int estimatedFeeInSAT = 0;
+  int estimatedFeeInSATHighPriority = 0;
+  int estimatedFeeInSATMedianPriority = 0;
+  int estimatedFeeInSATLowPriority = 0;
   int amountInSATS = 0; // per recipient
+  bool allowDust = false;
   int totalAmountInSAT = 0; // total value
   SendFlowStatus sendFlowStatus = SendFlowStatus.addRecipient;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
@@ -161,6 +164,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   late FrbTxBuilder txBuilder;
   late FrbPsbt frbPsbt;
+  late FrbPsbt frbDraftPsbt;
 
   // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
@@ -208,9 +212,26 @@ class SendViewModelImpl extends SendViewModel {
       StreamController<SendViewModel>.broadcast();
   late FrbAccount? _frbAccount;
   FrbBlockchainClient? blockClient;
+  Timer? _timer;
+  bool isValid = false;
+
+  void startExchangeRateUpdateService() {
+    isValid = true;
+    _timer = Timer.periodic(const Duration(seconds: eventLoopRefreshThreshold),
+        (timer) {
+      updateExchangeRateJob();
+    });
+  }
+
+  void stopExchangeRateUpdateService() {
+    isValid = false;
+    _timer?.cancel();
+    _timer = null;
+  }
 
   @override
   Future<void> dispose() async {
+    stopExchangeRateUpdateService();
     datasourceChangedStreamController.close();
   }
 
@@ -254,6 +275,7 @@ class SendViewModelImpl extends SendViewModel {
       addressKeys = await WalletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
+      startExchangeRateUpdateService();
       fiatCurrencyNotifier.value = userSettingsDataProvider.fiatCurrency;
       fiatCurrencyNotifier.addListener(() async {
         updateExchangeRate(fiatCurrencyNotifier.value);
@@ -264,7 +286,7 @@ class SendViewModelImpl extends SendViewModel {
 
       datasourceChangedStreamController.sinkAddSafe(this);
       blockClient = await Api.createEsploraBlockchainWithApi();
-      updateFeeRate();
+      await updateFeeRate();
       contactsEmail = await contactsDataProvider.getContacts() ?? [];
       walletModel = await DBHelper.walletDao!.findById(walletID);
       if (accountID == 0) {
@@ -290,6 +312,20 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = "";
     }
     datasourceChangedStreamController.sinkAddSafe(this);
+  }
+
+  Future<void> updateExchangeRateJob() async {
+    if (isValid) {
+      FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+      await ExchangeRateService.runOnce(fiatCurrency);
+      exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
+      if (sendFlowStatus == SendFlowStatus.reviewTransaction) {
+        buildTransactionScript();
+      }
+      logger.i(
+          "updateExchangeRateJob result: ${exchangeRate.fiatCurrency.name} = ${exchangeRate.exchangeRate}");
+      datasourceChangedStreamController.sinkAddSafe(this);
+    }
   }
 
   @override
@@ -363,6 +399,11 @@ class SendViewModelImpl extends SendViewModel {
         sendFlowStatus = status;
       }
     } else {
+      if (status == SendFlowStatus.editAmount) {
+        await initEstimatedFee();
+
+        /// build draft psbt first to get fee
+      }
       sendFlowStatus = status;
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -489,8 +530,8 @@ class SendViewModelImpl extends SendViewModel {
           }
           totalAmount += amount;
         }
-        amountTextController.text =
-            totalAmount.toStringAsFixed(defaultDisplayDigits);
+        amountTextController.text = totalAmount
+            .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
         datasourceChangedStreamController.sinkAddSafe(this);
       });
       recipients.add(ProtonRecipient(
@@ -593,6 +634,55 @@ class SendViewModelImpl extends SendViewModel {
   Stream<ViewModel> get datasourceChanged =>
       datasourceChangedStreamController.stream;
 
+  Future<bool> initEstimatedFee() async {
+    try {
+      if (_frbAccount == null) {
+        throw Exception("Account is not loaded");
+      }
+      txBuilder = await _frbAccount!.buildTx();
+      totalAmountInSAT = 0;
+      for (ProtonRecipient protonRecipient in recipients) {
+        amountInSATS = balance ~/ recipients.length; // dust size
+        String email = protonRecipient.email;
+        String bitcoinAddress = "";
+        if (email.contains("@")) {
+          bitcoinAddress = bitcoinAddresses[email] ?? email;
+        } else {
+          bitcoinAddress = email;
+        }
+        if (CommonHelper.isBitcoinAddress(bitcoinAddress) &&
+            selfBitcoinAddresses.contains(bitcoinAddress) == false) {
+          logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
+
+          txBuilder = txBuilder.addRecipient(
+            addressStr: bitcoinAddress,
+            amount: amountInSATS,
+          );
+          protonRecipient.amountInSATS = amountInSATS;
+        }
+      }
+      var network = appConfig.coinType.network;
+      txBuilder =
+          await txBuilder.setFeeRate(satPerVb: feeRateHighPriority.ceil());
+      frbDraftPsbt = await txBuilder.createDraftPsbt(
+        network: network,
+        allowDust: allowDust,
+      );
+      estimatedFeeInSAT = frbDraftPsbt.fee().toSat();
+    } catch (e) {
+      errorMessage = e.toString();
+      if (errorMessage.isNotEmpty) {
+        CommonHelper.showErrorDialog(
+            "buildTransactionScript error: $errorMessage");
+        errorMessage = "";
+      }
+      // }
+      return false;
+    }
+    datasourceChangedStreamController.sinkAddSafe(this);
+    return true;
+  }
+
   @override
   Future<bool> buildTransactionScript() async {
     try {
@@ -601,6 +691,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       txBuilder = await _frbAccount!.buildTx();
       totalAmountInSAT = 0;
+      bool hasValidRecipient = false;
       for (ProtonRecipient protonRecipient in recipients) {
         if (protonRecipient.amountController.text.isNotEmpty) {
           double amount = 0.0;
@@ -622,7 +713,9 @@ class SendViewModelImpl extends SendViewModel {
           if (CommonHelper.isBitcoinAddress(bitcoinAddress) &&
               selfBitcoinAddresses.contains(bitcoinAddress) == false) {
             logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
-
+            if (amountInSATS >= 546) {
+              hasValidRecipient = true;
+            }
             txBuilder = txBuilder.addRecipient(
               addressStr: bitcoinAddress,
               amount: amountInSATS,
@@ -632,45 +725,48 @@ class SendViewModelImpl extends SendViewModel {
           }
         }
       }
+      if (hasValidRecipient == false) {
+        return false;
+      }
       var network = appConfig.coinType.network;
+      var txBuilderHighPriority =
+          await txBuilder.setFeeRate(satPerVb: feeRateHighPriority.ceil());
+      var txBuilderMedianPriority =
+          await txBuilder.setFeeRate(satPerVb: feeRateMedianPriority.ceil());
+      var txBuilderLowPriority =
+          await txBuilder.setFeeRate(satPerVb: feeRateLowPriority.ceil());
+
+      var frbDraftPsbtHighPriority =
+          await txBuilderHighPriority.createDraftPsbt(
+        network: network,
+        allowDust: allowDust,
+      );
+      var frbDraftPsbtMedianPriority =
+          await txBuilderMedianPriority.createDraftPsbt(
+        network: network,
+        allowDust: allowDust,
+      );
+      var frbDraftPsbtLowPriority = await txBuilderLowPriority.createDraftPsbt(
+        network: network,
+        allowDust: allowDust,
+      );
+
+      estimatedFeeInSATHighPriority = frbDraftPsbtHighPriority.fee().toSat();
+      estimatedFeeInSATMedianPriority =
+          frbDraftPsbtMedianPriority.fee().toSat();
+      estimatedFeeInSATLowPriority = frbDraftPsbtLowPriority.fee().toSat();
+
+      /// txBuilder will be use to build real psbt
       txBuilder =
-          await txBuilder.setFeeRate(satPerVb: feeRateSatPerVByte.toInt());
-
-      frbPsbt = await txBuilder.createPbst(network: network);
-
-      estimatedFeeInSAT = frbPsbt.fee().toSat();
-
-      baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
-      // txBuilderResult =
-      //     .createDraftPsbt();
-      // .finish(_wallet!);
-      // /TODO:: fix me
-      // estimatedFeeInSAT = txBuilderResult.txDetails.fee ?? 0;
-      // totalAmountInSAT = txBuilderResult.txDetails.sent -
-      //     (txBuilderResult.txDetails.fee ?? 0) -
-      //     txBuilderResult.txDetails.received;
-      // baseFeeInSAT = estimatedFeeInSAT / feeRateSatPerVByte;
+          await txBuilder.setFeeRate(satPerVb: feeRateSatPerVByte.ceil());
     } catch (e) {
-      // TODO: fix me to handle exceptions
-      // if (e is InsufficientFundsException) {
-      //   if (Coordinator.rootNavigatorKey.currentContext != null) {
-      //     if (context != null && context!.mounted) {
-      //       CommonHelper.showSnackbar(
-      //           context!, S.of(context!).error_you_dont_have_sufficient_balance,
-      //           isError: true);
-      //     }
-      //   }
-      // } else if (e is NoRecipientsException) {
-      //   // amount is 0, or no recipients
-      //   return true;
-      // } else {
+      /// TODO:: handle exception here
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog(
             "buildTransactionScript error: $errorMessage");
         errorMessage = "";
       }
-      // }
       return false;
     }
     datasourceChangedStreamController.sinkAddSafe(this);
@@ -679,6 +775,7 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<bool> sendCoin() async {
+    logger.i("Start sendCoin()");
     EasyLoading.show(
         status: "Broadcasting transaction..",
         maskType: EasyLoadingMaskType.black);
@@ -725,12 +822,17 @@ class SendViewModelImpl extends SendViewModel {
       if (_frbAccount == null) {
         throw Exception("Account is not loaded");
       }
+
+      /// previous frbPsbt is draft one, only need to create real frbPsbt when user press submit button
+      /// the reason we use draft PSBT is that the internal address index will get increase everytime when create real PSBT
       var network = appConfig.coinType.network;
+      frbPsbt = await txBuilder.createPbst(network: network);
       frbPsbt = await _frbAccount!.sign(
         psbt: frbPsbt,
         network: network,
       );
 
+      logger.i("Start broadcastPsbt");
       txid = await blockClient!.broadcastPsbt(
         psbt: frbPsbt,
         walletId: walletModel!.serverWalletID,
@@ -743,6 +845,9 @@ class SendViewModelImpl extends SendViewModel {
         // subject is deprecated, set to default null
         body: encryptedMessage,
       );
+
+      logger.i("End broadcastPsbt");
+      logger.i("Start add local transaction record");
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
@@ -786,8 +891,11 @@ class SendViewModelImpl extends SendViewModel {
       EasyLoading.dismiss();
       return false;
     }
+    logger.i("End add local transaction record");
     try {
+      logger.i("Start eventloop runOnce()");
       await eventLoop.runOnce();
+      logger.i("End eventloop runOnce()");
     } catch (e) {
       e.toString();
     }
@@ -803,15 +911,12 @@ class SendViewModelImpl extends SendViewModel {
     }
     feeRateHighPriority = fees["1"] ?? 0;
     feeRateMedianPriority = fees["6"] ?? 0;
-    feeRateLowPriority = fees["15"] ?? 0;
+    feeRateLowPriority = fees["12"] ?? 0;
     try {
       datasourceChangedStreamController.sinkAddSafe(this);
     } catch (e) {
       logger.e(e.toString());
     }
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   updateFeeRate();
-    // });
   }
 
   Future<void> userFinishEmailBody() async {
@@ -866,8 +971,8 @@ class SendViewModelImpl extends SendViewModel {
     if (recipientCount > 0) {
       double amount = totalAmount / recipientCount;
       for (ProtonRecipient recipient in recipients) {
-        recipient.amountController.text =
-            amount.toStringAsFixed(defaultDisplayDigits);
+        recipient.amountController.text = amount
+            .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);

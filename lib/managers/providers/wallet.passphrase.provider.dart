@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
@@ -6,6 +7,7 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 
 class WalletPassphraseProvider extends DataProvider {
   final SecureStorageManager storage;
+  final String key = "proton_wallet_p_provider_key";
 
   List<WalletPassphrase>? walletPassphrases;
 
@@ -23,20 +25,34 @@ class WalletPassphraseProvider extends DataProvider {
     return pwd?.passphrase;
   }
 
+  Future<void> saveWalletPassphrase(WalletPassphrase walletPassphrase) async {
+    String? passphrase = await getPassphrase(walletPassphrase.walletID);
+    if (passphrase == null) {
+      List<WalletPassphrase>? passphrases = await _getWalletPassphrases();
+      passphrases.add(walletPassphrase);
+      List<Map<String, dynamic>> jsonList =
+          WalletPassphrase.toJsonList(passphrases);
+      await storage.set(key, json.encode(jsonList));
+      walletPassphrases = await _getFromSecureStorage();
+      dataUpdateController.add(DataUpdated("new wallet passphrase added!"));
+    }
+  }
+
+  Future<List<WalletPassphrase>> _getFromSecureStorage() async {
+    List<WalletPassphrase> passphrases = [];
+    var json = await storage.get(key);
+    if (json.isNotEmpty) {
+      passphrases = await WalletPassphrase.loadJsonString(json);
+    }
+    return passphrases;
+  }
+
   Future<List<WalletPassphrase>> _getWalletPassphrases() async {
     if (walletPassphrases != null) {
       return walletPassphrases!;
     }
-
-    /// TODO:: move to SecureStorageManager with object
-    var json = await storage.get("proton_wallet_p_provider_key");
-    if (json.isNotEmpty) {
-      walletPassphrases = await WalletPassphrase.loadJsonString(json);
-      if (walletPassphrases != null) {
-        return walletPassphrases!;
-      }
-    }
-    return [];
+    walletPassphrases = await _getFromSecureStorage();
+    return walletPassphrases ?? [];
   }
 
   @override

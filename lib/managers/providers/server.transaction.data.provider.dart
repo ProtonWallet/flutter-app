@@ -131,6 +131,7 @@ class ServerTransactionDataProvider extends DataProvider {
     TransactionModel transactionModel = TransactionModel(
         id: null,
         walletID: walletModel.id!,
+        type: walletTransaction.type?.index ?? TransactionType.unsupported.index,
         label: utf8.encode(walletTransaction.label ?? ""),
         externalTransactionID: utf8.encode(""),
 
