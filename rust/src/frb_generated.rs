@@ -9116,6 +9116,7 @@ impl SseDecode for crate::proton_api::wallet::CreateWalletReq {
         let mut var_publicKey = <Option<String>>::sse_decode(deserializer);
         let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         let mut var_walletKeySignature = <String>::sse_decode(deserializer);
+        let mut var_isAutoCreated = <Option<u8>>::sse_decode(deserializer);
         return crate::proton_api::wallet::CreateWalletReq {
             name: var_name,
             is_imported: var_isImported,
@@ -9127,6 +9128,7 @@ impl SseDecode for crate::proton_api::wallet::CreateWalletReq {
             public_key: var_publicKey,
             fingerprint: var_fingerprint,
             wallet_key_signature: var_walletKeySignature,
+            is_auto_created: var_isAutoCreated,
         };
     }
 }
@@ -12192,6 +12194,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::CreateWalletRe
             self.public_key.into_into_dart().into_dart(),
             self.fingerprint.into_into_dart().into_dart(),
             self.wallet_key_signature.into_into_dart().into_dart(),
+            self.is_auto_created.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -14071,6 +14074,7 @@ impl SseEncode for crate::proton_api::wallet::CreateWalletReq {
         <Option<String>>::sse_encode(self.public_key, serializer);
         <Option<String>>::sse_encode(self.fingerprint, serializer);
         <String>::sse_encode(self.wallet_key_signature, serializer);
+        <Option<u8>>::sse_encode(self.is_auto_created, serializer);
     }
 }
 

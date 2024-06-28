@@ -9605,8 +9605,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CreateWalletReq dco_decode_create_wallet_req(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return CreateWalletReq(
       name: dco_decode_String(arr[0]),
       isImported: dco_decode_u_8(arr[1]),
@@ -9618,6 +9618,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       publicKey: dco_decode_opt_String(arr[7]),
       fingerprint: dco_decode_opt_String(arr[8]),
       walletKeySignature: dco_decode_String(arr[9]),
+      isAutoCreated: dco_decode_opt_box_autoadd_u_8(arr[10]),
     );
   }
 
@@ -12073,6 +12074,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_publicKey = sse_decode_opt_String(deserializer);
     var var_fingerprint = sse_decode_opt_String(deserializer);
     var var_walletKeySignature = sse_decode_String(deserializer);
+    var var_isAutoCreated = sse_decode_opt_box_autoadd_u_8(deserializer);
     return CreateWalletReq(
         name: var_name,
         isImported: var_isImported,
@@ -12083,7 +12085,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         mnemonic: var_mnemonic,
         publicKey: var_publicKey,
         fingerprint: var_fingerprint,
-        walletKeySignature: var_walletKeySignature);
+        walletKeySignature: var_walletKeySignature,
+        isAutoCreated: var_isAutoCreated);
   }
 
   @protected
@@ -14701,6 +14704,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.publicKey, serializer);
     sse_encode_opt_String(self.fingerprint, serializer);
     sse_encode_String(self.walletKeySignature, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.isAutoCreated, serializer);
   }
 
   @protected

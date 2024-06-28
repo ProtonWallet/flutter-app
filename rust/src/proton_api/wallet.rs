@@ -177,6 +177,10 @@ pub struct CreateWalletReq {
 
     pub fingerprint: Option<String>,
     pub wallet_key_signature: String,
+
+    /// Flag that indicates the wallet is created from auto creation. 0 for no,
+    /// 1 for yes
+    pub is_auto_created: Option<u8>,
 }
 
 impl From<CreateWalletRequestBody> for CreateWalletReq {
@@ -192,6 +196,7 @@ impl From<CreateWalletRequestBody> for CreateWalletReq {
             public_key: req.PublicKey,
             fingerprint: req.Fingerprint,
             wallet_key_signature: req.WalletKeySignature,
+            is_auto_created: req.IsAutoCreated,
         }
     }
 }
@@ -209,6 +214,7 @@ impl From<CreateWalletReq> for CreateWalletRequestBody {
             PublicKey: req.public_key,
             Fingerprint: req.fingerprint,
             WalletKeySignature: req.wallet_key_signature,
+            IsAutoCreated: req.is_auto_created,
         }
     }
 }
