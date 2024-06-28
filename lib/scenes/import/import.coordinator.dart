@@ -13,6 +13,7 @@ class ImportCoordinator extends Coordinator {
   final String preInputName;
 
   ImportCoordinator(this.preInputName);
+
   @override
   void end() {}
 
@@ -21,9 +22,11 @@ class ImportCoordinator extends Coordinator {
     var dataProviderManager = serviceManager.get<DataProviderManager>();
     var userManager = serviceManager.get<UserManager>();
     var bloc = CreateWalletBloc(
-        userManager,
-        dataProviderManager.walletDataProvider,
-        dataProviderManager.walletKeysProvider);
+      userManager,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.walletKeysProvider,
+      dataProviderManager.walletPassphraseProvider,
+    );
     var viewModel = ImportViewModelImpl(
       this,
       dataProviderManager,

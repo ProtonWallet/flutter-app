@@ -53,6 +53,11 @@ class DataUpdated<T> extends DataState {
   List<Object?> get props => [updatedData];
 }
 
+class SelectedWalletUpdated extends DataState {
+  @override
+  List<Object?> get props => [];
+}
+
 abstract class DataDeleted extends DataState {}
 
 class DataError extends DataState {

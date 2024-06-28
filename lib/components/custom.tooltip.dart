@@ -20,6 +20,7 @@ class CustomTooltip extends StatelessWidget {
         tailBaseWidth: 16,
         preferredDirection: AxisDirection.up,
         backgroundColor: ProtonColors.backgroundBlack,
+        triggerMode: TooltipTriggerMode.tap,
         content: Padding(
             padding: const EdgeInsets.all(8),
             child: Text(message,

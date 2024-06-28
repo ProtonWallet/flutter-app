@@ -30,14 +30,6 @@ class TransactionListTitle extends StatelessWidget {
     this.body,
   });
 
-  String parsetime(int timestemp) {
-    var millis = timestemp;
-    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
-
-    var dformat = DateFormat('MM.dd.yyyy').format(dt);
-    return dformat.toString();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -82,12 +74,10 @@ class TransactionListTitle extends StatelessWidget {
                         )),
                         const SizedBox(width: 4),
                         isSend
-                            ? Text(
-                                bitcoinAmount.toFiatCurrencyString(),
+                            ? Text(bitcoinAmount.toFiatCurrencyString(),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
-                            : Text(
-                                "+${bitcoinAmount.toFiatCurrencyString()}",
+                            : Text("+${bitcoinAmount.toFiatCurrencyString()}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint))
                       ]),
@@ -97,27 +87,26 @@ class TransactionListTitle extends StatelessWidget {
                         timestamp != null
                             ? Expanded(
                                 child: Text(
-                                parsetime(timestamp!),
+                                CommonHelper.formatLocaleTime(
+                                    context, timestamp!),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ))
                             : Row(children: [
-                                const CustomLoading(),
-                                const SizedBox(width: 6),
-                                Text(S.of(context).in_progress,
+                                // const CustomLoading(),
+                                // const SizedBox(width: 6),
+                                Text(isSend ? S.of(context).in_progress_broadcasted : S.of(context).in_progress_waiting_for_confirm,
                                     style: FontManager.captionRegular(
                                         ProtonColors.protonBlue)),
                               ]),
                         const SizedBox(width: 4),
                         isSend
-                            ? Text(
-                                bitcoinAmount.toString(),
+                            ? Text(bitcoinAmount.toString(),
                                 style: FontManager.captionRegular(
                                     ProtonColors.signalError))
-                            : Text(
-                                "+${bitcoinAmount.toString()}",
+                            : Text("+${bitcoinAmount.toString()}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.signalSuccess)),
                       ]),

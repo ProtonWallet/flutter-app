@@ -289,8 +289,19 @@ class EmailIntegrationBitcoinAddress {
           bitcoinAddressSignature == other.bitcoinAddressSignature;
 }
 
+enum TransactionType {
+  notSend,
+  protonToProtonSend,
+  protonToProtonReceive,
+  externalSend,
+  externalReceive,
+  unsupported,
+  ;
+}
+
 class WalletTransaction {
   final String id;
+  final TransactionType? type;
   final String walletId;
   final String? walletAccountId;
   final String? label;
@@ -307,6 +318,7 @@ class WalletTransaction {
 
   const WalletTransaction({
     required this.id,
+    this.type,
     required this.walletId,
     this.walletAccountId,
     this.label,
@@ -325,6 +337,7 @@ class WalletTransaction {
   @override
   int get hashCode =>
       id.hashCode ^
+      type.hashCode ^
       walletId.hashCode ^
       walletAccountId.hashCode ^
       label.hashCode ^
@@ -345,6 +358,7 @@ class WalletTransaction {
       other is WalletTransaction &&
           runtimeType == other.runtimeType &&
           id == other.id &&
+          type == other.type &&
           walletId == other.walletId &&
           walletAccountId == other.walletAccountId &&
           label == other.label &&

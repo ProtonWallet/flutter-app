@@ -1,16 +1,15 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/components/transaction.history.send.item.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -37,7 +36,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: ProtonColors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
@@ -69,7 +68,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               .round();
     }
     return Container(
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         height: double.infinity,
         child: SingleChildScrollView(
             child: Padding(
@@ -118,6 +117,54 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             viewModel.amount.toInt().abs()),
                         style: FontManager.body2Regular(ProtonColors.textHint)),
                     const SizedBox(height: 20),
+                    viewModel.isSend
+                        ? buildSendInfo(context)
+                        : buildReceiveInfo(context),
+                    const Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                    if (viewModel.transactionTime != null)
+                      TransactionHistoryItem(
+                        title: S.of(context).trans_date,
+                        content: CommonHelper.formatLocaleTime(
+                            context, viewModel.transactionTime!),
+                        backgroundColor: ProtonColors.white,
+                      ),
+                    const Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                    TransactionHistoryItem(
+                      title: S.of(context).trans_status,
+                      content: viewModel.transactionTime != null
+                          ? S.of(context).completed
+                          : viewModel.isSend
+                              ? S.of(context).in_progress_broadcasted
+                              : S.of(context).in_progress_waiting_for_confirm,
+                      contentColor: viewModel.transactionTime != null
+                          ? ProtonColors.signalSuccess
+                          : ProtonColors.signalError,
+                      backgroundColor: ProtonColors.white,
+                    ),
+                    const Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                    if (viewModel.body.isNotEmpty)
+                      Column(children: [
+                        TransactionHistoryItem(
+                          title: viewModel.isSend
+                              ? S.of(context).trans_message_to_recipient
+                              : S.of(context).trans_message_from_sender,
+                          content: viewModel.body,
+                          backgroundColor: ProtonColors.white,
+                        ),
+                        const Divider(
+                          thickness: 0.2,
+                          height: 1,
+                        ),
+                      ]),
                     viewModel.isEditing == false
                         ? GestureDetector(
                             onTap: () {
@@ -130,7 +177,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 decoration: BoxDecoration(
                                     color:
                                         ProtonColors.transactionNoteBackground,
-                                    borderRadius: BorderRadius.circular(40.0)),
+                                    borderRadius: BorderRadius.circular(32.0)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,36 +188,62 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                         width: 32,
                                         height: 32),
                                     const SizedBox(width: 10),
-                                    Expanded(
-                                        child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (viewModel
-                                            .memoController.text.isNotEmpty)
-                                          Row(children: [
-                                            Expanded(
-                                                child: Text(
-                                                    viewModel
-                                                        .memoController.text,
-                                                    style:
-                                                        FontManager.body2Median(
-                                                            ProtonColors
-                                                                .textNorm)))
-                                          ]),
-                                        Text(S.of(context).trans_edit_note,
-                                            style: FontManager.body2Median(
-                                                ProtonColors.protonBlue)),
-                                      ],
-                                    ))
+                                    viewModel.memoController.text.isNotEmpty
+                                        ? Expanded(
+                                            child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  S
+                                                      .of(context)
+                                                      .message_to_myself,
+                                                  style: FontManager
+                                                      .captionRegular(
+                                                          ProtonColors
+                                                              .textHint)),
+                                              Row(children: [
+                                                Expanded(
+                                                    child: Text(
+                                                        viewModel.memoController
+                                                            .text,
+                                                        style: FontManager
+                                                            .body2Median(
+                                                                ProtonColors
+                                                                    .textNorm)))
+                                              ]),
+                                            ],
+                                          ))
+                                        : Expanded(
+                                            child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  S
+                                                      .of(context)
+                                                      .message_to_myself,
+                                                  style: FontManager
+                                                      .captionRegular(
+                                                          ProtonColors
+                                                              .textNorm)),
+                                              Text(S.of(context).trans_add_note,
+                                                  style:
+                                                      FontManager.body2Median(
+                                                          ProtonColors
+                                                              .textHint)),
+                                            ],
+                                          )),
                                   ],
                                 )))
                         : Container(
                             margin: const EdgeInsets.symmetric(vertical: 10.0),
                             child: TextFieldTextV2(
-                              labelText: S.of(context).trans_userLable,
+                              labelText: S.of(context).message_to_myself,
                               textController: viewModel.memoController,
                               myFocusNode: viewModel.memoFocusNode,
                               paddingSize: 7,
@@ -184,48 +257,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               validation: (String value) {
                                 return "";
                               },
+                              radius: 32,
                             ),
                           ),
-                    viewModel.isSend
-                        ? buildSendInfo(context)
-                        : buildReceiveInfo(context),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    if (viewModel.blockConfirmTimestamp != null)
-                      TransactionHistoryItem(
-                          title: S.of(context).trans_date,
-                          content: parsetime(
-                              context, viewModel.blockConfirmTimestamp!)),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    TransactionHistoryItem(
-                        title: S.of(context).trans_status,
-                        content: viewModel.blockConfirmTimestamp != null
-                            ? S.of(context).completed
-                            : S.of(context).in_progress,
-                        contentColor: viewModel.blockConfirmTimestamp != null
-                            ? ProtonColors.signalSuccess
-                            : ProtonColors.signalError),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    if (viewModel.body.isNotEmpty)
-                      Column(children: [
-                        TransactionHistoryItem(
-                            title: viewModel.isSend
-                                ? S.of(context).trans_message_to_recipient
-                                : S.of(context).trans_message_from_sender,
-                            content: viewModel.body),
-                        const Divider(
-                          thickness: 0.2,
-                          height: 1,
-                        ),
-                      ]),
                     ExpansionTile(
                         shape: const Border(),
                         initiallyExpanded: false,
@@ -243,27 +277,31 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             memo: ExchangeCalculator.getBitcoinUnitLabel(
                                 viewModel.userSettingsDataProvider.bitcoinUnit,
                                 viewModel.fee.toInt()),
+                            backgroundColor: ProtonColors.white,
                           ),
                           const Divider(
                             thickness: 0.2,
                             height: 1,
                           ),
                           TransactionHistoryItem(
-                              title: S.of(context).trans_total,
-                              content: viewModel.isSend
-                                  ? "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}"
-                                  : "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).toStringAsFixed(displayDigits)}",
-                              memo: viewModel.isSend
-                                  ? ExchangeCalculator.getBitcoinUnitLabel(
-                                      viewModel
-                                          .userSettingsDataProvider.bitcoinUnit,
-                                      viewModel.amount.toInt() -
-                                          viewModel.fee.toInt().abs())
-                                  : ExchangeCalculator.getBitcoinUnitLabel(
-                                      viewModel
-                                          .userSettingsDataProvider.bitcoinUnit,
-                                      viewModel.amount.toInt() +
-                                          viewModel.fee.toInt())),
+                            title: S.of(context).trans_total,
+                            content: viewModel.isSend
+                                ? "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}"
+                                : "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}",
+                            memo: viewModel.isSend
+                                ? ExchangeCalculator.getBitcoinUnitLabel(
+                                    viewModel
+                                        .userSettingsDataProvider.bitcoinUnit,
+                                    (viewModel.amount.toInt() -
+                                            viewModel.fee.toInt())
+                                        .abs())
+                                : ExchangeCalculator.getBitcoinUnitLabel(
+                                    viewModel
+                                        .userSettingsDataProvider.bitcoinUnit,
+                                    viewModel.amount.toInt() +
+                                        viewModel.fee.toInt()),
+                            backgroundColor: ProtonColors.white,
+                          ),
                           const SizedBox(height: 20),
                           ButtonV5(
                               onPressed: () {
@@ -283,6 +321,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   }
 
   Widget buildSendInfo(BuildContext context) {
+    String yourEmail =
+        WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,38 +338,53 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     ? WalletManager.getBitcoinAddressFromWalletTransaction(
                         viewModel.toEmail)
                     : viewModel.addresses.firstOrNull ?? "",
+                multiRecipient: false,
               )
             : Column(children: [
                 for (TransactionInfoModel info in viewModel.recipients)
-                  buildTransToInfo(context,
-                      email: info.toEmail.isNotEmpty ? info.toEmail : null,
-                      bitcoinAddress: info.toBitcoinAddress,
-                      amountInSatoshi: info.amountInSATS)
+                  buildTransToInfo(
+                    context,
+                    email: info.toEmail.isNotEmpty ? info.toEmail : null,
+                    bitcoinAddress: info.toBitcoinAddress,
+                    amountInSatoshi: info.amountInSATS,
+                    multiRecipient: viewModel.recipients.length > 1,
+                  )
               ]),
-        TransactionHistoryItem(
-          title: S.of(context).trans_from,
-          content:
-              "${WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail)} (You)",
-          memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
-        ),
+        yourEmail.isNotEmpty
+            ? TransactionHistoryItem(
+                title: S.of(context).trans_from,
+                content: "$yourEmail (You)",
+                memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
+                backgroundColor: ProtonColors.white,
+              )
+            : TransactionHistoryItem(
+                title: S.of(context).trans_from,
+                content: "${viewModel.strWallet} - ${viewModel.strAccount}",
+                backgroundColor: ProtonColors.white,
+              ),
       ],
     );
   }
 
-  Widget buildTransToInfo(BuildContext context,
-      {String? email,
-      String? bitcoinAddress,
-      String? walletAccountName,
-      int? amountInSatoshi}) {
+  Widget buildTransToInfo(
+    BuildContext context, {
+    String? email,
+    String? bitcoinAddress,
+    String? walletAccountName,
+    int? amountInSatoshi,
+    required bool multiRecipient,
+  }) {
     return Column(children: [
       if (viewModel.exchangeRate != null && amountInSatoshi != null)
         TransactionHistorySendItem(
           content: email ?? bitcoinAddress ?? "",
           bitcoinAddress: bitcoinAddress ?? "",
-          bitcoinAmount: BitcoinAmount(
-              amountInSatoshi: amountInSatoshi,
-              bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
-              exchangeRate: viewModel.exchangeRate!),
+          bitcoinAmount: multiRecipient
+              ? BitcoinAmount(
+                  amountInSatoshi: amountInSatoshi,
+                  bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
+                  exchangeRate: viewModel.exchangeRate!)
+              : null,
         ),
       const Divider(
         thickness: 0.2,
@@ -350,20 +405,22 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 ? WalletManager.getEmailFromWalletTransaction(
                     viewModel.fromEmail)
                 : "Unknown",
+            backgroundColor: ProtonColors.white,
           ),
-          Positioned(
-              top: 20,
-              right: defaultPadding,
-              child: GestureDetector(
-                  onTap: () {
-                    EditSenderSheet.show(context, viewModel);
-                  },
-                  child: SvgPicture.asset(
-                    "assets/images/icon/edit_unknown.svg",
-                    fit: BoxFit.fill,
-                    width: 40,
-                    height: 40,
-                  ))),
+          if (viewModel.isInternalTransaction == false)
+            Positioned(
+                top: 20,
+                right: defaultPadding,
+                child: GestureDetector(
+                    onTap: () {
+                      EditSenderSheet.show(context, viewModel);
+                    },
+                    child: SvgPicture.asset(
+                      "assets/images/icon/edit_unknown.svg",
+                      fit: BoxFit.fill,
+                      width: 40,
+                      height: 40,
+                    ))),
         ]),
         const Divider(
           thickness: 0.2,
@@ -375,76 +432,62 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               : "${viewModel.strWallet} - ${viewModel.strAccount}",
           walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
           bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
-          bitcoinAmount: viewModel.exchangeRate != null
-              ? BitcoinAmount(
-                  amountInSatoshi: viewModel.amount.toInt(),
-                  bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
-                  exchangeRate: viewModel.exchangeRate!)
-              : null,
+          bitcoinAmount: null,
         ),
       ],
     );
   }
 
-  String parsetime(BuildContext context, int timestemp) {
-    var millis = timestemp;
-    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
-
-    var dateLocalFormat =
-        DateFormat.yMd(Platform.localeName).add_jm().format(dt);
-    return dateLocalFormat.toString();
-  }
-}
-
-void showNetworkFee(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-      backgroundColor: ProtonColors.backgroundProton,
-      constraints: BoxConstraints(
-        minWidth: MediaQuery.of(context).size.width,
-      ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-      ),
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return SafeArea(
-            child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.all(defaultPadding),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                            "assets/images/icon/no_wallet_found.svg",
-                            fit: BoxFit.fill,
-                            width: 86,
-                            height: 87),
-                        const SizedBox(height: 10),
-                        Text(S.of(context).placeholder,
-                            style:
-                                FontManager.body1Median(ProtonColors.textNorm)),
-                        const SizedBox(height: 5),
-                        Text(S.of(context).placeholder,
-                            style: FontManager.body2Regular(
-                                ProtonColors.textWeak)),
-                        const SizedBox(height: 20),
-                        ButtonV5(
-                          text: S.of(context).ok,
-                          width: MediaQuery.of(context).size.width,
-                          backgroundColor: ProtonColors.protonBlue,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
-                          height: 48,
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ))),
-          );
+  void showNetworkFee(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: ProtonColors.white,
+        constraints: BoxConstraints(
+          minWidth: MediaQuery.of(context).size.width,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+        ),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                              "assets/images/icon/no_wallet_found.svg",
+                              fit: BoxFit.fill,
+                              width: 86,
+                              height: 87),
+                          const SizedBox(height: 10),
+                          Text(S.of(context).placeholder,
+                              style: FontManager.body1Median(
+                                  ProtonColors.textNorm)),
+                          const SizedBox(height: 5),
+                          Text(S.of(context).placeholder,
+                              style: FontManager.body2Regular(
+                                  ProtonColors.textWeak)),
+                          const SizedBox(height: 20),
+                          ButtonV5(
+                            text: S.of(context).ok,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: ProtonColors.protonBlue,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.white),
+                            height: 48,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ))),
+            );
+          });
         });
-      });
+  }
 }

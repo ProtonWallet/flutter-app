@@ -31,7 +31,6 @@ class EventLoop implements Manager {
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
   final DataProviderManager dataProviderManager;
-  static const int loopDuration = 10;
   bool _isRunning = false;
   String latestEventId = "";
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
@@ -58,7 +57,7 @@ class EventLoop implements Manager {
   Future<void> _run() async {
     while (_isRunning) {
       await runOnce();
-      await Future.delayed(const Duration(seconds: loopDuration));
+      await Future.delayed(const Duration(seconds: eventLoopRefreshThreshold));
     }
   }
 

@@ -1,5 +1,6 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -119,6 +120,7 @@ class BDKTransactionDataProvider extends DataProvider {
     bool isSyncing = isWalletSyncing.containsKey(accountModel.serverAccountID)
         ? isWalletSyncing[accountModel.serverAccountID]!
         : false;
+    bool success = false;
     if (isSyncing == false) {
       try {
         isWalletSyncing[accountModel.serverAccountID] = true;
@@ -135,19 +137,24 @@ class BDKTransactionDataProvider extends DataProvider {
           bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
             logger.i("Bdk wallet full sync Started");
-            await blockchain?.fullSync(account: account);
+            await blockchain?.fullSync(
+              account: account,
+              stopGap: appConfig.stopGap,
+            );
             await shared.write(syncCheckID, true);
             logger.i("Bdk wallet full sync End");
+            success = true;
           } else {
             logger.i("Bdk wallet partial sync check");
-            if (await blockchain!.shouldSync(account: account)) {
-              logger.i("Bdk wallet partial sync Started");
-              await blockchain!.partialSync(account: account);
-              logger.i("Bdk wallet partial sync End");
-            }
+
+            /// TODO:: check if it's needed
+            // if (await blockchain!.shouldSync(account: account)) {
+            logger.i("Bdk wallet partial sync Started");
+            await blockchain!.partialSync(account: account);
+            logger.i("Bdk wallet partial sync End");
+            success = true;
           }
         }
-        emitState(BDKDataUpdated(serverAccountID));
       } catch (e, stacktrace) {
         String errorMessage =
             "Bdk wallet full sync error: ${e.toString()} \nstacktrace: ${stacktrace.toString()}";
@@ -159,6 +166,9 @@ class BDKTransactionDataProvider extends DataProvider {
         );
       } finally {
         isWalletSyncing[accountModel.serverAccountID] = false;
+        if (success) {
+          emitState(BDKDataUpdated(accountModel.serverAccountID));
+        }
       }
     }
   }
