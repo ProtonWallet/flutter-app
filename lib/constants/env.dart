@@ -26,3 +26,4 @@ class ApiEnv {
 final jenner = ApiEnv.atlas("jenner");
 final eccles = ApiEnv.atlas("eccles");
 final pascal = ApiEnv.atlas("pascal");
+final payments = ApiEnv.atlas("payments");
