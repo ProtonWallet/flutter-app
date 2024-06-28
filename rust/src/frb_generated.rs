@@ -10031,6 +10031,19 @@ impl SseDecode for Option<crate::common::pagination::SortOrder> {
     }
 }
 
+impl SseDecode for Option<crate::proton_api::wallet::TransactionType> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::proton_api::wallet::TransactionType>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -10493,6 +10506,22 @@ impl SseDecode for crate::common::transaction_time::TransactionTime {
     }
 }
 
+impl SseDecode for crate::proton_api::wallet::TransactionType {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::proton_api::wallet::TransactionType::NotSend,
+            1 => crate::proton_api::wallet::TransactionType::ProtonToProtonSend,
+            2 => crate::proton_api::wallet::TransactionType::ProtonToProtonReceive,
+            3 => crate::proton_api::wallet::TransactionType::ExternalSend,
+            4 => crate::proton_api::wallet::TransactionType::ExternalReceive,
+            5 => crate::proton_api::wallet::TransactionType::Unsupported,
+            _ => unreachable!("Invalid variant for TransactionType: {}", inner),
+        };
+    }
+}
+
 impl SseDecode for u16 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -10599,6 +10628,8 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_type =
+            <Option<crate::proton_api::wallet::TransactionType>>::sse_decode(deserializer);
         let mut var_walletId = <String>::sse_decode(deserializer);
         let mut var_walletAccountId = <Option<String>>::sse_decode(deserializer);
         let mut var_label = <Option<String>>::sse_decode(deserializer);
@@ -10617,6 +10648,7 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
         let mut var_tolist = <Option<String>>::sse_decode(deserializer);
         return crate::proton_api::wallet::WalletTransaction {
             id: var_id,
+            r#type: var_type,
             wallet_id: var_walletId,
             wallet_account_id: var_walletAccountId,
             label: var_label,
@@ -12736,6 +12768,30 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::common::transaction_tim
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::proton_api::wallet::TransactionType> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::proton_api::wallet::TransactionType::NotSend => 0.into_dart(),
+            crate::proton_api::wallet::TransactionType::ProtonToProtonSend => 1.into_dart(),
+            crate::proton_api::wallet::TransactionType::ProtonToProtonReceive => 2.into_dart(),
+            crate::proton_api::wallet::TransactionType::ExternalSend => 3.into_dart(),
+            crate::proton_api::wallet::TransactionType::ExternalReceive => 4.into_dart(),
+            crate::proton_api::wallet::TransactionType::Unsupported => 5.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::proton_api::wallet::TransactionType>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::proton_api::wallet::TransactionType>>
+    for crate::proton_api::wallet::TransactionType
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::proton_api::wallet::TransactionType> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::proton_api::event_routes::WalletAccountEvent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -12828,6 +12884,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::WalletTransact
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.id.into_into_dart().into_dart(),
+            self.r#type.into_into_dart().into_dart(),
             self.wallet_id.into_into_dart().into_dart(),
             self.wallet_account_id.into_into_dart().into_dart(),
             self.label.into_into_dart().into_dart(),
@@ -14774,6 +14831,16 @@ impl SseEncode for Option<crate::common::pagination::SortOrder> {
     }
 }
 
+impl SseEncode for Option<crate::proton_api::wallet::TransactionType> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::wallet::TransactionType>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -15154,6 +15221,26 @@ impl SseEncode for crate::common::transaction_time::TransactionTime {
     }
 }
 
+impl SseEncode for crate::proton_api::wallet::TransactionType {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::proton_api::wallet::TransactionType::NotSend => 0,
+                crate::proton_api::wallet::TransactionType::ProtonToProtonSend => 1,
+                crate::proton_api::wallet::TransactionType::ProtonToProtonReceive => 2,
+                crate::proton_api::wallet::TransactionType::ExternalSend => 3,
+                crate::proton_api::wallet::TransactionType::ExternalReceive => 4,
+                crate::proton_api::wallet::TransactionType::Unsupported => 5,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for u16 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -15243,6 +15330,7 @@ impl SseEncode for crate::proton_api::wallet::WalletTransaction {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.id, serializer);
+        <Option<crate::proton_api::wallet::TransactionType>>::sse_encode(self.r#type, serializer);
         <String>::sse_encode(self.wallet_id, serializer);
         <Option<String>>::sse_encode(self.wallet_account_id, serializer);
         <Option<String>>::sse_encode(self.label, serializer);

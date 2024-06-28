@@ -183,6 +183,14 @@ class $AssetsImagesIconGen {
   SvgGenImage get icDiamondwalletPlus =>
       const SvgGenImage('assets/images/icon/ic-diamondwallet_plus.svg');
 
+  /// File path: assets/images/icon/ic-info-circle-dark.svg
+  SvgGenImage get icInfoCircleDark =>
+      const SvgGenImage('assets/images/icon/ic-info-circle-dark.svg');
+
+  /// File path: assets/images/icon/ic-info-circle.svg
+  SvgGenImage get icInfoCircle =>
+      const SvgGenImage('assets/images/icon/ic-info-circle.svg');
+
   /// File path: assets/images/icon/ic-list-bullets.svg
   SvgGenImage get icListBullets =>
       const SvgGenImage('assets/images/icon/ic-list-bullets.svg');
@@ -338,6 +346,8 @@ class $AssetsImagesIconGen {
         icCogWheel,
         icCross,
         icDiamondwalletPlus,
+        icInfoCircleDark,
+        icInfoCircle,
         icListBullets,
         icLock2fa,
         icMoneyBills,

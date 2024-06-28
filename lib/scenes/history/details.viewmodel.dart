@@ -58,9 +58,10 @@ abstract class HistoryDetailViewModel
   String strAccount = "";
   List<String> addresses = [];
   List<TransactionInfoModel> recipients = [];
-  int? blockConfirmTimestamp;
+  int? transactionTime;
   double amount = 0.0;
   double fee = 0.0;
+  bool isInternalTransaction = false;
   bool isSend = false;
   bool initialized = false;
   bool isEditing = false;
@@ -186,6 +187,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       transactionModel =
           findServerTransactionByTXID(serverTransactionData.transactions, txid);
 
+      if (transactionModel != null) {
+        isInternalTransaction = (transactionModel!.type ==
+                TransactionType.protonToProtonSend.index ||
+            transactionModel!.type ==
+                TransactionType.protonToProtonReceive.index);
+      }
+
       datasourceChangedStreamController.sinkAddSafe(this);
       _frbAccount =
           (await WalletManager.loadWalletWithID(walletID, accountID))!;
@@ -205,8 +213,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
         if (transaction.txid == txid) {
-          /// TODO:: fix me
-          blockConfirmTimestamp = 0; //transaction.confirmationTime?.timestamp;
           amount =
               transaction.received.toDouble() - transaction.sent.toDouble();
           fee = transaction.fees!.toDouble();
@@ -215,8 +221,20 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           if (isSend) {
             amount += transaction.fees ?? 0;
           }
-          foundedInBDKHistory = true;
 
+          transaction.time.when(
+            confirmed: (confirmationTime) {
+              logger.d('Confirmed transaction time: $confirmationTime');
+              transactionTime = confirmationTime;
+            },
+            unconfirmed: (lastSeen) {
+              logger.d('Unconfirmed transaction last seen: $lastSeen');
+              // needs to show in progress if it's not confirmed
+              // transactionTime = lastSeen;
+            },
+          );
+
+          foundedInBDKHistory = true;
           if (isSend) {
             if (recipients.isEmpty) {
               TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
@@ -268,6 +286,46 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           break;
         }
       }
+
+      if (foundedInBDKHistory == false) {
+        try {
+          if (recipients.isNotEmpty) {
+            // get transaction info locally, for sender
+            fee = recipients.first.feeInSATS.toDouble();
+            isSend = true;
+            amount = 0;
+            for (TransactionInfoModel recipient in recipients) {
+              amount -= recipient.amountInSATS.toDouble();
+            }
+          } else {
+            TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+                await WalletManager.getTransactionDetailsFromBlockStream(txid);
+            if (transactionDetailFromBlockChain != null) {
+              fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
+              Recipient? me;
+              for (Recipient recipient
+                  in transactionDetailFromBlockChain.recipients) {
+                BitcoinAddressModel? bitcoinAddressModel = await DBHelper
+                    .bitcoinAddressDao!
+                    .findBitcoinAddressInAccount(
+                        recipient.bitcoinAddress, accountModel.serverAccountID);
+                if (bitcoinAddressModel != null) {
+                  me = recipient;
+                  break;
+                }
+              }
+              if (me != null) {
+                isSend = false;
+                selfBitcoinAddress = me.bitcoinAddress;
+                amount = me.amountInSATS.toDouble();
+              }
+            }
+          }
+        } catch (e) {
+          logger.e(e.toString());
+        }
+      }
+
       logger.i("transactionModel == null ? ${transactionModel == null}");
       if (transactionModel == null && secretKey != null) {
         String hashedTransactionID =
@@ -289,9 +347,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             label: encryptedLabel,
             exchangeRateId: userSettingsDataProvider
                 .exchangeRate.id, // TODO:: fix it after finalize logic
-            // transactionTime: blockConfirmTimestamp != null
-            //     ? blockConfirmTimestamp.toString()
-            //     : (now.millisecondsSinceEpoch ~/ 1000).toString(),
           );
 
           String exchangeRateID = userSettingsDataProvider.exchangeRate.id;
@@ -300,6 +355,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
           transactionModel = TransactionModel(
               id: null,
+              type: isSend
+                  ? TransactionType.externalSend.index
+                  : TransactionType.externalReceive.index,
               walletID: walletID,
               label: utf8.encode(walletTransaction.label ?? ""),
               externalTransactionID: utf8.encode(txid),
@@ -373,45 +431,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       }
       if (fromEmail == "null") {
         fromEmail = "";
-      }
-      if (foundedInBDKHistory == false) {
-        blockConfirmTimestamp = null;
-        try {
-          if (recipients.isNotEmpty) {
-            // get transaction info locally, for sender
-            fee = recipients.first.feeInSATS.toDouble();
-            isSend = true;
-            amount = 0;
-            for (TransactionInfoModel recipient in recipients) {
-              amount -= recipient.amountInSATS.toDouble();
-            }
-          } else {
-            TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-                await WalletManager.getTransactionDetailsFromBlockStream(txid);
-            if (transactionDetailFromBlockChain != null) {
-              fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
-              Recipient? me;
-              for (Recipient recipient
-                  in transactionDetailFromBlockChain.recipients) {
-                BitcoinAddressModel? bitcoinAddressModel = await DBHelper
-                    .bitcoinAddressDao!
-                    .findBitcoinAddressInAccount(
-                        recipient.bitcoinAddress, accountModel.serverAccountID);
-                if (bitcoinAddressModel != null) {
-                  me = recipient;
-                  break;
-                }
-              }
-              if (me != null) {
-                isSend = false;
-                selfBitcoinAddress = me.bitcoinAddress;
-                amount = me.amountInSATS.toDouble();
-              }
-            }
-          }
-        } catch (e) {
-          logger.e(e.toString());
-        }
       }
 
       if (recipients.isNotEmpty && isRecipientsFromBlockChain) {

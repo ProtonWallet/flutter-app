@@ -13,6 +13,7 @@ class AppConfig {
   String esploraApiUrl;
   // TODO:: use this flag to enable / disable test output
   bool testMode;
+  int stopGap;
 
   ///
   AppConfig({
@@ -22,6 +23,7 @@ class AppConfig {
     required this.esploraWebpageUrl,
     required this.esploraApiUrl,
     required this.testMode,
+    required this.stopGap,
   });
 
   /// TODO:: conver this to enum
@@ -42,36 +44,42 @@ var appConfig = appConfigForProduction;
 
 ///predefined app config for test net
 final appConfigForTestNet = AppConfig(
-    coinType: bitcoinTestnet,
-    scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
-    apiEnv: ApiEnv.atlas(null),
-    esploraWebpageUrl: "https://proton.me/wallet/explorer/testnet/",
+  coinType: bitcoinTestnet,
+  scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
+  apiEnv: ApiEnv.atlas(null),
+  esploraWebpageUrl: "https://proton.me/wallet/explorer/testnet/",
 
-    /// use https://blockstream.info as api service since our own esplora service is not public yet
-    /// TODO:: change to our own esplora client once it's public
-    esploraApiUrl: "https://blockstream.info/testnet/",
-    testMode: true);
+  /// use https://blockstream.info as api service since our own esplora service is not public yet
+  /// TODO:: change to our own esplora client once it's public
+  esploraApiUrl: "https://blockstream.info/testnet/",
+  testMode: true,
+  stopGap: 50,
+);
 
 // payment test
 final appConfigForPayments = AppConfig(
-    coinType: bitcoinTestnet,
-    scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
-    apiEnv: payments,
-    esploraWebpageUrl: "https://payments.proton.me/wallet/explorer/testnet/",
+  coinType: bitcoinTestnet,
+  scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
+  apiEnv: payments,
+  esploraWebpageUrl: "https://payments.proton.me/wallet/explorer/testnet/",
 
-    /// use https://blockstream.info as api service since our own esplora service is not public yet
-    /// TODO:: change to our own esplora client once it's public
-    esploraApiUrl: "https://blockstream.info/testnet/",
-    testMode: true);
+  /// use https://blockstream.info as api service since our own esplora service is not public yet
+  /// TODO:: change to our own esplora client once it's public
+  esploraApiUrl: "https://blockstream.info/testnet/",
+  testMode: true,
+  stopGap: 30,
+);
 
 // production and this will be the default
 final appConfigForProduction = AppConfig(
-    coinType: bitcoin,
-    scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
-    apiEnv: const ApiEnv.prod(),
-    esploraWebpageUrl: "https://proton.me/wallet/explorer/",
+  coinType: bitcoin,
+  scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
+  apiEnv: const ApiEnv.prod(),
+  esploraWebpageUrl: "https://proton.me/wallet/explorer/",
 
-    /// use https://blockstream.info as api service since our own esplora service is not public yet
-    /// TODO:: change to our own esplora client once it's public
-    esploraApiUrl: "https://blockstream.info/",
-    testMode: false);
+  /// use https://blockstream.info as api service since our own esplora service is not public yet
+  /// TODO:: change to our own esplora client once it's public
+  esploraApiUrl: "https://blockstream.info/",
+  testMode: false,
+  stopGap: 50,
+);

@@ -34,7 +34,7 @@ class TransactionHistorySendItem extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.all(defaultPadding),
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

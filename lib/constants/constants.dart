@@ -6,7 +6,7 @@ const kPrimaryLightColor = Color(0xFFF1E6FF);
 
 const double defaultPadding = 16.0;
 const double defaultButtonPadding = 26.0;
-const int exchangeRateRefreshThreshold = 10;
+const int eventLoopRefreshThreshold = 10;
 const int defaultBitcoinAddressCountForOneEmail = 10;
 const int defaultTransactionPerPage = 5;
 const int defaultDisplayDigits = 2;

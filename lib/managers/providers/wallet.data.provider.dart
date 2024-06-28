@@ -27,6 +27,9 @@ class WalletsDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
 
+  StreamController<SelectedWalletUpdated> selectedWalletUpdateController =
+      StreamController<SelectedWalletUpdated>.broadcast();
+
   final WalletClient walletClient;
 
   //
@@ -127,26 +130,15 @@ class WalletsDataProvider extends DataProvider {
     return null;
   }
 
-  // Future<void> createWallet(String walletName, String mnemonicStr,
-  //     int walletType, FiatCurrency fiatCurrency,
-  //     [String? passphrase]) async {
-  //   /// TODO:: replace WalletManager
-  //   await WalletManager.createWallet(walletName, mnemonicStr,
-  //       WalletModel.importByUser, fiatCurrency, passphrase);
-
-  //   await WalletManager.autoBindEmailAddresses();
-
-  /// update cache,
-  //   walletsData = await _getFromDB();
-  //   dataUpdateController.add(DataUpdated("some data Updated"));
-  // }
-
   Future<ApiWalletData> createWallet(CreateWalletReq request) async {
     // api calls if failed throw error
     ApiWalletData walletData =
         await walletClient.createWallet(walletReq: request);
 
     await _processApiWalletData(walletData);
+
+    /// update cache
+    walletsData = await _getFromDB();
 
     return walletData;
   }
@@ -234,17 +226,6 @@ class WalletsDataProvider extends DataProvider {
     return false;
   }
 
-  // Future<void> createWalletAccount(int walletID, ScriptTypeInfo scriptType,
-  //     String label, FiatCurrency fiatCurrency,
-  //     {int internal = 0}) async {
-  //   await WalletManager.addWalletAccount(
-  //       walletID, scriptType, label, fiatCurrency);
-
-  //   /// update cache,
-  //   walletsData = await _getFromDB();
-  //   dataUpdateController.add(DataUpdated("some data Updated"));
-  // }
-
   Future<ApiWalletAccount> createWalletAccount(
     String walletID,
     CreateWalletAccountReq request,
@@ -262,6 +243,9 @@ class WalletsDataProvider extends DataProvider {
     var wallet = await getWallet(walletID);
     _processApiWalletAccountData(wallet!.wallet.id!, walletAccount);
 
+    /// update cache
+    walletsData = await _getFromDB();
+    dataUpdateController.add(DataUpdated("some data Updated"));
     return walletAccount;
   }
 
@@ -299,6 +283,9 @@ class WalletsDataProvider extends DataProvider {
     for (AccountModel accountModel in accounts) {
       await deleteWalletAccount(accountModel: accountModel, addToStream: false);
     }
+    if (selectedServerWalletID == wallet.serverWalletID) {
+      selectedServerWalletID = "";
+    }
 
     /// update cache,
     /// TODO:: improve performance here
@@ -318,7 +305,9 @@ class WalletsDataProvider extends DataProvider {
       {required AccountModel accountModel, bool addToStream = true}) async {
     await accountDao.deleteByServerAccountID(accountModel.serverAccountID);
     await addressDao.deleteByServerAccountID(accountModel.serverAccountID);
-
+    if (selectedServerWalletAccountID == accountModel.serverAccountID) {
+      selectedServerWalletAccountID = "";
+    }
     if (addToStream) {
       /// update cache,
       /// TODO:: improve performance here
@@ -330,7 +319,7 @@ class WalletsDataProvider extends DataProvider {
   void updateSelected(String? serverWalletID, String? serverAccountID) {
     selectedServerWalletID = serverWalletID ?? "";
     selectedServerWalletAccountID = serverAccountID ?? "";
-    // dataUpdateController.add(DataUpdated("some data Updated"));
+    selectedWalletUpdateController.add(SelectedWalletUpdated());
   }
 
   ///# DB operations

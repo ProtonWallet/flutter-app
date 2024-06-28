@@ -64,8 +64,10 @@ class HomeCoordinator extends Coordinator {
     push(view, fullscreenDialog: false);
   }
 
-  void showReceive(String serverWalletID, String serverAccountID, bool isWalletView) {
-    var view = ReceiveCoordinator(serverWalletID, serverAccountID, isWalletView).start();
+  void showReceive(
+      String serverWalletID, String serverAccountID, bool isWalletView) {
+    var view = ReceiveCoordinator(serverWalletID, serverAccountID, isWalletView)
+        .start();
     showInBottomSheet(view);
   }
 
@@ -149,12 +151,15 @@ class HomeCoordinator extends Coordinator {
     var walletBalanceBloc = WalletBalanceBloc(
       dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.balanceDataProvider,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.serverTransactionDataProvider,
     );
 
     var createWalletBloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletKeysProvider,
+      dataProviderManager.walletPassphraseProvider,
     );
 
     var viewModel = HomeViewModelImpl(

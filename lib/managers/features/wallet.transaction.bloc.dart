@@ -140,6 +140,7 @@ class WalletTransactionBloc
 
   StreamSubscription? serverTransactionDataSubscription;
   StreamSubscription? localTransactionDataSubscription;
+  StreamSubscription? bdkTransactionDataSubscription;
 
   // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
@@ -164,19 +165,28 @@ class WalletTransactionBloc
     /// we will compare the event.walletModel is equal to currentWalletModel or not
     WalletModel? currentWalletModel;
     AccountModel? currentAccountModel;
-    // bdkTransactionDataProvider.dataUpdateController.stream.listen((onData) {
-    //   handleTransactionDataProviderUpdate();
-    // });
+
+    bdkTransactionDataSubscription =
+        bdkTransactionDataProvider.stream.listen((state) {
+      //TODO:: improve me. only update the balance
+      if (state is BDKDataUpdated) {
+        handleTransactionDataProviderUpdate();
+      }
+    });
+
     serverTransactionDataSubscription = serverTransactionDataProvider
         .dataUpdateController.stream
         .listen((onData) {
       handleTransactionDataProviderUpdate();
+      syncWallet(true);
+      /// syncWallet so that balance can get update
     });
 
     localTransactionDataSubscription = localTransactionDataProvider
         .dataUpdateController.stream
         .listen((onData) {
       handleTransactionDataProviderUpdate();
+      syncWallet(true);
     });
     on<StartLoading>((event, emit) async {
       emit(state.copyWith(historyTransaction: []));
@@ -577,7 +587,7 @@ class WalletTransactionBloc
           await getExchangeRateFromTransactionModel(transactionModel);
 
       TransactionTime transactionTime = transactionDetail.time;
-      var time = 0;
+      int? time;
       transactionTime.when(
         confirmed: (confirmationTime) {
           logger.d('Confirmed transaction time: $confirmationTime');
@@ -585,7 +595,8 @@ class WalletTransactionBloc
         },
         unconfirmed: (lastSeen) {
           logger.d('Unconfirmed transaction last seen: $lastSeen');
-          time = lastSeen;
+          // needs to show in progress if it's not confirmed
+          // time = lastSeen;
         },
       );
 
@@ -599,7 +610,7 @@ class WalletTransactionBloc
             toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
         feeInSATS: transactionDetail.fees ?? 0,
         label: userLabel,
-        inProgress: false,
+        inProgress: time == null,
         //transactionDetail.confirmationTime == null,
         accountModel: accountModel,
         body: body.isNotEmpty ? body : null,
@@ -902,7 +913,10 @@ class WalletTransactionBloc
             (lastEvent as SelectWallet).walletMenuModel;
         for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
           bdkTransactionDataProvider.syncWallet(
-              walletMenuModel.walletModel, accountMenuModel.accountModel);
+            walletMenuModel.walletModel,
+            accountMenuModel.accountModel,
+            forceSync,
+          );
         }
         add(SyncWallet());
       } else if (lastEvent is SelectAccount) {
@@ -924,6 +938,7 @@ class WalletTransactionBloc
   Future<void> close() {
     serverTransactionDataSubscription?.cancel();
     localTransactionDataSubscription?.cancel();
+    bdkTransactionDataSubscription?.cancel();
     return super.close();
   }
 }

@@ -601,6 +601,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               AddWalletAccountSheet.show(
                                   context, viewModel, wallet);
                             },
+                            viewModel: viewModel,
                           ),
                           const SizedBox(
                             height: 10,

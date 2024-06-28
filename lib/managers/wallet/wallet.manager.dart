@@ -19,6 +19,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/address.dart';
 import 'package:wallet/rust/api/bdk_wallet/balance.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -177,56 +178,6 @@ class WalletManager implements Manager {
     logger.i("fingerprint = $fingerprint");
     return fingerprint;
   }
-
-  // static Future<void> autoCreateWallet() async {
-  //   String walletName = "My Wallet";
-  //   var mnemonic = FrbMnemonic(wordCount: WordCount.words12);
-  //   await createWallet(walletName, mnemonic.asString(),
-  //       WalletModel.createByProton, defaultFiatCurrency);
-  // }
-
-  // static Future<void> createWallet(String walletName, String mnemonicStr,
-  //     int walletType, FiatCurrency fiatCurrency,
-  //     [String? passphrase]) async {
-  //   SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-
-  //   var key = await userManager.getFirstKey();
-
-  //   String userPrivateKey = key.privateKey;
-  //   String userKeyID = key.keyID;
-
-  //   Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
-  //   String encryptedMnemonic =
-  //       await WalletKeyHelper.encrypt(secretKey, mnemonicStr);
-  //   String encryptedWalletName = await WalletKeyHelper.encrypt(
-  //       secretKey, walletName.isNotEmpty ? walletName : "My Wallet");
-  //   String fingerprint = await WalletManager.getFingerPrintFromMnemonic(
-  //       mnemonicStr,
-  //       passphrase:
-  //           passphrase != null && passphrase.isNotEmpty ? passphrase : null);
-  //   String encryptedWalletKey =
-  //       proton_crypto.encryptBinaryArmor(userPrivateKey, entropy);
-  //   String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
-  //       userPrivateKey, key.passphrase, entropy, gpgContextWalletKey);
-  //   CreateWalletReq walletReq = buildWalletRequest(
-  //       encryptedWalletName,
-  //       walletType,
-  //       encryptedMnemonic,
-  //       fingerprint,
-  //       userPrivateKey,
-  //       userKeyID,
-  //       encryptedWalletKey,
-  //       walletKeySignature,
-  //       passphrase != null && passphrase.isNotEmpty);
-
-  //   ApiWalletData walletData =
-  //       await proton_api.createWallet(walletReq: walletReq);
-  //   int walletID = await processWalletData(
-  //       walletData, walletName, encryptedMnemonic, fingerprint, walletType);
-  //   await WalletManager.setWalletKey([walletData.walletKey]);
-  //   await WalletManager.addWalletAccount(
-  //       walletID, appConfig.scriptTypeInfo, "My wallet account", fiatCurrency);
-  // }
 
   static CreateWalletReq buildWalletRequest(
       String encryptedName,
@@ -675,6 +626,8 @@ class WalletManager implements Manager {
     }
     TransactionModel transactionModel = TransactionModel(
         id: null,
+        type:
+            walletTransaction.type?.index ?? TransactionType.unsupported.index,
         walletID: walletModel.id!,
         label: utf8.encode(walletTransaction.label ?? ""),
         externalTransactionID: utf8.encode(txid),
@@ -947,7 +900,7 @@ class WalletManager implements Manager {
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       List<String> emails = [];
-      for (var item in jsonList){
+      for (var item in jsonList) {
         emails.add(item.values);
       }
       return emails.join(", ");
@@ -1025,18 +978,11 @@ class WalletManager implements Manager {
 
   static Future<bool> isMineBitcoinAddress(
     FrbAccount account,
-    String bitcoinAddress, {
-    int maxIter = 1000,
-  }) async {
-    // TODO:: use bdk to check bitcoin address is mine
-    // return  account.isMine(address: );
-    for (int addressIndex = 0; addressIndex < maxIter; addressIndex++) {
-      var addressInfo = await account.getAddress(index: addressIndex);
-      if (addressInfo.address == bitcoinAddress) {
-        return true;
-      }
-    }
-    return false;
+    String bitcoinAddress,
+  ) async {
+    var network = appConfig.coinType.network;
+    return account.isMine(
+        address: FrbAddress(address: bitcoinAddress, network: network));
   }
 
   static Future<FiatCurrency> getDefaultAccountFiatCurrency(

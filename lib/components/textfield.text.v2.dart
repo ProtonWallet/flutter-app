@@ -25,6 +25,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final int? maxLength;
   final bool? showFinishButton;
   final Widget? prefixIcon;
+  final double radius;
 
   const TextFieldTextV2({
     super.key,
@@ -49,6 +50,7 @@ class TextFieldTextV2 extends StatefulWidget {
     this.maxLength,
     this.showFinishButton,
     this.prefixIcon,
+    this.radius=18.0,
   });
 
   @override
@@ -111,7 +113,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     horizontal: 4, vertical: widget.paddingSize ?? 12),
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ?? ProtonColors.white,
-                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
                     border: Border.all(
                       width: 1,
                       style: BorderStyle.solid,

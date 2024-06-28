@@ -9473,6 +9473,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType dco_decode_box_autoadd_transaction_type(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_transaction_type(raw);
+  }
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -10082,6 +10088,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType? dco_decode_opt_box_autoadd_transaction_type(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_transaction_type(raw);
+  }
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
@@ -10375,6 +10387,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType dco_decode_transaction_type(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TransactionType.values[raw as int];
+  }
+
+  @protected
   int dco_decode_u_16(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -10466,23 +10484,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletTransaction dco_decode_wallet_transaction(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 14)
-      throw Exception('unexpected arr length: expect 14 but see ${arr.length}');
+    if (arr.length != 15)
+      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
     return WalletTransaction(
       id: dco_decode_String(arr[0]),
-      walletId: dco_decode_String(arr[1]),
-      walletAccountId: dco_decode_opt_String(arr[2]),
-      label: dco_decode_opt_String(arr[3]),
-      transactionId: dco_decode_String(arr[4]),
-      transactionTime: dco_decode_String(arr[5]),
-      isSuspicious: dco_decode_u_8(arr[6]),
-      isPrivate: dco_decode_u_8(arr[7]),
-      exchangeRate: dco_decode_opt_box_autoadd_proton_exchange_rate(arr[8]),
-      hashedTransactionId: dco_decode_opt_String(arr[9]),
-      subject: dco_decode_opt_String(arr[10]),
-      body: dco_decode_opt_String(arr[11]),
-      sender: dco_decode_opt_String(arr[12]),
-      tolist: dco_decode_opt_String(arr[13]),
+      type: dco_decode_opt_box_autoadd_transaction_type(arr[1]),
+      walletId: dco_decode_String(arr[2]),
+      walletAccountId: dco_decode_opt_String(arr[3]),
+      label: dco_decode_opt_String(arr[4]),
+      transactionId: dco_decode_String(arr[5]),
+      transactionTime: dco_decode_String(arr[6]),
+      isSuspicious: dco_decode_u_8(arr[7]),
+      isPrivate: dco_decode_u_8(arr[8]),
+      exchangeRate: dco_decode_opt_box_autoadd_proton_exchange_rate(arr[9]),
+      hashedTransactionId: dco_decode_opt_String(arr[10]),
+      subject: dco_decode_opt_String(arr[11]),
+      body: dco_decode_opt_String(arr[12]),
+      sender: dco_decode_opt_String(arr[13]),
+      tolist: dco_decode_opt_String(arr[14]),
     );
   }
 
@@ -11915,6 +11934,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType sse_decode_box_autoadd_transaction_type(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_transaction_type(deserializer));
+  }
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_u_32(deserializer));
@@ -12794,6 +12820,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType? sse_decode_opt_box_autoadd_transaction_type(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_transaction_type(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -13158,6 +13196,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TransactionType sse_decode_transaction_type(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TransactionType.values[inner];
+  }
+
+  @protected
   int sse_decode_u_16(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint16();
@@ -13240,6 +13285,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
+    var var_type = sse_decode_opt_box_autoadd_transaction_type(deserializer);
     var var_walletId = sse_decode_String(deserializer);
     var var_walletAccountId = sse_decode_opt_String(deserializer);
     var var_label = sse_decode_opt_String(deserializer);
@@ -13256,6 +13302,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_tolist = sse_decode_opt_String(deserializer);
     return WalletTransaction(
         id: var_id,
+        type: var_type,
         walletId: var_walletId,
         walletAccountId: var_walletAccountId,
         label: var_label,
@@ -14531,6 +14578,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_transaction_type(
+      TransactionType self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_transaction_type(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_32(self, serializer);
@@ -15252,6 +15306,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_transaction_type(
+      TransactionType? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_transaction_type(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -15544,6 +15609,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_transaction_type(
+      TransactionType self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_u_16(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint16(self);
@@ -15620,6 +15692,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       WalletTransaction self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.id, serializer);
+    sse_encode_opt_box_autoadd_transaction_type(self.type, serializer);
     sse_encode_String(self.walletId, serializer);
     sse_encode_opt_String(self.walletAccountId, serializer);
     sse_encode_opt_String(self.label, serializer);
