@@ -18,6 +18,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final String? titleTooltip;
   final VoidCallback? titleOptionsCallback; // display at far right of title
   final Color? contentColor;
+  final Color? backgroundColor;
   final BitcoinAmount? bitcoinAmount;
 
   const TransactionHistoryItem({
@@ -31,13 +32,14 @@ class TransactionHistoryItem extends StatelessWidget {
     this.bitcoinAmount,
     this.bitcoinAddress,
     this.walletAccountName,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(defaultPadding),
-      color: ProtonColors.backgroundProton,
+      color: backgroundColor ?? ProtonColors.backgroundProton,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -24,6 +24,7 @@ class SetupPassPhraseCoordinator extends Coordinator {
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletKeysProvider,
+      dataProviderManager.walletPassphraseProvider,
     );
 
     var viewModel = SetupPassPhraseViewModelImpl(

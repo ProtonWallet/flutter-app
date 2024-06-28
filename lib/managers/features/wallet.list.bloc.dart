@@ -174,12 +174,18 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       }
     });
 
+    walletPassProvider.dataUpdateController.stream.listen((onData) {
+      //TODO:: improve me
+      add(StartLoading());
+    });
+
     on<StartLoading>((event, emit) async {
       // loading wallet data
       logger.i("StartLoading!!!!!");
       var wallets = await walletsDataProvider.getWallets();
       if (wallets == null) {
         emit(state.copyWith(initialized: true, walletsModel: []));
+        walletsDataProvider.updateSelected(null, null);
         return; // error;
       }
 
@@ -192,14 +198,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       int index = 0;
       for (WalletData wallet in wallets) {
         WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
-        if (index == 0 && walletsDataProvider.selectedServerWalletID.isEmpty) {
-          walletModel.isSelected = true;
-        } else {
-          if (walletModel.walletModel.serverWalletID ==
-              walletsDataProvider.selectedServerWalletID) {
-            walletModel.isSelected = true;
-          }
-        }
         walletModel.currentIndex = index++;
 
         // check if wallet has password valid. no password is valid
@@ -207,6 +205,23 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           wallet.wallet,
           walletPassProvider,
         );
+
+        if (walletModel.hasValidPassword) {
+          if (index == 0 &&
+              walletsDataProvider.selectedServerWalletID.isEmpty) {
+            walletModel.isSelected = true;
+            walletsDataProvider.updateSelected(
+                walletModel.walletModel.serverWalletID, null);
+          } else {
+            if (walletModel.walletModel.serverWalletID ==
+                walletsDataProvider.selectedServerWalletID) {
+              walletModel.isSelected = true;
+              walletsDataProvider.updateSelected(
+                  walletModel.walletModel.serverWalletID, null);
+            }
+          }
+        }
+
         var walletKey = await walletKeysProvider.getWalletKey(
           wallet.wallet.serverWalletID,
         );
@@ -257,6 +272,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               accMenuModel.accountModel.serverAccountID ==
                   walletsDataProvider.selectedServerWalletAccountID) {
             accMenuModel.isSelected = true;
+            walletsDataProvider.updateSelected(
+                null, accMenuModel.accountModel.serverAccountID);
             userSettingsDataProvider.updateFiatCurrency(
                 accMenuModel.accountModel.fiatCurrency.toFiatCurrency());
           }
@@ -360,7 +377,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
                   account.accountModel.fiatCurrency.toFiatCurrency());
-              walletsDataProvider.updateSelected("", accountID);
+              walletsDataProvider.updateSelected(null, accountID);
             }
           }
         } else {

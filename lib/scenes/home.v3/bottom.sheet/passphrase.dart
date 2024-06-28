@@ -5,6 +5,7 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -64,7 +65,14 @@ class PassphraseSheet {
                             status: "apply passphrase to wallet",
                             maskType: EasyLoadingMaskType.black);
                         try {
-                          /// TODO:: set wallet passphrase here
+                          viewModel.errorMessage = "";
+                          viewModel.dataProviderManager.walletPassphraseProvider
+                              .saveWalletPassphrase(
+                            WalletPassphrase(
+                              walletID: walletModel.serverWalletID,
+                              passphrase: passphrase,
+                            ),
+                          );
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }

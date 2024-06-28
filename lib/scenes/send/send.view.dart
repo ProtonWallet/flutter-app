@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,6 +9,8 @@ import 'package:wallet/components/recipient.detail.dart';
 import 'package:wallet/components/textfield.send.btc.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/components/transaction.history.item.dart';
+import 'package:wallet/components/transaction.history.item.v2.dart';
+import 'package:wallet/components/transaction.history.send.item.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
@@ -33,7 +36,7 @@ class SendView extends ViewBase<SendViewModel> {
           statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: ProtonColors.white,
         title: getTitleWidget(context),
         centerTitle: true,
         leading: getLeadingWidget(context),
@@ -102,7 +105,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildEditAmount(BuildContext context) {
     return Container(
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -120,21 +123,22 @@ class SendView extends ViewBase<SendViewModel> {
                                 children: [
                                   const SizedBox(width: defaultPadding),
                                   Text(
-                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
                                     style: FontManager.captionRegular(
                                         ProtonColors.textWeak),
                                   ),
                                   const SizedBox(width: 8),
                                   GestureDetector(
                                     onTap: () {
-                                      // TODO:: fix logic to remain more accurate fee
+                                      // TODO:: fix logic to use more specific amount
                                       viewModel.amountTextController.text =
                                           ExchangeCalculator
-                                                  .getNotionalInFiatCurrency(
-                                                      viewModel.exchangeRate,
-                                                      viewModel.balance)
-                                              .toStringAsFixed(
-                                                  defaultDisplayDigits);
+                                              .getNotionalInFiatCurrency(
+                                        viewModel.exchangeRate,
+                                        viewModel.balance -
+                                            viewModel.estimatedFeeInSAT -
+                                            100,
+                                      ).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate));
                                       viewModel.splitAmountToRecipients();
                                     },
                                     child: Text(S.of(context).send_all,
@@ -146,7 +150,7 @@ class SendView extends ViewBase<SendViewModel> {
                             Row(children: [
                               Expanded(
                                   child: TextFieldSendBTCV2(
-                                backgroundColor: ProtonColors.white,
+                                backgroundColor: ProtonColors.backgroundProton,
                                 labelText: S.of(context).amount,
                                 textController: viewModel.amountTextController,
                                 myFocusNode: viewModel.amountFocusNode,
@@ -179,7 +183,8 @@ class SendView extends ViewBase<SendViewModel> {
                                       maxSuffixIconWidth: 20,
                                       textStyle: FontManager.captionMedian(
                                           ProtonColors.textNorm),
-                                      backgroundColor: ProtonColors.white,
+                                      backgroundColor:
+                                          ProtonColors.backgroundProton,
                                       items: fiatCurrencies,
                                       canSearch: true,
                                       itemsText: fiatCurrencies
@@ -307,21 +312,18 @@ class SendView extends ViewBase<SendViewModel> {
   Widget buildReviewContent(BuildContext context) {
     int estimatedFee = 0;
     switch (viewModel.userTransactionFeeMode) {
-      case TransactionFeeMode.lowPriority:
-        estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).ceil();
+      case TransactionFeeMode.highPriority:
+        estimatedFee = viewModel.estimatedFeeInSATHighPriority;
         break;
       case TransactionFeeMode.medianPriority:
-        estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).ceil();
+        estimatedFee = viewModel.estimatedFeeInSATMedianPriority;
         break;
-      case TransactionFeeMode.highPriority:
-        estimatedFee =
-            (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).ceil();
+      case TransactionFeeMode.lowPriority:
+        estimatedFee = viewModel.estimatedFeeInSATLowPriority;
         break;
     }
     return Container(
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -347,11 +349,11 @@ class SendView extends ViewBase<SendViewModel> {
                                               "") ==
                                       false)
                                 Column(children: [
-                                  TransactionHistoryItem(
-                                    title: S.of(context).trans_to,
+                                  TransactionHistorySendItem(
                                     content: protonRecipient.email,
-                                    memo: viewModel.bitcoinAddresses[
-                                        protonRecipient.email],
+                                    bitcoinAddress: viewModel.bitcoinAddresses[
+                                            protonRecipient.email] ??
+                                        "",
                                     bitcoinAmount: viewModel.recipients.length >
                                             1
                                         ? BitcoinAmount(
@@ -370,7 +372,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     height: 1,
                                   ),
                                 ]),
-                            TransactionHistoryItem(
+                            TransactionHistoryItemV2(
                               title: S.of(context).trans_metwork_fee,
                               titleTooltip:
                                   S.of(context).trans_metwork_fee_desc,
@@ -378,12 +380,25 @@ class SendView extends ViewBase<SendViewModel> {
                                 showSelectTransactionFeeMode(
                                     context, viewModel);
                               },
-                              content:
-                                  "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}",
-                              memo: ExchangeCalculator.getBitcoinUnitLabel(
-                                  viewModel
-                                      .userSettingsDataProvider.bitcoinUnit,
-                                  estimatedFee),
+                              backgroundColor: ProtonColors.white,
+                              content: AnimatedFlipCounter(
+                                duration: const Duration(milliseconds: 500),
+                                value: ExchangeCalculator
+                                    .getNotionalInFiatCurrency(
+                                        viewModel.exchangeRate, estimatedFee),
+                                prefix:
+                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
+                                fractionDigits: ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate),
+                                textStyle: FontManager.body2Median(
+                                    ProtonColors.textNorm),
+                              ),
+                              memo:
+                                  ExchangeCalculator.getBitcoinUnitLabelWidget(
+                                      viewModel
+                                          .userSettingsDataProvider.bitcoinUnit,
+                                      estimatedFee,
+                                      textStyle: FontManager.body2Regular(
+                                          ProtonColors.textHint)),
                             ),
                             const Divider(
                               thickness: 0.2,
@@ -463,7 +478,7 @@ class SendView extends ViewBase<SendViewModel> {
                                                       style: FontManager
                                                           .body2Median(
                                                               ProtonColors
-                                                                  .protonBlue)),
+                                                                  .textHint)),
                                                 ],
                                               ))
                                         ],
@@ -562,7 +577,7 @@ class SendView extends ViewBase<SendViewModel> {
                                                     style:
                                                         FontManager.body2Median(
                                                             ProtonColors
-                                                                .protonBlue)),
+                                                                .textHint)),
                                               ],
                                             ))
                                       ],
@@ -626,16 +641,16 @@ class SendView extends ViewBase<SendViewModel> {
   Widget getTransactionValueWidget(BuildContext context) {
     int amountInSATS = getTotalAmountInSATS();
     double amountInFiatCurrency = getTotalAmountInFiatCurrency();
+    int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${amountInFiatCurrency.toStringAsFixed(defaultDisplayDigits)}",
+          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${amountInFiatCurrency.toStringAsFixed(displayDigit)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
-      Text(
-          ExchangeCalculator.getBitcoinUnitLabel(
-              viewModel.userSettingsDataProvider.bitcoinUnit, amountInSATS),
-          style: FontManager.body2Regular(ProtonColors.textNorm)),
+      ExchangeCalculator.getBitcoinUnitLabelWidget(
+          viewModel.userSettingsDataProvider.bitcoinUnit, amountInSATS,
+          textStyle: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
 
@@ -647,19 +662,28 @@ class SendView extends ViewBase<SendViewModel> {
     double estimatedTotalValueInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
             viewModel.exchangeRate, viewModel.totalAmountInSAT);
-    return TransactionHistoryItem(
+    int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
+    return TransactionHistoryItemV2(
+      backgroundColor: ProtonColors.white,
       title: S.of(context).trans_total,
-      content:
-          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${(estimatedFeeInNotional + estimatedTotalValueInNotional).toStringAsFixed(defaultDisplayDigits)}",
-      memo: ExchangeCalculator.getBitcoinUnitLabel(
+      content: AnimatedFlipCounter(
+        duration: const Duration(milliseconds: 500),
+        value: estimatedFeeInNotional + estimatedTotalValueInNotional,
+        prefix:
+            "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
+        fractionDigits: displayDigit,
+        textStyle: FontManager.body2Median(ProtonColors.textNorm),
+      ),
+      memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
           viewModel.userSettingsDataProvider.bitcoinUnit,
-          (viewModel.totalAmountInSAT + estimatedFee)),
+          (viewModel.totalAmountInSAT + estimatedFee),
+          textStyle: FontManager.body2Regular(ProtonColors.textHint)),
     );
   }
 
   Widget buildAddRecipient(BuildContext context) {
     return Container(
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -720,7 +744,7 @@ class SendView extends ViewBase<SendViewModel> {
                                   children: [
                                     const SizedBox(width: defaultPadding),
                                     Text(
-                                      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(defaultDisplayDigits)} ${S.of(context).available_bitcoin_value}",
+                                      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
                                       style: FontManager.captionRegular(
                                           ProtonColors.textWeak),
                                     ),
@@ -787,7 +811,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildSuccessContent(BuildContext context) {
     return Container(
-        color: ProtonColors.backgroundProton,
+        color: ProtonColors.white,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -982,22 +1006,20 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
   switch (transactionFeeMode) {
     case TransactionFeeMode.highPriority:
       feeModeStr = S.of(context).high_priority;
-      estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateHighPriority).ceil();
+      estimatedFee = viewModel.estimatedFeeInSATHighPriority;
       break;
     case TransactionFeeMode.medianPriority:
       feeModeStr = S.of(context).median_priority;
-      estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateMedianPriority).ceil();
+      estimatedFee = viewModel.estimatedFeeInSATMedianPriority;
       break;
     case TransactionFeeMode.lowPriority:
       feeModeStr = S.of(context).low_priority;
-      estimatedFee =
-          (viewModel.baseFeeInSAT * viewModel.feeRateLowPriority).ceil();
+      estimatedFee = viewModel.estimatedFeeInSATLowPriority;
       break;
   }
+  int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
   String estimatedFeeInFiatCurrency =
-      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(defaultDisplayDigits)}";
+      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(displayDigit)}";
   String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
       viewModel.userSettingsDataProvider.bitcoinUnit, estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

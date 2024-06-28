@@ -1,9 +1,7 @@
-use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
-use andromeda_api::wallet::{ApiWalletSettings, ApiWalletTransaction, CreateWalletRequestBody};
-
-pub use andromeda_api::wallet::{ApiWallet, ApiWalletData, ApiWalletKey};
-
 use andromeda_api::bitcoin_address::ApiBitcoinAddressCreationPayload;
+use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
+pub use andromeda_api::wallet::{ApiWallet, ApiWalletData, ApiWalletKey, TransactionType};
+use andromeda_api::wallet::{ApiWalletSettings, ApiWalletTransaction, CreateWalletRequestBody};
 use flutter_rust_bridge::frb;
 
 use super::exchange_rate::ProtonExchangeRate;
@@ -11,9 +9,20 @@ use super::exchange_rate::ProtonExchangeRate;
 /// exposes
 pub use andromeda_api::bitcoin_address::ApiWalletBitcoinAddress;
 
+#[frb(mirror(TransactionType))]
+pub enum _TransactionType {
+    NotSend = 0,
+    ProtonToProtonSend = 1,
+    ProtonToProtonReceive = 2,
+    ExternalSend = 3,
+    ExternalReceive = 4,
+    Unsupported = 99,
+}
+
 #[derive(Debug)]
 pub struct WalletTransaction {
     pub id: String,
+    pub r#type: Option<TransactionType>,
     pub wallet_id: String,
     pub wallet_account_id: Option<String>,
     pub label: Option<String>,
@@ -32,6 +41,7 @@ impl From<ApiWalletTransaction> for WalletTransaction {
     fn from(wallet_transaction: ApiWalletTransaction) -> Self {
         WalletTransaction {
             id: wallet_transaction.ID,
+            r#type: wallet_transaction.Type,
             wallet_id: wallet_transaction.WalletID,
             wallet_account_id: wallet_transaction.WalletAccountID,
             label: wallet_transaction.Label,

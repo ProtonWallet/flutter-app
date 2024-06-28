@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -84,5 +87,21 @@ class CommonHelper {
   static FiatCurrency getFiatCurrencyByName(String name) {
     return FiatCurrency.values.firstWhere((v) => v.name.toUpperCase() == name,
         orElse: () => defaultFiatCurrency);
+  }
+
+  static String formatLocaleTime(BuildContext context, int timestamp) {
+    var millis = timestamp;
+    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
+    var now = DateTime.now();
+    var difference = now.difference(dt);
+    if (difference.inDays >= 1) {
+      var dateLocalFormat =
+          DateFormat.yMd(Platform.localeName).add_jm().format(dt);
+      return dateLocalFormat.toString();
+    } else if (difference.inHours >= 1) {
+      return S.of(context).n_hour_ago(difference.inHours.toInt());
+    } else {
+      return S.of(context).n_minutes_ago(difference.inMinutes.toInt());
+    }
   }
 }

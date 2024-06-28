@@ -900,6 +900,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SortOrder dco_decode_box_autoadd_sort_order(dynamic raw);
 
   @protected
+  TransactionType dco_decode_box_autoadd_transaction_type(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
@@ -1146,6 +1149,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SortOrder? dco_decode_opt_box_autoadd_sort_order(dynamic raw);
 
   @protected
+  TransactionType? dco_decode_opt_box_autoadd_transaction_type(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
 
   @protected
@@ -1236,6 +1242,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionTime dco_decode_transaction_time(dynamic raw);
+
+  @protected
+  TransactionType dco_decode_transaction_type(dynamic raw);
 
   @protected
   int dco_decode_u_16(dynamic raw);
@@ -1974,6 +1983,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SortOrder sse_decode_box_autoadd_sort_order(SseDeserializer deserializer);
 
   @protected
+  TransactionType sse_decode_box_autoadd_transaction_type(
+      SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
@@ -2251,6 +2264,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  TransactionType? sse_decode_opt_box_autoadd_transaction_type(
+      SseDeserializer deserializer);
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
@@ -2349,6 +2366,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionTime sse_decode_transaction_time(SseDeserializer deserializer);
+
+  @protected
+  TransactionType sse_decode_transaction_type(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_16(SseDeserializer deserializer);
@@ -3102,6 +3122,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SortOrder self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_transaction_type(
+      TransactionType self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
@@ -3385,6 +3409,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SortOrder? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_transaction_type(
+      TransactionType? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
 
   @protected
@@ -3484,6 +3512,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_transaction_time(
       TransactionTime self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_transaction_type(
+      TransactionType self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_16(int self, SseSerializer serializer);

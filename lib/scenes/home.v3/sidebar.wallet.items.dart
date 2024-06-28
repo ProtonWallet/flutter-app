@@ -10,7 +10,9 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
+import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 typedef WalletCallback = void Function(WalletMenuModel wallet);
@@ -31,6 +33,7 @@ class SidebarWalletItems extends StatelessWidget {
   final DeleteCallback? onDelete;
   final WalletCallback? updatePassphrase;
   final WalletCallback? selectWallet;
+  final HomeViewModel? viewModel;
 
   const SidebarWalletItems({
     super.key,
@@ -40,6 +43,7 @@ class SidebarWalletItems extends StatelessWidget {
     this.onDelete,
     this.updatePassphrase,
     this.selectWallet,
+    this.viewModel,
   });
 
   @override
@@ -144,7 +148,7 @@ class SidebarWalletItems extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              // updatePassphrase?.call(wlModel.wallet);
+              updatePassphrase?.call(wlModel);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -268,11 +272,15 @@ class SidebarWalletItems extends StatelessWidget {
               if (wlModel.accounts.length < freeUserWalletAccountLimit) {
                 addAccount?.call(wlModel);
               } else {
-                CommonHelper.showSnackbar(
-                  context,
-                  S.of(context).freeuser_wallet_account_limit(
-                      freeUserWalletAccountLimit),
-                );
+                if (viewModel == null) {
+                  CommonHelper.showSnackbar(
+                    context,
+                    S.of(context).freeuser_wallet_account_limit(
+                        freeUserWalletAccountLimit),
+                  );
+                } else {
+                  UpgradeIntroSheet.show(context, viewModel!);
+                }
               }
             },
             tileColor: ProtonColors.drawerBackground,
