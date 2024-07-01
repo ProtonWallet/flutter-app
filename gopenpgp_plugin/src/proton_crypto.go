@@ -196,6 +196,16 @@ func encryptBinary(userPrivateKey *C.char, binaryMessage *C.char, length C.int) 
 	return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
 }
 
+//export verifyCleartextMessageArmored
+func verifyCleartextMessageArmored(userPublicKey *C.char, armoredSignature *C.char) (*C.char, C.int) {
+	clearText, err := helper.VerifyCleartextMessageArmored(C.GoString(userPublicKey), C.GoString(armoredSignature), crypto.GetUnixTime())
+	cStr := C.CString(clearText)
+	if err == nil {
+		return cStr, C.int(1)
+	}
+	return cStr, C.int(0)
+}
+
 //export encryptBinaryArmor
 func encryptBinaryArmor(userPrivateKey *C.char, binaryMessage *C.char, length C.int) *C.char {
 	data := C.GoBytes(unsafe.Pointer(binaryMessage), length)

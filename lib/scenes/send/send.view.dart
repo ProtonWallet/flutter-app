@@ -8,7 +8,6 @@ import 'package:wallet/components/protonmail.autocomplete.dart';
 import 'package:wallet/components/recipient.detail.dart';
 import 'package:wallet/components/textfield.send.btc.v2.dart';
 import 'package:wallet/components/textfield.text.v2.dart';
-import 'package:wallet/components/transaction.history.item.dart';
 import 'package:wallet/components/transaction.history.item.v2.dart';
 import 'package:wallet/components/transaction.history.send.item.dart';
 import 'package:wallet/constants/constants.dart';
