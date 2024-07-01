@@ -9618,7 +9618,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       publicKey: dco_decode_opt_String(arr[7]),
       fingerprint: dco_decode_opt_String(arr[8]),
       walletKeySignature: dco_decode_String(arr[9]),
-      isAutoCreated: dco_decode_opt_box_autoadd_u_8(arr[10]),
+      isAutoCreated: dco_decode_u_8(arr[10]),
     );
   }
 
@@ -12074,7 +12074,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_publicKey = sse_decode_opt_String(deserializer);
     var var_fingerprint = sse_decode_opt_String(deserializer);
     var var_walletKeySignature = sse_decode_String(deserializer);
-    var var_isAutoCreated = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_isAutoCreated = sse_decode_u_8(deserializer);
     return CreateWalletReq(
         name: var_name,
         isImported: var_isImported,
@@ -14704,7 +14704,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.publicKey, serializer);
     sse_encode_opt_String(self.fingerprint, serializer);
     sse_encode_String(self.walletKeySignature, serializer);
-    sse_encode_opt_box_autoadd_u_8(self.isAutoCreated, serializer);
+    sse_encode_u_8(self.isAutoCreated, serializer);
   }
 
   @protected

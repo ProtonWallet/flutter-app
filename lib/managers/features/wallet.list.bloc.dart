@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -154,6 +155,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final UserManager userManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
 
+  StreamSubscription? walletPassDataSubscription;
+  StreamSubscription? bdkTransactionDataSubscription;
+  StreamSubscription? walletsDataSubscription;
+
   WalletListBloc(
     this.walletsDataProvider,
     this.walletPassProvider,
@@ -162,19 +167,22 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.userSettingsDataProvider,
     this.bdkTransactionDataProvider,
   ) : super(const WalletListState(initialized: false, walletsModel: [])) {
-    walletsDataProvider.dataUpdateController.stream.listen((onData) {
+    walletsDataSubscription =
+        walletsDataProvider.dataUpdateController.stream.listen((onData) {
       //TODO:: improve me
       add(StartLoading());
     });
 
-    bdkTransactionDataProvider.stream.listen((state) {
+    bdkTransactionDataSubscription =
+        bdkTransactionDataProvider.stream.listen((state) {
       //TODO:: improve me. only update the balance
       if (state is BDKDataUpdated) {
         add(UpdateBalance());
       }
     });
 
-    walletPassProvider.dataUpdateController.stream.listen((onData) {
+    walletPassDataSubscription =
+        walletPassProvider.dataUpdateController.stream.listen((onData) {
       //TODO:: improve me
       add(StartLoading());
     });
@@ -196,6 +204,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
       List<WalletMenuModel> walletsModel = [];
       int index = 0;
+      bool hadSelectWallet = false;
       for (WalletData wallet in wallets) {
         WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
         walletModel.currentIndex = index++;
@@ -207,8 +216,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         );
 
         if (walletModel.hasValidPassword) {
-          if (index == 0 &&
+          if (hadSelectWallet == false &&
               walletsDataProvider.selectedServerWalletID.isEmpty) {
+            hadSelectWallet = true;
             walletModel.isSelected = true;
             walletsDataProvider.updateSelected(
                 walletModel.walletModel.serverWalletID, null);
@@ -586,5 +596,13 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     }
     // Default to false if none of the above conditions are met
     return true;
+  }
+
+  @override
+  Future<void> close() {
+    walletsDataSubscription?.cancel();
+    walletPassDataSubscription?.cancel();
+    bdkTransactionDataSubscription?.cancel();
+    return super.close();
   }
 }
