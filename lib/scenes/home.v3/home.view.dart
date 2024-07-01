@@ -594,7 +594,10 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                             // update passphrase
                             updatePassphrase: (wallet) {
                               PassphraseSheet.show(
-                                  context, viewModel, wallet.walletModel);
+                                context,
+                                viewModel,
+                                wallet,
+                              );
                             },
                             // add new account into wallet
                             addAccount: (wallet) {

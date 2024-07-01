@@ -200,6 +200,7 @@ class WalletManager implements Manager {
       fingerprint: fingerprint,
       mnemonic: mnemonic,
       walletKeySignature: walletKeySignature,
+      isAutoCreated: 0,
     );
   }
 

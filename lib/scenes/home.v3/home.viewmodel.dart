@@ -969,7 +969,11 @@ class HomeViewModelImpl extends HomeViewModel {
         const Duration(seconds: 1),
       ); // wait for account show on sidebar
     } catch (e) {
-      errorMessage = e.toString();
+      CommonHelper.showSnackbar(
+        Coordinator.rootNavigatorKey.currentContext!,
+        e.toString(),
+        isError: true,
+      );
     }
   }
 

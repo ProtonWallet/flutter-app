@@ -5,17 +5,18 @@ import 'package:wallet/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class PassphraseSheet {
-  static void show(
-      BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+  static void show(BuildContext context, HomeViewModel viewModel,
+      WalletMenuModel walletMenuModel) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -56,7 +57,7 @@ class PassphraseSheet {
                       String passphrase =
                           viewModel.walletRecoverPassphraseController.text;
                       bool match = await WalletManager.checkFingerprint(
-                          walletModel, passphrase);
+                          walletMenuModel.walletModel, passphrase);
                       setState(() {
                         viewModel.isWalletPassphraseMatch = match;
                       });
@@ -69,10 +70,12 @@ class PassphraseSheet {
                           viewModel.dataProviderManager.walletPassphraseProvider
                               .saveWalletPassphrase(
                             WalletPassphrase(
-                              walletID: walletModel.serverWalletID,
+                              walletID:
+                                  walletMenuModel.walletModel.serverWalletID,
                               passphrase: passphrase,
                             ),
                           );
+                          viewModel.selectWallet(walletMenuModel);
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }
@@ -80,11 +83,16 @@ class PassphraseSheet {
                           CommonHelper.showErrorDialog(viewModel.errorMessage);
                           viewModel.errorMessage = "";
                         }
+
                         EasyLoading.dismiss();
                       }
                       viewModel.walletRecoverPassphraseController.text = "";
                       if (context.mounted && match) {
+                        walletMenuModel.hasValidPassword = true;
                         Navigator.of(context).pop();
+                        if (Responsive.isMobile(context)) {
+                          Navigator.of(context).pop(); // pop-up drawer
+                        }
                       }
                     },
                     backgroundColor: ProtonColors.protonBlue,
