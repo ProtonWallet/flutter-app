@@ -180,7 +180,7 @@ pub struct CreateWalletReq {
 
     /// Flag that indicates the wallet is created from auto creation. 0 for no,
     /// 1 for yes
-    pub is_auto_created: Option<u8>,
+    pub is_auto_created: u8,
 }
 
 impl From<CreateWalletRequestBody> for CreateWalletReq {

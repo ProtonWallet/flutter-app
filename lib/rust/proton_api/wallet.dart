@@ -226,7 +226,7 @@ class CreateWalletReq {
 
   /// Flag that indicates the wallet is created from auto creation. 0 for no,
   /// 1 for yes
-  final int? isAutoCreated;
+  final int isAutoCreated;
 
   const CreateWalletReq({
     required this.name,
@@ -239,7 +239,7 @@ class CreateWalletReq {
     this.publicKey,
     this.fingerprint,
     required this.walletKeySignature,
-    this.isAutoCreated,
+    required this.isAutoCreated,
   });
 
   @override

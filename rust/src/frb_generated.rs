@@ -9116,7 +9116,7 @@ impl SseDecode for crate::proton_api::wallet::CreateWalletReq {
         let mut var_publicKey = <Option<String>>::sse_decode(deserializer);
         let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         let mut var_walletKeySignature = <String>::sse_decode(deserializer);
-        let mut var_isAutoCreated = <Option<u8>>::sse_decode(deserializer);
+        let mut var_isAutoCreated = <u8>::sse_decode(deserializer);
         return crate::proton_api::wallet::CreateWalletReq {
             name: var_name,
             is_imported: var_isImported,
@@ -14074,7 +14074,7 @@ impl SseEncode for crate::proton_api::wallet::CreateWalletReq {
         <Option<String>>::sse_encode(self.public_key, serializer);
         <Option<String>>::sse_encode(self.fingerprint, serializer);
         <String>::sse_encode(self.wallet_key_signature, serializer);
-        <Option<u8>>::sse_encode(self.is_auto_created, serializer);
+        <u8>::sse_encode(self.is_auto_created, serializer);
     }
 }
 

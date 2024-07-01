@@ -72,9 +72,9 @@ extension WalletTransactionStateCopyWith on WalletBalanceState {
 
 /// Define the Bloc
 class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
-  StreamSubscription? subscription;
-  StreamSubscription? subscriptionForServerTransaction;
-  StreamSubscription? subscriptionForSelectedWalletChange;
+  StreamSubscription? bdkTransactionDataSubscription;
+  StreamSubscription? serverTransactionDataSubscription;
+  StreamSubscription? selectedWalletChangeSubscription;
   final BalanceDataProvider balanceDataProvider;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
   final WalletsDataProvider walletsDataProvider;
@@ -90,7 +90,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   ) : super(const WalletBalanceState(
           balanceInSatoshi: 0,
         )) {
-    subscriptionForSelectedWalletChange = walletsDataProvider
+    selectedWalletChangeSubscription = walletsDataProvider
         .selectedWalletUpdateController.stream
         .listen((data) async {
       if (lastEvent != null) {
@@ -141,12 +141,12 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
     });
 
     /// Listen to the data update
-    subscription = bdkTransactionDataProvider.stream.listen((state) {
+    bdkTransactionDataSubscription = bdkTransactionDataProvider.stream.listen((state) {
       if (state is BDKDataUpdated) {
         handleTransactionUpdate();
       }
     });
-    subscriptionForServerTransaction = serverTransactionDataProvider
+    serverTransactionDataSubscription = serverTransactionDataProvider
         .dataUpdateController.stream
         .listen((data) {
       handleTransactionUpdate();
@@ -238,9 +238,9 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
 
   @override
   Future<void> close() {
-    subscription?.cancel();
-    subscriptionForServerTransaction?.cancel();
-    subscriptionForSelectedWalletChange?.cancel();
+    bdkTransactionDataSubscription?.cancel();
+    serverTransactionDataSubscription?.cancel();
+    selectedWalletChangeSubscription?.cancel();
     return super.close();
   }
 }
