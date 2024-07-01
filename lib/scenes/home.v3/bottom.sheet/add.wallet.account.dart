@@ -230,10 +230,6 @@ class AddWalletAccountSheet {
                         child: Column(children: [
                           ButtonV5(
                               onPressed: () async {
-                                String newAccountName =
-                                    newAccountNameController.text.isNotEmpty
-                                        ? newAccountNameController.text
-                                        : S.of(context).default_account;
                                 int newAccountIndex = 0;
                                 try {
                                   newAccountIndex =
