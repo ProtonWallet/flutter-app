@@ -1,7 +1,8 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/components/bitcoin.price.chart.dart';
+import 'package:wallet/components/bitcoin.price.chart.homepage.dart';
+import 'package:wallet/components/bottom.sheets/bitcoin.price.detail.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -40,67 +41,79 @@ class CustomHomePageBox extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Row(children: [
-                  icon.svg(fit: BoxFit.fill, width: 44, height: 44),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title,
-                          style: TextStyle(
-                            color: ProtonColors.textWeak,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          )),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Wrap(children: [
-                          AnimatedFlipCounter(
-                              duration: const Duration(milliseconds: 500),
-                              prefix: Provider.of<UserSettingProvider>(context)
-                                  .getFiatCurrencyName(
-                                      fiatCurrency: exchangeRate.fiatCurrency),
-                              value:
-                                  ExchangeCalculator.getNotionalInFiatCurrency(
-                                      exchangeRate, 100000000),
-                              // value: price,
-                              fractionDigits: defaultDisplayDigits,
-                              textStyle: FontManager.body1Median(
-                                  ProtonColors.textNorm)),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          priceChange > 0
-                              ? AnimatedFlipCounter(
-                                  duration: const Duration(milliseconds: 500),
-                                  prefix: "▲",
-                                  value: priceChange,
-                                  suffix: "% (1d)",
-                                  fractionDigits: 2,
-                                  textStyle: FontManager.body2Regular(
-                                      ProtonColors.signalSuccess))
-                              : AnimatedFlipCounter(
-                                  duration: const Duration(milliseconds: 500),
-                                  prefix: "▼",
-                                  value: priceChange,
-                                  suffix: "% (1d)",
-                                  fractionDigits: 2,
-                                  textStyle: FontManager.body2Regular(
-                                      ProtonColors.signalError)),
-                        ]),
-                      )
-                    ],
-                  ),
-                ]),
+                GestureDetector(
+                  onTap: () {
+                    BitcoinPriceDetailSheet.show(
+                      context,
+                      exchangeRate,
+                      priceChange,
+                    );
+                  },
+                  child: Row(children: [
+                    icon.svg(fit: BoxFit.fill, width: 44, height: 44),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
+                            style: TextStyle(
+                              color: ProtonColors.textWeak,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            )),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Wrap(children: [
+                            AnimatedFlipCounter(
+                                duration: const Duration(milliseconds: 500),
+                                prefix:
+                                    Provider.of<UserSettingProvider>(context)
+                                        .getFiatCurrencyName(
+                                            fiatCurrency:
+                                                exchangeRate.fiatCurrency),
+                                value: ExchangeCalculator
+                                    .getNotionalInFiatCurrency(
+                                        exchangeRate, 100000000),
+                                // value: price,
+                                fractionDigits: defaultDisplayDigits,
+                                textStyle: FontManager.body1Median(
+                                    ProtonColors.textNorm)),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            priceChange > 0
+                                ? AnimatedFlipCounter(
+                                    duration: const Duration(milliseconds: 500),
+                                    prefix: "▲",
+                                    value: priceChange,
+                                    suffix: "% (1d)",
+                                    fractionDigits: 2,
+                                    textStyle: FontManager.body2Regular(
+                                        ProtonColors.signalSuccess))
+                                : AnimatedFlipCounter(
+                                    duration: const Duration(milliseconds: 500),
+                                    prefix: "▼",
+                                    value: priceChange,
+                                    suffix: "% (1d)",
+                                    fractionDigits: 2,
+                                    textStyle: FontManager.body2Regular(
+                                        ProtonColors.signalError)),
+                          ]),
+                        )
+                      ],
+                    ),
+                    BitcoinPriceHomepageChart(
+                      exchangeRate: exchangeRate,
+                      width: MediaQuery.of(context).size.width - 330,
+                      priceChange: priceChange,
+                    ),
+                  ]),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                const Divider(thickness: 0.4),
-
-                /// bitcoin price chart
-                BitcoinPriceChart(exchangeRate: exchangeRate),
                 const Divider(thickness: 0.4),
                 const SizedBox(
                   height: 10,
