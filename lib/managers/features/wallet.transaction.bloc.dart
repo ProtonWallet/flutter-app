@@ -170,9 +170,54 @@ class WalletTransactionBloc
     WalletModel? currentWalletModel;
     AccountModel? currentAccountModel;
 
-    walletsDataSubscription =
-        walletsDataProvider.dataUpdateController.stream.listen((onData) {
-      add(StartLoading());
+    walletsDataSubscription = walletsDataProvider
+        .selectedWalletUpdateController.stream
+        .listen((onData) async {
+      if (lastEvent is SelectWallet) {
+        SelectWallet selectWallet = (lastEvent as SelectWallet);
+        if (walletsDataProvider.selectedServerWalletID !=
+            selectWallet.walletMenuModel.walletModel.serverWalletID) {
+          /// need to refresh transaction when walletDataProvider's selected Wallet ID is not match to last event
+          /// this case will only happened when user delete wallet
+          WalletData? walletData =
+              await walletsDataProvider.getWalletByServerWalletID(
+                  walletsDataProvider.selectedServerWalletID);
+          if (walletData != null) {
+            WalletMenuModel walletMenuModel =
+                WalletMenuModel(walletData.wallet);
+            walletMenuModel.accounts = walletData.accounts
+                .map((item) => AccountMenuModel(item))
+                .toList();
+            add(SelectWallet(
+              walletMenuModel,
+              true,
+            ));
+          }
+        }
+      } else if (lastEvent is SelectAccount) {
+        SelectAccount selectAccount = (lastEvent as SelectAccount);
+        if (walletsDataProvider.selectedServerWalletAccountID !=
+            selectAccount.accountMenuModel.accountModel.serverAccountID) {
+          /// need to refresh transaction when walletDataProvider's selected Wallet account ID is not match to last event
+          /// this case will only happened when user delete wallet or wallet account
+          if (walletsDataProvider.selectedServerWalletID != "") {
+            WalletData? walletData =
+                await walletsDataProvider.getWalletByServerWalletID(
+                    walletsDataProvider.selectedServerWalletID);
+            if (walletData != null) {
+              WalletMenuModel walletMenuModel =
+                  WalletMenuModel(walletData.wallet);
+              walletMenuModel.accounts = walletData.accounts
+                  .map((item) => AccountMenuModel(item))
+                  .toList();
+              add(SelectWallet(
+                walletMenuModel,
+                true,
+              ));
+            }
+          }
+        }
+      }
     });
 
     bdkTransactionDataSubscription =
@@ -335,10 +380,12 @@ class WalletTransactionBloc
         event.accountMenuModel.accountModel,
       );
       logger.i("WalletTransactionBloc SelectAccount() 6");
-      if (currentAccountModel!.serverAccountID !=
-          event.accountMenuModel.accountModel.serverAccountID) {
-        /// skip process if user change to other wallet or wallet account
-        return;
+      if (currentAccountModel != null) {
+        if (currentAccountModel!.serverAccountID !=
+            event.accountMenuModel.accountModel.serverAccountID) {
+          /// skip process if user change to other wallet or wallet account
+          return;
+        }
       }
       emit(state.copyWith(
         isSyncing: isSyncing,

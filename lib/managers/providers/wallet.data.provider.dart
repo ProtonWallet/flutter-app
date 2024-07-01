@@ -434,6 +434,8 @@ class WalletsDataProvider extends DataProvider {
       walletID = wallet.id!;
       wallet.name = name;
       wallet.status = status;
+      wallet.fingerprint = fingerprint;
+      wallet.priority = priority;
       await walletDao.update(wallet);
     }
 
