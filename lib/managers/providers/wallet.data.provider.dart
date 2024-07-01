@@ -280,11 +280,18 @@ class WalletsDataProvider extends DataProvider {
     List<AccountModel> accounts =
         (await accountDao.findAllByWalletID(wallet.id ?? 0))
             .cast<AccountModel>();
+    bool isDeletingCurrentWallet = false;
     for (AccountModel accountModel in accounts) {
       await deleteWalletAccount(accountModel: accountModel, addToStream: false);
+      if (selectedServerWalletAccountID == accountModel.serverAccountID) {
+        isDeletingCurrentWallet = true;
+      }
     }
     if (selectedServerWalletID == wallet.serverWalletID) {
-      selectedServerWalletID = "";
+      isDeletingCurrentWallet = true;
+    }
+    if (isDeletingCurrentWallet) {
+      updateSelected(null, null);
     }
 
     /// update cache,

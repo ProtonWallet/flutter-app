@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -48,10 +50,17 @@ class CommonHelper {
   }
 
   static bool isBitcoinAddress(String bitcoinAddress) {
-    return (bitcoinAddress.toLowerCase().startsWith("tb") ||
-            bitcoinAddress.toLowerCase().startsWith("bc") ||
-            bitcoinAddress.toLowerCase().startsWith("1")) &&
-        bitcoinAddress.length > 24;
+    /// TODO:: improve me
+    if (appConfig.coinType == bitcoin) {
+      return (bitcoinAddress.toLowerCase().startsWith("bc") ||
+              bitcoinAddress.toLowerCase().startsWith("1") ||
+              bitcoinAddress.toLowerCase().startsWith("3")) &&
+          bitcoinAddress.length > 24;
+    } else {
+      /// testnet
+      return bitcoinAddress.toLowerCase().startsWith("tb") &&
+          bitcoinAddress.length > 24;
+    }
   }
 
   static void showErrorDialog(String errorMessage) {

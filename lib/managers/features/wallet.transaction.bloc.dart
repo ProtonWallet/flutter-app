@@ -20,6 +20,7 @@ import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -137,10 +138,12 @@ class WalletTransactionBloc
   final AddressKeyProvider addressKeyProvider;
   final WalletKeysProvider walletKeysProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
+  final WalletsDataProvider walletsDataProvider;
 
   StreamSubscription? serverTransactionDataSubscription;
   StreamSubscription? localTransactionDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
+  StreamSubscription? walletsDataSubscription;
 
   // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
@@ -154,6 +157,7 @@ class WalletTransactionBloc
     this.addressKeyProvider,
     this.walletKeysProvider,
     this.localBitcoinAddressDataProvider,
+    this.walletsDataProvider,
   ) : super(const WalletTransactionState(
           isSyncing: false,
           historyTransaction: [],
@@ -165,6 +169,11 @@ class WalletTransactionBloc
     /// we will compare the event.walletModel is equal to currentWalletModel or not
     WalletModel? currentWalletModel;
     AccountModel? currentAccountModel;
+
+    walletsDataSubscription =
+        walletsDataProvider.dataUpdateController.stream.listen((onData) {
+      add(StartLoading());
+    });
 
     bdkTransactionDataSubscription =
         bdkTransactionDataProvider.stream.listen((state) {
@@ -179,6 +188,7 @@ class WalletTransactionBloc
         .listen((onData) {
       handleTransactionDataProviderUpdate();
       syncWallet(true);
+
       /// syncWallet so that balance can get update
     });
 
@@ -939,6 +949,7 @@ class WalletTransactionBloc
     serverTransactionDataSubscription?.cancel();
     localTransactionDataSubscription?.cancel();
     bdkTransactionDataSubscription?.cancel();
+    walletsDataSubscription?.cancel();
     return super.close();
   }
 }

@@ -202,6 +202,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
       fingerprint: fingerprint,
       mnemonic: mnemonic,
       walletKeySignature: walletKeySignature,
+      isAutoCreated: 0,
     );
   }
 }
