@@ -1,3 +1,4 @@
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/scenes/backup.v2/backup.view.dart';
 import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -9,12 +10,18 @@ class SetupBackupCoordinator extends Coordinator {
   final int walletID;
 
   SetupBackupCoordinator(this.walletID);
+
   @override
   void end() {}
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = SetupBackupViewModelImpl(this, walletID);
+    var dataProviderManager = serviceManager.get<DataProviderManager>();
+    var viewModel = SetupBackupViewModelImpl(
+      this,
+      walletID,
+      dataProviderManager.walletDataProvider,
+    );
     widget = SetupBackupView(
       viewModel,
     );

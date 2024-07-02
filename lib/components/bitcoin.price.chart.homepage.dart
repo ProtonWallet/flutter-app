@@ -13,6 +13,7 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/responsive.dart';
 
 class BitcoinPriceHomepageChart extends StatefulWidget {
   final ProtonExchangeRate exchangeRate;
@@ -137,69 +138,77 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(children: [
-          Container(
-            width: min(widget.width - 20, 240),
-            padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-            height: 40,
-            child: Center(
-              child: isLoading
-                  ? CircularProgressIndicator(color: ProtonColors.protonBlue)
-                  : LineChart(
-                      LineChartData(
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: dataPoints,
-                            isCurved: false,
-                            barWidth: 2,
-                            dotData: const FlDotData(
+      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Expanded(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: Responsive.isDesktop(context)
+                      ? MediaQuery.of(context).size.width * 2 / 3 - 300
+                      : null,
+                  padding: const EdgeInsets.only(
+                    left: 8,
+                  ),
+                  height: 40,
+                  child: isLoading
+                      ? CircularProgressIndicator(
+                          color: ProtonColors.protonBlue)
+                      : LineChart(
+                          LineChartData(
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: dataPoints,
+                                isCurved: false,
+                                barWidth: 2,
+                                dotData: const FlDotData(
+                                  show: false,
+                                ),
+                                color: widget.priceChange >= 0
+                                    ? ProtonColors.signalSuccess
+                                    : ProtonColors.signalError,
+                              ),
+                            ],
+                            borderData: FlBorderData(
                               show: false,
                             ),
-                            color: widget.priceChange >= 0
-                                ? ProtonColors.signalSuccess
-                                : ProtonColors.signalError,
-                          ),
-                        ],
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        lineTouchData: LineTouchData(
-                          touchTooltipData: LineTouchTooltipData(
-                              tooltipBgColor: ProtonColors.white,
-                              tooltipBorder: BorderSide(
-                                width: 1.0,
-                                color: ProtonColors.textWeak,
+                            lineTouchData: LineTouchData(
+                              touchTooltipData: LineTouchTooltipData(
+                                  tooltipBgColor: ProtonColors.white,
+                                  tooltipBorder: BorderSide(
+                                    width: 1.0,
+                                    color: ProtonColors.textWeak,
+                                  )),
+                              handleBuiltInTouches: true,
+                            ),
+                            gridData: const FlGridData(
+                              drawVerticalLine: false,
+                              drawHorizontalLine: false,
+                            ),
+                            titlesData: const FlTitlesData(
+                              leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: false,
                               )),
-                          handleBuiltInTouches: true,
+                              bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: false,
+                              )),
+                              rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: false,
+                              )),
+                              topTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: false,
+                              )),
+                            ),
+                          ),
                         ),
-                        gridData: const FlGridData(
-                          drawVerticalLine: false,
-                          drawHorizontalLine: false,
-                        ),
-                        titlesData: const FlTitlesData(
-                          leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                          bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                          rightTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                          topTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                        ),
-                      ),
-                    ),
-            ),
-          ),
-        ]),
+                ),
+              ]),
+        ),
         Icon(
           Icons.keyboard_arrow_down_rounded,
           size: 24,

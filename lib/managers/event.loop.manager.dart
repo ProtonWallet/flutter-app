@@ -156,6 +156,7 @@ class EventLoop implements Manager {
                 fingerprint: walletData.fingerprint ?? "",
                 serverWalletID: serverWalletID,
                 publickey: null,
+                showWalletRecovery: walletData.isImported == 0 ? 1 : 0,
               );
             }
           }

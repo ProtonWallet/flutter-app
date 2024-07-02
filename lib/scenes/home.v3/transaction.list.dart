@@ -8,6 +8,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.bitcoinaddress.switch.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -50,14 +51,27 @@ class TransactionList extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(children: [
-                            Text(
-                              S.of(context).transactions,
-                              style: FontManager.body1Median(
-                                  ProtonColors.textNorm),
-                              textAlign: TextAlign.left,
-                            ),
-                          ]),
+                          GestureDetector(
+                            onTap: () {
+                              TransactionBitcoinAddressSwitchSheet.show(
+                                context,
+                                viewModel,
+                              );
+                            },
+                            child: Row(children: [
+                              Text(
+                                S.of(context).transactions,
+                                style: FontManager.body1Median(
+                                    ProtonColors.textNorm),
+                                textAlign: TextAlign.left,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_outlined,
+                                size: 18,
+                                color: ProtonColors.textWeak,
+                              ),
+                            ]),
+                          ),
                           Row(children: [
                             IconButton(
                                 onPressed: () {
