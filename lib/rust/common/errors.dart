@@ -50,4 +50,9 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.apiResponse(
     String field0,
   ) = BridgeError_ApiResponse;
+
+  /// srp errors
+  const factory BridgeError.apiSrp(
+    String field0,
+  ) = BridgeError_ApiSrp;
 }

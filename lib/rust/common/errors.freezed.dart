@@ -27,6 +27,7 @@ mixin _$BridgeError {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -39,6 +40,7 @@ mixin _$BridgeError {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +53,7 @@ mixin _$BridgeError {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -67,6 +70,7 @@ mixin _$BridgeError {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -79,6 +83,7 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -91,6 +96,7 @@ mixin _$BridgeError {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -210,6 +216,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return andromedaApi(field0);
   }
@@ -225,6 +232,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return andromedaApi?.call(field0);
   }
@@ -240,6 +248,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (andromedaApi != null) {
@@ -262,6 +271,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return andromedaApi(this);
   }
@@ -277,6 +287,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return andromedaApi?.call(this);
   }
@@ -292,6 +303,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (andromedaApi != null) {
@@ -389,6 +401,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return generic(field0);
   }
@@ -404,6 +417,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return generic?.call(field0);
   }
@@ -419,6 +433,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -441,6 +456,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return generic(this);
   }
@@ -456,6 +472,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return generic?.call(this);
   }
@@ -471,6 +488,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -570,6 +588,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return muonAuthSession(field0);
   }
@@ -585,6 +604,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return muonAuthSession?.call(field0);
   }
@@ -600,6 +620,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -622,6 +643,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return muonAuthSession(this);
   }
@@ -637,6 +659,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return muonAuthSession?.call(this);
   }
@@ -652,6 +675,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -751,6 +775,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return muonAuthRefresh(field0);
   }
@@ -766,6 +791,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return muonAuthRefresh?.call(field0);
   }
@@ -781,6 +807,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -803,6 +830,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return muonAuthRefresh(this);
   }
@@ -818,6 +846,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return muonAuthRefresh?.call(this);
   }
@@ -833,6 +862,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -932,6 +962,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return muonClient(field0);
   }
@@ -947,6 +978,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return muonClient?.call(field0);
   }
@@ -962,6 +994,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -984,6 +1017,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return muonClient(this);
   }
@@ -999,6 +1033,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return muonClient?.call(this);
   }
@@ -1014,6 +1049,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1113,6 +1149,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return muonSession(field0);
   }
@@ -1128,6 +1165,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return muonSession?.call(field0);
   }
@@ -1143,6 +1181,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1165,6 +1204,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return muonSession(this);
   }
@@ -1180,6 +1220,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return muonSession?.call(this);
   }
@@ -1195,6 +1236,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1295,6 +1337,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return andromedaBitcoin(field0);
   }
@@ -1310,6 +1353,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return andromedaBitcoin?.call(field0);
   }
@@ -1325,6 +1369,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1347,6 +1392,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return andromedaBitcoin(this);
   }
@@ -1362,6 +1408,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return andromedaBitcoin?.call(this);
   }
@@ -1377,6 +1424,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1477,6 +1525,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
   }) {
     return apiResponse(field0);
   }
@@ -1492,6 +1541,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
   }) {
     return apiResponse?.call(field0);
   }
@@ -1507,6 +1557,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -1529,6 +1580,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
     return apiResponse(this);
   }
@@ -1544,6 +1596,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
     return apiResponse?.call(this);
   }
@@ -1559,6 +1612,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -1579,4 +1633,189 @@ abstract class BridgeError_ApiResponse extends BridgeError {
   @JsonKey(ignore: true)
   _$$BridgeError_ApiResponseImplCopyWith<_$BridgeError_ApiResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_ApiSrpImplCopyWith<$Res>
+    implements $BridgeErrorCopyWith<$Res> {
+  factory _$$BridgeError_ApiSrpImplCopyWith(_$BridgeError_ApiSrpImpl value,
+          $Res Function(_$BridgeError_ApiSrpImpl) then) =
+      __$$BridgeError_ApiSrpImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_ApiSrpImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_ApiSrpImpl>
+    implements _$$BridgeError_ApiSrpImplCopyWith<$Res> {
+  __$$BridgeError_ApiSrpImplCopyWithImpl(_$BridgeError_ApiSrpImpl _value,
+      $Res Function(_$BridgeError_ApiSrpImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_ApiSrpImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
+  const _$BridgeError_ApiSrpImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.apiSrp(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_ApiSrpImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_ApiSrpImplCopyWith<_$BridgeError_ApiSrpImpl> get copyWith =>
+      __$$BridgeError_ApiSrpImplCopyWithImpl<_$BridgeError_ApiSrpImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(String field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
+  }) {
+    return apiSrp(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(String field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
+  }) {
+    return apiSrp?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(String field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
+    required TResult orElse(),
+  }) {
+    if (apiSrp != null) {
+      return apiSrp(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+  }) {
+    return apiSrp(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+  }) {
+    return apiSrp?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    required TResult orElse(),
+  }) {
+    if (apiSrp != null) {
+      return apiSrp(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_ApiSrp extends BridgeError {
+  const factory BridgeError_ApiSrp(final String field0) =
+      _$BridgeError_ApiSrpImpl;
+  const BridgeError_ApiSrp._() : super._();
+
+  @override
+  String get field0;
+  @override
+  @JsonKey(ignore: true)
+  _$$BridgeError_ApiSrpImplCopyWith<_$BridgeError_ApiSrpImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

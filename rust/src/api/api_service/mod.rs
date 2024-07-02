@@ -8,6 +8,7 @@ pub mod onramp_gateway_client;
 pub mod proton_api_service;
 pub mod proton_contacts_client;
 pub mod proton_email_addr_client;
+pub mod proton_settings_client;
 pub mod proton_users_client;
 pub mod settings_client;
 pub mod transaction_client;

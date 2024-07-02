@@ -31,7 +31,9 @@ log = "0.4.19"
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
-proton-srp = { version = "0.4.0", registry = "proton_internal" }
+proton-srp = { version = "0.4.0", registry = "proton_internal", features = [
+    "pgpinternal",
+] }
 bdk_sqlite = { version = "=0.2.0" }
 
 [target.'cfg(target_os = "android")'.dependencies]

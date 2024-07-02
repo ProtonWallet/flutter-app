@@ -14,6 +14,7 @@ import 'api/api_service/onramp_gateway_client.dart';
 import 'api/api_service/proton_api_service.dart';
 import 'api/api_service/proton_contacts_client.dart';
 import 'api/api_service/proton_email_addr_client.dart';
+import 'api/api_service/proton_settings_client.dart';
 import 'api/api_service/proton_users_client.dart';
 import 'api/api_service/settings_client.dart';
 import 'api/api_service/transaction_client.dart';
@@ -61,6 +62,7 @@ import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
 import 'proton_api/payment_gateway.dart';
 import 'proton_api/proton_address.dart';
+import 'proton_api/proton_users.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
@@ -190,6 +192,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ProtonEmailAddressClientPtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_ProtonSettingsClientPtr => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ProtonUsersClientPtr => wire
@@ -368,6 +374,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ProtonEmailAddressClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
+          dynamic raw);
+
+  @protected
+  ProtonSettingsClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
           dynamic raw);
 
   @protected
@@ -553,6 +564,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ProtonEmailAddressClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
+          dynamic raw);
+
+  @protected
+  ProtonUsersClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           dynamic raw);
 
   @protected
@@ -758,6 +774,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  ProtonSettingsClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          dynamic raw);
+
+  @protected
   ProtonUsersClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           dynamic raw);
@@ -897,6 +918,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw);
 
   @protected
+  ProtonSrpClientProofs dco_decode_box_autoadd_proton_srp_client_proofs(
+      dynamic raw);
+
+  @protected
   SortOrder dco_decode_box_autoadd_sort_order(dynamic raw);
 
   @protected
@@ -943,6 +968,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  EmptyResponseBody dco_decode_empty_response_body(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
 
   @protected
@@ -956,6 +984,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GatewayProvider dco_decode_gateway_provider(dynamic raw);
+
+  @protected
+  GetAuthInfoResponseBody dco_decode_get_auth_info_response_body(dynamic raw);
+
+  @protected
+  GetAuthModulusResponse dco_decode_get_auth_modulus_response(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -1049,6 +1083,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ProtonEvent> dco_decode_list_proton_event(dynamic raw);
+
+  @protected
+  List<ProtonUserKey> dco_decode_list_proton_user_key(dynamic raw);
 
   @protected
   List<Quote> dco_decode_list_quote(dynamic raw);
@@ -1176,6 +1213,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ProtonAddressKey>? dco_decode_opt_list_proton_address_key(dynamic raw);
 
   @protected
+  List<ProtonUserKey>? dco_decode_opt_list_proton_user_key(dynamic raw);
+
+  @protected
   List<WalletAccountEvent>? dco_decode_opt_list_wallet_account_event(
       dynamic raw);
 
@@ -1212,6 +1252,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonExchangeRate dco_decode_proton_exchange_rate(dynamic raw);
 
   @protected
+  ProtonSrpClientProofs dco_decode_proton_srp_client_proofs(dynamic raw);
+
+  @protected
+  ProtonUser dco_decode_proton_user(dynamic raw);
+
+  @protected
+  ProtonUserKey dco_decode_proton_user_key(dynamic raw);
+
+  @protected
   Quote dco_decode_quote(dynamic raw);
 
   @protected
@@ -1245,6 +1294,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionType dco_decode_transaction_type(dynamic raw);
+
+  @protected
+  TwoFA dco_decode_two_fa(dynamic raw);
 
   @protected
   int dco_decode_u_16(dynamic raw);
@@ -1441,6 +1493,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  ProtonSettingsClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonUsersClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           SseDeserializer deserializer);
@@ -1623,6 +1680,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ProtonEmailAddressClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
+          SseDeserializer deserializer);
+
+  @protected
+  ProtonUsersClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           SseDeserializer deserializer);
 
   @protected
@@ -1826,6 +1888,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  ProtonSettingsClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonUsersClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           SseDeserializer deserializer);
@@ -1980,6 +2047,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ProtonSrpClientProofs sse_decode_box_autoadd_proton_srp_client_proofs(
+      SseDeserializer deserializer);
+
+  @protected
   SortOrder sse_decode_box_autoadd_sort_order(SseDeserializer deserializer);
 
   @protected
@@ -2031,6 +2102,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  EmptyResponseBody sse_decode_empty_response_body(
+      SseDeserializer deserializer);
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer);
 
   @protected
@@ -2044,6 +2119,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GatewayProvider sse_decode_gateway_provider(SseDeserializer deserializer);
+
+  @protected
+  GetAuthInfoResponseBody sse_decode_get_auth_info_response_body(
+      SseDeserializer deserializer);
+
+  @protected
+  GetAuthModulusResponse sse_decode_get_auth_modulus_response(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -2147,6 +2230,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ProtonEvent> sse_decode_list_proton_event(SseDeserializer deserializer);
+
+  @protected
+  List<ProtonUserKey> sse_decode_list_proton_user_key(
+      SseDeserializer deserializer);
 
   @protected
   List<Quote> sse_decode_list_quote(SseDeserializer deserializer);
@@ -2295,6 +2382,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<ProtonUserKey>? sse_decode_opt_list_proton_user_key(
+      SseDeserializer deserializer);
+
+  @protected
   List<WalletAccountEvent>? sse_decode_opt_list_wallet_account_event(
       SseDeserializer deserializer);
 
@@ -2334,6 +2425,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ProtonSrpClientProofs sse_decode_proton_srp_client_proofs(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonUser sse_decode_proton_user(SseDeserializer deserializer);
+
+  @protected
+  ProtonUserKey sse_decode_proton_user_key(SseDeserializer deserializer);
+
+  @protected
   Quote sse_decode_quote(SseDeserializer deserializer);
 
   @protected
@@ -2369,6 +2470,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionType sse_decode_transaction_type(SseDeserializer deserializer);
+
+  @protected
+  TwoFA sse_decode_two_fa(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_16(SseDeserializer deserializer);
@@ -2569,6 +2673,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          ProtonSettingsClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           ProtonUsersClient self, SseSerializer serializer);
 
@@ -2751,6 +2860,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
           ProtonEmailAddressClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
+          ProtonUsersClient self, SseSerializer serializer);
 
   @protected
   void
@@ -2957,6 +3071,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          ProtonSettingsClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           ProtonUsersClient self, SseSerializer serializer);
 
@@ -3118,6 +3237,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonExchangeRate self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_proton_srp_client_proofs(
+      ProtonSrpClientProofs self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_sort_order(
       SortOrder self, SseSerializer serializer);
 
@@ -3171,6 +3294,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       EmailIntegrationBitcoinAddress self, SseSerializer serializer);
 
   @protected
+  void sse_encode_empty_response_body(
+      EmptyResponseBody self, SseSerializer serializer);
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
 
   @protected
@@ -3186,6 +3313,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_gateway_provider(
       GatewayProvider self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_get_auth_info_response_body(
+      GetAuthInfoResponseBody self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_get_auth_modulus_response(
+      GetAuthModulusResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -3293,6 +3428,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_proton_event(
       List<ProtonEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_proton_user_key(
+      List<ProtonUserKey> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_quote(List<Quote> self, SseSerializer serializer);
@@ -3440,6 +3579,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ProtonAddressKey>? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_list_proton_user_key(
+      List<ProtonUserKey>? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_list_wallet_account_event(
       List<WalletAccountEvent>? self, SseSerializer serializer);
 
@@ -3480,6 +3623,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonExchangeRate self, SseSerializer serializer);
 
   @protected
+  void sse_encode_proton_srp_client_proofs(
+      ProtonSrpClientProofs self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_user(ProtonUser self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proton_user_key(ProtonUserKey self, SseSerializer serializer);
+
+  @protected
   void sse_encode_quote(Quote self, SseSerializer serializer);
 
   @protected
@@ -3516,6 +3669,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_transaction_type(
       TransactionType self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_two_fa(TwoFA self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_16(int self, SseSerializer serializer);
@@ -3939,6 +4095,18 @@ class RustLibWire implements BaseWire {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
               ptr);
 
+  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+              ptr);
+
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           dynamic ptr) =>
       wasmModule
@@ -4270,6 +4438,14 @@ class RustLibWasmModule implements WasmModule {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonEmailAddressClient(
+          dynamic ptr);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          dynamic ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
           dynamic ptr);
 
   external void

@@ -7,6 +7,7 @@ pub mod api;
 pub mod common;
 // pub mod ldk;
 pub mod proton_api;
+pub mod srp;
 // pub mod utilities;
 
 pub use crate::common::errors::BridgeError;
