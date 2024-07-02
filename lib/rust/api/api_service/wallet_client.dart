@@ -126,6 +126,11 @@ class WalletClient extends RustOpaque {
           walletTransactionId: walletTransactionId,
           hint: hint);
 
+  Future<ApiWalletSettings> disableShowWalletRecovery(
+          {required String walletId, dynamic hint}) =>
+      RustLib.instance.api.walletClientDisableShowWalletRecovery(
+          that: this, walletId: walletId, hint: hint);
+
   Future<List<ApiWalletAccount>> getWalletAccounts(
           {required String walletId, dynamic hint}) =>
       RustLib.instance.api.walletClientGetWalletAccounts(

@@ -12,6 +12,7 @@ class ApiWalletSettings {
   final String? invoiceDefaultDescription;
   final int invoiceExpirationTime;
   final int maxChannelOpeningFee;
+  final bool? showWalletRecovery;
 
   const ApiWalletSettings({
     required this.walletId,
@@ -19,6 +20,7 @@ class ApiWalletSettings {
     this.invoiceDefaultDescription,
     required this.invoiceExpirationTime,
     required this.maxChannelOpeningFee,
+    this.showWalletRecovery,
   });
 
   @override
@@ -27,7 +29,8 @@ class ApiWalletSettings {
       hideAccounts.hashCode ^
       invoiceDefaultDescription.hashCode ^
       invoiceExpirationTime.hashCode ^
-      maxChannelOpeningFee.hashCode;
+      maxChannelOpeningFee.hashCode ^
+      showWalletRecovery.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -38,5 +41,6 @@ class ApiWalletSettings {
           hideAccounts == other.hideAccounts &&
           invoiceDefaultDescription == other.invoiceDefaultDescription &&
           invoiceExpirationTime == other.invoiceExpirationTime &&
-          maxChannelOpeningFee == other.maxChannelOpeningFee;
+          maxChannelOpeningFee == other.maxChannelOpeningFee &&
+          showWalletRecovery == other.showWalletRecovery;
 }

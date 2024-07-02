@@ -42,7 +42,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   double percentile25 = 0.0;
   double percentile100 = 0.0;
   double percentile75 = 0.0;
-  BitcoinPriceChartDataRange dataRange = BitcoinPriceChartDataRange.past1Month;
+  BitcoinPriceChartDataRange dataRange = BitcoinPriceChartDataRange.past1Day;
   List<BitcoinPriceChartDataRange> dataRangeOptions = [
     BitcoinPriceChartDataRange.past1Day,
     BitcoinPriceChartDataRange.past7Days,
@@ -140,7 +140,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 220,
       child: Column(children: [
         const SizedBox(
           height: 6,
@@ -148,7 +148,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-          height: 220,
+          height: 140,
           child: Center(
             child: isLoading
                 ? CircularProgressIndicator(color: ProtonColors.protonBlue)

@@ -60,4 +60,9 @@ class WalletDatabase extends BaseDatabase {
     // Add column `fingerprint`
     return addColumn("fingerprint", "TEXT NULL");
   }
+
+  Future<void> migration_3() {
+    // Add column `showWalletRecovery` from walletSettings
+    return addColumn("showWalletRecovery", "INTEGER NULL");
+  }
 }

@@ -65,7 +65,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -424166479;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 46051246;
 
 // Section: executor
 
@@ -2612,6 +2612,31 @@ let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decod
         }
         let api_that = api_that_decoded.unwrap();
  crate::api::api_service::wallet_client::WalletClient::delete_wallet_transactions(&api_that, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await
+                    })().await)
+                } })
+}
+fn wire_WalletClient_disable_show_wallet_recovery_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_disable_show_wallet_recovery", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse((move || async move {
+                        let mut api_that_decoded = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::rust_auto_opaque_decode_compute_order(vec![api_that.rust_auto_opaque_lock_order_info(0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_decoded = Some(api_that.rust_auto_opaque_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that = api_that_decoded.unwrap();
+ crate::api::api_service::wallet_client::WalletClient::disable_show_wallet_recovery(&api_that, api_wallet_id).await
                     })().await)
                 } })
 }
@@ -7882,6 +7907,7 @@ const _: fn() = || {
         let _: Option<String> = ApiWalletSettings.InvoiceDefaultDescription;
         let _: u64 = ApiWalletSettings.InvoiceExpirationTime;
         let _: u64 = ApiWalletSettings.MaxChannelOpeningFee;
+        let _: Option<bool> = ApiWalletSettings.ShowWalletRecovery;
     }
     {
         let ApiWalletUserSettings =
@@ -9198,12 +9224,14 @@ impl SseDecode for crate::proton_api::wallet_settings::ApiWalletSettings {
         let mut var_invoiceDefaultDescription = <Option<String>>::sse_decode(deserializer);
         let mut var_invoiceExpirationTime = <u64>::sse_decode(deserializer);
         let mut var_maxChannelOpeningFee = <u64>::sse_decode(deserializer);
+        let mut var_showWalletRecovery = <Option<bool>>::sse_decode(deserializer);
         return crate::proton_api::wallet_settings::ApiWalletSettings {
             WalletID: var_walletId,
             HideAccounts: var_hideAccounts,
             InvoiceDefaultDescription: var_invoiceDefaultDescription,
             InvoiceExpirationTime: var_invoiceExpirationTime,
             MaxChannelOpeningFee: var_maxChannelOpeningFee,
+            ShowWalletRecovery: var_showWalletRecovery,
         };
     }
 }
@@ -11306,6 +11334,9 @@ fn pde_ffi_dispatcher_primary_impl(
             data_len,
         ),
         98 => wire_WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        99 => {
+            wire_WalletClient_disable_show_wallet_recovery_impl(port, ptr, rust_vec_len, data_len)
+        }
         83 => wire_WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
         90 => wire_WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
         79 => wire_WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
@@ -11343,78 +11374,78 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        112 => wire_FrbAccount_build_tx_impl(port, ptr, rust_vec_len, data_len),
-        100 => wire_FrbAccount_get_address_impl(port, ptr, rust_vec_len, data_len),
-        104 => wire_FrbAccount_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        102 => wire_FrbAccount_get_bitcoin_uri_impl(port, ptr, rust_vec_len, data_len),
-        105 => wire_FrbAccount_get_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        101 => {
+        113 => wire_FrbAccount_build_tx_impl(port, ptr, rust_vec_len, data_len),
+        101 => wire_FrbAccount_get_address_impl(port, ptr, rust_vec_len, data_len),
+        105 => wire_FrbAccount_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire_FrbAccount_get_bitcoin_uri_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire_FrbAccount_get_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        102 => {
             wire_FrbAccount_get_last_unused_address_index_impl(port, ptr, rust_vec_len, data_len)
         }
-        108 => wire_FrbAccount_get_transaction_impl(port, ptr, rust_vec_len, data_len),
-        107 => wire_FrbAccount_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        106 => wire_FrbAccount_get_utxos_impl(port, ptr, rust_vec_len, data_len),
-        109 => wire_FrbAccount_has_sync_data_impl(port, ptr, rust_vec_len, data_len),
-        110 => wire_FrbAccount_insert_unconfirmed_tx_impl(port, ptr, rust_vec_len, data_len),
-        103 => wire_FrbAccount_is_mine_impl(port, ptr, rust_vec_len, data_len),
-        111 => wire_FrbAccount_sign_impl(port, ptr, rust_vec_len, data_len),
-        126 => wire_FrbBlockchainClient_broadcast_psbt_impl(port, ptr, rust_vec_len, data_len),
-        123 => wire_FrbBlockchainClient_full_sync_impl(port, ptr, rust_vec_len, data_len),
-        122 => wire_FrbBlockchainClient_get_fees_estimation_impl(port, ptr, rust_vec_len, data_len),
-        124 => wire_FrbBlockchainClient_partial_sync_impl(port, ptr, rust_vec_len, data_len),
-        125 => wire_FrbBlockchainClient_should_sync_impl(port, ptr, rust_vec_len, data_len),
-        167 => wire_FrbTxBuilder_create_draft_psbt_impl(port, ptr, rust_vec_len, data_len),
-        166 => wire_FrbTxBuilder_create_pbst_impl(port, ptr, rust_vec_len, data_len),
-        148 => wire_FrbTxBuilder_set_account_impl(port, ptr, rust_vec_len, data_len),
-        163 => wire_FrbTxBuilder_set_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-        152 => wire_FrbTxBuilder_update_recipient_impl(port, ptr, rust_vec_len, data_len),
-        153 => {
+        109 => wire_FrbAccount_get_transaction_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire_FrbAccount_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire_FrbAccount_get_utxos_impl(port, ptr, rust_vec_len, data_len),
+        110 => wire_FrbAccount_has_sync_data_impl(port, ptr, rust_vec_len, data_len),
+        111 => wire_FrbAccount_insert_unconfirmed_tx_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire_FrbAccount_is_mine_impl(port, ptr, rust_vec_len, data_len),
+        112 => wire_FrbAccount_sign_impl(port, ptr, rust_vec_len, data_len),
+        127 => wire_FrbBlockchainClient_broadcast_psbt_impl(port, ptr, rust_vec_len, data_len),
+        124 => wire_FrbBlockchainClient_full_sync_impl(port, ptr, rust_vec_len, data_len),
+        123 => wire_FrbBlockchainClient_get_fees_estimation_impl(port, ptr, rust_vec_len, data_len),
+        125 => wire_FrbBlockchainClient_partial_sync_impl(port, ptr, rust_vec_len, data_len),
+        126 => wire_FrbBlockchainClient_should_sync_impl(port, ptr, rust_vec_len, data_len),
+        168 => wire_FrbTxBuilder_create_draft_psbt_impl(port, ptr, rust_vec_len, data_len),
+        167 => wire_FrbTxBuilder_create_pbst_impl(port, ptr, rust_vec_len, data_len),
+        149 => wire_FrbTxBuilder_set_account_impl(port, ptr, rust_vec_len, data_len),
+        164 => wire_FrbTxBuilder_set_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+        153 => wire_FrbTxBuilder_update_recipient_impl(port, ptr, rust_vec_len, data_len),
+        154 => {
             wire_FrbTxBuilder_update_recipient_amount_to_max_impl(port, ptr, rust_vec_len, data_len)
         }
-        181 => wire_FrbTransaction_compute_txid_impl(port, ptr, rust_vec_len, data_len),
-        185 => wire_FrbWallet_get_balance_impl(port, ptr, rust_vec_len, data_len),
-        187 => wire_FrbWallet_get_transaction_impl(port, ptr, rust_vec_len, data_len),
-        186 => wire_FrbWallet_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-        191 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
-        190 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
-        189 => wire_test_impl(port, ptr, rust_vec_len, data_len),
-        211 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
-        208 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
-        199 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-        205 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
-        216 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        194 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-        197 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-        218 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        200 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-        221 => wire_fork_impl(port, ptr, rust_vec_len, data_len),
-        219 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
-        214 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
-        206 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
-        203 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-        204 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
-        207 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-        198 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-        195 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-        213 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        215 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-        192 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-        202 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-        220 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
-        212 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        209 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-        201 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-        210 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-        196 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-        193 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-        217 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-        226 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-        225 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
-        223 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-        222 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-        224 => wire_api_create_script_impl(port, ptr, rust_vec_len, data_len),
-        228 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-        227 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+        182 => wire_FrbTransaction_compute_txid_impl(port, ptr, rust_vec_len, data_len),
+        186 => wire_FrbWallet_get_balance_impl(port, ptr, rust_vec_len, data_len),
+        188 => wire_FrbWallet_get_transaction_impl(port, ptr, rust_vec_len, data_len),
+        187 => wire_FrbWallet_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+        192 => wire_info_logger_impl(port, ptr, rust_vec_len, data_len),
+        191 => wire_panic_impl(port, ptr, rust_vec_len, data_len),
+        190 => wire_test_impl(port, ptr, rust_vec_len, data_len),
+        212 => wire_add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
+        209 => wire_add_email_address_impl(port, ptr, rust_vec_len, data_len),
+        200 => wire_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+        206 => wire_collect_events_impl(port, ptr, rust_vec_len, data_len),
+        217 => wire_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        195 => wire_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+        198 => wire_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+        219 => wire_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        201 => wire_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+        222 => wire_fork_impl(port, ptr, rust_vec_len, data_len),
+        220 => wire_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
+        215 => wire_get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
+        207 => wire_get_contacts_impl(port, ptr, rust_vec_len, data_len),
+        204 => wire_get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+        205 => wire_get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+        208 => wire_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+        199 => wire_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+        196 => wire_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+        214 => wire_get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        216 => wire_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+        193 => wire_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+        203 => wire_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+        221 => wire_is_valid_token_impl(port, ptr, rust_vec_len, data_len),
+        213 => wire_lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        210 => wire_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+        202 => wire_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+        211 => wire_update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+        197 => wire_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+        194 => wire_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+        218 => wire_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
+        227 => wire_api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+        226 => wire_api_create_address_impl(port, ptr, rust_vec_len, data_len),
+        224 => wire_api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+        223 => wire_api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+        225 => wire_api_create_script_impl(port, ptr, rust_vec_len, data_len),
+        229 => wire_api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+        228 => wire_api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -11446,68 +11477,68 @@ fn pde_ffi_dispatcher_sync_impl(
         73 => wire_ProtonWalletAuthStore_from_session_impl(ptr, rust_vec_len, data_len),
         72 => wire_ProtonWalletAuthStore_new_impl(ptr, rust_vec_len, data_len),
         74 => wire_ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
-        99 => wire_FrbAccount_new_impl(ptr, rust_vec_len, data_len),
-        114 => wire_FrbAddress_from_script_impl(ptr, rust_vec_len, data_len),
-        116 => wire_FrbAddress_into_script_impl(ptr, rust_vec_len, data_len),
-        113 => wire_FrbAddress_new_impl(ptr, rust_vec_len, data_len),
-        115 => wire_FrbAddress_to_string_impl(ptr, rust_vec_len, data_len),
-        118 => wire_FrbAmount_to_btc_impl(ptr, rust_vec_len, data_len),
-        117 => wire_FrbAmount_to_sat_impl(ptr, rust_vec_len, data_len),
-        120 => wire_FrbBalance_total_impl(ptr, rust_vec_len, data_len),
-        119 => wire_FrbBalance_trusted_spendable_impl(ptr, rust_vec_len, data_len),
-        121 => wire_FrbBlockchainClient_new_impl(ptr, rust_vec_len, data_len),
-        128 => wire_FrbDerivationPath_from_parts_impl(ptr, rust_vec_len, data_len),
-        127 => wire_FrbDerivationPath_new_impl(ptr, rust_vec_len, data_len),
-        131 => wire_FrbMnemonic_as_string_impl(ptr, rust_vec_len, data_len),
-        132 => wire_FrbMnemonic_as_words_impl(ptr, rust_vec_len, data_len),
-        130 => wire_FrbMnemonic_from_string_impl(ptr, rust_vec_len, data_len),
-        133 => wire_FrbMnemonic_get_words_autocomplete_impl(ptr, rust_vec_len, data_len),
-        129 => wire_FrbMnemonic_new_impl(ptr, rust_vec_len, data_len),
-        134 => wire_FrbPaymentLink_to_string_impl(ptr, rust_vec_len, data_len),
-        135 => wire_FrbPaymentLink_to_uri_impl(ptr, rust_vec_len, data_len),
-        136 => wire_FrbPaymentLink_try_parse_impl(ptr, rust_vec_len, data_len),
-        137 => wire_FrbPsbt_extract_tx_impl(ptr, rust_vec_len, data_len),
-        138 => wire_FrbPsbt_fee_impl(ptr, rust_vec_len, data_len),
-        139 => wire_FrbScriptBuf_new_impl(ptr, rust_vec_len, data_len),
-        140 => wire_FrbScriptBuf_to_bytes_impl(ptr, rust_vec_len, data_len),
-        141 => wire_FrbSequence_is_final_impl(ptr, rust_vec_len, data_len),
-        144 => wire_FrbSequence_is_height_locked_impl(ptr, rust_vec_len, data_len),
-        142 => wire_FrbSequence_is_rbf_impl(ptr, rust_vec_len, data_len),
-        143 => wire_FrbSequence_is_relative_lock_time_impl(ptr, rust_vec_len, data_len),
-        145 => wire_FrbSequence_is_time_locked_impl(ptr, rust_vec_len, data_len),
-        146 => wire_onchain_store_factory_new_impl(ptr, rust_vec_len, data_len),
-        150 => wire_FrbTxBuilder_add_recipient_impl(ptr, rust_vec_len, data_len),
-        149 => wire_FrbTxBuilder_clear_recipients_impl(ptr, rust_vec_len, data_len),
-        154 => wire_FrbTxBuilder_clear_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
-        159 => wire_FrbTxBuilder_disable_rbf_impl(ptr, rust_vec_len, data_len),
-        158 => wire_FrbTxBuilder_enable_rbf_impl(ptr, rust_vec_len, data_len),
-        162 => wire_FrbTxBuilder_get_change_policy_impl(ptr, rust_vec_len, data_len),
-        157 => wire_FrbTxBuilder_get_coin_selection_impl(ptr, rust_vec_len, data_len),
-        164 => wire_FrbTxBuilder_get_fee_rate_impl(ptr, rust_vec_len, data_len),
-        160 => wire_FrbTxBuilder_get_rbf_enabled_impl(ptr, rust_vec_len, data_len),
-        155 => wire_FrbTxBuilder_get_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
-        147 => wire_FrbTxBuilder_new_impl(ptr, rust_vec_len, data_len),
-        165 => wire_FrbTxBuilder_remove_locktime_impl(ptr, rust_vec_len, data_len),
-        151 => wire_FrbTxBuilder_remove_recipient_impl(ptr, rust_vec_len, data_len),
-        161 => wire_FrbTxBuilder_set_change_policy_impl(ptr, rust_vec_len, data_len),
-        156 => wire_FrbTxBuilder_set_coin_selection_impl(ptr, rust_vec_len, data_len),
-        175 => wire_FrbTransactionDetails_account_derivation_path_impl(ptr, rust_vec_len, data_len),
-        171 => wire_FrbTransactionDetails_fees_impl(ptr, rust_vec_len, data_len),
-        173 => wire_FrbTransactionDetails_inputs_impl(ptr, rust_vec_len, data_len),
-        174 => wire_FrbTransactionDetails_outputs_impl(ptr, rust_vec_len, data_len),
-        169 => wire_FrbTransactionDetails_received_impl(ptr, rust_vec_len, data_len),
-        170 => wire_FrbTransactionDetails_sent_impl(ptr, rust_vec_len, data_len),
-        172 => wire_FrbTransactionDetails_time_impl(ptr, rust_vec_len, data_len),
-        168 => wire_FrbTransactionDetails_txid_impl(ptr, rust_vec_len, data_len),
-        176 => wire_FrbDetailledTxOutput_address_impl(ptr, rust_vec_len, data_len),
-        179 => wire_FrbDetailledTxOutput_is_mine_impl(ptr, rust_vec_len, data_len),
-        178 => wire_FrbDetailledTxOutput_script_pubkey_impl(ptr, rust_vec_len, data_len),
-        177 => wire_FrbDetailledTxOutput_value_impl(ptr, rust_vec_len, data_len),
-        180 => wire_FrbTransaction_new_impl(ptr, rust_vec_len, data_len),
-        183 => wire_FrbWallet_add_account_impl(ptr, rust_vec_len, data_len),
-        184 => wire_FrbWallet_get_account_impl(ptr, rust_vec_len, data_len),
-        188 => wire_FrbWallet_get_fingerprint_impl(ptr, rust_vec_len, data_len),
-        182 => wire_FrbWallet_new_impl(ptr, rust_vec_len, data_len),
+        100 => wire_FrbAccount_new_impl(ptr, rust_vec_len, data_len),
+        115 => wire_FrbAddress_from_script_impl(ptr, rust_vec_len, data_len),
+        117 => wire_FrbAddress_into_script_impl(ptr, rust_vec_len, data_len),
+        114 => wire_FrbAddress_new_impl(ptr, rust_vec_len, data_len),
+        116 => wire_FrbAddress_to_string_impl(ptr, rust_vec_len, data_len),
+        119 => wire_FrbAmount_to_btc_impl(ptr, rust_vec_len, data_len),
+        118 => wire_FrbAmount_to_sat_impl(ptr, rust_vec_len, data_len),
+        121 => wire_FrbBalance_total_impl(ptr, rust_vec_len, data_len),
+        120 => wire_FrbBalance_trusted_spendable_impl(ptr, rust_vec_len, data_len),
+        122 => wire_FrbBlockchainClient_new_impl(ptr, rust_vec_len, data_len),
+        129 => wire_FrbDerivationPath_from_parts_impl(ptr, rust_vec_len, data_len),
+        128 => wire_FrbDerivationPath_new_impl(ptr, rust_vec_len, data_len),
+        132 => wire_FrbMnemonic_as_string_impl(ptr, rust_vec_len, data_len),
+        133 => wire_FrbMnemonic_as_words_impl(ptr, rust_vec_len, data_len),
+        131 => wire_FrbMnemonic_from_string_impl(ptr, rust_vec_len, data_len),
+        134 => wire_FrbMnemonic_get_words_autocomplete_impl(ptr, rust_vec_len, data_len),
+        130 => wire_FrbMnemonic_new_impl(ptr, rust_vec_len, data_len),
+        135 => wire_FrbPaymentLink_to_string_impl(ptr, rust_vec_len, data_len),
+        136 => wire_FrbPaymentLink_to_uri_impl(ptr, rust_vec_len, data_len),
+        137 => wire_FrbPaymentLink_try_parse_impl(ptr, rust_vec_len, data_len),
+        138 => wire_FrbPsbt_extract_tx_impl(ptr, rust_vec_len, data_len),
+        139 => wire_FrbPsbt_fee_impl(ptr, rust_vec_len, data_len),
+        140 => wire_FrbScriptBuf_new_impl(ptr, rust_vec_len, data_len),
+        141 => wire_FrbScriptBuf_to_bytes_impl(ptr, rust_vec_len, data_len),
+        142 => wire_FrbSequence_is_final_impl(ptr, rust_vec_len, data_len),
+        145 => wire_FrbSequence_is_height_locked_impl(ptr, rust_vec_len, data_len),
+        143 => wire_FrbSequence_is_rbf_impl(ptr, rust_vec_len, data_len),
+        144 => wire_FrbSequence_is_relative_lock_time_impl(ptr, rust_vec_len, data_len),
+        146 => wire_FrbSequence_is_time_locked_impl(ptr, rust_vec_len, data_len),
+        147 => wire_onchain_store_factory_new_impl(ptr, rust_vec_len, data_len),
+        151 => wire_FrbTxBuilder_add_recipient_impl(ptr, rust_vec_len, data_len),
+        150 => wire_FrbTxBuilder_clear_recipients_impl(ptr, rust_vec_len, data_len),
+        155 => wire_FrbTxBuilder_clear_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
+        160 => wire_FrbTxBuilder_disable_rbf_impl(ptr, rust_vec_len, data_len),
+        159 => wire_FrbTxBuilder_enable_rbf_impl(ptr, rust_vec_len, data_len),
+        163 => wire_FrbTxBuilder_get_change_policy_impl(ptr, rust_vec_len, data_len),
+        158 => wire_FrbTxBuilder_get_coin_selection_impl(ptr, rust_vec_len, data_len),
+        165 => wire_FrbTxBuilder_get_fee_rate_impl(ptr, rust_vec_len, data_len),
+        161 => wire_FrbTxBuilder_get_rbf_enabled_impl(ptr, rust_vec_len, data_len),
+        156 => wire_FrbTxBuilder_get_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
+        148 => wire_FrbTxBuilder_new_impl(ptr, rust_vec_len, data_len),
+        166 => wire_FrbTxBuilder_remove_locktime_impl(ptr, rust_vec_len, data_len),
+        152 => wire_FrbTxBuilder_remove_recipient_impl(ptr, rust_vec_len, data_len),
+        162 => wire_FrbTxBuilder_set_change_policy_impl(ptr, rust_vec_len, data_len),
+        157 => wire_FrbTxBuilder_set_coin_selection_impl(ptr, rust_vec_len, data_len),
+        176 => wire_FrbTransactionDetails_account_derivation_path_impl(ptr, rust_vec_len, data_len),
+        172 => wire_FrbTransactionDetails_fees_impl(ptr, rust_vec_len, data_len),
+        174 => wire_FrbTransactionDetails_inputs_impl(ptr, rust_vec_len, data_len),
+        175 => wire_FrbTransactionDetails_outputs_impl(ptr, rust_vec_len, data_len),
+        170 => wire_FrbTransactionDetails_received_impl(ptr, rust_vec_len, data_len),
+        171 => wire_FrbTransactionDetails_sent_impl(ptr, rust_vec_len, data_len),
+        173 => wire_FrbTransactionDetails_time_impl(ptr, rust_vec_len, data_len),
+        169 => wire_FrbTransactionDetails_txid_impl(ptr, rust_vec_len, data_len),
+        177 => wire_FrbDetailledTxOutput_address_impl(ptr, rust_vec_len, data_len),
+        180 => wire_FrbDetailledTxOutput_is_mine_impl(ptr, rust_vec_len, data_len),
+        179 => wire_FrbDetailledTxOutput_script_pubkey_impl(ptr, rust_vec_len, data_len),
+        178 => wire_FrbDetailledTxOutput_value_impl(ptr, rust_vec_len, data_len),
+        181 => wire_FrbTransaction_new_impl(ptr, rust_vec_len, data_len),
+        184 => wire_FrbWallet_add_account_impl(ptr, rust_vec_len, data_len),
+        185 => wire_FrbWallet_get_account_impl(ptr, rust_vec_len, data_len),
+        189 => wire_FrbWallet_get_fingerprint_impl(ptr, rust_vec_len, data_len),
+        183 => wire_FrbWallet_new_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -12408,6 +12439,7 @@ impl flutter_rust_bridge::IntoDart
                 .into_dart(),
             self.0.InvoiceExpirationTime.into_into_dart().into_dart(),
             self.0.MaxChannelOpeningFee.into_into_dart().into_dart(),
+            self.0.ShowWalletRecovery.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -14609,6 +14641,7 @@ impl SseEncode for crate::proton_api::wallet_settings::ApiWalletSettings {
         <Option<String>>::sse_encode(self.InvoiceDefaultDescription, serializer);
         <u64>::sse_encode(self.InvoiceExpirationTime, serializer);
         <u64>::sse_encode(self.MaxChannelOpeningFee, serializer);
+        <Option<bool>>::sse_encode(self.ShowWalletRecovery, serializer);
     }
 }
 

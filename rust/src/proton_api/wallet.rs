@@ -1,7 +1,9 @@
 use andromeda_api::bitcoin_address::ApiBitcoinAddressCreationPayload;
 use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
-pub use andromeda_api::wallet::{ApiWallet, ApiWalletData, ApiWalletKey, TransactionType};
-use andromeda_api::wallet::{ApiWalletSettings, ApiWalletTransaction, CreateWalletRequestBody};
+pub use andromeda_api::wallet::{
+    ApiWallet, ApiWalletData, ApiWalletKey, ApiWalletSettings, TransactionType,
+};
+use andromeda_api::wallet::{ApiWalletTransaction, CreateWalletRequestBody};
 use flutter_rust_bridge::frb;
 
 use super::exchange_rate::ProtonExchangeRate;
