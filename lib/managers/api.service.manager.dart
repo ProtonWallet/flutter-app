@@ -47,6 +47,7 @@ class ProtonApiServiceManager implements Manager {
     String uid = await storage.get("sessionId");
     String accessToken = await storage.get("accessToken");
     String refreshToken = await storage.get("refreshToken");
+    logger.i("sessionId = '$uid';");
     logger.i("accessToken = '$accessToken';");
     logger.i("refreshToken = '$refreshToken';");
 

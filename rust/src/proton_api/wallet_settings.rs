@@ -9,4 +9,5 @@ pub struct _WalletSettings {
     pub InvoiceDefaultDescription: Option<String>,
     pub InvoiceExpirationTime: u64,
     pub MaxChannelOpeningFee: u64,
+    pub ShowWalletRecovery: Option<bool>,
 }

@@ -28,12 +28,20 @@ class WalletSettingSheet {
   static void show(BuildContext context, HomeViewModel viewModel,
       WalletMenuModel walletMenuModel) {
     ScrollController scrollController = ScrollController();
-
+    bool hasEmailIntegration = false;
     Map<String, bool> emailIntegrationEnables = {
       for (var accountMenuModel in walletMenuModel.accounts)
         accountMenuModel.accountModel.serverAccountID:
             accountMenuModel.emailIds.isNotEmpty
     };
+    for (var accountMenuModel in walletMenuModel.accounts) {
+      if (emailIntegrationEnables[
+              accountMenuModel.accountModel.serverAccountID] ??
+          false) {
+        hasEmailIntegration = true;
+        break;
+      }
+    }
     HomeModalBottomSheet.show(context, scrollController: scrollController,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -159,27 +167,51 @@ class WalletSettingSheet {
                     const SizedBox(
                       height: defaultPadding,
                     ),
-                    AlertCustom(
-                      content: S.of(context).bitcoin_via_email_desc,
-                      learnMore: GestureDetector(
-                          onTap: () {
-                            CustomPlaceholder.show(context);
-                          },
-                          child: Text(S.of(context).learn_more,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textNorm))),
-                      leadingWidget: SvgPicture.asset(
-                          "assets/images/icon/send_2.svg",
-                          fit: BoxFit.fill,
-                          width: 30,
-                          height: 30),
-                      border: Border.all(
-                        color: Colors.transparent,
-                        width: 0,
-                      ),
-                      backgroundColor: ProtonColors.alertEnableBackground,
-                      color: ProtonColors.textNorm,
-                    ),
+                    hasEmailIntegration
+                        ? AlertCustom(
+                            content: S.of(context).bitcoin_via_email_desc,
+                            learnMore: GestureDetector(
+                                onTap: () {
+                                  CustomPlaceholder.show(context);
+                                },
+                                child: Text(S.of(context).learn_more,
+                                    style: FontManager.body2Median(
+                                        ProtonColors.textNorm))),
+                            leadingWidget: SvgPicture.asset(
+                                "assets/images/icon/send_2.svg",
+                                fit: BoxFit.fill,
+                                width: 30,
+                                height: 30),
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                            backgroundColor: ProtonColors.alertEnableBackground,
+                            color: ProtonColors.textNorm,
+                          )
+                        : AlertCustom(
+                            content:
+                                S.of(context).bitcoin_via_email_not_active_desc,
+                            learnMore: GestureDetector(
+                                onTap: () {
+                                  CustomPlaceholder.show(context);
+                                },
+                                child: Text(S.of(context).learn_more,
+                                    style: FontManager.body2Median(
+                                        ProtonColors.textNorm))),
+                            leadingWidget: SvgPicture.asset(
+                                "assets/images/icon/send_2.svg",
+                                fit: BoxFit.fill,
+                                width: 30,
+                                height: 30),
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                            backgroundColor:
+                                ProtonColors.alertDisableBackground,
+                            color: ProtonColors.textNorm,
+                          ),
                     const SizedBox(
                       height: defaultPadding,
                     ),
@@ -367,6 +399,21 @@ class WalletSettingSheet {
                                                                   .accountModel
                                                                   .serverAccountID] =
                                                           false;
+                                                      hasEmailIntegration =
+                                                          false;
+                                                      for (var accountMenuModel
+                                                          in walletMenuModel
+                                                              .accounts) {
+                                                        if (emailIntegrationEnables[
+                                                                accountMenuModel
+                                                                    .accountModel
+                                                                    .serverAccountID] ??
+                                                            false) {
+                                                          hasEmailIntegration =
+                                                              true;
+                                                          break;
+                                                        }
+                                                      }
                                                     });
                                                   },
                                                   icon: const Icon(Icons.close),
@@ -390,6 +437,7 @@ class WalletSettingSheet {
                                                                 .accountModel
                                                                 .serverAccountID] =
                                                         true;
+                                                    hasEmailIntegration = true;
                                                   });
                                                 });
                                               },

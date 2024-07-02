@@ -32,7 +32,7 @@ class SecureYourWalletSheet {
               ),
               ListTile(
                 title: Text(S.of(context).todos_backup_wallet_mnemonic,
-                    style: viewModel.hadBackup == false
+                    style: viewModel.showWalletRecovery == true
                         ? FontManager.body2Median(ProtonColors.protonBlue)
                         : FontManager.body2MedianLineThrough(
                             ProtonColors.protonBlue)),

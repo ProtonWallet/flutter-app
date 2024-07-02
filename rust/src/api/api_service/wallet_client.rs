@@ -4,8 +4,8 @@ use andromeda_api::{
     core::ApiClient,
     settings::FiatCurrencySymbol as FiatCurrency,
     wallet::{
-        ApiWallet, ApiWalletAccount, ApiWalletData, CreateWalletTransactionRequestBody,
-        WalletTransactionFlag,
+        ApiWallet, ApiWalletAccount, ApiWalletData, ApiWalletSettings,
+        CreateWalletTransactionRequestBody, WalletTransactionFlag,
     },
 };
 
@@ -362,6 +362,17 @@ impl WalletClient {
             .inner
             .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
             .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn disable_show_wallet_recovery(
+        &self,
+        wallet_id: String,
+    ) -> Result<ApiWalletSettings, BridgeError> {
+        let result = self.inner.disable_show_wallet_recovery(wallet_id).await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),
