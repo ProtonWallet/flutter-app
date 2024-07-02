@@ -29,6 +29,13 @@ impl FrbMnemonic {
         })
     }
 
+    pub(crate) fn new_with(entropy: &[u8]) -> Result<FrbMnemonic, BridgeError> {
+        let mnemonic = Mnemonic::new_with(entropy)?;
+        Ok(FrbMnemonic {
+            inner: mnemonic.into(),
+        })
+    }
+
     #[frb(sync)]
     pub(crate) fn from_str(mnemonic: &str) -> Result<FrbMnemonic, BridgeError> {
         Self::from_string(mnemonic.to_string())

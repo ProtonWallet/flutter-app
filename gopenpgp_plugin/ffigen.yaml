@@ -2,10 +2,10 @@
 name: NativeLibrary
 description: ProtonCrypto from gopenpgp.
 output:
-  bindings: 'lib/generated_golang_bindings.dart'
+  bindings: "lib/generated_golang_bindings.dart"
 headers:
   entry-points:
-    - 'src/libproton_crypto.h'
+    - "src/libproton_crypto.h"
 preamble: |
   // ignore_for_file: always_specify_types
   // ignore_for_file: camel_case_types
@@ -15,3 +15,4 @@ preamble: |
 comments:
   style: any
   length: full
+ignore-source-errors: true

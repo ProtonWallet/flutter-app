@@ -14,6 +14,7 @@ use crate::api::api_service::onramp_gateway_client::*;
 use crate::api::api_service::proton_api_service::*;
 use crate::api::api_service::proton_contacts_client::*;
 use crate::api::api_service::proton_email_addr_client::*;
+use crate::api::api_service::proton_settings_client::*;
 use crate::api::api_service::proton_users_client::*;
 use crate::api::api_service::settings_client::*;
 use crate::api::api_service::transaction_client::*;
@@ -479,6 +480,20 @@ pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generat
     ptr: *const std::ffi::c_void,
 ) {
     MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonEmailAddressClient>>::decrement_strong_count(ptr as _);
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+    ptr: *const std::ffi::c_void,
+) {
+    MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonSettingsClient>>::increment_strong_count(ptr as _);
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+    ptr: *const std::ffi::c_void,
+) {
+    MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonSettingsClient>>::decrement_strong_count(ptr as _);
 }
 
 #[wasm_bindgen]

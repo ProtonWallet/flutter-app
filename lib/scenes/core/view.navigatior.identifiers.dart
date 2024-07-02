@@ -36,6 +36,7 @@ enum NavID {
   twoFactorAuthSetup,
   twoFactorAuthDisable,
   securitySetting,
+  recovery,
 
   // Mail integration
   mailList,
