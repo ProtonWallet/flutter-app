@@ -3,7 +3,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
@@ -17,12 +19,20 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   int walletID;
   String strMnemonic = "";
   bool inIntroduce = true;
+
   void setBackup();
+
   void setIntroduce(bool introduce);
 }
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
-  SetupBackupViewModelImpl(super.coordinator, super.walletID);
+  final WalletsDataProvider walletsDataProvider;
+
+  SetupBackupViewModelImpl(
+    super.coordinator,
+    super.walletID,
+    this.walletsDataProvider,
+  );
 
   final datasourceChangedStreamController =
       StreamController<SetupBackupViewModel>.broadcast();
@@ -51,9 +61,21 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   @override
   void setBackup() async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String serverWalletID = walletModel.serverWalletID;
-    preferences.setBool("todo_hadBackup_$serverWalletID", true);
+    walletModel.showWalletRecovery = 0;
+    walletsDataProvider.insertOrUpdateWallet(
+      userID: 0,
+      name: walletModel.name,
+      encryptedMnemonic: walletModel.mnemonic.base64encode(),
+      passphrase: walletModel.passphrase,
+      imported: walletModel.imported,
+      priority: walletModel.priority,
+      status: walletModel.status,
+      type: walletModel.type,
+      serverWalletID: walletModel.serverWalletID,
+      publickey: walletModel.publicKey.base64encode(),
+      fingerprint: walletModel.fingerprint ?? "",
+      showWalletRecovery: walletModel.showWalletRecovery,
+    );
   }
 
   @override

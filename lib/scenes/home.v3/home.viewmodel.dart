@@ -6,7 +6,6 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -124,7 +123,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   late TextEditingController twoFactorAmountThresholdController;
 
   bool hideEmptyUsedAddresses = false;
-  bool hadBackup = false;
+  bool showWalletRecovery = true;
   bool hadBackupProtonAccount = false;
   bool hadSetup2FA = false;
   bool showSearchHistoryTextField = false;
@@ -600,11 +599,9 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> checkPreference(WalletModel walletModel,
       {bool runOnce = false}) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String serverWalletID = walletModel.serverWalletID;
-    hadBackup = preferences.getBool("todo_hadBackup_$serverWalletID") ?? false;
+    showWalletRecovery = walletModel.showWalletRecovery == 1;
     currentTodoStep = 0;
-    currentTodoStep += hadBackup ? 1 : 0;
+    currentTodoStep += showWalletRecovery ? 0 : 1;
     currentTodoStep += hadBackupProtonAccount ? 1 : 0;
     currentTodoStep += hadSetup2FA ? 1 : 0;
     datasourceStreamSinkAdd();
@@ -955,7 +952,7 @@ class HomeViewModelImpl extends HomeViewModel {
         walletName,
         strMnemonic,
         appConfig.coinType.network,
-        WalletModel.importByUser,
+        WalletModel.createByProton,
         strPassphrase,
       );
 

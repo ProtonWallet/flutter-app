@@ -42,7 +42,7 @@ class EmailIntegrationDropdownSheet {
                         : null,
                     title: Text(protonAddress.email,
                         style: FontManager.body2Regular(ProtonColors.textNorm)),
-                    onTap: () {
+                    onTap: () async {
                       if (usedEmailIDs.contains(protonAddress.id)) {
                         LocalToast.showErrorToast(context,
                             S.of(context).email_already_linked_to_wallet);

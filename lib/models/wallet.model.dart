@@ -32,21 +32,26 @@ class WalletModel {
   String serverWalletID;
   String? fingerprint;
 
-  WalletModel(
-      {required this.id,
-      required this.userID,
-      required this.name,
-      required this.mnemonic,
-      required this.passphrase,
-      required this.publicKey,
-      required this.imported,
-      required this.priority,
-      required this.status,
-      required this.type,
-      required this.fingerprint,
-      required this.createTime,
-      required this.modifyTime,
-      required this.serverWalletID});
+  /// From walletSettings
+  int showWalletRecovery = 1;
+
+  WalletModel({
+    required this.id,
+    required this.userID,
+    required this.name,
+    required this.mnemonic,
+    required this.passphrase,
+    required this.publicKey,
+    required this.imported,
+    required this.priority,
+    required this.status,
+    required this.type,
+    required this.fingerprint,
+    required this.createTime,
+    required this.modifyTime,
+    required this.serverWalletID,
+    required this.showWalletRecovery,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -64,6 +69,7 @@ class WalletModel {
       'createTime': createTime,
       'modifyTime': modifyTime,
       'serverWalletID': serverWalletID,
+      'showWalletRecovery': showWalletRecovery,
     };
   }
 
@@ -83,6 +89,7 @@ class WalletModel {
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
       serverWalletID: map['serverWalletID'] ?? "",
+      showWalletRecovery: map['showWalletRecovery'] ?? 1,
     );
   }
 }

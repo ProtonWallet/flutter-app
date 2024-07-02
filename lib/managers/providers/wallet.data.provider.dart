@@ -333,6 +333,8 @@ class WalletsDataProvider extends DataProvider {
 
   /// process wallet data received from Api response, save it
   Future<int> _processApiWalletData(ApiWalletData apiWalletData) async {
+    bool showWalletRecovery =
+        apiWalletData.walletSettings.showWalletRecovery ?? true;
     String serverWalletID = apiWalletData.wallet.id;
     return await insertOrUpdateWallet(
       userID: 0,
@@ -347,6 +349,7 @@ class WalletsDataProvider extends DataProvider {
       fingerprint: apiWalletData.wallet.fingerprint ?? "",
       publickey: apiWalletData.wallet.publicKey,
       serverWalletID: serverWalletID,
+      showWalletRecovery: showWalletRecovery ? 1 : 0,
       initialize: true,
     );
   }
@@ -405,6 +408,7 @@ class WalletsDataProvider extends DataProvider {
     required String serverWalletID,
     required String? publickey,
     required String fingerprint,
+    required int showWalletRecovery,
     bool initialize = false,
   }) async {
     int walletID = -1;
@@ -414,20 +418,22 @@ class WalletsDataProvider extends DataProvider {
     if (wallet == null) {
       Uint8List uPubKey = publickey?.base64decode() ?? Uint8List(0);
       wallet = WalletModel(
-          id: null,
-          userID: userID,
-          name: name,
-          mnemonic: encryptedMnemonic.base64decode(),
-          passphrase: passphrase,
-          publicKey: uPubKey,
-          imported: imported,
-          priority: priority,
-          status: status,
-          type: type,
-          fingerprint: fingerprint,
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          serverWalletID: serverWalletID);
+        id: null,
+        userID: userID,
+        name: name,
+        mnemonic: encryptedMnemonic.base64decode(),
+        passphrase: passphrase,
+        publicKey: uPubKey,
+        imported: imported,
+        priority: priority,
+        status: status,
+        type: type,
+        fingerprint: fingerprint,
+        createTime: now.millisecondsSinceEpoch ~/ 1000,
+        modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+        serverWalletID: serverWalletID,
+        showWalletRecovery: showWalletRecovery,
+      );
       walletID = await walletDao.insert(wallet);
       wallet.id = walletID;
     } else {
@@ -436,6 +442,7 @@ class WalletsDataProvider extends DataProvider {
       wallet.status = status;
       wallet.fingerprint = fingerprint;
       wallet.priority = priority;
+      wallet.showWalletRecovery = showWalletRecovery;
       await walletDao.update(wallet);
     }
 
