@@ -25,6 +25,7 @@ import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
+import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
@@ -52,6 +53,11 @@ class HomeCoordinator extends Coordinator {
 
   void showNativeReportBugs() {
     nativeViewChannel.nativeReportBugs();
+  }
+
+  void showRecovery() {
+    var view = RecoveryCoordinator().start();
+    showInBottomSheet(view);
   }
 
   void showSend(int walletID, int accountID) {

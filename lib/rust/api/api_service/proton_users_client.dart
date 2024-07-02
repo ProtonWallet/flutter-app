@@ -3,27 +3,11 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/errors.dart';
 import '../../frb_generated.dart';
+import '../../proton_api/proton_users.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Arc < ProtonAPIService >>>
-@sealed
-class ArcProtonApiService extends RustOpaque {
-  ArcProtonApiService.dcoDecode(List<dynamic> wire)
-      : super.dcoDecode(wire, _kStaticData);
-
-  ArcProtonApiService.sseDecode(int ptr, int externalSizeOnNative)
-      : super.sseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount: RustLib
-        .instance.api.rust_arc_increment_strong_count_ArcProtonApiService,
-    rustArcDecrementStrongCount: RustLib
-        .instance.api.rust_arc_decrement_strong_count_ArcProtonApiService,
-    rustArcDecrementStrongCountPtr: RustLib
-        .instance.api.rust_arc_decrement_strong_count_ArcProtonApiServicePtr,
-  );
-}
+import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonUsersClient>>
 @sealed
@@ -43,8 +27,29 @@ class ProtonUsersClient extends RustOpaque {
         .instance.api.rust_arc_decrement_strong_count_ProtonUsersClientPtr,
   );
 
+  Future<GetAuthInfoResponseBody> getAuthInfo(
+          {required String intent, dynamic hint}) =>
+      RustLib.instance.api
+          .protonUsersClientGetAuthInfo(that: this, intent: intent, hint: hint);
+
+  Future<GetAuthModulusResponse> getAuthModule({dynamic hint}) =>
+      RustLib.instance.api
+          .protonUsersClientGetAuthModule(that: this, hint: hint);
+
+  Future<ProtonUser> getUserInfo({dynamic hint}) =>
+      RustLib.instance.api.protonUsersClientGetUserInfo(that: this, hint: hint);
+
+  Future<EmptyResponseBody> lockSensitiveSettings({dynamic hint}) =>
+      RustLib.instance.api
+          .protonUsersClientLockSensitiveSettings(that: this, hint: hint);
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<ProtonUsersClient> newInstance(
-          {required ArcProtonApiService client, dynamic hint}) =>
+          {required ProtonApiService client, dynamic hint}) =>
       RustLib.instance.api.protonUsersClientNew(client: client, hint: hint);
+
+  Future<String> unlockPasswordChange(
+          {required ProtonSrpClientProofs proofs, dynamic hint}) =>
+      RustLib.instance.api.protonUsersClientUnlockPasswordChange(
+          that: this, proofs: proofs, hint: hint);
 }

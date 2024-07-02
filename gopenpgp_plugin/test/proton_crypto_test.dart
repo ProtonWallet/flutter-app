@@ -754,6 +754,27 @@ void main() {
           protonWallet.publicKey ?? "", message, signature);
       expect(verifyWithProtonWalletPublicKey, equals(false));
     });
+
+    test('signature case 3', () async {
+      String message = "This is a plaintext message! Hello world!";
+      List<UserKeys> userKeys = [user1, user2];
+      List<String> signatures = [];
+      for (UserKeys userKey in userKeys) {
+        signatures.add(proton_crypto.getSignature(
+            userKey.privateKey, userKey.passphrase, message));
+      }
+      String signature = signatures.join("\n\n");
+      bool verifyWithUser1PublicKey = proton_crypto.verifySignature(
+          user1.publicKey ?? "", message, signature);
+      expect(verifyWithUser1PublicKey, equals(true));
+      bool verifyWithUser2PublicKey = proton_crypto.verifySignature(
+          user2.publicKey ?? "", message, signature);
+      expect(verifyWithUser2PublicKey, equals(true));
+      bool verifyWithProtonWalletPublicKey = proton_crypto.verifySignature(
+          protonWallet.publicKey ?? "", message, signature);
+      expect(verifyWithProtonWalletPublicKey, equals(false));
+    });
+
     test('signature with context case 1', () async {
       String message = "你好世界！This is a plaintext message!";
       String context = "wallet.bitcoin-address";

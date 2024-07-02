@@ -800,6 +800,9 @@ class HomeViewModelImpl extends HomeViewModel {
       case NavID.natvieReportBugs:
         coordinator.showNativeReportBugs();
         break;
+      case NavID.recovery:
+        coordinator.showRecovery();
+        break;
       default:
         break;
     }
