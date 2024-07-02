@@ -50,6 +50,8 @@ import flutter_local_notifications
             guard let self = self else { return }
             switch call.method {
             case "native.navigation.login", "native.navigation.signup":
+                self.authManager = AuthHelper()
+                apiService?.authDelegate = authManager
                 if call.method == "native.navigation.login" {
                     print("Starting login.")
                     self.switchToSignIn()
@@ -87,6 +89,8 @@ import flutter_local_notifications
                                         details: nil))
                 }
             case "native.account.logout":
+                self.authManager = AuthHelper()
+                apiService?.authDelegate = authManager
                 print("native.account.logout triggered")
             default:
                 result(FlutterMethodNotImplemented)

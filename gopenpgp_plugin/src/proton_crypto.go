@@ -59,9 +59,9 @@ func encryptWithKeyRing(userPublicKeysSepInComma *C.char, message *C.char) *C.ch
 func getArmoredPublicKey(userPrivateKey *C.char) *C.char {
 	privateKeyObj, _ := crypto.NewKeyFromArmored(C.GoString(userPrivateKey))
 	armoredPublicKey, err := privateKeyObj.GetArmoredPublicKey()
-    if err != nil {
-        fmt.Printf("Failed to armor public key: %v", err)
-    }
+	if err != nil {
+		fmt.Printf("Failed to armor public key: %v", err)
+	}
 	return C.CString(armoredPublicKey)
 }
 
@@ -177,6 +177,16 @@ func verifySignature(userPublicKey *C.char, message *C.char, signature *C.char) 
 	return C.int(0)
 }
 
+//export verifyCleartextMessageArmored
+func verifyCleartextMessageArmored(userPublicKey *C.char, armoredSignature *C.char) (*C.char, C.int) {
+	clearText, err := helper.VerifyCleartextMessageArmored(C.GoString(userPublicKey), C.GoString(armoredSignature), crypto.GetUnixTime())
+	cStr := C.CString(clearText)
+	if err == nil {
+		return cStr, C.int(1)
+	}
+	return cStr, C.int(0)
+}
+
 //export decrypt
 func decrypt(userPrivateKey *C.char, passphrase *C.char, armor *C.char) *C.char {
 	passphraseBytes := []byte(C.GoString(passphrase))
@@ -194,16 +204,6 @@ func encryptBinary(userPrivateKey *C.char, binaryMessage *C.char, length C.int) 
 	resultBytes := GoBytes2CBytes(encryptedBinary)
 	resultBytesLength := C.int(len(encryptedBinary))
 	return C.struct_BinaryResult{length: resultBytesLength, data: resultBytes}
-}
-
-//export verifyCleartextMessageArmored
-func verifyCleartextMessageArmored(userPublicKey *C.char, armoredSignature *C.char) (*C.char, C.int) {
-	clearText, err := helper.VerifyCleartextMessageArmored(C.GoString(userPublicKey), C.GoString(armoredSignature), crypto.GetUnixTime())
-	cStr := C.CString(clearText)
-	if err == nil {
-		return cStr, C.int(1)
-	}
-	return cStr, C.int(0)
 }
 
 //export encryptBinaryArmor

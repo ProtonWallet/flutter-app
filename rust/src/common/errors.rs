@@ -36,6 +36,10 @@ pub enum BridgeError {
     /// Andromeda api response error
     #[error("An error occurred in andromeda bitcoin: {0}")]
     ApiResponse(String),
+
+    /// srp errors
+    #[error("An error occurred in api srp: {0}")]
+    ApiSrp(String),
 }
 
 impl From<String> for BridgeError {
@@ -77,6 +81,12 @@ impl From<AndromedaBitcoinError> for BridgeError {
             "AndromedaBitcoinError occurred: {:?}",
             value.source()
         ))
+    }
+}
+
+impl From<proton_srp::SRPError> for BridgeError {
+    fn from(value: proton_srp::SRPError) -> Self {
+        BridgeError::Generic(format!("SRPError occurred: {:?}", value.source()))
     }
 }
 

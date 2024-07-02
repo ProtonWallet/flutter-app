@@ -453,9 +453,16 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                               ),
                                               const SizedBox(height: 2),
                                               state.isQuoteFailed
-                                                  ? const CardLoading(
-                                                      height: 22,
-                                                      width: 80,
+                                                  ? const Text(
+                                                      '---',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF191C32),
+                                                        fontSize: 16,
+                                                        fontFamily: 'Inter',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
                                                     )
                                                   : Text(
                                                       '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
@@ -489,11 +496,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                   width: 24,
                                                   height: 24,
                                                 ),
-                                                // const SizedBox(
-                                                //   width: 20,
-                                                //   height: 20,
-                                                //   child: FlutterLogo(),
-                                                // ),
                                                 const SizedBox(width: 8),
                                                 Text(
                                                   state.providerModel
@@ -594,8 +596,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (!state.isQuoteLoaded ||
-                                              state.isQuoteFailed)
+                                          if (!state.isQuoteLoaded)
                                             const CardLoading(
                                               margin: EdgeInsets.only(top: 4),
                                               height: 15,
@@ -639,8 +640,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (!state.isQuoteLoaded ||
-                                              state.isQuoteFailed)
+                                          if (!state.isQuoteLoaded)
                                             const CardLoading(
                                               margin: EdgeInsets.only(top: 4),
                                               height: 15,

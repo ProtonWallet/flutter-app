@@ -684,7 +684,12 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                       style: FontManager.body2Median(
                                           ProtonColors.textHint)))),
                           ListTile(
-                              onTap: () {},
+                              onTap: () {
+                                if (viewModel.currentSize == ViewSize.mobile) {
+                                  Navigator.of(context).pop();
+                                }
+                                viewModel.move(NavID.recovery);
+                              },
                               leading: SvgPicture.asset(
                                   "assets/images/icon/ic-arrow-rotate-right.svg",
                                   fit: BoxFit.fill,

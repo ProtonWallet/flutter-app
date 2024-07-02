@@ -5,6 +5,13 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:proton_crypto/generated_golang_bindings.dart';
 
+class VerifyCleartextMessagResult {
+  var verified = false;
+  var message = "";
+
+  VerifyCleartextMessagResult(this.verified, this.message);
+}
+
 String getBinarySignatureWithContext(
     String userPrivateKey, String passphrase, Uint8List data, String context) {
   String result = "";
@@ -20,6 +27,20 @@ String getBinarySignatureWithContext(
         .toDartString();
   });
   return result;
+}
+
+VerifyCleartextMessagResult verifyCleartextMessageArmored(
+    String userPublicKey, String signature) {
+  VerifyCleartextMessagResult res = VerifyCleartextMessagResult(false, "");
+  using((alloc) {
+    verifyCleartextMessageArmored_return result =
+        _bindings.verifyCleartextMessageArmored(
+            userPublicKey.toNativeUtf8() as Pointer<Char>,
+            signature.toNativeUtf8() as Pointer<Char>);
+    res.message = (result.r0 as Pointer<Utf8>).toDartString();
+    res.verified = result.r1 == 1;
+  });
+  return res;
 }
 
 bool verifyBinarySignatureWithContext(
