@@ -93,55 +93,41 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
     selectedWalletChangeSubscription = walletsDataProvider
         .selectedWalletUpdateController.stream
         .listen((data) async {
-      if (lastEvent != null) {
-        if (lastEvent is SelectWallet) {
-          SelectWallet selectWallet = (lastEvent as SelectWallet);
-          if (walletsDataProvider.selectedServerWalletID !=
-              selectWallet.walletMenuModel.walletModel.serverWalletID) {
-            /// need to refresh balance when walletDataProvider's selected Wallet ID is not match to last event
-            /// this case will only happened when user delete wallet
-            WalletData? walletData =
-                await walletsDataProvider.getWalletByServerWalletID(
-                    walletsDataProvider.selectedServerWalletID);
-            if (walletData != null) {
-              WalletMenuModel walletMenuModel =
-                  WalletMenuModel(walletData.wallet);
-              walletMenuModel.accounts = walletData.accounts
-                  .map((item) => AccountMenuModel(item))
-                  .toList();
-              add(SelectWallet(
+      WalletData? walletData =
+          await walletsDataProvider.getWalletByServerWalletID(
+              walletsDataProvider.selectedServerWalletID);
+      if (walletData != null) {
+        WalletMenuModel walletMenuModel = WalletMenuModel(walletData.wallet);
+        walletMenuModel.accounts =
+            walletData.accounts.map((item) => AccountMenuModel(item)).toList();
+        if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+          /// wallet view
+          add(SelectWallet(
+            walletMenuModel,
+          ));
+        } else {
+          /// wallet account view
+          for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
+            if (accountMenuModel.accountModel.serverAccountID ==
+                walletsDataProvider.selectedServerWalletAccountID) {
+              add(SelectAccount(
                 walletMenuModel,
+                accountMenuModel,
               ));
-            }
-          }
-        } else if (lastEvent is SelectAccount) {
-          SelectAccount selectAccount = (lastEvent as SelectAccount);
-          if (walletsDataProvider.selectedServerWalletAccountID !=
-              selectAccount.accountMenuModel.accountModel.serverAccountID) {
-            /// need to refresh balance when walletDataProvider's selected Wallet account ID is not match to last event
-            /// this case will only happened when user delete wallet or wallet account
-            if (walletsDataProvider.selectedServerWalletID != "") {
-              WalletData? walletData =
-                  await walletsDataProvider.getWalletByServerWalletID(
-                      walletsDataProvider.selectedServerWalletID);
-              if (walletData != null) {
-                WalletMenuModel walletMenuModel =
-                    WalletMenuModel(walletData.wallet);
-                walletMenuModel.accounts = walletData.accounts
-                    .map((item) => AccountMenuModel(item))
-                    .toList();
-                add(SelectWallet(
-                  walletMenuModel,
-                ));
-              }
+              break;
             }
           }
         }
+      } else {
+        /// no wallets
+        /// clear all
+        add(NoWallet());
       }
     });
 
     /// Listen to the data update
-    bdkTransactionDataSubscription = bdkTransactionDataProvider.stream.listen((state) {
+    bdkTransactionDataSubscription =
+        bdkTransactionDataProvider.stream.listen((state) {
       if (state is BDKDataUpdated) {
         handleTransactionUpdate();
       }

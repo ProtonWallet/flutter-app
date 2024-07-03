@@ -158,6 +158,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   StreamSubscription? walletPassDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? walletsDataSubscription;
+  StreamSubscription? selectedWalletChangeSubscription;
+
+  VoidCallback? onboardingCallback;
 
   WalletListBloc(
     this.walletsDataProvider,
@@ -167,6 +170,25 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.userSettingsDataProvider,
     this.bdkTransactionDataProvider,
   ) : super(const WalletListState(initialized: false, walletsModel: [])) {
+    selectedWalletChangeSubscription = walletsDataProvider
+        .selectedWalletUpdateController.stream
+        .listen((data) async {
+      if (walletsDataProvider.selectedServerWalletID.isNotEmpty) {
+        if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+          /// wallet view
+          add(SelectWallet(
+            walletsDataProvider.selectedServerWalletID,
+          ));
+        } else {
+          /// wallet account view
+          add(SelectAccount(
+            walletsDataProvider.selectedServerWalletID,
+            walletsDataProvider.selectedServerWalletAccountID,
+          ));
+        }
+      }
+    });
+
     walletsDataSubscription =
         walletsDataProvider.dataUpdateController.stream.listen((onData) {
       //TODO:: improve me
@@ -189,11 +211,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<StartLoading>((event, emit) async {
       // loading wallet data
-      logger.i("StartLoading!!!!!");
       var wallets = await walletsDataProvider.getWallets();
-      if (wallets == null) {
+      if (wallets == null || wallets.isEmpty) {
+        onboardingCallback?.call();
         emit(state.copyWith(initialized: true, walletsModel: []));
-        walletsDataProvider.updateSelected(null, null);
         return; // error;
       }
 
@@ -204,7 +225,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
       List<WalletMenuModel> walletsModel = [];
       int index = 0;
-      bool hadSelectWallet = false;
       for (WalletData wallet in wallets) {
         WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
         walletModel.currentIndex = index++;
@@ -214,23 +234,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           wallet.wallet,
           walletPassProvider,
         );
-
-        if (walletModel.hasValidPassword) {
-          if (hadSelectWallet == false &&
-              walletsDataProvider.selectedServerWalletID.isEmpty) {
-            hadSelectWallet = true;
-            walletModel.isSelected = true;
-            walletsDataProvider.updateSelected(
-                walletModel.walletModel.serverWalletID, null);
-          } else {
-            if (walletModel.walletModel.serverWalletID ==
-                walletsDataProvider.selectedServerWalletID) {
-              walletModel.isSelected = true;
-              walletsDataProvider.updateSelected(
-                  walletModel.walletModel.serverWalletID, null);
-            }
-          }
-        }
 
         var walletKey = await walletKeysProvider.getWalletKey(
           wallet.wallet.serverWalletID,
@@ -276,24 +279,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         bool hasUpdateUserSetting = false;
         for (AccountModel account in wallet.accounts) {
           AccountMenuModel accMenuModel = AccountMenuModel(account);
-
-          if (walletModel.walletModel.serverWalletID ==
-                  walletsDataProvider.selectedServerWalletID &&
-              accMenuModel.accountModel.serverAccountID ==
-                  walletsDataProvider.selectedServerWalletAccountID) {
-            accMenuModel.isSelected = true;
-            walletsDataProvider.updateSelected(
-                null, accMenuModel.accountModel.serverAccountID);
-            userSettingsDataProvider.updateFiatCurrency(
-                accMenuModel.accountModel.fiatCurrency.toFiatCurrency());
-          }
-
-          if (walletModel.isSelected && hasUpdateUserSetting == false) {
-            userSettingsDataProvider.updateFiatCurrency(
-                accMenuModel.accountModel.fiatCurrency.toFiatCurrency());
-            hasUpdateUserSetting = true;
-          }
-
           if (secretKey != null) {
             var encrypted = base64Encode(account.label);
             try {
@@ -333,21 +318,14 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
           accMenuModel.emailIds =
               await WalletManager.getAccountAddressIDs(account.serverAccountID);
-
-          ///
           walletModel.accounts.add(accMenuModel);
         }
-
-        ///
         walletsModel.add(walletModel);
       }
-
-      ///
       emit(state.copyWith(initialized: true, walletsModel: walletsModel));
       if (event.callback != null) {
         event.callback!.call();
       }
-      logger.i("StartLoading end!!!!!");
     });
 
     on<SelectWallet>((event, emit) async {
@@ -370,7 +348,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           }
         }
       }
-      walletsDataProvider.updateSelected(walletID, null);
       emit(state.copyWith(walletsModel: state.walletsModel));
     });
 
@@ -387,7 +364,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
                   account.accountModel.fiatCurrency.toFiatCurrency());
-              walletsDataProvider.updateSelected(null, accountID);
             }
           }
         } else {
@@ -547,7 +523,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
   }
 
-  void init({VoidCallback? callback}) {
+  void init({VoidCallback? callback, required VoidCallback onboardingCallback,}) {
+    this.onboardingCallback = onboardingCallback;
     add(StartLoading(callback: callback));
   }
 

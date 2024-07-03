@@ -391,10 +391,14 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           userLabel = await WalletKeyHelper.decrypt(
               secretKey!, utf8.decode(transactionModel!.label));
         }
-        strWallet = await WalletKeyHelper.decrypt(
-          secretKey!,
-          walletModel.name,
-        );
+        try {
+          strWallet = await WalletKeyHelper.decrypt(
+            secretKey!,
+            walletModel.name,
+          );
+        } catch (e) {
+          strWallet = walletModel.name;
+        }
       }
       memoController.text = userLabel;
 

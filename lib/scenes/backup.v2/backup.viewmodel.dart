@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
@@ -62,6 +61,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   void setBackup() async {
     WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
     walletModel.showWalletRecovery = 0;
+    walletsDataProvider.disableShowWalletRecovery(walletModel.serverWalletID);
     walletsDataProvider.insertOrUpdateWallet(
       userID: 0,
       name: walletModel.name,
