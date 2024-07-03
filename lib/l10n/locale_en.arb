@@ -14,6 +14,8 @@
   "tab_settings": "Settings",
   "welcome": "Welcome",
   "welcome_to": "Welcome to Proton Wallet \uD83C\uDF89",
+  "welcome_to_content": "Welcome to your self-custody Bitcoin wallet! Any BTC you buy or receive will be fully controlled by you. Even Proton cannot take or seize your assets.\n\nTo avoid loss of assets from forget password or other access issues, back up your Proton recovery phrase and wallet seed phrase.\n\nWe have also enabled Bitcoin via Email on this wallet so other Proton Wallet users can easily send BTC to {email}.",
+  "welcome_to_confirm_content": "By continuing, you agree to our terms and conditions",
   "welcome_hint": "Here is a checklist to get you started:",
   "@welcome_to": {
     "description": "The welcome message"
@@ -341,6 +343,7 @@
   "for_additional_security_you_can_use_passphrase_": "For additional security you can use a passphrase. Note that you will need this passphrase to access your wallet.",
   "store_your_passphrase_at_safe_location_": "Store your passphrase at a safe location. Without the passphrase, even Proton cannot recover your funds.",
   "passphrase_label": "Passphrase",
+  "passphrase_label_hint": "Enter a passphrase or leave empty",
   "scan_btc_address": "Scanning BTC address",
   "confirm_passphrase_label": "Confirm Passphrase",
   "save_passphrase_button": "Save Passphrase",

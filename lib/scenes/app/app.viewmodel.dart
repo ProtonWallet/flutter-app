@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:wallet/helper/firebase_messaging_helper.dart';
 import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/local_notification.dart';
 import 'package:wallet/helper/user.agent.dart';
@@ -52,7 +51,6 @@ class AppViewModelImpl extends AppViewModel {
 
     /// setup local services
     LocalNotification.init();
-    FirebaseMessagingHelper.init();
     LocalAuth.init();
 
     /// platform channel manager

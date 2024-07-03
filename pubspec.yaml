@@ -64,8 +64,6 @@ dependencies:
   share_plus: ^7.2.1
   syncfusion_flutter_charts: ^23.2.7
   flutter_local_notifications: ^16.2.0
-  firebase_core: ^2.24.2
-  firebase_messaging: ^14.7.9
   sqflite_common_ffi: ^2.3.1
   web_socket_channel: ^2.4.0
   introduction_screen: ^3.1.12
@@ -87,7 +85,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   connectivity_plus: ^6.0.1
   toggle_switch: ^2.3.0
-  # mobile_scanner: ^5.1.0
+  mobile_scanner: ^5.1.0
   xml: ^6.5.0
   # https://docs.ramp.network/mobile/flutter-sdk
   # issues: https://developers.google.com/ml-kit/known-issues#ios_issues
