@@ -176,7 +176,7 @@ import flutter_local_notifications
     }
     
     private var getShowWelcomeScreen: WelcomeScreenVariant? {
-        return .wallet(.init(body: "Please Mister Postman, look and see! Is there's a letter in your bag for me?"))
+        return .wallet(.init(body: "Create a new account or sign in with your existing Proton account to start using Proton Wallet."))
     }
 
     private var getAdditionalWork: WorkBeforeFlow? {
