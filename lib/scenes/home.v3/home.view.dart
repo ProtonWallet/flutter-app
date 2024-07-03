@@ -114,38 +114,59 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 style:
                                                     FontManager.captionSemiBold(
                                                         ProtonColors.textNorm)),
-                                          AnimatedFlipCounter(
-                                              prefix: viewModel
-                                                  .dataProviderManager
-                                                  .userSettingsDataProvider
-                                                  .getFiatCurrencyName(
-                                                      fiatCurrency: viewModel
-                                                          .currentExchangeRate
-                                                          .fiatCurrency),
-                                              value: ExchangeCalculator
-                                                  .getNotionalInFiatCurrency(
-                                                viewModel.currentExchangeRate,
-                                                walletBalanceState
-                                                    .balanceInSatoshi,
-                                              ),
+                                          viewModel.displayBalance
+                                              ? AnimatedFlipCounter(
+                                                  prefix: viewModel
+                                                      .dataProviderManager
+                                                      .userSettingsDataProvider
+                                                      .getFiatCurrencyName(
+                                                          fiatCurrency: viewModel
+                                                              .currentExchangeRate
+                                                              .fiatCurrency),
+                                                  value: ExchangeCalculator
+                                                      .getNotionalInFiatCurrency(
+                                                    viewModel
+                                                        .currentExchangeRate,
+                                                    walletBalanceState
+                                                        .balanceInSatoshi,
+                                                  ),
 
-                                              /// TODO:: use actual balance
-                                              fractionDigits:
-                                                  defaultDisplayDigits,
-                                              textStyle: FontManager
-                                                  .balanceInFiatCurrency(
-                                                      ProtonColors.textNorm)),
-                                          Text(
-                                              ExchangeCalculator
-                                                  .getBitcoinUnitLabel(
-                                                viewModel.bitcoinUnit,
-                                                walletBalanceState
-                                                    .balanceInSatoshi,
-                                              ),
+                                                  /// TODO:: use actual balance
+                                                  fractionDigits:
+                                                      defaultDisplayDigits,
+                                                  textStyle: FontManager
+                                                      .balanceInFiatCurrency(
+                                                          ProtonColors
+                                                              .textNorm))
+                                              : Text(
+                                                  "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)} ****",
+                                                  style: FontManager
+                                                      .balanceInFiatCurrency(
+                                                          ProtonColors
+                                                              .textNorm),
+                                                ),
+                                          viewModel.displayBalance
+                                              ? Text(
+                                                  ExchangeCalculator
+                                                      .getBitcoinUnitLabel(
+                                                    viewModel.bitcoinUnit,
+                                                    walletBalanceState
+                                                        .balanceInSatoshi,
+                                                  ),
 
-                                              /// TODO:: use actual balance
-                                              style: FontManager.balanceInBTC(
-                                                  ProtonColors.textWeak))
+                                                  /// TODO:: use actual balance
+                                                  style:
+                                                      FontManager.balanceInBTC(
+                                                          ProtonColors
+                                                              .textWeak))
+                                              : Text(
+                                                  "**** ${viewModel.bitcoinUnit.name.toUpperCase()}",
+
+                                                  /// TODO:: use actual balance
+                                                  style:
+                                                      FontManager.balanceInBTC(
+                                                          ProtonColors
+                                                              .textWeak)),
                                         ],
                                       ),
                                       const SizedBox(width: 4),
@@ -167,21 +188,40 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 Icons.refresh_rounded,
                                                 size: 22,
                                                 color: ProtonColors.textWeak,
+                                              )),
+                                      const SizedBox(width: 4),
+                                      viewModel.displayBalance
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                viewModel
+                                                    .setDisplayBalance(false);
+                                              },
+                                              child: Icon(
+                                                Icons.visibility_outlined,
+                                                size: 22,
+                                                color: ProtonColors.textWeak,
                                               ))
+                                          : GestureDetector(
+                                              onTap: () {
+                                                viewModel
+                                                    .setDisplayBalance(true);
+                                              },
+                                              child: Icon(
+                                                Icons.visibility_off_outlined,
+                                                size: 22,
+                                                color: ProtonColors.textWeak,
+                                              )),
                                     ]),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                BtcTitleActionsView(
-                                    onSend: () {
-                                      viewModel.move(NavID.send);
-                                    },
-                                    onBuy: () {
-                                      viewModel.move(NavID.buy);
-                                    },
-                                    onReceive: () {
-                                      move(context, NavID.receive);
-                                    }),
+                                BtcTitleActionsView(onSend: () {
+                                  viewModel.move(NavID.send);
+                                }, onBuy: () {
+                                  viewModel.move(NavID.buy);
+                                }, onReceive: () {
+                                  move(context, NavID.receive);
+                                }),
                                 const SizedBox(
                                   height: 20,
                                 ),

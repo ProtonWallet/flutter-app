@@ -130,6 +130,10 @@ class WalletsDataProvider extends DataProvider {
     return null;
   }
 
+  Future<void> disableShowWalletRecovery(String walletId) async {
+    await walletClient.disableShowWalletRecovery(walletId: walletId);
+  }
+
   Future<ApiWalletData> createWallet(CreateWalletReq request) async {
     // api calls if failed throw error
     ApiWalletData walletData =

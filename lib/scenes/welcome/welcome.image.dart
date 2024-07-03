@@ -25,7 +25,7 @@ class WelcomeImage extends StatelessWidget {
         const SizedBox(
           width: 280,
           child: Text(
-              "Please Mister Postman, look and see! Is there's a letter in your bag for me?"),
+              "Create a new account or sign in with your existing Proton account to start using Proton Wallet."),
         ),
         const SizedBox(height: defaultPadding * 2),
       ],

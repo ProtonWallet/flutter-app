@@ -1,6 +1,7 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -62,6 +63,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
   List<BDKTransactionData> bdkTransactionDataList = [];
   Map<String, bool> isWalletSyncing = {};
+  Map<String, int> lastSyncedTime = {};
 
   Future<void> init(List<WalletModel> wallets) async {
     bdkTransactionDataList.clear();
@@ -145,14 +147,20 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet full sync End");
             success = true;
           } else {
-            logger.i("Bdk wallet partial sync check");
+            int timeDiff = DateTime.now().millisecondsSinceEpoch -
+                (lastSyncedTime[accountModel.serverAccountID] ?? 0);
+            if (timeDiff > reSyncTime) {
+              logger.i("Bdk wallet partial sync check");
 
-            /// TODO:: check if it's needed
-            // if (await blockchain!.shouldSync(account: account)) {
-            logger.i("Bdk wallet partial sync Started");
-            await blockchain!.partialSync(account: account);
-            logger.i("Bdk wallet partial sync End");
-            success = true;
+              /// TODO:: check if it's needed
+              // if (await blockchain!.shouldSync(account: account)) {
+              logger.i("Bdk wallet partial sync Started");
+              await blockchain!.partialSync(account: account);
+              logger.i("Bdk wallet partial sync End");
+              success = true;
+              lastSyncedTime[accountModel.serverAccountID] =
+                  DateTime.now().microsecondsSinceEpoch;
+            }
           }
         }
       } catch (e, stacktrace) {
