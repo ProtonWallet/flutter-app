@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
@@ -184,21 +184,21 @@ void showQRScanBottomSheet(BuildContext context,
                     style: FontManager.body2Regular(ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   )),
-              Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: MobileScanner(
-                    onDetect: (capture) {
-                      final List<Barcode> barcodes = capture.barcodes;
-                      for (final barcode in barcodes) {
-                        textEditingController.text = barcode.rawValue ?? "";
-                        if (callback != null) {
-                          Navigator.of(context).pop();
-                          callback();
-                        }
-                        break;
-                      }
-                    },
-                  )),
+              // Padding(
+              //     padding: const EdgeInsets.only(top: 40),
+              //     child: MobileScanner(
+              //       onDetect: (capture) {
+              //         final List<Barcode> barcodes = capture.barcodes;
+              //         for (final barcode in barcodes) {
+              //           textEditingController.text = barcode.rawValue ?? "";
+              //           if (callback != null) {
+              //             Navigator.of(context).pop();
+              //             callback();
+              //           }
+              //           break;
+              //         }
+              //       },
+              //     )),
             ])),
       );
     },
