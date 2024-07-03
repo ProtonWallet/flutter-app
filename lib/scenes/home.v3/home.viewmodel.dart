@@ -73,10 +73,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   int selectedPage = 0;
 
   late UserSettingProvider userSettingProvider;
-  bool hasWallet = true;
   bool hasMailIntegration = false;
   bool isFetching = false;
   bool isLogout = false;
+  bool displayBalance = true;
   int currentHistoryPage = 0;
   bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
@@ -114,6 +114,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void setSearchHistoryTextField(bool show);
 
+  void setDisplayBalance(bool display);
+
   Future<void> createWallet();
 
   Future<void> deleteWallet(WalletModel walletModel);
@@ -145,7 +147,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     int accountIndex,
   );
 
-  void checkPreference(WalletModel walletModel);
+  void checkPreference();
 
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
 
@@ -311,14 +313,6 @@ class HomeViewModelImpl extends HomeViewModel {
     loadUserSettings();
   }
 
-  Future<void> loadwallet() async {
-    hasWallet = await WalletManager.hasWallet();
-    if (hasWallet == false) {
-      await WalletManager.fetchWalletsFromServer();
-      hasWallet = await WalletManager.hasWallet();
-    }
-  }
-
   @override
   Future<void> loadData() async {
     // init network
@@ -349,32 +343,11 @@ class HomeViewModelImpl extends HomeViewModel {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
-
-      loadwallet();
       loadUserSettings();
       walletListBloc.init(callback: () {
-        for (WalletMenuModel walletMenuModel
-            in walletListBloc.state.walletsModel) {
-          if (walletMenuModel.isSelected) {
-            walletBalanceBloc.selectWallet(walletMenuModel);
-            walletTransactionBloc.selectWallet(walletMenuModel);
-            break;
-          }
-          bool isSelectedAccount = false;
-          for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-            if (accountMenuModel.isSelected) {
-              isSelectedAccount = true;
-              walletBalanceBloc.selectAccount(
-                  walletMenuModel, accountMenuModel);
-              walletTransactionBloc.selectAccount(
-                  walletMenuModel, accountMenuModel);
-              break;
-            }
-          }
-          if (isSelectedAccount) {
-            break;
-          }
-        }
+        selectDefaultWallet();
+      }, onboardingCallback: () {
+        setOnBoard();
       });
 
       // async
@@ -410,8 +383,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
       eventLoop.start();
 
-      /// TODO:: check preference
-      // checkPreference();
+      checkPreference();
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -420,11 +392,20 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = "";
     } else {
       initialed = true;
-      if (hasWallet == false) {
-        setOnBoard();
-      }
     }
     datasourceStreamSinkAdd();
+  }
+
+  void selectDefaultWallet() {
+    for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
+      if (walletMenuModel.hasValidPassword) {
+        dataProviderManager.walletDataProvider.updateSelected(
+          walletMenuModel.walletModel.serverWalletID,
+          null,
+        );
+        break;
+      }
+    }
   }
 
   @override
@@ -469,31 +450,23 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> selectWallet(WalletMenuModel walletMenuModel) async {
-    walletListBloc.selectWallet(walletMenuModel.walletModel);
-    walletBalanceBloc.selectWallet(walletMenuModel);
-    walletTransactionBloc.selectWallet(walletMenuModel);
+    dataProviderManager.walletDataProvider.updateSelected(
+      walletMenuModel.walletModel.serverWalletID,
+      null,
+    );
   }
 
   @override
   Future<void> selectAccount(WalletMenuModel walletMenuModel,
       AccountMenuModel accountMenuModel) async {
-    walletListBloc.selectAccount(
-      walletMenuModel.walletModel,
-      accountMenuModel.accountModel,
-    );
-    walletBalanceBloc.selectAccount(
-      walletMenuModel,
-      accountMenuModel,
-    );
-    walletTransactionBloc.selectAccount(
-      walletMenuModel,
-      accountMenuModel,
+    dataProviderManager.walletDataProvider.updateSelected(
+      walletMenuModel.walletModel.serverWalletID,
+      accountMenuModel.accountModel.serverAccountID,
     );
   }
 
   @override
   void setOnBoard() async {
-    hasWallet = true;
     OnboardingGuideSheet.show(
         Coordinator.rootNavigatorKey.currentContext!, this);
     // move(NavID.setupOnboard);
@@ -597,20 +570,25 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> checkPreference(WalletModel walletModel,
-      {bool runOnce = false}) async {
-    showWalletRecovery = walletModel.showWalletRecovery == 1;
-    currentTodoStep = 0;
-    currentTodoStep += showWalletRecovery ? 0 : 1;
-    currentTodoStep += hadBackupProtonAccount ? 1 : 0;
-    currentTodoStep += hadSetup2FA ? 1 : 0;
+  Future<void> checkPreference() async {
+    int newTodoStep = 0;
+
+    for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
+      if (walletMenuModel.walletModel.serverWalletID ==
+          dataProviderManager.walletDataProvider.selectedServerWalletID) {
+        showWalletRecovery =
+            walletMenuModel.walletModel.showWalletRecovery == 1;
+      }
+    }
+    newTodoStep += showWalletRecovery ? 0 : 1;
+    newTodoStep += hadBackupProtonAccount ? 1 : 0;
+    newTodoStep += hadSetup2FA ? 1 : 0;
+    currentTodoStep = newTodoStep;
     datasourceStreamSinkAdd();
 
-    if (runOnce == false) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (isLogout == false) {
-        checkPreference(walletModel);
-      }
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (isLogout == false) {
+      checkPreference();
     }
   }
 
@@ -986,6 +964,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void updateTransactionListFilterBy(String filterBy) {
     transactionListFilterBy = filterBy;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void setDisplayBalance(bool display) {
+    displayBalance = display;
     datasourceStreamSinkAdd();
   }
 }

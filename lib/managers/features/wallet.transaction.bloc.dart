@@ -173,50 +173,48 @@ class WalletTransactionBloc
     walletsDataSubscription = walletsDataProvider
         .selectedWalletUpdateController.stream
         .listen((onData) async {
-      if (lastEvent is SelectWallet) {
-        SelectWallet selectWallet = (lastEvent as SelectWallet);
-        if (walletsDataProvider.selectedServerWalletID !=
-            selectWallet.walletMenuModel.walletModel.serverWalletID) {
-          /// need to refresh transaction when walletDataProvider's selected Wallet ID is not match to last event
-          /// this case will only happened when user delete wallet
-          WalletData? walletData =
-              await walletsDataProvider.getWalletByServerWalletID(
-                  walletsDataProvider.selectedServerWalletID);
-          if (walletData != null) {
-            WalletMenuModel walletMenuModel =
-                WalletMenuModel(walletData.wallet);
-            walletMenuModel.accounts = walletData.accounts
-                .map((item) => AccountMenuModel(item))
-                .toList();
+      WalletData? walletData =
+          await walletsDataProvider.getWalletByServerWalletID(
+              walletsDataProvider.selectedServerWalletID);
+      if (walletData != null) {
+        WalletMenuModel walletMenuModel = WalletMenuModel(walletData.wallet);
+        walletMenuModel.accounts =
+            walletData.accounts.map((item) => AccountMenuModel(item)).toList();
+        if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+          /// wallet view
+          if (currentWalletModel?.serverWalletID !=
+                  walletsDataProvider.selectedServerWalletID ||
+              currentAccountModel?.serverAccountID !=
+                  walletsDataProvider.selectedServerWalletAccountID) {
             add(SelectWallet(
               walletMenuModel,
-              true,
+              false, // need to sync wallet
             ));
           }
-        }
-      } else if (lastEvent is SelectAccount) {
-        SelectAccount selectAccount = (lastEvent as SelectAccount);
-        if (walletsDataProvider.selectedServerWalletAccountID !=
-            selectAccount.accountMenuModel.accountModel.serverAccountID) {
-          /// need to refresh transaction when walletDataProvider's selected Wallet account ID is not match to last event
-          /// this case will only happened when user delete wallet or wallet account
-          if (walletsDataProvider.selectedServerWalletID != "") {
-            WalletData? walletData =
-                await walletsDataProvider.getWalletByServerWalletID(
-                    walletsDataProvider.selectedServerWalletID);
-            if (walletData != null) {
-              WalletMenuModel walletMenuModel =
-                  WalletMenuModel(walletData.wallet);
-              walletMenuModel.accounts = walletData.accounts
-                  .map((item) => AccountMenuModel(item))
-                  .toList();
-              add(SelectWallet(
-                walletMenuModel,
-                true,
-              ));
+        } else {
+          /// wallet account view
+          if (currentWalletModel?.serverWalletID !=
+                  walletsDataProvider.selectedServerWalletID ||
+              currentAccountModel?.serverAccountID !=
+                  walletsDataProvider.selectedServerWalletAccountID) {
+            for (AccountMenuModel accountMenuModel
+                in walletMenuModel.accounts) {
+              if (accountMenuModel.accountModel.serverAccountID ==
+                  walletsDataProvider.selectedServerWalletAccountID) {
+                add(SelectAccount(
+                  walletMenuModel,
+                  accountMenuModel,
+                  false, // need to sync wallet
+                ));
+                break;
+              }
             }
           }
         }
+      } else {
+        /// no wallets
+        /// clear all
+        add(StartLoading());
       }
     });
 
@@ -256,7 +254,6 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      logger.i("WalletTransactionBloc selectWallet() start");
       if (currentWalletModel?.serverWalletID !=
               event.walletMenuModel.walletModel.serverWalletID ||
           currentAccountModel != null) {
@@ -324,12 +321,9 @@ class WalletTransactionBloc
         historyTransaction: historyTransaction,
         bitcoinAddresses: bitcoinAddresses,
       ));
-
-      logger.i("WalletTransactionBloc selectWallet() end");
     });
 
     on<SelectAccount>((event, emit) async {
-      logger.i("WalletTransactionBloc SelectAccount() start");
       if (currentWalletModel?.serverWalletID !=
               event.walletMenuModel.walletModel.serverWalletID ||
           currentAccountModel?.serverAccountID !=
@@ -347,12 +341,9 @@ class WalletTransactionBloc
         syncWallet();
       }
 
-      logger.i("WalletTransactionBloc SelectAccount() 1");
-
       WalletModel walletModel = event.walletMenuModel.walletModel;
       SecretKey? secretKey =
           await getSecretKey(event.walletMenuModel.walletModel);
-      logger.i("WalletTransactionBloc SelectAccount() 2");
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
@@ -360,7 +351,6 @@ class WalletTransactionBloc
           await getHistoryTransactions(
               walletModel, event.accountMenuModel, secretKey);
       newHistoryTransactions += historyTransactionsInAccount;
-      logger.i("WalletTransactionBloc SelectAccount() 3");
 
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
       bool isSyncing = bdkTransactionDataProvider.isSyncing(
@@ -372,14 +362,12 @@ class WalletTransactionBloc
       List<HistoryTransaction> historyTransaction =
           applyHistoryTransactionFilterAndKeyword(
               filter, keyWord, newHistoryTransactions);
-      logger.i("WalletTransactionBloc SelectAccount() 4");
 
       LocalBitcoinAddressData localBitcoinAddressData =
           await localBitcoinAddressDataProvider.getDataByWalletAccount(
         walletModel,
         event.accountMenuModel.accountModel,
       );
-      logger.i("WalletTransactionBloc SelectAccount() 6");
       if (currentAccountModel != null) {
         if (currentAccountModel!.serverAccountID !=
             event.accountMenuModel.accountModel.serverAccountID) {
@@ -392,7 +380,6 @@ class WalletTransactionBloc
         historyTransaction: historyTransaction,
         bitcoinAddresses: localBitcoinAddressData.bitcoinAddresses,
       ));
-      logger.i("WalletTransactionBloc SelectAccount() end");
     });
   }
 
