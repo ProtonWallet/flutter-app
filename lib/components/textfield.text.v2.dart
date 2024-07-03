@@ -26,6 +26,7 @@ class TextFieldTextV2 extends StatefulWidget {
   final bool? showFinishButton;
   final Widget? prefixIcon;
   final double radius;
+  final bool alwaysShowHint;
 
   const TextFieldTextV2({
     super.key,
@@ -50,7 +51,8 @@ class TextFieldTextV2 extends StatefulWidget {
     this.maxLength,
     this.showFinishButton,
     this.prefixIcon,
-    this.radius=18.0,
+    this.radius = 18.0,
+    this.alwaysShowHint = false,
   });
 
   @override
@@ -113,7 +115,8 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     horizontal: 4, vertical: widget.paddingSize ?? 12),
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ?? ProtonColors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(widget.radius)),
                     border: Border.all(
                       width: 1,
                       style: BorderStyle.solid,
@@ -157,6 +160,9 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     return null;
                   },
                   decoration: InputDecoration(
+                    floatingLabelBehavior: widget.alwaysShowHint
+                        ? FloatingLabelBehavior.always
+                        : null,
                     suffixIcon: widget.isPassword
                         ? IconButton(
                             onPressed: () {

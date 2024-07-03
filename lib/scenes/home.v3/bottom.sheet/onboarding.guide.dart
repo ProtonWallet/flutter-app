@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wallet/components/alert.custom.dart';
 import 'package:wallet/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/components/button.v5.dart';
@@ -11,6 +12,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -59,9 +61,22 @@ class OnboardingGuideSheet {
                             ),
                             const SizedBox(height: 30),
                             TextFieldTextV2(
-                              labelText: S.of(context).wallet_name,
+                              labelText: S.of(context).name,
                               maxLength: maxAccountNameSize,
                               hintText: S.of(context).wallet_name_hint,
+                              prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: CircleAvatar(
+                                      backgroundColor:
+                                      AvatarColorHelper.getBackgroundColor(1),
+                                      radius: 10,
+                                      child: SvgPicture.asset(
+                                        "assets/images/icon/wallet-1.svg",
+                                        fit: BoxFit.scaleDown,
+                                        width: 16,
+                                        height: 16,
+                                      ))),
+                              alwaysShowHint: true,
                               textController: viewModel.nameTextController,
                               myFocusNode: viewModel.nameFocusNode,
                               validation: (String _) {

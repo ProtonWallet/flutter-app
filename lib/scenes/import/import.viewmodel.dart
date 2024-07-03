@@ -10,6 +10,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/common/network.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
@@ -25,14 +26,18 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   late FocusNode mnemonicFocusNode;
   late FocusNode nameFocusNode;
   late FocusNode passphraseFocusNode;
+  late ValueNotifier<FiatCurrency> fiatCurrencyNotifier;
 
   bool isPasteMode = true;
   String errorMessage = "";
   bool isValidMnemonic = false;
 
   void switchToManualInputMode();
+
   void switchToPasteMode();
+
   void updateValidMnemonic(bool isValidMnemonic);
+
   (bool, String) mnemonicValidation(String strMnemonic);
 
   Future<void> importWallet();
@@ -68,6 +73,7 @@ class ImportViewModelImpl extends ImportViewModel {
     mnemonicFocusNode = FocusNode();
     nameFocusNode = FocusNode();
     passphraseFocusNode = FocusNode();
+    fiatCurrencyNotifier = ValueNotifier(defaultFiatCurrency);
     nameTextController.text = preInputWalletName;
   }
 
