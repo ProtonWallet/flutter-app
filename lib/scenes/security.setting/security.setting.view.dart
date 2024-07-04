@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/components/dropdown.button.v2.dart';
-import 'package:wallet/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';

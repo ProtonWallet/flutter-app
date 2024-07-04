@@ -22,4 +22,10 @@ class AccountDatabase extends BaseDatabase {
     await addIndex("walletID");
     await addIndex("accountID");
   }
+
+  Future<void> migration_1() async {
+    // Add column `priority` and `lastUsedIndex`
+    await addColumn("priority", "INTEGER");
+    await addColumn("lastUsedIndex", "INTEGER");
+  }
 }

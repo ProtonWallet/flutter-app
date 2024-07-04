@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 
 class ExampleSheet {
