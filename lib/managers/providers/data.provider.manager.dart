@@ -20,6 +20,7 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
@@ -110,6 +111,7 @@ class DataProviderManager extends Manager {
   final PreferencesManager shared;
   final ProtonApiService apiService;
   final AppDatabase dbConnection;
+  final UserManager userManager;
 
   late UserDataProvider userDataProvider;
   late WalletsDataProvider walletDataProvider;
@@ -131,6 +133,7 @@ class DataProviderManager extends Manager {
     this.shared,
     this.apiService,
     this.dbConnection,
+    this.userManager,
   );
 
   @override
@@ -145,12 +148,11 @@ class DataProviderManager extends Manager {
       DBHelper.accountDao!,
       DBHelper.addressDao!,
       apiService.getWalletClient(),
+      // TODO:: put selected wallet server id here
       "",
-
-      /// TODO:: put selected wallet server id here
+      // TODO:: put selected wallet account server id here
       "",
-
-      /// TODO:: put selected wallet account server id here
+      userID,
     );
     //
     walletKeysProvider = WalletKeysProvider(
@@ -161,6 +163,7 @@ class DataProviderManager extends Manager {
     contactsDataProvider = ContactsDataProvider(
       apiService.getProtonContactsClient(),
       DBHelper.contactsDao!,
+      userID,
     );
     //
     userSettingsDataProvider = UserSettingsDataProvider(
@@ -177,12 +180,12 @@ class DataProviderManager extends Manager {
         AddressKeyProvider(apiService.getProtonEmailAddrClient());
 
     serverTransactionDataProvider = ServerTransactionDataProvider(
-      apiService.getWalletClient(),
-      DBHelper.walletDao!,
-      DBHelper.accountDao!,
-      DBHelper.exchangeRateDao!,
-      DBHelper.transactionDao!,
-    );
+        apiService.getWalletClient(),
+        DBHelper.walletDao!,
+        DBHelper.accountDao!,
+        DBHelper.exchangeRateDao!,
+        DBHelper.transactionDao!,
+        userManager.userID);
 
     bdkTransactionDataProvider = BDKTransactionDataProvider(
       DBHelper.accountDao!,
@@ -194,12 +197,14 @@ class DataProviderManager extends Manager {
       DBHelper.walletDao!,
       DBHelper.accountDao!,
       DBHelper.transactionInfoDao!,
+      userID,
     );
 
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(
       DBHelper.walletDao!,
       DBHelper.accountDao!,
       DBHelper.bitcoinAddressDao!,
+      userID,
     );
 
     balanceDataProvider = BalanceDataProvider(
@@ -213,6 +218,8 @@ class DataProviderManager extends Manager {
     // TODO:: fix this
     WalletManager.walletKeysProvider = walletKeysProvider;
     WalletManager.walletPassphraseProvider = walletPassphraseProvider;
+    WalletManager.walletDataProvider = walletDataProvider;
+    WalletManager.userID = userID;
   }
 
   @override

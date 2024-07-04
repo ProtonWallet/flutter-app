@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/strings.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
@@ -36,9 +37,11 @@ class WalletsDataProvider extends DataProvider {
   final WalletDao walletDao;
   final AccountDao accountDao;
   final AddressDao addressDao;
-  final String userID = ""; // need to add userid.
   String selectedServerWalletID;
   String selectedServerWalletAccountID;
+
+  /// current user id
+  final String userID;
 
   // need to monitor the db changes apply to this cache
   List<WalletData>? walletsData;
@@ -50,11 +53,12 @@ class WalletsDataProvider extends DataProvider {
     this.walletClient,
     this.selectedServerWalletID,
     this.selectedServerWalletAccountID,
+    this.userID,
   );
 
   WalletData? getCurrentWalletData() {
     for (WalletData walletData in walletsData ?? []) {
-      if (walletData.wallet.serverWalletID == selectedServerWalletID) {
+      if (walletData.wallet.walletID == selectedServerWalletID) {
         return walletData;
       }
     }
@@ -64,15 +68,16 @@ class WalletsDataProvider extends DataProvider {
   Future<List<WalletData>?> _getFromDB() async {
     List<WalletData> retWallet = [];
     // try to find it fro cache
-    var wallets = (await walletDao.findAll())
-        .cast<WalletModel>(); // TODO:: search by UserID
+    var wallets = await walletDao.findAllByUserID(userID);
     // if found wallet cache.
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
         retWallet.add(WalletData(
-            wallet: walletModel,
-            accounts: (await accountDao.findAllByWalletID(walletModel.id!))
-                .cast<AccountModel>()));
+          wallet: walletModel,
+          accounts: await accountDao.findAllByWalletID(
+            walletModel.walletID,
+          ),
+        ));
       }
       return retWallet;
     }
@@ -94,19 +99,20 @@ class WalletsDataProvider extends DataProvider {
     for (ApiWalletData apiWalletData in apiWallets.reversed) {
       // update and insert wallet
       String serverWalletID = apiWalletData.wallet.id;
-
-      int walletID = await _processApiWalletData(apiWalletData);
-
+      await _processApiWalletData(apiWalletData);
       List<ApiWalletAccount> apiWalletAccts =
           await walletClient.getWalletAccounts(
               walletId: apiWalletData.wallet.id); // this id is serverWalletID
       for (ApiWalletAccount apiWalletAcct in apiWalletAccts) {
         String serverAccountID = apiWalletAcct.id;
-        await _processApiWalletAccountData(walletID, apiWalletAcct);
+        await _processApiWalletAccountData(serverWalletID, apiWalletAcct);
 
         for (ApiEmailAddress address in apiWalletAcct.addresses) {
-          _addEmailAddressToWalletAccount(
-              serverWalletID, serverAccountID, address);
+          addEmailAddressToWalletAccount(
+            serverWalletID,
+            serverAccountID,
+            address,
+          );
         }
       }
     }
@@ -122,7 +128,7 @@ class WalletsDataProvider extends DataProvider {
     var wallets = await getWallets();
     if (wallets != null) {
       for (WalletData walletData in wallets) {
-        if (walletData.wallet.serverWalletID == walletID) {
+        if (walletData.wallet.walletID == walletID) {
           return walletData;
         }
       }
@@ -148,7 +154,7 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<String> getNewDerivationPath(
-    int walletID,
+    String walletID,
     ScriptTypeInfo scriptType,
     CoinType coinType, {
     int internal = 0,
@@ -158,7 +164,9 @@ class WalletsDataProvider extends DataProvider {
       String newDerivationPath =
           "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
       var result = await accountDao.findByDerivationPath(
-          walletID, "$newDerivationPath/$internal");
+        walletID,
+        "$newDerivationPath/$internal",
+      );
       if (result == null) {
         return newDerivationPath;
       }
@@ -245,7 +253,7 @@ class WalletsDataProvider extends DataProvider {
     );
     // TODO:: fix me
     var wallet = await getWallet(walletID);
-    _processApiWalletAccountData(wallet!.wallet.id!, walletAccount);
+    _processApiWalletAccountData(wallet!.wallet.walletID, walletAccount);
 
     /// update cache
     walletsData = await _getFromDB();
@@ -271,27 +279,24 @@ class WalletsDataProvider extends DataProvider {
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
 
-  Future<void> deleteWalletByServerID(String serverWalletID) async {
-    WalletModel? walletModel =
-        await walletDao.getWalletByServerWalletID(serverWalletID);
+  Future<void> deleteWalletByServerID(String walletID) async {
+    WalletModel? walletModel = await walletDao.findByServerID(walletID);
     if (walletModel != null) {
       await deleteWallet(wallet: walletModel);
     }
   }
 
   Future<void> deleteWallet({required WalletModel wallet}) async {
-    await walletDao.deleteByServerID(wallet.serverWalletID);
-    List<AccountModel> accounts =
-        (await accountDao.findAllByWalletID(wallet.id ?? 0))
-            .cast<AccountModel>();
+    await walletDao.deleteByServerID(wallet.walletID);
+    var accounts = await accountDao.findAllByWalletID(wallet.walletID);
     bool isDeletingCurrentWallet = false;
     for (AccountModel accountModel in accounts) {
       await deleteWalletAccount(accountModel: accountModel, addToStream: false);
-      if (selectedServerWalletAccountID == accountModel.serverAccountID) {
+      if (selectedServerWalletAccountID == accountModel.accountID) {
         isDeletingCurrentWallet = true;
       }
     }
-    if (selectedServerWalletID == wallet.serverWalletID) {
+    if (selectedServerWalletID == wallet.walletID) {
       isDeletingCurrentWallet = true;
     }
     if (isDeletingCurrentWallet) {
@@ -304,19 +309,20 @@ class WalletsDataProvider extends DataProvider {
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
 
-  Future<void> deleteWalletAccountByServerID(String serverAccountID) async {
-    AccountModel? accountModel =
-        await accountDao.findByServerAccountID(serverAccountID);
+  Future<void> deleteWalletAccountByServerID(String accountID) async {
+    AccountModel? accountModel = await accountDao.findByServerID(accountID);
     if (accountModel != null) {
       await deleteWalletAccount(accountModel: accountModel);
+    } else {
+      logger.e("deleteWalletAccountByServerID: Account not found: $accountID");
     }
   }
 
   Future<void> deleteWalletAccount(
       {required AccountModel accountModel, bool addToStream = true}) async {
-    await accountDao.deleteByServerAccountID(accountModel.serverAccountID);
-    await addressDao.deleteByServerAccountID(accountModel.serverAccountID);
-    if (selectedServerWalletAccountID == accountModel.serverAccountID) {
+    await accountDao.deleteByServerID(accountModel.accountID);
+    await addressDao.deleteByServerAccountID(accountModel.accountID);
+    if (selectedServerWalletAccountID == accountModel.accountID) {
       selectedServerWalletAccountID = "";
     }
     if (addToStream) {
@@ -339,10 +345,9 @@ class WalletsDataProvider extends DataProvider {
   Future<int> _processApiWalletData(ApiWalletData apiWalletData) async {
     bool showWalletRecovery =
         apiWalletData.walletSettings.showWalletRecovery ?? true;
-    String serverWalletID = apiWalletData.wallet.id;
+    String walletID = apiWalletData.wallet.id;
     return await insertOrUpdateWallet(
-      userID: 0,
-      // this need a string userID
+      userID: userID,
       name: apiWalletData.wallet.name,
       encryptedMnemonic: apiWalletData.wallet.mnemonic!,
       passphrase: apiWalletData.wallet.hasPassphrase,
@@ -352,7 +357,7 @@ class WalletsDataProvider extends DataProvider {
       type: apiWalletData.wallet.type,
       fingerprint: apiWalletData.wallet.fingerprint ?? "",
       publickey: apiWalletData.wallet.publicKey,
-      serverWalletID: serverWalletID,
+      walletID: walletID,
       showWalletRecovery: showWalletRecovery ? 1 : 0,
       initialize: true,
     );
@@ -360,15 +365,14 @@ class WalletsDataProvider extends DataProvider {
 
   /// process wallet account data received from Api response, save it
   Future<int> _processApiWalletAccountData(
-    int walletID,
+    String walletID,
     ApiWalletAccount apiWalletAcct,
   ) async {
     return await insertOrUpdateAccount(
-      walletID, //use server wallet id
+      walletID,
       apiWalletAcct.label,
       apiWalletAcct.scriptType,
       apiWalletAcct.derivationPath,
-      // "${apiWalletAcct.derivationPath}/0",
       apiWalletAcct.id,
       apiWalletAcct.fiatCurrency,
       initialize: true,
@@ -376,7 +380,7 @@ class WalletsDataProvider extends DataProvider {
   }
 
   /// add email address to wallet account
-  Future<void> _addEmailAddressToWalletAccount(
+  Future<void> addEmailAddressToWalletAccount(
     String serverWalletID,
     String serverAccountID,
     ApiEmailAddress address,
@@ -384,7 +388,7 @@ class WalletsDataProvider extends DataProvider {
     AddressModel? addressModel = await addressDao.findByServerID(address.id);
     if (addressModel == null) {
       addressModel = AddressModel(
-        id: null,
+        id: -1,
         email: address.email,
         serverID: address.id,
         serverWalletID: serverWalletID,
@@ -401,7 +405,7 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<int> insertOrUpdateWallet({
-    required int userID,
+    required String userID,
     required String name,
     required String encryptedMnemonic,
     required int passphrase,
@@ -409,20 +413,19 @@ class WalletsDataProvider extends DataProvider {
     required int priority,
     required int status,
     required int type,
-    required String serverWalletID,
+    required String walletID,
     required String? publickey,
     required String fingerprint,
     required int showWalletRecovery,
     bool initialize = false,
   }) async {
-    int walletID = -1;
-    WalletModel? wallet =
-        await walletDao.getWalletByServerWalletID(serverWalletID);
+    int tmpID = -1;
+    WalletModel? wallet = await walletDao.findByServerID(walletID);
     DateTime now = DateTime.now();
     if (wallet == null) {
       Uint8List uPubKey = publickey?.base64decode() ?? Uint8List(0);
       wallet = WalletModel(
-        id: null,
+        id: -1,
         userID: userID,
         name: name,
         mnemonic: encryptedMnemonic.base64decode(),
@@ -435,13 +438,13 @@ class WalletsDataProvider extends DataProvider {
         fingerprint: fingerprint,
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        serverWalletID: serverWalletID,
+        walletID: walletID,
         showWalletRecovery: showWalletRecovery,
       );
-      walletID = await walletDao.insert(wallet);
-      wallet.id = walletID;
+      tmpID = await walletDao.insert(wallet);
+      wallet.id = tmpID;
     } else {
-      walletID = wallet.id!;
+      tmpID = wallet.id;
       wallet.name = name;
       wallet.status = status;
       wallet.fingerprint = fingerprint;
@@ -456,24 +459,23 @@ class WalletsDataProvider extends DataProvider {
       walletsData = await _getFromDB();
       dataUpdateController.add(DataUpdated("some data Updated"));
     }
-    return walletID;
+    return tmpID;
   }
 
   Future<int> insertOrUpdateAccount(
-    int walletID,
+    String walletID,
     String labelEncrypted,
     int scriptType,
     String derivationPath,
-    String serverAccountID,
+    String accountID,
     FiatCurrency fiatCurrency, {
     bool initialize = false,
   }) async {
-    int accountID = -1;
-    AccountModel? account =
-        await accountDao.findByServerAccountID(serverAccountID);
+    int tmpID = -1;
+    AccountModel? account = await accountDao.findByServerID(accountID);
     DateTime now = DateTime.now();
     if (account != null) {
-      accountID = account.id ?? -1;
+      tmpID = account.id;
       account.walletID = walletID;
       account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
       account.scriptType = scriptType;
@@ -481,7 +483,7 @@ class WalletsDataProvider extends DataProvider {
       await accountDao.update(account);
     } else {
       account = AccountModel(
-          id: null,
+          id: -1,
           walletID: walletID,
           derivationPath: derivationPath,
           label: labelEncrypted.base64decode(),
@@ -489,8 +491,8 @@ class WalletsDataProvider extends DataProvider {
           fiatCurrency: fiatCurrency.name.toUpperCase(),
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          serverAccountID: serverAccountID);
-      accountID = await accountDao.insert(account);
+          accountID: accountID);
+      tmpID = await accountDao.insert(account);
     }
 
     if (initialize == false) {
@@ -499,7 +501,7 @@ class WalletsDataProvider extends DataProvider {
       walletsData = await _getFromDB();
       dataUpdateController.add(DataUpdated("some data Updated"));
     }
-    return accountID;
+    return tmpID;
   }
 
   Future<WalletData?> getFirstPriorityWallet() async {
@@ -510,11 +512,11 @@ class WalletsDataProvider extends DataProvider {
     return null;
   }
 
-  Future<WalletData?> getWalletByServerWalletID(String serverWalletID) async {
+  Future<WalletData?> getWalletByServerWalletID(String walletID) async {
     List<WalletData>? walletDataList = await getWallets();
     if (walletDataList != null) {
       for (WalletData walletData in walletDataList) {
-        if (walletData.wallet.serverWalletID == serverWalletID) {
+        if (walletData.wallet.walletID == walletID) {
           return walletData;
         }
       }

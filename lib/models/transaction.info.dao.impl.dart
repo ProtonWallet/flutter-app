@@ -33,6 +33,8 @@ abstract class TransactionInfoDao extends TransactionInfoDatabase
   Future<List<TransactionInfoModel>> findAllByServerAccountID(
     String serverAccountID,
   );
+
+  Future<List> findAll();
 }
 
 class TransactionInfoDaoImpl extends TransactionInfoDao {
@@ -192,6 +194,12 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
   @override
   Future<void> deleteByServerID(String id) {
     // TODO: implement deleteByServerID
+    throw UnimplementedError();
+  }
+
+  @override
+  Future findByServerID(String serverID) {
+    // TODO: implement findByServerID
     throw UnimplementedError();
   }
 }

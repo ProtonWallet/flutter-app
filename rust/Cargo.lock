@@ -3727,9 +3727,9 @@ dependencies = [
 
 [[package]]
 name = "proton-srp"
-version = "0.4.0"
+version = "0.4.1"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "e850bcc4ec21a120d3fcbf30524357472a1a95f6507979115b41e84d83d98829"
+checksum = "858409c5393babaafefa8e5e27ce5e8c60eda274695fe8c51d0dfc5ba17b2749"
 dependencies = [
  "base64 0.22.1",
  "bcrypt",

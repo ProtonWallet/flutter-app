@@ -11,8 +11,8 @@ import 'package:wallet/scenes/history/details.viewmodel.dart';
 
 class HistoryDetailCoordinator extends Coordinator {
   late ViewBase widget;
-  final int walletID;
-  final int accountID;
+  final String walletID;
+  final String accountID;
   final String txID;
   final FiatCurrency userFiatCurrency;
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
@@ -182,9 +181,9 @@ class WalletTransactionBloc
             walletData.accounts.map((item) => AccountMenuModel(item)).toList();
         if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
           /// wallet view
-          if (currentWalletModel?.serverWalletID !=
+          if (currentWalletModel?.walletID !=
                   walletsDataProvider.selectedServerWalletID ||
-              currentAccountModel?.serverAccountID !=
+              currentAccountModel?.accountID !=
                   walletsDataProvider.selectedServerWalletAccountID) {
             add(SelectWallet(
               walletMenuModel,
@@ -193,13 +192,13 @@ class WalletTransactionBloc
           }
         } else {
           /// wallet account view
-          if (currentWalletModel?.serverWalletID !=
+          if (currentWalletModel?.walletID !=
                   walletsDataProvider.selectedServerWalletID ||
-              currentAccountModel?.serverAccountID !=
+              currentAccountModel?.accountID !=
                   walletsDataProvider.selectedServerWalletAccountID) {
             for (AccountMenuModel accountMenuModel
                 in walletMenuModel.accounts) {
-              if (accountMenuModel.accountModel.serverAccountID ==
+              if (accountMenuModel.accountModel.accountID ==
                   walletsDataProvider.selectedServerWalletAccountID) {
                 add(SelectAccount(
                   walletMenuModel,
@@ -254,8 +253,8 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      if (currentWalletModel?.serverWalletID !=
-              event.walletMenuModel.walletModel.serverWalletID ||
+      if (currentWalletModel?.walletID !=
+              event.walletMenuModel.walletModel.walletID ||
           currentAccountModel != null) {
         emit(state.copyWith(
           isSyncing: false,
@@ -298,7 +297,7 @@ class WalletTransactionBloc
         );
         bitcoinAddresses += localBitcoinAddressData.bitcoinAddresses;
         if (currentAccountModel != null ||
-            currentWalletModel!.serverWalletID != walletModel.serverWalletID) {
+            currentWalletModel!.walletID != walletModel.walletID) {
           /// skip process if user change to other wallet or wallet account
           return;
         }
@@ -312,7 +311,7 @@ class WalletTransactionBloc
           applyHistoryTransactionFilterAndKeyword(
               filter, keyWord, newHistoryTransactions);
       if (currentAccountModel != null ||
-          currentWalletModel!.serverWalletID != walletModel.serverWalletID) {
+          currentWalletModel!.walletID != walletModel.walletID) {
         /// skip process if user change to other wallet or wallet account
         return;
       }
@@ -324,10 +323,10 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
-      if (currentWalletModel?.serverWalletID !=
-              event.walletMenuModel.walletModel.serverWalletID ||
-          currentAccountModel?.serverAccountID !=
-              event.accountMenuModel.accountModel.serverAccountID) {
+      if (currentWalletModel?.walletID !=
+              event.walletMenuModel.walletModel.walletID ||
+          currentAccountModel?.accountID !=
+              event.accountMenuModel.accountModel.accountID) {
         emit(state.copyWith(
           isSyncing: false,
           historyTransaction: [],
@@ -369,8 +368,8 @@ class WalletTransactionBloc
         event.accountMenuModel.accountModel,
       );
       if (currentAccountModel != null) {
-        if (currentAccountModel!.serverAccountID !=
-            event.accountMenuModel.accountModel.serverAccountID) {
+        if (currentAccountModel!.accountID !=
+            event.accountMenuModel.accountModel.accountID) {
           /// skip process if user change to other wallet or wallet account
           return;
         }
@@ -527,7 +526,9 @@ class WalletTransactionBloc
 
     /// TODO:: replace it
     FrbAccount? account = await WalletManager.loadWalletWithID(
-        walletModel.id!, accountMenuModel.accountModel.id!);
+      walletModel.walletID,
+      accountMenuModel.accountModel.accountID,
+    );
 
     Map<String, FrbAddressInfo> selfBitcoinAddressInfo =
         await localBitcoinAddressDataProvider.getBitcoinAddress(
@@ -567,7 +568,7 @@ class WalletTransactionBloc
 
         BitcoinAddressModel? bitcoinAddressModel =
             await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
-                bitcoinAddress, accountModel.serverAccountID);
+                bitcoinAddress, accountModel.accountID);
 
         if (bitcoinAddressModel != null) {
           bitcoinAddressModel.used = 1;
@@ -582,8 +583,8 @@ class WalletTransactionBloc
             // deprecated
             accountID: 0,
             // deprecated
-            serverWalletID: walletModel.serverWalletID,
-            serverAccountID: accountModel.serverAccountID,
+            serverWalletID: walletModel.walletID,
+            serverAccountID: accountModel.accountID,
             bitcoinAddress: bitcoinAddress,
             bitcoinAddressIndex: selfBitcoinAddressInfo[bitcoinAddress]!.index,
             inEmailIntegrationPool: 0,
@@ -625,7 +626,7 @@ class WalletTransactionBloc
         // bdk sent include fee, so need add back to make display send amount without fee
         amountInSATS += transactionDetail.fees ?? 0;
       }
-      String key = "$txID-${accountModel.serverAccountID}";
+      String key = "$txID-${accountModel.accountID}";
 
       ProtonExchangeRate exchangeRate =
           await getExchangeRateFromTransactionModel(transactionModel);
@@ -673,7 +674,7 @@ class WalletTransactionBloc
             secretKey, utf8.decode(transactionModel.label));
       }
       String txID = utf8.decode(transactionModel.externalTransactionID);
-      String key = "$txID-${accountModel.serverAccountID}";
+      String key = "$txID-${accountModel.accountID}";
       if (txID.isEmpty) {
         continue;
       }
@@ -750,7 +751,7 @@ class WalletTransactionBloc
                   await localBitcoinAddressDataProvider
                       .findBitcoinAddressInAccount(
                 bitcoinAddress,
-                accountModel.serverAccountID,
+                accountModel.accountID,
               );
               if (bitcoinAddressModel != null) {
                 bitcoinAddressModel.used = 1;
@@ -771,8 +772,8 @@ class WalletTransactionBloc
                   // deprecated
                   accountID: 0,
                   // deprecated
-                  serverWalletID: walletModel.serverWalletID,
-                  serverAccountID: accountModel.serverAccountID,
+                  serverWalletID: walletModel.walletID,
+                  serverAccountID: accountModel.accountID,
                   bitcoinAddress: recipient.bitcoinAddress,
                   bitcoinAddressIndex:
                       selfBitcoinAddressInfo[bitcoinAddress]!.index,
@@ -896,25 +897,14 @@ class WalletTransactionBloc
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
     /// get user key
     var firstUserKey = await userManager.getFirstKey();
-    var userPrivateKey = firstUserKey.privateKey;
-    var userPassphrase = firstUserKey.passphrase;
 
     /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
     var walletKey = await walletKeysProvider.getWalletKey(
-      walletModel.serverWalletID,
+      walletModel.walletID,
     );
-    Uint8List? entropy;
     SecretKey? secretKey;
     if (walletKey != null) {
-      var pgpEncryptedWalletKey = walletKey.walletKey;
-
-      /// decrypt walletKey
-      entropy = proton_crypto.decryptBinaryPGP(
-        userPrivateKey,
-        userPassphrase,
-        pgpEncryptedWalletKey,
-      );
-      secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
+      secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
     }
     return secretKey;
   }

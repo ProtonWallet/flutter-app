@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
@@ -22,7 +21,6 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 
 // Define the events
@@ -220,9 +218,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
       /// get user key
       var firstUserKey = await userManager.getFirstKey();
-      var userPrivateKey = firstUserKey.privateKey;
-      var userPassphrase = firstUserKey.passphrase;
-
       List<WalletMenuModel> walletsModel = [];
       int index = 0;
       for (WalletData wallet in wallets) {
@@ -236,32 +231,24 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         );
 
         var walletKey = await walletKeysProvider.getWalletKey(
-          wallet.wallet.serverWalletID,
+          wallet.wallet.walletID,
         );
-        Uint8List? entropy;
         SecretKey? secretKey;
         if (walletKey != null) {
-          var pgpEncryptedWalletKey = walletKey.walletKey;
-          var signature = walletKey.walletKeySignature;
-          // decrypt wallet key
-          entropy = proton_crypto.decryptBinaryPGP(
-            userPrivateKey,
-            userPassphrase,
-            pgpEncryptedWalletKey,
+          secretKey = WalletKeyHelper.decryptWalletKey(
+            firstUserKey,
+            walletKey,
           );
-          var userPublicKey = proton_crypto.getArmoredPublicKey(userPrivateKey);
-          // check signature
+
           var isValidWalletKeySignature =
-              proton_crypto.verifyBinarySignatureWithContext(
-            userPublicKey,
-            entropy,
-            signature,
-            gpgContextWalletKey,
+              await WalletKeyHelper.verifySecretKeySignature(
+            firstUserKey,
+            walletKey,
+            secretKey,
           );
+
           walletModel.isSignatureValid = isValidWalletKeySignature;
           logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
-
-          secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
         }
         walletModel.accountSize = wallet.accounts.length;
         walletModel.walletName = wallet.wallet.name;
@@ -291,10 +278,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             }
           }
 
-          // TODO:: fixme
           var balance = await WalletManager.getWalletAccountBalance(
-            wallet.wallet.id!,
-            account.id!,
+            wallet.wallet.walletID,
+            account.accountID,
           );
 
           accMenuModel.balance = balance.toInt();
@@ -317,7 +303,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           );
 
           accMenuModel.emailIds =
-              await WalletManager.getAccountAddressIDs(account.serverAccountID);
+              await WalletManager.getAccountAddressIDs(account.accountID);
           walletModel.accounts.add(accMenuModel);
         }
         walletsModel.add(walletModel);
@@ -331,8 +317,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     on<SelectWallet>((event, emit) async {
       final walletID = event.walletID;
       for (WalletMenuModel walletModel in state.walletsModel) {
-        walletModel.isSelected =
-            walletModel.walletModel.serverWalletID == walletID;
+        walletModel.isSelected = walletModel.walletModel.walletID == walletID;
         bool isSelectedWallet = false;
         if (walletModel.isSelected) {
           walletsDataProvider.selectedServerWalletID = walletID;
@@ -357,10 +342,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
       for (WalletMenuModel walletModel in state.walletsModel) {
         walletModel.isSelected = false;
-        if (walletModel.walletModel.serverWalletID == walletID) {
+        if (walletModel.walletModel.walletID == walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            account.isSelected =
-                account.accountModel.serverAccountID == accountID;
+            account.isSelected = account.accountModel.accountID == accountID;
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
                   account.accountModel.fiatCurrency.toFiatCurrency());
@@ -377,8 +361,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<UpdateWalletName>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           walletModel.walletName = event.newName;
 
           /// TODO:: infomr data provider to update name? but this is WalletMenuModel only, data provider need walletMdoel
@@ -390,15 +373,15 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<UpdateAccountFiat>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            if (account.accountModel.serverAccountID ==
-                event.accountModel.serverAccountID) {
+            if (account.accountModel.accountID ==
+                event.accountModel.accountID) {
               /// TODO:: handle wallet account view change here
               if (account.isSelected) {
-                userSettingsDataProvider
-                    .updateFiatCurrency(event.fiatName.toFiatCurrency());
+                userSettingsDataProvider.updateFiatCurrency(
+                  event.fiatName.toFiatCurrency(),
+                );
               }
               account.accountModel.fiatCurrency = event.fiatName;
               walletsDataProvider.updateWalletAccount(
@@ -407,10 +390,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               double estimateValue = 0.0;
               var settings = await userSettingsDataProvider.getSettings();
 
-              // TODO:: fixme
               var balance = await WalletManager.getWalletAccountBalance(
-                walletModel.walletModel.id!,
-                account.accountModel.id!,
+                walletModel.walletModel.walletID,
+                account.accountModel.accountID,
               );
               // Tempary need to use providers
               var fiatCurrency =
@@ -439,11 +421,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<UpdateAccountName>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            if (account.accountModel.serverAccountID ==
-                event.accountModel.serverAccountID) {
+            if (account.accountModel.accountID ==
+                event.accountModel.accountID) {
               account.label = event.newName;
               break;
             }
@@ -456,11 +437,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<AddEmailIntegration>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            if (account.accountModel.serverAccountID ==
-                event.accountModel.serverAccountID) {
+            if (account.accountModel.accountID ==
+                event.accountModel.accountID) {
               if (account.emailIds.contains(event.emailID) == false) {
                 account.emailIds.add(event.emailID);
               }
@@ -475,11 +455,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<RemoveEmailIntegration>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
-        if (walletModel.walletModel.serverWalletID ==
-            event.walletModel.serverWalletID) {
+        if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           for (AccountMenuModel account in walletModel.accounts) {
-            if (account.accountModel.serverAccountID ==
-                event.accountModel.serverAccountID) {
+            if (account.accountModel.accountID ==
+                event.accountModel.accountID) {
               account.emailIds.remove(event.emailID);
               break;
             }
@@ -495,8 +474,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       for (WalletMenuModel walletModel in wallets) {
         for (AccountMenuModel account in walletModel.accounts) {
           var balance = await WalletManager.getWalletAccountBalance(
-            walletModel.walletModel.id!,
-            account.accountModel.id!,
+            walletModel.walletModel.walletID,
+            account.accountModel.accountID,
           );
           account.balance = balance.toInt();
           double estimateValue = 0.0;
@@ -523,17 +502,20 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
   }
 
-  void init({VoidCallback? callback, required VoidCallback onboardingCallback,}) {
+  void init({
+    VoidCallback? callback,
+    required VoidCallback onboardingCallback,
+  }) {
     this.onboardingCallback = onboardingCallback;
     add(StartLoading(callback: callback));
   }
 
   void selectWallet(WalletModel wallet) {
-    add(SelectWallet(wallet.serverWalletID));
+    add(SelectWallet(wallet.walletID));
   }
 
   void selectAccount(WalletModel wallet, AccountModel acct) {
-    add(SelectAccount(wallet.serverWalletID, acct.serverAccountID));
+    add(SelectAccount(wallet.walletID, acct.accountID));
   }
 
   void updateWalletName(WalletModel wallet, String newName) {
@@ -567,7 +549,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     // Check if the wallet requires a passphrase and if the passphrase is valid
     if (wallet.passphrase == 1) {
       final passphrase = await walletPassProvider.getPassphrase(
-        wallet.serverWalletID,
+        wallet.walletID,
       );
       return passphrase != null;
     }

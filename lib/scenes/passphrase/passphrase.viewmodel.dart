@@ -50,9 +50,11 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     super.coordinator,
     super.strMnemonic,
     this.createWalletBloc,
+    this.userID,
   );
 
   final CreateWalletBloc createWalletBloc;
+  final String userID;
 
   final datasourceChangedStreamController =
       StreamController<SetupPassPhraseViewModel>.broadcast();
@@ -170,7 +172,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         0, // default wallet account index
       );
 
-      await WalletManager.autoBindEmailAddresses();
+      await WalletManager.autoBindEmailAddresses(userID);
       await Future.delayed(
           const Duration(seconds: 1)); // wait for account show on sidebar
     } catch (e) {

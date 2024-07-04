@@ -50,7 +50,7 @@ class EmailIntegrationDropdownSheet {
                         setState(() async {
                           Navigator.of(context).pop();
                           await viewModel.addEmailAddressToWalletAccount(
-                              userWallet.serverWalletID,
+                              userWallet.walletID,
                               userWallet,
                               accountMenuModel.accountModel,
                               protonAddress.id);
