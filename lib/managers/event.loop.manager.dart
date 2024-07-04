@@ -1,9 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
@@ -24,7 +23,6 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/rust/proton_api/wallet_settings.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/scenes/core/coordinator.dart';
 
 class EventLoop implements Manager {
@@ -96,56 +94,54 @@ class EventLoop implements Manager {
             ApiWallet? walletData = walletEvent.wallet;
 
             var firstUserKey = await userManager.getFirstKey();
-            String userPrivateKey = firstUserKey.privateKey;
-            String userPassphrase = firstUserKey.passphrase;
-            Uint8List entropy = Uint8List(0);
             if (walletData != null) {
-              String serverWalletID = walletData.id;
-              if (walletID2ProtonWalletKey.containsKey(serverWalletID)) {
-                for (ApiWalletKey? walletKey
-                    in walletID2ProtonWalletKey[serverWalletID]!) {
+              SecretKey? secretKey;
+              String walletID = walletData.id;
+              if (walletID2ProtonWalletKey.containsKey(walletID)) {
+                for (ApiWalletKey? apiWalletKey
+                    in walletID2ProtonWalletKey[walletID]!) {
                   try {
-                    // try to decrypt
-                    String pgpBinaryMessage = walletKey?.walletKey ?? "";
-                    String signature = walletKey?.walletKeySignature ?? "";
+                    if (apiWalletKey == null) {
+                      continue;
+                    }
+                    WalletKey walletKey = WalletKey.fromApiWalletKey(
+                      apiWalletKey,
+                    );
 
-                    entropy = proton_crypto.decryptBinaryPGP(
-                        userPrivateKey, userPassphrase, pgpBinaryMessage);
-                    String userPublicKey =
-                        proton_crypto.getArmoredPublicKey(userPrivateKey);
+                    secretKey = WalletKeyHelper.decryptWalletKey(
+                      firstUserKey,
+                      walletKey,
+                    );
+
+                    // TODO:: fix me use it
                     bool isValidWalletKeySignature =
-                        proton_crypto.verifyBinarySignatureWithContext(
-                            userPublicKey,
-                            entropy,
-                            signature,
-                            gpgContextWalletKey);
+                        await WalletKeyHelper.verifySecretKeySignature(
+                      firstUserKey,
+                      walletKey,
+                      secretKey,
+                    );
                     logger.i(
-                        "isValidWalletKeySignature = $isValidWalletKeySignature");
+                      "isValidWalletKeySignature = $isValidWalletKeySignature",
+                    );
                     break;
                   } catch (e) {
                     continue;
                   }
                 }
               }
-              SecretKey? secretKey;
-              if (entropy.isNotEmpty) {
-                secretKey =
-                    WalletKeyHelper.restoreSecretKeyFromEntropy(entropy);
-              }
-              // int status = entropy.isNotEmpty
-              //     ? WalletModel.statusActive
-              //     : WalletModel.statusDisabled;
               int status = WalletModel.statusActive;
               String decryptedWalletName = walletData.name;
               try {
-                secretKey ??= await WalletManager.getWalletKey(serverWalletID);
+                secretKey ??= await WalletManager.getWalletKey(walletID);
                 decryptedWalletName = await WalletKeyHelper.decrypt(
-                    secretKey, decryptedWalletName);
+                  secretKey,
+                  decryptedWalletName,
+                );
               } catch (e) {
                 logger.e(e.toString());
               }
               await dataProviderManager.walletDataProvider.insertOrUpdateWallet(
-                userID: 0,
+                userID: userManager.userID,
                 name: decryptedWalletName,
                 encryptedMnemonic: walletData.mnemonic!,
                 passphrase: walletData.hasPassphrase,
@@ -154,7 +150,7 @@ class EventLoop implements Manager {
                 status: status,
                 type: walletData.type,
                 fingerprint: walletData.fingerprint ?? "",
-                serverWalletID: serverWalletID,
+                walletID: walletID,
                 publickey: null,
                 showWalletRecovery: walletData.isImported == 0 ? 1 : 0,
               );
@@ -172,17 +168,12 @@ class EventLoop implements Manager {
             }
             ApiWalletAccount? account = walletAccountEvent.walletAccount;
             if (account != null) {
-              int walletID = await WalletManager.getWalletIDByServerWalletID(
-                  account.walletId);
-              // int internal = 0;
               await dataProviderManager.walletDataProvider
                   .insertOrUpdateAccount(
-                walletID,
+                account.walletId,
                 account.label,
                 account.scriptType,
                 account.derivationPath,
-                // "${account.derivationPath}/$internal",
-                // Backend store m/$ScriptType/$CoinType/$accountIndex, we need m/$ScriptType/$CoinType/$accountIndex/$internal here
                 account.id,
                 account.fiatCurrency,
               );
@@ -206,15 +197,16 @@ class EventLoop implements Manager {
             WalletTransaction? walletTransaction =
                 walletTransactionEvent.walletTransaction;
             WalletModel? walletModel = await DBHelper.walletDao!
-                .getWalletByServerWalletID(walletTransaction!.walletId);
-            if (walletModel != null) {
-              await dataProviderManager.serverTransactionDataProvider
-                  .handleWalletTransaction(
-                walletModel,
-                walletTransaction,
-                notifyDataUpdate: true,
-              );
+                .findByServerID(walletTransaction!.walletId);
+            if (walletModel == null) {
+              logger.e("message: walletModel is null");
+              continue;
             }
+            await dataProviderManager.serverTransactionDataProvider
+                .handleWalletTransaction(
+              walletTransaction,
+              notifyDataUpdate: true,
+            );
           }
         }
 
@@ -267,34 +259,38 @@ class EventLoop implements Manager {
 
   /// TODO:: fix me handle the !
   Future<void> handleBitcoinAddress() async {
-    List<WalletModel> walletModels =
-        (await DBHelper.walletDao!.findAll()).cast<WalletModel>();
+    var userID = userManager.userInfo.userId;
+    var walletModels = await DBHelper.walletDao!.findAllByUserID(userID);
     for (WalletModel walletModel in walletModels) {
-      List<AccountModel> accountModels =
-          (await DBHelper.accountDao!.findAllByWalletID(walletModel.id!))
-              .cast<AccountModel>();
+      var accountModels =
+          await DBHelper.accountDao!.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accountModels) {
         FrbAccount? account = await WalletManager.loadWalletWithID(
-          walletModel.id!,
-          accountModel.id!,
+          walletModel.walletID,
+          accountModel.accountID,
         );
 
         List<String> accountAddressIDs =
-            await WalletManager.getAccountAddressIDs(
-                accountModel.serverAccountID);
+            await WalletManager.getAccountAddressIDs(accountModel.accountID);
         if (accountAddressIDs.isEmpty) {
           continue;
         }
 
         try {
-          await WalletManager.handleBitcoinAddressRequests(account!,
-              walletModel.serverWalletID, accountModel.serverAccountID);
+          await WalletManager.handleBitcoinAddressRequests(
+            account!,
+            walletModel.walletID,
+            accountModel.accountID,
+          );
         } catch (e) {
           logger.e("handleBitcoinAddressRequests error: ${e.toString()}");
         }
         try {
-          await WalletManager.bitcoinAddressPoolHealthCheck(account!,
-              walletModel.serverWalletID, accountModel.serverAccountID);
+          await WalletManager.bitcoinAddressPoolHealthCheck(
+            account!,
+            walletModel.walletID,
+            accountModel.accountID,
+          );
         } catch (e) {
           logger.e("bitcoinAddressPoolHealthCheck error: ${e.toString()}");
         }

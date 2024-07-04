@@ -584,7 +584,6 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
 #[cfg(test)]
 mod test {
 
-    use andromeda_bitcoin::mnemonic::Mnemonic;
     use proton_srp::SRPAuth;
     use rand::Rng;
 

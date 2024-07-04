@@ -31,6 +31,7 @@ class SetupPassPhraseCoordinator extends Coordinator {
       this,
       strMnemonic,
       createWalletBloc,
+      userManager.userID,
     );
     widget = SetupPassPhraseView(
       viewModel,

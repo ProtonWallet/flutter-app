@@ -34,6 +34,15 @@ abstract class BaseDatabase {
     await _addColumnIfNotExists(columnName, columnType);
   }
 
+  Future<void> addIndex(String columnName) async {
+    if (!_isValidTableName(tableName)) {
+      throw getException();
+    }
+    await db.execute("""
+      CREATE INDEX IF NOT EXISTS idx_$columnName ON $tableName($columnName)
+    """);
+  }
+
   Future<void> dropColumn(String columnName) async {
     if (!_isValidTableName(tableName)) {
       throw getException();

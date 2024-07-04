@@ -74,6 +74,8 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     return await storage.get("sessionId") != "";
   }
 
+  String get userID => userInfo.userId;
+
   Future<void> firstRun() async {
     await shared.checkif('firstTimeEntry', false, () async {
       await storage.deleteAll();

@@ -54,13 +54,14 @@ class BdkLibrary {
     }
   }
 
+  @Deprecated("Use the function in Blockchain client instead")
   Future<bool> fullSyncWalletWithWallet(
-    int walletID,
-    int accountID,
+    String walletID,
+    String accountID,
   ) async {
     try {
       // Define the function to be run in the isolate
-      Future<void> isolateTask(int walletID, int accountID) async {
+      Future<void> isolateTask(String walletID, String accountID) async {
         await RustLib.init();
         var account = await WalletManager.loadWalletWithID(walletID, accountID);
         var blockClient = await Api.createEsploraBlockchainWithApi();

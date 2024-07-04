@@ -151,7 +151,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
 
-  void openWalletPreference(int walletID);
+  void openWalletPreference(String walletID);
 
   void checkProtonAddresses();
 
@@ -400,7 +400,7 @@ class HomeViewModelImpl extends HomeViewModel {
     for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.hasValidPassword) {
         dataProviderManager.walletDataProvider.updateSelected(
-          walletMenuModel.walletModel.serverWalletID,
+          walletMenuModel.walletModel.walletID,
           null,
         );
         break;
@@ -430,8 +430,8 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void openWalletPreference(int walletID) async {
-    walletForPreference = await DBHelper.walletDao!.findById(walletID);
+  void openWalletPreference(String walletID) async {
+    walletForPreference = await DBHelper.walletDao!.findByServerID(walletID);
     if (walletForPreference != null) {
       userAccountsForPreference =
           await DBHelper.accountDao!.findAllByWalletID(walletID);
@@ -451,7 +451,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> selectWallet(WalletMenuModel walletMenuModel) async {
     dataProviderManager.walletDataProvider.updateSelected(
-      walletMenuModel.walletModel.serverWalletID,
+      walletMenuModel.walletModel.walletID,
       null,
     );
   }
@@ -460,8 +460,8 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> selectAccount(WalletMenuModel walletMenuModel,
       AccountMenuModel accountMenuModel) async {
     dataProviderManager.walletDataProvider.updateSelected(
-      walletMenuModel.walletModel.serverWalletID,
-      accountMenuModel.accountModel.serverAccountID,
+      walletMenuModel.walletModel.walletID,
+      accountMenuModel.accountModel.accountID,
     );
   }
 
@@ -506,11 +506,11 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> updateWalletName(WalletModel walletModel, String newName) async {
     SecretKey secretKey =
-        await WalletManager.getWalletKey(walletModel.serverWalletID);
+        await WalletManager.getWalletKey(walletModel.walletID);
     try {
       String encryptedName = await WalletKeyHelper.encrypt(secretKey, newName);
       await proton_api.updateWalletName(
-          walletId: walletModel.serverWalletID, newName: encryptedName);
+          walletId: walletModel.walletID, newName: encryptedName);
       walletListBloc.updateWalletName(walletModel, newName);
     } catch (e) {
       errorMessage = e.toString();
@@ -526,11 +526,11 @@ class HomeViewModelImpl extends HomeViewModel {
       String newName) async {
     try {
       SecretKey secretKey =
-          await WalletManager.getWalletKey(walletModel.serverWalletID);
+          await WalletManager.getWalletKey(walletModel.walletID);
       ApiWalletAccount walletAccount =
           await proton_api.updateWalletAccountLabel(
-              walletId: walletModel.serverWalletID,
-              walletAccountId: accountModel.serverAccountID,
+              walletId: walletModel.walletID,
+              walletAccountId: accountModel.accountID,
               newLabel: await WalletKeyHelper.encrypt(secretKey, newName));
       accountModel.label = base64Decode(walletAccount.label);
       accountModel.labelDecrypt = newName;
@@ -553,8 +553,8 @@ class HomeViewModelImpl extends HomeViewModel {
           status: "deleting account..", maskType: EasyLoadingMaskType.black);
       try {
         await proton_api.deleteWalletAccount(
-            walletId: walletModel.serverWalletID,
-            walletAccountId: accountModel.serverAccountID);
+            walletId: walletModel.walletID,
+            walletAccountId: accountModel.accountID);
         await dataProviderManager.walletDataProvider
             .deleteWalletAccount(accountModel: accountModel);
       } catch (e) {
@@ -574,7 +574,7 @@ class HomeViewModelImpl extends HomeViewModel {
     int newTodoStep = 0;
 
     for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
-      if (walletMenuModel.walletModel.serverWalletID ==
+      if (walletMenuModel.walletModel.walletID ==
           dataProviderManager.walletDataProvider.selectedServerWalletID) {
         showWalletRecovery =
             walletMenuModel.walletModel.showWalletRecovery == 1;
@@ -625,9 +625,10 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     try {
       ApiWalletAccount walletAccount = await proton_api.removeEmailAddress(
-          walletId: walletModel.serverWalletID,
-          walletAccountId: accountModel.serverAccountID,
-          addressId: serverAddressID);
+        walletId: walletModel.walletID,
+        walletAccountId: accountModel.accountID,
+        addressId: serverAddressID,
+      );
       bool deleted = true;
       for (ApiEmailAddress emailAddress in walletAccount.addresses) {
         if (emailAddress.id == serverAddressID) {
@@ -684,7 +685,7 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(
         status: "deleting wallet..", maskType: EasyLoadingMaskType.black);
     try {
-      await proton_api.deleteWallet(walletId: walletModel.serverWalletID);
+      await proton_api.deleteWallet(walletId: walletModel.walletID);
       await dataProviderManager.walletDataProvider
           .deleteWallet(wallet: walletModel);
     } catch (e) {
@@ -723,14 +724,14 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.send:
         coordinator.showSend(
-          selectedWallet?.id ?? 0,
-          selectedAccount?.id ?? 0,
+          selectedWallet?.walletID ?? "",
+          selectedAccount?.accountID ?? "",
         );
         break;
       case NavID.receive:
         coordinator.showReceive(
-          selectedWallet?.serverWalletID ?? "",
-          selectedAccount?.serverAccountID ?? "",
+          selectedWallet?.walletID ?? "",
+          selectedAccount?.accountID ?? "",
           isWalletView,
         );
         break;
@@ -745,8 +746,8 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.historyDetails:
         coordinator.showHistoryDetails(
-          selectedWallet?.id ?? 0,
-          historyAccountModel?.id ?? 0,
+          selectedWallet?.walletID ?? "",
+          selectedAccount?.accountID ?? "",
           selectedTXID,
           fiatCurrencyNotifier.value,
         );
@@ -759,14 +760,17 @@ class HomeViewModelImpl extends HomeViewModel {
         break;
       case NavID.setupBackup:
         coordinator.showSetupBackup(
-          selectedWallet?.id ?? 0,
+          selectedWallet?.walletID ?? "",
         );
         break;
       case NavID.discover:
         coordinator.showDiscover();
         break;
       case NavID.buy:
-        coordinator.showBuy();
+        coordinator.showBuy(
+          selectedWallet?.walletID ?? "",
+          selectedAccount?.accountID ?? "",
+        );
         break;
       case NavID.nativeUpgrade:
         final session = await userManager.getChildSession();
@@ -778,6 +782,8 @@ class HomeViewModelImpl extends HomeViewModel {
       case NavID.recovery:
         coordinator.showRecovery();
         break;
+      case NavID.settings:
+        coordinator.showSettings();
       default:
         break;
     }
@@ -824,12 +830,20 @@ class HomeViewModelImpl extends HomeViewModel {
     String serverAddressID,
   ) async {
     EasyLoading.show(
-        status: "adding email..", maskType: EasyLoadingMaskType.black);
+      status: "adding email..",
+      maskType: EasyLoadingMaskType.black,
+    );
     try {
       await WalletManager.addEmailAddress(
-          serverWalletID, accountModel.serverAccountID, serverAddressID);
+        serverWalletID,
+        accountModel.accountID,
+        serverAddressID,
+      );
       walletListBloc.addEmailIntegration(
-          walletModel, accountModel, serverAddressID);
+        walletModel,
+        accountModel,
+        serverAddressID,
+      );
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -856,37 +870,33 @@ class HomeViewModelImpl extends HomeViewModel {
   Map<String, ValueNotifier> getAccountFiatCurrencyNotifiers(
       List<AccountModel> userAccounts) {
     for (AccountModel accountModel in userAccounts) {
-      if (accountFiatCurrencyNotifiers
-              .containsKey(accountModel.serverAccountID) ==
+      if (accountFiatCurrencyNotifiers.containsKey(accountModel.accountID) ==
           false) {
         ValueNotifier valueNotifier =
             ValueNotifier(WalletManager.getAccountFiatCurrency(accountModel));
         valueNotifier.addListener(() {
           updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
         });
-        accountFiatCurrencyNotifiers[accountModel.serverAccountID] =
-            valueNotifier;
+        accountFiatCurrencyNotifiers[accountModel.accountID] = valueNotifier;
       }
     }
     return accountFiatCurrencyNotifiers;
   }
 
   Future<void> updateWalletAccountFiatCurrency(
-      AccountModel accountModel, FiatCurrency newFiatCurrency) async {
+    AccountModel accountModel,
+    FiatCurrency newFiatCurrency,
+  ) async {
     WalletModel walletModel =
-        await DBHelper.walletDao!.findById(accountModel.walletID);
+        await DBHelper.walletDao!.findByServerID(accountModel.walletID);
 
     var walletClient = apiServiceManager.getWalletClient();
     var walletAccount = await walletClient.updateWalletAccountFiatCurrency(
-      walletId: walletModel.serverWalletID,
-      walletAccountId: accountModel.serverAccountID,
+      walletId: walletModel.walletID,
+      walletAccountId: accountModel.accountID,
       newFiatCurrency: newFiatCurrency,
     );
-    // ApiWalletAccount walletAccount =
-    //     await proton_api.updateWalletAccountFiatCurrency(
-    //         walletId: walletModel.serverWalletID,
-    //         walletAccountId: accountModel.serverAccountID,
-    //         newFiatCurrency: newFiatCurrency);
+
     accountModel.fiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
     await DBHelper.accountDao!.update(accountModel);
     walletListBloc.updateAccountFiat(

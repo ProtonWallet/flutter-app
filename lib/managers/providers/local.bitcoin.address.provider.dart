@@ -37,11 +37,13 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   final WalletDao walletDao;
   final AccountDao accountDao;
   final BitcoinAddressDao bitcoinAddressDao;
+  final String userID;
 
   LocalBitcoinAddressDataProvider(
     this.walletDao,
     this.accountDao,
     this.bitcoinAddressDao,
+    this.userID,
   );
 
   List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
@@ -51,18 +53,14 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
 
   Future<List<LocalBitcoinAddressData>> _getFromDB() async {
     List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
-    var wallets = (await walletDao.findAll())
-        .cast<WalletModel>(); // TODO:: search by UserID
-
+    var wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
-        List<AccountModel> accounts =
-            (await accountDao.findAllByWalletID(walletModel.id!))
-                .cast<AccountModel>();
+        var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
           List<BitcoinAddressModel> bitcoinAddresses =
               await bitcoinAddressDao.findByWalletAccount(
-                  walletModel.serverWalletID, accountModel.serverAccountID);
+                  walletModel.walletID, accountModel.accountID);
           LocalBitcoinAddressData localBitcoinAddressData =
               LocalBitcoinAddressData(
                   accountModel: accountModel,
@@ -110,8 +108,8 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
         await _getFromDB();
     for (LocalBitcoinAddressData localBitcoinAddresData
         in localBitcoinAddresDataList) {
-      if (localBitcoinAddresData.accountModel.serverAccountID ==
-          accountModel.serverAccountID) {
+      if (localBitcoinAddresData.accountModel.accountID ==
+          accountModel.accountID) {
         return localBitcoinAddresData;
       }
     }

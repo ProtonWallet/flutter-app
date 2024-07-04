@@ -14,8 +14,9 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   SetupBackupViewModel(super.coordinator, this.walletID);
 
+  final String walletID;
+
   List<Item> itemList = [];
-  int walletID;
   String strMnemonic = "";
   bool inIntroduce = true;
 
@@ -26,11 +27,13 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
   final WalletsDataProvider walletsDataProvider;
+  final String userID;
 
   SetupBackupViewModelImpl(
     super.coordinator,
     super.walletID,
     this.walletsDataProvider,
+    this.userID,
   );
 
   final datasourceChangedStreamController =
@@ -59,11 +62,12 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   void setBackup() async {
-    WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
+    WalletModel walletModel =
+        await DBHelper.walletDao!.findByServerID(walletID);
     walletModel.showWalletRecovery = 0;
-    walletsDataProvider.disableShowWalletRecovery(walletModel.serverWalletID);
+    walletsDataProvider.disableShowWalletRecovery(walletModel.walletID);
     walletsDataProvider.insertOrUpdateWallet(
-      userID: 0,
+      userID: userID,
       name: walletModel.name,
       encryptedMnemonic: walletModel.mnemonic.base64encode(),
       passphrase: walletModel.passphrase,
@@ -71,7 +75,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       priority: walletModel.priority,
       status: walletModel.status,
       type: walletModel.type,
-      serverWalletID: walletModel.serverWalletID,
+      walletID: walletModel.walletID,
       publickey: walletModel.publicKey.base64encode(),
       fingerprint: walletModel.fingerprint ?? "",
       showWalletRecovery: walletModel.showWalletRecovery,

@@ -9,6 +9,7 @@ abstract class ContactsDao extends ContactsDatabase implements BaseDao {
   Future<void> insertOrUpdate(String serverContactID, String name, String email,
       String canonicalEmail, int isProton);
   Future<ContactsModel?> findByServerContactID(String serverContactID);
+  Future<List<ContactsModel>> findAll();
 }
 
 class ContactsDaoImpl extends ContactsDao {
@@ -25,7 +26,7 @@ class ContactsDaoImpl extends ContactsDao {
   }
 
   @override
-  Future<List> findAll() async {
+  Future<List<ContactsModel>> findAll() async {
     List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => ContactsModel.fromMap(maps[index]));
@@ -91,5 +92,11 @@ class ContactsDaoImpl extends ContactsDao {
       return ContactsModel.fromMap(maps.first);
     }
     return null;
+  }
+
+  @override
+  Future findByServerID(String serverID) {
+    // TODO: implement findByServerID
+    throw UnimplementedError();
   }
 }

@@ -25,9 +25,10 @@ class AddWalletAccountSheet {
       WalletMenuModel walletMenuModel) async {
     int accountIndex = await viewModel.dataProviderManager.walletDataProvider
         .getNewDerivationAccountIndex(
-            walletMenuModel.walletModel.serverWalletID,
-            appConfig.scriptTypeInfo,
-            appConfig.coinType);
+      walletMenuModel.walletModel.walletID,
+      appConfig.scriptTypeInfo,
+      appConfig.coinType,
+    );
     ValueNotifier newAccountScriptTypeValueNotifier =
         ValueNotifier(appConfig.scriptTypeInfo);
     TextEditingController newAccountNameController = TextEditingController(
@@ -47,9 +48,10 @@ class AddWalletAccountSheet {
           int accountIndex = await viewModel
               .dataProviderManager.walletDataProvider
               .getNewDerivationAccountIndex(
-                  walletMenuModel.walletModel.serverWalletID,
-                  newAccountScriptTypeValueNotifier.value,
-                  appConfig.coinType);
+            walletMenuModel.walletModel.walletID,
+            newAccountScriptTypeValueNotifier.value,
+            appConfig.coinType,
+          );
           newAccountIndexController.text = accountIndex.toString();
         });
         return Column(
@@ -246,9 +248,8 @@ class AddWalletAccountSheet {
                                         maskType: EasyLoadingMaskType.black);
                                     bool isSuccess =
                                         await viewModel.addWalletAccount(
-                                      walletMenuModel.walletModel.id!,
-                                      walletMenuModel
-                                          .walletModel.serverWalletID,
+                                      walletMenuModel.walletModel.id,
+                                      walletMenuModel.walletModel.walletID,
                                       newAccountScriptTypeValueNotifier.value,
                                       newAccountNameController.text.isNotEmpty
                                           ? newAccountNameController.text

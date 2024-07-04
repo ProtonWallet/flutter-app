@@ -2,8 +2,8 @@ import 'package:wallet/models/database/base.database.dart';
 
 class ExchangeRateDatabase extends BaseDatabase {
   @override
-  Future<void> migration_0() {
-    return createTable('''
+  Future<void> migration_0() async {
+    return await createTable('''
         CREATE TABLE IF NOT EXISTS `exchangeRate` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           serverID TEXT,
