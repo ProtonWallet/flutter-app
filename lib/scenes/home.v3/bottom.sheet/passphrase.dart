@@ -74,7 +74,6 @@ class PassphraseSheet {
                               passphrase: passphrase,
                             ),
                           );
-                          viewModel.selectWallet(walletMenuModel);
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }
@@ -82,16 +81,12 @@ class PassphraseSheet {
                           CommonHelper.showErrorDialog(viewModel.errorMessage);
                           viewModel.errorMessage = "";
                         }
-
                         EasyLoading.dismiss();
                       }
                       viewModel.walletRecoverPassphraseController.text = "";
                       if (context.mounted && match) {
                         walletMenuModel.hasValidPassword = true;
                         Navigator.of(context).pop();
-                        if (Responsive.isMobile(context)) {
-                          Navigator.of(context).pop(); // pop-up drawer
-                        }
                       }
                     },
                     backgroundColor: ProtonColors.protonBlue,

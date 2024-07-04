@@ -81,6 +81,10 @@ class WalletManager implements Manager {
         walletServerID,
       );
       var mnemonic = await WalletManager.getMnemonicWithID(walletID);
+      if (walletModel.passphrase == 1 && passphrase == null) {
+        /// wallet has passphrase, but user didn't set correct passphrase yet
+        return null;
+      }
       frbWallet = FrbWallet(
         network: appConfig.coinType.network,
         bip39Mnemonic: mnemonic,
