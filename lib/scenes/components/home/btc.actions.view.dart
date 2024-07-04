@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/home/custom.homepage.box.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/home/custom.homepage.box.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/constants/proton.color.dart';

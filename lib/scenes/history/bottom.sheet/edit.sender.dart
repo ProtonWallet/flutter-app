@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/close.button.v1.dart';
-import 'package:wallet/components/textfield.text.v2.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 

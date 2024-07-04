@@ -219,6 +219,7 @@ class DataProviderManager extends Manager {
     WalletManager.walletKeysProvider = walletKeysProvider;
     WalletManager.walletPassphraseProvider = walletPassphraseProvider;
     WalletManager.walletDataProvider = walletDataProvider;
+    WalletManager.localBitcoinAddressDataProvider = localBitcoinAddressDataProvider;
     WalletManager.userID = userID;
   }
 

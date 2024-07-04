@@ -34,6 +34,7 @@ class ReceiveCoordinator extends Coordinator {
       dataProviderManager.walletDataProvider,
       dataProviderManager.protonAddressProvider,
       dataProviderManager.walletKeysProvider,
+      dataProviderManager.localBitcoinAddressDataProvider,
     );
     widget = ReceiveView(
       viewModel,

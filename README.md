@@ -127,6 +127,6 @@ help                           Display this help screen
 
 ### iOS: mobile_scanner
 
-this dependcy doesnt work on ios simulator. the workaround is to disable this plugin in file [pubspec.yaml](pubspec.yaml#L88) then disable the imports in [file import line](lib/components/protonmail.autocomplete.dart#L4) and code block [code block 173-187](lib/components/protonmail.autocomplete.dart#L173-L187)
+this dependcy doesnt work on ios simulator. the workaround is to disable this plugin in file [pubspec.yaml](pubspec.yaml#L88) then disable the imports in [file import line](lib/scenes/components/protonmail.autocomplete.dart#L4) and code block [code block 173-187](lib/scenes/components/protonmail.autocomplete.dart#L173-L187)
 
 Optional: Try pod install or flutter clean if you see strange errors

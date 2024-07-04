@@ -12,6 +12,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
@@ -54,7 +55,9 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   ///
   void selectCountry(String code);
+
   void selectCurrency(String fiatCurrency);
+
   void selectAmount(String amount);
 
   void pay(SelectedInfoModel selected);
@@ -68,7 +71,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     this.userID,
     this.walletID,
     this.accountID,
+    this.localBitcoinAddressDataProvider,
   );
+
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
 
@@ -79,6 +84,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   /// features
   final BuyBitcoinBloc buyBloc;
+
+  /// provider
+  final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
 
   /// ramp
   late final Configuration configuration;
@@ -260,18 +268,16 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         );
       }
 
-      int addressIndex = 0;
-      BitcoinAddressModel? bitcoinAddressModel =
-          await DBHelper.bitcoinAddressDao!.findLatestUnusedLocalBitcoinAddress(
-        walletModel.walletID,
-        accountModel.accountID,
-      );
-      if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
-        addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
-      } else {
-        addressIndex = await WalletManager.getBitcoinAddressIndex(
-            walletModel.walletID, accountModel.accountID);
+      /// check if local highest used bitcoin address index is higher than the one store in wallet account
+      /// this will happen when some one send bitcoin via qr code
+      int localUsedIndex = await localBitcoinAddressDataProvider
+          .getLastUsedIndex(walletModel, accountModel);
+      if (localUsedIndex >= accountModel.lastUsedIndex) {
+        accountModel.lastUsedIndex = localUsedIndex + 1;
+        await WalletManager.updateLastUsedIndex(accountModel);
       }
+      int addressIndex = accountModel.lastUsedIndex;
+
       var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {

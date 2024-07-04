@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/components/text.choices.dart';
+import 'package:wallet/scenes/components/text.choices.dart';
 
 final TextEditingController textEditingController = TextEditingController();
 void main() {

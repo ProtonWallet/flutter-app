@@ -1,8 +1,8 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/components/bitcoin.price.chart.homepage.dart';
-import 'package:wallet/components/bottom.sheets/bitcoin.price.detail.dart';
+import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
+import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';

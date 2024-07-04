@@ -42,8 +42,10 @@ pub struct _ApiWalletAccount {
     pub FiatCurrency: FiatCurrency,
     pub DerivationPath: String,
     pub Label: String,
+    pub Priority: u32,
     pub ScriptType: u8,
     pub Addresses: Vec<ApiEmailAddress>,
+    pub LastUsedIndex: u32,
 }
 
 #[frb(mirror(ApiEmailAddress))]

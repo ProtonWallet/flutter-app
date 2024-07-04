@@ -6,7 +6,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/components/discover/proton.feeditem.dart';
+import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -344,11 +344,14 @@ class HomeViewModelImpl extends HomeViewModel {
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
       loadUserSettings();
-      walletListBloc.init(callback: () {
-        selectDefaultWallet();
-      }, onboardingCallback: () {
-        setOnBoard();
-      });
+      walletListBloc.init(
+        startLoadingCallback: () {
+          selectDefaultWallet();
+        },
+        onboardingCallback: () {
+          setOnBoard();
+        },
+      );
 
       // async
       dataProviderManager.contactsDataProvider.preLoad();
@@ -747,7 +750,7 @@ class HomeViewModelImpl extends HomeViewModel {
       case NavID.historyDetails:
         coordinator.showHistoryDetails(
           selectedWallet?.walletID ?? "",
-          selectedAccount?.accountID ?? "",
+          historyAccountModel?.accountID ?? "",
           selectedTXID,
           fiatCurrencyNotifier.value,
         );

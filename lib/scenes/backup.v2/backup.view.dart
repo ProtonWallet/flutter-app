@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/bottom.sheets/placeholder.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/tag.v2.dart';
-import 'package:wallet/components/underline.dart';
+import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/tag.v2.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';

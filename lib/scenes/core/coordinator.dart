@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/components/page_route.dart';
+import 'package:wallet/scenes/components/page_route.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/scenes/core/responsive.dart';
