@@ -7,9 +7,12 @@ abstract class AddressDao extends AddressDatabase implements BaseDao {
   AddressDao(super.db, super.tableName);
 
   Future<List<AddressModel>> findByServerAccountID(String serverAccountID);
+  @override
   Future<AddressModel?> findByServerID(String serverID);
 
   Future<void> deleteByServerAccountID(String serverAccountID);
+
+  Future<List> findAll();
 }
 
 class AddressDaoImpl extends AddressDao {

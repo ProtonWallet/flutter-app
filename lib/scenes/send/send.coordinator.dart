@@ -10,8 +10,8 @@ import 'package:wallet/scenes/send/send.viewmodel.dart';
 
 class SendCoordinator extends Coordinator {
   late ViewBase widget;
-  final int walletID;
-  final int accountID;
+  final String walletID;
+  final String accountID;
 
   SendCoordinator(this.walletID, this.accountID);
 

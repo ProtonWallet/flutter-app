@@ -20,7 +20,7 @@ class ContactsDataProvider extends DataProvider {
 
   //
   final ContactsDao contactsDao;
-  final String userID = ""; // need to add userid.
+  final String userID;
 
   // need to monitor the db changes apply to this cache
   List<ContactsModel>? contactsData;
@@ -28,6 +28,7 @@ class ContactsDataProvider extends DataProvider {
   ContactsDataProvider(
     this.contactClient,
     this.contactsDao,
+    this.userID,
   );
 
   StreamController<DataUpdated> dataUpdateController =

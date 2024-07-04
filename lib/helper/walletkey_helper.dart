@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:cryptography/cryptography.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 
@@ -46,7 +47,9 @@ class WalletKeyHelper {
   }
 
   static Future<String> getHmacHashedString(
-      SecretKey secretKey, String message) async {
+    SecretKey secretKey,
+    String message,
+  ) async {
     var key = await secretKey.extractBytes();
     var bytes = utf8.encode(message);
 
@@ -70,14 +73,38 @@ class WalletKeyHelper {
     return plaintext;
   }
 
+  /// decrypt wallet key by user key
   static SecretKey decryptWalletKey(
     UserKey userKey,
     WalletKey walletKey,
   ) {
     var pgpBinaryMessage = walletKey.walletKey;
     var entropy = proton_crypto.decryptBinaryPGP(
-        userKey.privateKey, userKey.passphrase, pgpBinaryMessage);
+      userKey.privateKey,
+      userKey.passphrase,
+      pgpBinaryMessage,
+    );
     var secretKey = restoreSecretKeyFromEntropy(entropy);
     return secretKey;
+  }
+
+  /// verify wallet key signature by user key
+  static Future<bool> verifySecretKeySignature(
+    UserKey userKey,
+    WalletKey walletKey,
+    SecretKey secretKey,
+  ) async {
+    var userPublicKey = proton_crypto.getArmoredPublicKey(userKey.privateKey);
+    var signature = walletKey.walletKeySignature;
+    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    // check signature
+    var isValidWalletKeySignature =
+        proton_crypto.verifyBinarySignatureWithContext(
+      userPublicKey,
+      entropy,
+      signature,
+      gpgContextWalletKey,
+    );
+    return isValidWalletKeySignature;
   }
 }

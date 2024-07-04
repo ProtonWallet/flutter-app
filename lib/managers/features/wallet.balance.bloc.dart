@@ -108,7 +108,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
         } else {
           /// wallet account view
           for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-            if (accountMenuModel.accountModel.serverAccountID ==
+            if (accountMenuModel.accountModel.accountID ==
                 walletsDataProvider.selectedServerWalletAccountID) {
               add(SelectAccount(
                 walletMenuModel,

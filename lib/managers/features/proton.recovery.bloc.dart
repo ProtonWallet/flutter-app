@@ -72,7 +72,7 @@ class ProtonRecoveryBloc
 
       /// get clear text and verify signature
       var check = proton_crypto.verifyCleartextMessageArmored(
-          SRP_MODULUS_KEY, module.modulus);
+          srpModulusKey, module.modulus);
 
       /// reencrypt password for now only support one
       for (ProtonUserKey key in userKeys) {
@@ -91,7 +91,7 @@ class ProtonRecoveryBloc
 
       /// get clear text and verify signature
       var check = proton_crypto.verifyCleartextMessageArmored(
-          SRP_MODULUS_KEY, module.modulus);
+          srpModulusKey, module.modulus);
 
       if (!check.verified) {
         return Future.error('Invalid modulus');

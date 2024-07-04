@@ -34,8 +34,8 @@ class CustomTodos extends StatelessWidget {
                 hoverColor: Colors.transparent,
                 focusColor: Colors.transparent,
                 activeColor: ProtonColors.protonBlue,
-                fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(MaterialState.selected)) {
+                fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.selected)) {
                     return ProtonColors.protonBlue;
                   }
                   return ProtonColors.protonBlue;

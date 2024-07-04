@@ -28,6 +28,7 @@ import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
+import 'package:wallet/scenes/settings/settings.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.coordinator.dart';
 import 'package:wallet/scenes/two.factor.auth/two.factor.auth.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
@@ -60,12 +61,18 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(view);
   }
 
-  void showSend(int walletID, int accountID) {
+  void showSettings() {
+    var view = SettingsCoordinator().start();
+    // showInBottomSheet(view);
+    push(view);
+  }
+
+  void showSend(String walletID, String accountID) {
     var view = SendCoordinator(walletID, accountID).start();
     showInBottomSheet(view);
   }
 
-  void showSetupBackup(int walletID) {
+  void showSetupBackup(String walletID) {
     var view = SetupBackupCoordinator(walletID).start();
     push(view, fullscreenDialog: false);
   }
@@ -87,8 +94,8 @@ class HomeCoordinator extends Coordinator {
     push(view);
   }
 
-  void showBuy() {
-    var view = BuyBitcoinCoordinator().start();
+  void showBuy(String walletID, String accountID) {
+    var view = BuyBitcoinCoordinator(walletID, accountID).start();
     push(view);
   }
 
@@ -98,10 +105,17 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showHistoryDetails(
-      int walletID, int accountID, String txID, FiatCurrency userFiatCurrency) {
-    var view =
-        HistoryDetailCoordinator(walletID, accountID, txID, userFiatCurrency)
-            .start();
+    String walletID,
+    String accountID,
+    String txID,
+    FiatCurrency userFiatCurrency,
+  ) {
+    var view = HistoryDetailCoordinator(
+      walletID,
+      accountID,
+      txID,
+      userFiatCurrency,
+    ).start();
     showInBottomSheet(view);
   }
 

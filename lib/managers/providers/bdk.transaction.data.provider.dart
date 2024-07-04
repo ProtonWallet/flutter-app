@@ -68,9 +68,7 @@ class BDKTransactionDataProvider extends DataProvider {
   Future<void> init(List<WalletModel> wallets) async {
     bdkTransactionDataList.clear();
     for (WalletModel walletModel in wallets) {
-      List<AccountModel> accounts =
-          (await accountDao.findAllByWalletID(walletModel.id!))
-              .cast<AccountModel>();
+      var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accounts) {
         syncWallet(walletModel, accountModel);
         bdkTransactionDataList.add(await _getBDKTransactionData(
@@ -85,8 +83,10 @@ class BDKTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    FrbAccount? account =
-        await WalletManager.loadWalletWithID(walletModel.id!, accountModel.id!);
+    FrbAccount? account = await WalletManager.loadWalletWithID(
+      walletModel.walletID,
+      accountModel.accountID,
+    );
     List<FrbTransactionDetails> transactions = [];
     if (account != null) {
       transactions = await account.getTransactions();
@@ -111,7 +111,7 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   bool isSyncing(WalletModel walletModel, AccountModel accountModel) {
-    return isWalletSyncing[accountModel.serverAccountID] ?? false;
+    return isWalletSyncing[accountModel.accountID] ?? false;
   }
 
   Future<void> syncWallet(
@@ -119,22 +119,24 @@ class BDKTransactionDataProvider extends DataProvider {
     AccountModel accountModel, [
     bool forceSync = false,
   ]) async {
-    bool isSyncing = isWalletSyncing.containsKey(accountModel.serverAccountID)
-        ? isWalletSyncing[accountModel.serverAccountID]!
+    bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
+        ? isWalletSyncing[accountModel.accountID]!
         : false;
     bool success = false;
     if (isSyncing == false) {
       try {
-        isWalletSyncing[accountModel.serverAccountID] = true;
+        isWalletSyncing[accountModel.accountID] = true;
         blockchain ??= await Api.createEsploraBlockchainWithApi();
 
-        String serverWalletID = walletModel.serverWalletID;
-        String serverAccountID = accountModel.serverAccountID;
+        String serverWalletID = walletModel.walletID;
+        String serverAccountID = accountModel.accountID;
         String syncCheckID =
             "is_wallet_full_synced_${serverWalletID}_$serverAccountID";
 
         FrbAccount? account = await WalletManager.loadWalletWithID(
-            walletModel.id!, accountModel.id!);
+          walletModel.walletID,
+          accountModel.accountID,
+        );
         if (account != null) {
           bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
@@ -148,7 +150,7 @@ class BDKTransactionDataProvider extends DataProvider {
             success = true;
           } else {
             int timeDiff = DateTime.now().millisecondsSinceEpoch -
-                (lastSyncedTime[accountModel.serverAccountID] ?? 0);
+                (lastSyncedTime[accountModel.accountID] ?? 0);
             if (timeDiff > reSyncTime) {
               logger.i("Bdk wallet partial sync check");
 
@@ -158,7 +160,7 @@ class BDKTransactionDataProvider extends DataProvider {
               await blockchain!.partialSync(account: account);
               logger.i("Bdk wallet partial sync End");
               success = true;
-              lastSyncedTime[accountModel.serverAccountID] =
+              lastSyncedTime[accountModel.accountID] =
                   DateTime.now().microsecondsSinceEpoch;
             }
           }
@@ -173,9 +175,9 @@ class BDKTransactionDataProvider extends DataProvider {
           errorMessage,
         );
       } finally {
-        isWalletSyncing[accountModel.serverAccountID] = false;
+        isWalletSyncing[accountModel.accountID] = false;
         if (success) {
-          emitState(BDKDataUpdated(accountModel.serverAccountID));
+          emitState(BDKDataUpdated(accountModel.accountID));
         }
       }
     }

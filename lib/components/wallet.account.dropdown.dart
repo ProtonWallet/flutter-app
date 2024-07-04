@@ -44,7 +44,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
   int _getIndexOfAccount(AccountModel selectedAccount) {
     int selectedIndex = 0;
     for (AccountModel accountModel in widget.accounts) {
-      if (accountModel.serverAccountID == selectedAccount.serverAccountID) {
+      if (accountModel.accountID == selectedAccount.accountID) {
         selectedIndex = widget.accounts.indexOf(accountModel);
         break;
       }
@@ -109,7 +109,11 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
 
   Widget getWalletAccountBalanceWidget(
       BuildContext context, AccountModel accountModel) {
-    double esitmateValue = ExchangeCalculator.getNotionalInFiatCurrency(Provider.of<UserSettingProvider>(context).walletUserSetting.exchangeRate, accountModel.balance.toInt());
+    double esitmateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+        Provider.of<UserSettingProvider>(context)
+            .walletUserSetting
+            .exchangeRate,
+        accountModel.balance.toInt());
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
@@ -118,7 +122,8 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
           ExchangeCalculator.getBitcoinUnitLabel(
               Provider.of<UserSettingProvider>(context)
                   .walletUserSetting
-                  .bitcoinUnit, accountModel.balance.toInt()),
+                  .bitcoinUnit,
+              accountModel.balance.toInt()),
           style: FontManager.overlineRegular(ProtonColors.textHint))
     ]);
   }

@@ -25,11 +25,14 @@ class ServerTransactionData {
 class ServerTransactionDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
+
+  ///
   final WalletClient walletClient;
   final WalletDao walletDao;
   final AccountDao accountDao;
   final ExchangeRateDao exchangeRateDao;
   final TransactionDao transactionDao;
+  final String userID;
 
   ServerTransactionDataProvider(
     this.walletClient,
@@ -37,26 +40,28 @@ class ServerTransactionDataProvider extends DataProvider {
     this.accountDao,
     this.exchangeRateDao,
     this.transactionDao,
+    this.userID,
   );
 
+  ///
   List<ServerTransactionData> serverTransactionDataList = [];
   bool initialized = false;
+  Map<String, List<TransactionModel>> accountServerTransactions = {};
 
   Future<List<ServerTransactionData>> _getFromDB() async {
     List<ServerTransactionData> transactionDataList = [];
-    var wallets = (await walletDao.findAll())
-        .cast<WalletModel>(); // TODO:: search by UserID
-
+    var wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
-        List<AccountModel> accounts =
-            (await accountDao.findAllByWalletID(walletModel.id!))
-                .cast<AccountModel>();
+        var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
-          List<TransactionModel> transactions = await transactionDao
-              .findAllByServerAccountID(accountModel.serverAccountID);
-          ServerTransactionData serverTransactionData = ServerTransactionData(
-              accountModel: accountModel, transactions: transactions);
+          var transactions = await transactionDao.findAllByServerAccountID(
+            accountModel.accountID,
+          );
+          var serverTransactionData = ServerTransactionData(
+            accountModel: accountModel,
+            transactions: transactions,
+          );
           transactionDataList.add(serverTransactionData);
         }
       }
@@ -65,14 +70,24 @@ class ServerTransactionDataProvider extends DataProvider {
     return [];
   }
 
+  Future<List<TransactionModel>> _getFromDBByAccount(String accountID) async {
+    var transactions = await transactionDao.findAllByServerAccountID(
+      accountID,
+    );
+
+    return transactions;
+  }
+
   Future<ServerTransactionData> getServerTransactionDataByWalletAccount(
-      WalletModel walletModel, AccountModel accountModel) async {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
     List<ServerTransactionData> serverTransactionsData =
         await getServerTransactionData();
     for (ServerTransactionData serverTransactionData
         in serverTransactionsData) {
-      if (serverTransactionData.accountModel.serverAccountID ==
-          accountModel.serverAccountID) {
+      if (serverTransactionData.accountModel.accountID ==
+          accountModel.accountID) {
         return serverTransactionData;
       }
     }
@@ -80,33 +95,66 @@ class ServerTransactionDataProvider extends DataProvider {
     return ServerTransactionData(accountModel: accountModel, transactions: []);
   }
 
+  Future<List<TransactionModel>> getTransByAccountID(
+    String walletID,
+    String accountID,
+  ) async {
+    // check cache first
+    var trans = accountServerTransactions[accountID];
+    if (trans != null && initialized) {
+      return trans;
+    }
+
+    // fetch from db
+    var dbTrans = await _getFromDBByAccount(accountID);
+    if (dbTrans.isNotEmpty && initialized) {
+      accountServerTransactions[accountID] = dbTrans;
+      return dbTrans;
+    }
+
+    // fetch from server
+    await fetchTransactions(walletID, accountID);
+
+    // fetch from db
+    dbTrans = await _getFromDBByAccount(accountID);
+    if (dbTrans.isNotEmpty) {
+      accountServerTransactions[accountID] = dbTrans;
+      initialized = true;
+      return dbTrans;
+    }
+
+    return [];
+  }
+
   Future<List<ServerTransactionData>> getServerTransactionData() async {
     if (initialized) {
       return serverTransactionDataList;
     }
     // fetch from server
-    List<WalletModel> wallets = (await walletDao.findAll()).cast<WalletModel>();
-
+    var wallets = await walletDao.findAllByUserID(userID);
     for (WalletModel walletModel in wallets) {
-      await handleWalletTransactions(walletModel);
+      await fetchTransactions(walletModel.walletID, null);
     }
     serverTransactionDataList = await _getFromDB();
     initialized = true;
     return serverTransactionDataList;
   }
 
-  Future<void> handleWalletTransactions(WalletModel walletModel) async {
-    List<WalletTransaction> walletTransactions = await walletClient
-        .getWalletTransactions(walletId: walletModel.serverWalletID);
+  Future<void> fetchTransactions(String walletID, String? accountID) async {
+    var walletTransactions = await walletClient.getWalletTransactions(
+      walletId: walletID,
+      walletAccountId: accountID,
+    );
 
     for (WalletTransaction walletTransaction in walletTransactions) {
-      await handleWalletTransaction(walletModel, walletTransaction);
+      await handleWalletTransaction(walletTransaction);
     }
   }
 
   Future<void> handleWalletTransaction(
-      WalletModel walletModel, WalletTransaction walletTransaction,
-      {bool notifyDataUpdate = false}) async {
+    WalletTransaction walletTransaction, {
+    bool notifyDataUpdate = false,
+  }) async {
     DateTime now = DateTime.now();
 
     String exchangeRateID = "";
@@ -129,9 +177,9 @@ class ServerTransactionDataProvider extends DataProvider {
     }
 
     TransactionModel transactionModel = TransactionModel(
-        id: null,
-        walletID: walletModel.id!,
-        type: walletTransaction.type?.index ?? TransactionType.unsupported.index,
+        id: -1,
+        type:
+            walletTransaction.type?.index ?? TransactionType.unsupported.index,
         label: utf8.encode(walletTransaction.label ?? ""),
         externalTransactionID: utf8.encode(""),
 
@@ -159,12 +207,17 @@ class ServerTransactionDataProvider extends DataProvider {
   Future<void> insertOrUpdate(TransactionModel transactionModel,
       {bool notifyDataUpdate = false}) async {
     await transactionDao.insertOrUpdate(transactionModel);
+
     /// refresh cache
     /// TODO:: improve performance
     serverTransactionDataList = await _getFromDB();
     if (notifyDataUpdate) {
       dataUpdateController.add(DataUpdated(""));
     }
+  }
+
+  void resetInit() {
+    initialized = false;
   }
 
   @override

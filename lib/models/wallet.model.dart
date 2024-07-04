@@ -10,8 +10,8 @@ class WalletModel {
   static const int importByUser = 1;
   static const int primary = 1;
 
-  int? id;
-  int userID;
+  int id;
+
   String name;
   Uint8List mnemonic;
   int passphrase;
@@ -24,12 +24,13 @@ class WalletModel {
   int type;
   int createTime;
   int modifyTime;
+  String userID;
+  String walletID;
 
   // optional
   int accountCount = 0;
   double balance = 0;
 
-  String serverWalletID;
   String? fingerprint;
 
   /// From walletSettings
@@ -49,13 +50,13 @@ class WalletModel {
     required this.fingerprint,
     required this.createTime,
     required this.modifyTime,
-    required this.serverWalletID,
+    required this.walletID,
     required this.showWalletRecovery,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'userID': userID,
       'name': name,
       'mnemonic': mnemonic,
@@ -68,7 +69,7 @@ class WalletModel {
       'fingerprint': fingerprint,
       'createTime': createTime,
       'modifyTime': modifyTime,
-      'serverWalletID': serverWalletID,
+      'walletID': walletID,
       'showWalletRecovery': showWalletRecovery,
     };
   }
@@ -88,7 +89,7 @@ class WalletModel {
       fingerprint: map['fingerprint'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
-      serverWalletID: map['serverWalletID'] ?? "",
+      walletID: map['walletID'] ?? "",
       showWalletRecovery: map['showWalletRecovery'] ?? 1,
     );
   }

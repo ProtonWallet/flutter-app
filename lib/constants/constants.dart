@@ -30,7 +30,7 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.sats,
 ];
 
-const String SRP_MODULUS_KEY = r"""
+const String srpModulusKey = r"""
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 xjMEXAHLgxYJKwYBBAHaRw8BAQdAFurWXXwjTemqjD7CXjXVyKf0of7n9Ctm

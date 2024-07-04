@@ -53,9 +53,8 @@ class RecipientDetailSheet {
                   Text(S.of(context).bitcoin_address,
                       style: FontManager.captionRegular(ProtonColors.textWeak)),
                   Text(bitcoinAddress,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textNorm)),
+                      overflow: TextOverflow.ellipsis,
+                      style: FontManager.body2Regular(ProtonColors.textNorm)),
                   const SizedBox(height: 20),
                   ButtonV5(
                       onPressed: () async {

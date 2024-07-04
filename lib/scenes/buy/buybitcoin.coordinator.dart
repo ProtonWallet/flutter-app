@@ -12,22 +12,27 @@ import 'buybitcoin.viewmodel.dart';
 class BuyBitcoinCoordinator extends Coordinator {
   late ViewBase widget;
 
-  BuyBitcoinCoordinator();
+  final String walletID;
+  final String accountID;
+  BuyBitcoinCoordinator(this.walletID, this.accountID);
 
   @override
   void end() {}
 
   @override
   ViewBase<ViewModel> start() {
-    var email = serviceManager.get<UserManager>().userInfo.userMail;
+    var info = serviceManager.get<UserManager>().userInfo;
 
     BuyBitcoinBloc buyBloc = BuyBitcoinBloc(
       serviceManager.get<DataProviderManager>().gatewayDataProvider,
     );
     var viewModel = BuyBitcoinViewModelImpl(
       this,
-      email,
+      info.userMail,
       buyBloc,
+      info.userId,
+      walletID,
+      accountID,
     );
     widget = BuyBitcoinView(
       viewModel,

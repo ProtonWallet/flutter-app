@@ -104,6 +104,7 @@ class AppViewModelImpl extends AppViewModel {
       shared,
       apiServiceManager.getApiService(),
       dbConnection,
+      userManager,
     );
     // dataProviderManager.init();
     serviceManager.register(dataProviderManager);

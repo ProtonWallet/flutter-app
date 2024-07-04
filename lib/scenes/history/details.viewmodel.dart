@@ -19,7 +19,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
@@ -40,16 +39,16 @@ import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 abstract class HistoryDetailViewModel
     extends ViewModel<HistoryDetailCoordinator> {
-  int walletID;
-  int accountID;
-  String txid;
+  String walletID;
+  String accountID;
+  String txID;
   String userLabel = "";
 
   HistoryDetailViewModel(
     super.coordinator,
     this.walletID,
     this.accountID,
-    this.txid,
+    this.txID,
     this.userFiatCurrency,
     this.userSettingsDataProvider,
   );
@@ -103,7 +102,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.userSettingsDataProvider,
   );
 
-  // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
   late FrbAccount _frbAccount;
   final datasourceChangedStreamController =
       StreamController<HistoryDetailViewModel>.broadcast();
@@ -133,59 +131,30 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       memoFocusNode.addListener(() {
         userFinishMemo();
       });
-      WalletModel walletModel = await DBHelper.walletDao!.findById(walletID);
-      AccountModel accountModel =
-          await DBHelper.accountDao!.findById(accountID);
-      addressKeys = await WalletManager.getAddressKeys();
 
-      ServerTransactionData serverTransactionData =
-          await serverTransactionDataProvider
-              .getServerTransactionDataByWalletAccount(
-        walletModel,
-        accountModel,
+      if (addressKeys.isEmpty) {
+        addressKeys = await WalletManager.getAddressKeys();
+      }
+
+      var serverTrans = await serverTransactionDataProvider.getTransByAccountID(
+        walletID,
+        accountID,
       );
 
       /// get user key
       var firstUserKey = await userManager.getFirstKey();
-      String userPrivateKey = firstUserKey.privateKey;
-      String userPassphrase = firstUserKey.passphrase;
       WalletKey? walletKey = await walletKeysProvider.getWalletKey(
-        walletModel.serverWalletID,
+        walletID,
       );
-
       if (walletKey != null) {
-        var pgpEncryptedWalletKey = walletKey.walletKey;
-        entropy = proton_crypto.decryptBinaryPGP(
-          userPrivateKey,
-          userPassphrase,
-          pgpEncryptedWalletKey,
-        );
-        if (entropy != null) {
-          secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(entropy!);
-        }
+        secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
       }
 
-      for (TransactionModel transactionModel
-          in serverTransactionData.transactions) {
-        String txid = proton_crypto.decrypt(
-            userPrivateKey, userPassphrase, transactionModel.transactionID);
-        if (txid.isEmpty) {
-          for (AddressKey addressKey in addressKeys) {
-            try {
-              txid = addressKey.decrypt(transactionModel.transactionID);
-            } catch (e) {
-              // logger.e(e.toString());
-            }
-            if (txid.isNotEmpty) {
-              break;
-            }
-          }
-        }
-        transactionModel.externalTransactionID = utf8.encode(txid);
-      }
-
-      transactionModel =
-          findServerTransactionByTXID(serverTransactionData.transactions, txid);
+      transactionModel = await findServerTransactionByTxID(
+        firstUserKey,
+        serverTrans,
+        txID,
+      );
 
       if (transactionModel != null) {
         isInternalTransaction = (transactionModel!.type ==
@@ -195,24 +164,29 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       }
 
       datasourceChangedStreamController.sinkAddSafe(this);
-      _frbAccount =
-          (await WalletManager.loadWalletWithID(walletID, accountID))!;
+      _frbAccount = (await WalletManager.loadWalletWithID(
+        walletID,
+        accountID,
+      ))!;
       List<FrbTransactionDetails> history = await _frbAccount.getTransactions();
       strWallet = await WalletManager.getNameWithID(walletID);
       strAccount = await WalletManager.getAccountLabelWithID(accountID);
 
       try {
         recipients = await DBHelper.transactionInfoDao!.findAllRecipients(
-            utf8.encode(txid),
-            walletModel.serverWalletID,
-            accountModel.serverAccountID);
-      } catch (e) {
-        logger.e(e.toString());
+          utf8.encode(txID),
+          walletID,
+          accountID,
+        );
+      } catch (e, stacktrace) {
+        logger.e(
+          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        );
       }
 
       bool foundedInBDKHistory = false;
       for (var transaction in history) {
-        if (transaction.txid == txid) {
+        if (transaction.txid == txID) {
           amount =
               transaction.received.toDouble() - transaction.sent.toDouble();
           fee = transaction.fees!.toDouble();
@@ -239,7 +213,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             if (recipients.isEmpty) {
               TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
                   await WalletManager.getTransactionDetailsFromBlockStream(
-                      txid);
+                      txID);
               if (transactionDetailFromBlockChain != null) {
                 isRecipientsFromBlockChain = true;
                 bool hasFindMineBitcoinAddress = false;
@@ -260,17 +234,17 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                       isSend: 1,
                       transactionTime: 0,
                       feeMode: 0,
-                      serverWalletID: walletModel.serverWalletID,
-                      serverAccountID: accountModel.serverAccountID,
+                      serverWalletID: walletID,
+                      serverAccountID: accountID,
                       toEmail: "",
                       toBitcoinAddress: recipient.bitcoinAddress));
                 }
               }
             }
           } else {
-            addresses.add(txid);
+            addresses.add(txID);
             TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-                await WalletManager.getTransactionDetailsFromBlockStream(txid);
+                await WalletManager.getTransactionDetailsFromBlockStream(txID);
             if (transactionDetailFromBlockChain != null) {
               for (Recipient recipient
                   in transactionDetailFromBlockChain.recipients) {
@@ -299,7 +273,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             }
           } else {
             TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-                await WalletManager.getTransactionDetailsFromBlockStream(txid);
+                await WalletManager.getTransactionDetailsFromBlockStream(txID);
             if (transactionDetailFromBlockChain != null) {
               fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
               Recipient? me;
@@ -308,7 +282,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 BitcoinAddressModel? bitcoinAddressModel = await DBHelper
                     .bitcoinAddressDao!
                     .findBitcoinAddressInAccount(
-                        recipient.bitcoinAddress, accountModel.serverAccountID);
+                  recipient.bitcoinAddress,
+                  accountID,
+                );
                 if (bitcoinAddressModel != null) {
                   me = recipient;
                   break;
@@ -321,27 +297,30 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               }
             }
           }
-        } catch (e) {
-          logger.e(e.toString());
+        } catch (e, stacktrace) {
+          logger.e(
+            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          );
         }
       }
 
       logger.i("transactionModel == null ? ${transactionModel == null}");
       if (transactionModel == null && secretKey != null) {
-        String hashedTransactionID =
-            await WalletKeyHelper.getHmacHashedString(secretKey!, txid);
+        String hashedTransactionID = await WalletKeyHelper.getHmacHashedString(
+          secretKey!,
+          txID,
+        );
+
+        /// default label
         String encryptedLabel = await WalletKeyHelper.encrypt(secretKey!, "");
-
-        var firstUserKey = await userManager.getFirstKey();
         String userPrivateKey = firstUserKey.privateKey;
-
-        String transactionId = proton_crypto.encrypt(userPrivateKey, txid);
+        String transactionId = proton_crypto.encrypt(userPrivateKey, txID);
         DateTime now = DateTime.now();
         try {
-          WalletTransaction walletTransaction =
-              await proton_api.createWalletTransactions(
-            walletId: walletModel.serverWalletID,
-            walletAccountId: accountModel.serverAccountID,
+          // TODO:: move this to provider
+          var walletTransaction = await proton_api.createWalletTransactions(
+            walletId: walletID,
+            walletAccountId: accountID,
             transactionId: transactionId,
             hashedTransactionId: hashedTransactionID,
             label: encryptedLabel,
@@ -354,13 +333,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             exchangeRateID = walletTransaction.exchangeRate!.id;
           }
           transactionModel = TransactionModel(
-              id: null,
+              id: -1,
               type: isSend
                   ? TransactionType.externalSend.index
                   : TransactionType.externalReceive.index,
-              walletID: walletID,
               label: utf8.encode(walletTransaction.label ?? ""),
-              externalTransactionID: utf8.encode(txid),
+              externalTransactionID: utf8.encode(txID),
               createTime: now.millisecondsSinceEpoch ~/ 1000,
               modifyTime: now.millisecondsSinceEpoch ~/ 1000,
               hashedTransactionID:
@@ -376,11 +354,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               subject: walletTransaction.subject,
               body: walletTransaction.body);
           await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
-        } catch (e) {
+        } catch (e, stacktrace) {
+          logger.e(
+            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          );
           if (e.toString().contains("Hashed TransactionId is already used") ||
               e.toString().contains("Code:2011")) {
             // TODO:: fix logic here, only fetch wallet transactions in account or specific hashedTransaction
             if (transactionModel == null) {
+              serverTransactionDataProvider.resetInit();
               rethrow;
             }
           }
@@ -391,6 +373,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           userLabel = await WalletKeyHelper.decrypt(
               secretKey!, utf8.decode(transactionModel!.label));
         }
+        var walletModel = await DBHelper.walletDao!.findByServerID(walletID);
         try {
           strWallet = await WalletKeyHelper.decrypt(
             secretKey!,
@@ -413,8 +396,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           body = body.isNotEmpty
               ? body
               : addressKey.decrypt(transactionModel!.body ?? "");
-        } catch (e) {
-          logger.e(e.toString());
+        } catch (e, stacktrace) {
+          logger.e(
+            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          );
         }
         try {
           toEmail = toEmail.isNotEmpty
@@ -426,8 +411,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           if (toEmail.isNotEmpty) {
             break;
           }
-        } catch (e) {
-          logger.e(e.toString());
+        } catch (e, stacktrace) {
+          logger.e(
+            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          );
         }
       }
       if (toEmail == "null") {
@@ -451,8 +438,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               }
             }
           }
-        } catch (e) {
-          logger.e(e.toString());
+        } catch (e, stacktrace) {
+          logger.e(
+            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          );
           try {
             var jsonList = jsonDecode(toEmail) as List<dynamic>;
             for (dynamic map in jsonList) {
@@ -465,8 +454,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 }
               }
             }
-          } catch (e) {
-            logger.e(e.toString());
+          } catch (e, stacktrace) {
+            logger.e(
+              "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+            );
           }
         }
       }
@@ -501,7 +492,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               : null);
 
       datasourceChangedStreamController.sinkAddSafe(this);
-    } catch (e) {
+    } catch (e, stacktrace) {
+      logger.e(
+        "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+      );
       errorMessage = e.toString();
     }
 
@@ -514,15 +508,38 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     initialized = true;
   }
 
-  TransactionModel? findServerTransactionByTXID(
-      List<TransactionModel> transactions, String txid) {
-    for (TransactionModel transactionModel in transactions) {
-      String transactionTXID =
-          utf8.decode(transactionModel.externalTransactionID);
-      if (transactionTXID == txid) {
-        return transactionModel;
+  Future<TransactionModel?> findServerTransactionByTxID(
+    UserKey userKey,
+    List<TransactionModel> transactions,
+    String lookupTxID,
+  ) async {
+    for (var tranMode in transactions) {
+      String encryptedTxID = tranMode.transactionID;
+      String clearTxID = proton_crypto.decrypt(
+        userKey.privateKey,
+        userKey.passphrase,
+        encryptedTxID,
+      );
+      if (clearTxID.isEmpty) {
+        for (AddressKey addressKey in addressKeys) {
+          try {
+            clearTxID = addressKey.decrypt(encryptedTxID);
+          } catch (e, stacktrace) {
+            logger.e(
+              "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+            );
+          }
+          if (clearTxID.isNotEmpty) {
+            break;
+          }
+        }
+      }
+      tranMode.externalTransactionID = utf8.encode(clearTxID);
+      if (lookupTxID == clearTxID) {
+        return tranMode;
       }
     }
+
     return null;
   }
 
@@ -533,7 +550,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   Future<void> userFinishMemo() async {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
     try {
-      WalletModel _ = await DBHelper.walletDao!.findById(walletID);
+      WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text && secretKey != null) {
           userLabel = memoController.text;
@@ -551,7 +568,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
         isEditing = false;
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
+      logger.e(
+        "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+      );
       errorMessage = e.toString();
     }
     datasourceChangedStreamController.sinkAddSafe(this);

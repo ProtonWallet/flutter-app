@@ -51,6 +51,9 @@ enum NavID {
   // Feeds
   discover,
 
+  // Settings
+  settings,
+
   // Others
   testWallet,
   testWebsocket,

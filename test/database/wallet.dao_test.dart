@@ -20,9 +20,10 @@ Future<void> main() async {
     test('Insert case 1', () async {
       // Insert the data
       int id = await appDatabase.walletDao.insert(WalletModel(
-        id: null,
-        userID: 2,
+        id: -1,
+        userID: "server_userid_2",
         name: 'Wallet for Test 1',
+        walletID: "test_wallet_id_1",
         mnemonic: Uint8List(0),
         passphrase: 0,
         publicKey: Uint8List(0),
@@ -33,13 +34,12 @@ Future<void> main() async {
         fingerprint: "12345678",
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        serverWalletID: "",
         showWalletRecovery: 1,
       ));
       expect(id, 1);
       id = await appDatabase.walletDao.insert(WalletModel(
-        id: null,
-        userID: 33,
+        id: -1,
+        userID: "server_userid_2",
         name: 'Wallet for Test 2',
         mnemonic: Uint8List(0),
         passphrase: 1,
@@ -51,19 +51,19 @@ Future<void> main() async {
         fingerprint: "22222222",
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        serverWalletID: "",
+        walletID: "test_wallet_id_2",
         showWalletRecovery: 0,
       ));
       expect(id, 2);
     });
 
     test('findAll case 1', () async {
-      results = await appDatabase.walletDao.findAll();
+      results = await appDatabase.walletDao.findAllByUserID("server_userid_2");
       // Verify that the data was inserted and retrieved correctly
       expect(results?.length, 2);
       expect(results?[0].id, 1);
-      expect(results?[0].userID, 2);
       expect(results?[0].name, 'Wallet for Test 1');
+      expect(results?[0].userID, 'server_userid_2');
       expect(results?[0].passphrase, 0);
       expect(results?[0].imported, WalletModel.createByProton);
       expect(results?[0].priority, WalletModel.primary);
@@ -75,7 +75,7 @@ Future<void> main() async {
       expect(results?[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
 
       expect(results?[1].id, 2);
-      expect(results?[1].userID, 33);
+      expect(results?[1].userID, "server_userid_2");
       expect(results?[1].name, 'Wallet for Test 2');
       expect(results?[1].passphrase, 1);
       expect(results?[1].imported, WalletModel.createByProton);
@@ -92,7 +92,7 @@ Future<void> main() async {
       // findByID
       WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);
-      expect(walletModel.userID, 33);
+      expect(walletModel.userID, "server_userid_2");
       expect(walletModel.name, 'Wallet for Test 2');
       expect(walletModel.passphrase, 1);
       expect(walletModel.imported, WalletModel.createByProton);
@@ -109,11 +109,11 @@ Future<void> main() async {
       await appDatabase.walletDao.delete(1);
 
       // Verify new result after delete
-      results = await appDatabase.walletDao.findAll();
+      results = await appDatabase.walletDao.findAllByUserID("server_userid_2");
       // Verify that the data was inserted and retrieved correctly
       expect(results?.length, 1);
       expect(results?[0].id, 2);
-      expect(results?[0].userID, 33);
+      expect(results?[0].userID, "server_userid_2");
       expect(results?[0].name, 'Wallet for Test 2');
       expect(results?[0].passphrase, 1);
       expect(results?[0].imported, WalletModel.createByProton);
@@ -128,7 +128,7 @@ Future<void> main() async {
     test('update case 1', () async {
       await appDatabase.walletDao.update(WalletModel(
         id: 2,
-        userID: 33,
+        userID: "server_userid_33",
         name: 'Wallet for Test Updated',
         mnemonic: Uint8List(0),
         passphrase: 0,
@@ -140,12 +140,12 @@ Future<void> main() async {
         fingerprint: null,
         createTime: now.millisecondsSinceEpoch ~/ 1000 + 9487949,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000 - 87653,
-        serverWalletID: "",
+        walletID: "",
         showWalletRecovery: 0,
       ));
       WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);
-      expect(walletModel.userID, 33);
+      expect(walletModel.userID, "server_userid_33");
       expect(walletModel.name, 'Wallet for Test Updated');
       expect(walletModel.passphrase, 0);
       expect(walletModel.imported, WalletModel.createByProton);
