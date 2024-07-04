@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/onboarding/content.dart';
-import 'package:wallet/components/textfield.2fa.dart';
-import 'package:wallet/components/textfield.password.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/onboarding/content.dart';
+import 'package:wallet/scenes/components/textfield.2fa.dart';
+import 'package:wallet/scenes/components/textfield.password.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';

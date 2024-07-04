@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/components/progress.dot.dart';
+import 'package:wallet/scenes/components/progress.dot.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';

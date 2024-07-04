@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/components/underline.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 

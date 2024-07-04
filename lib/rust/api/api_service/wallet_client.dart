@@ -231,6 +231,28 @@ class WalletClient extends RustOpaque {
           newLabel: newLabel,
           hint: hint);
 
+  Future<ApiWalletAccount> updateWalletAccountLastUsedIndex(
+          {required String walletId,
+          required String walletAccountId,
+          required int lastUsedIndex,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientUpdateWalletAccountLastUsedIndex(
+          that: this,
+          walletId: walletId,
+          walletAccountId: walletAccountId,
+          lastUsedIndex: lastUsedIndex,
+          hint: hint);
+
+  Future<List<ApiWalletAccount>> updateWalletAccountsOrder(
+          {required String walletId,
+          required List<String> walletAccountIds,
+          dynamic hint}) =>
+      RustLib.instance.api.walletClientUpdateWalletAccountsOrder(
+          that: this,
+          walletId: walletId,
+          walletAccountIds: walletAccountIds,
+          hint: hint);
+
   Future<ApiWallet> updateWalletName(
           {required String walletId, required String newName, dynamic hint}) =>
       RustLib.instance.api.walletClientUpdateWalletName(

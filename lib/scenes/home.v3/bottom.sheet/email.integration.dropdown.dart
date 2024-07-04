@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/add.button.v1.dart';
+import 'package:wallet/scenes/components/add.button.v1.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
-import 'package:wallet/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -47,16 +47,16 @@ class EmailIntegrationDropdownSheet {
                         LocalToast.showErrorToast(context,
                             S.of(context).email_already_linked_to_wallet);
                       } else {
-                        setState(() async {
-                          Navigator.of(context).pop();
-                          await viewModel.addEmailAddressToWalletAccount(
-                              userWallet.walletID,
-                              userWallet,
-                              accountMenuModel.accountModel,
-                              protonAddress.id);
+                        await viewModel.addEmailAddressToWalletAccount(
+                            userWallet.walletID,
+                            userWallet,
+                            accountMenuModel.accountModel,
+                            protonAddress.id);
+                        setState(() {
                           if (callback != null) {
                             callback.call();
                           }
+                          Navigator.of(context).pop();
                         });
                       }
                     },

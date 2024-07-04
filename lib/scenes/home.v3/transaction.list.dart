@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/components/textfield.text.dart';
-import 'package:wallet/components/wallet.history.transaction.list.dart';
+import 'package:wallet/scenes/components/textfield.text.dart';
+import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';

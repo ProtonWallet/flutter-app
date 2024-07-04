@@ -1,20 +1,21 @@
 // home.view.dart
 import 'dart:math';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/custom.expansion.dart';
-import 'package:wallet/components/custom.loading.with.icon.dart';
-import 'package:wallet/components/custom.todo.dart';
-import 'package:wallet/components/discover/discover.feeds.view.dart';
-import 'package:wallet/components/home/bitcoin.price.box.dart';
-import 'package:wallet/components/home/btc.actions.view.dart';
-import 'package:wallet/components/underline.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.expansion.dart';
+import 'package:wallet/scenes/components/custom.loading.with.icon.dart';
+import 'package:wallet/scenes/components/custom.todo.dart';
+import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
+import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
+import 'package:wallet/scenes/components/home/btc.actions.view.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -138,17 +139,32 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     /// TODO:: use actual balance
                                                     fractionDigits:
                                                         defaultDisplayDigits,
-                                                    textStyle: FontManager
-                                                        .balanceInFiatCurrency(
-                                                            ProtonColors
-                                                                .textNorm))
-                                                : Text(
-                                                    "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)} ****",
-                                                    style: FontManager
-                                                        .balanceInFiatCurrency(
-                                                            ProtonColors
-                                                                .textNorm),
-                                                  ),
+                                                    textStyle: FontManager.balanceInFiatCurrency(
+                                                        ProtonColors.textNorm))
+                                                : Blur(
+                                                    blur: 5,
+                                                    blurColor: ProtonColors
+                                                        .backgroundProton,
+                                                    colorOpacity: 0.8,
+                                                    child: AnimatedFlipCounter(
+                                                        prefix: viewModel
+                                                            .dataProviderManager
+                                                            .userSettingsDataProvider
+                                                            .getFiatCurrencyName(
+                                                                fiatCurrency: viewModel
+                                                                    .currentExchangeRate
+                                                                    .fiatCurrency),
+                                                        value:
+                                                            ExchangeCalculator.getNotionalInFiatCurrency(
+                                                          viewModel
+                                                              .currentExchangeRate,
+                                                          walletBalanceState
+                                                              .balanceInSatoshi,
+                                                        ),
+
+                                                        /// TODO:: use actual balance
+                                                        fractionDigits: defaultDisplayDigits,
+                                                        textStyle: FontManager.balanceInFiatCurrency(ProtonColors.textNorm))),
                                             viewModel.displayBalance
                                                 ? Text(
                                                     ExchangeCalculator
@@ -163,14 +179,25 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                         .balanceInBTC(
                                                             ProtonColors
                                                                 .textWeak))
-                                                : Text(
-                                                    "**** ${viewModel.bitcoinUnit.name.toUpperCase()}",
+                                                : Blur(
+                                                    blur: 3,
+                                                    blurColor: ProtonColors
+                                                        .backgroundProton,
+                                                    colorOpacity: 0.8,
+                                                    child: Text(
+                                                        ExchangeCalculator
+                                                            .getBitcoinUnitLabel(
+                                                          viewModel.bitcoinUnit,
+                                                          walletBalanceState
+                                                              .balanceInSatoshi,
+                                                        ),
 
-                                                    /// TODO:: use actual balance
-                                                    style: FontManager
-                                                        .balanceInBTC(
-                                                            ProtonColors
-                                                                .textWeak)),
+                                                        /// TODO:: use actual balance
+                                                        style: FontManager
+                                                            .balanceInBTC(
+                                                                ProtonColors
+                                                                    .textWeak)),
+                                                  ),
                                           ],
                                         ),
                                         const SizedBox(width: 4),

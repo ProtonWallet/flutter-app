@@ -19,6 +19,8 @@ class AccountModel {
   int createTime;
   int modifyTime;
   String fiatCurrency;
+  int priority;
+  int lastUsedIndex;
 
   //TODO:: move to other place
   String labelDecrypt = "Default Account";
@@ -31,10 +33,12 @@ class AccountModel {
     required this.walletID,
     required this.derivationPath,
     required this.label,
+    required this.priority,
     required this.scriptType,
     required this.createTime,
     required this.modifyTime,
     required this.fiatCurrency,
+    required this.lastUsedIndex,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,10 +47,12 @@ class AccountModel {
       'walletID': walletID,
       'derivationPath': derivationPath,
       'label': label,
+      'priority': priority,
       'scriptType': scriptType,
       'createTime': createTime,
       'modifyTime': modifyTime,
       'fiatCurrency': fiatCurrency,
+      'lastUsedIndex': lastUsedIndex,
     };
   }
 
@@ -73,10 +79,12 @@ class AccountModel {
       walletID: map['walletID'],
       derivationPath: map['derivationPath'],
       label: map['label'],
+      priority: map['priority'],
       scriptType: map['scriptType'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
       fiatCurrency: map['fiatCurrency'],
+      lastUsedIndex: map['lastUsedIndex'],
     );
     return accountModel;
   }

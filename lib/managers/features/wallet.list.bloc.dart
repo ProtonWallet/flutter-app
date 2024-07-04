@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -49,9 +48,7 @@ class UpdateWalletName extends WalletListEvent {
 }
 
 class StartLoading extends WalletListEvent {
-  final VoidCallback? callback;
-
-  StartLoading({this.callback});
+  StartLoading();
 
   @override
   List<Object> get props => [];
@@ -158,6 +155,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? selectedWalletChangeSubscription;
 
+  VoidCallback? startLoadingCallback;
   VoidCallback? onboardingCallback;
 
   WalletListBloc(
@@ -216,6 +214,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         return; // error;
       }
 
+      bool hasSelected = false;
       /// get user key
       var firstUserKey = await userManager.getFirstKey();
       List<WalletMenuModel> walletsModel = [];
@@ -223,7 +222,12 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       for (WalletData wallet in wallets) {
         WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
         walletModel.currentIndex = index++;
-
+        if (walletModel.walletModel.walletID ==
+                walletsDataProvider.selectedServerWalletID &&
+            walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+          walletModel.isSelected = true;
+          hasSelected = true;
+        }
         // check if wallet has password valid. no password is valid
         walletModel.hasValidPassword = await _hasValidPassphrase(
           wallet.wallet,
@@ -263,9 +267,15 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             logger.e(e.toString());
           }
         }
-        bool hasUpdateUserSetting = false;
         for (AccountModel account in wallet.accounts) {
           AccountMenuModel accMenuModel = AccountMenuModel(account);
+          if (walletModel.walletModel.walletID ==
+                  walletsDataProvider.selectedServerWalletID &&
+              accMenuModel.accountModel.accountID ==
+                  walletsDataProvider.selectedServerWalletAccountID) {
+            hasSelected = true;
+            accMenuModel.isSelected = true;
+          }
           if (secretKey != null) {
             var encrypted = base64Encode(account.label);
             try {
@@ -309,8 +319,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         walletsModel.add(walletModel);
       }
       emit(state.copyWith(initialized: true, walletsModel: walletsModel));
-      if (event.callback != null) {
-        event.callback!.call();
+      if (hasSelected == false) {
+        /// trigger startLoadingCallback to select default wallet
+        startLoadingCallback?.call();
       }
     });
 
@@ -503,11 +514,12 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   }
 
   void init({
-    VoidCallback? callback,
+    VoidCallback? startLoadingCallback,
     required VoidCallback onboardingCallback,
   }) {
+    this.startLoadingCallback = startLoadingCallback;
     this.onboardingCallback = onboardingCallback;
-    add(StartLoading(callback: callback));
+    add(StartLoading());
   }
 
   void selectWallet(WalletModel wallet) {

@@ -114,6 +114,37 @@ impl WalletClient {
         }
     }
 
+    pub async fn update_wallet_accounts_order(
+        &self,
+        wallet_id: String,
+        wallet_account_ids: Vec<String>,
+    ) -> Result<Vec<ApiWalletAccount>, BridgeError> {
+        let result = self
+            .inner
+            .update_wallet_accounts_order(wallet_id, wallet_account_ids)
+            .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn update_wallet_account_last_used_index(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        last_used_index: u32,
+    ) -> Result<ApiWalletAccount, BridgeError> {
+        let result = self
+            .inner
+            .update_wallet_account_last_used_index(wallet_id, wallet_account_id, last_used_index)
+            .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
     pub async fn update_wallet_account_fiat_currency(
         &self,
         wallet_id: String,

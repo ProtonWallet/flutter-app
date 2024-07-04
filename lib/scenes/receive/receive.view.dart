@@ -2,12 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:wallet/components/alert.custom.dart';
-import 'package:wallet/components/bottom.sheets/placeholder.dart';
-import 'package:wallet/components/button.v5.dart';
-import 'package:wallet/components/close.button.v1.dart';
-import 'package:wallet/components/custom.tooltip.dart';
-import 'package:wallet/components/wallet.account.dropdown.dart';
+import 'package:wallet/scenes/components/alert.custom.dart';
+import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
+import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -61,56 +61,57 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         ),
                         Column(children: [
                           const SizedBox(height: 10),
-                          viewModel.hasEmailIntegration
-                              ? AlertCustom(
-                                  content: S
-                                      .of(context)
-                                      .receive_email_integration_alert_content(
-                                          viewModel.bitcoinViaEmailAddress),
-                                  learnMore: GestureDetector(
-                                      onTap: () {
-                                        CustomPlaceholder.show(context);
-                                      },
-                                      child: Text(S.of(context).learn_more,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textNorm))),
-                                  leadingWidget: SvgPicture.asset(
-                                      "assets/images/icon/send_2.svg",
-                                      fit: BoxFit.fill,
-                                      width: 30,
-                                      height: 30),
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                    width: 0,
+                          if (viewModel.initialized)
+                            viewModel.hasEmailIntegration
+                                ? AlertCustom(
+                                    content: S
+                                        .of(context)
+                                        .receive_email_integration_alert_content(
+                                            viewModel.bitcoinViaEmailAddress),
+                                    learnMore: GestureDetector(
+                                        onTap: () {
+                                          CustomPlaceholder.show(context);
+                                        },
+                                        child: Text(S.of(context).learn_more,
+                                            style: FontManager.body2Median(
+                                                ProtonColors.textNorm))),
+                                    leadingWidget: SvgPicture.asset(
+                                        "assets/images/icon/send_2.svg",
+                                        fit: BoxFit.fill,
+                                        width: 30,
+                                        height: 30),
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                      width: 0,
+                                    ),
+                                    backgroundColor:
+                                        ProtonColors.alertEnableBackground,
+                                    color: ProtonColors.textNorm,
+                                  )
+                                : AlertCustom(
+                                    content: S
+                                        .of(context)
+                                        .bitcoin_via_email_not_active_desc,
+                                    learnMore: GestureDetector(
+                                        onTap: () {
+                                          CustomPlaceholder.show(context);
+                                        },
+                                        child: Text(S.of(context).learn_more,
+                                            style: FontManager.body2Median(
+                                                ProtonColors.textNorm))),
+                                    leadingWidget: SvgPicture.asset(
+                                        "assets/images/icon/send_2.svg",
+                                        fit: BoxFit.fill,
+                                        width: 30,
+                                        height: 30),
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                      width: 0,
+                                    ),
+                                    backgroundColor:
+                                        ProtonColors.alertDisableBackground,
+                                    color: ProtonColors.textNorm,
                                   ),
-                                  backgroundColor:
-                                      ProtonColors.alertEnableBackground,
-                                  color: ProtonColors.textNorm,
-                                )
-                              : AlertCustom(
-                                  content: S
-                                      .of(context)
-                                      .bitcoin_via_email_not_active_desc,
-                                  learnMore: GestureDetector(
-                                      onTap: () {
-                                        CustomPlaceholder.show(context);
-                                      },
-                                      child: Text(S.of(context).learn_more,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textNorm))),
-                                  leadingWidget: SvgPicture.asset(
-                                      "assets/images/icon/send_2.svg",
-                                      fit: BoxFit.fill,
-                                      width: 30,
-                                      height: 30),
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                    width: 0,
-                                  ),
-                                  backgroundColor:
-                                      ProtonColors.alertDisableBackground,
-                                  color: ProtonColors.textNorm,
-                                ),
                           const SizedBox(height: 10),
                         ]),
                         const SizedBox(height: 14),
@@ -219,16 +220,15 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                               color: ProtonColors.textWeak,
                                             ))
                                       ]),
-                                  // const SizedBox(height: 10),
-                                  // TODO:: remove this debug output
-                                  // Text(
-                                  //   "(Debug) AddressIndex: ${viewModel.addressIndex}",
-                                  //   style: FontManager.body2Regular(
-                                  //       ProtonColors.textWeak),
-                                  //   maxLines: 2,
-                                  //   overflow: TextOverflow.ellipsis,
-                                  //   textAlign: TextAlign.center,
-                                  // ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "(Debug) AddressIndex: ${viewModel.addressIndex}",
+                                    style: FontManager.body2Regular(
+                                        ProtonColors.textWeak),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
                                   const SizedBox(height: 20),
                                 ])),
                         SizedBoxes.box24,
@@ -246,7 +246,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         SizedBoxes.box12,
                         ButtonV5(
                             onPressed: () async {
-                              viewModel.getAddress();
+                              viewModel.generateNewAddress();
                             },
                             text: S.of(context).generate_new_address,
                             width: MediaQuery.of(context).size.width,

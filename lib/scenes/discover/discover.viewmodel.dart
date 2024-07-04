@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:wallet/components/discover/proton.feeditem.dart';
+import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';

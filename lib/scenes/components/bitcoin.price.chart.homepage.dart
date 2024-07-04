@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:wallet/components/bitcoin.price.chart.dart';
+import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
 import 'dart:convert';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';

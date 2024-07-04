@@ -375,6 +375,8 @@ class WalletsDataProvider extends DataProvider {
       apiWalletAcct.derivationPath,
       apiWalletAcct.id,
       apiWalletAcct.fiatCurrency,
+      apiWalletAcct.priority,
+      apiWalletAcct.lastUsedIndex,
       initialize: true,
     );
   }
@@ -468,8 +470,11 @@ class WalletsDataProvider extends DataProvider {
     int scriptType,
     String derivationPath,
     String accountID,
-    FiatCurrency fiatCurrency, {
+    FiatCurrency fiatCurrency,
+    int priority,
+    int lastUsedIndex, {
     bool initialize = false,
+    bool notify = true,
   }) async {
     int tmpID = -1;
     AccountModel? account = await accountDao.findByServerID(accountID);
@@ -480,26 +485,31 @@ class WalletsDataProvider extends DataProvider {
       account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
       account.scriptType = scriptType;
       account.fiatCurrency = fiatCurrency.name.toUpperCase();
+      account.priority = priority;
+      account.lastUsedIndex = lastUsedIndex;
       await accountDao.update(account);
     } else {
       account = AccountModel(
-          id: -1,
-          walletID: walletID,
-          derivationPath: derivationPath,
-          label: labelEncrypted.base64decode(),
-          scriptType: scriptType,
-          fiatCurrency: fiatCurrency.name.toUpperCase(),
-          createTime: now.millisecondsSinceEpoch ~/ 1000,
-          modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-          accountID: accountID);
+        id: -1,
+        walletID: walletID,
+        derivationPath: derivationPath,
+        label: labelEncrypted.base64decode(),
+        scriptType: scriptType,
+        fiatCurrency: fiatCurrency.name.toUpperCase(),
+        createTime: now.millisecondsSinceEpoch ~/ 1000,
+        modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+        accountID: accountID,
+        priority: priority,
+        lastUsedIndex: lastUsedIndex,
+      );
       tmpID = await accountDao.insert(account);
     }
 
     if (initialize == false) {
-      /// update cache,
-      /// TODO:: improve performance here
       walletsData = await _getFromDB();
-      dataUpdateController.add(DataUpdated("some data Updated"));
+      if (notify) {
+        dataUpdateController.add(DataUpdated("some data Updated"));
+      }
     }
     return tmpID;
   }
