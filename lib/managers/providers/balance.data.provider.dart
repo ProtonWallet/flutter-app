@@ -42,8 +42,8 @@ class BalanceDataProvider extends DataProvider {
     AccountModel accountModel,
   ) async {
     FrbAccount? account = await WalletManager.loadWalletWithID(
-      walletModel.id!,
-      accountModel.id!,
+      walletModel.walletID,
+      accountModel.accountID,
     );
     return BDKBalanceData(
       walletModel: walletModel,

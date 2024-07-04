@@ -2,45 +2,50 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-
 import 'package:wallet/helper/walletkey_helper.dart';
 
 class AccountModel {
-  int? id;
-  int walletID;
+  int id;
+  // unique account id from server
+  String accountID;
+  // wallet server id, 1 account : N
+  String walletID;
+  // 1 account : N,  join unique with wallet id
   String derivationPath;
+  // encrypted label
   Uint8List label;
+  // TODO:: map to script type object
   int scriptType;
   int createTime;
   int modifyTime;
-
-  String labelDecrypt = "Default Account";
-  String serverAccountID;
-  double balance = 0;
   String fiatCurrency;
+
+  //TODO:: move to other place
+  String labelDecrypt = "Default Account";
+  //TODO:: move to other place
+  double balance = 0;
 
   AccountModel({
     required this.id,
+    required this.accountID,
     required this.walletID,
     required this.derivationPath,
     required this.label,
     required this.scriptType,
     required this.createTime,
     required this.modifyTime,
-    required this.serverAccountID,
     required this.fiatCurrency,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'accountID': accountID,
       'walletID': walletID,
       'derivationPath': derivationPath,
       'label': label,
       'scriptType': scriptType,
       'createTime': createTime,
       'modifyTime': modifyTime,
-      'serverAccountID': serverAccountID,
       'fiatCurrency': fiatCurrency,
     };
   }
@@ -64,13 +69,13 @@ class AccountModel {
   factory AccountModel.fromMap(Map<String, dynamic> map) {
     AccountModel accountModel = AccountModel(
       id: map['id'],
+      accountID: map['accountID'] ?? "",
       walletID: map['walletID'],
       derivationPath: map['derivationPath'],
       label: map['label'],
       scriptType: map['scriptType'],
       createTime: map['createTime'],
       modifyTime: map['modifyTime'],
-      serverAccountID: map['serverAccountID'] ?? "",
       fiatCurrency: map['fiatCurrency'],
     );
     return accountModel;

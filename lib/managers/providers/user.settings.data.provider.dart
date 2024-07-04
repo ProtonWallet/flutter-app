@@ -109,23 +109,27 @@ class UserSettingsDataProvider extends DataProvider {
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
     if (this.fiatCurrency != fiatCurrency) {
       this.fiatCurrency = fiatCurrency;
-      insertUpdate(ApiWalletUserSettings(
-        bitcoinUnit: settingsData!.bitcoinUnit.toBitcoinUnit(),
-        fiatCurrency: fiatCurrency,
-        hideEmptyUsedAddresses: settingsData!.hideEmptyUsedAddresses ? 1 : 0,
-        twoFactorAmountThreshold:
-            settingsData!.twoFactorAmountThreshold.toInt(),
-      ));
-      ProtonExchangeRate exchangeRate =
-          await ExchangeRateService.getExchangeRate(fiatCurrency);
-      updateExchangeRate(exchangeRate);
+
+      var settings = await getSettings();
+      if (settings != null) {
+        insertUpdate(ApiWalletUserSettings(
+          bitcoinUnit: settings.bitcoinUnit.toBitcoinUnit(),
+          fiatCurrency: fiatCurrency,
+          hideEmptyUsedAddresses: settings.hideEmptyUsedAddresses ? 1 : 0,
+          twoFactorAmountThreshold: settings.twoFactorAmountThreshold.toInt(),
+        ));
+        ProtonExchangeRate exchangeRate =
+            await ExchangeRateService.getExchangeRate(fiatCurrency);
+        updateExchangeRate(exchangeRate);
+      }
     }
   }
 
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
     this.exchangeRate = exchangeRate;
     logger.i(
-        "Updating exchangeRate in new user setting provider (${exchangeRate.fiatCurrency.name}) = ${exchangeRate.exchangeRate}");
+      "Updating exchangeRate in new user setting provider (${exchangeRate.fiatCurrency.name}) = ${exchangeRate.exchangeRate}",
+    );
     exchangeRateUpdateController.add(ExchangeRateDataUpdated());
   }
 

@@ -23,7 +23,7 @@ class AppDatabase {
   static String versionKey = "db_version";
 
   // current version of the database
-  int version = 18;
+  int version = 19;
 
   // future: if the database cached version < resetVersion. rebuild the cache with latest schema. we can clean up migrations.
   int resetVersion = 1;
@@ -74,19 +74,12 @@ class AppDatabase {
 
   void buildMigration() {
     List<Migration> migrations = [
-      Migration(1, 2, () async {
-        await walletDao.migration_0();
-        await accountDao.migration_0();
-      }),
+      Migration(1, 2, () async {}),
       Migration(2, 3, () async {
         await transactionDao.migration_0();
       }),
-      Migration(3, 4, () async {
-        await walletDao.migration_1();
-      }),
-      Migration(4, 5, () async {
-        await walletDao.migration_2();
-      }),
+      Migration(3, 4, () async {}),
+      Migration(4, 5, () async {}),
       Migration(5, 6, () async {
         await contactsDao.migration_0();
       }),
@@ -109,9 +102,7 @@ class AppDatabase {
       Migration(11, 12, () async {
         await transactionInfoDao.migration_2();
       }),
-      Migration(12, 13, () async {
-        await accountDao.migration_1();
-      }),
+      Migration(12, 13, () async {}),
       Migration(13, 14, () async {
         await exchangeRateDao.migration_0();
       }),
@@ -124,10 +115,12 @@ class AppDatabase {
       Migration(16, 17, () async {
         await transactionDao.migration_4();
       }),
-      Migration(17, 18, () async {
-        await walletDao.migration_3();
+      Migration(17, 18, () async {}),
+      Migration(18, 19, () async {
+        await walletDao.migration_0();
+        await accountDao.migration_0();
       }),
-      Migration(18, 19, () async {}),
+      Migration(19, 20, () async {}),
     ];
 
     migrationContainer.addMigrations(migrations);

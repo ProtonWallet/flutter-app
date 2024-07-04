@@ -2,8 +2,8 @@ import 'package:wallet/models/database/base.database.dart';
 
 class AddressDatabase extends BaseDatabase {
   @override
-  Future<void> migration_0() {
-    return createTable('''
+  Future<void> migration_0() async {
+    await createTable('''
         CREATE TABLE IF NOT EXISTS `address` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           serverID TEXT,

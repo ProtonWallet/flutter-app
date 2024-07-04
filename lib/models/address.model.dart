@@ -1,5 +1,5 @@
 class AddressModel {
-  int? id; // Proton @ ContactList.ContactID
+  int id; // Proton @ ContactList.ContactID
   String serverID;
   String email;
   String serverWalletID;
@@ -15,7 +15,7 @@ class AddressModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'serverID': serverID,
       'email': email,
       'serverWalletID': serverWalletID,

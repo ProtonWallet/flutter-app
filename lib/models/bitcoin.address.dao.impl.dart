@@ -39,6 +39,8 @@ abstract class BitcoinAddressDao extends BitcoinAddressDatabase
   Future<List<BitcoinAddressModel>> findByWalletAccount(
       String serverWalletID, String serverAccountID,
       {String orderBy = "desc"});
+
+  Future<List> findAll();
 }
 
 class BitcoinAddressDaoImpl extends BitcoinAddressDao {
@@ -202,6 +204,12 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   @override
   Future<void> deleteByServerID(String id) {
     // TODO: implement deleteByServerID
+    throw UnimplementedError();
+  }
+
+  @override
+  Future findByServerID(String serverID) {
+    // TODO: implement findByServerID
     throw UnimplementedError();
   }
 }

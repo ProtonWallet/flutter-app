@@ -80,8 +80,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
     this.inviteClient,
   );
 
-  int walletID;
-  int accountID;
+  String walletID;
+  String accountID;
   final int maxRecipientCount = 5;
   String fromAddress = "";
   String errorMessage = "";
@@ -288,12 +288,12 @@ class SendViewModelImpl extends SendViewModel {
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
       contactsEmail = await contactsDataProvider.getContacts() ?? [];
-      walletModel = await DBHelper.walletDao!.findById(walletID);
-      if (accountID == 0) {
-        accountModel = await DBHelper.accountDao!
-            .findDefaultAccountByWalletID(walletModel?.id ?? 0);
+      walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+      if (accountID.isEmpty) {
+        accountModel =
+            await DBHelper.accountDao!.findDefaultAccountByWalletID(walletID);
       } else {
-        accountModel = await DBHelper.accountDao!.findById(accountID);
+        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
       }
       accountValueNotifier = ValueNotifier(accountModel);
       accountValueNotifier.addListener(() async {
@@ -344,16 +344,19 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> updateWallet() async {
     selfBitcoinAddresses.clear();
-    List<BitcoinAddressModel> localBitcoinAddresses =
-        await DBHelper.bitcoinAddressDao!.findByWalletAccount(
-            walletModel!.serverWalletID, accountModel!.serverAccountID);
+    List<BitcoinAddressModel> localBitcoinAddresses = await DBHelper
+        .bitcoinAddressDao!
+        .findByWalletAccount(walletModel!.walletID, accountModel!.accountID);
     selfBitcoinAddresses = localBitcoinAddresses.map((bitcoinAddressModel) {
       return bitcoinAddressModel.bitcoinAddress;
     }).toList();
-    _frbAccount =
-        await WalletManager.loadWalletWithID(walletID, accountModel?.id ?? 0);
-    accountAddressIDs = await WalletManager.getAccountAddressIDs(
-        accountModel?.serverAccountID ?? "");
+    // TODO:: fix me
+    _frbAccount = await WalletManager.loadWalletWithID(
+      walletID,
+      accountModel?.accountID ?? "",
+    );
+    accountAddressIDs =
+        await WalletManager.getAccountAddressIDs(accountModel?.accountID ?? "");
     if (_frbAccount != null) {
       var walletBalance = await _frbAccount!.getBalance();
       balance = walletBalance.trustedSpendable().toSat();
@@ -790,7 +793,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       String? encryptedLabel;
       SecretKey? secretKey =
-          await WalletManager.getWalletKey(walletModel!.serverWalletID);
+          await WalletManager.getWalletKey(walletModel!.walletID);
       encryptedLabel =
           await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
 
@@ -835,8 +838,8 @@ class SendViewModelImpl extends SendViewModel {
       logger.i("Start broadcastPsbt");
       txid = await blockClient!.broadcastPsbt(
         psbt: frbPsbt,
-        walletId: walletModel!.serverWalletID,
-        walletAccountId: accountModel!.serverAccountID,
+        walletId: walletModel!.walletID,
+        walletAccountId: accountModel!.accountID,
         label: encryptedLabel,
         exchangeRateId: exchangeRate.id,
         transactionTime: null,
@@ -872,8 +875,8 @@ class SendViewModelImpl extends SendViewModel {
                   transactionTime:
                       DateTime.now().millisecondsSinceEpoch ~/ 1000,
                   feeMode: userTransactionFeeMode.index,
-                  serverWalletID: walletModel!.serverWalletID,
-                  serverAccountID: accountModel!.serverAccountID,
+                  serverWalletID: walletModel!.walletID,
+                  serverAccountID: accountModel!.accountID,
                   toEmail: email.contains("@") ? email : "",
                   toBitcoinAddress: bitcoinAddress));
             }

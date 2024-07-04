@@ -31,12 +31,11 @@ class WalletSettingSheet {
     bool hasEmailIntegration = false;
     Map<String, bool> emailIntegrationEnables = {
       for (var accountMenuModel in walletMenuModel.accounts)
-        accountMenuModel.accountModel.serverAccountID:
+        accountMenuModel.accountModel.accountID:
             accountMenuModel.emailIds.isNotEmpty
     };
     for (var accountMenuModel in walletMenuModel.accounts) {
-      if (emailIntegrationEnables[
-              accountMenuModel.accountModel.serverAccountID] ??
+      if (emailIntegrationEnables[accountMenuModel.accountModel.accountID] ??
           false) {
         hasEmailIntegration = true;
         break;
@@ -51,8 +50,8 @@ class WalletSettingSheet {
             /// TODO:: change to walletMenuModel
 
             for (WalletMenuModel walletMenuModel2 in state.walletsModel) {
-              if (walletMenuModel.walletModel.serverWalletID ==
-                  walletMenuModel2.walletModel.serverWalletID) {
+              if (walletMenuModel.walletModel.walletID ==
+                  walletMenuModel2.walletModel.walletID) {
                 walletMenuModel =
                     walletMenuModel2; // TODO:: fix this workaround, or the value is old one
                 break;
@@ -66,17 +65,17 @@ class WalletSettingSheet {
                 walletMenuModel.accounts.map((e) => e.accountModel).toList();
             Map<String, TextEditingController> accountNameControllers = {
               for (var accountMenuModel in walletMenuModel.accounts)
-                accountMenuModel.accountModel.serverAccountID:
+                accountMenuModel.accountModel.accountID:
                     TextEditingController(text: accountMenuModel.label)
             };
             Map<String, ValueNotifier> accountFiatCurrencyNotifier =
                 viewModel.getAccountFiatCurrencyNotifiers(userAccounts);
             Map<String, FocusNode> accountNameFocusNodes = {
-              for (var item in userAccounts) item.serverAccountID: FocusNode()
+              for (var item in userAccounts) item.accountID: FocusNode()
             };
             for (AccountModel item in userAccounts) {
-              accountNameFocusNodes[item.serverAccountID]!.addListener(() {
-                if (accountNameFocusNodes[item.serverAccountID]!.hasFocus) {
+              accountNameFocusNodes[item.accountID]!.addListener(() {
+                if (accountNameFocusNodes[item.accountID]!.hasFocus) {
                   scrollController.jumpTo(scrollController.offset +
                       MediaQuery.of(context).viewInsets.bottom);
                 }
@@ -84,7 +83,7 @@ class WalletSettingSheet {
             }
             Map<String, ValueNotifier> _ = {
               for (var item in userAccounts)
-                item.serverAccountID:
+                item.accountID:
                     ValueNotifier(viewModel.protonAddresses.firstOrNull)
             };
             int indexOfWallet = walletMenuModel.currentIndex;
@@ -223,8 +222,8 @@ class WalletSettingSheet {
                           return Column(children: [
                             for (WalletMenuModel walletMenuModel2
                                 in state.walletsModel)
-                              if (walletMenuModel2.walletModel.serverWalletID ==
-                                  walletMenuModel.walletModel.serverWalletID)
+                              if (walletMenuModel2.walletModel.walletID ==
+                                  walletMenuModel.walletModel.walletID)
                                 for (AccountMenuModel accountMenuModel
                                     in walletMenuModel2.accounts)
                                   Container(
@@ -250,12 +249,12 @@ class WalletSettingSheet {
                                                     accountNameControllers[
                                                         accountMenuModel
                                                             .accountModel
-                                                            .serverAccountID]!,
+                                                            .accountID]!,
                                                 myFocusNode:
                                                     accountNameFocusNodes[
                                                         accountMenuModel
                                                             .accountModel
-                                                            .serverAccountID]!,
+                                                            .accountID]!,
                                                 onFinish: () async {
                                                   viewModel.renameAccount(
                                                       userWallet,
@@ -264,7 +263,7 @@ class WalletSettingSheet {
                                                       accountNameControllers[
                                                               accountMenuModel
                                                                   .accountModel
-                                                                  .serverAccountID]!
+                                                                  .accountID]!
                                                           .text);
                                                 },
                                                 scrollPadding: EdgeInsets.only(
@@ -330,7 +329,7 @@ class WalletSettingSheet {
                                                 accountFiatCurrencyNotifier[
                                                     accountMenuModel
                                                         .accountModel
-                                                        .serverAccountID]),
+                                                        .accountID]),
                                         const Divider(
                                           thickness: 0.2,
                                           height: 1,
@@ -356,7 +355,7 @@ class WalletSettingSheet {
                                                     value: emailIntegrationEnables[
                                                             accountMenuModel
                                                                 .accountModel
-                                                                .serverAccountID] ??
+                                                                .accountID] ??
                                                         false,
                                                     activeColor:
                                                         ProtonColors.protonBlue,
@@ -365,7 +364,7 @@ class WalletSettingSheet {
                                                         emailIntegrationEnables[
                                                                 accountMenuModel
                                                                     .accountModel
-                                                                    .serverAccountID] =
+                                                                    .accountID] =
                                                             newValue;
                                                       });
                                                     },
@@ -399,7 +398,7 @@ class WalletSettingSheet {
                                                       emailIntegrationEnables[
                                                               accountMenuModel
                                                                   .accountModel
-                                                                  .serverAccountID] =
+                                                                  .accountID] =
                                                           false;
                                                       hasEmailIntegration =
                                                           false;
@@ -409,7 +408,7 @@ class WalletSettingSheet {
                                                         if (emailIntegrationEnables[
                                                                 accountMenuModel
                                                                     .accountModel
-                                                                    .serverAccountID] ??
+                                                                    .accountID] ??
                                                             false) {
                                                           hasEmailIntegration =
                                                               true;
@@ -423,7 +422,7 @@ class WalletSettingSheet {
                                               )),
                                         if (emailIntegrationEnables[
                                             accountMenuModel
-                                                .accountModel.serverAccountID]!)
+                                                .accountModel.accountID]!)
                                           GestureDetector(
                                               onTap: () {
                                                 EmailIntegrationDropdownSheet
@@ -435,10 +434,9 @@ class WalletSettingSheet {
                                                         callback: () {
                                                   setState(() {
                                                     emailIntegrationEnables[
-                                                            accountMenuModel
-                                                                .accountModel
-                                                                .serverAccountID] =
-                                                        true;
+                                                        accountMenuModel
+                                                            .accountModel
+                                                            .accountID] = true;
                                                     hasEmailIntegration = true;
                                                   });
                                                 });

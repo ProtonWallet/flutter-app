@@ -151,6 +151,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
       'assets/images/icon/ic-arrow-out-from-rectanglesignout.svg');
 
+  /// File path: assets/images/icon/ic-arrow-out-square.svg
+  SvgGenImage get icArrowOutSquare =>
+      const SvgGenImage('assets/images/icon/ic-arrow-out-square.svg');
+
   /// File path: assets/images/icon/ic-arrow-right-arrow-left.svg
   SvgGenImage get icArrowRightArrowLeft =>
       const SvgGenImage('assets/images/icon/ic-arrow-right-arrow-left.svg');
@@ -338,6 +342,7 @@ class $AssetsImagesIconGen {
         drawerMenu,
         editUnknown,
         icArrowOutFromRectanglesignout,
+        icArrowOutSquare,
         icArrowRightArrowLeft,
         icArrowRotateRight,
         icBugreport,

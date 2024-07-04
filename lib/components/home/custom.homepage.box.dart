@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/proton.color.dart';
 
 class CustomHomePageBox extends StatelessWidget {
   final List<Widget> children;
@@ -16,7 +15,7 @@ class CustomHomePageBox extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: children,
             ),
             const SizedBox(

@@ -61,7 +61,14 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
-  BuyBitcoinViewModelImpl(super.coordinator, this.userEmail, this.buyBloc);
+  BuyBitcoinViewModelImpl(
+    super.coordinator,
+    this.userEmail,
+    this.buyBloc,
+    this.userID,
+    this.walletID,
+    this.accountID,
+  );
   final datasourceChangedStreamController =
       StreamController<BuyBitcoinViewModel>.broadcast();
 
@@ -78,9 +85,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   late final RampFlutter ramp;
 
   //
-  final int walletID = 1;
+  final String walletID;
   final String userEmail;
-  final int accountID = 1;
+  final String userID;
+  final String accountID;
 
   @override
   List<String> get favoriteCountryCode {
@@ -145,13 +153,20 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
     try {
       WalletModel? walletModel;
-      if (walletID == 0) {
-        walletModel = await DBHelper.walletDao!.getFirstPriorityWallet();
+      if (walletID.isEmpty) {
+        walletModel = await DBHelper.walletDao!.getFirstPriorityWallet(userID);
       } else {
-        walletModel = await DBHelper.walletDao!.findById(walletID);
+        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
       }
-      AccountModel accountModel =
-          await DBHelper.accountDao!.findById(accountID);
+
+      AccountModel? accountModel;
+      if (accountID.isEmpty) {
+        accountModel = await DBHelper.accountDao!.findDefaultAccountByWalletID(
+          walletModel?.walletID ?? "",
+        );
+      } else {
+        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+      }
       // await WalletManager.syncBitcoinAddressIndex(
       //     walletModel!.serverWalletID, accountModel.serverAccountID);
       await getAddress(walletModel, accountModel, init: true);
@@ -231,31 +246,38 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     return 'data:image/png;base64,$base64String';
   }
 
-  Future<void> getAddress(WalletModel? walletModel, AccountModel? accountModel,
-      {bool init = false}) async {
+  Future<void> getAddress(
+    WalletModel? walletModel,
+    AccountModel? accountModel, {
+    bool init = false,
+  }) async {
     if (walletModel != null && accountModel != null) {
       FrbAccount? account;
       if (init) {
         account = await WalletManager.loadWalletWithID(
-            walletModel.id!, accountModel.id!);
+          walletModel.walletID,
+          accountModel.accountID,
+        );
       }
 
       int addressIndex = 0;
       BitcoinAddressModel? bitcoinAddressModel =
           await DBHelper.bitcoinAddressDao!.findLatestUnusedLocalBitcoinAddress(
-              walletModel.serverWalletID, accountModel.serverAccountID);
+        walletModel.walletID,
+        accountModel.accountID,
+      );
       if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
         addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
       } else {
         addressIndex = await WalletManager.getBitcoinAddressIndex(
-            walletModel.serverWalletID, accountModel.serverAccountID);
+            walletModel.walletID, accountModel.accountID);
       }
       var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-            serverWalletID: walletModel.serverWalletID,
-            serverAccountID: accountModel.serverAccountID,
+            serverWalletID: walletModel.walletID,
+            serverAccountID: accountModel.accountID,
             bitcoinAddress: receiveAddress,
             bitcoinAddressIndex: addressIndex,
             inEmailIntegrationPool: 0,

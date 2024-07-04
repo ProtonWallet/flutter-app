@@ -6,7 +6,7 @@ import 'package:wallet/models/exchangerate.model.dart';
 abstract class ExchangeRateDao extends ExchangeRateDatabase implements BaseDao {
   ExchangeRateDao(super.db, super.tableName);
 
-  Future<ExchangeRateModel?> findByServerID(String serverID);
+  Future<List> findAll(String userID);
 }
 
 class ExchangeRateDaoImpl extends ExchangeRateDao {
@@ -18,7 +18,7 @@ class ExchangeRateDaoImpl extends ExchangeRateDao {
   }
 
   @override
-  Future<List> findAll() async {
+  Future<List> findAll(String userID) async {
     List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => ExchangeRateModel.fromMap(maps[index]));

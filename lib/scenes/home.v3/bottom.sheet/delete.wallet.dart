@@ -44,9 +44,8 @@ class DeleteWalletSheet {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              S
-                                  .of(context)
-                                  .confirm_to_delete_wallet(walletMenuModel.walletName),
+                              S.of(context).confirm_to_delete_wallet(
+                                  walletMenuModel.walletName),
                               style: FontManager.titleHeadline(
                                   ProtonColors.textNorm),
                               textAlign: TextAlign.center,
@@ -80,10 +79,9 @@ class DeleteWalletSheet {
                             ButtonV5(
                                 onPressed: () async {
                                   Clipboard.setData(ClipboardData(
-                                          text: await WalletManager
-                                              .getMnemonicWithID(
-                                              walletMenuModel.walletModel.id!)))
-                                      .then((_) {
+                                    text: await WalletManager.getMnemonicWithID(
+                                        walletMenuModel.walletModel.walletID),
+                                  )).then((_) {
                                     if (context.mounted) {
                                       logger.i(S.of(context).copied_mnemonic);
                                       LocalToast.showToast(context,
@@ -114,7 +112,8 @@ class DeleteWalletSheet {
                                   Navigator.of(context)
                                       .pop(); // pop up this bottomSheet
                                 }
-                                await viewModel.deleteWallet(walletMenuModel.walletModel);
+                                await viewModel
+                                    .deleteWallet(walletMenuModel.walletModel);
                                 if (context.mounted) {
                                   CommonHelper.showSnackbar(
                                       context, S.of(context).wallet_deleted);

@@ -70,8 +70,7 @@ class PassphraseSheet {
                           viewModel.dataProviderManager.walletPassphraseProvider
                               .saveWalletPassphrase(
                             WalletPassphrase(
-                              walletID:
-                                  walletMenuModel.walletModel.serverWalletID,
+                              walletID: walletMenuModel.walletModel.walletID,
                               passphrase: passphrase,
                             ),
                           );

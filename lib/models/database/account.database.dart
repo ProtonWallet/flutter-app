@@ -3,23 +3,23 @@ import 'package:wallet/models/database/base.database.dart';
 class AccountDatabase extends BaseDatabase {
   AccountDatabase(super.db, super.tableName);
   @override
-  Future<void> migration_0() {
-    return createTable('''
-      CREATE TABLE IF NOT EXISTS `account` (
+  Future<void> migration_0() async {
+    await dropTable();
+    await createTable('''
+      CREATE TABLE IF NOT EXISTS `$tableName` (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        walletID INTEGER,
+        accountID TEXT,
+        walletID TEXT,
         derivationPath TEXT,
         label BLOB,
         scriptType INTEGER,
         createTime INTEGER,
         modifyTime INTEGER,
-        serverAccountID TEXT,
+        fiatCurrency TEXT,
         UNIQUE (walletID, derivationPath)
       )
     ''');
-  }
-  Future<void> migration_1() {
-    // Add column `fingerprint`
-    return addColumn("fiatCurrency", "TEXT");
+    await addIndex("walletID");
+    await addIndex("accountID");
   }
 }

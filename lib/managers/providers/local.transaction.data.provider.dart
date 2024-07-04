@@ -25,29 +25,29 @@ class LocalTransactionDataProvider extends DataProvider {
   final WalletDao walletDao;
   final AccountDao accountDao;
   final TransactionInfoDao transactionInfoDao;
+  final String userID;
 
   LocalTransactionDataProvider(
     this.walletClient,
     this.walletDao,
     this.accountDao,
     this.transactionInfoDao,
+    this.userID,
   );
 
   List<LocalTransactionData> transactionDataList = [];
 
   Future<List<LocalTransactionData>> _getFromDB() async {
     List<LocalTransactionData> transactionDataList = [];
-    var wallets = (await walletDao.findAll())
-        .cast<WalletModel>(); // TODO:: search by UserID
-
+    var wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
         List<AccountModel> accounts =
-            (await accountDao.findAllByWalletID(walletModel.id!))
+            (await accountDao.findAllByWalletID(walletModel.walletID))
                 .cast<AccountModel>();
         for (AccountModel accountModel in accounts) {
-          List<TransactionInfoModel> transactions = await transactionInfoDao
-              .findAllByServerAccountID(accountModel.serverAccountID);
+          var transactions = await transactionInfoDao
+              .findAllByServerAccountID(accountModel.accountID);
           LocalTransactionData localTransactionData = LocalTransactionData(
               accountModel: accountModel, transactions: transactions);
           transactionDataList.add(localTransactionData);
@@ -60,11 +60,10 @@ class LocalTransactionDataProvider extends DataProvider {
 
   Future<LocalTransactionData> getLocalTransactionDataByWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
-    List<LocalTransactionData> localTransactionsData =
-        await getLocalTransactionData();
+    var localTransactionsData = await getLocalTransactionData();
     for (LocalTransactionData localTransactionData in localTransactionsData) {
-      if (localTransactionData.accountModel.serverAccountID ==
-          accountModel.serverAccountID) {
+      if (localTransactionData.accountModel.accountID ==
+          accountModel.accountID) {
         return localTransactionData;
       }
     }
@@ -84,7 +83,7 @@ class LocalTransactionDataProvider extends DataProvider {
     await transactionInfoDao.insert(transactionInfoModel);
     transactionDataList = await _getFromDB();
     // dataUpdateController.add(DataUpdated("Local transaction data update"));
-    // /// TODO:: enhance performance
+    /// TODO:: enhance performance
   }
 
   @override
