@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/components/discover/proton.feeditem.dart';
+import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 
 void main() {
   group('ProtonFeedItem', () {

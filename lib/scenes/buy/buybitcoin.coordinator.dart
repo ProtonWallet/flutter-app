@@ -14,6 +14,7 @@ class BuyBitcoinCoordinator extends Coordinator {
 
   final String walletID;
   final String accountID;
+
   BuyBitcoinCoordinator(this.walletID, this.accountID);
 
   @override
@@ -33,6 +34,7 @@ class BuyBitcoinCoordinator extends Coordinator {
       info.userId,
       walletID,
       accountID,
+      serviceManager.get<DataProviderManager>().localBitcoinAddressDataProvider,
     );
     widget = BuyBitcoinView(
       viewModel,

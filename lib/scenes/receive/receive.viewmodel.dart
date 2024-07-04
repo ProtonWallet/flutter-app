@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -16,7 +16,6 @@ import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
-import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -56,6 +55,8 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 
   void getAddress();
 
+  void generateNewAddress();
+
   void changeAccount(AccountModel newAccountModel);
 }
 
@@ -69,6 +70,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     this.walletDataProvider,
     this.protonAddressProvider,
     this.walletKeysProvider,
+    this.localBitcoinAddressDataProvider,
   );
 
   late FrbAccount _frbAccount;
@@ -79,6 +81,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   final UserManager userManager;
   final WalletsDataProvider walletDataProvider;
+  final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final ProtonAddressProvider protonAddressProvider;
   final WalletKeysProvider walletKeysProvider;
 
@@ -89,9 +92,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> loadData() async {
-    EasyLoading.show(
-        status: "syncing bitcoin address index..",
-        maskType: EasyLoadingMaskType.black);
     try {
       walletData =
           await walletDataProvider.getWalletByServerWalletID(serverWalletID);
@@ -116,7 +116,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -130,8 +129,18 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       datasourceChangedStreamController.stream;
 
   @override
+  Future<void> generateNewAddress() async {
+    if (accountModel != null) {
+      accountModel!.lastUsedIndex = accountModel!.lastUsedIndex + 1;
+      await WalletManager.updateLastUsedIndex(accountModel!);
+      getAddress();
+    }
+  }
+
+  @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
+      addressIndex = accountModel!.lastUsedIndex;
       if (init) {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,
@@ -148,25 +157,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           }
         }
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
-        BitcoinAddressModel? bitcoinAddressModel = await DBHelper
-            .bitcoinAddressDao!
-            .findLatestUnusedLocalBitcoinAddress(
-          walletModel!.walletID,
-          accountModel!.accountID,
-        );
-        if (bitcoinAddressModel != null && bitcoinAddressModel.used == 0) {
-          addressIndex = bitcoinAddressModel.bitcoinAddressIndex;
-        } else {
-          addressIndex = await WalletManager.getBitcoinAddressIndex(
-            walletModel!.walletID,
-            accountModel!.accountID,
-          );
-        }
-      } else {
-        addressIndex = await WalletManager.getBitcoinAddressIndex(
-          walletModel!.walletID,
-          accountModel!.accountID,
-        );
       }
       var addressInfo = await _frbAccount.getAddress(index: addressIndex);
       address = addressInfo.address;
@@ -218,20 +208,23 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> changeAccount(AccountModel newAccountModel) async {
-    EasyLoading.show(
-        status: "syncing bitcoin address index..",
-        maskType: EasyLoadingMaskType.black);
     try {
       accountModel = newAccountModel;
       accountModel?.labelDecrypt =
           await decryptAccountName(base64Encode(accountModel!.label));
-      await WalletManager.syncBitcoinAddressIndex(
-          walletModel!.walletID, accountModel!.accountID);
+
+      /// check if local highest used bitcoin address index is higher than the one store in wallet account
+      /// this will happen when some one send bitcoin via qr code
+      int localUsedIndex = await localBitcoinAddressDataProvider
+          .getLastUsedIndex(walletModel, accountModel);
+      if (localUsedIndex >= accountModel!.lastUsedIndex) {
+        accountModel!.lastUsedIndex = localUsedIndex + 1;
+        await WalletManager.updateLastUsedIndex(accountModel!);
+      }
       await getAddress(init: true);
     } catch (e) {
       logger.e(e.toString());
     }
-    EasyLoading.dismiss();
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

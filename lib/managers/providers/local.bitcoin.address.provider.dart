@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
@@ -98,6 +99,29 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
       bitcoinAddressInfos[addressInfo.address] = addressInfo;
     }
     return bitcoinAddressInfos;
+  }
+
+  /// return -1 if no bitcoin address is used
+  /// otherwise return highest used index
+  Future<int> getLastUsedIndex(
+    WalletModel? walletModel,
+    AccountModel? accountModel,
+  ) async {
+    if (walletModel != null && accountModel != null) {
+      /// TODO: improve performance
+      LocalBitcoinAddressData localBitcoinAddressData =
+          await getDataByWalletAccount(walletModel, accountModel);
+      int highestUsedIndex = -1;
+      for (BitcoinAddressModel bitcoinAddressModel
+          in localBitcoinAddressData.bitcoinAddresses) {
+        if (bitcoinAddressModel.used == 1) {
+          highestUsedIndex =
+              max(highestUsedIndex, bitcoinAddressModel.bitcoinAddressIndex);
+        }
+      }
+      return highestUsedIndex;
+    }
+    return -1;
   }
 
   Future<LocalBitcoinAddressData> getDataByWalletAccount(

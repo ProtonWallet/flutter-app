@@ -176,6 +176,8 @@ class EventLoop implements Manager {
                 account.derivationPath,
                 account.id,
                 account.fiatCurrency,
+                account.priority,
+                account.lastUsedIndex,
               );
             }
           }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/components/dropdown.button.v1.dart';
+import 'package:wallet/scenes/components/dropdown.button.v1.dart';
 
 List<String> items = ["Option 1", "Banana B", "Cannon 3", "4 for Four"];
 final ValueNotifier valueNotifier = ValueNotifier("Banana B");

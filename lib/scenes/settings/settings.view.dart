@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/l10n/generated/locale.dart';

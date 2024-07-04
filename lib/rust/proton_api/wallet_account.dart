@@ -34,8 +34,10 @@ class ApiWalletAccount {
   final FiatCurrency fiatCurrency;
   final String derivationPath;
   final String label;
+  final int priority;
   final int scriptType;
   final List<ApiEmailAddress> addresses;
+  final int lastUsedIndex;
 
   const ApiWalletAccount({
     required this.id,
@@ -43,8 +45,10 @@ class ApiWalletAccount {
     required this.fiatCurrency,
     required this.derivationPath,
     required this.label,
+    required this.priority,
     required this.scriptType,
     required this.addresses,
+    required this.lastUsedIndex,
   });
 
   @override
@@ -54,8 +58,10 @@ class ApiWalletAccount {
       fiatCurrency.hashCode ^
       derivationPath.hashCode ^
       label.hashCode ^
+      priority.hashCode ^
       scriptType.hashCode ^
-      addresses.hashCode;
+      addresses.hashCode ^
+      lastUsedIndex.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -67,8 +73,10 @@ class ApiWalletAccount {
           fiatCurrency == other.fiatCurrency &&
           derivationPath == other.derivationPath &&
           label == other.label &&
+          priority == other.priority &&
           scriptType == other.scriptType &&
-          addresses == other.addresses;
+          addresses == other.addresses &&
+          lastUsedIndex == other.lastUsedIndex;
 }
 
 class CreateWalletAccountReq {
