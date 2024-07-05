@@ -42,6 +42,7 @@ import 'api/bdk_wallet/wallet.dart';
 import 'api/flutter_logger.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
+import 'api/srp/srp_client.dart';
 import 'common/address_info.dart';
 import 'common/change_spend_policy.dart';
 import 'common/coin_selection.dart';
@@ -67,6 +68,7 @@ import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
 import 'proton_api/wallet_settings.dart';
+import 'srp/proofs.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustLibApiImplPlatform({
@@ -567,6 +569,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  ProtonSettingsClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          dynamic raw);
+
+  @protected
   ProtonUsersClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           dynamic raw);
@@ -833,6 +840,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiEmailAddress dco_decode_api_email_address(dynamic raw);
 
   @protected
+  ApiMnemonicUserKey dco_decode_api_mnemonic_user_key(dynamic raw);
+
+  @protected
   ApiWallet dco_decode_api_wallet(dynamic raw);
 
   @protected
@@ -937,6 +947,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_box_autoadd_u_8(dynamic raw);
 
   @protected
+  UpdateMnemonicSettingsRequestBody
+      dco_decode_box_autoadd_update_mnemonic_settings_request_body(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_usize(dynamic raw);
 
   @protected
@@ -966,9 +980,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   EmailIntegrationBitcoinAddress dco_decode_email_integration_bitcoin_address(
       dynamic raw);
-
-  @protected
-  EmptyResponseBody dco_decode_empty_response_body(dynamic raw);
 
   @protected
   double dco_decode_f_64(dynamic raw);
@@ -1048,6 +1059,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ApiEmailAddress> dco_decode_list_api_email_address(dynamic raw);
 
   @protected
+  List<ApiMnemonicUserKey> dco_decode_list_api_mnemonic_user_key(dynamic raw);
+
+  @protected
   List<ApiWalletAccount> dco_decode_list_api_wallet_account(dynamic raw);
 
   @protected
@@ -1065,6 +1079,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<FrbOutPoint> dco_decode_list_frb_out_point(dynamic raw);
+
+  @protected
+  List<MnemonicUserKey> dco_decode_list_mnemonic_user_key(dynamic raw);
 
   @protected
   List<PaymentMethod> dco_decode_list_payment_method(dynamic raw);
@@ -1131,6 +1148,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry dco_decode_log_entry(dynamic raw);
+
+  @protected
+  MnemonicAuth dco_decode_mnemonic_auth(dynamic raw);
+
+  @protected
+  MnemonicUserKey dco_decode_mnemonic_user_key(dynamic raw);
 
   @protected
   Network dco_decode_network(dynamic raw);
@@ -1290,6 +1313,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SortOrder dco_decode_sort_order(dynamic raw);
 
   @protected
+  SrpClient dco_decode_srp_client(dynamic raw);
+
+  @protected
+  SRPProofB64 dco_decode_srp_proof_b_64(dynamic raw);
+
+  @protected
+  SRPVerifierB64 dco_decode_srp_verifier_b_64(dynamic raw);
+
+  @protected
   TransactionTime dco_decode_transaction_time(dynamic raw);
 
   @protected
@@ -1312,6 +1344,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void dco_decode_unit(dynamic raw);
+
+  @protected
+  UpdateMnemonicSettingsRequestBody
+      dco_decode_update_mnemonic_settings_request_body(dynamic raw);
 
   @protected
   int dco_decode_usize(dynamic raw);
@@ -1683,6 +1719,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  ProtonSettingsClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonUsersClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           SseDeserializer deserializer);
@@ -1949,6 +1990,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer);
 
   @protected
+  ApiMnemonicUserKey sse_decode_api_mnemonic_user_key(
+      SseDeserializer deserializer);
+
+  @protected
   ApiWallet sse_decode_api_wallet(SseDeserializer deserializer);
 
   @protected
@@ -2067,6 +2112,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_box_autoadd_u_8(SseDeserializer deserializer);
 
   @protected
+  UpdateMnemonicSettingsRequestBody
+      sse_decode_box_autoadd_update_mnemonic_settings_request_body(
+          SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
@@ -2099,10 +2149,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   EmailIntegrationBitcoinAddress sse_decode_email_integration_bitcoin_address(
-      SseDeserializer deserializer);
-
-  @protected
-  EmptyResponseBody sse_decode_empty_response_body(
       SseDeserializer deserializer);
 
   @protected
@@ -2188,6 +2234,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<ApiMnemonicUserKey> sse_decode_list_api_mnemonic_user_key(
+      SseDeserializer deserializer);
+
+  @protected
   List<ApiWalletAccount> sse_decode_list_api_wallet_account(
       SseDeserializer deserializer);
 
@@ -2209,6 +2259,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<FrbOutPoint> sse_decode_list_frb_out_point(SseDeserializer deserializer);
+
+  @protected
+  List<MnemonicUserKey> sse_decode_list_mnemonic_user_key(
+      SseDeserializer deserializer);
 
   @protected
   List<PaymentMethod> sse_decode_list_payment_method(
@@ -2287,6 +2341,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry sse_decode_log_entry(SseDeserializer deserializer);
+
+  @protected
+  MnemonicAuth sse_decode_mnemonic_auth(SseDeserializer deserializer);
+
+  @protected
+  MnemonicUserKey sse_decode_mnemonic_user_key(SseDeserializer deserializer);
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
@@ -2466,6 +2526,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SortOrder sse_decode_sort_order(SseDeserializer deserializer);
 
   @protected
+  SrpClient sse_decode_srp_client(SseDeserializer deserializer);
+
+  @protected
+  SRPProofB64 sse_decode_srp_proof_b_64(SseDeserializer deserializer);
+
+  @protected
+  SRPVerifierB64 sse_decode_srp_verifier_b_64(SseDeserializer deserializer);
+
+  @protected
   TransactionTime sse_decode_transaction_time(SseDeserializer deserializer);
 
   @protected
@@ -2488,6 +2557,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_decode_unit(SseDeserializer deserializer);
+
+  @protected
+  UpdateMnemonicSettingsRequestBody
+      sse_decode_update_mnemonic_settings_request_body(
+          SseDeserializer deserializer);
 
   @protected
   int sse_decode_usize(SseDeserializer deserializer);
@@ -2863,6 +2937,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonSettingsClient(
+          ProtonSettingsClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonUsersClient(
           ProtonUsersClient self, SseSerializer serializer);
 
@@ -3134,6 +3213,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiEmailAddress self, SseSerializer serializer);
 
   @protected
+  void sse_encode_api_mnemonic_user_key(
+      ApiMnemonicUserKey self, SseSerializer serializer);
+
+  @protected
   void sse_encode_api_wallet(ApiWallet self, SseSerializer serializer);
 
   @protected
@@ -3258,6 +3341,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_u_8(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_update_mnemonic_settings_request_body(
+      UpdateMnemonicSettingsRequestBody self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_usize(int self, SseSerializer serializer);
 
   @protected
@@ -3292,10 +3379,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_email_integration_bitcoin_address(
       EmailIntegrationBitcoinAddress self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_empty_response_body(
-      EmptyResponseBody self, SseSerializer serializer);
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
@@ -3383,6 +3466,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ApiEmailAddress> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_api_mnemonic_user_key(
+      List<ApiMnemonicUserKey> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_api_wallet_account(
       List<ApiWalletAccount> self, SseSerializer serializer);
 
@@ -3405,6 +3492,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_frb_out_point(
       List<FrbOutPoint> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_mnemonic_user_key(
+      List<MnemonicUserKey> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_payment_method(
@@ -3484,6 +3575,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_mnemonic_auth(MnemonicAuth self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_mnemonic_user_key(
+      MnemonicUserKey self, SseSerializer serializer);
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
@@ -3663,6 +3761,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_sort_order(SortOrder self, SseSerializer serializer);
 
   @protected
+  void sse_encode_srp_client(SrpClient self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_srp_proof_b_64(SRPProofB64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_srp_verifier_b_64(
+      SRPVerifierB64 self, SseSerializer serializer);
+
+  @protected
   void sse_encode_transaction_time(
       TransactionTime self, SseSerializer serializer);
 
@@ -3687,6 +3795,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_update_mnemonic_settings_request_body(
+      UpdateMnemonicSettingsRequestBody self, SseSerializer serializer);
 
   @protected
   void sse_encode_usize(int self, SseSerializer serializer);

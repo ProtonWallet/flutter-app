@@ -219,6 +219,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get icSquaresInSquarediscover =>
       const SvgGenImage('assets/images/icon/ic-squares-in-squarediscover.svg');
 
+  /// File path: assets/images/icon/ic-squares.svg
+  SvgGenImage get icSquares =>
+      const SvgGenImage('assets/images/icon/ic-squares.svg');
+
   /// File path: assets/images/icon/ic-wallet.svg
   SvgGenImage get icWallet =>
       const SvgGenImage('assets/images/icon/ic-wallet.svg');
@@ -359,6 +363,7 @@ class $AssetsImagesIconGen {
         icPlusCircle,
         icShield,
         icSquaresInSquarediscover,
+        icSquares,
         icWallet,
         icMessage,
         icNote,

@@ -84,12 +84,12 @@ macos:
 	CGO_ENABLED=1 \
 	GOOS=darwin \
 	GOARCH=arm64 \
-	SDK=macos \
+	SDK=macosx \
 	go build -trimpath -buildmode=c-shared -o ${LIB_NAME}_arm64.dylib .
 	CGO_ENABLED=1 \
 	GOOS=darwin \
 	GOARCH=amd64 \
-	SDK=macos \
+	SDK=macosx \
 	go build -trimpath -buildmode=c-shared -o ${LIB_NAME}_amd64.dylib .
 	lipo \
 		-create \

@@ -89,12 +89,11 @@ class AddWalletAccountSheet {
                         textController: newAccountNameController,
                         myFocusNode: newAccountNameFocusNode,
                         validation: (String newAccountName) {
-                          bool accountNameExists = false;
-
+                          // bool accountNameExists = false;
                           /// TODO:: check if accountName already used
-                          if (accountNameExists) {
-                            return S.of(context).account_name_already_used;
-                          }
+                          // if (accountNameExists) {
+                          //   return S.of(context).account_name_already_used;
+                          // }
                           return "";
                         },
                       ),
@@ -203,14 +202,13 @@ class AddWalletAccountSheet {
                               ],
                               myFocusNode: newAccountIndexFocusNode,
                               validation: (String newAccountName) {
-                                bool accountNameExists = false;
-
+                                // bool accountNameExists = false;
                                 /// TODO:: check if accountName already used
-                                if (accountNameExists) {
-                                  return S
-                                      .of(context)
-                                      .account_name_already_used;
-                                }
+                                // if (accountNameExists) {
+                                //   return S
+                                //       .of(context)
+                                //       .account_name_already_used;
+                                // }
                                 return "";
                               },
                             ),

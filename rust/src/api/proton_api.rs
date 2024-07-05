@@ -583,15 +583,10 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
 
 #[cfg(test)]
 mod test {
-
-    use proton_srp::SRPAuth;
-    use rand::Rng;
-
     use crate::api::{
         api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        bdk_wallet::mnemonic::FrbMnemonic,
         proton_api::fork,
     };
 
@@ -650,51 +645,5 @@ mod test {
         let forked_session = fork().await.unwrap();
         println!("forked session: {:?}", forked_session);
         assert!(!forked_session.access_token.is_empty())
-    }
-
-    #[tokio::test]
-    async fn test_enable_proton_recovery() {
-        let app_version = "android-wallet@1.0.0".to_string();
-        let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
-        let env = "atlas";
-
-        let user = "feng100".to_string();
-        let pass = "12345678".to_string();
-
-        let store = ProtonWalletAuthStore::new(env).unwrap();
-        let mut client =
-            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
-        let auth_info = client.login(user, pass).await.unwrap();
-        assert!(!auth_info.access_token.is_empty());
-        client.set_proton_api();
-
-        let srp_module_key = "-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-        xjMEXAHLgxYJKwYBBAHaRw8BAQdAFurWXXwjTemqjD7CXjXVyKf0of7n9Ctm
-        L8v9enkzggHNEnByb3RvbkBzcnAubW9kdWx1c8J3BBAWCgApBQJcAcuDBgsJ
-        BwgDAgkQNQWFxOlRjyYEFQgKAgMWAgECGQECGwMCHgEAAPGRAP9sauJsW12U
-        MnTQUZpsbJb53d0Wv55mZIIiJL2XulpWPQD/V6NglBd96lZKBmInSXX/kXat
-        Sv+y0io+LR8i2+jV+AbOOARcAcuDEgorBgEEAZdVAQUBAQdAeJHUz1c9+KfE
-        kSIgcBRE3WuXC4oj5a2/U3oASExGDW4DAQgHwmEEGBYIABMFAlwBy4MJEDUF
-        hcTpUY8mAhsMAAD/XQD8DxNI6E78meodQI+wLsrKLeHn32iLvUqJbVDhfWSU
-        WO4BAMcm1u02t4VKw++ttECPt+HUgPUq5pqQWe5Q2cW4TMsE
-        =Y4Mw";
-        let AUTH_VERSION = 4;
-        // get random srp getRandomSrpVerifier
-        let mut rng = rand::thread_rng();
-        let mut entropy = [0u8; 16];
-        rng.fill(&mut entropy);
-        let words = FrbMnemonic::new_with(&entropy).unwrap();
-
-        // proton_srp::SRPAuth::new(
-        //     user,
-        //     pass,
-        //     auth_info.salt,˝
-        //     auth_info.verifier,
-        //     AUTH_VERSION,
-        //     words.as_string(),
-        // )
-
-        // proton_srp::mailbox_password_hash(password, salt)
     }
 }

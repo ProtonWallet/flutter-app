@@ -10,7 +10,6 @@ import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 

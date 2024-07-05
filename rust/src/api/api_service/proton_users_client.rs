@@ -5,8 +5,8 @@ pub use andromeda_api::ProtonUsersClient as InnerProtonUsersClient;
 use andromeda_api::{
     core::ApiClient,
     proton_users::{
-        EmptyResponseBody, GetAuthInfoRequest, GetAuthInfoResponseBody, GetAuthModulusResponse,
-        ProtonSrpClientProofs, ProtonUser,
+        GetAuthInfoRequest, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
+        ProtonUser,
     },
 };
 
@@ -43,10 +43,17 @@ impl ProtonUsersClient {
         &self,
         proofs: ProtonSrpClientProofs,
     ) -> Result<String, BridgeError> {
-        Ok(self.inner.unlock_password_change(proofs).await?.ServerProof)
+        Ok(self.inner.unlock_password_change(proofs).await?)
     }
 
-    pub async fn lock_sensitive_settings(&self) -> Result<EmptyResponseBody, BridgeError> {
+    pub async fn lock_sensitive_settings(&self) -> Result<u32, BridgeError> {
         Ok(self.inner.lock_sensitive_settings().await?)
+    }
+
+    pub async fn unlock_sensitive_settings(
+        &self,
+        proofs: ProtonSrpClientProofs,
+    ) -> Result<String, BridgeError> {
+        Ok(self.inner.unlock_sensitive_settings(proofs).await?)
     }
 }
