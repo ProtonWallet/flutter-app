@@ -18,6 +18,7 @@ import 'onramp_gateway_client.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_contacts_client.dart';
 import 'proton_email_addr_client.dart';
+import 'proton_settings_client.dart';
 import 'proton_users_client.dart';
 import 'settings_client.dart';
 import 'transaction_client.dart';
@@ -73,6 +74,10 @@ class ProtonApiService extends RustOpaque {
   ProtonEmailAddressClient getProtonEmailAddrClient({dynamic hint}) =>
       RustLib.instance.api
           .protonApiServiceGetProtonEmailAddrClient(that: this, hint: hint);
+
+  ProtonSettingsClient getProtonSettingsClient({dynamic hint}) =>
+      RustLib.instance.api
+          .protonApiServiceGetProtonSettingsClient(that: this, hint: hint);
 
   ProtonUsersClient getProtonUserClient({dynamic hint}) => RustLib.instance.api
       .protonApiServiceGetProtonUserClient(that: this, hint: hint);

@@ -20,17 +20,18 @@ impl FrbMnemonic {
         Ok(FrbMnemonic { inner: mnemonic })
     }
 
-    /// Parse a Mnemonic with the given string.
     #[frb(sync)]
-    pub fn from_string(mnemonic: String) -> Result<FrbMnemonic, BridgeError> {
-        let mnemonic = Mnemonic::from_string(mnemonic)?;
+    pub fn new_with(entropy: Vec<u8>) -> Result<FrbMnemonic, BridgeError> {
+        let mnemonic = Mnemonic::new_with(&entropy)?;
         Ok(FrbMnemonic {
             inner: mnemonic.into(),
         })
     }
 
-    pub(crate) fn new_with(entropy: &[u8]) -> Result<FrbMnemonic, BridgeError> {
-        let mnemonic = Mnemonic::new_with(entropy)?;
+    /// Parse a Mnemonic with the given string.
+    #[frb(sync)]
+    pub fn from_string(mnemonic: String) -> Result<FrbMnemonic, BridgeError> {
+        let mnemonic = Mnemonic::from_string(mnemonic)?;
         Ok(FrbMnemonic {
             inner: mnemonic.into(),
         })

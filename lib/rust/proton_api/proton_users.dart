@@ -6,22 +6,28 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class EmptyResponseBody {
-  final int code;
+class ApiMnemonicUserKey {
+  final String id;
+  final String privateKey;
+  final String salt;
 
-  const EmptyResponseBody({
-    required this.code,
+  const ApiMnemonicUserKey({
+    required this.id,
+    required this.privateKey,
+    required this.salt,
   });
 
   @override
-  int get hashCode => code.hashCode;
+  int get hashCode => id.hashCode ^ privateKey.hashCode ^ salt.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is EmptyResponseBody &&
+      other is ApiMnemonicUserKey &&
           runtimeType == other.runtimeType &&
-          code == other.code;
+          id == other.id &&
+          privateKey == other.privateKey &&
+          salt == other.salt;
 }
 
 class GetAuthInfoResponseBody {
@@ -89,6 +95,55 @@ class GetAuthModulusResponse {
           code == other.code &&
           modulus == other.modulus &&
           modulusId == other.modulusId;
+}
+
+class MnemonicAuth {
+  final int version;
+  final String modulusId;
+  final String salt;
+  final String verifier;
+
+  const MnemonicAuth({
+    required this.version,
+    required this.modulusId,
+    required this.salt,
+    required this.verifier,
+  });
+
+  @override
+  int get hashCode =>
+      version.hashCode ^ modulusId.hashCode ^ salt.hashCode ^ verifier.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MnemonicAuth &&
+          runtimeType == other.runtimeType &&
+          version == other.version &&
+          modulusId == other.modulusId &&
+          salt == other.salt &&
+          verifier == other.verifier;
+}
+
+class MnemonicUserKey {
+  final String id;
+  final String privateKey;
+
+  const MnemonicUserKey({
+    required this.id,
+    required this.privateKey,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ privateKey.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MnemonicUserKey &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          privateKey == other.privateKey;
 }
 
 class ProtonSrpClientProofs {
@@ -276,4 +331,29 @@ class TwoFA {
       other is TwoFA &&
           runtimeType == other.runtimeType &&
           enabled == other.enabled;
+}
+
+class UpdateMnemonicSettingsRequestBody {
+  final List<MnemonicUserKey> mnemonicUserKeys;
+  final String mnemonicSalt;
+  final MnemonicAuth mnemonicAuth;
+
+  const UpdateMnemonicSettingsRequestBody({
+    required this.mnemonicUserKeys,
+    required this.mnemonicSalt,
+    required this.mnemonicAuth,
+  });
+
+  @override
+  int get hashCode =>
+      mnemonicUserKeys.hashCode ^ mnemonicSalt.hashCode ^ mnemonicAuth.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateMnemonicSettingsRequestBody &&
+          runtimeType == other.runtimeType &&
+          mnemonicUserKeys == other.mnemonicUserKeys &&
+          mnemonicSalt == other.mnemonicSalt &&
+          mnemonicAuth == other.mnemonicAuth;
 }

@@ -138,21 +138,19 @@ ios: ios-x86_64-sim ios-arm64-sim ios-arm64 ## build ios all arches
 
 ##### --- Building commands desktops --- #####
 
-.PHONY: macos
-macos: ## Build macos release
+.PHONY: macosx
+macosx: ## Build macos release
 	@echo "Building macos arm64..."
-	@CGO_ENABLED=1 \
-		GOOS=ios \
-		GOARCH=arm64 \
-		SDK=macos \
-		go build -C ./src -trimpath -buildmode=c-archive -o ${BUILD_DIR}/${LIB_NAME}_arm64.a .
+	@GOARCH=arm64 \
+		LIB_NAME=${LIB_NAME} \
+		src/build_macos.sh || { echo "Build failed"; exit 1; }
+	@echo "Build macos-arm64 completed successfully."
 
 	@echo "Building macos amd64..."
-	@CGO_ENABLED=1 \
-		GOOS=darwin \
-		GOARCH=amd64 \
-		SDK=macos \
-		go build -C ./src -trimpath -buildmode=c-archive -o ${BUILD_DIR}/${LIB_NAME}_amd64.a .
+	@GOARCH=amd64 \
+		LIB_NAME=${LIB_NAME} \
+		src/build_macos.sh || { echo "Build failed"; exit 1; }
+	@echo "Build macos-amd64 completed successfully."
 
 	@mv -f ${BUILD_DIR}/${LIB_NAME}_arm64.h ${BUILD_DIR}/${LIB_NAME}.h
 	@rm ${BUILD_DIR}/${LIB_NAME}_amd64.h
@@ -181,6 +179,49 @@ macos: ## Build macos release
 	@rm ${BUILD_DIR}/${LIB_NAME}.h
 	@echo "Building macos ${BUILD_DIR}/${LIB_NAME}.xcframework ... Done"
 	
+
+.PHONY: macos
+macos: ## Build macos release
+	@echo "Building macos arm64..."
+	@CGO_ENABLED=1 \
+		GOOS=ios \
+		GOARCH=arm64 \
+		SDK=macos \
+		go build -C ./src -trimpath -buildmode=c-archive -o ${BUILD_DIR}/${LIB_NAME}_arm64.a .
+
+	@CGO_ENABLED=1 \
+		GOOS=darwin \
+		GOARCH=amd64 \
+		SDK=macos \
+		go build -C ./src -trimpath -buildmode=c-archive -o ${BUILD_DIR}/${LIB_NAME}_amd64.a .
+	@mv -f ${BUILD_DIR}/${LIB_NAME}_arm64.h ${BUILD_DIR}/${LIB_NAME}.h
+	@rm ${BUILD_DIR}/${LIB_NAME}_amd64.h
+	@rm -rf ${BUILD_DIR}/${LIB_NAME}.a
+
+	@echo "Building macos universal..."
+	@lipo -create \
+		${BUILD_DIR}/${LIB_NAME}_arm64.a \
+		${BUILD_DIR}/${LIB_NAME}_amd64.a \
+		-output ${BUILD_DIR}/${LIB_NAME}.a
+
+	@rm ${BUILD_DIR}/${LIB_NAME}_amd64.a
+	@rm ${BUILD_DIR}/${LIB_NAME}_arm64.a
+	@rm -rf ${BUILD_DIR}/${LIB_NAME}.xcframework
+
+	@xcodebuild -create-xcframework \
+		-output ${BUILD_DIR}/${LIB_NAME}.xcframework \
+		-library ${BUILD_DIR}/${LIB_NAME}.a \
+		-headers ${BUILD_DIR}/${LIB_NAME}.h > /dev/null
+
+# @echo "Install macos lib name"
+# @install_name_tool -id "@rpath/libproton_crypto.dylib" ${BUILD_DIR}/${LIB_NAME}.dylib
+	@rm -rf macos/${LIB_NAME}.xcframework
+	@mv -f ${BUILD_DIR}/${LIB_NAME}.xcframework ./macos/${LIB_NAME}.xcframework
+	@rm ${BUILD_DIR}/${LIB_NAME}.a
+	@rm ${BUILD_DIR}/${LIB_NAME}.h
+	@echo "Building macos ${BUILD_DIR}/${LIB_NAME}.xcframework ... Done"
+	
+
 .PHONY: windows
 windows: ## Build windows release
 	@echo "Building windows..."
@@ -204,6 +245,11 @@ linux: ## Build linux release
 	@rm ${LIB_NAME}_*.h
 # linux:
 # 	go build -o ../linux/shared/${LIB_NAME}.so -buildmode=c-shared proton_crypto.go
+
+.PHONY: ffigen
+ffigen: ## Generate dart bindings
+	@echo "Generating dart bindings..."
+	@dart run ffigen --config ffigen.yaml 
 
 .PHONY: help
 help: ## Display this help screen

@@ -160,7 +160,10 @@ String encryptBinaryArmor(String userPrivateKey, Uint8List data) {
 }
 
 Uint8List decryptBinary(
-    String userPrivateKey, String passphrase, Uint8List encryptedBinary) {
+  String userPrivateKey,
+  String passphrase,
+  Uint8List encryptedBinary,
+) {
   Uint8List result = Uint8List(0);
   using((alloc) {
     final Pointer<Uint8> pEncryptedBinary = alloc(encryptedBinary.length);
@@ -174,6 +177,26 @@ Uint8List decryptBinary(
         encryptedBinary.length);
     result = pointerToUint8List(
         binaryResult.data as Pointer<Uint8>, binaryResult.length);
+  });
+  return result;
+}
+
+String changePrivateKeyPassword(
+  String privateKey,
+  String oldPassphrase,
+  String newPassphrase,
+) {
+  String result = "";
+  using((alloc) {
+    Pointer<Char> goResult = _bindings.changePrivateKeyPassphrase(
+      privateKey.toNativeUtf8() as Pointer<Char>,
+      oldPassphrase.toNativeUtf8() as Pointer<Char>,
+      newPassphrase.toNativeUtf8() as Pointer<Char>,
+    );
+    result = String.fromCharCodes(pointerToUint8List(
+      goResult as Pointer<Uint8>,
+      getPointerLength(goResult as Pointer<Uint8>),
+    ));
   });
   return result;
 }

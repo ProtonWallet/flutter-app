@@ -426,6 +426,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       if (recipients.isNotEmpty && isRecipientsFromBlockChain) {
         // TODO:: clean logic here and make sure toEmail structure in backend,
+        // TODO:: abstract this logic and if toEmail is "" we can skip this logic
         // It can be [{}, {}], or {"key": "value", "key2": "value2"}...
         try {
           var jsonList = jsonDecode(toEmail) as Map<String, dynamic>;
