@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/settings/settings.viewmodel.dart';
@@ -69,11 +70,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: FlutterLogo(),
-                      ),
+                      // SizedBox(
+                      //   width: 20,
+                      //   height: 20,
+                      //   child: Icon(
+                      //     Icons.arrow_forward_ios_rounded,
+                      //     size: 20,
+                      //     color: ProtonColors.textHint,
+                      //   ),
+                      // ),
                       const SizedBox(width: 8),
                       const Expanded(
                         child: Column(
@@ -97,6 +102,17 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                         ),
                       ),
                       const SizedBox(width: 8),
+                      const Text(
+                        'User current plan / free / plus or etc',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 8, 8, 8),
+                          fontSize: 17,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.43,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
                       Container(
                         width: 40,
                         height: 40,
@@ -127,7 +143,9 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 9),
+                const SizedBox(height: 2),
+
+                /// account settings
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -175,7 +193,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 borderRadius: BorderRadius.circular(200),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,7 +201,85 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: FlutterLogo(),
+                                  child:
+                                      Assets.images.icon.icArrowOutSquare.svg(
+                                    height: 20,
+                                    width: 20,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+
+                /// sentinal settings
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 68,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Sentinal Settings ',
+                                  style: TextStyle(
+                                    color: Color(0xFF0E0E0E),
+                                    fontSize: 17,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0.08,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            padding: const EdgeInsets.all(4),
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFF3F5F6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(200),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child:
+                                      Assets.images.icon.icArrowOutSquare.svg(
+                                    height: 20,
+                                    width: 20,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ],
                             ),
@@ -269,12 +365,12 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                     topRight: Radius.circular(16),
                                   ),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -283,7 +379,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Account recovery phrase',
+                                            'Theme',
                                             style: TextStyle(
                                               color: Color(0xFF0E0E0E),
                                               fontSize: 17,
@@ -295,11 +391,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 16),
+                                    const SizedBox(width: 16),
                                     SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: FlutterLogo(),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textHint,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -328,7 +428,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                     Expanded(
                                       child: SizedBox(
                                         child: Text(
-                                          'Some explanation here, lorem ipsum dolor sit ametmconsectetur adipiscing ',
+                                          'System default / Light / Dark',
                                           style: TextStyle(
                                             color: Color(0xFF6F7B8F),
                                             fontSize: 12,
@@ -366,12 +466,12 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 ),
                                 decoration:
                                     const BoxDecoration(color: Colors.white),
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -380,7 +480,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Wallet recovery seed ',
+                                            'Default Browser',
                                             style: TextStyle(
                                               color: Color(0xFF0E0E0E),
                                               fontSize: 17,
@@ -392,11 +492,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 16),
+                                    const SizedBox(width: 16),
                                     SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: FlutterLogo(),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textHint,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -424,7 +528,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'Your secret seed is the ONLY way to recover your fund if you loose access to the wallet',
+                                        'System default',
                                         style: TextStyle(
                                           color: Color(0xFF6F7B8F),
                                           fontSize: 12,
@@ -451,19 +555,19 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                             bottomRight: Radius.circular(16),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
+                            const Expanded(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Recovery email and phone',
+                                    'Languages',
                                     style: TextStyle(
                                       color: Color(0xFF191C32),
                                       fontSize: 17,
@@ -475,11 +579,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             SizedBox(
                               width: 20,
                               height: 20,
-                              child: FlutterLogo(),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 20,
+                                color: ProtonColors.textHint,
+                              ),
                             ),
                           ],
                         ),
@@ -563,12 +671,12 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                     topRight: Radius.circular(16),
                                   ),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -577,7 +685,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Account recovery phrase',
+                                            'Application logs',
                                             style: TextStyle(
                                               color: Color(0xFF0E0E0E),
                                               fontSize: 17,
@@ -589,11 +697,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 16),
+                                    const SizedBox(width: 16),
                                     SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: FlutterLogo(),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textHint,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -622,7 +734,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                     Expanded(
                                       child: SizedBox(
                                         child: Text(
-                                          'Some explanation here, lorem ipsum dolor sit ametmconsectetur adipiscing ',
+                                          'View logs',
                                           style: TextStyle(
                                             color: Color(0xFF6F7B8F),
                                             fontSize: 12,
@@ -660,12 +772,12 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 ),
                                 decoration:
                                     const BoxDecoration(color: Colors.white),
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -674,7 +786,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Wallet recovery seed ',
+                                            'Force reload the application',
                                             style: TextStyle(
                                               color: Color(0xFF0E0E0E),
                                               fontSize: 17,
@@ -686,11 +798,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 16),
+                                    const SizedBox(width: 16),
                                     SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: FlutterLogo(),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textHint,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -718,7 +834,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'Your secret seed is the ONLY way to recover your fund if you loose access to the wallet',
+                                        'Wipe cache and reload --- this need move to other sections',
                                         style: TextStyle(
                                           color: Color(0xFF6F7B8F),
                                           fontSize: 12,
@@ -745,19 +861,19 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                             bottomRight: Radius.circular(16),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
+                            const Expanded(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Recovery email and phone',
+                                    'Clear all logs',
                                     style: TextStyle(
                                       color: Color(0xFF191C32),
                                       fontSize: 17,
@@ -769,11 +885,15 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             SizedBox(
                               width: 20,
                               height: 20,
-                              child: FlutterLogo(),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 20,
+                                color: ProtonColors.textHint,
+                              ),
                             ),
                           ],
                         ),
@@ -785,7 +905,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
             ),
           ),
 
-          /// help
+          /// help center
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -806,7 +926,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Support & Feedback',
+                          'Help center',
                           style: TextStyle(
                             color: Color(0xFF848993),
                             fontSize: 15,
@@ -824,6 +944,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// privacy policy
                     Container(
                       height: 72,
                       padding: const EdgeInsets.all(16),
@@ -834,19 +955,19 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                           topRight: Radius.circular(16),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
+                          const Expanded(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Send feedback',
+                                  'Privacy policy',
                                   style: TextStyle(
                                     color: Color(0xFF191C32),
                                     fontSize: 17,
@@ -858,33 +979,89 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           SizedBox(
                             width: 20,
                             height: 20,
-                            child: FlutterLogo(),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 20,
+                              color: ProtonColors.textHint,
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 1),
+
+                    /// terms
+                    Container(
+                      height: 72,
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Terms of service',
+                                  style: TextStyle(
+                                    color: Color(0xFF191C32),
+                                    fontSize: 17,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0.07,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 20,
+                              color: ProtonColors.textHint,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 1),
+
+                    /// how to import to Proton Wallet
                     Container(
                       height: 72,
                       padding: const EdgeInsets.all(16),
                       decoration: const BoxDecoration(color: Colors.white),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
+                          const Expanded(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Report problem',
+                                  'How to import your wallet to Proton Wallet',
                                   style: TextStyle(
                                     color: Color(0xFF191C32),
                                     fontSize: 17,
@@ -896,18 +1073,21 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           SizedBox(
                             width: 20,
                             height: 20,
-                            child: FlutterLogo(),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 20,
+                              color: ProtonColors.textHint,
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 1),
                     Container(
-                      width: 343,
                       height: 72,
                       padding: const EdgeInsets.all(16),
                       decoration: const BoxDecoration(color: Colors.white),
@@ -925,7 +1105,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'How to use Proton Wallet',
+                                    'Feedback',
                                     style: TextStyle(
                                       color: Color(0xFF191C32),
                                       fontSize: 17,
@@ -949,7 +1129,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 borderRadius: BorderRadius.circular(200),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -957,7 +1137,11 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: FlutterLogo(),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 20,
+                                    color: ProtonColors.textHint,
+                                  ),
                                 ),
                               ],
                             ),
@@ -967,7 +1151,6 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                     ),
                     const SizedBox(height: 1),
                     Container(
-                      width: 343,
                       height: 72,
                       padding: const EdgeInsets.all(16),
                       decoration: const BoxDecoration(
@@ -989,13 +1172,12 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Help center',
+                                  'Help center & knowledge base',
                                   style: TextStyle(
                                     color: Color(0xFF191C32),
                                     fontSize: 17,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w500,
-                                    height: 0.07,
                                   ),
                                 ),
                               ],
@@ -1012,7 +1194,7 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 borderRadius: BorderRadius.circular(200),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1020,7 +1202,11 @@ class SettingsView extends ViewBase<SettingsViewModel> {
                                 SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: FlutterLogo(),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 20,
+                                    color: ProtonColors.textHint,
+                                  ),
                                 ),
                               ],
                             ),

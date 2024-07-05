@@ -301,3 +301,20 @@ func splitPGPSignatures(multiSig string) []string {
 
 	return signatures
 }
+
+//export changePrivateKeyPassphrase
+func changePrivateKeyPassphrase(privateKey *C.char, oldPassphrase *C.char, newPassphrase *C.char) *C.char {
+	// parse old passphrase
+	oldPassphraseBytes := []byte(C.GoString(oldPassphrase))
+	// parse new passphrase
+	newPassphraseBytes := []byte(C.GoString(newPassphrase))
+	// parse private key
+	privateKeyObj, _ := crypto.NewKeyFromArmored(C.GoString(privateKey))
+	// unlock private key with old passphrase
+	unlockedKeyObj, _ := privateKeyObj.Unlock(oldPassphraseBytes)
+	// lock private key with new passphrase
+	newLockedKeyOjb, _ := unlockedKeyObj.Lock(newPassphraseBytes)
+	// export armor private key
+	newPrivateKey, _ := newLockedKeyOjb.Armor()
+	return C.CString(newPrivateKey)
+}

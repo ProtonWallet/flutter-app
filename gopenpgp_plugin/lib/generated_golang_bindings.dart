@@ -3679,6 +3679,29 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('enforce_binding');
   late final _enforce_binding =
       _enforce_bindingPtr.asFunction<void Function()>();
+
+  ffi.Pointer<ffi.Char> changePrivateKeyPassphrase(
+    ffi.Pointer<ffi.Char> privateKey,
+    ffi.Pointer<ffi.Char> oldPassphrase,
+    ffi.Pointer<ffi.Char> newPassphrase,
+  ) {
+    return _changePrivateKeyPassphrase(
+      privateKey,
+      oldPassphrase,
+      newPassphrase,
+    );
+  }
+
+  late final _changePrivateKeyPassphrasePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('changePrivateKeyPassphrase');
+  late final _changePrivateKeyPassphrase =
+      _changePrivateKeyPassphrasePtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 }
 
 /// mbstate_t is an opaque object to keep conversion state, during multibyte
@@ -5184,6 +5207,8 @@ const int __MAC_14_3 = 140300;
 
 const int __MAC_14_4 = 140400;
 
+const int __MAC_14_5 = 140500;
+
 const int __IPHONE_2_0 = 20000;
 
 const int __IPHONE_2_1 = 20100;
@@ -5340,6 +5365,8 @@ const int __IPHONE_17_3 = 170300;
 
 const int __IPHONE_17_4 = 170400;
 
+const int __IPHONE_17_5 = 170500;
+
 const int __WATCHOS_1_0 = 10000;
 
 const int __WATCHOS_2_0 = 20000;
@@ -5431,6 +5458,8 @@ const int __WATCHOS_10_2 = 100200;
 const int __WATCHOS_10_3 = 100300;
 
 const int __WATCHOS_10_4 = 100400;
+
+const int __WATCHOS_10_5 = 100500;
 
 const int __TVOS_9_0 = 90000;
 
@@ -5526,6 +5555,8 @@ const int __TVOS_17_3 = 170300;
 
 const int __TVOS_17_4 = 170400;
 
+const int __TVOS_17_5 = 170500;
+
 const int __BRIDGEOS_2_0 = 20000;
 
 const int __BRIDGEOS_3_0 = 30000;
@@ -5576,6 +5607,8 @@ const int __BRIDGEOS_8_3 = 80300;
 
 const int __BRIDGEOS_8_4 = 80400;
 
+const int __BRIDGEOS_8_5 = 80500;
+
 const int __DRIVERKIT_19_0 = 190000;
 
 const int __DRIVERKIT_20_0 = 200000;
@@ -5600,9 +5633,13 @@ const int __DRIVERKIT_23_3 = 230300;
 
 const int __DRIVERKIT_23_4 = 230400;
 
+const int __DRIVERKIT_23_5 = 230500;
+
 const int __VISIONOS_1_0 = 10000;
 
 const int __VISIONOS_1_1 = 10100;
+
+const int __VISIONOS_1_2 = 10200;
 
 const int MAC_OS_X_VERSION_10_0 = 1000;
 
@@ -5723,6 +5760,8 @@ const int MAC_OS_VERSION_14_2 = 140200;
 const int MAC_OS_VERSION_14_3 = 140300;
 
 const int MAC_OS_VERSION_14_4 = 140400;
+
+const int MAC_OS_VERSION_14_5 = 140500;
 
 const int __MAC_OS_X_VERSION_MIN_REQUIRED = 140000;
 

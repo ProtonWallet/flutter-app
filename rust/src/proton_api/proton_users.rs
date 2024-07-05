@@ -1,8 +1,13 @@
 use flutter_rust_bridge::frb;
 
-pub use andromeda_api::proton_users::{
-    EmptyResponseBody, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
-    ProtonUser, ProtonUserKey, TwoFA,
+pub use andromeda_api::{
+    proton_settings::{
+        ApiMnemonicUserKey, MnemonicAuth, MnemonicUserKey, UpdateMnemonicSettingsRequestBody,
+    },
+    proton_users::{
+        EmptyResponseBody, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
+        ProtonUser, ProtonUserKey, TwoFA,
+    },
 };
 
 #[frb(mirror(GetAuthModulusResponse))]
@@ -81,4 +86,35 @@ pub struct _ProtonSrpClientProofs {
 #[allow(non_snake_case)]
 pub struct _EmptyResponseBody {
     pub Code: u32,
+}
+
+#[frb(mirror(MnemonicUserKey))]
+#[allow(non_snake_case)]
+pub struct _MnemonicUserKey {
+    pub ID: String,
+    pub PrivateKey: String,
+}
+#[frb(mirror(MnemonicAuth))]
+#[allow(non_snake_case)]
+pub struct _MnemonicAuth {
+    pub Version: u32,
+    pub ModulusID: String,
+    pub Salt: String,
+    pub Verifier: String,
+}
+
+#[frb(mirror(UpdateMnemonicSettingsRequestBody))]
+#[allow(non_snake_case)]
+pub struct _UpdateMnemonicSettingsRequestBody {
+    pub MnemonicUserKeys: Vec<MnemonicUserKey>,
+    pub MnemonicSalt: String,
+    pub MnemonicAuth: MnemonicAuth,
+}
+
+#[frb(mirror(ApiMnemonicUserKey))]
+#[allow(non_snake_case)]
+pub struct _ApiMnemonicUserKey {
+    pub ID: String,
+    pub PrivateKey: String,
+    pub Salt: String,
 }
