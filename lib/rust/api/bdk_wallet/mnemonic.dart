@@ -49,4 +49,7 @@ class FrbMnemonic extends RustOpaque {
   /// Create a new Mnemonic with the given word count.
   factory FrbMnemonic({required WordCount wordCount, dynamic hint}) =>
       RustLib.instance.api.frbMnemonicNew(wordCount: wordCount, hint: hint);
+
+  static FrbMnemonic newWith({required List<int> entropy, dynamic hint}) =>
+      RustLib.instance.api.frbMnemonicNewWith(entropy: entropy, hint: hint);
 }

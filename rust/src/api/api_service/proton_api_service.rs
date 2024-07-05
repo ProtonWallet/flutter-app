@@ -2,6 +2,7 @@
 use super::address_client::AddressClient;
 use super::invite_client::InviteClient;
 use super::onramp_gateway_client::OnRampGatewayClient;
+use super::proton_settings_client::ProtonSettingsClient;
 use super::proton_users_client::ProtonUsersClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
@@ -224,6 +225,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_proton_user_client(&self) -> ProtonUsersClient {
         ProtonUsersClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_proton_settings_client(&self) -> ProtonSettingsClient {
+        ProtonSettingsClient::new(&self)
     }
 }
 

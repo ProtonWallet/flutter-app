@@ -1,30 +1,36 @@
 import 'dart:async';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/managers/features/proton.recovery.bloc.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
 
 abstract class RecoveryViewModel extends ViewModel<RecoveryCoordinator> {
-  RecoveryViewModel(super.coordinator);
+  RecoveryViewModel(super.coordinator, this.protonRecoveryBloc);
+
+  final ProtonRecoveryBloc protonRecoveryBloc;
 
   ///
   bool recoveryEnabled = false;
   void updateRecovery(bool value);
+  void stateReset();
+
+  void disableRecover(String pwd, String twofa);
+  void enableRecover(String pwd, String twofa);
 }
 
 class RecoveryViewModelImpl extends RecoveryViewModel {
   RecoveryViewModelImpl(
     super.coordinator,
-    this.protonRecoveryBloc,
+    super.protonRecoveryBloc,
     this.protonUsersApi,
   );
   final datasourceChangedStreamController =
       StreamController<RecoveryViewModel>.broadcast();
-
-  final ProtonRecoveryBloc protonRecoveryBloc;
   final ProtonUsersClient protonUsersApi;
+
   @override
   void dispose() {
     datasourceChangedStreamController.close();
@@ -32,8 +38,9 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
 
   @override
   Future<void> loadData() async {
-    var userInfo = await protonUsersApi.getUserInfo();
-    recoveryEnabled = userInfo.mnemonicStatus == 3;
+    // get user recovery phrase
+    stateReset();
+
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
@@ -51,13 +58,34 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
 
   @override
   void updateRecovery(bool value) {
-    // get user check if recovery is enabled
-
     // get user recovery phrase
+    if (!value) {
+      protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));
+    } else {
+      protonRecoveryBloc.add(EnableRecovery(RecoverySteps.start));
+    }
+  }
 
-    protonRecoveryBloc.enableRecovery();
+  @override
+  void stateReset() {
+    protonRecoveryBloc.add(LoadingRecovery());
+  }
 
-    // recoveryEnabled = value;
-    // datasourceChangedStreamController.sinkAddSafe(this);
+  @override
+  void disableRecover(String pwd, String twofa) {
+    protonRecoveryBloc.add(DisableRecovery(
+      RecoverySteps.auth,
+      password: pwd,
+      twofa: twofa,
+    ));
+  }
+
+  @override
+  void enableRecover(String pwd, String twofa) {
+    protonRecoveryBloc.add(EnableRecovery(
+      RecoverySteps.auth,
+      password: pwd,
+      twofa: twofa,
+    ));
   }
 }

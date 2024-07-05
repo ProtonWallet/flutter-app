@@ -1,36 +1,44 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 
 class RecoverySection extends StatelessWidget {
   final String title;
   final String description;
-  final Widget logo;
-  final Widget warning;
+  final Widget? logo;
+  final Widget? warning;
+  final ValueChanged<bool>? onChanged;
+  final bool isLoading;
+  final bool? isSwitched;
 
   const RecoverySection({
     super.key,
     required this.title,
     required this.description,
-    required this.logo,
-    required this.warning,
+    this.logo,
+    this.warning,
+    required this.isLoading,
+    this.onChanged,
+    this.isSwitched,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16).copyWith(bottom: 8),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Row(
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// header
+          Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,22 +61,26 @@ class RecoverySection extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 20, height: 20, child: warning),
+              if (warning != null)
+                SizedBox(width: 20, height: 20, child: warning),
               const SizedBox(width: 16),
-              SizedBox(width: 20, height: 20, child: logo),
+              if (logo != null) SizedBox(width: 20, height: 20, child: logo),
+              if (onChanged != null)
+                if (isLoading)
+                  const SizedBox(
+                      height: 39, child: CupertinoActivityIndicator())
+                else
+                  CupertinoSwitch(
+                    value: isSwitched ?? false,
+                    activeColor: ProtonColors.protonBlue,
+                    onChanged: onChanged,
+                  ),
             ],
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(16).copyWith(top: 8),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
-          ),
-          child: Row(
+          const SizedBox(height: 20),
+
+          /// description
+          Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,8 +99,8 @@ class RecoverySection extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

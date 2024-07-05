@@ -16,16 +16,12 @@ class AccountDatabase extends BaseDatabase {
         createTime INTEGER,
         modifyTime INTEGER,
         fiatCurrency TEXT,
+        priority INTEGER,
+        lastUsedIndex INTEGER,
         UNIQUE (walletID, derivationPath)
       )
     ''');
     await addIndex("walletID");
     await addIndex("accountID");
-  }
-
-  Future<void> migration_1() async {
-    // Add column `priority` and `lastUsedIndex`
-    await addColumn("priority", "INTEGER");
-    await addColumn("lastUsedIndex", "INTEGER");
   }
 }

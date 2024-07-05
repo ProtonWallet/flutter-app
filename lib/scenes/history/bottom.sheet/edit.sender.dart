@@ -73,12 +73,12 @@ class EditSenderSheet {
                         textController: nameController,
                         myFocusNode: nameFocusNode,
                         validation: (String newAccountName) {
-                          bool accountNameExists = false;
+                          // bool accountNameExists = false;
 
                           /// TODO:: check if accountName already used
-                          if (accountNameExists) {
-                            return S.of(context).account_name_already_used;
-                          }
+                          // if (accountNameExists) {
+                          //   return S.of(context).account_name_already_used;
+                          // }
                           return "";
                         },
                       ),
@@ -94,12 +94,12 @@ class EditSenderSheet {
                         textController: emailController,
                         myFocusNode: emailFocusNode,
                         validation: (String newAccountName) {
-                          bool accountNameExists = false;
+                          // bool accountNameExists = false;
 
                           /// TODO:: check if accountName already used
-                          if (accountNameExists) {
-                            return S.of(context).account_name_already_used;
-                          }
+                          // if (accountNameExists) {
+                          //   return S.of(context).account_name_already_used;
+                          // }
                           return "";
                         },
                       ),

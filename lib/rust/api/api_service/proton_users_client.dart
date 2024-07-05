@@ -39,9 +39,8 @@ class ProtonUsersClient extends RustOpaque {
   Future<ProtonUser> getUserInfo({dynamic hint}) =>
       RustLib.instance.api.protonUsersClientGetUserInfo(that: this, hint: hint);
 
-  Future<EmptyResponseBody> lockSensitiveSettings({dynamic hint}) =>
-      RustLib.instance.api
-          .protonUsersClientLockSensitiveSettings(that: this, hint: hint);
+  Future<int> lockSensitiveSettings({dynamic hint}) => RustLib.instance.api
+      .protonUsersClientLockSensitiveSettings(that: this, hint: hint);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<ProtonUsersClient> newInstance(
@@ -51,5 +50,10 @@ class ProtonUsersClient extends RustOpaque {
   Future<String> unlockPasswordChange(
           {required ProtonSrpClientProofs proofs, dynamic hint}) =>
       RustLib.instance.api.protonUsersClientUnlockPasswordChange(
+          that: this, proofs: proofs, hint: hint);
+
+  Future<String> unlockSensitiveSettings(
+          {required ProtonSrpClientProofs proofs, dynamic hint}) =>
+      RustLib.instance.api.protonUsersClientUnlockSensitiveSettings(
           that: this, proofs: proofs, hint: hint);
 }

@@ -1,7 +1,9 @@
+use std::str::from_utf8;
+
 // srp_client.rs
 use flutter_rust_bridge::frb;
 
-use proton_srp::{self, SRPAuth, SRPProofB64};
+use proton_srp::{self, mailbox_password_hash, SRPAuth, SRPProofB64, SRPVerifierB64};
 
 use crate::BridgeError;
 
@@ -9,11 +11,11 @@ pub struct SrpClient {}
 
 impl SrpClient {
     #[frb(sync)]
-    fn new() -> Self {
+    pub fn new() -> Self {
         SrpClient {}
     }
 
-    fn build_srp_client(
+    pub fn generate_proofs(
         login_password: String,
         version: u8,
         salt: String,
@@ -23,5 +25,30 @@ impl SrpClient {
         let client = SRPAuth::new(&login_password, version, &salt, &modulus, &server_ephemeral)?;
         let proofs = client.generate_proofs()?;
         Ok(proofs.into())
+    }
+
+    pub fn generate_verifer(
+        password: String,
+        salt_opt: Option<String>,
+        server_modulus: String,
+    ) -> Result<SRPVerifierB64, BridgeError> {
+        let salt: Option<&str> = salt_opt.as_deref();
+        let verifier = SRPAuth::generate_random_verifier(&password, salt, &server_modulus)?;
+        Ok(verifier.into())
+    }
+
+    pub fn compute_key_password(password: String, salt: Vec<u8>) -> Result<String, BridgeError> {
+        let hashed_password = mailbox_password_hash(&password, &salt)?;
+
+        let password_raw: Vec<u8> = hashed_password.as_bytes().to_vec();
+        let suffix_len = 31;
+        // Ensure the vector is long enough
+        if password_raw.len() < suffix_len {
+            panic!("The password is too short!");
+        }
+        // Get the last `suffix_len` bytes
+        let password_suffix: &[u8] = &password_raw[password_raw.len() - suffix_len..];
+        let mailboxpwd = from_utf8(password_suffix)?;
+        Ok(mailboxpwd.to_string())
     }
 }

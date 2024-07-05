@@ -105,6 +105,7 @@ extern struct BinaryResult encryptBinary(char* userPrivateKey, char* binaryMessa
 extern char* encryptBinaryArmor(char* userPrivateKey, char* binaryMessage, int length);
 extern struct BinaryResult decryptBinary(char* userPrivateKey, char* passphrase, char* encryptedBinary, int length);
 extern void enforce_binding();
+extern char* changePrivateKeyPassphrase(char* privateKey, char* oldPassphrase, char* newPassphrase);
 
 #ifdef __cplusplus
 }
