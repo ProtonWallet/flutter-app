@@ -49,15 +49,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Buy',
+                        S.of(context).buy,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF191C32),
                           fontSize: 16,
                           fontFamily: 'SF Pro Text',
@@ -70,15 +70,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Sell',
+                        S.of(context).sell,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF9294A3),
                           fontSize: 16,
                           fontFamily: 'SF Pro Text',
@@ -131,8 +131,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 ),
                                 // Optional. Styles the search field.
                                 inputDecoration: InputDecoration(
-                                  labelText: 'Search',
-                                  hintText: 'Start typing to search',
+                                  labelText: S.of(context).search,
+                                  hintText: S.of(context).search_hint,
                                   prefixIcon: const Icon(Icons.search),
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(
@@ -170,9 +170,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Country',
-                                      style: TextStyle(
+                                    Text(
+                                      S.of(context).country,
+                                      style: const TextStyle(
                                         color: Color(0xFF535964),
                                         fontSize: 14,
                                         fontFamily: 'Inter',
@@ -267,9 +267,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
-                                            'You pay',
-                                            style: TextStyle(
+                                          Text(
+                                            S.of(context).you_pay,
+                                            style: const TextStyle(
                                               color: Color(0xFF535964),
                                               fontSize: 14,
                                               fontFamily: 'Inter',
@@ -469,9 +469,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             children: [
                                               if (!state.isQuoteLoaded)
                                                 const CardLoading(height: 50),
-                                              const Text(
-                                                'You receive',
-                                                style: TextStyle(
+                                              Text(
+                                                S.of(context).you_receive,
+                                                style: const TextStyle(
                                                   color: Color(0xFF535964),
                                                   fontSize: 14,
                                                   fontFamily: 'Inter',
@@ -599,7 +599,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             ),
                                           if (state.isQuoteFailed)
                                             Text(
-                                              "Quote is not a vailable but you can still try to buy",
+                                              S
+                                                  .of(context)
+                                                  .quote_failed_warning,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: ProtonColors.signalError,
@@ -675,10 +677,10 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             ),
                                           if (state.isQuoteLoaded &&
                                               !state.isQuoteFailed)
-                                            const Text(
-                                              "network fee",
+                                            Text(
+                                              S.of(context).trans_metwork_fee,
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Color(0xFF9294A3),
                                                 fontSize: 14,
                                                 fontFamily: 'Inter',
@@ -785,15 +787,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               const SizedBox(width: 16),
 
                               /// payment type text
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
                                       child: Text(
-                                        'Pay with ',
-                                        style: TextStyle(
+                                        S.of(context).pay_with,
+                                        style: const TextStyle(
                                           color: Color(0xFF535964),
                                           fontSize: 14,
                                           fontFamily: 'Inter',
@@ -802,8 +804,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       ),
                                     ),
                                     Text(
-                                      'Credit card',
-                                      style: TextStyle(
+                                      S.of(context).credit_card,
+                                      style: const TextStyle(
                                         color: Color(0xFF191C32),
                                         fontSize: 16,
                                         fontFamily: 'Inter',
@@ -862,12 +864,12 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
             SizedBoxes.box8,
 
             ///buttom description
-            const SizedBox(
+            SizedBox(
               width: 400,
               child: Text(
-                'Proton suggests the best provider based on your input and current market prices.',
+                S.of(context).buy_flow_bottom_desc,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF9294A3),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

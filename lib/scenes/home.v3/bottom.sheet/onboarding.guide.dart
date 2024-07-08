@@ -1,3 +1,4 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -68,7 +69,8 @@ class OnboardingGuideSheet {
                                   padding: const EdgeInsets.all(4),
                                   child: CircleAvatar(
                                       backgroundColor:
-                                      AvatarColorHelper.getBackgroundColor(1),
+                                          AvatarColorHelper.getBackgroundColor(
+                                              1),
                                       radius: 10,
                                       child: SvgPicture.asset(
                                         "assets/images/icon/wallet-1.svg",
@@ -93,6 +95,17 @@ class OnboardingGuideSheet {
                                 itemsText: fiatCurrencies
                                     .map((v) =>
                                         FiatCurrencyHelper.getFullName(v))
+                                    .toList(),
+                                itemsLeadingIcons: fiatCurrencies
+                                    .map((v) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 4),
+                                        child: CountryFlag.fromCountryCode(
+                                          FiatCurrencyHelper.toCountryCode(v),
+                                          shape: const Circle(),
+                                          width: 20,
+                                          height: 20,
+                                        )))
                                     .toList(),
                                 valueNotifier: viewModel.fiatCurrencyNotifier),
                             const SizedBox(height: 10),

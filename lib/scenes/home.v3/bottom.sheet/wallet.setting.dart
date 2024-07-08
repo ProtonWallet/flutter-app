@@ -1,3 +1,4 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -332,6 +333,20 @@ class WalletSettingSheet {
                                             itemsText: fiatCurrencies
                                                 .map((v) => FiatCurrencyHelper
                                                     .getFullName(v))
+                                                .toList(),
+                                            itemsLeadingIcons: fiatCurrencies
+                                                .map((v) => Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 4),
+                                                    child: CountryFlag
+                                                        .fromCountryCode(
+                                                      FiatCurrencyHelper
+                                                          .toCountryCode(v),
+                                                      shape: const Circle(),
+                                                      width: 20,
+                                                      height: 20,
+                                                    )))
                                                 .toList(),
                                             valueNotifier:
                                                 accountFiatCurrencyNotifier[
