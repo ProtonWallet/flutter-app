@@ -5,7 +5,11 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
@@ -15,14 +19,17 @@ class WalletAccountDropdown extends StatefulWidget {
   final ValueNotifier? valueNotifier;
   final String? labelText;
   final Color? backgroundColor;
+  final BitcoinUnit? bitcoinUnit;
 
-  const WalletAccountDropdown(
-      {super.key,
-      required this.width,
-      required this.accounts,
-      this.labelText,
-      this.valueNotifier,
-      this.backgroundColor});
+  const WalletAccountDropdown({
+    super.key,
+    required this.width,
+    required this.accounts,
+    this.labelText,
+    this.valueNotifier,
+    this.backgroundColor,
+    this.bitcoinUnit = BitcoinUnit.btc,
+  });
 
   @override
   WalletAccountDropdownState createState() => WalletAccountDropdownState();
@@ -109,21 +116,21 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
 
   Widget getWalletAccountBalanceWidget(
       BuildContext context, AccountModel accountModel) {
-    double esitmateValue = ExchangeCalculator.getNotionalInFiatCurrency(
-        Provider.of<UserSettingProvider>(context)
-            .walletUserSetting
-            .exchangeRate,
-        accountModel.balance.toInt());
+    var fiatCurrency = WalletManager.getAccountFiatCurrency(accountModel);
+    ProtonExchangeRate? exchangeRate =
+        ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
+    double estimatedValue = 0.0;
+    if (exchangeRate != null) {
+      estimatedValue = ExchangeCalculator.getNotionalInFiatCurrency(
+          exchangeRate, accountModel.balance.toInt());
+    }
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
-          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName()}${esitmateValue.toStringAsFixed(defaultDisplayDigits)}",
+          "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName(fiatCurrency: exchangeRate?.fiatCurrency ?? FiatCurrency.usd)}${estimatedValue.toStringAsFixed(defaultDisplayDigits)}",
           style: FontManager.captionSemiBold(ProtonColors.textNorm)),
       Text(
           ExchangeCalculator.getBitcoinUnitLabel(
-              Provider.of<UserSettingProvider>(context)
-                  .walletUserSetting
-                  .bitcoinUnit,
-              accountModel.balance.toInt()),
+              widget.bitcoinUnit!, accountModel.balance.toInt()),
           style: FontManager.overlineRegular(ProtonColors.textHint))
     ]);
   }

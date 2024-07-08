@@ -267,6 +267,9 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
 
+  /// File path: assets/images/icon/send_1.svg
+  SvgGenImage get send1 => const SvgGenImage('assets/images/icon/send_1.svg');
+
   /// File path: assets/images/icon/send_2.svg
   SvgGenImage get send2 => const SvgGenImage('assets/images/icon/send_2.svg');
 
@@ -277,6 +280,9 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/setup-preference.svg
   SvgGenImage get setupPreference =>
       const SvgGenImage('assets/images/icon/setup-preference.svg');
+
+  /// File path: assets/images/icon/star.svg
+  SvgGenImage get star => const SvgGenImage('assets/images/icon/star.svg');
 
   /// File path: assets/images/icon/transfer.svg
   SvgGenImage get transfer =>
@@ -376,9 +382,11 @@ class $AssetsImagesIconGen {
         ramp,
         receive,
         send,
+        send1,
         send2,
         sendSuccess,
         setupPreference,
+        star,
         transfer,
         upgradeIntro,
         wallet0,

@@ -16,6 +16,7 @@ import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
+import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
@@ -58,6 +59,7 @@ class WalletManager implements Manager {
   static late WalletPassphraseProvider walletPassphraseProvider;
   static late WalletsDataProvider walletDataProvider;
   static late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
+  static late ServerTransactionDataProvider serverTransactionDataProvider;
   static late String userID;
 
   ///
@@ -451,68 +453,6 @@ class WalletManager implements Manager {
     return addressKeys;
   }
 
-  static Future<void> handleWalletTransaction(WalletModel walletModel,
-      List<AddressKey> addressKeys, WalletTransaction walletTransaction) async {
-    DateTime now = DateTime.now();
-    String txid = "";
-    for (AddressKey addressKey in addressKeys) {
-      try {
-        txid = addressKey.decrypt(walletTransaction.transactionId);
-        if (txid.isNotEmpty) {
-          break;
-        }
-      } catch (e) {
-        logger.e(e.toString());
-      }
-    }
-    if (txid.isEmpty) {
-      var firstUserKey = await userManager.getFirstKey();
-      String userPrivateKey = firstUserKey.privateKey;
-      String userPassphrase = firstUserKey.passphrase;
-      txid = proton_crypto.decrypt(
-          userPrivateKey, userPassphrase, walletTransaction.transactionId);
-    }
-    String exchangeRateID = "";
-    if (walletTransaction.exchangeRate != null) {
-      exchangeRateID = walletTransaction.exchangeRate!.id;
-      ExchangeRateModel exchangeRateModel = ExchangeRateModel(
-        id: null,
-        serverID: walletTransaction.exchangeRate!.id,
-        bitcoinUnit:
-            walletTransaction.exchangeRate!.bitcoinUnit.name.toUpperCase(),
-        fiatCurrency:
-            walletTransaction.exchangeRate!.fiatCurrency.name.toUpperCase(),
-        sign: "",
-        // TODO:: add sign once apiClient update for it
-        exchangeRateTime: walletTransaction.exchangeRate!.exchangeRateTime,
-        exchangeRate: walletTransaction.exchangeRate!.exchangeRate,
-        cents: walletTransaction.exchangeRate!.cents,
-      );
-      await DBHelper.exchangeRateDao!.insert(exchangeRateModel);
-    }
-    TransactionModel transactionModel = TransactionModel(
-        id: -1,
-        type:
-            walletTransaction.type?.index ?? TransactionType.unsupported.index,
-        label: utf8.encode(walletTransaction.label ?? ""),
-        externalTransactionID: utf8.encode(txid),
-        createTime: now.millisecondsSinceEpoch ~/ 1000,
-        modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        hashedTransactionID:
-            utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-        transactionID: walletTransaction.transactionId,
-        serverID: walletTransaction.id,
-        transactionTime: walletTransaction.transactionTime,
-        exchangeRateID: exchangeRateID,
-        serverWalletID: walletTransaction.walletId,
-        serverAccountID: walletTransaction.walletAccountId!,
-        sender: walletTransaction.sender,
-        tolist: walletTransaction.tolist,
-        subject: walletTransaction.subject,
-        body: walletTransaction.body);
-    await DBHelper.transactionDao!.insertOrUpdate(transactionModel);
-  }
-
   static Future<bool> checkFingerprint(
       WalletModel walletModel, String passphrase) async {
     String strMnemonic =
@@ -783,17 +723,10 @@ class WalletManager implements Manager {
         publicAddressKey, message, signature, gpgContext);
   }
 
-  static String getEmailFromWalletTransaction(String jsonString,
-      {List<String> selfEmailAddresses = const []}) {
-    if (jsonString.contains("isExternalTransaction")) {
-      var jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
-      String email = jsonMap["email"] ?? "";
-      String name = jsonMap["name"] ?? "";
-      if (email.isNotEmpty) {
-        return "$name ($email)";
-      }
-      return name;
-    }
+  static String getEmailFromWalletTransaction(
+    String jsonString, {
+    List<String> selfEmailAddresses = const [],
+  }) {
     try {
       var jsonList = jsonDecode(jsonString) as List<dynamic>;
       List<String> emails = [];
@@ -805,12 +738,19 @@ class WalletManager implements Manager {
       try {
         var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
         List<String> emails = [];
+        List<String> keys = [];
         for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
           // bitcoinAddress as key, emailAddress as value
+          keys.add(keyValues.key.toLowerCase());
           if (selfEmailAddresses.contains(keyValues.value)) {
             continue;
           }
-          emails.add(keyValues.value);
+          if (keyValues.value.isNotEmpty) {
+            emails.add(keyValues.value);
+          }
+        }
+        if (keys.contains("email") && keys.contains("name")) {
+          return emails.join(" - ");
         }
         return emails.join(", ");
       } catch (e) {
