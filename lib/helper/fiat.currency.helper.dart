@@ -40,6 +40,10 @@ class FiatCurrencyHelper {
     }
     return symbol;
   }
+
+  static String toCountryCode(FiatCurrency fiatCurrency) {
+    return fiatCurrencyToCountryCode[fiatCurrency] ?? "";
+  }
 }
 
 const List<FiatCurrency> fiatCurrencies = [
@@ -88,6 +92,53 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.vnd,
   FiatCurrency.zar,
 ];
+
+const Map<FiatCurrency, String> fiatCurrencyToCountryCode = {
+  FiatCurrency.usd: 'US',
+  FiatCurrency.eur: 'EU',
+  FiatCurrency.chf: 'CH',
+  FiatCurrency.aed: 'AE',
+  FiatCurrency.ars: 'AR',
+  FiatCurrency.aud: 'AU',
+  FiatCurrency.bdt: 'BD',
+  FiatCurrency.bhd: 'BH',
+  FiatCurrency.bmd: 'BM',
+  FiatCurrency.brl: 'BR',
+  FiatCurrency.cad: 'CA',
+  FiatCurrency.clp: 'CL',
+  FiatCurrency.cny: 'CN',
+  FiatCurrency.czk: 'CZ',
+  FiatCurrency.dkk: 'DK',
+  FiatCurrency.gbp: 'GB',
+  FiatCurrency.gel: 'GE',
+  FiatCurrency.hkd: 'HK',
+  FiatCurrency.huf: 'HU',
+  FiatCurrency.idr: 'ID',
+  FiatCurrency.ils: 'IL',
+  FiatCurrency.inr: 'IN',
+  FiatCurrency.jpy: 'JP',
+  FiatCurrency.krw: 'KR',
+  FiatCurrency.kwd: 'KW',
+  FiatCurrency.lkr: 'LK',
+  FiatCurrency.mmk: 'MM',
+  FiatCurrency.mxn: 'MX',
+  FiatCurrency.myr: 'MY',
+  FiatCurrency.ngn: 'NG',
+  FiatCurrency.nok: 'NO',
+  FiatCurrency.nzd: 'NZ',
+  FiatCurrency.php: 'PH',
+  FiatCurrency.pkr: 'PK',
+  FiatCurrency.pln: 'PL',
+  FiatCurrency.rub: 'RU',
+  FiatCurrency.sar: 'SA',
+  FiatCurrency.sek: 'SE',
+  FiatCurrency.sgd: 'SG',
+  FiatCurrency.thb: 'TH',
+  FiatCurrency.twd: 'TW',
+  FiatCurrency.uah: 'UA',
+  FiatCurrency.vnd: 'VN',
+  FiatCurrency.zar: 'ZA',
+};
 
 /// These info comes from /api/wallet/v1/fiat-currencies
 /// Since change is unlikely, there's no need to load dynamically via API.

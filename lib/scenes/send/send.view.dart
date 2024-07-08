@@ -1,4 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -203,6 +204,19 @@ class SendView extends ViewBase<SendViewModel> {
                                           .map((v) =>
                                               FiatCurrencyHelper.getDisplayName(
                                                   v))
+                                          .toList(),
+                                      itemsLeadingIcons: fiatCurrencies
+                                          .map((v) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 4),
+                                              child:
+                                                  CountryFlag.fromCountryCode(
+                                                FiatCurrencyHelper
+                                                    .toCountryCode(v),
+                                                shape: const Circle(),
+                                                width: 20,
+                                                height: 20,
+                                              )))
                                           .toList(),
                                       valueNotifier:
                                           viewModel.fiatCurrencyNotifier)),

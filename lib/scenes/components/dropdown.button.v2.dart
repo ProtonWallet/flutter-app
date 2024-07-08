@@ -14,6 +14,7 @@ class DropdownButtonV2 extends StatefulWidget {
   final double width;
   final List items;
   final List itemsText;
+  final List? itemsLeadingIcons;
   final List? itemsTextForDisplay;
   final List? itemsMoreDetail;
   final ValueNotifier? valueNotifier;
@@ -40,6 +41,7 @@ class DropdownButtonV2 extends StatefulWidget {
     this.maxSuffixIconWidth = 24,
     this.valueNotifier,
     this.canSearch = false,
+    this.itemsLeadingIcons,
   });
 
   @override
@@ -221,9 +223,27 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                                     height: 16),
                                               )
                                             : null,
-                                        title: Text(widget.itemsText[index],
-                                            style: FontManager.body2Regular(
-                                                ProtonColors.textNorm)),
+                                        title: widget.itemsLeadingIcons != null
+                                            ? Row(
+                                                children: [
+                                                  widget.itemsLeadingIcons?[
+                                                      index],
+                                                  Expanded(
+                                                    child: Text(
+                                                      widget.itemsText[index],
+                                                      style: FontManager
+                                                          .body2Regular(
+                                                              ProtonColors
+                                                                  .textNorm),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Text(widget.itemsText[index],
+                                                style: FontManager.body2Regular(
+                                                    ProtonColors.textNorm)),
                                         onTap: () {
                                           setState(() {
                                             selected = widget.items[index];

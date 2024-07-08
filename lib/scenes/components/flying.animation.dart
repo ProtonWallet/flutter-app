@@ -33,7 +33,7 @@ class RotateChildState extends State<FlyingAnimation>
         Future.delayed(const Duration(milliseconds: 300), () {
           controller.reverse();
         });
-      } else if(status == AnimationStatus.dismissed){
+      } else if (status == AnimationStatus.dismissed) {
         Future.delayed(const Duration(milliseconds: 300), () {
           controller.forward();
         });
@@ -55,7 +55,7 @@ class RotateChildState extends State<FlyingAnimation>
       child: widget.child,
       builder: (context, child) {
         return Transform.rotate(
-          angle: controller.value * 0.3 * 3.1415926535897932,
+          angle: (controller.value + 0.8) * 0.12 * 3.1415926535897932,
           child: child,
         );
       },
