@@ -674,10 +674,11 @@ class WalletTransactionBloc
         body = tryDecryptWithAddressKeys(addressKeys, encryptedBody);
       }
 
-      int amountInSATS = transactionDetail.received - transactionDetail.sent;
+      int amountInSATS =
+          (transactionDetail.received - transactionDetail.sent).toInt();
       if (amountInSATS < 0) {
         // bdk sent include fee, so need add back to make display send amount without fee
-        amountInSATS += transactionDetail.fees ?? 0;
+        amountInSATS += (transactionDetail.fees ?? BigInt.zero).toInt();
       }
       String key = "$txID-${accountModel.accountID}";
 
@@ -689,7 +690,7 @@ class WalletTransactionBloc
       transactionTime.when(
         confirmed: (confirmationTime) {
           logger.d('Confirmed transaction time: $confirmationTime');
-          time = confirmationTime;
+          time = confirmationTime.toInt();
         },
         unconfirmed: (lastSeen) {
           logger.d('Unconfirmed transaction last seen: $lastSeen');
@@ -706,7 +707,7 @@ class WalletTransactionBloc
         sender: sender.isNotEmpty ? sender : "Unknown",
         toList:
             toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
-        feeInSATS: transactionDetail.fees ?? 0,
+        feeInSATS: (transactionDetail.fees ?? BigInt.zero).toInt(),
         label: userLabel,
         inProgress: time == null,
         //transactionDetail.confirmationTime == null,
@@ -900,8 +901,8 @@ class WalletTransactionBloc
           bitcoinUnit: bitcoinUnit,
           fiatCurrency: fiatCurrency,
           exchangeRateTime: exchangeRateModel.exchangeRateTime,
-          exchangeRate: exchangeRateModel.exchangeRate,
-          cents: exchangeRateModel.cents,
+          exchangeRate: BigInt.from(exchangeRateModel.exchangeRate),
+          cents: BigInt.from(exchangeRateModel.cents),
         );
       }
     }

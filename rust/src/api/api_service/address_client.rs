@@ -10,7 +10,7 @@ use crate::BridgeError;
 use super::proton_api_service::ProtonAPIService;
 
 pub struct AddressClient {
-    pub inner: Arc<andromeda_api::address::AddressClient>,
+    pub(crate) inner: Arc<andromeda_api::address::AddressClient>,
 }
 
 impl AddressClient {

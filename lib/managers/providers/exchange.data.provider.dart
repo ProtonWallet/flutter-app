@@ -18,7 +18,7 @@ class ExchangeDataProvider extends DataProvider {
     String key = getKey(fiatCurrency, time: time);
     fiatCurrency2exchangeRate[key] = await exchangeRateClient.getExchangeRate(
       fiatCurrency: fiatCurrency,
-      time: time,
+      time: time == null ? null : BigInt.from(time),
     );
   }
 

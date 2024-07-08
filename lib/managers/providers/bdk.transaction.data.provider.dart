@@ -143,7 +143,7 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet full sync Started");
             await blockchain?.fullSync(
               account: account,
-              stopGap: appConfig.stopGap,
+              stopGap: BigInt.from(appConfig.stopGap),
             );
             await shared.write(syncCheckID, true);
             logger.i("Bdk wallet full sync End");

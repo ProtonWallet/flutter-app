@@ -171,13 +171,13 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
   bool isSending = false;
-  ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
+  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
       fiatCurrency: defaultFiatCurrency,
       exchangeRateTime: '',
-      exchangeRate: 1,
-      cents: 1);
+      exchangeRate: BigInt.one,
+      cents: BigInt.one);
 
   // user-setting data provider
   final UserSettingsDataProvider userSettingsDataProvider;
@@ -365,7 +365,7 @@ class SendViewModelImpl extends SendViewModel {
         await WalletManager.getAccountAddressIDs(accountModel?.accountID ?? "");
     if (_frbAccount != null) {
       var walletBalance = await _frbAccount!.getBalance();
-      balance = walletBalance.trustedSpendable().toSat();
+      balance = walletBalance.trustedSpendable().toSat().toInt();
     }
     datasourceChangedStreamController.sinkAddSafe(this);
   }
@@ -665,19 +665,19 @@ class SendViewModelImpl extends SendViewModel {
 
           txBuilder = txBuilder.addRecipient(
             addressStr: bitcoinAddress,
-            amount: amountInSATS,
+            amount: BigInt.from(amountInSATS),
           );
           protonRecipient.amountInSATS = amountInSATS;
         }
       }
       var network = appConfig.coinType.network;
-      txBuilder =
-          await txBuilder.setFeeRate(satPerVb: feeRateHighPriority.ceil());
+      txBuilder = await txBuilder.setFeeRate(
+          satPerVb: BigInt.from(feeRateHighPriority.ceil()));
       frbDraftPsbt = await txBuilder.createDraftPsbt(
         network: network,
         allowDust: allowDust,
       );
-      estimatedFeeInSAT = frbDraftPsbt.fee().toSat();
+      estimatedFeeInSAT = frbDraftPsbt.fee().toSat().toInt();
     } catch (e) {
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
@@ -727,7 +727,7 @@ class SendViewModelImpl extends SendViewModel {
             }
             txBuilder = txBuilder.addRecipient(
               addressStr: bitcoinAddress,
-              amount: amountInSATS,
+              amount: BigInt.from(amountInSATS),
             );
             protonRecipient.amountInSATS = amountInSATS;
             totalAmountInSAT += amountInSATS;
@@ -738,12 +738,12 @@ class SendViewModelImpl extends SendViewModel {
         return false;
       }
       var network = appConfig.coinType.network;
-      var txBuilderHighPriority =
-          await txBuilder.setFeeRate(satPerVb: feeRateHighPriority.ceil());
-      var txBuilderMedianPriority =
-          await txBuilder.setFeeRate(satPerVb: feeRateMedianPriority.ceil());
-      var txBuilderLowPriority =
-          await txBuilder.setFeeRate(satPerVb: feeRateLowPriority.ceil());
+      var txBuilderHighPriority = await txBuilder.setFeeRate(
+          satPerVb: BigInt.from(feeRateHighPriority.ceil()));
+      var txBuilderMedianPriority = await txBuilder.setFeeRate(
+          satPerVb: BigInt.from(feeRateMedianPriority.ceil()));
+      var txBuilderLowPriority = await txBuilder.setFeeRate(
+          satPerVb: BigInt.from(feeRateLowPriority.ceil()));
 
       var frbDraftPsbtHighPriority =
           await txBuilderHighPriority.createDraftPsbt(
@@ -760,14 +760,16 @@ class SendViewModelImpl extends SendViewModel {
         allowDust: allowDust,
       );
 
-      estimatedFeeInSATHighPriority = frbDraftPsbtHighPriority.fee().toSat();
+      estimatedFeeInSATHighPriority =
+          frbDraftPsbtHighPriority.fee().toSat().toInt();
       estimatedFeeInSATMedianPriority =
-          frbDraftPsbtMedianPriority.fee().toSat();
-      estimatedFeeInSATLowPriority = frbDraftPsbtLowPriority.fee().toSat();
+          frbDraftPsbtMedianPriority.fee().toSat().toInt();
+      estimatedFeeInSATLowPriority =
+          frbDraftPsbtLowPriority.fee().toSat().toInt();
 
       /// txBuilder will be use to build real psbt
-      txBuilder =
-          await txBuilder.setFeeRate(satPerVb: feeRateSatPerVByte.ceil());
+      txBuilder = await txBuilder.setFeeRate(
+          satPerVb: BigInt.from(feeRateSatPerVByte.ceil()));
     } catch (e) {
       /// TODO:: handle exception here
       errorMessage = e.toString();
@@ -873,7 +875,7 @@ class SendViewModelImpl extends SendViewModel {
                   id: null,
                   externalTransactionID: utf8.encode(txid),
                   amountInSATS: protonRecipient.amountInSATS ?? 0,
-                  feeInSATS: frbPsbt.fee().toSat(),
+                  feeInSATS: frbPsbt.fee().toSat().toInt(),
                   // all recipients have same fee since its same transaction
                   isSend: 1,
                   transactionTime:

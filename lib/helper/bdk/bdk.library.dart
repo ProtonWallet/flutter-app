@@ -67,7 +67,7 @@ class BdkLibrary {
         var blockClient = await Api.createEsploraBlockchainWithApi();
         await blockClient.fullSync(
           account: account!,
-          stopGap: appConfig.stopGap,
+          stopGap: BigInt.from(appConfig.stopGap),
         );
         RustLib.dispose();
       }
@@ -113,7 +113,7 @@ class BdkLibrary {
     try {
       await blockchain.fullSync(
         account: account,
-        stopGap: appConfig.stopGap,
+        stopGap: BigInt.from(appConfig.stopGap),
       );
       return true;
     } on FormatException catch (e, stacktrace) {

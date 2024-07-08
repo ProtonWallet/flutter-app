@@ -5,7 +5,7 @@ use andromeda_bitcoin::Sequence as BdkSequence;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FrbSequence {
-    inner: BdkSequence,
+    pub(crate) inner: BdkSequence,
 }
 
 impl From<BdkSequence> for FrbSequence {

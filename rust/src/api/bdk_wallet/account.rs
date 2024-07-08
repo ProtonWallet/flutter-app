@@ -23,7 +23,7 @@ use super::{
 
 #[derive(Debug, Clone)]
 pub struct FrbAccount {
-    inner: Account<OnchainStore>,
+    pub(crate) inner: Account<OnchainStore>,
 }
 
 impl FrbAccount {

@@ -20,7 +20,7 @@ class BitcoinAmount {
   }
 
   int getDisplayDigit() {
-    return (log(exchangeRate.cents) / log(10)).round();
+    return (log(exchangeRate.cents.toInt()) / log(10)).round();
   }
 
   String toFiatCurrencyString() {
