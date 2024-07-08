@@ -1,4 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
@@ -31,7 +32,7 @@ class BitcoinPriceBox extends StatelessWidget {
         child: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: defaultPadding,
-              vertical: 20,
+              vertical: 29,
             ),
             decoration: BoxDecoration(
               color: ProtonColors.white,
@@ -62,54 +63,68 @@ class BitcoinPriceBox extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             )),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Wrap(children: [
-                            AnimatedFlipCounter(
-                                duration: const Duration(milliseconds: 500),
-                                prefix:
-                                    Provider.of<UserSettingProvider>(context)
-                                        .getFiatCurrencyName(
-                                            fiatCurrency:
-                                                exchangeRate.fiatCurrency),
-                                value: ExchangeCalculator
-                                    .getNotionalInFiatCurrency(
-                                        exchangeRate, 100000000),
-                                // value: price,
-                                fractionDigits: defaultDisplayDigits,
-                                textStyle: FontManager.body2Median(
-                                    ProtonColors.textNorm)),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            priceChange > 0
-                                ? AnimatedFlipCounter(
-                                    duration: const Duration(milliseconds: 500),
-                                    prefix: "▲",
-                                    value: priceChange,
-                                    suffix: "% (1d)",
-                                    fractionDigits: 2,
-                                    textStyle: FontManager.body2Regular(
-                                        ProtonColors.signalSuccess))
-                                : AnimatedFlipCounter(
-                                    duration: const Duration(milliseconds: 500),
-                                    prefix: "▼",
-                                    value: priceChange,
-                                    suffix: "% (1d)",
-                                    fractionDigits: 2,
-                                    textStyle: FontManager.body2Regular(
-                                        ProtonColors.signalError)),
-                          ]),
-                        )
+                        exchangeRate.id == "default"
+                            ? const SizedBox(
+                                width: 160,
+                                child: CardLoading(
+                                  height: 16,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                  margin: EdgeInsets.only(top: 4),
+                                ),
+                              )
+                            : Align(
+                                alignment: Alignment.centerLeft,
+                                child: Wrap(children: [
+                                  AnimatedFlipCounter(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      prefix: Provider.of<UserSettingProvider>(
+                                              context)
+                                          .getFiatCurrencyName(
+                                              fiatCurrency:
+                                                  exchangeRate.fiatCurrency),
+                                      value: ExchangeCalculator
+                                          .getNotionalInFiatCurrency(
+                                              exchangeRate, 100000000),
+                                      // value: price,
+                                      fractionDigits: defaultDisplayDigits,
+                                      textStyle: FontManager.body2Median(
+                                          ProtonColors.textNorm)),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  priceChange > 0
+                                      ? AnimatedFlipCounter(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          prefix: "▲",
+                                          value: priceChange,
+                                          suffix: "% (1d)",
+                                          fractionDigits: 2,
+                                          textStyle: FontManager.body2Regular(
+                                              ProtonColors.signalSuccess))
+                                      : AnimatedFlipCounter(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          prefix: "▼",
+                                          value: priceChange,
+                                          suffix: "% (1d)",
+                                          fractionDigits: 2,
+                                          textStyle: FontManager.body2Regular(
+                                              ProtonColors.signalError)),
+                                ]),
+                              )
                       ],
                     ),
-                    Expanded(
-                      child: BitcoinPriceHomepageChart(
-                        exchangeRate: exchangeRate,
-                        width: MediaQuery.of(context).size.width - 260,
-                        priceChange: priceChange,
+                    if (exchangeRate.id != "default")
+                      Expanded(
+                        child: BitcoinPriceHomepageChart(
+                          exchangeRate: exchangeRate,
+                          width: MediaQuery.of(context).size.width - 260,
+                          priceChange: priceChange,
+                        ),
                       ),
-                    ),
                   ]),
                 ),
               ],

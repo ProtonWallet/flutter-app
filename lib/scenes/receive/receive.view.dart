@@ -151,13 +151,19 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                   Container(
                                     color: ProtonColors.white,
                                     padding: const EdgeInsets.all(10),
-                                    child: QrImageView(
-                                      size: min(
-                                          MediaQuery.of(context).size.width,
-                                          200),
-                                      data: viewModel.address,
-                                      version: QrVersions.auto,
-                                    ),
+                                    child: viewModel.initialized
+                                        ? QrImageView(
+                                            size: min(
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                200),
+                                            data: viewModel.address,
+                                            version: QrVersions.auto,
+                                          )
+                                        : CircularProgressIndicator(
+                                            color: ProtonColors.protonBlue,
+                                          ),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

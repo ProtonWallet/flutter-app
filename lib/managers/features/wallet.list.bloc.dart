@@ -215,6 +215,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       }
 
       bool hasSelected = false;
+
       /// get user key
       var firstUserKey = await userManager.getFirstKey();
       List<WalletMenuModel> walletsModel = [];
@@ -385,6 +386,19 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     on<UpdateAccountFiat>((event, emit) async {
       for (WalletMenuModel walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
+          if (walletModel.isSelected) {
+            /// wallet view, check if the update fiat is the default account
+            AccountMenuModel? accountMenuModel =
+                walletModel.accounts.firstOrNull;
+            if (accountMenuModel != null) {
+              if (accountMenuModel.accountModel.accountID ==
+                  event.accountModel.accountID) {
+                userSettingsDataProvider.updateFiatCurrency(
+                  event.fiatName.toFiatCurrency(),
+                );
+              }
+            }
+          }
           for (AccountMenuModel account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {

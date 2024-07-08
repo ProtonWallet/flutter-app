@@ -69,6 +69,7 @@ class EditSenderSheet {
                       child: TextFieldTextV2(
                         labelText: S.of(context).sender_name,
                         hintText: S.of(context).sender_name_hint,
+                        alwaysShowHint: true,
                         maxLength: maxWalletNameSize,
                         textController: nameController,
                         myFocusNode: nameFocusNode,
@@ -90,6 +91,7 @@ class EditSenderSheet {
                       child: TextFieldTextV2(
                         labelText: S.of(context).sender_email_optional,
                         hintText: S.of(context).sender_email_optional_hint,
+                        alwaysShowHint: true,
                         maxLength: maxWalletNameSize,
                         textController: emailController,
                         myFocusNode: emailFocusNode,

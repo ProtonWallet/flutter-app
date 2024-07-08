@@ -45,6 +45,12 @@ abstract class DataLoaded extends DataState {
 
 abstract class DataCreated extends DataState {}
 
+enum UpdateType {
+  inserted,
+  updated,
+  deleted,
+}
+
 class DataUpdated<T> extends DataState {
   final T updatedData;
 
@@ -219,7 +225,9 @@ class DataProviderManager extends Manager {
     WalletManager.walletKeysProvider = walletKeysProvider;
     WalletManager.walletPassphraseProvider = walletPassphraseProvider;
     WalletManager.walletDataProvider = walletDataProvider;
-    WalletManager.localBitcoinAddressDataProvider = localBitcoinAddressDataProvider;
+    WalletManager.localBitcoinAddressDataProvider =
+        localBitcoinAddressDataProvider;
+    WalletManager.serverTransactionDataProvider = serverTransactionDataProvider;
     WalletManager.userID = userID;
   }
 

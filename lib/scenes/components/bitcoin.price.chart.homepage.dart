@@ -138,7 +138,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
         Expanded(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: Responsive.isDesktop(context)
@@ -149,8 +149,15 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
                   ),
                   height: 40,
                   child: isLoading
-                      ? CircularProgressIndicator(
-                          color: ProtonColors.protonBlue)
+                      ? SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: ProtonColors.protonBlue,
+                            ),
+                          ),
+                        )
                       : LineChart(
                           LineChartData(
                             lineBarsData: [
@@ -169,14 +176,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
                             borderData: FlBorderData(
                               show: false,
                             ),
-                            lineTouchData: LineTouchData(
-                              touchTooltipData: LineTouchTooltipData(
-                                  tooltipBgColor: ProtonColors.white,
-                                  tooltipBorder: BorderSide(
-                                    width: 1.0,
-                                    color: ProtonColors.textWeak,
-                                  )),
-                              handleBuiltInTouches: true,
+                            lineTouchData: const LineTouchData(
+                              enabled: false,
                             ),
                             gridData: const FlGridData(
                               drawVerticalLine: false,

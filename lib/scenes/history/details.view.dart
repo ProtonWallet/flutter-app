@@ -130,6 +130,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         content: CommonHelper.formatLocaleTime(
                             context, viewModel.transactionTime!),
                         backgroundColor: ProtonColors.white,
+                        isLoading: viewModel.initialized == false,
                       ),
                     const Divider(
                       thickness: 0.2,
@@ -146,6 +147,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           ? ProtonColors.signalSuccess
                           : ProtonColors.signalError,
                       backgroundColor: ProtonColors.white,
+                      isLoading: viewModel.initialized == false,
                     ),
                     const Divider(
                       thickness: 0.2,
@@ -159,6 +161,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               : S.of(context).trans_message_from_sender,
                           content: viewModel.body,
                           backgroundColor: ProtonColors.white,
+                          isLoading: viewModel.initialized == false,
                         ),
                         const Divider(
                           thickness: 0.2,
@@ -278,6 +281,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 viewModel.userSettingsDataProvider.bitcoinUnit,
                                 viewModel.fee.toInt()),
                             backgroundColor: ProtonColors.white,
+                            isLoading: viewModel.initialized == false,
                           ),
                           const Divider(
                             thickness: 0.2,
@@ -301,6 +305,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                     viewModel.amount.toInt() +
                                         viewModel.fee.toInt()),
                             backgroundColor: ProtonColors.white,
+                            isLoading: viewModel.initialized == false,
                           ),
                           const SizedBox(height: 20),
                           ButtonV5(
@@ -356,11 +361,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 content: "$yourEmail (You)",
                 memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
                 backgroundColor: ProtonColors.white,
+                isLoading: viewModel.initialized == false,
               )
             : TransactionHistoryItem(
                 title: S.of(context).trans_from,
                 content: "${viewModel.strWallet} - ${viewModel.strAccount}",
                 backgroundColor: ProtonColors.white,
+                isLoading: viewModel.initialized == false,
               ),
       ],
     );
@@ -385,6 +392,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
                   exchangeRate: viewModel.exchangeRate!)
               : null,
+          isLoading: viewModel.initialized == false,
         ),
       const Divider(
         thickness: 0.2,
@@ -406,8 +414,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     viewModel.fromEmail)
                 : "Unknown",
             backgroundColor: ProtonColors.white,
+            isLoading: viewModel.initialized == false,
           ),
-          if (viewModel.isInternalTransaction == false)
+          if (viewModel.isInternalTransaction == false && viewModel.initialized)
             Positioned(
                 top: 20,
                 right: defaultPadding,
@@ -433,6 +442,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
           bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
           bitcoinAmount: null,
+          isLoading: viewModel.initialized == false,
         ),
       ],
     );
