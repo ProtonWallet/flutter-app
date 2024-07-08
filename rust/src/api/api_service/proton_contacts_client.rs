@@ -4,7 +4,7 @@ use andromeda_api::{contacts::ApiContactEmails, core::ApiClient};
 use std::sync::Arc;
 
 pub struct ContactsClient {
-    pub inner: Arc<andromeda_api::contacts::ContactsClient>,
+    pub(crate) inner: Arc<andromeda_api::contacts::ContactsClient>,
 }
 
 impl ContactsClient {

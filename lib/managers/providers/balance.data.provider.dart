@@ -20,7 +20,7 @@ class BDKBalanceData {
   Future<int> getBalance() async {
     if (account != null) {
       var balance = await account!.getBalance();
-      return balance.trustedSpendable().toSat();
+      return balance.trustedSpendable().toSat().toInt();
     }
     return 0;
   }

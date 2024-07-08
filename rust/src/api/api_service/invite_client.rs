@@ -7,7 +7,7 @@ use crate::BridgeError;
 use super::proton_api_service::ProtonAPIService;
 
 pub struct InviteClient {
-    pub inner: Arc<andromeda_api::invite::InviteClient>,
+    pub(crate) inner: Arc<andromeda_api::invite::InviteClient>,
 }
 
 impl InviteClient {

@@ -216,13 +216,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
-  ProtonExchangeRate currentExchangeRate = const ProtonExchangeRate(
+  ProtonExchangeRate currentExchangeRate = ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
       fiatCurrency: defaultFiatCurrency,
       exchangeRateTime: '',
-      exchangeRate: 1,
-      cents: 1);
+      exchangeRate: BigInt.one,
+      cents: BigInt.one);
 
   /// app version
   String appVersion = "Proton Wallet";

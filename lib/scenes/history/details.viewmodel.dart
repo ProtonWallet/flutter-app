@@ -190,13 +190,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         isSend = amount < 0;
         // bdk sent include fee, so need add back to make display send amount without fee
         if (isSend) {
-          amount += transaction.fees ?? 0;
+          amount += (transaction.fees ?? BigInt.zero).toDouble();
         }
 
         transaction.time.when(
           confirmed: (confirmationTime) {
             logger.d('Confirmed transaction time: $confirmationTime');
-            transactionTime = confirmationTime;
+            transactionTime = confirmationTime.toInt();
           },
           unconfirmed: (lastSeen) {
             logger.d('Unconfirmed transaction last seen: $lastSeen');
@@ -493,8 +493,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           bitcoinUnit: bitcoinUnit,
           fiatCurrency: fiatCurrency,
           exchangeRateTime: exchangeRateModel.exchangeRateTime,
-          exchangeRate: exchangeRateModel.exchangeRate,
-          cents: exchangeRateModel.cents,
+          exchangeRate: BigInt.from(exchangeRateModel.exchangeRate),
+          cents: BigInt.from(exchangeRateModel.cents),
         );
       }
     }

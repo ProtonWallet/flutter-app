@@ -11,7 +11,7 @@ use andromeda_api::{
 };
 
 pub struct ProtonUsersClient {
-    pub inner: InnerProtonUsersClient,
+    pub(crate) inner: InnerProtonUsersClient,
 }
 
 impl ProtonUsersClient {

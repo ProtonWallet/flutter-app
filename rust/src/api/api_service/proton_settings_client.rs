@@ -9,7 +9,7 @@ use andromeda_api::{
 };
 
 pub struct ProtonSettingsClient {
-    pub inner: InnerProtonSettingsClient,
+    pub(crate) inner: InnerProtonSettingsClient,
 }
 
 impl ProtonSettingsClient {

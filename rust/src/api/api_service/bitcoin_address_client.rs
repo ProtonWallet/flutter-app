@@ -7,7 +7,7 @@ use crate::{wallet::BitcoinAddress, BridgeError};
 use super::proton_api_service::ProtonAPIService;
 
 pub struct BitcoinAddressClient {
-    pub inner: Arc<andromeda_api::bitcoin_address::BitcoinAddressClient>,
+    pub(crate) inner: Arc<andromeda_api::bitcoin_address::BitcoinAddressClient>,
 }
 
 impl BitcoinAddressClient {

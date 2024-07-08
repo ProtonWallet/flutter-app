@@ -61,10 +61,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           fiatCurrency: viewModel.exchangeRate!.fiatCurrency);
       fiatCurrencySign = viewModel.userSettingsDataProvider.getFiatCurrencySign(
           fiatCurrency: viewModel.exchangeRate!.fiatCurrency);
-      displayDigits = (log(viewModel.exchangeRate!.cents) / log(10)).round();
+      displayDigits =
+          (log(viewModel.exchangeRate!.cents.toInt()) / log(10)).round();
     } else {
       displayDigits =
-          (log(viewModel.userSettingsDataProvider.exchangeRate.cents) / log(10))
+          (log(viewModel.userSettingsDataProvider.exchangeRate.cents.toInt()) /
+                  log(10))
               .round();
     }
     return Container(

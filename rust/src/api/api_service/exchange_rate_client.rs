@@ -4,7 +4,7 @@ use andromeda_api::{core::ApiClient, settings::FiatCurrencySymbol as FiatCurrenc
 use std::sync::Arc;
 
 pub struct ExchangeRateClient {
-    pub inner: Arc<andromeda_api::exchange_rate::ExchangeRateClient>,
+    pub(crate) inner: Arc<andromeda_api::exchange_rate::ExchangeRateClient>,
 }
 
 impl ExchangeRateClient {

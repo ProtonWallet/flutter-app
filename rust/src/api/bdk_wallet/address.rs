@@ -11,7 +11,7 @@ use super::script_buf::FrbScriptBuf;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FrbAddress {
-    inner: BdkAddress,
+    pub(crate) inner: BdkAddress,
 }
 
 impl FrbAddress {

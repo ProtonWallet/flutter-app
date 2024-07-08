@@ -18,7 +18,7 @@ use crate::{
 use super::proton_api_service::ProtonAPIService;
 
 pub struct WalletClient {
-    pub inner: Arc<andromeda_api::wallet::WalletClient>,
+    pub(crate) inner: Arc<andromeda_api::wallet::WalletClient>,
 }
 
 impl WalletClient {

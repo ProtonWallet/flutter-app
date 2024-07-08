@@ -51,13 +51,13 @@ class UserSettingsDataProvider extends DataProvider {
     this.settingsClient,
   );
 
-  ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
+  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
       fiatCurrency: defaultFiatCurrency,
       exchangeRateTime: '',
-      exchangeRate: 1,
-      cents: 1);
+      exchangeRate: BigInt.one,
+      cents: BigInt.one);
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   FiatCurrency fiatCurrency = FiatCurrency.usd;
 
@@ -116,7 +116,8 @@ class UserSettingsDataProvider extends DataProvider {
           bitcoinUnit: settings.bitcoinUnit.toBitcoinUnit(),
           fiatCurrency: fiatCurrency,
           hideEmptyUsedAddresses: settings.hideEmptyUsedAddresses ? 1 : 0,
-          twoFactorAmountThreshold: settings.twoFactorAmountThreshold.toInt(),
+          twoFactorAmountThreshold:
+              BigInt.from(settings.twoFactorAmountThreshold),
         ));
         ProtonExchangeRate exchangeRate =
             await ExchangeRateService.getExchangeRate(fiatCurrency);
@@ -140,9 +141,9 @@ class UserSettingsDataProvider extends DataProvider {
       fiatCurrency: settings.fiatCurrency.enumToString(),
       hideEmptyUsedAddresses: settings.hideEmptyUsedAddresses == 1,
       showWalletRecovery: false,
-      twoFactorAmountThreshold:
-          (settings.twoFactorAmountThreshold ?? defaultTwoFactorAmountThreshold)
-              .toDouble(),
+      twoFactorAmountThreshold: (settings.twoFactorAmountThreshold ??
+              BigInt.from(defaultTwoFactorAmountThreshold))
+          .toDouble(),
     ));
     settingsData = await _getFromDB();
     dataUpdateController.add(UserSettingDataUpdated());

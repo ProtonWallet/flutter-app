@@ -10,25 +10,25 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 class WalletUserSetting {
   proton_user_setting.FiatCurrency fiatCurrency = defaultFiatCurrency;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
-  ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
+  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
       fiatCurrency: defaultFiatCurrency,
       exchangeRateTime: '',
-      exchangeRate: 1,
-      cents: 1);
+      exchangeRate: BigInt.one,
+      cents: BigInt.one);
 
   void destroy() {
     // clear data to default one
     fiatCurrency = defaultFiatCurrency;
     bitcoinUnit = BitcoinUnit.btc;
-    exchangeRate = const ProtonExchangeRate(
+    exchangeRate = ProtonExchangeRate(
         id: 'default',
         bitcoinUnit: BitcoinUnit.btc,
         fiatCurrency: defaultFiatCurrency,
         exchangeRateTime: '',
-        exchangeRate: 1,
-        cents: 1);
+        exchangeRate: BigInt.one,
+        cents: BigInt.one);
   }
 }
 
@@ -58,10 +58,10 @@ class UserSettingProvider with ChangeNotifier {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
           (walletUserSetting.exchangeRate.exchangeRate /
-              fiatCurrencyInfo.cents);
+              BigInt.from(fiatCurrencyInfo.cents));
     }
     return amountInFiatCurrency /
-        (walletUserSetting.exchangeRate.exchangeRate / 100);
+        (walletUserSetting.exchangeRate.exchangeRate / BigInt.from(100));
   }
 
   String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
