@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
@@ -97,7 +98,7 @@ class WalletTransactionState extends Equatable {
   /// 2. LocalTransactionDataProvider, this is used to show sender side's info, how much to which recipient..etc, only used when bdk didn't synced for the transaction yet
   /// 3. BKDTransactionDataProvider, this is main transactionProvider, 1 and 2 are used when bdk not synced (bdk didn't know the transaction yet)
   final List<HistoryTransaction> historyTransaction;
-  final List<BitcoinAddressModel> bitcoinAddresses;
+  final List<BitcoinAddressDetail> bitcoinAddresses;
   final bool isSyncing;
 
   const WalletTransactionState({
@@ -118,7 +119,7 @@ extension WalletTransactionStateCopyWith on WalletTransactionState {
   WalletTransactionState copyWith({
     bool isSyncing = false,
     List<HistoryTransaction>? historyTransaction,
-    List<BitcoinAddressModel>? bitcoinAddresses,
+    List<BitcoinAddressDetail>? bitcoinAddresses,
   }) {
     return WalletTransactionState(
       isSyncing: isSyncing,
@@ -277,7 +278,7 @@ class WalletTransactionBloc
         syncWallet();
       }
 
-      List<BitcoinAddressModel> bitcoinAddresses = [];
+      List<BitcoinAddressDetail> bitcoinAddresses = [];
       WalletModel walletModel = event.walletMenuModel.walletModel;
       SecretKey? secretKey =
           await getSecretKey(event.walletMenuModel.walletModel);
@@ -303,6 +304,26 @@ class WalletTransactionBloc
           walletModel,
           accountMenuModel.accountModel,
         );
+
+        /// check every bitcoinAddress if it exists in transactions
+        Map<String, List<String>> bitcoinAddress2TXIDMap = {};
+        for (HistoryTransaction historyTransaction
+            in historyTransactionsInAccount) {
+          for (String addr in historyTransaction.bitcoinAddresses) {
+            if (bitcoinAddress2TXIDMap.containsKey(addr) == false) {
+              bitcoinAddress2TXIDMap[addr] = [];
+            }
+            bitcoinAddress2TXIDMap[addr]?.add(historyTransaction.txID);
+          }
+        }
+
+        for (BitcoinAddressDetail bitcoinAddressDetail
+            in localBitcoinAddressData.bitcoinAddresses) {
+          bitcoinAddressDetail.txIDs = bitcoinAddress2TXIDMap[
+                  bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddress] ??
+              [];
+        }
+
         bitcoinAddresses += localBitcoinAddressData.bitcoinAddresses;
         if (currentAccountModel != null ||
             currentWalletModel!.walletID != walletModel.walletID) {
@@ -375,6 +396,25 @@ class WalletTransactionBloc
         walletModel,
         event.accountMenuModel.accountModel,
       );
+
+      /// check every bitcoinAddress if it exists in transactions
+      Map<String, List<String>> bitcoinAddress2TXIDMap = {};
+      for (HistoryTransaction historyTransaction
+          in historyTransactionsInAccount) {
+        for (String addr in historyTransaction.bitcoinAddresses) {
+          if (bitcoinAddress2TXIDMap.containsKey(addr) == false) {
+            bitcoinAddress2TXIDMap[addr] = [];
+          }
+          bitcoinAddress2TXIDMap[addr]?.add(historyTransaction.txID);
+        }
+      }
+
+      for (BitcoinAddressDetail bitcoinAddressDetail
+          in localBitcoinAddressData.bitcoinAddresses) {
+        bitcoinAddressDetail.txIDs = bitcoinAddress2TXIDMap[
+                bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddress] ??
+            [];
+      }
       if (currentAccountModel != null) {
         if (currentAccountModel!.accountID !=
             event.accountMenuModel.accountModel.accountID) {
@@ -540,7 +580,11 @@ class WalletTransactionBloc
 
     Map<String, FrbAddressInfo> selfBitcoinAddressInfo =
         await localBitcoinAddressDataProvider.getBitcoinAddress(
-            walletModel, accountMenuModel.accountModel, account);
+      walletModel,
+      accountMenuModel.accountModel,
+      account,
+      maxAddressIndex: accountModel.lastUsedIndex + appConfig.stopGap,
+    );
 
     var firstUserkey = await userManager.getFirstKey();
     var userPrivateKey = firstUserkey.privateKey;
@@ -568,12 +612,13 @@ class WalletTransactionBloc
     /// checking transactions from bdk
     for (FrbTransactionDetails transactionDetail
         in bdkTransactionData.transactions) {
+      List<String> bitcoinAddressesInTransaction = [];
       String txID = transactionDetail.txid;
       List<FrbDetailledTxOutput> output = transactionDetail.outputs;
       List<String> recipientBitcoinAddresses = [];
       for (FrbDetailledTxOutput txOut in output) {
         String bitcoinAddress = txOut.address;
-
+        bitcoinAddressesInTransaction.add(bitcoinAddress);
         BitcoinAddressModel? bitcoinAddressModel =
             await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
                 bitcoinAddress, accountModel.accountID);
@@ -668,6 +713,7 @@ class WalletTransactionBloc
         accountModel: accountModel,
         body: body.isNotEmpty ? body : null,
         exchangeRate: exchangeRate,
+        bitcoinAddresses: bitcoinAddressesInTransaction,
       );
     }
 
@@ -732,6 +778,7 @@ class WalletTransactionBloc
           accountModel: accountModel,
           body: body.isNotEmpty ? body : null,
           exchangeRate: exchangeRate,
+          bitcoinAddresses: [],
         );
       } else {
         /// no transactionInfoModels found, means it's recipient side
@@ -750,9 +797,11 @@ class WalletTransactionBloc
           }
           if (transactionDetailFromBlockChain != null) {
             Recipient? me;
+            List<String> bitcoinAddressesInTransaction = [];
             for (Recipient recipient
                 in transactionDetailFromBlockChain.recipients) {
               String bitcoinAddress = recipient.bitcoinAddress;
+              bitcoinAddressesInTransaction.add(bitcoinAddress);
               BitcoinAddressModel? bitcoinAddressModel =
                   await localBitcoinAddressDataProvider
                       .findBitcoinAddressInAccount(
@@ -807,6 +856,7 @@ class WalletTransactionBloc
                 accountModel: accountModel,
                 body: body.isNotEmpty ? body : null,
                 exchangeRate: exchangeRate,
+                bitcoinAddresses: bitcoinAddressesInTransaction,
               );
             } else {
               // logger.i("Cannot find this tx, $txID");

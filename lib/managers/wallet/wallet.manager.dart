@@ -499,7 +499,8 @@ class WalletManager implements Manager {
               "handleBitcoinAddressRequests: accountModel is null after syncBitcoinAddressIndex()");
           continue;
         }
-        int addressIndex = accountModel.lastUsedIndex + 1;
+        // need plus 2 since the lastUsedIndex + 1 is used for manual receive
+        int addressIndex = accountModel.lastUsedIndex + 2;
         var addressInfo = await account.getAddress(index: addressIndex);
         String address = addressInfo.address;
         String signature = await getSignature(
@@ -528,7 +529,7 @@ class WalletManager implements Manager {
         } catch (e) {
           logger.e(e.toString());
         }
-        accountModel.lastUsedIndex = accountModel.lastUsedIndex + 1;
+        accountModel.lastUsedIndex = accountModel.lastUsedIndex + 2;
         await updateLastUsedIndex(accountModel);
       }
     }
@@ -540,8 +541,8 @@ class WalletManager implements Manager {
     /// this will happen when some one send bitcoin via qr code
     int localUsedIndex = await localBitcoinAddressDataProvider.getLastUsedIndex(
         walletModel, accountModel);
-    if (localUsedIndex >= accountModel.lastUsedIndex) {
-      accountModel.lastUsedIndex = localUsedIndex + 1;
+    if (localUsedIndex > accountModel.lastUsedIndex) {
+      accountModel.lastUsedIndex = localUsedIndex;
       await updateLastUsedIndex(accountModel);
     }
   }
@@ -654,7 +655,7 @@ class WalletManager implements Manager {
       for (int offset = 0; offset < addingCount; offset++) {
         int addressIndex = accountModel.lastUsedIndex +
             offset +
-            1; // need plus 1 since the lastUsedIndex is used for manual receive
+            2; // need plus 2 since the lastUsedIndex + 1 is used for manual receive
         logger.i(
             "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID");
 
@@ -685,8 +686,11 @@ class WalletManager implements Manager {
           logger.e(e.toString());
         }
       }
-      accountModel.lastUsedIndex = accountModel.lastUsedIndex + addingCount + 1;
-      await updateLastUsedIndex(accountModel);
+      if (addingCount > 0) {
+        accountModel.lastUsedIndex =
+            accountModel.lastUsedIndex + addingCount + 1;
+        await updateLastUsedIndex(accountModel);
+      }
     }
   }
 

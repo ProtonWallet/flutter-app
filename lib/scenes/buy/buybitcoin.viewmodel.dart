@@ -280,11 +280,12 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       /// this will happen when some one send bitcoin via qr code
       int localUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      if (localUsedIndex >= accountModel.lastUsedIndex) {
-        accountModel.lastUsedIndex = localUsedIndex + 1;
+      if (localUsedIndex > accountModel.lastUsedIndex) {
+        accountModel.lastUsedIndex = localUsedIndex;
         await WalletManager.updateLastUsedIndex(accountModel);
       }
-      int addressIndex = accountModel.lastUsedIndex;
+      int addressIndex = accountModel.lastUsedIndex + 1;
+
       var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {

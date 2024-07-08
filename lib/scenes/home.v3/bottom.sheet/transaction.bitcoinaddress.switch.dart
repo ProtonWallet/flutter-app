@@ -49,9 +49,9 @@ class TransactionBitcoinAddressSwitchSheet {
                 title: Text(S.of(context).bitcoin_address,
                     style: FontManager.body2Regular(ProtonColors.textNorm)),
                 onTap: () {
-                  CommonHelper.showSnackbar(context, "TODO");
-                  // viewModel
-                  //     .updateBodyListStatus(BodyListStatus.bitcoinAddressList);
+                  // CommonHelper.showSnackbar(context, "TODO");
+                  viewModel
+                      .updateBodyListStatus(BodyListStatus.bitcoinAddressList);
                   Navigator.of(context).pop();
                 },
               ),

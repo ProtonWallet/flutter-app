@@ -146,7 +146,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      addressIndex = accountModel!.lastUsedIndex;
+      addressIndex = accountModel!.lastUsedIndex + 1;
       if (init) {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,
@@ -221,10 +221,10 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
       /// check if local highest used bitcoin address index is higher than the one store in wallet account
       /// this will happen when some one send bitcoin via qr code
-      int localUsedIndex = await localBitcoinAddressDataProvider
+      int localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      if (localUsedIndex >= accountModel!.lastUsedIndex) {
-        accountModel!.lastUsedIndex = localUsedIndex + 1;
+      if (localLastUsedIndex > accountModel!.lastUsedIndex) {
+        accountModel!.lastUsedIndex = localLastUsedIndex;
         await WalletManager.updateLastUsedIndex(accountModel!);
       }
       await getAddress(init: true);
