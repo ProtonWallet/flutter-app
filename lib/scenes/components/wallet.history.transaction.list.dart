@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -105,7 +106,7 @@ class WalletHistoryTransactionListState
               },
               child: Container(
                   padding: const EdgeInsets.only(top: 10),
-                  child: Text("Show more",
+                  child: Text(S.of(context).show_more,
                       style:
                           FontManager.body1Regular(ProtonColors.protonBlue)))),
       ],

@@ -16,6 +16,7 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -229,7 +230,14 @@ class WalletTransactionBloc
         .dataUpdateController.stream
         .listen((onData) {
       handleTransactionDataProviderUpdate();
-      syncWallet(true);
+
+      if (onData.updatedData == UpdateType.inserted) {
+        Future.delayed(const Duration(seconds: 10), () {
+          /// wait 10 second so transaction can update first
+          /// since bdk account will be locked when it's syncing
+          syncWallet(true);
+        });
+      }
 
       /// syncWallet so that balance can get update
     });
@@ -237,8 +245,8 @@ class WalletTransactionBloc
     localTransactionDataSubscription = localTransactionDataProvider
         .dataUpdateController.stream
         .listen((onData) {
-      handleTransactionDataProviderUpdate();
-      syncWallet(true);
+      // handleTransactionDataProviderUpdate();
+      // syncWallet(true);
     });
     on<StartLoading>((event, emit) async {
       emit(state.copyWith(historyTransaction: []));
@@ -728,19 +736,17 @@ class WalletTransactionBloc
       } else {
         /// no transactionInfoModels found, means it's recipient side
         /// going to get transaction info from proton esplora server
+        /// TODO:: fix me since it take too long time
         try {
           TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-          for (int i = 0; i < 5; i++) {
-            transactionDetailFromBlockChain =
-                await WalletManager.getTransactionDetailsFromBlockStream(txID);
-            try {
-              if (transactionDetailFromBlockChain != null) {
-                break;
-              }
-            } catch (e) {
-              logger.e(e.toString());
+          transactionDetailFromBlockChain =
+              await WalletManager.getTransactionDetailsFromBlockStream(txID);
+          try {
+            if (transactionDetailFromBlockChain != null) {
+              break;
             }
-            await Future.delayed(const Duration(seconds: 1));
+          } catch (e) {
+            logger.e(e.toString());
           }
           if (transactionDetailFromBlockChain != null) {
             Recipient? me;

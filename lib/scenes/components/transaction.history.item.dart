@@ -1,3 +1,4 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,6 +21,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final Color? contentColor;
   final Color? backgroundColor;
   final BitcoinAmount? bitcoinAmount;
+  final bool isLoading;
 
   const TransactionHistoryItem({
     super.key,
@@ -33,6 +35,7 @@ class TransactionHistoryItem extends StatelessWidget {
     this.bitcoinAddress,
     this.walletAccountName,
     this.backgroundColor,
+    this.isLoading = false,
   });
 
   @override
@@ -40,125 +43,143 @@ class TransactionHistoryItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(defaultPadding),
       color: backgroundColor ?? ProtonColors.backgroundProton,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      child: isLoading
+          ? const CardLoading(
+              height: 50,
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              margin: EdgeInsets.only(top: 4),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(title,
-                          style:
-                              FontManager.body2Median(ProtonColors.textWeak)),
-                      const SizedBox(width: 2),
-                      if (titleTooltip != null)
-                        Transform.translate(
-                          offset: const Offset(0, 1),
-                          child: CustomTooltip(
-                              message: titleTooltip ?? "",
-                              child: SvgPicture.asset(
-                                  "assets/images/icon/ic-info-circle.svg",
-                                  fit: BoxFit.fill,
-                                  width: 16,
-                                  height: 16)),
-                        )
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(title,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textWeak)),
+                            const SizedBox(width: 2),
+                            if (titleTooltip != null)
+                              Transform.translate(
+                                offset: const Offset(0, 1),
+                                child: CustomTooltip(
+                                    message: titleTooltip ?? "",
+                                    child: SvgPicture.asset(
+                                        "assets/images/icon/ic-info-circle.svg",
+                                        fit: BoxFit.fill,
+                                        width: 16,
+                                        height: 16)),
+                              )
+                          ]),
+                      if (titleOptionsCallback != null)
+                        GestureDetector(
+                            onTap: titleOptionsCallback,
+                            child: Text(S.of(context).advanced_options,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textWeak)))
                     ]),
-                if (titleOptionsCallback != null)
+                if (content.isNotEmpty || memo != null)
                   GestureDetector(
-                      onTap: titleOptionsCallback,
-                      child: Text(S.of(context).advanced_options,
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(
+                                text:
+                                    content.isNotEmpty ? content : memo ?? ""))
+                            .then((_) {
+                          if (context.mounted) {
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).copied);
+                          }
+                        });
+                      },
+                      child: Row(children: [
+                        Expanded(
+                            child: Text(
+                                content.isNotEmpty ? content : memo ?? "",
+                                style: FontManager.body2Median(
+                                    contentColor != null
+                                        ? contentColor!
+                                        : ProtonColors.textNorm),
+                                softWrap: true)),
+                        const SizedBox(width: 2),
+                      ])),
+                if (memo != null && content.isNotEmpty)
+                  GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(text: memo ?? ""))
+                            .then((_) {
+                          if (context.mounted) {
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).copied);
+                          }
+                        });
+                      },
+                      child: Text(memo!,
                           style:
-                              FontManager.body2Median(ProtonColors.textWeak)))
-              ]),
-          if (content.isNotEmpty || memo != null)
-            GestureDetector(
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(
-                          text: content.isNotEmpty ? content : memo ?? ""))
-                      .then((_) {
-                    if (context.mounted) {
-                      CommonHelper.showSnackbar(context, S.of(context).copied);
-                    }
-                  });
-                },
-                child: Row(children: [
-                  Expanded(
-                      child: Text(content.isNotEmpty ? content : memo ?? "",
-                          style: FontManager.body2Median(contentColor != null
-                              ? contentColor!
-                              : ProtonColors.textNorm),
-                          softWrap: true)),
-                  const SizedBox(width: 2),
-                ])),
-          if (memo != null && content.isNotEmpty)
-            GestureDetector(
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(text: memo ?? "")).then((_) {
-                    if (context.mounted) {
-                      CommonHelper.showSnackbar(context, S.of(context).copied);
-                    }
-                  });
-                },
-                child: Text(memo!,
-                    style: FontManager.body2Regular(ProtonColors.textHint))),
-          if (walletAccountName != null)
-            GestureDetector(
-                onLongPress: () {
-                  Clipboard.setData(
-                          ClipboardData(text: walletAccountName ?? ""))
-                      .then((_) {
-                    if (context.mounted) {
-                      CommonHelper.showSnackbar(context, S.of(context).copied);
-                    }
-                  });
-                },
-                child: Text(walletAccountName!,
-                    style: FontManager.body2Regular(ProtonColors.textNorm))),
-          if (bitcoinAddress != null)
-            GestureDetector(
-              onTap: () {
-                if (bitcoinAddress!.isNotEmpty) {
-                  Clipboard.setData(ClipboardData(text: bitcoinAddress!))
-                      .then((_) {
-                    if (context.mounted) {
-                      CommonHelper.showSnackbar(
-                          context, S.of(context).copied_address);
-                    }
-                  });
-                }
-              },
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(bitcoinAddress!,
-                        style: FontManager.body2Median(ProtonColors.textHint),
-                        softWrap: true),
-                    const SizedBox(width: 4),
-                    Icon(Icons.copy_rounded,
-                        size: 16,
-                        color: contentColor != null
-                            ? contentColor!
-                            : ProtonColors.textHint),
-                  ]),
-            ),
-          if (bitcoinAmount != null)
-            Row(
-              children: [
-                Text(bitcoinAmount!.toFiatCurrencyString(),
-                    style: FontManager.body2Regular(ProtonColors.textHint)),
-                const SizedBox(width: 5),
-                Text(bitcoinAmount!.toString(),
-                    style: FontManager.body2Regular(ProtonColors.textHint)),
+                              FontManager.body2Regular(ProtonColors.textHint))),
+                if (walletAccountName != null)
+                  GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(
+                                ClipboardData(text: walletAccountName ?? ""))
+                            .then((_) {
+                          if (context.mounted) {
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).copied);
+                          }
+                        });
+                      },
+                      child: Text(walletAccountName!,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textNorm))),
+                if (bitcoinAddress != null)
+                  GestureDetector(
+                    onTap: () {
+                      if (bitcoinAddress!.isNotEmpty) {
+                        Clipboard.setData(ClipboardData(text: bitcoinAddress!))
+                            .then((_) {
+                          if (context.mounted) {
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).copied_address);
+                          }
+                        });
+                      }
+                    },
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(bitcoinAddress!,
+                              style: FontManager.body2Median(
+                                  ProtonColors.textHint),
+                              softWrap: true),
+                          const SizedBox(width: 4),
+                          Icon(Icons.copy_rounded,
+                              size: 16,
+                              color: contentColor != null
+                                  ? contentColor!
+                                  : ProtonColors.textHint),
+                        ]),
+                  ),
+                if (bitcoinAmount != null)
+                  Row(
+                    children: [
+                      Text(bitcoinAmount!.toFiatCurrencyString(),
+                          style:
+                              FontManager.body2Regular(ProtonColors.textHint)),
+                      const SizedBox(width: 5),
+                      Text(bitcoinAmount!.toString(),
+                          style:
+                              FontManager.body2Regular(ProtonColors.textHint)),
+                    ],
+                  )
               ],
-            )
-        ],
-      ),
+            ),
     );
   }
 }

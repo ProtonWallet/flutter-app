@@ -904,6 +904,7 @@ class HomeViewModelImpl extends HomeViewModel {
     await DBHelper.accountDao!.update(accountModel);
     walletListBloc.updateAccountFiat(
         walletModel, accountModel, newFiatCurrency.name.toUpperCase());
+    walletBalanceBloc.handleTransactionUpdate();
   }
 
   Future<void> checkNetwork() async {

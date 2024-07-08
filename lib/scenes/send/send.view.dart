@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/flying.background.animation.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
 import 'package:wallet/scenes/components/recipient.detail.dart';
+import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/textfield.send.btc.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.v2.dart';
@@ -77,6 +79,9 @@ class SendView extends ViewBase<SendViewModel> {
         },
       );
     }
+    if (viewModel.sendFlowStatus == SendFlowStatus.broadcasting) {
+      return const SizedBox();
+    }
     return IconButton(
       icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
       onPressed: () {
@@ -97,6 +102,8 @@ class SendView extends ViewBase<SendViewModel> {
         return buildEditAmount(context);
       case SendFlowStatus.reviewTransaction:
         return buildReviewContent(context);
+      case SendFlowStatus.broadcasting:
+        return buildBroadcastingContent(context);
       case SendFlowStatus.sendSuccess:
         return buildSuccessContent(context);
     }
@@ -137,7 +144,9 @@ class SendView extends ViewBase<SendViewModel> {
                                         viewModel.balance -
                                             viewModel.estimatedFeeInSAT -
                                             100,
-                                      ).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate));
+                                      ).toStringAsFixed(ExchangeCalculator
+                                              .getDisplayDigit(
+                                                  viewModel.exchangeRate));
                                       viewModel.splitAmountToRecipients();
                                     },
                                     child: Text(S.of(context).send_all,
@@ -387,7 +396,9 @@ class SendView extends ViewBase<SendViewModel> {
                                         viewModel.exchangeRate, estimatedFee),
                                 prefix:
                                     "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
-                                fractionDigits: ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate),
+                                fractionDigits:
+                                    ExchangeCalculator.getDisplayDigit(
+                                        viewModel.exchangeRate),
                                 textStyle: FontManager.body2Median(
                                     ProtonColors.textNorm),
                               ),
@@ -617,10 +628,23 @@ class SendView extends ViewBase<SendViewModel> {
                   const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
               child: ButtonV5(
                   onPressed: () async {
-                    // TODO:: Send bitcoin with Esplora client
-                    bool success = await viewModel.sendCoin();
+                    viewModel.updatePageStatus(SendFlowStatus.broadcasting);
+                    viewModel.isSending = true;
+                    bool success = false;
+                    try {
+                      success = await viewModel.sendCoin();
+                    } catch (e) {
+                      // e.toString();
+                    }
+
+                    /// TODO:: improve this to update transactionBloc faster
+                    await Future.delayed(const Duration(seconds: 1));
+                    viewModel.isSending = false;
+                    if (success == false) {
+                      viewModel
+                          .updatePageStatus(SendFlowStatus.reviewTransaction);
+                    }
                     if (context.mounted && success) {
-                      /// TODO:: trigger bdk to sync wallet so can display the in progress transaction
                       viewModel.updatePageStatus(SendFlowStatus.sendSuccess);
                     } else if (context.mounted && success == false) {
                       LocalToast.showErrorToast(
@@ -640,7 +664,8 @@ class SendView extends ViewBase<SendViewModel> {
   Widget getTransactionValueWidget(BuildContext context) {
     int amountInSATS = getTotalAmountInSATS();
     double amountInFiatCurrency = getTotalAmountInFiatCurrency();
-    int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
+    int displayDigit =
+        ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
@@ -661,7 +686,8 @@ class SendView extends ViewBase<SendViewModel> {
     double estimatedTotalValueInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
             viewModel.exchangeRate, viewModel.totalAmountInSAT);
-    int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
+    int displayDigit =
+        ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return TransactionHistoryItemV2(
       backgroundColor: ProtonColors.white,
       title: S.of(context).trans_total,
@@ -808,6 +834,172 @@ class SendView extends ViewBase<SendViewModel> {
         ]));
   }
 
+  Widget buildBroadcastingContent(BuildContext context) {
+    return Container(
+        color: ProtonColors.white,
+        child: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Center(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                            Stack(children: [
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 2400,
+                                    delayMilliSeconds: 0,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 16,
+                                          height: 16),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 3200,
+                                    delayMilliSeconds: 800,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 20,
+                                          height: 20),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 2000,
+                                    delayMilliSeconds: 300,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 16,
+                                          height: 16),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 4500,
+                                    delayMilliSeconds: 150,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 20,
+                                          height: 20),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 1800,
+                                    delayMilliSeconds: 700,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 12,
+                                          height: 12),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 31,
+                                  ),
+                                  FlyingBackgroundAnimation(
+                                    animationMilliSeconds: 2600,
+                                    delayMilliSeconds: 500,
+                                    child: Transform.rotate(
+                                      angle: 40,
+                                      child: SvgPicture.asset(
+                                          "assets/images/icon/star.svg",
+                                          fit: BoxFit.fill,
+                                          width: 16,
+                                          height: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(children: [
+                                const SizedBox(
+                                  height: 80,
+                                ),
+                                FlyingAnimation(
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/send_1.svg",
+                                      fit: BoxFit.fill,
+                                      width: 80,
+                                      height: 80),
+                                ),
+                                const SizedBox(
+                                  height: 80,
+                                ),
+                              ]),
+                            ]),
+                            Text(
+                              S.of(context).send_broadcasting_title,
+                              style: FontManager.titleHeadline(
+                                  ProtonColors.textNorm),
+                              textAlign: TextAlign.center,
+                            ),
+                          ]))))),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Column(children: [
+                ButtonV5(
+                    onPressed: () async {
+                      viewModel.coordinator.end();
+                      Navigator.of(context).pop();
+                    },
+                    enable: false,
+                    text: S.of(context).done,
+                    width: MediaQuery.of(context).size.width,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    backgroundColor: ProtonColors.protonBlue,
+                    borderColor: ProtonColors.protonBlue,
+                    height: 48),
+                const SizedBox(
+                  height: 8,
+                ),
+                ButtonV5(
+                    onPressed: () async {
+                      // TODO:: add invite friend dialog and api call here
+                      LocalToast.showToast(context, "TODO");
+                    },
+                    enable: false,
+                    text: S.of(context).invite_a_friend,
+                    width: MediaQuery.of(context).size.width,
+                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                    backgroundColor: ProtonColors.textWeakPressed,
+                    borderColor: ProtonColors.textWeakPressed,
+                    height: 48),
+                const SizedBox(height: 20),
+              ])),
+        ]));
+  }
+
   Widget buildSuccessContent(BuildContext context) {
     return Container(
         color: ProtonColors.white,
@@ -840,40 +1032,37 @@ class SendView extends ViewBase<SendViewModel> {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 40),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: defaultPadding),
-                                child: Column(children: [
-                                  ButtonV5(
-                                      onPressed: () async {
-                                        viewModel.coordinator.end();
-                                        Navigator.of(context).pop();
-                                      },
-                                      text: S.of(context).done,
-                                      width: MediaQuery.of(context).size.width,
-                                      textStyle: FontManager.body1Median(
-                                          ProtonColors.white),
-                                      backgroundColor: ProtonColors.protonBlue,
-                                      borderColor: ProtonColors.protonBlue,
-                                      height: 48),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  ButtonV5(
-                                      onPressed: () async {
-                                        // TODO:: add invite friend dialog and api call here
-                                        LocalToast.showToast(context, "TODO");
-                                      },
-                                      text: S.of(context).invite_a_friend,
-                                      width: MediaQuery.of(context).size.width,
-                                      textStyle: FontManager.body1Median(
-                                          ProtonColors.textNorm),
-                                      backgroundColor:
-                                          ProtonColors.textWeakPressed,
-                                      borderColor: ProtonColors.textWeakPressed,
-                                      height: 48),
-                                ])),
                           ]))))),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              child: Column(children: [
+                ButtonV5(
+                    onPressed: () async {
+                      viewModel.coordinator.end();
+                      Navigator.of(context).pop();
+                    },
+                    text: S.of(context).done,
+                    width: MediaQuery.of(context).size.width,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    backgroundColor: ProtonColors.protonBlue,
+                    borderColor: ProtonColors.protonBlue,
+                    height: 48),
+                const SizedBox(
+                  height: 8,
+                ),
+                ButtonV5(
+                    onPressed: () async {
+                      // TODO:: add invite friend dialog and api call here
+                      LocalToast.showToast(context, "TODO");
+                    },
+                    text: S.of(context).invite_a_friend,
+                    width: MediaQuery.of(context).size.width,
+                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                    backgroundColor: ProtonColors.textWeakPressed,
+                    borderColor: ProtonColors.textWeakPressed,
+                    height: 48),
+                const SizedBox(height: 20),
+              ])),
         ]));
   }
 }
