@@ -72,24 +72,25 @@ class TransactionList extends StatelessWidget {
                               ),
                             ]),
                           ),
-                          Row(children: [
-                            IconButton(
-                                onPressed: () {
-                                  TransactionFilterSheet.show(
-                                      context, viewModel);
-                                },
-                                icon: SvgPicture.asset(
-                                    "assets/images/icon/setup-preference.svg",
-                                    fit: BoxFit.fill,
-                                    width: 16,
-                                    height: 16)),
-                            IconButton(
-                                onPressed: () {
-                                  viewModel.setSearchHistoryTextField(true);
-                                },
-                                icon: Icon(Icons.search_rounded,
-                                    color: ProtonColors.textNorm, size: 16))
-                          ]),
+                          if (state.historyTransaction.isNotEmpty)
+                            Row(children: [
+                              IconButton(
+                                  onPressed: () {
+                                    TransactionFilterSheet.show(
+                                        context, viewModel);
+                                  },
+                                  icon: SvgPicture.asset(
+                                      "assets/images/icon/setup-preference.svg",
+                                      fit: BoxFit.fill,
+                                      width: 16,
+                                      height: 16)),
+                              IconButton(
+                                  onPressed: () {
+                                    viewModel.setSearchHistoryTextField(true);
+                                  },
+                                  icon: Icon(Icons.search_rounded,
+                                      color: ProtonColors.textNorm, size: 16))
+                            ]),
                         ],
                       )),
             ),

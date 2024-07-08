@@ -54,6 +54,7 @@ enum SendFlowStatus {
   addRecipient,
   editAmount,
   reviewTransaction,
+  broadcasting,
   sendSuccess,
 }
 
@@ -169,6 +170,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
+  bool isSending = false;
   ProtonExchangeRate exchangeRate = const ProtonExchangeRate(
       id: 'default',
       bitcoinUnit: BitcoinUnit.btc,
@@ -320,7 +322,11 @@ class SendViewModelImpl extends SendViewModel {
       await ExchangeRateService.runOnce(fiatCurrency);
       exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
       if (sendFlowStatus == SendFlowStatus.reviewTransaction) {
-        buildTransactionScript();
+        if (isSending == false) {
+          /// need to lock transaction Script if it's in sending process
+          /// otherwise we can update transaction script to apply latest exchangeRate
+          buildTransactionScript();
+        }
       }
       logger.i(
           "updateExchangeRateJob result: ${exchangeRate.fiatCurrency.name} = ${exchangeRate.exchangeRate}");
@@ -779,9 +785,6 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<bool> sendCoin() async {
     logger.i("Start sendCoin()");
-    EasyLoading.show(
-        status: "Broadcasting transaction..",
-        maskType: EasyLoadingMaskType.black);
     addressPublicKeys.clear();
     try {
       String? emailAddressID;
@@ -854,6 +857,7 @@ class SendViewModelImpl extends SendViewModel {
       try {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
+          _frbAccount?.insertUnconfirmedTx(psbt: frbPsbt);
 
           // for multi-recipients
           for (ProtonRecipient protonRecipient in recipients) {
@@ -869,7 +873,7 @@ class SendViewModelImpl extends SendViewModel {
                   id: null,
                   externalTransactionID: utf8.encode(txid),
                   amountInSATS: protonRecipient.amountInSATS ?? 0,
-                  feeInSATS: estimatedFeeInSAT,
+                  feeInSATS: frbPsbt.fee().toSat(),
                   // all recipients have same fee since its same transaction
                   isSend: 1,
                   transactionTime:
@@ -891,7 +895,6 @@ class SendViewModelImpl extends SendViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog("sendCoin() error: $errorMessage");
       errorMessage = "";
-      EasyLoading.dismiss();
       return false;
     }
     logger.i("End add local transaction record");
@@ -902,7 +905,6 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       e.toString();
     }
-    EasyLoading.dismiss();
     return true;
   }
 

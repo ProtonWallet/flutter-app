@@ -33,17 +33,19 @@ class TransactionListTitle extends StatelessWidget {
     return GestureDetector(
         onTap: onTap,
         child: Container(
-          margin: const EdgeInsets.only(left: 26, right: 26, top: 10),
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          // width: width,
-          decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-              color: ProtonColors.wMajor1,
-              width: 0.5,
-            )),
+          margin: const EdgeInsets.only(
+            left: 26,
+            right: 26,
           ),
-          child: Row(children: [
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          // decoration: BoxDecoration(
+          //   border: Border(
+          //       bottom: BorderSide(
+          //     color: ProtonColors.wMajor1,
+          //     width: 0.5,
+          //   )),
+          // ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             SvgPicture.asset(
                 isSend
                     ? "assets/images/icon/send.svg"
@@ -62,31 +64,16 @@ class TransactionListTitle extends StatelessWidget {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                            child: Text(
-                          address,
-                          style:
-                              FontManager.captionRegular(ProtonColors.textNorm),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                        const SizedBox(width: 4),
-                        isSend
-                            ? Text(bitcoinAmount.toFiatCurrencyString(),
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
-                            : Text("+${bitcoinAmount.toFiatCurrencyString()}",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textHint))
-                      ]),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         timestamp != null
                             ? Expanded(
                                 child: Text(
-                                CommonHelper.formatLocaleTime(
-                                    context, timestamp!),
+                                isSend
+                                    ? S.of(context).sent_on(
+                                        CommonHelper.formatLocaleTime(
+                                            context, timestamp!))
+                                    : S.of(context).received_on(
+                                        CommonHelper.formatLocaleTime(
+                                            context, timestamp!)),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint),
                                 maxLines: 1,
@@ -95,61 +82,93 @@ class TransactionListTitle extends StatelessWidget {
                             : Row(children: [
                                 // const CustomLoading(),
                                 // const SizedBox(width: 6),
-                                Text(isSend ? S.of(context).in_progress_broadcasted : S.of(context).in_progress_waiting_for_confirm,
+                                Text(
+                                    isSend
+                                        ? S.of(context).in_progress_broadcasted
+                                        : S
+                                            .of(context)
+                                            .in_progress_waiting_for_confirm,
                                     style: FontManager.captionRegular(
                                         ProtonColors.protonBlue)),
                               ]),
-                        const SizedBox(width: 4),
-                        isSend
-                            ? Text(bitcoinAmount.toString(),
-                                style: FontManager.captionRegular(
-                                    ProtonColors.signalError))
-                            : Text("+${bitcoinAmount.toString()}",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.signalSuccess)),
                       ]),
-                  if (note != "")
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ProtonColors.wMajor1,
-                          ),
-                          margin: const EdgeInsets.only(right: 4, top: 2),
-                          padding: const EdgeInsets.all(2.0),
-                          child: Icon(Icons.edit_outlined,
-                              size: 10, color: ProtonColors.textHint)),
-                      Expanded(
-                          child: Text(
-                        S
-                            .of(context)
-                            .trans_note(CommonHelper.getFirstNChar(note, 24)),
-                        style:
-                            FontManager.captionRegular(ProtonColors.textHint),
-                        overflow: TextOverflow.ellipsis,
-                      ))
-                    ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Text(
+                          isSend
+                              ? "${S.of(context).trans_to}: $address"
+                              : "${S.of(context).trans_from}: $address",
+                          style:
+                              FontManager.captionMedian(ProtonColors.textNorm),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                      ]),
+                  // if (note != "")
+                  //   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  //     Container(
+                  //         decoration: BoxDecoration(
+                  //           shape: BoxShape.circle,
+                  //           color: ProtonColors.wMajor1,
+                  //         ),
+                  //         margin: const EdgeInsets.only(right: 4, top: 2),
+                  //         padding: const EdgeInsets.all(2.0),
+                  //         child: Icon(Icons.edit_outlined,
+                  //             size: 10, color: ProtonColors.textHint)),
+                  //     Expanded(
+                  //         child: Text(
+                  //       S
+                  //           .of(context)
+                  //           .trans_note(CommonHelper.getFirstNChar(note, 24)),
+                  //       style:
+                  //           FontManager.captionRegular(ProtonColors.textHint),
+                  //       overflow: TextOverflow.ellipsis,
+                  //     ))
+                  //   ]),
                   if ((body ?? "").isNotEmpty)
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ProtonColors.wMajor1,
-                          ),
-                          margin: const EdgeInsets.only(right: 4, top: 2),
-                          padding: const EdgeInsets.all(2.0),
-                          child: Icon(Icons.messenger_outline,
-                              size: 10, color: ProtonColors.textHint)),
+                      // Container(
+                      //     decoration: BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //       color: ProtonColors.wMajor1,
+                      //     ),
+                      //     margin: const EdgeInsets.only(right: 4, top: 2),
+                      //     padding: const EdgeInsets.all(2.0),
+                      //     child: Icon(Icons.messenger_outline,
+                      //         size: 10, color: ProtonColors.textHint)),
                       Expanded(
                           child: Text(
-                        S.of(context).trans_body(body ?? ""),
-                        style:
-                            FontManager.captionRegular(ProtonColors.textHint),
+                        S.of(context).trans_body((body ?? "").replaceAll("\n", " ")),
+                        style: FontManager.captionMedian(ProtonColors.textWeak),
                         overflow: TextOverflow.ellipsis,
                       ))
                     ]),
                 ],
               )),
+            ),
+            const SizedBox(
+              width: 6,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                isSend
+                    ? Text(bitcoinAmount.toFiatCurrencyString(),
+                        style:
+                            FontManager.captionRegular(ProtonColors.signalError))
+                    : Text("+${bitcoinAmount.toFiatCurrencyString()}",
+                        style:
+                            FontManager.captionRegular(ProtonColors.signalSuccess)),
+                // isSend
+                //     ? Text(bitcoinAmount.toString(),
+                //         style: FontManager.captionRegular(
+                //             ProtonColors.signalError))
+                //     : Text("+${bitcoinAmount.toString()}",
+                //         style: FontManager.captionRegular(
+                //             ProtonColors.signalSuccess)),
+              ],
             ),
           ]),
         ));

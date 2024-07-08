@@ -46,7 +46,6 @@ class ServerTransactionDataProvider extends DataProvider {
   ///
   List<ServerTransactionData> serverTransactionDataList = [];
   bool initialized = false;
-  Map<String, List<TransactionModel>> accountServerTransactions = {};
 
   Future<List<ServerTransactionData>> _getFromDB() async {
     List<ServerTransactionData> transactionDataList = [];
@@ -100,29 +99,22 @@ class ServerTransactionDataProvider extends DataProvider {
     String accountID,
   ) async {
     // check cache first
-    var trans = accountServerTransactions[accountID];
-    if (trans != null && initialized) {
-      return trans;
+    List<ServerTransactionData> transactionDataList =
+        await getServerTransactionData();
+    for (ServerTransactionData serverTransactionData in transactionDataList) {
+      if (serverTransactionData.accountModel.walletID == walletID &&
+          serverTransactionData.accountModel.accountID == accountID) {
+        return serverTransactionData.transactions;
+      }
     }
-
-    // fetch from db
-    var dbTrans = await _getFromDBByAccount(accountID);
-    if (dbTrans.isNotEmpty && initialized) {
-      accountServerTransactions[accountID] = dbTrans;
-      return dbTrans;
-    }
-
     // fetch from server
     await fetchTransactions(walletID, accountID);
 
     // fetch from db
-    dbTrans = await _getFromDBByAccount(accountID);
+    var dbTrans = await _getFromDBByAccount(accountID);
     if (dbTrans.isNotEmpty) {
-      accountServerTransactions[accountID] = dbTrans;
-      initialized = true;
       return dbTrans;
     }
-
     return [];
   }
 
@@ -133,27 +125,39 @@ class ServerTransactionDataProvider extends DataProvider {
     // fetch from server
     var wallets = await walletDao.findAllByUserID(userID);
     for (WalletModel walletModel in wallets) {
-      await fetchTransactions(walletModel.walletID, null);
+      await fetchTransactions(
+        walletModel.walletID,
+        null,
+        isInitializeProcess: true,
+      );
     }
     serverTransactionDataList = await _getFromDB();
     initialized = true;
     return serverTransactionDataList;
   }
 
-  Future<void> fetchTransactions(String walletID, String? accountID) async {
+  Future<void> fetchTransactions(
+    String walletID,
+    String? accountID, {
+    bool isInitializeProcess = false,
+  }) async {
     var walletTransactions = await walletClient.getWalletTransactions(
       walletId: walletID,
       walletAccountId: accountID,
     );
 
     for (WalletTransaction walletTransaction in walletTransactions) {
-      await handleWalletTransaction(walletTransaction);
+      await handleWalletTransaction(
+        walletTransaction,
+        isInitializeProcess: isInitializeProcess,
+      );
     }
   }
 
   Future<void> handleWalletTransaction(
     WalletTransaction walletTransaction, {
     bool notifyDataUpdate = false,
+    bool isInitializeProcess = false,
   }) async {
     DateTime now = DateTime.now();
 
@@ -201,23 +205,55 @@ class ServerTransactionDataProvider extends DataProvider {
     await insertOrUpdate(
       transactionModel,
       notifyDataUpdate: notifyDataUpdate,
+      isInitializeProcess: isInitializeProcess,
     );
   }
 
-  Future<void> insertOrUpdate(TransactionModel transactionModel,
-      {bool notifyDataUpdate = false}) async {
+  Future<void> insertOrUpdate(
+    TransactionModel transactionModel, {
+    bool notifyDataUpdate = false,
+    bool isInitializeProcess = false,
+    UpdateType? updateType,
+  }) async {
+    TransactionModel? transactionModelInDB =
+        await transactionDao.findByServerID(transactionModel.serverID);
+    bool transactionModelExists = transactionModelInDB != null;
+    if (transactionModelInDB != null) {
+      transactionModel.id = transactionModelInDB
+          .id; // need to update id since the update function is based on auto increase id
+    }
     await transactionDao.insertOrUpdate(transactionModel);
 
     /// refresh cache
     /// TODO:: improve performance
-    serverTransactionDataList = await _getFromDB();
+    if (isInitializeProcess == false) {
+      /// only need to update cached serverTransactionDataList after initialized
+      serverTransactionDataList = await _getFromDB();
+    }
     if (notifyDataUpdate) {
-      dataUpdateController.add(DataUpdated(""));
+      if (updateType != null) {
+        dataUpdateController.add(DataUpdated(updateType));
+      } else {
+        if (transactionModelExists) {
+          dataUpdateController.add(DataUpdated(UpdateType.updated));
+        } else {
+          dataUpdateController.add(DataUpdated(UpdateType.inserted));
+        }
+      }
     }
   }
 
-  void resetInit() {
-    initialized = false;
+  Future<void> reloadAccountTransactions(
+    String walletID,
+    String accountID,
+  ) async {
+    // fetch from server
+    await fetchTransactions(
+      walletID,
+      accountID,
+      isInitializeProcess: true,
+    );
+    serverTransactionDataList = await _getFromDB();
   }
 
   @override

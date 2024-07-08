@@ -12,11 +12,14 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class EmailIntegrationDropdownSheet {
-  static void show(BuildContext context, HomeViewModel viewModel,
-      WalletModel userWallet, AccountMenuModel accountMenuModel,
-      {VoidCallback? callback}) {
-    List<String> usedEmailIDs = accountMenuModel.emailIds;
-
+  static void show(
+    BuildContext context,
+    HomeViewModel viewModel,
+    WalletModel userWallet,
+    AccountMenuModel accountMenuModel,
+    List<String> usedEmailIDs, {
+    VoidCallback? callback,
+  }) {
     /// TODO:: getAllIntegratedEmailIDs here
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
@@ -56,7 +59,9 @@ class EmailIntegrationDropdownSheet {
                           if (callback != null) {
                             callback.call();
                           }
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         });
                       }
                     },

@@ -97,9 +97,15 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           await walletDataProvider.getWalletByServerWalletID(serverWalletID);
       walletModel = walletData?.wallet;
       for (AccountModel accModel in walletData?.accounts ?? []) {
+        accModel.labelDecrypt =
+            await decryptAccountName(base64Encode(accModel.label));
+        var balance = await WalletManager.getWalletAccountBalance(
+          walletModel?.walletID ?? "",
+          accModel.accountID,
+        );
+        accModel.balance = balance.toDouble();
         if (accModel.accountID == serverAccountID) {
           accountModel = accModel;
-          break;
         }
       }
       accountsCount = walletData?.accounts.length ?? 0;

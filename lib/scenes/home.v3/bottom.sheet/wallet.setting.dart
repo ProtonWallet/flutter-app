@@ -219,6 +219,14 @@ class WalletSettingSheet {
                     BlocBuilder<WalletListBloc, WalletListState>(
                         bloc: viewModel.walletListBloc,
                         builder: (context, state) {
+                          List<String> usedEmailIDs = [];
+                          for (WalletMenuModel walletMenuModel
+                              in state.walletsModel) {
+                            for (AccountMenuModel accountMenuModel
+                                in walletMenuModel.accounts) {
+                              usedEmailIDs += accountMenuModel.emailIds;
+                            }
+                          }
                           return Column(children: [
                             for (WalletMenuModel walletMenuModel2
                                 in state.walletsModel)
@@ -431,6 +439,7 @@ class WalletSettingSheet {
                                                         viewModel,
                                                         userWallet,
                                                         accountMenuModel,
+                                                        usedEmailIDs,
                                                         callback: () {
                                                   setState(() {
                                                     emailIntegrationEnables[
