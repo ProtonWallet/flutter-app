@@ -1,6 +1,8 @@
 import 'package:card_loading/card_loading.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -16,6 +18,7 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'buybitcoin.viewmodel.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   const BuyBitcoinView(BuyBitcoinViewModel viewModel)
@@ -23,6 +26,15 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
 
   @override
   Widget build(BuildContext context) {
+    viewModel.focusNode.addListener(() {
+      bool hasFocus = viewModel.focusNode.hasFocus;
+      if (hasFocus) {
+        showOverlay(context);
+      } else {
+        removeOverlay();
+      }
+    });
+
     return BlocProvider(
       create: (context) => viewModel.bloc,
       child: PageLayoutV1(
@@ -238,140 +250,155 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 ),
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                /// currency input
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'You pay',
-                                        style: TextStyle(
-                                          color: Color(0xFF535964),
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      if (state.isCurrencyLoaded)
-                                        TextFormField(
-                                          initialValue:
-                                              state.selectedModel.amount,
-                                          inputFormatters: [
-                                            CurrencyTextInputFormatter.currency(
-                                              name: state.selectedModel
-                                                  .fiatCurrency.symbol,
-                                              decimalDigits: 0,
-                                              symbol: "",
-                                              enableNegative: false,
-                                              minValue: 1,
-                                            ),
-                                          ],
-                                          onChanged: (value) {},
-                                          onFieldSubmitted: (value) {
-                                            viewModel.selectAmount(value);
-                                          },
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      if (!state.isCurrencyLoaded)
-                                        const CardLoading(
-                                          height: 26,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4)),
-                                          margin: EdgeInsets.only(top: 4),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-
-                                /// currency dropdown picker
-                                GestureDetector(
-                                  onTap: () => {
-                                    if (state.isCurrencyLoaded)
-                                      showCurrencyPicker(
-                                        context: context,
-                                        currencyFilter: state.currencyNames,
-                                        showFlag: true,
-                                        showSearchField: true,
-                                        showCurrencyName: true,
-                                        showCurrencyCode: true,
-                                        // favorite: ['USD'],
-                                        onSelect: (Currency currency) {
-                                          viewModel
-                                              .selectCurrency(currency.code);
-                                        },
-                                        theme: CurrencyPickerThemeData(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(8.0),
-                                              topRight: Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          // Optional. Styles the search field.
-                                          inputDecoration: InputDecoration(
-                                            labelText: 'Search',
-                                            hintText: 'Start typing to search',
-                                            prefixIcon:
-                                                const Icon(Icons.search),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: const Color(0xFF8C98A8)
-                                                    .withOpacity(0.2),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 10,
-                                      left: 16,
-                                      right: 8,
-                                      bottom: 10,
-                                    ),
-                                    decoration: ShapeDecoration(
-                                      color: const Color(0xFFF3F5F6),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(200),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        if (state.isCurrencyLoaded)
-                                          Text(
-                                            state.selectedModel.fiatCurrency
-                                                .symbol,
-                                            style: const TextStyle(
-                                              color: Color(0xFF191C32),
-                                              fontSize: 15,
+                            child: KeyboardVisibilityBuilder(
+                              builder: (context, isKeyboardVisible) {
+                                if (!isKeyboardVisible) {
+                                  removeOverlay();
+                                }
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    /// currency input
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'You pay',
+                                            style: TextStyle(
+                                              color: Color(0xFF535964),
+                                              fontSize: 14,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                        Assets.images.icon.icChevronTinyDown
-                                            .svg(
-                                          fit: BoxFit.fill,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ],
+                                          const SizedBox(height: 2),
+                                          if (state.isCurrencyLoaded)
+                                            TextFormField(
+                                              controller: viewModel.controller,
+                                              focusNode: viewModel.focusNode,
+                                              inputFormatters: [
+                                                CurrencyTextInputFormatter
+                                                    .currency(
+                                                  name: state.selectedModel
+                                                      .fiatCurrency.symbol,
+                                                  decimalDigits: 0,
+                                                  symbol: "",
+                                                  enableNegative: false,
+                                                  minValue: 1,
+                                                ),
+                                              ],
+                                              onChanged: (value) {},
+                                              onFieldSubmitted: (value) {
+                                                viewModel.selectAmount(value);
+                                              },
+                                              keyboardType:
+                                                  TextInputType.number,
+                                            ),
+                                          if (!state.isCurrencyLoaded)
+                                            const CardLoading(
+                                              height: 26,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(4)),
+                                              margin: EdgeInsets.only(top: 4),
+                                            ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                    const SizedBox(width: 16),
+
+                                    /// currency dropdown picker
+                                    GestureDetector(
+                                      onTap: () => {
+                                        if (state.isCurrencyLoaded)
+                                          showCurrencyPicker(
+                                            context: context,
+                                            currencyFilter: state.currencyNames,
+                                            showFlag: true,
+                                            showSearchField: true,
+                                            showCurrencyName: true,
+                                            showCurrencyCode: true,
+                                            // favorite: ['USD'],
+                                            onSelect: (Currency currency) {
+                                              viewModel.selectCurrency(
+                                                  currency.code);
+                                            },
+                                            theme: CurrencyPickerThemeData(
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(8.0),
+                                                  topRight:
+                                                      Radius.circular(8.0),
+                                                ),
+                                              ),
+                                              // Optional. Styles the search field.
+                                              inputDecoration: InputDecoration(
+                                                labelText: 'Search',
+                                                hintText:
+                                                    'Start typing to search',
+                                                prefixIcon:
+                                                    const Icon(Icons.search),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color:
+                                                        const Color(0xFF8C98A8)
+                                                            .withOpacity(0.2),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                          top: 10,
+                                          left: 16,
+                                          right: 8,
+                                          bottom: 10,
+                                        ),
+                                        decoration: ShapeDecoration(
+                                          color: const Color(0xFFF3F5F6),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(200),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            if (state.isCurrencyLoaded)
+                                              Text(
+                                                state.selectedModel.fiatCurrency
+                                                    .symbol,
+                                                style: const TextStyle(
+                                                  color: Color(0xFF191C32),
+                                                  fontSize: 15,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            Assets.images.icon.icChevronTinyDown
+                                                .svg(
+                                              fit: BoxFit.fill,
+                                              width: 24,
+                                              height: 24,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           );
                         },
@@ -617,7 +644,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           if (state.isQuoteLoaded &&
                                               !state.isQuoteFailed)
                                             Text(
-                                              "${state.selectedModel.selectedQuote.paymentGatewayFee} ${state.selectedModel.fiatCurrency.symbol}",
+                                              "${state.selectedModel.paymentGatewayFee} ${state.selectedModel.fiatCurrency.symbol}",
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 color: Color(0xFF9294A3),
@@ -661,7 +688,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           if (state.isQuoteLoaded &&
                                               !state.isQuoteFailed)
                                             Text(
-                                              "${state.selectedModel.selectedQuote.networkFee} ${state.selectedModel.fiatCurrency.symbol}",
+                                              "${state.selectedModel.networkFee} ${state.selectedModel.fiatCurrency.symbol}",
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 color: Color(0xFF9294A3),
@@ -815,7 +842,10 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     builder: (context, state) {
                       return ButtonV5(
                           onPressed: state.isQuoteLoaded
-                              ? () => {viewModel.pay(state.selectedModel)}
+                              ? () => {
+                                    viewModel.focusNode.unfocus(),
+                                    viewModel.pay(state.selectedModel),
+                                  }
                               : null,
                           text:
                               "Buy with ${state.providerModel.providerInfo.name}",
@@ -849,6 +879,56 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
             ),
             SizedBoxes.box24,
           ],
+        ),
+      ),
+    );
+  }
+
+  showOverlay(BuildContext context) {
+    if (TargetPlatform.iOS != defaultTargetPlatform) return;
+    if (viewModel.overlayEntry != null) return;
+    OverlayState overlayState = Overlay.of(context);
+    viewModel.overlayEntry = OverlayEntry(builder: (context) {
+      return Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          right: 0.0,
+          left: 0.0,
+          child: const InputDoneView());
+    });
+
+    overlayState.insert(viewModel.overlayEntry!);
+  }
+
+  removeOverlay() {
+    if (viewModel.overlayEntry != null) {
+      viewModel.overlayEntry!.remove();
+      viewModel.overlayEntry = null;
+    }
+  }
+}
+
+class InputDoneView extends StatelessWidget {
+  const InputDoneView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: ProtonColors.protonGrey,
+      child: Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+          child: CupertinoButton(
+            padding: const EdgeInsets.only(right: 24.0, top: 8.0, bottom: 8.0),
+            onPressed: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Text("Done",
+                style: TextStyle(
+                    color: ProtonColors.blue1Text,
+                    fontWeight: FontWeight.bold)),
+          ),
         ),
       ),
     );

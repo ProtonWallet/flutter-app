@@ -12,6 +12,7 @@ class GatewayDataProvider extends DataProvider {
   Map<GatewayProvider, List<ApiCountry>> countries = {};
   Map<GatewayProvider, List<ApiCountryFiatCurrency>> fiatCurrencies = {};
   Map<GatewayProvider, List<PaymentMethod>> paymentMethods = {};
+  List<GatewayProvider> supportedProviders = [];
 
   // find the list of available providers
   List<GatewayProvider> providers = [];
@@ -24,6 +25,7 @@ class GatewayDataProvider extends DataProvider {
 
     countries = await onRampGatewayClient.getCountries();
 
+    supportedProviders = countries.keys.toList();
     //
     for (var element in countries.keys) {
       providers.add(element);

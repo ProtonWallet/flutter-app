@@ -821,16 +821,18 @@ class SendView extends ViewBase<SendViewModel> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 margin: const EdgeInsets.symmetric(
                     horizontal: defaultButtonPadding),
-                child: ButtonV5(
-                    onPressed: () {
-                      viewModel.updatePageStatus(SendFlowStatus.editAmount);
-                    },
-                    enable: viewModel.validRecipientCount() > 0,
-                    text: S.of(context).continue_buttion,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.protonBlue,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48)),
+                child: SafeArea(
+                  child: ButtonV5(
+                      onPressed: () {
+                        viewModel.updatePageStatus(SendFlowStatus.editAmount);
+                      },
+                      enable: viewModel.validRecipientCount() > 0,
+                      text: S.of(context).continue_buttion,
+                      width: MediaQuery.of(context).size.width,
+                      backgroundColor: ProtonColors.protonBlue,
+                      textStyle: FontManager.body1Median(ProtonColors.white),
+                      height: 48),
+                )),
         ]));
   }
 

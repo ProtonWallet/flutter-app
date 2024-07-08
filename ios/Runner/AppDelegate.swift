@@ -159,7 +159,7 @@ import flutter_local_notifications
             appName: appName,
             clientApp: .wallet,
             apiService: apiService,
-            minimumAccountType: .internal,
+            minimumAccountType: .external,
             isCloseButtonAvailable: true,
             paymentsAvailability: .notAvailable,
             signupAvailability: getSignupAvailability

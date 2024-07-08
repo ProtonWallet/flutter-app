@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.expansion.dart';
 import 'package:wallet/scenes/components/custom.loading.with.icon.dart';
 import 'package:wallet/scenes/components/custom.todo.dart';
@@ -445,7 +444,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                     bottom: 0,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: 100,
                       child: BitcoinPriceBox(
                         title: S.of(context).current_btc_price,
                         price: viewModel.btcPriceInfo.price,
