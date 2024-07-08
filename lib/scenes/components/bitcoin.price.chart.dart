@@ -121,17 +121,20 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         values.add(bitcoinNotionalInFiat);
         index++;
       }
-      setState(() {
-        dataPoints = spots;
-        isLoading = false;
-        if (values.isNotEmpty) {
-          values.sort();
-          percentile25 = values[(values.length * 0.25).floor()];
-          percentile0 = values[(values.length * 0.0).floor()];
-          percentile75 = values[(values.length * 0.75).floor()];
-          percentile100 = values[values.length - 1];
-        }
-      });
+
+      if (mounted) {
+        setState(() {
+          dataPoints = spots;
+          isLoading = false;
+          if (values.isNotEmpty) {
+            values.sort();
+            percentile25 = values[(values.length * 0.25).floor()];
+            percentile0 = values[(values.length * 0.0).floor()];
+            percentile75 = values[(values.length * 0.75).floor()];
+            percentile100 = values[values.length - 1];
+          }
+        });
+      }
     } else {
       throw Exception('Failed to load data');
     }

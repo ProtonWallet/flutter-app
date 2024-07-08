@@ -8,6 +8,8 @@ class SelectedInfoModel {
   final PaymentMethod paymentMethod;
   final String amount;
   final Quote selectedQuote;
+  final String paymentGatewayFee;
+  final String networkFee;
 
   const SelectedInfoModel({
     this.provider = GatewayProvider.ramp,
@@ -34,6 +36,8 @@ class SelectedInfoModel {
       paymentGatewayFee: "20",
       paymentMethod: PaymentMethod.card,
     ),
+    this.paymentGatewayFee = "",
+    this.networkFee = "",
   });
 
   SelectedInfoModel copyWith({
@@ -45,6 +49,13 @@ class SelectedInfoModel {
     String? amount,
     Quote? quote,
   }) {
+    var paymentGatewayFee = "";
+    var networkFee = "";
+    if (quote != null) {
+      networkFee = roundUpToTwoDecimalPlaces(quote.networkFee);
+      paymentGatewayFee = roundUpToTwoDecimalPlaces(quote.paymentGatewayFee);
+    }
+
     return SelectedInfoModel(
       provider: provider ?? this.provider,
       providerInfo: providerInfo ?? this.providerInfo,
@@ -53,7 +64,15 @@ class SelectedInfoModel {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       amount: amount ?? this.amount,
       selectedQuote: quote ?? selectedQuote,
+      paymentGatewayFee: paymentGatewayFee,
+      networkFee: networkFee,
     );
+  }
+
+  String roundUpToTwoDecimalPlaces(String value) {
+    double number = double.parse(value);
+    double roundedUpNumber = (number * 100).ceil() / 100;
+    return "$roundedUpNumber";
   }
 }
 
