@@ -91,10 +91,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     /// select amount
     on<SelectAmountEvent>((event, emit) async {
       String amount = event.amount;
-      String numericAmountg = amount.replaceAll(RegExp(r'[^\d.]'), '');
-      if (numericAmountg.isEmpty) {
-        return;
-      }
+      String numericAmountg = toNumberAmount(amount);
       emit(state.copyWith(
         selectedModel: state.selectedModel.copyWith(
           amount: numericAmountg,
@@ -134,5 +131,13 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
         }
       }
     });
+  }
+
+  String toNumberAmount(String textAmount) {
+    String numericAmountg = textAmount.replaceAll(RegExp(r'[^\d.]'), '');
+    if (numericAmountg.isEmpty) {
+      return '0';
+    }
+    return numericAmountg;
   }
 }
