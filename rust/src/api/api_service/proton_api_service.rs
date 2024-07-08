@@ -13,15 +13,14 @@ use super::{
     wallet_client::WalletClient,
 };
 use crate::api::proton_api::{logout, set_proton_api};
+use crate::api::srp::srp_client::SrpClient;
 use crate::{auth_credential::AuthCredential, BridgeError};
 use andromeda_api::wallet::ApiWalletData;
 use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
-// use bitcoin::base64::decode;
 use flutter_rust_bridge::frb;
 use log::info;
-use std::str;
 use std::sync::Arc;
 
 #[derive(Clone)]
@@ -66,43 +65,24 @@ impl ProtonAPIService {
         password: String,
     ) -> Result<AuthCredential, BridgeError> {
         info!("start login ================> ");
-        let login_result = self.inner.login(username.as_str(), password.as_str()).await;
+        let login_result = self.inner.login(&username, &password).await;
         let user_data = match login_result {
             Ok(res) => Ok(res),
             Err(err) => Err(BridgeError::Generic(err.to_string())),
         }?;
-
         let user_key = user_data.user.keys.first().unwrap();
-        let first_key = user_data.key_salts.first();
-
-        let salt = user_data
+        let key_id = user_key.id.clone();
+        let encoded_salt = user_data
             .key_salts
-            .first()
+            .iter()
+            .find(|&key_salt| key_salt.id == key_id)
             .unwrap()
             .key_salt
             .clone()
             .unwrap();
 
-        let mailbox_pwd = proton_srp::mailbox_password_hash(
-            password.as_str(),
-            BASE64_STANDARD.decode(salt).unwrap().as_slice(),
-        )?;
-
-        let password: Vec<u8> = mailbox_pwd.as_bytes().to_vec();
-
-        // Define the length of the suffix we want
-        let suffix_len = 31;
-        // Ensure the vector is long enough
-        if password.len() < suffix_len {
-            panic!("The password is too short!");
-        }
-        // Get the last `suffix_len` bytes
-        let password_suffix: &[u8] = &password[password.len() - suffix_len..];
-        info!("password: {:?}", password);
-        let mailboxpwd = str::from_utf8(password_suffix).unwrap();
-        info!("mailbox_pwd: {:?}", mailboxpwd);
-        info!("user_auth: {:?}", self.store.inner.auth);
-        info!("first_key: {:?}", first_key);
+        let raw_salt = BASE64_STANDARD.decode(encoded_salt).unwrap();
+        let mailboxpwd = SrpClient::compute_key_password(password.clone(), raw_salt)?;
         let auth = self.store.inner.auth.lock().unwrap().clone();
         let session_id = auth.uid().unwrap().to_string();
         let acc_token = auth.tokens().unwrap().acc_tok().unwrap().to_string();

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ramp_flutter/configuration.dart';
 import 'package:ramp_flutter/offramp_sale.dart';
@@ -60,6 +61,10 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   void selectAmount(String amount);
 
   void pay(SelectedInfoModel selected);
+
+  FocusNode get focusNode;
+  TextEditingController get controller;
+  OverlayEntry? overlayEntry;
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
@@ -78,6 +83,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void dispose() {
+    focusNode.dispose();
+    controller.dispose();
     datasourceChangedStreamController.close();
   }
 
@@ -96,6 +103,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   final String userEmail;
   final String userID;
   final String accountID;
+  @override
+  final FocusNode focusNode = FocusNode();
+  @override
+  final TextEditingController controller = TextEditingController(text: "100");
 
   @override
   List<String> get favoriteCountryCode {
@@ -144,9 +155,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     configuration = Configuration()
       ..hostApiKey = apiKey
       ..hostAppName = "Proton Wallet"
-      ..defaultFlow = "ONRAMP"
-      ..userAddress = receiveAddress
-      ..userEmailAddress = userEmail;
+      ..defaultFlow = "ONRAMP";
 
     ramp = RampFlutter();
     ramp.onOnrampPurchaseCreated = onOnrampPurchaseCreated;
@@ -276,17 +285,17 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         await WalletManager.updateLastUsedIndex(accountModel);
       }
       int addressIndex = accountModel.lastUsedIndex;
-
       var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
-            serverWalletID: walletModel.walletID,
-            serverAccountID: accountModel.accountID,
-            bitcoinAddress: receiveAddress,
-            bitcoinAddressIndex: addressIndex,
-            inEmailIntegrationPool: 0,
-            used: 0);
+          serverWalletID: walletModel.walletID,
+          serverAccountID: accountModel.accountID,
+          bitcoinAddress: receiveAddress,
+          bitcoinAddressIndex: addressIndex,
+          inEmailIntegrationPool: 0,
+          used: 0,
+        );
       } catch (e) {
         logger.e(e.toString());
       }
@@ -336,6 +345,11 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void pay(SelectedInfoModel selected) {
+    var amount = selected.amount.toString();
+    var check = buyBloc.toNumberAmount(controller.text);
+    if (amount != check) {
+      selectAmount(check);
+    }
     if (selected.provider == GatewayProvider.ramp) {
       configuration.hostLogoUrl =
           "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
@@ -344,9 +358,11 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
       configuration.swapAsset = "BTC_BTC";
       configuration.defaultAsset = "BTC";
-      configuration.fiatValue = selected.amount.toString();
+      configuration.fiatValue = check;
       configuration.fiatCurrency = selected.fiatCurrency.symbol;
       configuration.selectedCountryCode = selected.country.code;
+      configuration.userAddress = receiveAddress;
+      configuration.userEmailAddress = userEmail;
 
       configuration.variant = "auto";
 

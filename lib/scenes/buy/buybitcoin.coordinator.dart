@@ -27,6 +27,7 @@ class BuyBitcoinCoordinator extends Coordinator {
     BuyBitcoinBloc buyBloc = BuyBitcoinBloc(
       serviceManager.get<DataProviderManager>().gatewayDataProvider,
     );
+
     var viewModel = BuyBitcoinViewModelImpl(
       this,
       info.userMail,
