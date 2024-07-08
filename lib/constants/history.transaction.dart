@@ -14,18 +14,21 @@ class HistoryTransaction {
   final bool inProgress;
   final String? body;
   final AccountModel accountModel;
+  final List<String> bitcoinAddresses;
 
-  HistoryTransaction(
-      {required this.txID,
-      this.createTimestamp,
-      this.updateTimestamp,
-      required this.amountInSATS,
-      required this.feeInSATS,
-      required this.exchangeRate,
-      this.label,
-      required this.sender,
-      required this.toList,
-      this.inProgress = false,
-      this.body,
-      required this.accountModel});
+  HistoryTransaction({
+    required this.txID,
+    this.createTimestamp,
+    this.updateTimestamp,
+    required this.amountInSATS,
+    required this.feeInSATS,
+    required this.exchangeRate,
+    this.label,
+    required this.sender,
+    required this.toList,
+    this.inProgress = false,
+    this.body,
+    required this.accountModel,
+    required this.bitcoinAddresses,
+  });
 }

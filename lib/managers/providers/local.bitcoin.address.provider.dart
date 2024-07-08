@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.dao.impl.dart';
@@ -24,9 +25,21 @@ class LocalBitcoinAddress2TransactionData {
   }
 }
 
+class BitcoinAddressDetail {
+  BitcoinAddressModel bitcoinAddressModel;
+  String accountID;
+  List<String> txIDs;
+
+  BitcoinAddressDetail({
+    required this.bitcoinAddressModel,
+    required this.accountID,
+    required this.txIDs,
+  });
+}
+
 class LocalBitcoinAddressData {
   final AccountModel accountModel;
-  List<BitcoinAddressModel> bitcoinAddresses = [];
+  List<BitcoinAddressDetail> bitcoinAddresses = [];
 
   LocalBitcoinAddressData({
     required this.accountModel,
@@ -62,10 +75,51 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
           List<BitcoinAddressModel> bitcoinAddresses =
               await bitcoinAddressDao.findByWalletAccount(
                   walletModel.walletID, accountModel.accountID);
+          Map<int, BitcoinAddressModel> addressIndex2bitcoinAddressModel = {};
+          for (BitcoinAddressModel bitcoinAddressModel in bitcoinAddresses) {
+            addressIndex2bitcoinAddressModel[
+                bitcoinAddressModel.bitcoinAddressIndex] = bitcoinAddressModel;
+          }
+          var frbAccount = (await WalletManager.loadWalletWithID(
+            walletModel.walletID,
+            accountModel.accountID,
+          ))!;
+          List<BitcoinAddressDetail> finalBitcoinAddresses = [];
+          for (int addressIndex = 0;
+              addressIndex <= accountModel.lastUsedIndex;
+              addressIndex++) {
+            if (addressIndex2bitcoinAddressModel.containsKey(addressIndex) ==
+                false) {
+              var addressInfo =
+                  await frbAccount.getAddress(index: addressIndex);
+              addressIndex2bitcoinAddressModel[addressIndex] =
+                  BitcoinAddressModel(
+                id: null,
+                walletID: 0,
+                // deprecated
+                accountID: 0,
+                // deprecated
+                serverWalletID: walletModel.walletID,
+                serverAccountID: accountModel.accountID,
+                bitcoinAddress: addressInfo.address,
+                bitcoinAddressIndex: addressIndex,
+                inEmailIntegrationPool: 0,
+                used: 0,
+              );
+            }
+            finalBitcoinAddresses.add(BitcoinAddressDetail(
+              bitcoinAddressModel:
+                  addressIndex2bitcoinAddressModel[addressIndex]!,
+              accountID: accountModel.accountID,
+              txIDs: [],
+            ));
+          }
+
           LocalBitcoinAddressData localBitcoinAddressData =
               LocalBitcoinAddressData(
-                  accountModel: accountModel,
-                  bitcoinAddresses: bitcoinAddresses);
+            accountModel: accountModel,
+            bitcoinAddresses: finalBitcoinAddresses.reversed.toList(),
+          );
           bitcoinAddressDataList.add(localBitcoinAddressData);
         }
       }
@@ -112,11 +166,11 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
       LocalBitcoinAddressData localBitcoinAddressData =
           await getDataByWalletAccount(walletModel, accountModel);
       int highestUsedIndex = -1;
-      for (BitcoinAddressModel bitcoinAddressModel
+      for (BitcoinAddressDetail bitcoinAddressDetail
           in localBitcoinAddressData.bitcoinAddresses) {
-        if (bitcoinAddressModel.used == 1) {
-          highestUsedIndex =
-              max(highestUsedIndex, bitcoinAddressModel.bitcoinAddressIndex);
+        if (bitcoinAddressDetail.bitcoinAddressModel.used == 1) {
+          highestUsedIndex = max(highestUsedIndex,
+              bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddressIndex);
         }
       }
       return highestUsedIndex;
@@ -128,13 +182,13 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    List<LocalBitcoinAddressData> localBitcoinAddresDataList =
+    List<LocalBitcoinAddressData> localBitcoinAddressDataList =
         await _getFromDB();
-    for (LocalBitcoinAddressData localBitcoinAddresData
-        in localBitcoinAddresDataList) {
-      if (localBitcoinAddresData.accountModel.accountID ==
+    for (LocalBitcoinAddressData localBitcoinAddressData
+        in localBitcoinAddressDataList) {
+      if (localBitcoinAddressData.accountModel.accountID ==
           accountModel.accountID) {
-        return localBitcoinAddresData;
+        return localBitcoinAddressData;
       }
     }
     // no local transaction found for this account, return empty transactions array
