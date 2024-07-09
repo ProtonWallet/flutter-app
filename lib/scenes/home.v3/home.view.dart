@@ -9,7 +9,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/scenes/components/custom.expansion.dart';
-import 'package:wallet/scenes/components/custom.loading.with.icon.dart';
 import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
 import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
@@ -202,29 +201,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       ),
                                               ],
                                             ),
-                                            const SizedBox(width: 4),
-                                            walletTransactionState.isSyncing
-                                                ? CustomLoadingWithIcon(
-                                                    icon: Icon(
-                                                      Icons.refresh_rounded,
-                                                      size: 22,
-                                                      color:
-                                                          ProtonColors.textWeak,
-                                                    ),
-                                                    durationInMilliSeconds: 800,
-                                                  )
-                                                : GestureDetector(
-                                                    onTap: () {
-                                                      viewModel
-                                                          .walletTransactionBloc
-                                                          .syncWallet(true);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.refresh_rounded,
-                                                      size: 22,
-                                                      color:
-                                                          ProtonColors.textWeak,
-                                                    )),
                                             const SizedBox(width: 4),
                                             viewModel.displayBalance
                                                 ? GestureDetector(

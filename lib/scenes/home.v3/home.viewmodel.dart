@@ -457,6 +457,7 @@ class HomeViewModelImpl extends HomeViewModel {
       walletMenuModel.walletModel.walletID,
       null,
     );
+    updateBodyListStatus(BodyListStatus.transactionList);
   }
 
   @override
@@ -466,6 +467,7 @@ class HomeViewModelImpl extends HomeViewModel {
       walletMenuModel.walletModel.walletID,
       accountMenuModel.accountModel.accountID,
     );
+    updateBodyListStatus(BodyListStatus.transactionList);
   }
 
   @override
