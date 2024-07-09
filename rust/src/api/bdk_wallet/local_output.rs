@@ -1,6 +1,7 @@
 // local_output.rs
 
 use andromeda_bitcoin::{ConfirmationTime, KeychainKind, LocalOutput, OutPoint, TxOut};
+use flutter_rust_bridge::frb;
 
 use super::amount::FrbAmount;
 use crate::api::bdk_wallet::script_buf::FrbScriptBuf;
@@ -8,17 +9,17 @@ use crate::api::bdk_wallet::script_buf::FrbScriptBuf;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FrbLocalOutput {
     /// Reference to a transaction output
-    pub outpoint: FrbOutPoint,
+    pub(crate) outpoint: FrbOutPoint,
     /// Transaction output
-    pub txout: FrbTxOut,
+    pub(crate) txout: FrbTxOut,
     /// Type of keychain
-    pub keychain: KeychainKind,
+    pub(crate) keychain: KeychainKind,
     /// Whether this UTXO is spent or not
-    pub is_spent: bool,
+    pub(crate) is_spent: bool,
     /// The derivation index for the script pubkey in the wallet
-    pub derivation_index: u32,
+    pub(crate) derivation_index: u32,
     /// The confirmation time for transaction containing this utxo
-    pub confirmation_time: ConfirmationTime,
+    pub(crate) confirmation_time: ConfirmationTime,
 }
 
 impl From<LocalOutput> for FrbLocalOutput {
@@ -31,6 +32,38 @@ impl From<LocalOutput> for FrbLocalOutput {
             derivation_index: local_utxo.derivation_index,
             confirmation_time: local_utxo.confirmation_time,
         }
+    }
+}
+
+impl FrbLocalOutput {
+    #[frb(getter, sync)]
+    pub fn outpoint(&self) -> FrbOutPoint {
+        self.outpoint.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn txout(&self) -> FrbTxOut {
+        self.txout.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn keychain(&self) -> KeychainKind {
+        self.keychain.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn is_spent(&self) -> bool {
+        self.is_spent.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn derivation_index(&self) -> u32 {
+        self.derivation_index.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn confirmation_time(&self) -> ConfirmationTime {
+        self.confirmation_time.clone()
     }
 }
 
@@ -54,9 +87,21 @@ impl From<OutPoint> for FrbOutPoint {
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct FrbTxOut {
     /// The value of the output, in satoshis.
-    pub value: FrbAmount,
+    pub(crate) value: FrbAmount,
     /// The script which must be satisfied for the output to be spent.
-    pub script_pubkey: FrbScriptBuf,
+    pub(crate) script_pubkey: FrbScriptBuf,
+}
+
+impl FrbTxOut {
+    #[frb(getter, sync)]
+    pub fn value(&self) -> FrbAmount {
+        self.value.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn script_pubkey(&self) -> FrbScriptBuf {
+        self.script_pubkey.clone()
+    }
 }
 
 impl From<TxOut> for FrbTxOut {

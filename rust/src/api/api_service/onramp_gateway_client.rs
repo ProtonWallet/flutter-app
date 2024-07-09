@@ -11,7 +11,7 @@ use crate::BridgeError;
 use super::proton_api_service::ProtonAPIService;
 
 pub struct OnRampGatewayClient {
-    pub inner: Arc<andromeda_api::payment_gateway::PaymentGatewayClient>,
+    pub(crate) inner: Arc<andromeda_api::payment_gateway::PaymentGatewayClient>,
 }
 
 impl OnRampGatewayClient {

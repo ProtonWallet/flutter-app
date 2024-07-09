@@ -174,8 +174,8 @@ class ServerTransactionDataProvider extends DataProvider {
         sign: "",
         // TODO:: add sign once apiClient update for it
         exchangeRateTime: walletTransaction.exchangeRate!.exchangeRateTime,
-        exchangeRate: walletTransaction.exchangeRate!.exchangeRate,
-        cents: walletTransaction.exchangeRate!.cents,
+        exchangeRate: walletTransaction.exchangeRate!.exchangeRate.toInt(),
+        cents: walletTransaction.exchangeRate!.cents.toInt(),
       );
       await exchangeRateDao.insert(exchangeRateModel);
     }

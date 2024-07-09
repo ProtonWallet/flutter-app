@@ -7,7 +7,7 @@ use crate::{event_routes::ProtonEvent, BridgeError};
 use super::proton_api_service::ProtonAPIService;
 
 pub struct EventClient {
-    pub inner: Arc<andromeda_api::event::EventClient>,
+    pub(crate) inner: Arc<andromeda_api::event::EventClient>,
 }
 
 impl EventClient {

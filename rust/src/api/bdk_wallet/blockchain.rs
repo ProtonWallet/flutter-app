@@ -10,7 +10,7 @@ use super::{account::FrbAccount, psbt::FrbPsbt};
 use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
 
 pub struct FrbBlockchainClient {
-    inner: BlockchainClient,
+    pub(crate) inner: BlockchainClient,
 }
 
 impl From<BlockchainClient> for FrbBlockchainClient {

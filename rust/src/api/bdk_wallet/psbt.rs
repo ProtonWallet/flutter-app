@@ -15,8 +15,8 @@ pub struct FrbPsbtRecipient(pub String, pub u64);
 pub struct FrbPsbt {
     pub(crate) inner: Psbt,
 
-    pub recipients: Vec<FrbPsbtRecipient>,
-    pub total_fees: u64,
+    pub(crate) recipients: Vec<FrbPsbtRecipient>,
+    pub(crate) total_fees: u64,
 }
 
 impl FrbPsbt {
@@ -54,5 +54,15 @@ impl FrbPsbt {
         };
 
         Ok(frb_psbt)
+    }
+
+    #[frb(getter, sync)]
+    pub fn recipients(&self) -> Vec<FrbPsbtRecipient> {
+        self.recipients.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn total_fees(&self) -> u64 {
+        self.total_fees.clone()
     }
 }

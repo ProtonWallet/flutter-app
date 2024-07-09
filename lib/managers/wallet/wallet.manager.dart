@@ -257,7 +257,7 @@ class WalletManager implements Manager {
 
       FrbBalance balance = await frbAccount.getBalance();
 
-      return balance.trustedSpendable().toSat();
+      return balance.trustedSpendable().toSat().toInt();
     } catch (e) {
       logger.e(e.toString());
     }
@@ -292,7 +292,8 @@ class WalletManager implements Manager {
   static Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
     ProtonExchangeRate exchangeRate = await proton_api.getExchangeRate(
-        fiatCurrency: fiatCurrency, time: time);
+        fiatCurrency: fiatCurrency,
+        time: time == null ? null : BigInt.from(time));
     return exchangeRate;
   }
 
@@ -512,7 +513,7 @@ class WalletManager implements Manager {
         BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
-            bitcoinAddressIndex: addressIndex);
+            bitcoinAddressIndex: BigInt.from(addressIndex));
         await proton_api.updateBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
@@ -587,7 +588,8 @@ class WalletManager implements Manager {
     for (var walletBitcoinAddress in walletBitcoinAddresses) {
       try {
         String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
-        int addressIndex = walletBitcoinAddress.bitcoinAddressIndex ?? -1;
+        int addressIndex =
+            walletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? -1;
         if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
               serverWalletID: serverWalletID,
@@ -669,7 +671,7 @@ class WalletManager implements Manager {
         BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
-            bitcoinAddressIndex: addressInfo.index);
+            bitcoinAddressIndex: BigInt.from(addressInfo.index));
         await proton_api.addBitcoinAddresses(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,

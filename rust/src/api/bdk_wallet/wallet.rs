@@ -15,7 +15,7 @@ use crate::BridgeError;
 
 #[derive(Debug)]
 pub struct FrbWallet {
-    inner: Wallet<OnchainStore>,
+    pub(crate) inner: Wallet<OnchainStore>,
 }
 
 impl FrbWallet {

@@ -8,7 +8,7 @@ use crate::BridgeError;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct FrbPaymentLink {
-    inner: PaymentLink,
+    pub(crate) inner: PaymentLink,
 }
 
 // pub enum PaymentLinkKind {

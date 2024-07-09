@@ -5,7 +5,7 @@ use andromeda_bitcoin::Amount as BdkAmount;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FrbAmount {
-    inner: BdkAmount,
+    pub(crate) inner: BdkAmount,
 }
 
 impl From<BdkAmount> for FrbAmount {
