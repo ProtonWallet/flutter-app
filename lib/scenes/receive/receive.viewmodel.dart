@@ -40,6 +40,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   String errorMessage = "";
   var selectedWallet = 1;
   int accountsCount = 0;
+  int localLastUsedIndex = -1;
   bool initialized = false;
 
   WalletData? walletData;
@@ -146,7 +147,11 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      addressIndex = accountModel!.lastUsedIndex + 1;
+      if (localLastUsedIndex == -1 && accountModel!.lastUsedIndex == 0){
+        addressIndex = accountModel!.lastUsedIndex;
+      } else {
+        addressIndex = accountModel!.lastUsedIndex + 1;
+      }
       if (init) {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,
@@ -221,7 +226,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
       /// check if local highest used bitcoin address index is higher than the one store in wallet account
       /// this will happen when some one send bitcoin via qr code
-      int localLastUsedIndex = await localBitcoinAddressDataProvider
+      localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
       if (localLastUsedIndex > accountModel!.lastUsedIndex) {
         accountModel!.lastUsedIndex = localLastUsedIndex;

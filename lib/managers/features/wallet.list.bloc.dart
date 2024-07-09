@@ -192,11 +192,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.stream.listen((state) {
-      //TODO:: improve me. only update the balance
-      if (state is BDKDataUpdated) {
-        add(UpdateBalance());
-      }
+        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
+      add(UpdateBalance());
     });
 
     walletPassDataSubscription =

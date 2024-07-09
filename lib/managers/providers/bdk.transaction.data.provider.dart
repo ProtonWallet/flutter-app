@@ -38,18 +38,10 @@ class BDKTransactionData {
   });
 }
 
-class BDKDataUpdated extends DataState {
-  final String accountID;
-
-  BDKDataUpdated(this.accountID);
-
-  @override
-  List<Object?> get props => [accountID];
-}
-
 class BDKTransactionDataProvider extends DataProvider {
   final AccountDao accountDao;
-
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>.broadcast();
   FrbBlockchainClient? blockchain;
   final ProtonApiService apiService;
 
@@ -177,12 +169,14 @@ class BDKTransactionDataProvider extends DataProvider {
       } finally {
         isWalletSyncing[accountModel.accountID] = false;
         if (success) {
-          emitState(BDKDataUpdated(accountModel.accountID));
+          dataUpdateController.add(DataUpdated("bdk data updated"));
         }
       }
     }
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    dataUpdateController.close();
+  }
 }
