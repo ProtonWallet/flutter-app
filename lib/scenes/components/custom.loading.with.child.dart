@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CustomLoadingWithIcon extends StatefulWidget {
+class CustomLoadingWithChild extends StatefulWidget {
   final int durationInMilliSeconds;
-  final Icon icon;
+  final Widget child;
 
-  const CustomLoadingWithIcon({
+  const CustomLoadingWithChild({
     super.key,
     this.durationInMilliSeconds = 1600,
-    this.icon = const Icon(Icons.refresh_rounded, size: 22),
+    this.child = const Icon(Icons.refresh_rounded, size: 22),
   });
 
   @override
-  CustomLoadingWithIconState createState() => CustomLoadingWithIconState();
+  CustomLoadingWithChildState createState() => CustomLoadingWithChildState();
 }
 
-class CustomLoadingWithIconState extends State<CustomLoadingWithIcon>
+class CustomLoadingWithChildState extends State<CustomLoadingWithChild>
     with SingleTickerProviderStateMixin {
   AnimationController? _controller;
 
@@ -38,7 +38,7 @@ class CustomLoadingWithIconState extends State<CustomLoadingWithIcon>
       builder: (context, child) {
         return RotationTransition(
           turns: _controller!,
-          child: widget.icon,
+          child: widget.child,
         );
       },
     );

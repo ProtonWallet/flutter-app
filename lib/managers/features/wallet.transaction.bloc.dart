@@ -220,11 +220,8 @@ class WalletTransactionBloc
     });
 
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.stream.listen((state) {
-      //TODO:: improve me. only update the balance
-      if (state is BDKDataUpdated) {
-        handleTransactionDataProviderUpdate();
-      }
+        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
+      handleTransactionDataProviderUpdate();
     });
 
     serverTransactionDataSubscription = serverTransactionDataProvider

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
+import 'package:wallet/scenes/components/custom.loading.with.child.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/constants/constants.dart';
@@ -74,22 +76,59 @@ class TransactionList extends StatelessWidget {
                           ),
                           if (state.historyTransaction.isNotEmpty)
                             Row(children: [
-                              IconButton(
-                                  onPressed: () {
-                                    TransactionFilterSheet.show(
-                                        context, viewModel);
-                                  },
-                                  icon: SvgPicture.asset(
+                              state.isSyncing
+                                  ? CustomLoadingWithChild(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Icon(
+                                          Icons.refresh_rounded,
+                                          size: 20,
+                                          color: ProtonColors.textWeak,
+                                        ),
+                                      ),
+                                      durationInMilliSeconds: 800,
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        viewModel.walletTransactionBloc
+                                            .syncWallet(true);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Icon(
+                                          Icons.refresh_rounded,
+                                          size: 20,
+                                          color: ProtonColors.textWeak,
+                                        ),
+                                      ),
+                                    ),
+                              const SizedBox(width: 4),
+                              GestureDetector(
+                                onTap: () {
+                                  TransactionFilterSheet.show(
+                                      context, viewModel);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: SvgPicture.asset(
                                       "assets/images/icon/setup-preference.svg",
                                       fit: BoxFit.fill,
-                                      width: 16,
-                                      height: 16)),
-                              IconButton(
-                                  onPressed: () {
-                                    viewModel.setSearchHistoryTextField(true);
-                                  },
-                                  icon: Icon(Icons.search_rounded,
-                                      color: ProtonColors.textNorm, size: 16))
+                                      width: 20,
+                                      height: 20),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              GestureDetector(
+                                onTap: () {
+                                  viewModel.setSearchHistoryTextField(true);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Icon(Icons.search_rounded,
+                                      color: ProtonColors.textNorm, size: 20),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
                             ]),
                         ],
                       )),
@@ -112,30 +151,54 @@ class TransactionList extends StatelessWidget {
               bitcoinUnit: viewModel.bitcoinUnit,
             ),
             if (state.historyTransaction.isEmpty)
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Center(
-                    child: SvgPicture.asset(
-                        "assets/images/icon/do_transactions.svg",
-                        fit: BoxFit.fill,
-                        width: 26,
-                        height: 26)),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                    width: 280,
-                    child: Text(
-                      "Send and receive Bitcoin with your email.",
-                      style: FontManager.titleHeadline(ProtonColors.textNorm),
-                      textAlign: TextAlign.center,
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
-              ]),
+              state.isSyncing
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomLoading(
+                          size: 40,
+                          durationInMilliSeconds: 1600,
+                          strokeWidth: 3,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          S.of(context).loading_transactions,
+                          style: FontManager.body2Regular(
+                            ProtonColors.textWeak,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                              child: SvgPicture.asset(
+                                  "assets/images/icon/do_transactions.svg",
+                                  fit: BoxFit.fill,
+                                  width: 26,
+                                  height: 26)),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              width: 280,
+                              child: Text(
+                                "Send and receive Bitcoin with your email.",
+                                style: FontManager.titleHeadline(
+                                    ProtonColors.textNorm),
+                                textAlign: TextAlign.center,
+                              )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ]),
           ]);
         });
   }

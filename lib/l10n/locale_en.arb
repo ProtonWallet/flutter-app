@@ -42,6 +42,7 @@
   "received_on": "Received on {date}",
   "show_more": "Show more",
   "transactions": "Transactions",
+  "loading_transactions": "Loading transactions..",
   "trans_details": "Transaction Detail",
   "trans_total": "Total",
   "trans_to": "To",
