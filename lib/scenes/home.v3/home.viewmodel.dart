@@ -78,6 +78,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isLogout = false;
   bool displayBalance = true;
   int currentHistoryPage = 0;
+  int currentAddressPage = 0;
   bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
@@ -98,6 +99,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   TextEditingController transactionSearchController =
       TextEditingController(text: "");
+  TextEditingController addressSearchController =
+      TextEditingController(text: "");
   TextEditingController walletPreferenceTextEditingController =
       TextEditingController(text: "");
 
@@ -114,6 +117,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void setSearchHistoryTextField(bool show);
 
+  void setSearchAddressTextField(bool show);
+
   void setDisplayBalance(bool display);
 
   Future<void> createWallet();
@@ -129,6 +134,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hadBackupProtonAccount = false;
   bool hadSetup2FA = false;
   bool showSearchHistoryTextField = false;
+  bool showSearchAddressTextField = false;
 
   void setOnBoard();
 
@@ -138,6 +144,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
       WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel);
 
   void showMoreTransactionHistory();
+
+  void showMoreAddress();
 
   Future<bool> addWalletAccount(
     int walletID,
@@ -204,10 +212,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String userEmail = "";
   String displayName = "";
   String transactionListFilterBy = "";
+  String addressListFilterBy = "";
 
   Future<void> updatePassphrase(String key, String passphrase);
 
   void updateTransactionListFilterBy(String filterBy);
+
+  void updateAddressListFilterBy(String filterBy);
 
   //
   final WalletListBloc walletListBloc;
@@ -384,6 +395,10 @@ class HomeViewModelImpl extends HomeViewModel {
         datasourceStreamSinkAdd();
       });
 
+      addressSearchController.addListener(() {
+        datasourceStreamSinkAdd();
+      });
+
       eventLoop.start();
 
       checkPreference();
@@ -457,6 +472,8 @@ class HomeViewModelImpl extends HomeViewModel {
       walletMenuModel.walletModel.walletID,
       null,
     );
+    currentHistoryPage = 0;
+    currentAddressPage = 0;
     updateBodyListStatus(BodyListStatus.transactionList);
   }
 
@@ -467,6 +484,8 @@ class HomeViewModelImpl extends HomeViewModel {
       walletMenuModel.walletModel.walletID,
       accountMenuModel.accountModel.accountID,
     );
+    currentHistoryPage = 0;
+    currentAddressPage = 0;
     updateBodyListStatus(BodyListStatus.transactionList);
   }
 
@@ -480,6 +499,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void showMoreTransactionHistory() {
     currentHistoryPage++;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void showMoreAddress() {
+    currentAddressPage++;
     datasourceStreamSinkAdd();
   }
 
@@ -872,6 +897,17 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
+  void setSearchAddressTextField(bool show) {
+    if (show == false) {
+      if (addressSearchController.text.isNotEmpty) {
+        addressSearchController.text = "";
+      }
+    }
+    showSearchAddressTextField = show;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
   Map<String, ValueNotifier> getAccountFiatCurrencyNotifiers(
       List<AccountModel> userAccounts) {
     for (AccountModel accountModel in userAccounts) {
@@ -980,6 +1016,12 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void updateTransactionListFilterBy(String filterBy) {
     transactionListFilterBy = filterBy;
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  void updateAddressListFilterBy(String filterBy) {
+    addressListFilterBy = filterBy;
     datasourceStreamSinkAdd();
   }
 
