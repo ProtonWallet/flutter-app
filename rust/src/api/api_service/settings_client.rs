@@ -8,7 +8,7 @@ use andromeda_common::BitcoinUnit;
 use std::sync::Arc;
 
 pub struct SettingsClient {
-    pub inner: Arc<andromeda_api::settings::SettingsClient>,
+    pub(crate) inner: Arc<andromeda_api::settings::SettingsClient>,
 }
 
 impl SettingsClient {
@@ -50,7 +50,10 @@ impl SettingsClient {
         }
     }
 
-    pub async fn two_fa_threshold(&self, amount: u64) -> Result<ApiWalletUserSettings, BridgeError> {
+    pub async fn two_fa_threshold(
+        &self,
+        amount: u64,
+    ) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self.inner.update_two_fa_threshold(amount).await;
         match result {
             Ok(response) => Ok(response),

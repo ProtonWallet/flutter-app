@@ -25,8 +25,8 @@ use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct ProtonAPIService {
-    pub inner: Arc<andromeda_api::ProtonWalletApiClient>,
-    pub store: Arc<ProtonWalletAuthStore>,
+    pub(crate) inner: Arc<andromeda_api::ProtonWalletApiClient>,
+    pub(crate) store: Arc<ProtonWalletAuthStore>,
 }
 
 impl ProtonAPIService {

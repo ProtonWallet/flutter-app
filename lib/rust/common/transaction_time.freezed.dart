@@ -18,20 +18,20 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TransactionTime {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int confirmationTime) confirmed,
-    required TResult Function(int lastSeen) unconfirmed,
+    required TResult Function(BigInt confirmationTime) confirmed,
+    required TResult Function(BigInt lastSeen) unconfirmed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int confirmationTime)? confirmed,
-    TResult? Function(int lastSeen)? unconfirmed,
+    TResult? Function(BigInt confirmationTime)? confirmed,
+    TResult? Function(BigInt lastSeen)? unconfirmed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int confirmationTime)? confirmed,
-    TResult Function(int lastSeen)? unconfirmed,
+    TResult Function(BigInt confirmationTime)? confirmed,
+    TResult Function(BigInt lastSeen)? unconfirmed,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -81,7 +81,7 @@ abstract class _$$TransactionTime_ConfirmedImplCopyWith<$Res> {
           $Res Function(_$TransactionTime_ConfirmedImpl) then) =
       __$$TransactionTime_ConfirmedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int confirmationTime});
+  $Res call({BigInt confirmationTime});
 }
 
 /// @nodoc
@@ -102,7 +102,7 @@ class __$$TransactionTime_ConfirmedImplCopyWithImpl<$Res>
       confirmationTime: null == confirmationTime
           ? _value.confirmationTime
           : confirmationTime // ignore: cast_nullable_to_non_nullable
-              as int,
+              as BigInt,
     ));
   }
 }
@@ -114,7 +114,7 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
       : super._();
 
   @override
-  final int confirmationTime;
+  final BigInt confirmationTime;
 
   @override
   String toString() {
@@ -143,8 +143,8 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int confirmationTime) confirmed,
-    required TResult Function(int lastSeen) unconfirmed,
+    required TResult Function(BigInt confirmationTime) confirmed,
+    required TResult Function(BigInt lastSeen) unconfirmed,
   }) {
     return confirmed(confirmationTime);
   }
@@ -152,8 +152,8 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int confirmationTime)? confirmed,
-    TResult? Function(int lastSeen)? unconfirmed,
+    TResult? Function(BigInt confirmationTime)? confirmed,
+    TResult? Function(BigInt lastSeen)? unconfirmed,
   }) {
     return confirmed?.call(confirmationTime);
   }
@@ -161,8 +161,8 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int confirmationTime)? confirmed,
-    TResult Function(int lastSeen)? unconfirmed,
+    TResult Function(BigInt confirmationTime)? confirmed,
+    TResult Function(BigInt lastSeen)? unconfirmed,
     required TResult orElse(),
   }) {
     if (confirmed != null) {
@@ -205,10 +205,11 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
 
 abstract class TransactionTime_Confirmed extends TransactionTime {
   const factory TransactionTime_Confirmed(
-      {required final int confirmationTime}) = _$TransactionTime_ConfirmedImpl;
+          {required final BigInt confirmationTime}) =
+      _$TransactionTime_ConfirmedImpl;
   const TransactionTime_Confirmed._() : super._();
 
-  int get confirmationTime;
+  BigInt get confirmationTime;
   @JsonKey(ignore: true)
   _$$TransactionTime_ConfirmedImplCopyWith<_$TransactionTime_ConfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -221,7 +222,7 @@ abstract class _$$TransactionTime_UnconfirmedImplCopyWith<$Res> {
           $Res Function(_$TransactionTime_UnconfirmedImpl) then) =
       __$$TransactionTime_UnconfirmedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int lastSeen});
+  $Res call({BigInt lastSeen});
 }
 
 /// @nodoc
@@ -243,7 +244,7 @@ class __$$TransactionTime_UnconfirmedImplCopyWithImpl<$Res>
       lastSeen: null == lastSeen
           ? _value.lastSeen
           : lastSeen // ignore: cast_nullable_to_non_nullable
-              as int,
+              as BigInt,
     ));
   }
 }
@@ -254,7 +255,7 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
   const _$TransactionTime_UnconfirmedImpl({required this.lastSeen}) : super._();
 
   @override
-  final int lastSeen;
+  final BigInt lastSeen;
 
   @override
   String toString() {
@@ -283,8 +284,8 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int confirmationTime) confirmed,
-    required TResult Function(int lastSeen) unconfirmed,
+    required TResult Function(BigInt confirmationTime) confirmed,
+    required TResult Function(BigInt lastSeen) unconfirmed,
   }) {
     return unconfirmed(lastSeen);
   }
@@ -292,8 +293,8 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int confirmationTime)? confirmed,
-    TResult? Function(int lastSeen)? unconfirmed,
+    TResult? Function(BigInt confirmationTime)? confirmed,
+    TResult? Function(BigInt lastSeen)? unconfirmed,
   }) {
     return unconfirmed?.call(lastSeen);
   }
@@ -301,8 +302,8 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int confirmationTime)? confirmed,
-    TResult Function(int lastSeen)? unconfirmed,
+    TResult Function(BigInt confirmationTime)? confirmed,
+    TResult Function(BigInt lastSeen)? unconfirmed,
     required TResult orElse(),
   }) {
     if (unconfirmed != null) {
@@ -344,11 +345,11 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
 }
 
 abstract class TransactionTime_Unconfirmed extends TransactionTime {
-  const factory TransactionTime_Unconfirmed({required final int lastSeen}) =
+  const factory TransactionTime_Unconfirmed({required final BigInt lastSeen}) =
       _$TransactionTime_UnconfirmedImpl;
   const TransactionTime_Unconfirmed._() : super._();
 
-  int get lastSeen;
+  BigInt get lastSeen;
   @JsonKey(ignore: true)
   _$$TransactionTime_UnconfirmedImplCopyWith<_$TransactionTime_UnconfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;

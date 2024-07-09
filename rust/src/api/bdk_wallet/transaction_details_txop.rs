@@ -7,10 +7,10 @@ use crate::api::bdk_wallet::script_buf::FrbScriptBuf;
 
 #[derive(Debug, Clone)]
 pub struct FrbDetailledTxOutput {
-    pub value: u64,
-    pub address: String,
-    pub script_pubkey: FrbScriptBuf,
-    pub is_mine: bool,
+    pub(crate) value: u64,
+    pub(crate) address: String,
+    pub(crate) script_pubkey: FrbScriptBuf,
+    pub(crate) is_mine: bool,
 }
 
 impl From<DetailledTxOutput> for FrbDetailledTxOutput {

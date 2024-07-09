@@ -16,19 +16,21 @@ class ExchangeCalculator {
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       var outValue = exchangeRate.exchangeRate *
-          amountInSatoshi /
-          fiatCurrencyInfo.cents /
+          BigInt.from(amountInSatoshi) /
+          BigInt.from(fiatCurrencyInfo.cents) /
           100000000;
       return outValue;
     }
-    return exchangeRate.exchangeRate * amountInSatoshi / 100000000;
+    return exchangeRate.exchangeRate *
+        BigInt.from(amountInSatoshi) /
+        BigInt.from(100000000);
   }
 
   static int getDisplayDigit(
     ProtonExchangeRate exchangeRate,
   ) {
     try {
-      return (log(exchangeRate.cents) / log(10)).round();
+      return (log(exchangeRate.cents.toInt()) / log(10)).round();
     } catch (e) {
       //
     }
@@ -96,8 +98,9 @@ class ExchangeCalculator {
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
       FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
-          (exchangeRate.exchangeRate / fiatCurrencyInfo.cents);
+          (exchangeRate.exchangeRate / BigInt.from(fiatCurrencyInfo.cents));
     }
-    return amountInFiatCurrency / (exchangeRate.exchangeRate / 100);
+    return amountInFiatCurrency /
+        (exchangeRate.exchangeRate / BigInt.from(100));
   }
 }

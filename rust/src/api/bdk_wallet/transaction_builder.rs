@@ -12,7 +12,7 @@ use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt, stora
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {
-    inner: TxBuilder<OnchainStore>,
+    pub(crate) inner: TxBuilder<OnchainStore>,
 }
 
 impl From<TxBuilder<OnchainStore>> for FrbTxBuilder {

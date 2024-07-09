@@ -7,7 +7,7 @@ pub use andromeda_bitcoin::Transaction as bdkTransaction;
 use super::proton_api_service::ProtonAPIService;
 
 pub struct TransactionClient {
-    pub inner: Arc<andromeda_api::transaction::TransactionClient>,
+    pub(crate) inner: Arc<andromeda_api::transaction::TransactionClient>,
 }
 
 impl TransactionClient {

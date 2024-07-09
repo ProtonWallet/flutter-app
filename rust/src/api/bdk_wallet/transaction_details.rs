@@ -12,28 +12,28 @@ use super::{
 #[derive(Clone, Debug)]
 pub struct FrbTransactionDetails {
     /// Transaction id
-    pub txid: String,
+    pub(crate) txid: String,
     /// Received value (sats)
     /// Sum of owned outputs of this transaction.
-    pub received: u64,
+    pub(crate) received: u64,
     /// Sent value (sats)
     /// Sum of owned inputs of this transaction.
-    pub sent: u64,
+    pub(crate) sent: u64,
     /// Fee value (sats) if confirmed.
     /// The availability of the fee depends on the backend. It's never `None`
     /// with an Electrum Server backend, but it could be `None` with a
     /// Bitcoin RPC node without txindex that receive funds while offline.
-    pub fees: Option<u64>,
+    pub(crate) fees: Option<u64>,
     /// If the transaction is confirmed, contains height and Unix timestamp of
     /// the block containing the transaction, unconfirmed transaction
     /// contains `None`.
-    pub time: TransactionTime,
+    pub(crate) time: TransactionTime,
     /// List of transaction inputs.
-    pub inputs: Vec<FrbDetailledTxIn>,
+    pub(crate) inputs: Vec<FrbDetailledTxIn>,
     /// List of transaction outputs.
-    pub outputs: Vec<FrbDetailledTxOutput>,
+    pub(crate) outputs: Vec<FrbDetailledTxOutput>,
     /// BIP44 Account to which the transaction is bound
-    pub account_derivation_path: FrbDerivationPath,
+    pub(crate) account_derivation_path: FrbDerivationPath,
 }
 
 impl FrbTransactionDetails {

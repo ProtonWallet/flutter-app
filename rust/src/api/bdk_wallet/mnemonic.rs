@@ -9,7 +9,7 @@ use andromeda_bitcoin::{
 
 #[derive(Debug)]
 pub struct FrbMnemonic {
-    inner: Mnemonic,
+    pub(crate) inner: Mnemonic,
 }
 
 impl FrbMnemonic {
