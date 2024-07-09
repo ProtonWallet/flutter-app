@@ -33,6 +33,8 @@ class PassphraseSheet {
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: TextFieldTextV2(
                 labelText: S.of(context).passphrase_label,
+                hintText: S.of(context).passphrase_recovery_hint,
+                alwaysShowHint: true,
                 textController: viewModel.walletRecoverPassphraseController,
                 myFocusNode: viewModel.walletRecoverPassphraseFocusNode,
                 validation: (String value) {
@@ -41,6 +43,7 @@ class PassphraseSheet {
                   }
                   return "";
                 },
+                isPassword: true,
               ),
             ),
             if (viewModel.isWalletPassphraseMatch == false)
