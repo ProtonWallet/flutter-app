@@ -127,10 +127,8 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
 
     /// Listen to the data update
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.stream.listen((state) {
-      if (state is BDKDataUpdated) {
-        handleTransactionUpdate();
-      }
+        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
+      handleTransactionUpdate();
     });
     serverTransactionDataSubscription = serverTransactionDataProvider
         .dataUpdateController.stream

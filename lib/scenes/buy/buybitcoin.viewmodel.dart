@@ -278,13 +278,18 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
       /// check if local highest used bitcoin address index is higher than the one store in wallet account
       /// this will happen when some one send bitcoin via qr code
-      int localUsedIndex = await localBitcoinAddressDataProvider
+      int localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      if (localUsedIndex > accountModel.lastUsedIndex) {
-        accountModel.lastUsedIndex = localUsedIndex;
+      if (localLastUsedIndex > accountModel.lastUsedIndex) {
+        accountModel.lastUsedIndex = localLastUsedIndex;
         await WalletManager.updateLastUsedIndex(accountModel);
       }
-      int addressIndex = accountModel.lastUsedIndex + 1;
+      int addressIndex = 0;
+      if (localLastUsedIndex == -1 && accountModel.lastUsedIndex == 0){
+        addressIndex = accountModel.lastUsedIndex;
+      } else {
+        addressIndex = accountModel.lastUsedIndex + 1;
+      }
 
       var addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
