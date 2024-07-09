@@ -78,6 +78,7 @@ class TransactionList extends StatelessWidget {
                             Row(children: [
                               state.isSyncing
                                   ? CustomLoadingWithChild(
+                                      durationInMilliSeconds: 800,
                                       child: Padding(
                                         padding: const EdgeInsets.all(3),
                                         child: Icon(
@@ -86,7 +87,6 @@ class TransactionList extends StatelessWidget {
                                           color: ProtonColors.textWeak,
                                         ),
                                       ),
-                                      durationInMilliSeconds: 800,
                                     )
                                   : GestureDetector(
                                       onTap: () {
@@ -109,12 +109,12 @@ class TransactionList extends StatelessWidget {
                                       context, viewModel);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(3),
+                                  padding: const EdgeInsets.all(5),
                                   child: SvgPicture.asset(
                                       "assets/images/icon/setup-preference.svg",
                                       fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
+                                      width: 16,
+                                      height: 16),
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -155,7 +155,7 @@ class TransactionList extends StatelessWidget {
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomLoading(
+                        const CustomLoading(
                           size: 40,
                           durationInMilliSeconds: 1600,
                           strokeWidth: 3,

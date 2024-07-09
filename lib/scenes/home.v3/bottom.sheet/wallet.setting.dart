@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/add.button.v1.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -18,9 +19,10 @@ import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.setting.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -480,24 +482,49 @@ class WalletSettingSheet {
                                       ]))
                           ]);
                         }),
-                    const SizedBox(
-                      height: defaultPadding,
-                    ),
-                    ListTile(
-                      shape: const Border(),
-                      leading: SvgPicture.asset(
-                          "assets/images/icon/ic-cog-wheel.svg",
-                          fit: BoxFit.fill,
-                          width: 20,
-                          height: 20),
-                      title: Text(S.of(context).advanced_settings,
-                          style:
-                              FontManager.body2Median(ProtonColors.textNorm)),
-                      onTap: () {
-                        AdvanceWalletSettingSheet.show(
-                            context, viewModel, walletMenuModel);
-                      },
-                      iconColor: ProtonColors.textHint,
+                    Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        title: Transform.translate(
+                            offset: const Offset(-8, 0),
+                            child: Text(S.of(context).view_more,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textNorm))),
+                        backgroundColor: Colors.transparent,
+                        collapsedBackgroundColor: Colors.transparent,
+                        children: [
+                          const SizedBox(height: 4),
+                          ButtonV5(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pop(); // pop wallet setting sheet or it will hide setupBackup view
+                                viewModel.move(NavID.setupBackup);
+                              },
+                              text:
+                                  S.of(context).backup_wallet_view_seed_phrase,
+                              width: MediaQuery.of(context).size.width,
+                              backgroundColor: ProtonColors.protonBlue,
+                              textStyle:
+                                  FontManager.body1Median(ProtonColors.white),
+                              height: 48),
+                          const SizedBox(height: 8),
+                          ButtonV5(
+                              onPressed: () {
+                                DeleteWalletSheet.show(
+                                  context,
+                                  viewModel,
+                                  walletMenuModel,
+                                  walletMenuModel.walletModel.balance > 0,
+                                );
+                              },
+                              text: S.of(context).delete_wallet,
+                              width: MediaQuery.of(context).size.width,
+                              backgroundColor: ProtonColors.signalError,
+                              textStyle:
+                                  FontManager.body1Median(ProtonColors.white),
+                              height: 48),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: defaultPadding,
