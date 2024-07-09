@@ -61,40 +61,73 @@ class SidebarWalletItems extends StatelessWidget {
                     left: defaultPadding,
                     right: 10,
                   ),
-                  child: ExpansionTile(
-                    shape: const Border(),
-                    collapsedBackgroundColor: wlMenu.isSelected
-                        ? ProtonColors.drawerBackgroundHighlight
-                        : Colors.transparent,
-                    backgroundColor: wlMenu.isSelected
-                        ? ProtonColors.drawerBackgroundHighlight
-                        : Colors.transparent,
-                    initiallyExpanded: wlMenu.hasValidPassword,
-                    leading: SvgPicture.asset(
-                      "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
-                      fit: BoxFit.fill,
-                      width: 18,
-                      height: 18,
-                    ),
-                    title: Transform.translate(
-                      offset: const Offset(-8, 0),
-                      // Build title
-                      child: _buildTitle(
-                        context,
-                        walletListBloc,
-                        state,
-                        wlMenu,
-                      ),
-                    ),
-                    iconColor: ProtonColors.textHint,
-                    collapsedIconColor: ProtonColors.textHint,
-                    children: _buildExpansionChildren(
-                      context,
-                      walletListBloc,
-                      state,
-                      wlMenu,
-                    ),
-                  ),
+                  child: wlMenu.hasValidPassword
+                      ? ExpansionTile(
+                          shape: const Border(),
+                          collapsedBackgroundColor: wlMenu.isSelected
+                              ? ProtonColors.drawerBackgroundHighlight
+                              : Colors.transparent,
+                          backgroundColor: wlMenu.isSelected
+                              ? ProtonColors.drawerBackgroundHighlight
+                              : Colors.transparent,
+                          initiallyExpanded: wlMenu.hasValidPassword,
+                          leading: SvgPicture.asset(
+                            "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
+                            fit: BoxFit.fill,
+                            width: 18,
+                            height: 18,
+                          ),
+                          title: Transform.translate(
+                            offset: const Offset(-8, 0),
+                            // Build title
+                            child: _buildTitle(
+                              context,
+                              walletListBloc,
+                              state,
+                              wlMenu,
+                            ),
+                          ),
+                          iconColor: ProtonColors.textHint,
+                          collapsedIconColor: ProtonColors.textHint,
+                          children: _buildExpansionChildren(
+                            context,
+                            walletListBloc,
+                            state,
+                            wlMenu,
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            updatePassphrase?.call(wlMenu);
+                          },
+                          child: ListTile(
+                            shape: const Border(),
+                            leading: SvgPicture.asset(
+                              "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
+                              fit: BoxFit.fill,
+                              width: 18,
+                              height: 18,
+                            ),
+                            title: Transform.translate(
+                              offset: const Offset(-8, 0),
+                              // Build title
+                              child: _buildTitle(
+                                context,
+                                walletListBloc,
+                                state,
+                                wlMenu,
+                              ),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                onDelete?.call(wlMenu, false, true);
+                              },
+                              child: Icon(Icons.delete_forever_rounded,
+                                  size: 24, color: ProtonColors.signalError),
+                            ),
+                            iconColor: ProtonColors.textHint,
+                          ),
+                        ),
                 ),
             ],
           );
@@ -152,51 +185,41 @@ class SidebarWalletItems extends StatelessWidget {
               updatePassphrase?.call(wlModel);
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: min(MediaQuery.of(context).size.width - 250,
-                          drawerMaxWidth - 180),
-                      child: Text(
-                        wlModel.walletName,
-                        style: FontManager.captionSemiBold(
-                          AvatarColorHelper.getTextColor(
-                              state.walletsModel.indexOf(wlModel)),
+                Row(children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: min(MediaQuery.of(context).size.width - 250,
+                            drawerMaxWidth - 180),
+                        child: Text(
+                          wlModel.walletName,
+                          style: FontManager.captionSemiBold(
+                            AvatarColorHelper.getTextColor(
+                                state.walletsModel.indexOf(wlModel)),
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      "${wlModel.accountSize} accounts",
-                      style: FontManager.captionRegular(ProtonColors.textHint),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Icon(
-                    Icons.info_outline_rounded,
-                    color: ProtonColors.signalError,
-                    size: 24,
+                      Text(
+                        "${wlModel.accountSize} accounts",
+                        style:
+                            FontManager.captionRegular(ProtonColors.textHint),
+                      ),
+                    ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Icon(
+                      Icons.lock_rounded,
+                      color: ProtonColors.signalSuccess,
+                      size: 22,
+                    ),
+                  ),
+                ]),
               ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              onDelete?.call(wlModel, false, true);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(
-                Icons.delete_outline_rounded,
-                color: ProtonColors.signalError,
-                size: 24,
-              ),
             ),
           ),
         ],
