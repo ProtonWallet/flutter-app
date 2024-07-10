@@ -39,7 +39,7 @@ class HomeModalBottomSheet {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         constraints: BoxConstraints(
-          maxWidth: 400,
+          maxWidth: maxDeskTopSheetWidth,
           maxHeight: MediaQuery.of(context).size.height,
           minHeight: MediaQuery.of(context).size.height,
         ),

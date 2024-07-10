@@ -106,6 +106,7 @@ class AppViewModelImpl extends AppViewModel {
 
     /// data provider manager
     var dataProviderManager = DataProviderManager(
+      apiEnv,
       storage,
       shared,
       apiServiceManager.getApiService(),

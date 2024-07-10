@@ -407,29 +407,28 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
     for (AddressKey addressKey in addressKeys) {
       try {
-        toEmail = toEmail.isNotEmpty
-            ? toEmail
-            : addressKey.decrypt(transactionModel!.tolist ?? "");
-        fromEmail = fromEmail.isNotEmpty
-            ? fromEmail
-            : addressKey.decrypt(transactionModel!.sender ?? "");
-        body = body.isNotEmpty
-            ? body
-            : addressKey.decrypt(transactionModel!.body ?? "");
-      } catch (e, stacktrace) {
-        logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
-        );
-      }
-      try {
-        toEmail = toEmail.isNotEmpty
-            ? toEmail
-            : addressKey.decryptBinary(transactionModel!.tolist ?? "");
-        fromEmail = fromEmail.isNotEmpty
-            ? fromEmail
-            : addressKey.decryptBinary(transactionModel!.sender ?? "");
-        if (toEmail.isNotEmpty) {
-          break;
+        /// Decrypt 'to' email if needed
+        if (toEmail.isEmpty) {
+          final encToList = transactionModel?.tolist;
+          if (encToList != null) {
+            toEmail = addressKey.decrypt(encToList);
+          }
+        }
+
+        /// Decrypt 'from' email if needed
+        if (fromEmail.isEmpty) {
+          final encSender = transactionModel?.sender;
+          if (encSender != null) {
+            fromEmail = addressKey.decrypt(encSender);
+          }
+        }
+
+        /// Decrypt body if needed
+        if (body.isEmpty) {
+          final encBody = transactionModel?.body;
+          if (encBody != null) {
+            body = addressKey.decrypt(encBody);
+          }
         }
       } catch (e, stacktrace) {
         logger.e(

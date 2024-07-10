@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/flutter_logger.dart';
@@ -30,12 +34,48 @@ Future setupLogger() async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  LoggerService.initLogFile();
-  AppConfig.initAppEnv();
-  await RustLib.init();
-  setupLogger();
+  BindingBase.debugZoneErrorsAreFatal = true;
 
-  var app = AppCoordinator();
-  runApp(app.start());
+  /// This captures errors that occur in the Flutter framework
+  /// includes: Rendering Errors, Gesture Handling Errors, Build Method Errors,
+  ///   Async Errors in Flutter Widgets. in case scam our sentry.
+  /// we need monitor this and see if this is ok.
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    if (kDebugMode) {
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      // In release mode, report to Sentry
+      await Sentry.captureException(
+        details.exception,
+        stackTrace: details.stack,
+      );
+    }
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (kDebugMode) {
+      logger.e(
+        "PlatformDispatcher.instance.onError: ${error.toString()} stacktrace: ${stack.toString()}",
+      );
+    } else {
+      // In release mode, report to Sentry
+      Sentry.captureException(error, stackTrace: stack);
+    }
+    return true;
+  };
+
+  /// sentry init
+  await Sentry.init(
+      (options) => options
+        ..dsn =
+            'https://f430ab6a50234e50ab7fc57174de1cbc@sentry-new.protontech.ch/69'
+        ..environment = appConfig.apiEnv.toString(), appRunner: () async {
+    /// init everything in zone
+    WidgetsFlutterBinding.ensureInitialized();
+    LoggerService.initLogFile();
+    AppConfig.initAppEnv();
+    await RustLib.init();
+    setupLogger();
+    var app = AppCoordinator();
+    runApp(app.start());
+  });
 }

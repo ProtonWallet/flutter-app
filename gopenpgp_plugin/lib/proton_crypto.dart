@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:ffi';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-import 'package:proton_crypto/generated_golang_bindings.dart';
+import 'package:proton_crypto/exception.dart';
+import 'package:proton_crypto/extension.dart';
+import 'package:proton_crypto/library.dart';
 
 class VerifyCleartextMessagResult {
   var verified = false;
@@ -12,208 +13,402 @@ class VerifyCleartextMessagResult {
   VerifyCleartextMessagResult(this.verified, this.message);
 }
 
+// getBinarySignatureWithContext
 String getBinarySignatureWithContext(
-    String userPrivateKey, String passphrase, Uint8List data, String context) {
+  String userPrivateKey,
+  String passphrase,
+  Uint8List data,
+  String context,
+) {
   String result = "";
-  using((alloc) {
-    final Pointer<Uint8> pData = alloc(data.length);
-    pData.asTypedList(data.length).setAll(0, data);
-    result = (_bindings.getBinarySignatureWithContext(
-            userPrivateKey.toNativeUtf8() as Pointer<Char>,
-            passphrase.toNativeUtf8() as Pointer<Char>,
-            pData as Pointer<Char>,
-            data.length,
-            context.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-        .toDartString();
+  using((arena) {
+    final Pointer<Uint8> dataPtr = arena(data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final passphrasePtr = passphrase.toNativeChar(arena);
+    final contextPtr = context.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    var goResult = bindings.getBinarySignatureWithContext(
+      privateKeyPtr,
+      passphrasePtr,
+      dataPtr as Pointer<Char>,
+      data.length,
+      contextPtr,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
   });
   return result;
 }
 
+// verifyCleartextMessageArmored
 VerifyCleartextMessagResult verifyCleartextMessageArmored(
-    String userPublicKey, String signature) {
+  String userPublicKey,
+  String signature,
+) {
   VerifyCleartextMessagResult res = VerifyCleartextMessagResult(false, "");
-  using((alloc) {
-    verifyCleartextMessageArmored_return result =
-        _bindings.verifyCleartextMessageArmored(
-            userPublicKey.toNativeUtf8() as Pointer<Char>,
-            signature.toNativeUtf8() as Pointer<Char>);
-    res.message = (result.r0 as Pointer<Utf8>).toDartString();
-    res.verified = result.r1 == 1;
+  using((arena) {
+    final publicKeyPtr = userPublicKey.toNativeChar(arena);
+    final signaturePtr = signature.toNativeChar(arena);
+    var goResult = bindings.verifyCleartextMessageArmored(
+      publicKeyPtr,
+      signaturePtr,
+    );
+    res.message = goResult.r0.charToDartString();
+    res.verified = goResult.r1 == 1;
   });
   return res;
 }
 
+// verifyBinarySignatureWithContext
 bool verifyBinarySignatureWithContext(
-    String userPublicKey, Uint8List data, String signature, String context) {
+  String userPublicKey,
+  Uint8List data,
+  String signature,
+  String context,
+) {
   bool result = false;
-  using((alloc) {
-    final Pointer<Uint8> pData = alloc(data.length);
-    pData.asTypedList(data.length).setAll(0, data);
-    result = _bindings.verifyBinarySignatureWithContext(
-            userPublicKey.toNativeUtf8() as Pointer<Char>,
-            pData as Pointer<Char>,
-            data.length,
-            signature.toNativeUtf8() as Pointer<Char>,
-            context.toNativeUtf8() as Pointer<Char>) ==
-        1;
+  using((arena) {
+    final Pointer<Uint8> dataPtr = arena(data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+
+    final publicKeyPtr = userPublicKey.toNativeChar(arena);
+    final signaturePtr = signature.toNativeChar(arena);
+    final contextPtr = context.toNativeChar(arena);
+
+    var goResult = bindings.verifyBinarySignatureWithContext(
+      publicKeyPtr,
+      dataPtr as Pointer<Char>,
+      data.length,
+      signaturePtr,
+      contextPtr,
+    );
+    result = goResult == 1;
   });
   return result;
 }
 
+// getSignatureWithContext
 String getSignatureWithContext(
-    String userPrivateKey, String passphrase, String message, String context) {
-  return (_bindings.getSignatureWithContext(
-          userPrivateKey.toNativeUtf8() as Pointer<Char>,
-          passphrase.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>,
-          context.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+  String userPrivateKey,
+  String passphrase,
+  String message,
+  String context,
+) {
+  String result = "";
+  using((arena) {
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final passphrasePtr = passphrase.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final contextPtr = context.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+    var goResult = bindings.getSignatureWithContext(
+      privateKeyPtr,
+      passphrasePtr,
+      messagePtr,
+      contextPtr,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
+// verifySignatureWithContext
 bool verifySignatureWithContext(
-    String userPublicKey, String message, String signature, String context) {
-  return _bindings.verifySignatureWithContext(
-          userPublicKey.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>,
-          signature.toNativeUtf8() as Pointer<Char>,
-          context.toNativeUtf8() as Pointer<Char>) ==
-      1;
+  String userPublicKey,
+  String message,
+  String signature,
+  String context,
+) {
+  bool result = false;
+  using((arena) {
+    final publicKeyPtr = userPublicKey.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final signaturePtr = signature.toNativeChar(arena);
+    final contextPtr = context.toNativeChar(arena);
+
+    var goResult = bindings.verifySignatureWithContext(
+      publicKeyPtr,
+      messagePtr,
+      signaturePtr,
+      contextPtr,
+    );
+    result = goResult == 1;
+  });
+  return result;
 }
 
-String getSignature(String userPrivateKey, String passphrase, String message) {
-  return (_bindings.getSignature(
-          userPrivateKey.toNativeUtf8() as Pointer<Char>,
-          passphrase.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+// getSignature
+String getSignature(
+  String userPrivateKey,
+  String passphrase,
+  String message,
+) {
+  String result = "";
+  using((arena) {
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final passphrasePtr = passphrase.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+    var goResult = bindings.getSignature(
+      privateKeyPtr,
+      passphrasePtr,
+      messagePtr,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
-bool verifySignature(String userPublicKey, String message, String signature) {
-  return _bindings.verifySignature(
-          userPublicKey.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>,
-          signature.toNativeUtf8() as Pointer<Char>) ==
-      1;
+// verifySignature
+bool verifySignature(
+  String userPublicKey,
+  String message,
+  String signature,
+) {
+  bool result = false;
+  using((arena) {
+    final publicKeyPtr = userPublicKey.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final signaturePtr = signature.toNativeChar(arena);
+    var goResult = bindings.verifySignature(
+      publicKeyPtr,
+      messagePtr,
+      signaturePtr,
+    );
+    result = goResult == 1;
+  });
+  return result;
 }
 
+// getArmoredPublicKey
 String getArmoredPublicKey(String userPrivateKey) {
-  return (_bindings.getArmoredPublicKey(
-          userPrivateKey.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+  String result = "";
+  using((arena) {
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+    var goResult = bindings.getArmoredPublicKey(privateKeyPtr, errPtr);
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
+// encrypt
 String encrypt(String userPrivateKey, String message) {
-  return (_bindings.encrypt(userPrivateKey.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+  String result = "";
+  using((arena) {
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+    var goResult = bindings.encrypt(privateKeyPtr, messagePtr, errPtr);
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
+// encryptWithKeyRing
 String encryptWithKeyRing(String userPublicKeysSepInComma, String message) {
-  return (_bindings.encryptWithKeyRing(
-          userPublicKeysSepInComma.toNativeUtf8() as Pointer<Char>,
-          message.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+  String result = "";
+  using((arena) {
+    final publicKeysSepInCommaPtr =
+        userPublicKeysSepInComma.toNativeChar(arena);
+    final messagePtr = message.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    var goResult = bindings.encryptWithKeyRing(
+      publicKeysSepInCommaPtr,
+      messagePtr,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
-String decrypt(String userPrivateKey, String passphrase, String armor) {
-  return (_bindings.decrypt(
-          userPrivateKey.toNativeUtf8() as Pointer<Char>,
-          passphrase.toNativeUtf8() as Pointer<Char>,
-          armor.toNativeUtf8() as Pointer<Char>) as Pointer<Utf8>)
-      .toDartString();
+// decrypt
+String decrypt(
+  String userPrivateKey,
+  String passphrase,
+  String armor,
+) {
+  String result = "";
+  using((arena) {
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final passphrasePtr = passphrase.toNativeChar(arena);
+    final armorPtr = armor.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+    var goResult = bindings.decrypt(
+      privateKeyPtr,
+      passphrasePtr,
+      armorPtr,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
+  });
+  return result;
 }
 
+// decryptBinaryPGP
 Uint8List decryptBinaryPGP(
-    String userPrivateKey, String passphrase, String armor) {
+  String userPrivateKey,
+  String passphrase,
+  String armor,
+) {
   Uint8List unArmored = unArmor(armor);
   return decryptBinary(userPrivateKey, passphrase, unArmored);
 }
 
+// encryptBinary
 Uint8List encryptBinary(String userPrivateKey, Uint8List data) {
   Uint8List result = Uint8List(0);
-  using((alloc) {
-    final Pointer<Uint8> pData = alloc(data.length);
-    pData.asTypedList(data.length).setAll(0, data);
-    BinaryResult binaryResult = _bindings.encryptBinary(
-        userPrivateKey.toNativeUtf8() as Pointer<Char>,
-        pData as Pointer<Char>,
-        data.length);
-    result = pointerToUint8List(
-        binaryResult.data as Pointer<Uint8>, binaryResult.length);
+  using((arena) {
+    final Pointer<Uint8> dataPtr = arena(data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    var goResult = bindings.encryptBinary(
+      privateKeyPtr,
+      dataPtr as Pointer<Char>,
+      data.length,
+      errPtr,
+    );
+
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.data.charToUint8List(goResult.length);
+    }
   });
   return result;
 }
 
+// encryptBinaryArmor
 String encryptBinaryArmor(String userPrivateKey, Uint8List data) {
   String result = "";
-  using((alloc) {
-    final Pointer<Uint8> pData = alloc(data.length);
-    pData.asTypedList(data.length).setAll(0, data);
-    Pointer<Char> goResult = _bindings.encryptBinaryArmor(
-        userPrivateKey.toNativeUtf8() as Pointer<Char>,
-        pData as Pointer<Char>,
-        data.length);
-    result = String.fromCharCodes(pointerToUint8List(goResult as Pointer<Uint8>,
-        getPointerLength(goResult as Pointer<Uint8>)));
+  using((arena) {
+    final Pointer<Uint8> dataPtr = arena(data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    var goResult = bindings.encryptBinaryArmor(
+      privateKeyPtr,
+      dataPtr as Pointer<Char>,
+      data.length,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
   });
   return result;
 }
 
+// decryptBinary
 Uint8List decryptBinary(
   String userPrivateKey,
   String passphrase,
   Uint8List encryptedBinary,
 ) {
   Uint8List result = Uint8List(0);
-  using((alloc) {
-    final Pointer<Uint8> pEncryptedBinary = alloc(encryptedBinary.length);
-    pEncryptedBinary
-        .asTypedList(encryptedBinary.length)
-        .setAll(0, encryptedBinary);
-    BinaryResult binaryResult = _bindings.decryptBinary(
-        userPrivateKey.toNativeUtf8() as Pointer<Char>,
-        passphrase.toNativeUtf8() as Pointer<Char>,
-        pEncryptedBinary as Pointer<Char>,
-        encryptedBinary.length);
-    result = pointerToUint8List(
-        binaryResult.data as Pointer<Uint8>, binaryResult.length);
+  using((arena) {
+    final Pointer<Uint8> dataPtr = arena(encryptedBinary.length);
+    dataPtr.asTypedList(encryptedBinary.length).setAll(0, encryptedBinary);
+
+    final privateKeyPtr = userPrivateKey.toNativeChar(arena);
+    final passphrasePtr = passphrase.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    var goResult = bindings.decryptBinary(
+      privateKeyPtr,
+      passphrasePtr,
+      dataPtr as Pointer<Char>,
+      encryptedBinary.length,
+      errPtr,
+    );
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.data.charToUint8List(goResult.length);
+    }
   });
   return result;
 }
 
+/// change private key password
 String changePrivateKeyPassword(
   String privateKey,
   String oldPassphrase,
   String newPassphrase,
 ) {
   String result = "";
-  using((alloc) {
-    Pointer<Char> goResult = _bindings.changePrivateKeyPassphrase(
-      privateKey.toNativeUtf8() as Pointer<Char>,
-      oldPassphrase.toNativeUtf8() as Pointer<Char>,
-      newPassphrase.toNativeUtf8() as Pointer<Char>,
+  using((arena) {
+    final privateKeyPtr = privateKey.toNativeChar(arena);
+    final oldPassphrasePtr = oldPassphrase.toNativeChar(arena);
+    final newPassphrasePtr = newPassphrase.toNativeChar(arena);
+    final Pointer<Pointer<Char>> errPtr = arena<Pointer<Char>>();
+
+    Pointer<Char> goResult = bindings.changePrivateKeyPassphrase(
+      privateKeyPtr,
+      oldPassphrasePtr,
+      newPassphrasePtr,
+      errPtr,
     );
-    result = String.fromCharCodes(pointerToUint8List(
-      goResult as Pointer<Uint8>,
-      getPointerLength(goResult as Pointer<Uint8>),
-    ));
+
+    if (errPtr.value != nullptr) {
+      final errorMessage = errPtr.value.charToDartString();
+      throw CryptoException.from(errorMessage);
+    } else {
+      result = goResult.charToDartString();
+    }
   });
   return result;
-}
-
-Uint8List pointerToUint8List(Pointer<Uint8> ptr, int length) {
-  List<int> intList = ptr.asTypedList(length);
-  return Uint8List.fromList(intList);
-}
-
-int getPointerLength(Pointer<Uint8> ptr) {
-  int length = 0;
-  // TODO:: fix me
-  // ignore: deprecated_member_use
-  while (ptr.elementAt(length).value != 0) {
-    length++;
-  }
-  return length;
 }
 
 Uint8List unArmor(String armoredMessage) {
@@ -245,40 +440,3 @@ Uint8List unArmor(String armoredMessage) {
   result = base64Decode(body);
   return result;
 }
-
-const String _libName = 'proton_crypto';
-
-/// The dynamic library in which the symbols for [NativeAddBindings] can be found.
-final DynamicLibrary _dylib = () {
-  if (Platform.isMacOS || Platform.isIOS) {
-    // this is workaround. Env or have a lib in build folder is better option.
-    //   we can fix it later
-    if (Platform.isMacOS) {
-      if (Platform.environment.containsKey('FLUTTER_TEST')) {
-        return DynamicLibrary.open(
-            '${Directory.current.path}/macos/libproton_crypto.dylib');
-      }
-    }
-    return DynamicLibrary.open('$_libName.framework/$_libName');
-  }
-  if (Platform.isAndroid) {
-    return DynamicLibrary.open('libproton_crypto.so');
-  }
-  if (Platform.isLinux) {
-    if (Platform.environment.containsKey('FLUTTER_TEST')) {
-      return DynamicLibrary.open(
-          '${Directory.current.path}/linux/shared/libproton_crypto.so');
-    }
-    return DynamicLibrary.open('proton_crypto.so');
-  }
-  if (Platform.isWindows) {
-    if (Platform.environment.containsKey('FLUTTER_TEST')) {
-      return DynamicLibrary.open('windows/shared/$_libName.dll');
-    }
-    return DynamicLibrary.open('$_libName.dll');
-  }
-  throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-}();
-
-/// The bindings to the native functions in [_dylib].
-final NativeLibrary _bindings = NativeLibrary(_dylib);

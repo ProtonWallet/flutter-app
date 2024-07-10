@@ -77,7 +77,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   String get userID => userInfo.userId;
 
   Future<void> firstRun() async {
-    await shared.checkif('firstTimeEntry', false, () async {
+    await shared.isFirstTimeEntry(() async {
       await storage.deleteAll();
     });
     // shared.checkAndRunLogic()

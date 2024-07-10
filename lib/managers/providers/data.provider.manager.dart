@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
@@ -15,6 +17,7 @@ import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -119,6 +122,7 @@ class DataProviderManager extends Manager {
   final ProtonApiService apiService;
   final AppDatabase dbConnection;
   final UserManager userManager;
+  final ApiEnv apiEnv;
 
   late UserDataProvider userDataProvider;
   late WalletsDataProvider walletDataProvider;
@@ -135,8 +139,10 @@ class DataProviderManager extends Manager {
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
+  late UnleashDataProvider unleashDataProvider;
 
   DataProviderManager(
+    this.apiEnv,
     this.storage,
     this.shared,
     this.apiService,
@@ -227,6 +233,16 @@ class DataProviderManager extends Manager {
       apiService.getBlockClient(),
     );
 
+    var userAgent = UserAgent();
+    var uid = userManager.userInfo.sessionId;
+    var accessToken = userManager.userInfo.accessToken;
+    unleashDataProvider = UnleashDataProvider(
+      apiEnv,
+      await userAgent.appVersion,
+      await userAgent.ua,
+      uid,
+      accessToken,
+    );
     // TODO:: fix this
     WalletManager.walletKeysProvider = walletKeysProvider;
     WalletManager.walletPassphraseProvider = walletPassphraseProvider;
@@ -252,5 +268,6 @@ class DataProviderManager extends Manager {
     await walletPassphraseProvider.clear();
     await walletKeysProvider.clear();
     await contactsDataProvider.clear();
+    await unleashDataProvider.clear();
   }
 }

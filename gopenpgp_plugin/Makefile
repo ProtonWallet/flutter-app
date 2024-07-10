@@ -213,14 +213,34 @@ macos: ## Build macos release
 		-library ${BUILD_DIR}/${LIB_NAME}.a \
 		-headers ${BUILD_DIR}/${LIB_NAME}.h > /dev/null
 
-# @echo "Install macos lib name"
-# @install_name_tool -id "@rpath/libproton_crypto.dylib" ${BUILD_DIR}/${LIB_NAME}.dylib
 	@rm -rf macos/${LIB_NAME}.xcframework
 	@mv -f ${BUILD_DIR}/${LIB_NAME}.xcframework ./macos/${LIB_NAME}.xcframework
 	@rm ${BUILD_DIR}/${LIB_NAME}.a
 	@rm ${BUILD_DIR}/${LIB_NAME}.h
 	@echo "Building macos ${BUILD_DIR}/${LIB_NAME}.xcframework ... Done"
 	
+.PHONY: macos-shared
+macos-shared: ## Build macos shared release:
+	@CGO_ENABLED=1 \
+		GOOS=darwin \
+		GOARCH=arm64 \
+		SDK=macosx \
+		go build -C ./src -trimpath -buildmode=c-shared -o  ${BUILD_DIR}/${LIB_NAME}_arm64.dylib .
+	@CGO_ENABLED=1 \
+		GOOS=darwin \
+		GOARCH=amd64 \
+		SDK=macosx \
+		go build -C ./src -trimpath -buildmode=c-shared -o ${BUILD_DIR}/${LIB_NAME}_amd64.dylib .
+	@lipo -create \
+		${BUILD_DIR}/${LIB_NAME}_arm64.dylib \
+		${BUILD_DIR}/${LIB_NAME}_amd64.dylib \
+		-output ${BUILD_DIR}/${LIB_NAME}.dylib
+	@install_name_tool -id "@rpath/libproton_crypto.dylib" ${BUILD_DIR}/${LIB_NAME}.dylib
+	@mv -f ${BUILD_DIR}/${LIB_NAME}.dylib macos/libs/${LIB_NAME}.dylib
+	@rm ${BUILD_DIR}/${LIB_NAME}_*.dylib
+	@mv -f ${BUILD_DIR}/${LIB_NAME}_amd64.h src/${LIB_NAME}.h
+	@rm ${BUILD_DIR}/${LIB_NAME}_*.h
+
 
 .PHONY: windows
 windows: ## Build windows release
