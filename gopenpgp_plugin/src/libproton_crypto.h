@@ -84,14 +84,14 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern char* encryptWithKeyRing(char* userPublicKeysSepInComma, char* message);
-extern char* getArmoredPublicKey(char* userPrivateKey);
-extern char* encrypt(char* userPrivateKey, char* message);
-extern char* getSignatureWithContext(char* userPrivateKey, char* passphrase, char* message, char* context);
+extern char* encryptWithKeyRing(char* userPublicKeysSepInComma, char* message, char** outError);
+extern char* getArmoredPublicKey(char* userPrivateKey, char** outError);
+extern char* encrypt(char* userPrivateKey, char* message, char** outError);
+extern char* getSignatureWithContext(char* userPrivateKey, char* passphrase, char* message, char* context, char** outError);
 extern int verifySignatureWithContext(char* userPublicKey, char* message, char* signature, char* context);
-extern char* getBinarySignatureWithContext(char* userPrivateKey, char* passphrase, char* binaryMessage, int length, char* context);
+extern char* getBinarySignatureWithContext(char* userPrivateKey, char* passphrase, char* binaryMessage, int length, char* context, char** outError);
 extern int verifyBinarySignatureWithContext(char* userPublicKey, char* binaryMessage, int length, char* signature, char* context);
-extern char* getSignature(char* userPrivateKey, char* passphrase, char* message);
+extern char* getSignature(char* userPrivateKey, char* passphrase, char* message, char** outError);
 extern int verifySignature(char* userPublicKey, char* message, char* signature);
 
 /* Return type for verifyCleartextMessageArmored */
@@ -100,12 +100,12 @@ struct verifyCleartextMessageArmored_return {
 	int r1;
 };
 extern struct verifyCleartextMessageArmored_return verifyCleartextMessageArmored(char* userPublicKey, char* armoredSignature);
-extern char* decrypt(char* userPrivateKey, char* passphrase, char* armor);
-extern struct BinaryResult encryptBinary(char* userPrivateKey, char* binaryMessage, int length);
-extern char* encryptBinaryArmor(char* userPrivateKey, char* binaryMessage, int length);
-extern struct BinaryResult decryptBinary(char* userPrivateKey, char* passphrase, char* encryptedBinary, int length);
+extern char* decrypt(char* userPrivateKey, char* passphrase, char* armor, char** outError);
+extern struct BinaryResult encryptBinary(char* userPrivateKey, char* binaryMessage, int length, char** outError);
+extern char* encryptBinaryArmor(char* userPrivateKey, char* binaryMessage, int length, char** outError);
+extern struct BinaryResult decryptBinary(char* userPrivateKey, char* passphrase, char* encryptedBinary, int length, char** outError);
 extern void enforce_binding();
-extern char* changePrivateKeyPassphrase(char* privateKey, char* oldPassphrase, char* newPassphrase);
+extern char* changePrivateKeyPassphrase(char* privateKey, char* oldPassphrase, char* newPassphrase, char** outError);
 
 #ifdef __cplusplus
 }

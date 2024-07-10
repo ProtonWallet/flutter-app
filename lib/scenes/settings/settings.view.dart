@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/helper/url.external.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -11,7 +13,9 @@ import 'package:wallet/scenes/settings/settings.info.dart';
 import 'package:wallet/scenes/settings/settings.item.dart';
 import 'package:wallet/scenes/settings/settings.viewmodel.dart';
 
-class SettingsView extends ViewBase<SettingsViewModel> {
+part 'settings.view.debug.dart';
+
+class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
   const SettingsView(SettingsViewModel viewModel)
       : super(viewModel, const Key("SettingsView"));
 
@@ -177,6 +181,11 @@ class SettingsView extends ViewBase<SettingsViewModel> {
 
           ///
           const SizedBox(height: 24),
+
+          /// Debug tools -- code will the Tree shaking in production
+          if (kDebugMode) ...[
+            buildDebugSection(),
+          ]
         ],
       ),
     );

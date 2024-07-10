@@ -21,6 +21,7 @@ class UserAgent {
 
   String? _cachedAppVersion;
   String? _cachedDisplay;
+  String? _cachedSentryRelease;
 
   Future<String> get ua async {
     if (_cachedUA == null) {
@@ -46,10 +47,28 @@ class UserAgent {
     }
   }
 
+  /// Sentry inital release string
+  Future<String> get sentryRelease async {
+    if (_cachedSentryRelease == null) {
+      return await _computeSentryRelease();
+    } else {
+      return _cachedSentryRelease!;
+    }
+  }
+
+  /// format: android-wallet@2.3.12+12
+  Future<String> _computeSentryRelease() async {
+    final info = await packageInfo;
+    final version = info.version;
+    final build = info.buildNumber;
+    String platformName = _getPlatformName();
+    return "$platformName-wallet@$version+$build";
+  }
+
   ///
   Future<String> _computeDisplay() async {
     final info = await packageInfo;
-    final name = info.appName;
+    final name = info.appName.replaceAll(' ', '');
     final version = info.version;
     final build = info.buildNumber;
     var suffix = "";
@@ -63,6 +82,15 @@ class UserAgent {
   Future<String> _computeAppVersion() async {
     final info = await packageInfo;
     final version = info.version;
+    String platformName = _getPlatformName();
+    var suffix = "";
+    if (kDebugMode) {
+      suffix = "-dev";
+    }
+    return "$platformName-wallet@$version$suffix";
+  }
+
+  String _getPlatformName() {
     String platformName = "ios";
     final TargetPlatform platform = defaultTargetPlatform;
     if (kIsWeb) {
@@ -81,12 +109,7 @@ class UserAgent {
     } else if (platform == TargetPlatform.windows) {
       platformName = "windows";
     }
-
-    var suffix = "";
-    if (kDebugMode) {
-      suffix = "-dev";
-    }
-    return "$platformName-wallet@$version$suffix";
+    return platformName;
   }
 
   Future<String> _computeUA() async {
