@@ -4,6 +4,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -18,6 +19,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -120,6 +122,9 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         });
         await changeAccount(accountModel!);
       }
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }

@@ -12,9 +12,9 @@ part 'errors.freezed.dart';
 sealed class BridgeError with _$BridgeError implements FrbException {
   const BridgeError._();
 
-  const factory BridgeError.andromedaApi(
+  const factory BridgeError.apiLock(
     String field0,
-  ) = BridgeError_AndromedaApi;
+  ) = BridgeError_ApiLock;
 
   /// Generic error
   const factory BridgeError.generic(
@@ -48,11 +48,35 @@ sealed class BridgeError with _$BridgeError implements FrbException {
 
   /// Andromeda api response error
   const factory BridgeError.apiResponse(
-    String field0,
+    ResponseError field0,
   ) = BridgeError_ApiResponse;
 
   /// srp errors
   const factory BridgeError.apiSrp(
     String field0,
   ) = BridgeError_ApiSrp;
+}
+
+class ResponseError {
+  final int code;
+  final String error;
+  final String details;
+
+  const ResponseError({
+    required this.code,
+    required this.error,
+    required this.details,
+  });
+
+  @override
+  int get hashCode => code.hashCode ^ error.hashCode ^ details.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResponseError &&
+          runtimeType == other.runtimeType &&
+          code == other.code &&
+          error == other.error &&
+          details == other.details;
 }

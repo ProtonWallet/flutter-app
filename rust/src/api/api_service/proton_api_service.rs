@@ -105,40 +105,37 @@ impl ProtonAPIService {
         })
     }
 
-    pub async fn update_auth(
+    pub fn update_auth(
         &mut self,
         uid: String,
         access: String,
         refresh: String,
         scopes: Vec<String>,
-    ) {
+    ) -> Result<(), BridgeError> {
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
         info!("update_auth api service --- loggin");
-        let mut old_auth = self.store.inner.auth.lock().unwrap();
+        let mut old_auth = self.store.inner.auth.lock()?;
         *old_auth = auth;
         info!("auth data is updated");
+        Ok(())
     }
 
-    pub fn set_proton_api(&mut self) {
-        set_proton_api(Arc::new(self.clone()));
+    pub fn set_proton_api(&mut self) -> Result<(), BridgeError> {
+        set_proton_api(Arc::new(self.clone()))
     }
 
-    pub async fn logout(&mut self) {
+    pub async fn logout(&mut self) -> Result<(), BridgeError> {
         // self.store.clone().logout().await;
         info!("logout api service is loggin out");
-        let mut old_auth = self.store.inner.auth.lock().unwrap();
+        let mut old_auth = self.store.inner.auth.lock()?;
         *old_auth = Auth::None;
         info!("reset auth data");
-        logout();
+        logout()
     }
 
     /// clients
     pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, BridgeError> {
-        let result = self.inner.clients().wallet.get_wallets().await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        Ok(self.inner.clients().wallet.get_wallets().await?)
     }
 
     #[frb(sync)]
@@ -244,7 +241,7 @@ mod test {
                 refresh_token.to_string(),
                 vec!["wallet".to_string(), "account".to_string()],
             )
-            .await;
+            .unwrap();
         let settings_client = client.get_settings_client();
         let res = settings_client.get_user_settings().await.unwrap();
 

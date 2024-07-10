@@ -41,8 +41,8 @@ abstract class Service<T> {
         await onUpdate().then((value) {
           _dataController.sinkAddSafe(value);
         });
-      } catch (e) {
-        logger.e('Service $runtimeType runTask: $e');
+      } catch (e, statcktrace) {
+        logger.e('Service $runtimeType runTask: $e statcktrac: $statcktrace');
       }
 
       await Future.delayed(duration);

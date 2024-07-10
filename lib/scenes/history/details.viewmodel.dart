@@ -9,6 +9,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -29,6 +30,7 @@ import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
@@ -298,7 +300,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       }
     }
-
     logger.i("transactionModel == null ? ${transactionModel == null}");
     if (transactionModel == null && secretKey != null) {
       String hashedTransactionID = await WalletKeyHelper.getHmacHashedString(
@@ -349,35 +350,42 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             subject: walletTransaction.subject,
             body: walletTransaction.body);
         await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
+      } on BridgeError catch (e, stacktrace) {
+        logger.e(
+          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        );
+        // parse the server error code
+        var responseError = parseResponseError(e);
+        if (responseError != null) {
+          if (responseError.code == 2011) {
+            if (transactionModel == null) {
+              /// this will only happend when user open web app and mobile app in same time (race condition)
+              /// need to reload wallet transactions from server
+              /// throw exceptions if it's still happening
+              await serverTransactionDataProvider.reloadAccountTransactions(
+                walletID,
+                accountID,
+              );
+              serverTrans =
+                  await serverTransactionDataProvider.getTransByAccountID(
+                walletID,
+                accountID,
+              );
+              transactionModel = await findServerTransactionByTxID(
+                firstUserKey,
+                serverTrans,
+                txID,
+              );
+              if (transactionModel == null) {
+                rethrow;
+              }
+            }
+          }
+        }
       } catch (e, stacktrace) {
         logger.e(
           "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
         );
-        if (e.toString().contains("Hashed TransactionId is already used") ||
-            e.toString().contains("Code:2011")) {
-          if (transactionModel == null) {
-            /// this will only happend when user open web app and mobile app in same time (race condition)
-            /// need to reload wallet transactions from server
-            /// throw exceptions if it's still happening
-            await serverTransactionDataProvider.reloadAccountTransactions(
-              walletID,
-              accountID,
-            );
-            serverTrans =
-                await serverTransactionDataProvider.getTransByAccountID(
-              walletID,
-              accountID,
-            );
-            transactionModel = await findServerTransactionByTxID(
-              firstUserKey,
-              serverTrans,
-              txID,
-            );
-            if (transactionModel == null) {
-              rethrow;
-            }
-          }
-        }
       }
     }
     if (secretKey != null) {
