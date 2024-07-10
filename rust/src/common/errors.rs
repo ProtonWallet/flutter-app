@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::{error::Error, fmt, sync::PoisonError};
 
 // errors.rs
 use andromeda_api::error::Error as AndromedaApiError;
@@ -6,8 +6,8 @@ use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum BridgeError {
-    #[error("An error occurred in andromeda api: {0}")]
-    AndromedaApi(String),
+    #[error("Error when reading PROTON_API")]
+    ApiLock(String),
 
     /// Generic error
     #[error("An generic error occurred: {0}")]
@@ -34,12 +34,19 @@ pub enum BridgeError {
     AndromedaBitcoin(String),
 
     /// Andromeda api response error
-    #[error("An error occurred in andromeda bitcoin: {0}")]
-    ApiResponse(String),
+    #[error("An error occurred in andromeda api response: {0}")]
+    ApiResponse(ResponseError),
 
     /// srp errors
     #[error("An error occurred in api srp: {0}")]
     ApiSrp(String),
+}
+
+/// rclock mutex lock error
+impl<T> From<PoisonError<T>> for BridgeError {
+    fn from(_: PoisonError<T>) -> Self {
+        BridgeError::ApiLock("Proton api service read error, please try to restart app".to_string())
+    }
 }
 
 impl From<String> for BridgeError {
@@ -75,18 +82,43 @@ impl From<proton_srp::MailboxHashError> for BridgeError {
     }
 }
 
-impl From<AndromedaBitcoinError> for BridgeError {
-    fn from(value: AndromedaBitcoinError) -> Self {
-        BridgeError::AndromedaBitcoin(format!(
-            "AndromedaBitcoinError occurred: {:?}",
-            value.source()
-        ))
-    }
-}
-
 impl From<proton_srp::SRPError> for BridgeError {
     fn from(value: proton_srp::SRPError) -> Self {
         BridgeError::Generic(format!("SRPError occurred: {:?}", value.source()))
+    }
+}
+
+impl From<AndromedaBitcoinError> for BridgeError {
+    fn from(error: AndromedaBitcoinError) -> Self {
+        if let Some(inner_error) = find_error_type::<AndromedaApiError>(&error) {
+            if let AndromedaApiError::ErrorCode(error) = inner_error {
+                return BridgeError::ApiResponse(error.into());
+            }
+            if let AndromedaApiError::AuthSession(kind) = inner_error {
+                return BridgeError::MuonAuthSession(format!(
+                    "AuthSession: A muon {kind} error was caused by a non-existent auth session"
+                ));
+            }
+            if let AndromedaApiError::AuthRefresh(kind) = inner_error {
+                return BridgeError::MuonAuthSession(format!(
+                    "AuthSession: A muon {kind} error was caused by a non-existent auth session"
+                ));
+            }
+            if let AndromedaApiError::MuonError(me) = inner_error {
+                return BridgeError::MuonClient(format!(
+                    "MuonError: {me} (caused by: {source:?})",
+                    source = me.source(),
+                ));
+            }
+            if let AndromedaApiError::ErrorCode(error) = inner_error {
+                return BridgeError::ApiResponse(error.into());
+            }
+        }
+
+        BridgeError::AndromedaBitcoin(format!(
+            "AndromedaBitcoinError occurred: {:?}",
+            error.source()
+        ))
     }
 }
 
@@ -116,10 +148,7 @@ impl From<AndromedaApiError> for BridgeError {
                 hde.source()
             )),
             AndromedaApiError::Http => BridgeError::Generic("HTTP error occurred".to_string()),
-            AndromedaApiError::ErrorCode(error) => BridgeError::ApiResponse(format!(
-                "Response Code:{}\nError: {}\nDetails:{}",
-                error.Code, error.Error, error.Details
-            )),
+            AndromedaApiError::ErrorCode(error) => BridgeError::ApiResponse(error.into()),
             AndromedaApiError::Deserialize(err) => BridgeError::Generic(err),
             AndromedaApiError::MuonAppVersion(err) => BridgeError::MuonSession(format!(
                 "Muon MuonAppVersion occurred: {:?}",
@@ -131,4 +160,58 @@ impl From<AndromedaApiError> for BridgeError {
             )),
         }
     }
+}
+
+// #[derive(Debug)]
+// pub struct MuonStatusError {
+//     pub http_code: u16,
+//     pub error: String,
+//     pub details: String,
+// }
+
+#[derive(Debug)]
+pub struct ResponseError {
+    pub code: u16,
+    pub error: String,
+    pub details: String,
+}
+impl fmt::Display for ResponseError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "ResponseError:\n  Code: {}\n  Error: {}\n  Details: {}",
+            self.code, self.error, self.details
+        )
+    }
+}
+
+impl From<andromeda_api::error::ResponseError> for ResponseError {
+    fn from(value: andromeda_api::error::ResponseError) -> Self {
+        ResponseError {
+            code: value.Code,
+            error: value.Error,
+            details: value.Details.to_string(),
+        }
+    }
+}
+
+impl From<&andromeda_api::error::ResponseError> for ResponseError {
+    fn from(value: &andromeda_api::error::ResponseError) -> Self {
+        ResponseError {
+            code: value.Code,
+            error: value.Error.clone(),
+            details: value.Details.to_string(),
+        }
+    }
+}
+
+fn find_error_type<T: 'static + Error>(error: &dyn Error) -> Option<&T> {
+    let mut current_error = error;
+    while let Some(source) = current_error.source() {
+        if let Some(specific_error) = source.downcast_ref::<T>() {
+            return Some(specific_error);
+        }
+        current_error = source;
+    }
+    None
 }

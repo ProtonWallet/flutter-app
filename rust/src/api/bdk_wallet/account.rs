@@ -76,9 +76,17 @@ impl FrbAccount {
         Ok(address.into())
     }
 
+    #[deprecated(
+        note = "this fn returns next unused spk after of last unused. please use `get_index_after_last_used_address` instead"
+    )]
     pub async fn get_last_unused_address_index(&self) -> Option<u32> {
         let account_inner = self.get_inner();
         account_inner.get_last_unused_address_index().await
+    }
+
+    pub async fn get_index_after_last_used_address(&self) -> u32 {
+        let account_inner = self.get_inner();
+        account_inner.get_index_after_last_used_address().await
     }
 
     pub async fn get_bitcoin_uri(

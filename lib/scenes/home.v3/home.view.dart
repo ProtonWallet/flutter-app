@@ -8,6 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/custom.expansion.dart';
 import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
@@ -775,20 +778,20 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   child: Text(S.of(context).recovery,
                                       style: FontManager.body2Median(
                                           ProtonColors.textHint)))),
-                          ListTile(
-                              onTap: () {
-                                viewModel.move(NavID.natvieReportBugs);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-bugreport.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).report_a_problem,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
+                          // ListTile(
+                          //     onTap: () {
+                          //       viewModel.move(NavID.natvieReportBugs);
+                          //     },
+                          //     leading: SvgPicture.asset(
+                          //         "assets/images/icon/ic-bugreport.svg",
+                          //         fit: BoxFit.fill,
+                          //         width: 20,
+                          //         height: 20),
+                          //     title: Transform.translate(
+                          //         offset: const Offset(-8, 0),
+                          //         child: Text(S.of(context).report_a_problem,
+                          //             style: FontManager.body2Median(
+                          //                 ProtonColors.textHint)))),
                           ListTile(
                               onTap: () async {
                                 await viewModel.logout();
@@ -848,6 +851,10 @@ Widget showUpdateWalletPassphraseDialog(
             await viewModel.updatePassphrase(
                 walletModel.walletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
+          } on BridgeError catch (e, stacktrace) {
+            // TODO:: fix me
+            viewModel.errorMessage = parseSampleDisplayError(e);
+            logger.e("importWallet error: $e, stacktrace: $stacktrace");
           } catch (e) {
             viewModel.errorMessage = e.toString();
           }

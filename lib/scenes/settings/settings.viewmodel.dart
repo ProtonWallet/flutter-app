@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -16,10 +17,12 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
 
 class SettingsViewModelImpl extends SettingsViewModel {
   final UserManager userManager;
+  final NativeViewChannel nativeViewChannel;
 
   SettingsViewModelImpl(
     super.coordinator,
     this.userManager,
+    this.nativeViewChannel,
   );
 
   bool hadLocallogin = false;
@@ -46,6 +49,11 @@ class SettingsViewModelImpl extends SettingsViewModel {
   @override
   Future<void> move(NavID to) async {
     switch (to) {
+      case NavID.natvieReportBugs:
+        nativeViewChannel.nativeReportBugs();
+        break;
+      case NavID.logs:
+        coordinator.showLogs();
       default:
         break;
     }

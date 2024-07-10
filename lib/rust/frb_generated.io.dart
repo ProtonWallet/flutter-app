@@ -971,6 +971,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  ResponseError dco_decode_box_autoadd_response_error(dynamic raw);
+
+  @protected
   SortOrder dco_decode_box_autoadd_sort_order(dynamic raw);
 
   @protected
@@ -1358,6 +1361,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, double) dco_decode_record_string_f_64(dynamic raw);
+
+  @protected
+  ResponseError dco_decode_response_error(dynamic raw);
 
   @protected
   ScriptType dco_decode_script_type(dynamic raw);
@@ -2182,6 +2188,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ResponseError sse_decode_box_autoadd_response_error(
+      SseDeserializer deserializer);
+
+  @protected
   SortOrder sse_decode_box_autoadd_sort_order(SseDeserializer deserializer);
 
   @protected
@@ -2619,6 +2629,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, double) sse_decode_record_string_f_64(SseDeserializer deserializer);
+
+  @protected
+  ResponseError sse_decode_response_error(SseDeserializer deserializer);
 
   @protected
   ScriptType sse_decode_script_type(SseDeserializer deserializer);
@@ -3459,6 +3472,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ProtonSrpClientProofs self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_response_error(
+      ResponseError self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_sort_order(
       SortOrder self, SseSerializer serializer);
 
@@ -3905,6 +3922,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_record_string_f_64(
       (String, double) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_response_error(ResponseError self, SseSerializer serializer);
 
   @protected
   void sse_encode_script_type(ScriptType self, SseSerializer serializer);

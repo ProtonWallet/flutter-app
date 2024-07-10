@@ -31,6 +31,7 @@ Future setupLogger() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  LoggerService.initLogFile();
   AppConfig.initAppEnv();
   await RustLib.init();
   setupLogger();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
@@ -148,6 +149,7 @@ class HomeCoordinator extends Coordinator {
     var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     var dataProviderManager = serviceManager.get<DataProviderManager>();
     var channelManager = serviceManager.get<PlatformChannelManager>();
+    var appStateManager = serviceManager.get<AppStateManager>();
 
     var walletBloc = WalletListBloc(
       dataProviderManager.walletDataProvider,
@@ -197,6 +199,7 @@ class HomeCoordinator extends Coordinator {
 
       ///
       channelManager,
+      appStateManager,
     );
     widget = HomeView(
       viewModel,

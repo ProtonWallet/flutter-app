@@ -34,8 +34,6 @@ class AppConfig {
       appConfig = appConfigForPayments;
     } else if (environment == 'atlas') {
       appConfig = appConfigForTestNet;
-    } else {
-      appConfig = appConfigForProduction;
     }
   }
 }

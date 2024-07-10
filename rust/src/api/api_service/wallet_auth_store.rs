@@ -80,12 +80,14 @@ impl ProtonWalletAuthStore {
         Ok(())
     }
 
-    pub async fn logout(&mut self) {
+    pub async fn logout(&mut self) -> Result<(), BridgeError> {
         info!("logout");
         let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
         *cb = None;
-        let mut old_auth = self.inner.auth.lock().unwrap();
+        let mut old_auth = self.inner.auth.lock()?;
         *old_auth = Auth::None;
+
+        Ok(())
     }
 
     fn refresh_auth_credential(&self, auth: Auth) {
