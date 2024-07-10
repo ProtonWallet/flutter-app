@@ -6,6 +6,11 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
+import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -252,6 +257,7 @@ class HomeViewModelImpl extends HomeViewModel {
     super.walletBalanceBloc,
     super.createWalletBloc,
     this.channel,
+    this.appStateManager,
   );
 
   // user manager
@@ -269,6 +275,10 @@ class HomeViewModelImpl extends HomeViewModel {
   /// native channel
   final NativeViewChannel channel;
 
+  /// app state
+  final AppStateManager appStateManager;
+  StreamSubscription? appStateSubscription;
+
   ///
   final datasourceChangedStreamController =
       StreamController<HomeViewModel>.broadcast();
@@ -284,6 +294,7 @@ class HomeViewModelImpl extends HomeViewModel {
     selectedSectionChangedController.close();
     //clean up wallet ....
     disposeServices();
+    appStateSubscription?.cancel();
     super.dispose();
   }
 
@@ -337,7 +348,15 @@ class HomeViewModelImpl extends HomeViewModel {
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);
-    // build up the data provider. providers are used after login.
+
+    // app state
+    appStateSubscription = appStateManager.stream.listen((state) {
+      if (state is AppSessionFailed) {
+        showLogoutErrorDialog(errorMessage, () {
+          logout();
+        });
+      }
+    });
 
     // ----------------
     // settings
@@ -402,6 +421,9 @@ class HomeViewModelImpl extends HomeViewModel {
       eventLoop.start();
 
       checkPreference();
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -542,6 +564,9 @@ class HomeViewModelImpl extends HomeViewModel {
       await proton_api.updateWalletName(
           walletId: walletModel.walletID, newName: encryptedName);
       walletListBloc.updateWalletName(walletModel, newName);
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -566,6 +591,9 @@ class HomeViewModelImpl extends HomeViewModel {
       accountModel.labelDecrypt = newName;
       await DBHelper.accountDao!.update(accountModel);
       walletListBloc.updateAccountName(walletModel, accountModel, newName);
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -587,6 +615,9 @@ class HomeViewModelImpl extends HomeViewModel {
             walletAccountId: accountModel.accountID);
         await dataProviderManager.walletDataProvider
             .deleteWalletAccount(accountModel: accountModel);
+      } on BridgeError catch (e, stacktrace) {
+        errorMessage = parseSampleDisplayError(e);
+        logger.e("importWallet error: $e, stacktrace: $stacktrace");
       } catch (e) {
         errorMessage = e.toString();
       }
@@ -670,6 +701,9 @@ class HomeViewModelImpl extends HomeViewModel {
         walletListBloc.removeEmailIntegration(
             walletModel, accountModel, serverAddressID);
       }
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -698,6 +732,9 @@ class HomeViewModelImpl extends HomeViewModel {
       await DBHelper.reset();
       await Future.delayed(
           const Duration(seconds: 3)); // TODO:: fix await for DBHelper.reset();
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -718,6 +755,9 @@ class HomeViewModelImpl extends HomeViewModel {
       await proton_api.deleteWallet(walletId: walletModel.walletID);
       await dataProviderManager.walletDataProvider
           .deleteWallet(wallet: walletModel);
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -838,6 +878,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
       // await dataProviderManager.walletDataProvider.createWalletAccount(
       //     walletID, scriptType, label, fiatCurrencyNotifier.value);
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -874,6 +917,9 @@ class HomeViewModelImpl extends HomeViewModel {
         accountModel,
         serverAddressID,
       );
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -998,6 +1044,14 @@ class HomeViewModelImpl extends HomeViewModel {
       await Future.delayed(
         const Duration(seconds: 1),
       ); // wait for account show on sidebar
+    } on BridgeError catch (e, stacktrace) {
+      var msg = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      CommonHelper.showSnackbar(
+        Coordinator.rootNavigatorKey.currentContext!,
+        msg,
+        isError: true,
+      );
     } catch (e) {
       CommonHelper.showSnackbar(
         Coordinator.rootNavigatorKey.currentContext!,

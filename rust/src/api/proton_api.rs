@@ -23,25 +23,45 @@ lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);
 }
 
-pub(crate) fn retrieve_proton_api() -> Arc<ProtonAPIService> {
-    PROTON_API.read().unwrap().clone().unwrap()
+pub(crate) fn retrieve_proton_api() -> Result<Arc<ProtonAPIService>, BridgeError> {
+    let read_guard = PROTON_API.read()?;
+    read_guard.clone().ok_or(BridgeError::ApiLock(
+        "PROTON_API api is not set".to_string(),
+    ))
 }
 
-pub(crate) fn set_proton_api(inner: Arc<ProtonAPIService>) {
+pub(crate) fn set_proton_api(inner: Arc<ProtonAPIService>) -> Result<(), BridgeError> {
     info!("set_proton_api is called");
-    let mut api_ref = PROTON_API.write().unwrap();
-    *api_ref = Some(inner.clone());
+    let mut api_ref = PROTON_API.write()?;
+    *api_ref = Some(inner);
+    Ok(())
 }
 
-pub(crate) fn logout() {
-    let mut api_ref = PROTON_API.write().unwrap();
+pub(crate) fn logout() -> Result<(), BridgeError> {
+    let mut api_ref = PROTON_API.write()?;
     *api_ref = None;
+    Ok(())
 }
+
+// pub(crate) fn retrieve_proton_api() -> Arc<ProtonAPIService> {
+//     PROTON_API.read().unwrap().clone().unwrap()
+// }
+
+// pub(crate) fn set_proton_api(inner: Arc<ProtonAPIService>) {
+//     info!("set_proton_api is called");
+//     let mut api_ref = PROTON_API.write().unwrap();
+//     *api_ref = Some(inner.clone());
+// }
+
+// pub(crate) fn logout() {
+//     let mut api_ref = PROTON_API.write().unwrap();
+//     *api_ref = None;
+// }
 
 /// TODO:: slowly move to use api_service folder functions
 // wallets
 pub async fn get_wallets() -> Result<Vec<ApiWalletData>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result: Result<Vec<andromeda_api::wallet::ApiWalletData>, andromeda_api::error::Error> =
         proton_api.inner.clients().wallet.get_wallets().await;
     match result {
@@ -54,7 +74,7 @@ pub async fn update_wallet_name(
     wallet_id: String,
     new_name: String,
 ) -> Result<ApiWallet, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -68,7 +88,7 @@ pub async fn update_wallet_name(
 }
 
 pub async fn delete_wallet(wallet_id: String) -> Result<(), BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -83,7 +103,7 @@ pub async fn delete_wallet(wallet_id: String) -> Result<(), BridgeError> {
 
 // wallet accounts
 pub async fn get_wallet_accounts(wallet_id: String) -> Result<Vec<ApiWalletAccount>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -101,7 +121,7 @@ pub async fn update_wallet_account_label(
     wallet_account_id: String,
     new_label: String,
 ) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -118,7 +138,7 @@ pub async fn delete_wallet_account(
     wallet_id: String,
     wallet_account_id: String,
 ) -> Result<(), BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -133,7 +153,7 @@ pub async fn delete_wallet_account(
 
 /// getUserSettings
 pub async fn get_user_settings() -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -147,7 +167,7 @@ pub async fn get_user_settings() -> Result<ApiWalletUserSettings, BridgeError> {
 }
 
 pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -161,7 +181,7 @@ pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiWalletUserSettings, 
 }
 
 pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -175,7 +195,7 @@ pub async fn fiat_currency(symbol: FiatCurrency) -> Result<ApiWalletUserSettings
 }
 
 pub async fn two_fa_threshold(amount: u64) -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -191,7 +211,7 @@ pub async fn two_fa_threshold(amount: u64) -> Result<ApiWalletUserSettings, Brid
 pub async fn hide_empty_used_addresses(
     hide_empty_used_addresses: bool,
 ) -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -210,8 +230,7 @@ pub async fn get_exchange_rate(
     fiat_currency: FiatCurrency,
     time: Option<u64>,
 ) -> Result<ProtonExchangeRate, BridgeError> {
-    // call_dart_callback("geting_exchange_rate".to_string()).await;
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -228,7 +247,7 @@ pub async fn get_exchange_rate(
 }
 
 pub async fn get_latest_event_id() -> Result<String, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api.inner.clients().event.get_latest_event_id().await;
     match result {
         Ok(response) => Ok(response),
@@ -237,7 +256,7 @@ pub async fn get_latest_event_id() -> Result<String, BridgeError> {
 }
 
 pub async fn collect_events(latest_event_id: String) -> Result<Vec<ProtonEvent>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -251,7 +270,7 @@ pub async fn collect_events(latest_event_id: String) -> Result<Vec<ProtonEvent>,
 }
 
 pub async fn get_contacts() -> Result<Vec<ApiContactEmails>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -265,7 +284,7 @@ pub async fn get_contacts() -> Result<Vec<ApiContactEmails>, BridgeError> {
 }
 
 pub async fn get_proton_address() -> Result<Vec<ProtonAddress>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -283,7 +302,7 @@ pub async fn add_email_address(
     wallet_account_id: String,
     address_id: String,
 ) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -302,7 +321,7 @@ pub async fn remove_email_address(
     wallet_account_id: String,
     address_id: String,
 ) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -322,7 +341,7 @@ pub async fn update_bitcoin_address(
     wallet_account_bitcoin_address_id: String,
     bitcoin_address: BitcoinAddress,
 ) -> Result<ApiWalletBitcoinAddress, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -346,7 +365,7 @@ pub async fn add_bitcoin_addresses(
     wallet_account_id: String,
     bitcoin_addresses: Vec<BitcoinAddress>,
 ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -367,7 +386,7 @@ pub async fn add_bitcoin_addresses(
 pub async fn lookup_bitcoin_address(
     email: String,
 ) -> Result<EmailIntegrationBitcoinAddress, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -386,7 +405,7 @@ pub async fn get_wallet_bitcoin_address(
     wallet_account_id: String,
     only_request: Option<u8>,
 ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -404,7 +423,7 @@ pub async fn get_bitcoin_address_latest_index(
     wallet_id: String,
     wallet_account_id: String,
 ) -> Result<u64, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -423,7 +442,7 @@ pub async fn get_wallet_transactions(
     wallet_account_id: Option<String>,
     hashed_txids: Option<Vec<String>>,
 ) -> Result<Vec<WalletTransaction>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
 
     let result = proton_api
         .inner
@@ -446,7 +465,7 @@ pub async fn create_wallet_transactions(
     exchange_rate_id: Option<String>,
     transaction_time: Option<String>,
 ) -> Result<WalletTransaction, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let payload = CreateWalletTransactionRequestBody {
         TransactionID: transaction_id,
         HashedTransactionID: hashed_transaction_id,
@@ -472,7 +491,7 @@ pub async fn update_wallet_transaction_label(
     wallet_transaction_id: String,
     label: String,
 ) -> Result<WalletTransaction, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -490,7 +509,7 @@ pub async fn delete_wallet_transactions(
     wallet_account_id: String,
     wallet_transaction_id: String,
 ) -> Result<(), BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -507,7 +526,7 @@ pub async fn get_all_public_keys(
     email: String,
     internal_only: u8,
 ) -> Result<Vec<AllKeyAddressKey>, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api
         .inner
         .clients()
@@ -529,7 +548,7 @@ pub async fn is_valid_token() -> Result<bool, BridgeError> {
 }
 
 pub async fn fork() -> Result<ChildSession, BridgeError> {
-    let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+    let proton_api = retrieve_proton_api()?;
     let result = proton_api.inner.fork().await;
     match result {
         Ok(response) => Ok(response),
@@ -540,7 +559,7 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
 // enable it after 2fa mr ready for andromeda
 
 // pub async fn get_2fa_enabled() -> Result<u32, BridgeError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let proton_api = retrieve_proton_api()?;
 //     let result = proton_api.two_factor_auth.get_2fa_enabled().await;
 //     match result {
 //         Ok(response) => Ok(response.into()),
@@ -554,7 +573,7 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
 //     totp_shared_secret: String,
 //     totp_confirmation: String,
 // ) -> Result<Vec<String>, BridgeError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let proton_api = retrieve_proton_api()?;
 //     let result = proton_api
 //         .two_factor_auth
 //         .set_2fa_totp(username, password, totp_shared_secret, totp_confirmation)
@@ -570,7 +589,7 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
 //     password: String,
 //     two_factor_code: String,
 // ) -> Result<u32, BridgeError> {
-//     let proton_api = PROTON_API.read().unwrap().clone().unwrap();
+//     let proton_api = retrieve_proton_api()?;
 //     let result = proton_api
 //         .two_factor_auth
 //         .disable_2fa_totp(username, password, two_factor_code)
@@ -619,7 +638,7 @@ mod test {
         .unwrap();
         let mut client =
             ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
-        client.set_proton_api();
+        client.set_proton_api().unwrap();
         let forked_session = fork().await.unwrap();
         println!("forked session: {:?}", forked_session);
         assert!(!forked_session.access_token.is_empty())
@@ -640,7 +659,7 @@ mod test {
             ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
         let auth_info = client.login(user, pass).await.unwrap();
         assert!(!auth_info.access_token.is_empty());
-        client.set_proton_api();
+        client.set_proton_api().unwrap();
 
         let forked_session = fork().await.unwrap();
         println!("forked session: {:?}", forked_session);

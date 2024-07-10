@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -11,6 +12,7 @@ import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/srp/proofs.dart';
 
@@ -103,7 +105,11 @@ class ProtonRecoveryBloc
       // get user info
       var userInfo = await protonUsersApi.getUserInfo();
       var status = userInfo.mnemonicStatus;
-      if (status == 0) {
+      // 0 - Mnemonic is disabled
+      // 1 - Mnemonic is enabled but not set
+      // 2 - Mnemonic is enabled but needs to be re-activated
+      // 3 - Mnemonic is enabled and set
+      if (status == 0 || status == 1) {
         /// set new flow
         /// get auth info
 
@@ -218,6 +224,15 @@ class ProtonRecoveryBloc
             logger.i("EnableRecovery response code: $code");
             code = await protonUsersApi.lockSensitiveSettings();
             logger.i("EnableRecovery lockSensitiveSettings: $code");
+            if (code != 1000) {
+              emit(state.copyWith(
+                isLoading: false,
+                requireAuthModel: const RequireAuthModel(),
+                authInfo: null,
+                error: "Eanble recovery failed, please try again. code: $code",
+              ));
+              return;
+            }
             emit(state.copyWith(
                 isLoading: false,
                 error: "",
@@ -225,6 +240,13 @@ class ProtonRecoveryBloc
                 requireAuthModel: const RequireAuthModel(),
                 mnemonic: mnemonicWords.join(" "),
                 authInfo: null));
+          } on BridgeError catch (e) {
+            var errorMessage = parseSampleDisplayError(e);
+            emit(state.copyWith(
+                isLoading: false,
+                requireAuthModel: const RequireAuthModel(),
+                authInfo: null,
+                error: errorMessage));
           } catch (e) {
             emit(state.copyWith(
                 isLoading: false,
@@ -235,7 +257,7 @@ class ProtonRecoveryBloc
         }
 
         /// set mnemonic
-      } else if (status == 1 || status == 2 || status == 4) {
+      } else if (status == 2 || status == 4) {
         /// reactive flow
         /// generate new entropy and mnemonic
         var salt = WalletKeyHelper.getRandomValues(16);
@@ -297,8 +319,17 @@ class ProtonRecoveryBloc
         );
 
         try {
-          var code = await protonSettingsApi.setMnemonicSettings(req: req);
+          var code = await protonSettingsApi.reactiveMnemonicSettings(req: req);
           logger.i("EnableRecovery response code: $code");
+          if (code != 1000) {
+            emit(state.copyWith(
+              isLoading: false,
+              requireAuthModel: const RequireAuthModel(),
+              authInfo: null,
+              error: "Eanble recovery failed, please try again. code: $code",
+            ));
+            return;
+          }
           emit(state.copyWith(
               isLoading: false,
               error: "",
@@ -306,6 +337,13 @@ class ProtonRecoveryBloc
               requireAuthModel: const RequireAuthModel(),
               mnemonic: mnemonicWords.join(" "),
               authInfo: null));
+        } on BridgeError catch (e) {
+          var errorMessage = parseSampleDisplayError(e);
+          emit(state.copyWith(
+              isLoading: false,
+              requireAuthModel: const RequireAuthModel(),
+              authInfo: null,
+              error: errorMessage));
         } catch (e) {
           emit(state.copyWith(
               isLoading: false,
@@ -372,6 +410,13 @@ class ProtonRecoveryBloc
               isRecoveryEnabled: false,
               requireAuthModel: const RequireAuthModel(),
               authInfo: null));
+        } on BridgeError catch (e) {
+          var errorMessage = parseSampleDisplayError(e);
+          emit(state.copyWith(
+              isLoading: false,
+              requireAuthModel: const RequireAuthModel(),
+              authInfo: null,
+              error: errorMessage));
         } catch (e) {
           emit(state.copyWith(
               isLoading: false,

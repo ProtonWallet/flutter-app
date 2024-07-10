@@ -2,6 +2,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/logger.dart';
@@ -17,6 +18,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -29,6 +31,7 @@ class EventLoop implements Manager {
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
   final DataProviderManager dataProviderManager;
+  final AppStateManager appStateManager;
   bool _isRunning = false;
   String latestEventId = "";
   late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
@@ -37,6 +40,7 @@ class EventLoop implements Manager {
     this.protonWalletManager,
     this.userManager,
     this.dataProviderManager,
+    this.appStateManager,
   );
 
   Future<void> start() async {
@@ -226,11 +230,14 @@ class EventLoop implements Manager {
           }
         }
       }
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.handleError(e);
+      logger.e(
+          "Event Loop error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
     } catch (e, stacktrace) {
       logger.e(
           "Event Loop error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
     }
-
     try {
       await polling();
     } catch (e, stacktrace) {

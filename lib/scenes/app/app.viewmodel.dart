@@ -5,6 +5,7 @@ import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/local_notification.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -94,6 +95,11 @@ class AppViewModelImpl extends AppViewModel {
     await apiServiceManager.init();
     serviceManager.register(apiServiceManager);
 
+    /// app state manager
+    var appStateManger = AppStateManager();
+    await appStateManger.init();
+    serviceManager.register(appStateManger);
+
     /// user manager
     var userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
     serviceManager.register(userManager);
@@ -118,8 +124,12 @@ class AppViewModelImpl extends AppViewModel {
     WalletManager.protonWallet = protonWallet;
 
     /// event loop
-    serviceManager
-        .register(EventLoop(protonWallet, userManager, dataProviderManager));
+    serviceManager.register(EventLoop(
+      protonWallet,
+      userManager,
+      dataProviderManager,
+      appStateManger,
+    ));
 
     if (await userManager.sessionExists()) {
       await userManager.tryRestoreUserInfo();

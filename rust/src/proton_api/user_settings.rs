@@ -117,4 +117,7 @@ pub struct _ApiWalletUserSettings {
     pub FiatCurrency: FiatCurrency,
     pub HideEmptyUsedAddresses: u8,
     pub TwoFactorAmountThreshold: Option<u64>,
+    pub ReceiveInviterNotification: Option<u8>,
+    pub ReceiveEmailIntegrationNotification: Option<u8>,
+    pub WalletCreated: Option<u8>,
 }

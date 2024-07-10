@@ -3,7 +3,7 @@ use flutter_rust_bridge::frb;
 use std::str::FromStr;
 
 use andromeda_bitcoin::DerivationPath as BdkDerivationPath;
-use andromeda_common::{FromParts, Network};
+use andromeda_common::{FromParts, Network, ScriptType};
 
 use crate::BridgeError;
 
@@ -36,9 +36,13 @@ impl FrbDerivationPath {
     }
 
     #[frb(sync)]
-    pub fn from_parts(purpose: u32, network: Network, account_index: u32) -> FrbDerivationPath {
+    pub fn from_parts(
+        script_type: ScriptType,
+        network: Network,
+        account_index: u32,
+    ) -> FrbDerivationPath {
         Self {
-            inner: BdkDerivationPath::from_parts(purpose, network.into(), account_index),
+            inner: BdkDerivationPath::from_parts(script_type, network.into(), account_index),
         }
     }
 }

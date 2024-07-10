@@ -90,8 +90,8 @@ class UserSettingsDataProvider extends DataProvider {
       ApiWalletUserSettings apiSettings =
           await settingsClient.getUserSettings();
       insertUpdate(apiSettings);
-    } catch (e) {
-      logger.e(e.toString());
+    } catch (e, stacktrace) {
+      logger.e("error: $e, stacktrace: $stacktrace");
     }
     settingsData = await _getFromDB();
     if (settingsData != null) {

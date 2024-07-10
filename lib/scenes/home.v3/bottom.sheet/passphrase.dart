@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -76,6 +79,11 @@ class PassphraseSheet {
                               passphrase: passphrase,
                             ),
                           );
+                        } on BridgeError catch (e, stacktrace) {
+                          //TODO:: fix me
+                          viewModel.errorMessage = parseSampleDisplayError(e);
+                          logger.e(
+                              "importWallet error: $e, stacktrace: $stacktrace");
                         } catch (e) {
                           viewModel.errorMessage = e.toString();
                         }

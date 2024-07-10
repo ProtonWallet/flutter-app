@@ -16,50 +16,50 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$BridgeError {
-  String get field0 => throw _privateConstructorUsedError;
+  Object get field0 => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -75,7 +75,7 @@ mixin _$BridgeError {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -88,7 +88,7 @@ mixin _$BridgeError {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -100,10 +100,6 @@ mixin _$BridgeError {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $BridgeErrorCopyWith<BridgeError> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -111,8 +107,6 @@ abstract class $BridgeErrorCopyWith<$Res> {
   factory $BridgeErrorCopyWith(
           BridgeError value, $Res Function(BridgeError) then) =
       _$BridgeErrorCopyWithImpl<$Res, BridgeError>;
-  @useResult
-  $Res call({String field0});
 }
 
 /// @nodoc
@@ -124,40 +118,23 @@ class _$BridgeErrorCopyWithImpl<$Res, $Val extends BridgeError>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_value.copyWith(
-      field0: null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$BridgeError_AndromedaApiImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
-  factory _$$BridgeError_AndromedaApiImplCopyWith(
-          _$BridgeError_AndromedaApiImpl value,
-          $Res Function(_$BridgeError_AndromedaApiImpl) then) =
-      __$$BridgeError_AndromedaApiImplCopyWithImpl<$Res>;
-  @override
+abstract class _$$BridgeError_ApiLockImplCopyWith<$Res> {
+  factory _$$BridgeError_ApiLockImplCopyWith(_$BridgeError_ApiLockImpl value,
+          $Res Function(_$BridgeError_ApiLockImpl) then) =
+      __$$BridgeError_ApiLockImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String field0});
 }
 
 /// @nodoc
-class __$$BridgeError_AndromedaApiImplCopyWithImpl<$Res>
-    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_AndromedaApiImpl>
-    implements _$$BridgeError_AndromedaApiImplCopyWith<$Res> {
-  __$$BridgeError_AndromedaApiImplCopyWithImpl(
-      _$BridgeError_AndromedaApiImpl _value,
-      $Res Function(_$BridgeError_AndromedaApiImpl) _then)
+class __$$BridgeError_ApiLockImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_ApiLockImpl>
+    implements _$$BridgeError_ApiLockImplCopyWith<$Res> {
+  __$$BridgeError_ApiLockImplCopyWithImpl(_$BridgeError_ApiLockImpl _value,
+      $Res Function(_$BridgeError_ApiLockImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -165,7 +142,7 @@ class __$$BridgeError_AndromedaApiImplCopyWithImpl<$Res>
   $Res call({
     Object? field0 = null,
   }) {
-    return _then(_$BridgeError_AndromedaApiImpl(
+    return _then(_$BridgeError_ApiLockImpl(
       null == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
@@ -176,22 +153,22 @@ class __$$BridgeError_AndromedaApiImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
-  const _$BridgeError_AndromedaApiImpl(this.field0) : super._();
+class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
+  const _$BridgeError_ApiLockImpl(this.field0) : super._();
 
   @override
   final String field0;
 
   @override
   String toString() {
-    return 'BridgeError.andromedaApi(field0: $field0)';
+    return 'BridgeError.apiLock(field0: $field0)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BridgeError_AndromedaApiImpl &&
+            other is _$BridgeError_ApiLockImpl &&
             (identical(other.field0, field0) || other.field0 == field0));
   }
 
@@ -201,58 +178,58 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BridgeError_AndromedaApiImplCopyWith<_$BridgeError_AndromedaApiImpl>
-      get copyWith => __$$BridgeError_AndromedaApiImplCopyWithImpl<
-          _$BridgeError_AndromedaApiImpl>(this, _$identity);
+  _$$BridgeError_ApiLockImplCopyWith<_$BridgeError_ApiLockImpl> get copyWith =>
+      __$$BridgeError_ApiLockImplCopyWithImpl<_$BridgeError_ApiLockImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
-    return andromedaApi(field0);
+    return apiLock(field0);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
-    return andromedaApi?.call(field0);
+    return apiLock?.call(field0);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
-    if (andromedaApi != null) {
-      return andromedaApi(field0);
+    if (apiLock != null) {
+      return apiLock(field0);
     }
     return orElse();
   }
@@ -260,7 +237,7 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -273,13 +250,13 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
   }) {
-    return andromedaApi(this);
+    return apiLock(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -289,13 +266,13 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
   }) {
-    return andromedaApi?.call(this);
+    return apiLock?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -306,33 +283,30 @@ class _$BridgeError_AndromedaApiImpl extends BridgeError_AndromedaApi {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     required TResult orElse(),
   }) {
-    if (andromedaApi != null) {
-      return andromedaApi(this);
+    if (apiLock != null) {
+      return apiLock(this);
     }
     return orElse();
   }
 }
 
-abstract class BridgeError_AndromedaApi extends BridgeError {
-  const factory BridgeError_AndromedaApi(final String field0) =
-      _$BridgeError_AndromedaApiImpl;
-  const BridgeError_AndromedaApi._() : super._();
+abstract class BridgeError_ApiLock extends BridgeError {
+  const factory BridgeError_ApiLock(final String field0) =
+      _$BridgeError_ApiLockImpl;
+  const BridgeError_ApiLock._() : super._();
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
-  _$$BridgeError_AndromedaApiImplCopyWith<_$BridgeError_AndromedaApiImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$BridgeError_ApiLockImplCopyWith<_$BridgeError_ApiLockImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_GenericImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_GenericImplCopyWith<$Res> {
   factory _$$BridgeError_GenericImplCopyWith(_$BridgeError_GenericImpl value,
           $Res Function(_$BridgeError_GenericImpl) then) =
       __$$BridgeError_GenericImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -393,14 +367,14 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return generic(field0);
@@ -409,14 +383,14 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return generic?.call(field0);
@@ -425,14 +399,14 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -445,7 +419,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -464,7 +438,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -480,7 +454,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -505,20 +479,17 @@ abstract class BridgeError_Generic extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_GenericImplCopyWith<_$BridgeError_GenericImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_MuonAuthSessionImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_MuonAuthSessionImplCopyWith<$Res> {
   factory _$$BridgeError_MuonAuthSessionImplCopyWith(
           _$BridgeError_MuonAuthSessionImpl value,
           $Res Function(_$BridgeError_MuonAuthSessionImpl) then) =
       __$$BridgeError_MuonAuthSessionImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -580,14 +551,14 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return muonAuthSession(field0);
@@ -596,14 +567,14 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return muonAuthSession?.call(field0);
@@ -612,14 +583,14 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -632,7 +603,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -651,7 +622,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -667,7 +638,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -692,20 +663,17 @@ abstract class BridgeError_MuonAuthSession extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_MuonAuthSessionImplCopyWith<_$BridgeError_MuonAuthSessionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_MuonAuthRefreshImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_MuonAuthRefreshImplCopyWith<$Res> {
   factory _$$BridgeError_MuonAuthRefreshImplCopyWith(
           _$BridgeError_MuonAuthRefreshImpl value,
           $Res Function(_$BridgeError_MuonAuthRefreshImpl) then) =
       __$$BridgeError_MuonAuthRefreshImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -767,14 +735,14 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return muonAuthRefresh(field0);
@@ -783,14 +751,14 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return muonAuthRefresh?.call(field0);
@@ -799,14 +767,14 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -819,7 +787,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -838,7 +806,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -854,7 +822,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -879,20 +847,17 @@ abstract class BridgeError_MuonAuthRefresh extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_MuonAuthRefreshImplCopyWith<_$BridgeError_MuonAuthRefreshImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_MuonClientImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_MuonClientImplCopyWith<$Res> {
   factory _$$BridgeError_MuonClientImplCopyWith(
           _$BridgeError_MuonClientImpl value,
           $Res Function(_$BridgeError_MuonClientImpl) then) =
       __$$BridgeError_MuonClientImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -954,14 +919,14 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return muonClient(field0);
@@ -970,14 +935,14 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return muonClient?.call(field0);
@@ -986,14 +951,14 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -1006,7 +971,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -1025,7 +990,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1041,7 +1006,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1066,20 +1031,17 @@ abstract class BridgeError_MuonClient extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_MuonClientImplCopyWith<_$BridgeError_MuonClientImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_MuonSessionImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_MuonSessionImplCopyWith<$Res> {
   factory _$$BridgeError_MuonSessionImplCopyWith(
           _$BridgeError_MuonSessionImpl value,
           $Res Function(_$BridgeError_MuonSessionImpl) then) =
       __$$BridgeError_MuonSessionImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -1141,14 +1103,14 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return muonSession(field0);
@@ -1157,14 +1119,14 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return muonSession?.call(field0);
@@ -1173,14 +1135,14 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -1193,7 +1155,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -1212,7 +1174,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1228,7 +1190,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1253,20 +1215,17 @@ abstract class BridgeError_MuonSession extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_MuonSessionImplCopyWith<_$BridgeError_MuonSessionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_AndromedaBitcoinImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_AndromedaBitcoinImplCopyWith<$Res> {
   factory _$$BridgeError_AndromedaBitcoinImplCopyWith(
           _$BridgeError_AndromedaBitcoinImpl value,
           $Res Function(_$BridgeError_AndromedaBitcoinImpl) then) =
       __$$BridgeError_AndromedaBitcoinImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -1329,14 +1288,14 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return andromedaBitcoin(field0);
@@ -1345,14 +1304,14 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return andromedaBitcoin?.call(field0);
@@ -1361,14 +1320,14 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -1381,7 +1340,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -1400,7 +1359,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1416,7 +1375,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1441,7 +1400,6 @@ abstract class BridgeError_AndromedaBitcoin extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_AndromedaBitcoinImplCopyWith<
           _$BridgeError_AndromedaBitcoinImpl>
@@ -1449,15 +1407,13 @@ abstract class BridgeError_AndromedaBitcoin extends BridgeError {
 }
 
 /// @nodoc
-abstract class _$$BridgeError_ApiResponseImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_ApiResponseImplCopyWith<$Res> {
   factory _$$BridgeError_ApiResponseImplCopyWith(
           _$BridgeError_ApiResponseImpl value,
           $Res Function(_$BridgeError_ApiResponseImpl) then) =
       __$$BridgeError_ApiResponseImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({String field0});
+  $Res call({ResponseError field0});
 }
 
 /// @nodoc
@@ -1478,7 +1434,7 @@ class __$$BridgeError_ApiResponseImplCopyWithImpl<$Res>
       null == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
+              as ResponseError,
     ));
   }
 }
@@ -1489,7 +1445,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   const _$BridgeError_ApiResponseImpl(this.field0) : super._();
 
   @override
-  final String field0;
+  final ResponseError field0;
 
   @override
   String toString() {
@@ -1517,14 +1473,14 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return apiResponse(field0);
@@ -1533,14 +1489,14 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return apiResponse?.call(field0);
@@ -1549,14 +1505,14 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -1569,7 +1525,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -1588,7 +1544,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1604,7 +1560,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1623,25 +1579,22 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
 }
 
 abstract class BridgeError_ApiResponse extends BridgeError {
-  const factory BridgeError_ApiResponse(final String field0) =
+  const factory BridgeError_ApiResponse(final ResponseError field0) =
       _$BridgeError_ApiResponseImpl;
   const BridgeError_ApiResponse._() : super._();
 
   @override
-  String get field0;
-  @override
+  ResponseError get field0;
   @JsonKey(ignore: true)
   _$$BridgeError_ApiResponseImplCopyWith<_$BridgeError_ApiResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BridgeError_ApiSrpImplCopyWith<$Res>
-    implements $BridgeErrorCopyWith<$Res> {
+abstract class _$$BridgeError_ApiSrpImplCopyWith<$Res> {
   factory _$$BridgeError_ApiSrpImplCopyWith(_$BridgeError_ApiSrpImpl value,
           $Res Function(_$BridgeError_ApiSrpImpl) then) =
       __$$BridgeError_ApiSrpImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String field0});
 }
@@ -1702,14 +1655,14 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) andromedaApi,
+    required TResult Function(String field0) apiLock,
     required TResult Function(String field0) generic,
     required TResult Function(String field0) muonAuthSession,
     required TResult Function(String field0) muonAuthRefresh,
     required TResult Function(String field0) muonClient,
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
-    required TResult Function(String field0) apiResponse,
+    required TResult Function(ResponseError field0) apiResponse,
     required TResult Function(String field0) apiSrp,
   }) {
     return apiSrp(field0);
@@ -1718,14 +1671,14 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? andromedaApi,
+    TResult? Function(String field0)? apiLock,
     TResult? Function(String field0)? generic,
     TResult? Function(String field0)? muonAuthSession,
     TResult? Function(String field0)? muonAuthRefresh,
     TResult? Function(String field0)? muonClient,
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
-    TResult? Function(String field0)? apiResponse,
+    TResult? Function(ResponseError field0)? apiResponse,
     TResult? Function(String field0)? apiSrp,
   }) {
     return apiSrp?.call(field0);
@@ -1734,14 +1687,14 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? andromedaApi,
+    TResult Function(String field0)? apiLock,
     TResult Function(String field0)? generic,
     TResult Function(String field0)? muonAuthSession,
     TResult Function(String field0)? muonAuthRefresh,
     TResult Function(String field0)? muonClient,
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
-    TResult Function(String field0)? apiResponse,
+    TResult Function(ResponseError field0)? apiResponse,
     TResult Function(String field0)? apiSrp,
     required TResult orElse(),
   }) {
@@ -1754,7 +1707,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(BridgeError_AndromedaApi value) andromedaApi,
+    required TResult Function(BridgeError_ApiLock value) apiLock,
     required TResult Function(BridgeError_Generic value) generic,
     required TResult Function(BridgeError_MuonAuthSession value)
         muonAuthSession,
@@ -1773,7 +1726,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
     TResult? Function(BridgeError_Generic value)? generic,
     TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1789,7 +1742,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(BridgeError_AndromedaApi value)? andromedaApi,
+    TResult Function(BridgeError_ApiLock value)? apiLock,
     TResult Function(BridgeError_Generic value)? generic,
     TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
     TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
@@ -1814,7 +1767,6 @@ abstract class BridgeError_ApiSrp extends BridgeError {
 
   @override
   String get field0;
-  @override
   @JsonKey(ignore: true)
   _$$BridgeError_ApiSrpImplCopyWith<_$BridgeError_ApiSrpImpl> get copyWith =>
       throw _privateConstructorUsedError;
