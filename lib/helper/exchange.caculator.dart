@@ -4,6 +4,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
@@ -31,8 +32,8 @@ class ExchangeCalculator {
   ) {
     try {
       return (log(exchangeRate.cents.toInt()) / log(10)).round();
-    } catch (e) {
-      //
+    } catch (e, stacktrace) {
+      logger.e("getDisplayDigit error: $e, stacktrace: $stacktrace");
     }
     return defaultDisplayDigits;
   }

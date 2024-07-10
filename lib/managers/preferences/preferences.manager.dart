@@ -20,7 +20,7 @@ class PreferencesManager implements Manager {
     dynamic checkValue = await storage.read(key);
     // Check if the value is false
     if (checkValue != value) {
-      logger.d('Running logic because checkValue{$key} is not match');
+      logger.d('Running logic because checkValue $key is not match');
       await run.call();
       await storage.write(key, value);
     }

@@ -9,6 +9,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
@@ -32,6 +33,7 @@ import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_builder.dart';
 import 'package:wallet/rust/api/rust_api.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -304,6 +306,8 @@ class SendViewModelImpl extends SendViewModel {
       });
       updateWallet();
       logger.i(DateTime.now().toString());
+    } on BridgeError catch (e, stacktrace) {
+      _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -480,6 +484,8 @@ class SendViewModelImpl extends SendViewModel {
             }
           }
           // TODO:: handle banned bitcoin address alert here
+        } on BridgeError catch (e, stacktrace) {
+          _processError(e, stacktrace);
         } catch (e) {
           logger.e(e.toString());
           showInvite = true;
@@ -596,6 +602,8 @@ class SendViewModelImpl extends SendViewModel {
               isError: true);
         }
       }
+    } on BridgeError catch (e, stacktrace) {
+      _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -678,6 +686,8 @@ class SendViewModelImpl extends SendViewModel {
         allowDust: allowDust,
       );
       estimatedFeeInSAT = frbDraftPsbt.fee().toSat().toInt();
+    } on BridgeError catch (e, stacktrace) {
+      return _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
@@ -770,6 +780,8 @@ class SendViewModelImpl extends SendViewModel {
       /// txBuilder will be use to build real psbt
       txBuilder = await txBuilder.setFeeRate(
           satPerVb: BigInt.from(feeRateSatPerVByte.ceil()));
+    } on BridgeError catch (e, stacktrace) {
+      return _processError(e, stacktrace);
     } catch (e) {
       /// TODO:: handle exception here
       errorMessage = e.toString();
@@ -891,6 +903,8 @@ class SendViewModelImpl extends SendViewModel {
       } catch (e) {
         logger.e(e.toString());
       }
+    } on BridgeError catch (e, stacktrace) {
+      return _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -919,11 +933,8 @@ class SendViewModelImpl extends SendViewModel {
     feeRateHighPriority = fees["1"] ?? 0;
     feeRateMedianPriority = fees["6"] ?? 0;
     feeRateLowPriority = fees["12"] ?? 0;
-    try {
-      datasourceChangedStreamController.sinkAddSafe(this);
-    } catch (e) {
-      logger.e(e.toString());
-    }
+
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 
   Future<void> userFinishEmailBody() async {
@@ -998,5 +1009,16 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> _sendInviteForNewComer(String email) async {
     await inviteClient.sendNewcomerInvite(inviteeEmail: email);
+  }
+
+  bool _processError(BridgeError error, Object stacktrace) {
+    logger.e(
+      "Send sendCoin() error: ${error.toString()} stacktrace: ${stacktrace.toString()}",
+    );
+    var msg = parseSampleDisplayError(error);
+    if (msg.isNotEmpty) {
+      CommonHelper.showErrorDialog(msg);
+    }
+    return false;
   }
 }

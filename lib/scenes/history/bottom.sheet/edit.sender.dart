@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -123,6 +126,10 @@ class EditSenderSheet {
                                     emailController.text,
                                   );
                                 }
+                              } on BridgeError catch (e, stacktrace) {
+                                var msg = parseSampleDisplayError(e);
+                                logger.e("error: $e, stacktrace: $stacktrace");
+                                CommonHelper.showErrorDialog(msg);
                               } catch (e) {
                                 CommonHelper.showErrorDialog(e.toString());
                               }

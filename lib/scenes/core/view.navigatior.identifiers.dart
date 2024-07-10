@@ -53,6 +53,7 @@ enum NavID {
 
   // Settings
   settings,
+  logs,
 
   // Others
   testWallet,

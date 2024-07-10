@@ -11,12 +11,18 @@ class ApiWalletUserSettings {
   final FiatCurrency fiatCurrency;
   final int hideEmptyUsedAddresses;
   final BigInt? twoFactorAmountThreshold;
+  final int? receiveInviterNotification;
+  final int? receiveEmailIntegrationNotification;
+  final int? walletCreated;
 
   const ApiWalletUserSettings({
     required this.bitcoinUnit,
     required this.fiatCurrency,
     required this.hideEmptyUsedAddresses,
     this.twoFactorAmountThreshold,
+    this.receiveInviterNotification,
+    this.receiveEmailIntegrationNotification,
+    this.walletCreated,
   });
 
   @override
@@ -24,7 +30,10 @@ class ApiWalletUserSettings {
       bitcoinUnit.hashCode ^
       fiatCurrency.hashCode ^
       hideEmptyUsedAddresses.hashCode ^
-      twoFactorAmountThreshold.hashCode;
+      twoFactorAmountThreshold.hashCode ^
+      receiveInviterNotification.hashCode ^
+      receiveEmailIntegrationNotification.hashCode ^
+      walletCreated.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -34,7 +43,11 @@ class ApiWalletUserSettings {
           bitcoinUnit == other.bitcoinUnit &&
           fiatCurrency == other.fiatCurrency &&
           hideEmptyUsedAddresses == other.hideEmptyUsedAddresses &&
-          twoFactorAmountThreshold == other.twoFactorAmountThreshold;
+          twoFactorAmountThreshold == other.twoFactorAmountThreshold &&
+          receiveInviterNotification == other.receiveInviterNotification &&
+          receiveEmailIntegrationNotification ==
+              other.receiveEmailIntegrationNotification &&
+          walletCreated == other.walletCreated;
 }
 
 enum BitcoinUnit {

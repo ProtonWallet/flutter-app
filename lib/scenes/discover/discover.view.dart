@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/helper/url.external.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -16,7 +16,7 @@ class DiscoverView extends ViewBase<DiscoverViewModel> {
         title: S.of(context).discover,
         child: DiscoverFeedsView(
           onTap: (String link) {
-            launchUrl(Uri.parse(link));
+            ExternalUrl.shared.launchString(link);
           },
           protonFeedItems: viewModel.protonFeedItems,
         ));
