@@ -30,11 +30,23 @@ class BitcoinAmount {
     String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
         displayDigits: displayDigits);
     String fiatCurrencyName =
-        exchangeRate.fiatCurrency.name.toString().toUpperCase();
+    exchangeRate.fiatCurrency.name.toString().toUpperCase();
     if (amountInSatoshi > 0) {
       return "$fiatCurrencyName $amountString";
     }
     return "-$fiatCurrencyName $amountString";
+  }
+
+  String toFiatCurrencySignString() {
+    int displayDigits = getDisplayDigit();
+    double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
+    String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
+        displayDigits: displayDigits);
+    String sign = CommonHelper.getFiatCurrencySign(exchangeRate.fiatCurrency);
+    if (amountInSatoshi > 0) {
+      return "$sign$amountString";
+    }
+    return "-$sign$amountString";
   }
 
   @override
