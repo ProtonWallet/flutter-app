@@ -75,10 +75,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                             CustomPlaceholder.show(context);
                                           },
                                           child: Text(S.of(context).learn_more,
-                                              style: FontManager.body2Median(
-                                                  ProtonColors.textNorm))),
+                                              style: FontManager.body2Regular(
+                                                  ProtonColors.protonBlue))),
                                       leadingWidget: SvgPicture.asset(
-                                          "assets/images/icon/send_2.svg",
+                                          "assets/images/icon/bve_enable.svg",
                                           fit: BoxFit.fill,
                                           width: 30,
                                           height: 30),
@@ -87,7 +87,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         width: 0,
                                       ),
                                       backgroundColor:
-                                          ProtonColors.alertEnableBackground,
+                                          ProtonColors.white,
                                       color: ProtonColors.textNorm,
                                     )
                                   : AlertCustom(
@@ -99,10 +99,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                             CustomPlaceholder.show(context);
                                           },
                                           child: Text(S.of(context).learn_more,
-                                              style: FontManager.body2Median(
-                                                  ProtonColors.textNorm))),
+                                              style: FontManager.body2Regular(
+                                                  ProtonColors.protonBlue))),
                                       leadingWidget: SvgPicture.asset(
-                                          "assets/images/icon/send_2.svg",
+                                          "assets/images/icon/bve_disable.svg",
                                           fit: BoxFit.fill,
                                           width: 30,
                                           height: 30),
@@ -111,7 +111,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         width: 0,
                                       ),
                                       backgroundColor:
-                                          ProtonColors.alertDisableBackground,
+                                          ProtonColors.white,
                                       color: ProtonColors.textNorm,
                                     ),
                             const SizedBox(height: 10),

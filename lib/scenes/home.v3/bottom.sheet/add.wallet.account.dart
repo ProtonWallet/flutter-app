@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -41,6 +41,7 @@ class AddWalletAccountSheet {
     Future.delayed(const Duration(milliseconds: 100), () {
       newAccountNameFocusNode.requestFocus();
     });
+    bool isAdding = false;
     if (context.mounted) {
       HomeModalBottomSheet.show(context, child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -228,42 +229,46 @@ class AddWalletAccountSheet {
                         margin: const EdgeInsets.symmetric(
                             horizontal: defaultButtonPadding),
                         child: Column(children: [
-                          ButtonV5(
+                          ButtonV6(
                               onPressed: () async {
-                                int newAccountIndex = 0;
-                                try {
-                                  newAccountIndex =
-                                      int.parse(newAccountIndexController.text);
-                                } catch (e) {
-                                  // parse newAccountIndex failed, use default one
-                                }
-                                bool accountNameExists = false;
-                                if (context.mounted) {
-                                  /// TODO:: check if accountName already used
-                                  if (accountNameExists == false) {
-                                    EasyLoading.show(
-                                        status: "Adding account..",
-                                        maskType: EasyLoadingMaskType.black);
-                                    bool isSuccess =
-                                        await viewModel.addWalletAccount(
-                                      walletMenuModel.walletModel.id,
-                                      walletMenuModel.walletModel.walletID,
-                                      newAccountScriptTypeValueNotifier.value,
-                                      newAccountNameController.text.isNotEmpty
-                                          ? newAccountNameController.text
-                                          : S.of(context).default_account,
-                                      newAccountIndex,
-                                    );
-
-                                    EasyLoading.dismiss();
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                      if (isSuccess) {
-                                        CommonHelper.showSnackbar(context,
-                                            S.of(context).account_created);
+                                if (isAdding == false) {
+                                  isAdding = true;
+                                  int newAccountIndex = 0;
+                                  try {
+                                    newAccountIndex =
+                                        int.parse(
+                                            newAccountIndexController.text);
+                                  } catch (e) {
+                                    // parse newAccountIndex failed, use default one
+                                  }
+                                  bool accountNameExists = false;
+                                  if (context.mounted) {
+                                    /// TODO:: check if accountName already used
+                                    if (accountNameExists == false) {
+                                      bool isSuccess =
+                                      await viewModel.addWalletAccount(
+                                        walletMenuModel.walletModel.id,
+                                        walletMenuModel.walletModel.walletID,
+                                        newAccountScriptTypeValueNotifier.value,
+                                        newAccountNameController.text.isNotEmpty
+                                            ? newAccountNameController.text
+                                            : S
+                                            .of(context)
+                                            .default_account,
+                                        newAccountIndex,
+                                      );
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                        if (isSuccess) {
+                                          CommonHelper.showSnackbar(context,
+                                              S
+                                                  .of(context)
+                                                  .account_created);
+                                        }
                                       }
                                     }
                                   }
+                                  isAdding = false;
                                 }
                               },
                               backgroundColor: ProtonColors.protonBlue,

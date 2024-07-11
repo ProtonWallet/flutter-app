@@ -4,18 +4,25 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/network.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   ImportViewModel(
@@ -33,6 +40,9 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   bool isPasteMode = true;
   String errorMessage = "";
   bool isValidMnemonic = false;
+  bool isFirstWallet = false;
+  bool isImporting = false;
+  List<ProtonAddress> protonAddresses = [];
 
   void switchToManualInputMode();
 
@@ -77,6 +87,18 @@ class ImportViewModelImpl extends ImportViewModel {
     passphraseFocusNode = FocusNode();
     fiatCurrencyNotifier = ValueNotifier(defaultFiatCurrency);
     nameTextController.text = preInputWalletName;
+
+    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    protonAddresses =
+        addresses.where((element) => element.status == 1).toList();
+
+    List<WalletData>? wallets =
+        await dataProviderManager.walletDataProvider.getWallets();
+    if (wallets == null) {
+      isFirstWallet = true;
+    } else if (wallets.isEmpty) {
+      isFirstWallet = true;
+    }
   }
 
   @override
@@ -102,27 +124,65 @@ class ImportViewModelImpl extends ImportViewModel {
         strPassphrase,
       );
 
-      await createWalletBloc.createWalletAccount(
+      var apiWalletAccount = await createWalletBloc.createWalletAccount(
         apiWallet.wallet.id,
         scriptTypeInfo,
         "My wallet account",
         defaultFiatCurrency,
         0, // default wallet account index
       );
-
-      await Future.delayed(
-          const Duration(seconds: 1)); // wait for account show on sidebar
+      if (isFirstWallet) {
+        /// Auto bind email address if it's first wallet
+        String walletID = apiWallet.wallet.id;
+        String accountID = apiWalletAccount.id;
+        WalletModel? walletModel =
+            await DBHelper.walletDao!.findByServerID(walletID);
+        AccountModel? accountModel =
+            await DBHelper.accountDao!.findByServerID(accountID);
+        if (walletModel != null && accountModel != null) {
+          ProtonAddress? protonAddress = protonAddresses.firstOrNull;
+          if (protonAddress != null) {
+            await addEmailAddressToWalletAccount(
+              walletID,
+              walletModel,
+              accountModel,
+              protonAddress.id,
+            );
+          }
+        }
+      }
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      errorMessage = e.toString();
     }
   }
 
   @override
   Future<void> move(NavID to) async {}
+
+  Future<void> addEmailAddressToWalletAccount(
+    String serverWalletID,
+    WalletModel walletModel,
+    AccountModel accountModel,
+    String serverAddressID,
+  ) async {
+    try {
+      await WalletManager.addEmailAddress(
+        serverWalletID,
+        accountModel.accountID,
+        serverAddressID,
+      );
+      dataProviderManager.walletDataProvider.notifyUpdateEmailIntegration();
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
+  }
 
   @override
   void switchToManualInputMode() {

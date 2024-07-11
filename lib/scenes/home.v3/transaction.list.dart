@@ -74,35 +74,35 @@ class TransactionList extends StatelessWidget {
                               ),
                             ]),
                           ),
-                          if (state.historyTransaction.isNotEmpty)
-                            Row(children: [
-                              state.isSyncing
-                                  ? CustomLoadingWithChild(
-                                      durationInMilliSeconds: 800,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: Icon(
-                                          Icons.refresh_rounded,
-                                          size: 20,
-                                          color: ProtonColors.textWeak,
-                                        ),
-                                      ),
-                                    )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        viewModel.walletTransactionBloc
-                                            .syncWallet(true);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: Icon(
-                                          Icons.refresh_rounded,
-                                          size: 20,
-                                          color: ProtonColors.textWeak,
-                                        ),
+                          Row(children: [
+                            state.isSyncing
+                                ? CustomLoadingWithChild(
+                                    durationInMilliSeconds: 800,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3),
+                                      child: Icon(
+                                        Icons.refresh_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textWeak,
                                       ),
                                     ),
-                              const SizedBox(width: 4),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      viewModel.walletTransactionBloc
+                                          .syncWallet(true);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3),
+                                      child: Icon(
+                                        Icons.refresh_rounded,
+                                        size: 20,
+                                        color: ProtonColors.textWeak,
+                                      ),
+                                    ),
+                                  ),
+                            const SizedBox(width: 4),
+                            if (state.historyTransaction.isNotEmpty)
                               GestureDetector(
                                 onTap: () {
                                   TransactionFilterSheet.show(
@@ -117,7 +117,8 @@ class TransactionList extends StatelessWidget {
                                       height: 16),
                                 ),
                               ),
-                              const SizedBox(width: 4),
+                            const SizedBox(width: 4),
+                            if (state.historyTransaction.isNotEmpty)
                               GestureDetector(
                                 onTap: () {
                                   viewModel.setSearchHistoryTextField(true);
@@ -128,8 +129,8 @@ class TransactionList extends StatelessWidget {
                                       color: ProtonColors.textNorm, size: 20),
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                            ]),
+                            const SizedBox(width: 4),
+                          ]),
                         ],
                       )),
             ),
@@ -144,8 +145,7 @@ class TransactionList extends StatelessWidget {
                 viewModel.historyAccountModel = accountModel;
                 viewModel.move(NavID.historyDetails);
               }),
-              selfEmailAddresses:
-                  viewModel.protonAddresses.map((e) => e.email).toList(),
+              selfEmailAddresses: const [],
               filter: viewModel.transactionListFilterBy,
               keyWord: viewModel.transactionSearchController.text,
               bitcoinUnit: viewModel.bitcoinUnit,
@@ -190,7 +190,7 @@ class TransactionList extends StatelessWidget {
                           SizedBox(
                               width: 280,
                               child: Text(
-                                "Send and receive Bitcoin with your email.",
+                                S.of(context).start_your_journey,
                                 style: FontManager.titleHeadline(
                                     ProtonColors.textNorm),
                                 textAlign: TextAlign.center,

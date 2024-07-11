@@ -11,6 +11,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -514,7 +515,10 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void setOnBoard() async {
     OnboardingGuideSheet.show(
-        Coordinator.rootNavigatorKey.currentContext!, this);
+      Coordinator.rootNavigatorKey.currentContext!,
+      this,
+      firstWallet: true,
+    );
     // move(NavID.setupOnboard);
   }
 
@@ -607,8 +611,6 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> deleteAccount(
       WalletModel walletModel, AccountModel accountModel) async {
     if (initialed) {
-      EasyLoading.show(
-          status: "deleting account..", maskType: EasyLoadingMaskType.black);
       try {
         await proton_api.deleteWalletAccount(
             walletId: walletModel.walletID,
@@ -621,7 +623,6 @@ class HomeViewModelImpl extends HomeViewModel {
       } catch (e) {
         errorMessage = e.toString();
       }
-      EasyLoading.dismiss();
       if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog("deleteAccount(): $errorMessage");
         errorMessage = "";
@@ -749,8 +750,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> deleteWallet(WalletModel walletModel) async {
-    EasyLoading.show(
-        status: "deleting wallet..", maskType: EasyLoadingMaskType.black);
     try {
       await proton_api.deleteWallet(walletId: walletModel.walletID);
       await dataProviderManager.walletDataProvider
@@ -761,7 +760,6 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
   }
 
   @override
@@ -902,10 +900,6 @@ class HomeViewModelImpl extends HomeViewModel {
     AccountModel accountModel,
     String serverAddressID,
   ) async {
-    EasyLoading.show(
-      status: "adding email..",
-      maskType: EasyLoadingMaskType.black,
-    );
     try {
       await WalletManager.addEmailAddress(
         serverWalletID,
@@ -923,7 +917,6 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -1019,6 +1012,15 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> createWallet() async {
     try {
+      bool isFirstWallet = false;
+      List<WalletData>? wallets =
+          await walletListBloc.walletsDataProvider.getWallets();
+      if (wallets == null) {
+        isFirstWallet = true;
+      } else if (wallets.isEmpty) {
+        isFirstWallet = true;
+      }
+
       FrbMnemonic mnemonic = FrbMnemonic(wordCount: WordCount.words12);
       String strMnemonic = mnemonic.asString();
       String walletName = nameTextController.text;
@@ -1032,7 +1034,7 @@ class HomeViewModelImpl extends HomeViewModel {
         strPassphrase,
       );
 
-      await createWalletBloc.createWalletAccount(
+      var apiWalletAccount = await createWalletBloc.createWalletAccount(
         apiWallet.wallet.id,
         appConfig.scriptTypeInfo,
         "My wallet account",
@@ -1040,10 +1042,26 @@ class HomeViewModelImpl extends HomeViewModel {
         0, // default wallet account index
       );
 
-      // TODO:: fix me remove this
-      await Future.delayed(
-        const Duration(seconds: 1),
-      ); // wait for account show on sidebar
+      /// Auto bind email address if it's first wallet
+      if (isFirstWallet) {
+        String walletID = apiWallet.wallet.id;
+        String accountID = apiWalletAccount.id;
+        WalletModel? walletModel =
+            await DBHelper.walletDao!.findByServerID(walletID);
+        AccountModel? accountModel =
+            await DBHelper.accountDao!.findByServerID(accountID);
+        if (walletModel != null && accountModel != null) {
+          ProtonAddress? protonAddress = protonAddresses.firstOrNull;
+          if (protonAddress != null) {
+            await addEmailAddressToWalletAccount(
+              walletID,
+              walletModel,
+              accountModel,
+              protonAddress.id,
+            );
+          }
+        }
+      }
     } on BridgeError catch (e, stacktrace) {
       var msg = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");

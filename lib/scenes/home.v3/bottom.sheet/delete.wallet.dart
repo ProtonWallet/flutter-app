@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -20,6 +21,7 @@ class DeleteWalletSheet {
   static void show(BuildContext context, HomeViewModel viewModel,
       WalletMenuModel walletMenuModel, bool hasBalance,
       {bool isInvalidWallet = false}) {
+    bool isDeleting = false;
     HomeModalBottomSheet.show(context,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -99,24 +101,26 @@ class DeleteWalletSheet {
                             const SizedBox(
                               height: 8,
                             ),
-                            ButtonV5(
+                            ButtonV6(
                               onPressed: () async {
-                                if (isInvalidWallet == false) {
-                                  Navigator.of(context)
-                                      .pop(); // pop up this bottomSheet
-                                  Navigator.of(context)
-                                      .pop(); // pop up wallet advance setting bottomSheet
-                                  Navigator.of(context)
-                                      .pop(); // pop up wallet setting bottomSheet
-                                } else {
-                                  Navigator.of(context)
-                                      .pop(); // pop up this bottomSheet
-                                }
-                                await viewModel
-                                    .deleteWallet(walletMenuModel.walletModel);
-                                if (context.mounted) {
-                                  CommonHelper.showSnackbar(
-                                      context, S.of(context).wallet_deleted);
+                                if (isDeleting == false) {
+                                  isDeleting = true;
+                                  await viewModel.deleteWallet(
+                                      walletMenuModel.walletModel);
+                                  if (context.mounted) {
+                                    if (isInvalidWallet == false) {
+                                      Navigator.of(context)
+                                          .pop(); // pop up this bottomSheet
+                                      Navigator.of(context)
+                                          .pop(); // pop up wallet setting bottomSheet
+                                    } else {
+                                      Navigator.of(context)
+                                          .pop(); // pop up this bottomSheet
+                                    }
+                                    CommonHelper.showSnackbar(
+                                        context, S.of(context).wallet_deleted);
+                                  }
+                                  isDeleting = false;
                                 }
                               },
                               text: S.of(context).delete_wallet_now,

@@ -333,6 +333,10 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
+  Future<void> notifyUpdateEmailIntegration() async{
+    dataUpdateController.add(DataUpdated("email integration Updated"));
+  }
+
   void updateSelected(String? serverWalletID, String? serverAccountID) {
     selectedServerWalletID = serverWalletID ?? "";
     selectedServerWalletAccountID = serverAccountID ?? "";

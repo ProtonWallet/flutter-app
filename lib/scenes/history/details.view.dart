@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -79,45 +80,60 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.only(right: 4, top: 2),
-                            padding: const EdgeInsets.all(2.0),
-                            child: SvgPicture.asset(
-                                viewModel.isSend
-                                    ? "assets/images/icon/send.svg"
-                                    : "assets/images/icon/receive.svg",
-                                fit: BoxFit.fill,
-                                width: 25,
-                                height: 25)),
-                        Text(
-                            viewModel.isSend
-                                ? S.of(context).you_sent
-                                : S.of(context).you_received,
-                            style:
-                                FontManager.body2Regular(ProtonColors.textHint))
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                            "$fiatCurrencySign${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs().toStringAsFixed(displayDigits)}",
-                            style: FontManager.transactionHistoryAmountTitle(
-                                ProtonColors.textNorm)),
-                        const SizedBox(width: 4),
-                        Text(fiatCurrencyName,
-                            style: FontManager.body2Regular(
-                                ProtonColors.textNorm)),
-                      ],
-                    ),
-                    Text(
-                        ExchangeCalculator.getBitcoinUnitLabel(
-                            viewModel.userSettingsDataProvider.bitcoinUnit,
-                            viewModel.amount.toInt().abs()),
-                        style: FontManager.body2Regular(ProtonColors.textHint)),
+                    viewModel.initialized == false
+                        ? const CardLoading(
+                            height: 50,
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            margin: EdgeInsets.only(top: 4),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 4, top: 2),
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: SvgPicture.asset(
+                                            viewModel.isSend
+                                                ? "assets/images/icon/send.svg"
+                                                : "assets/images/icon/receive.svg",
+                                            fit: BoxFit.fill,
+                                            width: 25,
+                                            height: 25)),
+                                    Text(
+                                        viewModel.isSend
+                                            ? S.of(context).you_sent
+                                            : S.of(context).you_received,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textHint))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        "$fiatCurrencySign${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs().toStringAsFixed(displayDigits)}",
+                                        style: FontManager
+                                            .transactionHistoryAmountTitle(
+                                                ProtonColors.textNorm)),
+                                    const SizedBox(width: 4),
+                                    Text(fiatCurrencyName,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textNorm)),
+                                  ],
+                                ),
+                                Text(
+                                    ExchangeCalculator.getBitcoinUnitLabel(
+                                        viewModel.userSettingsDataProvider
+                                            .bitcoinUnit,
+                                        viewModel.amount.toInt().abs()),
+                                    style: FontManager.body2Regular(
+                                        ProtonColors.textHint)),
+                              ]),
                     const SizedBox(height: 20),
                     viewModel.isSend
                         ? buildSendInfo(context)
@@ -170,101 +186,121 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           height: 1,
                         ),
                       ]),
-                    viewModel.isEditing == false
-                        ? GestureDetector(
-                            onTap: () {
-                              viewModel.editMemo();
-                            },
-                            child: Container(
+                    viewModel.initialized == false
+                        ? const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: defaultPadding),
+                            child: CardLoading(
+                              height: 50,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              margin: EdgeInsets.only(top: 4),
+                            ),
+                          )
+                        : viewModel.isEditing == false
+                            ? GestureDetector(
+                                onTap: () {
+                                  viewModel.editMemo();
+                                },
+                                child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    padding:
+                                        const EdgeInsets.all(defaultPadding),
+                                    decoration: BoxDecoration(
+                                        color: ProtonColors
+                                            .transactionNoteBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(32.0)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                            "assets/images/icon/ic_note.svg",
+                                            fit: BoxFit.fill,
+                                            width: 32,
+                                            height: 32),
+                                        const SizedBox(width: 10),
+                                        viewModel.memoController.text.isNotEmpty
+                                            ? Expanded(
+                                                child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      S
+                                                          .of(context)
+                                                          .message_to_myself,
+                                                      style: FontManager
+                                                          .captionRegular(
+                                                              ProtonColors
+                                                                  .textHint)),
+                                                  Row(children: [
+                                                    Expanded(
+                                                        child: Text(
+                                                            viewModel
+                                                                .memoController
+                                                                .text,
+                                                            style: FontManager
+                                                                .body2Median(
+                                                                    ProtonColors
+                                                                        .textNorm)))
+                                                  ]),
+                                                ],
+                                              ))
+                                            : Expanded(
+                                                child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      S
+                                                          .of(context)
+                                                          .message_to_myself,
+                                                      style: FontManager
+                                                          .captionRegular(
+                                                              ProtonColors
+                                                                  .textNorm)),
+                                                  Text(
+                                                      S
+                                                          .of(context)
+                                                          .trans_add_note,
+                                                      style: FontManager
+                                                          .body2Median(
+                                                              ProtonColors
+                                                                  .textHint)),
+                                                ],
+                                              )),
+                                      ],
+                                    )))
+                            : Container(
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 10.0),
-                                padding: const EdgeInsets.all(defaultPadding),
-                                decoration: BoxDecoration(
-                                    color:
-                                        ProtonColors.transactionNoteBackground,
-                                    borderRadius: BorderRadius.circular(32.0)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                        "assets/images/icon/ic_note.svg",
-                                        fit: BoxFit.fill,
-                                        width: 32,
-                                        height: 32),
-                                    const SizedBox(width: 10),
-                                    viewModel.memoController.text.isNotEmpty
-                                        ? Expanded(
-                                            child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  S
-                                                      .of(context)
-                                                      .message_to_myself,
-                                                  style: FontManager
-                                                      .captionRegular(
-                                                          ProtonColors
-                                                              .textHint)),
-                                              Row(children: [
-                                                Expanded(
-                                                    child: Text(
-                                                        viewModel.memoController
-                                                            .text,
-                                                        style: FontManager
-                                                            .body2Median(
-                                                                ProtonColors
-                                                                    .textNorm)))
-                                              ]),
-                                            ],
-                                          ))
-                                        : Expanded(
-                                            child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  S
-                                                      .of(context)
-                                                      .message_to_myself,
-                                                  style: FontManager
-                                                      .captionRegular(
-                                                          ProtonColors
-                                                              .textNorm)),
-                                              Text(S.of(context).trans_add_note,
-                                                  style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
-                                                              .textHint)),
-                                            ],
-                                          )),
+                                child: TextFieldTextV2(
+                                  labelText: S.of(context).message_to_myself,
+                                  textController: viewModel.memoController,
+                                  myFocusNode: viewModel.memoFocusNode,
+                                  paddingSize: 7,
+                                  maxLines: null,
+                                  showCounterText: true,
+                                  maxLength: maxMemoTextCharSize,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(
+                                        maxMemoTextCharSize)
                                   ],
-                                )))
-                        : Container(
-                            margin: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: TextFieldTextV2(
-                              labelText: S.of(context).message_to_myself,
-                              textController: viewModel.memoController,
-                              myFocusNode: viewModel.memoFocusNode,
-                              paddingSize: 7,
-                              maxLines: null,
-                              showCounterText: true,
-                              maxLength: maxMemoTextCharSize,
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(
-                                    maxMemoTextCharSize)
-                              ],
-                              validation: (String value) {
-                                return "";
-                              },
-                              radius: 32,
-                            ),
-                          ),
+                                  validation: (String value) {
+                                    return "";
+                                  },
+                                  radius: 32,
+                                ),
+                              ),
                     ExpansionTile(
                         shape: const Border(),
                         initiallyExpanded: false,
