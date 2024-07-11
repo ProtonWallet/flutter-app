@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';

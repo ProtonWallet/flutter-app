@@ -59,7 +59,7 @@ class LogsViewModelImpl extends LogsViewModel {
 
   Future<void> loadLogs() async {
     final directory = await getApplicationDocumentsDirectory();
-    final logFile = File('${directory.path}/app.log');
+    final logFile = File('${directory.path}/logs/app.log');
     if (await logFile.exists()) {
       final logs = await logFile.readAsString();
       this.logs = logs;

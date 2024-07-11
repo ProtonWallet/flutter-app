@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
@@ -73,10 +72,10 @@ class UserSettingsDataProvider extends DataProvider {
       StreamController<UserSettingDataUpdated>();
 
   StreamController<ExchangeRateDataUpdated> exchangeRateUpdateController =
-  StreamController<ExchangeRateDataUpdated>();
+      StreamController<ExchangeRateDataUpdated>();
 
   StreamController<FiatCurrencyDataUpdated> fiatCurrencyUpdateController =
-  StreamController<FiatCurrencyDataUpdated>();
+      StreamController<FiatCurrencyDataUpdated>();
 
   StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
       StreamController<BitcoinUnitDataUpdated>();

@@ -51,33 +51,30 @@ class TransactionHistorySendItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                      Expanded(
+                          child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(S.of(context).trans_to,
                               style: FontManager.body2Median(
                                   ProtonColors.textWeak)),
-                          SizedBox(
-                              width: 180,
-                              child: Text(
-                                content,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textNorm),
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                          Text(
+                            content,
+                            style:
+                                FontManager.body2Median(ProtonColors.textNorm),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           if (walletAccountName != null &&
                               walletAccountName != content)
-                            SizedBox(
-                                width: 180,
-                                child: Text(
-                                  walletAccountName!,
-                                  style: FontManager.body2Median(
-                                      ProtonColors.textWeak),
-                                  overflow: TextOverflow.ellipsis,
-                                )),
+                            Text(
+                              walletAccountName!,
+                              style: FontManager.body2Median(
+                                  ProtonColors.textWeak),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                         ],
-                      ),
+                      )),
                       Row(mainAxisSize: MainAxisSize.min, children: [
                         if (bitcoinAmount != null)
                           Column(

@@ -3366,65 +3366,78 @@ class NativeLibrary {
   ffi.Pointer<ffi.Char> encryptWithKeyRing(
     ffi.Pointer<ffi.Char> userPublicKeysSepInComma,
     ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _encryptWithKeyRing(
       userPublicKeysSepInComma,
       message,
+      outError,
     );
   }
 
   late final _encryptWithKeyRingPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('encryptWithKeyRing');
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('encryptWithKeyRing');
   late final _encryptWithKeyRing = _encryptWithKeyRingPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   ffi.Pointer<ffi.Char> getArmoredPublicKey(
     ffi.Pointer<ffi.Char> userPrivateKey,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _getArmoredPublicKey(
       userPrivateKey,
+      outError,
     );
   }
 
   late final _getArmoredPublicKeyPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>)>>('getArmoredPublicKey');
-  late final _getArmoredPublicKey = _getArmoredPublicKeyPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('getArmoredPublicKey');
+  late final _getArmoredPublicKey = _getArmoredPublicKeyPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   ffi.Pointer<ffi.Char> encrypt(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _encrypt(
       userPrivateKey,
       message,
+      outError,
     );
   }
 
   late final _encryptPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('encrypt');
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('encrypt');
   late final _encrypt = _encryptPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   ffi.Pointer<ffi.Char> getSignatureWithContext(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> passphrase,
     ffi.Pointer<ffi.Char> message,
     ffi.Pointer<ffi.Char> context,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _getSignatureWithContext(
       userPrivateKey,
       passphrase,
       message,
       context,
+      outError,
     );
   }
 
@@ -3434,13 +3447,15 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('getSignatureWithContext');
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('getSignatureWithContext');
   late final _getSignatureWithContext = _getSignatureWithContextPtr.asFunction<
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>)>();
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   int verifySignatureWithContext(
     ffi.Pointer<ffi.Char> userPublicKey,
@@ -3474,6 +3489,7 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> binaryMessage,
     int length,
     ffi.Pointer<ffi.Char> context,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _getBinarySignatureWithContext(
       userPrivateKey,
@@ -3481,17 +3497,20 @@ class NativeLibrary {
       binaryMessage,
       length,
       context,
+      outError,
     );
   }
 
   late final _getBinarySignatureWithContextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Int,
-              ffi.Pointer<ffi.Char>)>>('getBinarySignatureWithContext');
+          ffi.NativeFunction<
+              ffi.Pointer<ffi.Char> Function(
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Int,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Pointer<ffi.Char>>)>>(
+      'getBinarySignatureWithContext');
   late final _getBinarySignatureWithContext =
       _getBinarySignatureWithContextPtr.asFunction<
           ffi.Pointer<ffi.Char> Function(
@@ -3499,7 +3518,8 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               int,
-              ffi.Pointer<ffi.Char>)>();
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   int verifyBinarySignatureWithContext(
     ffi.Pointer<ffi.Char> userPublicKey,
@@ -3534,21 +3554,29 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> passphrase,
     ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _getSignature(
       userPrivateKey,
       passphrase,
       message,
+      outError,
     );
   }
 
   late final _getSignaturePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('getSignature');
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('getSignature');
   late final _getSignature = _getSignaturePtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   int verifySignature(
     ffi.Pointer<ffi.Char> userPublicKey,
@@ -3593,83 +3621,104 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> passphrase,
     ffi.Pointer<ffi.Char> armor,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _decrypt(
       userPrivateKey,
       passphrase,
       armor,
+      outError,
     );
   }
 
   late final _decryptPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('decrypt');
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('decrypt');
   late final _decrypt = _decryptPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Char> Function(
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   BinaryResult encryptBinary(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> binaryMessage,
     int length,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _encryptBinary(
       userPrivateKey,
       binaryMessage,
       length,
+      outError,
     );
   }
 
   late final _encryptBinaryPtr = _lookup<
       ffi.NativeFunction<
           BinaryResult Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Int)>>('encryptBinary');
+              ffi.Int, ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('encryptBinary');
   late final _encryptBinary = _encryptBinaryPtr.asFunction<
-      BinaryResult Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int)>();
+      BinaryResult Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int,
+          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   ffi.Pointer<ffi.Char> encryptBinaryArmor(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> binaryMessage,
     int length,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _encryptBinaryArmor(
       userPrivateKey,
       binaryMessage,
       length,
+      outError,
     );
   }
 
   late final _encryptBinaryArmorPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Int)>>('encryptBinaryArmor');
+          ffi.Pointer<ffi.Char> Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('encryptBinaryArmor');
   late final _encryptBinaryArmor = _encryptBinaryArmorPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int)>();
+      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   BinaryResult decryptBinary(
     ffi.Pointer<ffi.Char> userPrivateKey,
     ffi.Pointer<ffi.Char> passphrase,
     ffi.Pointer<ffi.Char> encryptedBinary,
     int length,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _decryptBinary(
       userPrivateKey,
       passphrase,
       encryptedBinary,
       length,
+      outError,
     );
   }
 
   late final _decryptBinaryPtr = _lookup<
       ffi.NativeFunction<
-          BinaryResult Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Int)>>('decryptBinary');
+          BinaryResult Function(
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('decryptBinary');
   late final _decryptBinary = _decryptBinaryPtr.asFunction<
       BinaryResult Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>, int)>();
+          ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
   void enforce_binding() {
     return _enforce_binding();
@@ -3684,24 +3733,31 @@ class NativeLibrary {
     ffi.Pointer<ffi.Char> privateKey,
     ffi.Pointer<ffi.Char> oldPassphrase,
     ffi.Pointer<ffi.Char> newPassphrase,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> outError,
   ) {
     return _changePrivateKeyPassphrase(
       privateKey,
       oldPassphrase,
       newPassphrase,
+      outError,
     );
   }
 
   late final _changePrivateKeyPassphrasePtr = _lookup<
-      ffi.NativeFunction<
+          ffi.NativeFunction<
+              ffi.Pointer<ffi.Char> Function(
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Pointer<ffi.Char>>)>>(
+      'changePrivateKeyPassphrase');
+  late final _changePrivateKeyPassphrase =
+      _changePrivateKeyPassphrasePtr.asFunction<
           ffi.Pointer<ffi.Char> Function(
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('changePrivateKeyPassphrase');
-  late final _changePrivateKeyPassphrase =
-      _changePrivateKeyPassphrasePtr.asFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 }
 
 /// mbstate_t is an opaque object to keep conversion state, during multibyte
@@ -5765,7 +5821,7 @@ const int MAC_OS_VERSION_14_5 = 140500;
 
 const int __MAC_OS_X_VERSION_MIN_REQUIRED = 140000;
 
-const int __MAC_OS_X_VERSION_MAX_ALLOWED = 140400;
+const int __MAC_OS_X_VERSION_MAX_ALLOWED = 140500;
 
 const int __ENABLE_LEGACY_MAC_AVAILABILITY = 1;
 

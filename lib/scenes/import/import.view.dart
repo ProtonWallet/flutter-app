@@ -1,6 +1,5 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/bottom.sheets/seed.phrase.tutorial.dart';
@@ -18,7 +17,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';

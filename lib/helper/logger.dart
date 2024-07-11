@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logger/logger.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 var logger = Logger(
@@ -23,6 +24,7 @@ class LoggerService {
 
   static Future<void> initLogFile() async {
     final directory = await getApplicationDocumentsDirectory();
+    final logsPath = join(directory.path, "logs");
     logger = Logger(
       printer: PrettyPrinter(
         methodCount: 1,
@@ -35,14 +37,20 @@ class LoggerService {
       ),
       output: MultiOutput([
         ConsoleOutput(),
-        AdvancedFileOutput(path: directory.path, latestFileName: "app.log")
+        AdvancedFileOutput(
+          path: logsPath,
+          maxFileSizeKB: 5120,
+          latestFileName: "app.log",
+        )
       ]),
     );
   }
 
   static Future<void> reset() async {
     final directory = await getApplicationDocumentsDirectory();
-    final logFile = File('${directory.path}/app.log');
+    final logsPath = join(directory.path, "logs");
+
+    final logFile = File('$logsPath/app.log');
     if (await logFile.exists()) {
       await logFile.delete();
     }
@@ -58,7 +66,11 @@ class LoggerService {
       ),
       output: MultiOutput([
         ConsoleOutput(),
-        AdvancedFileOutput(path: directory.path, latestFileName: "app.log")
+        AdvancedFileOutput(
+          path: logsPath,
+          maxFileSizeKB: 5120,
+          latestFileName: "app.log",
+        )
       ]),
     );
   }

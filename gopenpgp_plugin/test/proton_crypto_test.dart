@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:proton_crypto/exception.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 class UserKeys {
@@ -238,6 +239,7 @@ DeYE4U0ks7cI9VPmeImOYBNcTOZIqIA2hEniBg==
     passphrase: "12345678");
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group('Proton Crypto functions', () {
     test('binary encryption & decryption case 1', () async {
       Uint8List origin = Uint8List.fromList([
@@ -825,9 +827,129 @@ EjOJpeHY0j8B14q+E3Ci5XKAVQiX3hSmN/tiq8fKXx0WIxTl8W9C4GxbCH4Z
 S78EDl9lzDq2HRD4mB7Ghh1DJL9aDN8fEaM=
 =Md5n
 -----END PGP MESSAGE-----''';
-      String decryptMessage =
-          proton_crypto.decrypt(user2.privateKey, user2.passphrase, armor);
+      String decryptMessage = proton_crypto.decrypt(
+        user2.privateKey,
+        user2.passphrase,
+        armor,
+      );
       expect(decryptMessage, equals(message));
+    });
+
+    test('encrypt decrypt case 3', () async {
+      String message = "Test message 3";
+      var encrypted = proton_crypto.encrypt(protonWallet.privateKey, message);
+      var clear = proton_crypto.decrypt(
+        protonWallet.privateKey,
+        protonWallet.passphrase,
+        encrypted,
+      );
+      expect(clear, equals(message));
+
+      encrypted = proton_crypto.encrypt(user1.privateKey, message);
+      clear = proton_crypto.decrypt(
+        user1.privateKey,
+        user1.passphrase,
+        encrypted,
+      );
+      expect(clear, equals(message));
+
+      encrypted = proton_crypto.encrypt(user2.privateKey, message);
+      clear = proton_crypto.decrypt(
+        user2.privateKey,
+        user2.passphrase,
+        encrypted,
+      );
+      expect(clear, equals(message));
+
+      expect(
+        () => proton_crypto.decrypt(
+          user1.privateKey,
+          user1.passphrase,
+          encrypted,
+        ),
+        throwsA(isA<DecryptionException>()),
+      );
+
+      expect(
+        () => proton_crypto.decrypt(
+          user2.privateKey,
+          user1.passphrase,
+          encrypted,
+        ),
+        throwsA(isA<DecryptionException>()),
+      );
+    });
+
+    test('change privatge key cases', () async {
+      String eccKey = protonWallet.privateKey;
+      String eccKeyPwd = protonWallet.passphrase;
+      String eccKeyNewPwd = "1234567890";
+      var newKey = proton_crypto.changePrivateKeyPassword(
+        eccKey,
+        eccKeyPwd,
+        eccKeyNewPwd,
+      );
+      expect(newKey.isNotEmpty, equals(true));
+      var revertKey = proton_crypto.changePrivateKeyPassword(
+        newKey,
+        eccKeyNewPwd,
+        eccKeyPwd,
+      );
+      expect(revertKey.isNotEmpty, equals(true));
+
+      expect(
+        () => proton_crypto.changePrivateKeyPassword(
+          eccKey,
+          "asdlfjhlk1jlk12j3oiu",
+          eccKeyNewPwd,
+        ),
+        throwsA(isA<PassphraseException>()),
+      );
+      String armor = '';
+      expect(
+        () => proton_crypto.changePrivateKeyPassword(
+          armor,
+          "asdlfjhlk1jlk12j3oiu",
+          eccKeyNewPwd,
+        ),
+        throwsA(isA<ArmorException>()),
+      );
+    });
+
+    test('change privatge key cases user 2', () async {
+      String eccKey = user2.privateKey;
+      String eccKeyPwd = user2.passphrase;
+      String eccKeyNewPwd = "1234567890111";
+      var newKey = proton_crypto.changePrivateKeyPassword(
+        eccKey,
+        eccKeyPwd,
+        eccKeyNewPwd,
+      );
+      expect(newKey.isNotEmpty, equals(true));
+      var revertKey = proton_crypto.changePrivateKeyPassword(
+        newKey,
+        eccKeyNewPwd,
+        eccKeyPwd,
+      );
+      expect(revertKey.isNotEmpty, equals(true));
+
+      expect(
+        () => proton_crypto.changePrivateKeyPassword(
+          eccKey,
+          "asdlfjhlk1jlk12j3oiu",
+          eccKeyNewPwd,
+        ),
+        throwsA(isA<PassphraseException>()),
+      );
+      String armor = '';
+      expect(
+        () => proton_crypto.changePrivateKeyPassword(
+          armor,
+          "asdlfjhlk1jlk12j3oiu",
+          eccKeyNewPwd,
+        ),
+        throwsA(isA<ArmorException>()),
+      );
     });
   });
 }

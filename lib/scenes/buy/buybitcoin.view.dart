@@ -1,10 +1,10 @@
 import 'package:card_loading/card_loading.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/scenes/buy/buybitcoin.keyboard.done.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/constants/assets.gen.dart';
@@ -29,7 +29,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
     viewModel.focusNode.addListener(() {
       bool hasFocus = viewModel.focusNode.hasFocus;
       if (hasFocus) {
-        showOverlay(context);
+        showOverlay(context, () {
+          viewModel.keyboardDone();
+        });
       } else {
         removeOverlay();
       }
@@ -113,7 +115,11 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               countryFilter: state.isCountryLoaded
                                   ? state.countryCodes
                                   : null,
-                              favorite: viewModel.favoriteCountryCode,
+                              favorite: state.isCountryLoaded
+                                  ? viewModel
+                                      .getFavoriteCountry(state.countryCodes)
+                                  : null,
+
                               //Optional. Shows phone code before the country name.
                               showPhoneCode: false,
                               useSafeArea: true,
@@ -279,6 +285,19 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           const SizedBox(height: 2),
                                           if (state.isCurrencyLoaded)
                                             TextFormField(
+                                              decoration: const InputDecoration(
+                                                hintText: 'Enter text',
+                                                border: InputBorder
+                                                    .none, // Remove the underline
+                                                enabledBorder: InputBorder
+                                                    .none, // Remove the underline when the field is enabled
+                                                focusedBorder: InputBorder
+                                                    .none, // Remove the underline when the field is focused
+                                                errorBorder: InputBorder
+                                                    .none, // Remove the underline when the field has an error
+                                                disabledBorder: InputBorder
+                                                    .none, // Remove the underline when the field is disabled
+                                              ),
                                               controller: viewModel.controller,
                                               focusNode: viewModel.focusNode,
                                               inputFormatters: [
@@ -886,7 +905,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
     );
   }
 
-  showOverlay(BuildContext context) {
+  /// when platform is ios. we show overlay on top of keyboard Done button
+  showOverlay(BuildContext context, VoidCallback? onTap) {
     if (TargetPlatform.iOS != defaultTargetPlatform) return;
     if (viewModel.overlayEntry != null) return;
     OverlayState overlayState = Overlay.of(context);
@@ -895,44 +915,17 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
           bottom: MediaQuery.of(context).viewInsets.bottom,
           right: 0.0,
           left: 0.0,
-          child: const InputDoneView());
+          child: InputDoneView(onTap: onTap));
     });
 
     overlayState.insert(viewModel.overlayEntry!);
   }
 
+  /// remove the overlay
   removeOverlay() {
     if (viewModel.overlayEntry != null) {
       viewModel.overlayEntry!.remove();
       viewModel.overlayEntry = null;
     }
-  }
-}
-
-class InputDoneView extends StatelessWidget {
-  const InputDoneView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: ProtonColors.protonGrey,
-      child: Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-          child: CupertinoButton(
-            padding: const EdgeInsets.only(right: 24.0, top: 8.0, bottom: 8.0),
-            onPressed: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            child: Text("Done",
-                style: TextStyle(
-                    color: ProtonColors.blue1Text,
-                    fontWeight: FontWeight.bold)),
-          ),
-        ),
-      ),
-    );
   }
 }

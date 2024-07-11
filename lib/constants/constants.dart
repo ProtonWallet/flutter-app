@@ -17,6 +17,9 @@ const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
 const int reSyncTime = 120; // trigger sync at least after 120 seconds
 
+// desktop
+const double maxDeskTopSheetWidth = 600.0;
+
 const String latestAddressIndex = "bitcoinAddress.latest";
 
 const BitcoinUnit defaultBitcoinUnit = BitcoinUnit.btc;

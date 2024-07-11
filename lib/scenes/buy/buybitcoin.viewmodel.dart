@@ -51,7 +51,7 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   List<DropdownItem> providers = [];
 
   /// get prebuild country code
-  late List<String> favoriteCountryCode;
+  List<String>? getFavoriteCountry(List<String> availableCountries);
 
   ///
   void selectCountry(String code);
@@ -61,6 +61,7 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   void selectAmount(String amount);
 
   void pay(SelectedInfoModel selected);
+  void keyboardDone();
 
   FocusNode get focusNode;
   TextEditingController get controller;
@@ -107,12 +108,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   final FocusNode focusNode = FocusNode();
   @override
   final TextEditingController controller = TextEditingController(text: "100");
-
-  @override
-  List<String> get favoriteCountryCode {
-    var currentCode = PlatformDispatcher.instance.locale.countryCode ?? "US";
-    return [currentCode];
-  }
 
   @override
   BuyBitcoinBloc get bloc => buyBloc;
@@ -285,7 +280,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         await WalletManager.updateLastUsedIndex(accountModel);
       }
       int addressIndex = 0;
-      if (localLastUsedIndex == -1 && accountModel.lastUsedIndex == 0){
+      if (localLastUsedIndex == -1 && accountModel.lastUsedIndex == 0) {
         addressIndex = accountModel.lastUsedIndex;
       } else {
         addressIndex = accountModel.lastUsedIndex + 1;
@@ -350,6 +345,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   @override
+  void keyboardDone() {
+    var amount = bloc.state.selectedModel.amount.toString();
+    var check = buyBloc.toNumberAmount(controller.text);
+    if (amount != check) {
+      selectAmount(check);
+    }
+  }
+
+  @override
   void pay(SelectedInfoModel selected) {
     var amount = selected.amount.toString();
     var check = buyBloc.toNumberAmount(controller.text);
@@ -374,5 +378,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
       move(NavID.rampExternal);
     }
+  }
+
+  @override
+  List<String>? getFavoriteCountry(List<String> availableCountries) {
+    var currentCode = PlatformDispatcher.instance.locale.countryCode ?? "US";
+    if (availableCountries.contains(currentCode)) {
+      return [currentCode];
+    }
+
+    return null;
   }
 }
