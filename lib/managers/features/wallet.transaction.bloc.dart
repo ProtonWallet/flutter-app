@@ -595,8 +595,13 @@ class WalletTransactionBloc
 
     for (TransactionModel transactionModel
         in serverTransactionData.transactions) {
-      String txid = proton_crypto.decrypt(
-          userPrivateKey, userPassphrase, transactionModel.transactionID);
+      String txid = "";
+      try {
+        txid = proton_crypto.decrypt(
+            userPrivateKey, userPassphrase, transactionModel.transactionID);
+      } catch (e) {
+        logger.e(e);
+      }
       if (txid.isEmpty) {
         for (AddressKey addressKey in addressKeys) {
           try {
