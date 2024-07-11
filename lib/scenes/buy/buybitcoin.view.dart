@@ -285,6 +285,19 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           const SizedBox(height: 2),
                                           if (state.isCurrencyLoaded)
                                             TextFormField(
+                                              decoration: const InputDecoration(
+                                                hintText: 'Enter text',
+                                                border: InputBorder
+                                                    .none, // Remove the underline
+                                                enabledBorder: InputBorder
+                                                    .none, // Remove the underline when the field is enabled
+                                                focusedBorder: InputBorder
+                                                    .none, // Remove the underline when the field is focused
+                                                errorBorder: InputBorder
+                                                    .none, // Remove the underline when the field has an error
+                                                disabledBorder: InputBorder
+                                                    .none, // Remove the underline when the field is disabled
+                                              ),
                                               controller: viewModel.controller,
                                               focusNode: viewModel.focusNode,
                                               inputFormatters: [
