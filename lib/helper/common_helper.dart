@@ -113,4 +113,30 @@ class CommonHelper {
       return S.of(context).n_minutes_ago(difference.inMinutes.toInt());
     }
   }
+
+  static String formatLocaleTimeWithSendOrReceiveOn(
+      BuildContext context, bool isSend, int timestamp) {
+    var millis = timestamp;
+    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
+    var now = DateTime.now();
+    var difference = now.difference(dt);
+    if (difference.inDays >= 1) {
+      var dateLocalFormat =
+          DateFormat.yMd(Platform.localeName).add_jm().format(dt);
+      return isSend
+          ? S.of(context).sent_on(dateLocalFormat.toString())
+          : S.of(context).received_on(dateLocalFormat.toString());
+    } else if (difference.inHours >= 1) {
+      String timeAgo = S.of(context).n_hour_ago(difference.inHours.toInt());
+      return isSend
+          ? S.of(context).sent_time_ago(timeAgo)
+          : S.of(context).received_time_ago(timeAgo);
+    } else {
+      String timeAgo =
+          S.of(context).n_minutes_ago(difference.inMinutes.toInt());
+      return isSend
+          ? S.of(context).sent_time_ago(timeAgo)
+          : S.of(context).received_time_ago(timeAgo);
+    }
+  }
 }

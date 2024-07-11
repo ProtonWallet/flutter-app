@@ -4,18 +4,36 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 
 class HomeModalBottomSheet {
-  static void show(BuildContext context,
-      {Widget? child, ScrollController? scrollController}) {
+  static void show(
+    BuildContext context, {
+    Widget? child,
+    ScrollController? scrollController,
+    Color? backgroundColor,
+  }) {
     if (Responsive.isMobile(context)) {
-      _showMobile(context, child: child, scrollController: scrollController);
+      _showMobile(
+        context,
+        child: child,
+        scrollController: scrollController,
+        backgroundColor: backgroundColor,
+      );
     } else {
       // desktop and tablet
-      _showDesktop(context, child: child, scrollController: scrollController);
+      _showDesktop(
+        context,
+        child: child,
+        scrollController: scrollController,
+        backgroundColor: backgroundColor,
+      );
     }
   }
 
-  static void _showDesktop(BuildContext context,
-      {Widget? child, ScrollController? scrollController}) {
+  static void _showDesktop(
+    BuildContext context, {
+    Widget? child,
+    ScrollController? scrollController,
+    Color? backgroundColor,
+  }) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -33,7 +51,7 @@ class HomeModalBottomSheet {
               alignment: Alignment.center,
               child: Container(
                   decoration: BoxDecoration(
-                    color: ProtonColors.backgroundProton,
+                    color: backgroundColor ?? ProtonColors.backgroundProton,
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 30),
@@ -55,11 +73,15 @@ class HomeModalBottomSheet {
         });
   }
 
-  static void _showMobile(BuildContext context,
-      {Widget? child, ScrollController? scrollController}) {
+  static void _showMobile(
+    BuildContext context, {
+    Widget? child,
+    ScrollController? scrollController,
+    Color? backgroundColor,
+  }) {
     showModalBottomSheet(
         context: context,
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: backgroundColor ?? ProtonColors.backgroundProton,
         isScrollControlled: true,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,

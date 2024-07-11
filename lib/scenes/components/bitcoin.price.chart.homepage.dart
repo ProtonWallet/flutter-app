@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
 import 'dart:convert';
 import 'package:wallet/constants/proton.color.dart';
@@ -144,8 +145,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
                   width: Responsive.isDesktop(context)
                       ? MediaQuery.of(context).size.width * 2 / 3 - 300
                       : null,
-                  padding: const EdgeInsets.only(
-                    left: 8,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
                   ),
                   height: 40,
                   child: isLoading
@@ -209,7 +210,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
         Icon(
           Icons.keyboard_arrow_down_rounded,
           size: 24,
-          color: ProtonColors.textWeak,
+          color: ProtonColors.textHint,
         ),
       ]),
     );

@@ -17,6 +17,7 @@ class FlyingAnimation extends StatefulWidget {
 class RotateChildState extends State<FlyingAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
+  bool isDisposed = false;
 
   @override
   void initState() {
@@ -31,11 +32,15 @@ class RotateChildState extends State<FlyingAnimation>
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 300), () {
-          controller.reverse();
+          if (isDisposed == false) {
+            controller.reverse();
+          }
         });
       } else if (status == AnimationStatus.dismissed) {
         Future.delayed(const Duration(milliseconds: 300), () {
-          controller.forward();
+          if (isDisposed == false) {
+            controller.reverse();
+          }
         });
       }
     });
@@ -45,6 +50,7 @@ class RotateChildState extends State<FlyingAnimation>
   @override
   void dispose() {
     controller.dispose();
+    isDisposed = true;
     super.dispose();
   }
 

@@ -1,11 +1,11 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -20,7 +20,9 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -31,6 +33,7 @@ class OnboardingGuideSheet {
     bool firstWallet = false,
   }) {
     bool passphraseConfirmed = true;
+    bool isCreatingWallet = false;
     HomeModalBottomSheet.show(context,
         child: BlocBuilder<WalletListBloc, WalletListState>(
             bloc: viewModel.walletListBloc,
@@ -109,7 +112,8 @@ class OnboardingGuideSheet {
                                     .toList(),
                                 valueNotifier: viewModel.fiatCurrencyNotifier),
                             const SizedBox(height: 10),
-                            if (state.walletsModel.isNotEmpty)
+                            if (state.walletsModel.isNotEmpty &&
+                                firstWallet == false)
                               ExpansionTile(
                                   shape: const Border(),
                                   initiallyExpanded: false,
@@ -124,29 +128,20 @@ class OnboardingGuideSheet {
                                   iconColor: ProtonColors.textHint,
                                   collapsedIconColor: ProtonColors.textHint,
                                   children: [
-                                    AlertCustom(
-                                      content: S
-                                          .of(context)
-                                          .what_is_wallet_passphrase,
-                                      onTap: () {
-                                        PassphraseTutorialSheet.show(context);
-                                      },
-                                      canClose: false,
-                                      leadingWidget:
-                                          Assets.images.icon.alertInfo.svg(
-                                        fit: BoxFit.fill,
-                                        width: 22,
-                                        height: 22,
-                                      ),
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                        width: 0,
-                                      ),
-                                      backgroundColor:
-                                          ProtonColors.purple1Background,
-                                      color: ProtonColors.purple1Text,
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      S.of(context).add_a_passphrase_title,
+                                      style: FontManager.titleHeadline(
+                                          ProtonColors.textNorm),
                                     ),
-                                    SizedBoxes.box12,
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      S.of(context).add_a_passphrase_desc,
+                                      style: FontManager.body2Regular(
+                                          ProtonColors.textWeak),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 20),
                                     TextFieldTextV2(
                                       labelText: S
                                           .of(context)
@@ -216,43 +211,68 @@ class OnboardingGuideSheet {
                                       },
                                       isPassword: true,
                                     ),
+                                    const SizedBox(height: 12),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          PassphraseTutorialSheet.show(context);
+                                        },
+                                        child: Underline(
+                                          child: Text(
+                                            S.of(context).learn_more,
+                                            style: FontManager.body2Regular(
+                                                ProtonColors.purple1Text),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ]),
                             const SizedBox(height: 30),
                             Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: defaultPadding),
                                 child: Column(children: [
-                                  ButtonV5(
+                                  ButtonV6(
                                       onPressed: () async {
-                                        if (viewModel.passphraseTextController
-                                                .text ==
-                                            viewModel
-                                                .passphraseConfirmTextController
-                                                .text) {
-                                          Navigator.of(context).pop();
-                                          EasyLoading.show(
-                                              status: "creating wallet..",
-                                              maskType:
-                                                  EasyLoadingMaskType.black);
-                                          await viewModel.createWallet();
-                                          EasyLoading.dismiss();
-                                          if (context.mounted) {
-                                            if (viewModel
-                                                .errorMessage.isEmpty) {
-                                              CommonHelper.showSnackbar(context,
-                                                  S.of(context).wallet_created);
-                                            } else {
-                                              CommonHelper.showSnackbar(context,
-                                                  viewModel.errorMessage,
-                                                  isError: true);
+                                        if (isCreatingWallet == false) {
+                                          isCreatingWallet = true;
+                                          if (viewModel.passphraseTextController
+                                                  .text ==
+                                              viewModel
+                                                  .passphraseConfirmTextController
+                                                  .text) {
+                                            await viewModel.createWallet();
+                                            if (context.mounted) {
+                                              Navigator.of(context).pop();
+                                              if (viewModel
+                                                  .errorMessage.isEmpty) {
+                                                CommonHelper.showSnackbar(
+                                                    context,
+                                                    S
+                                                        .of(context)
+                                                        .wallet_created);
+                                              } else {
+                                                CommonHelper.showSnackbar(
+                                                    context,
+                                                    viewModel.errorMessage,
+                                                    isError: true);
+                                              }
                                             }
+                                          } else {
+                                            LocalToast.showErrorToast(
+                                                context,
+                                                S
+                                                    .of(context)
+                                                    .passphrase_are_not_match);
                                           }
-                                        } else {
-                                          LocalToast.showErrorToast(
+                                          isCreatingWallet = false;
+                                          if (context.mounted && firstWallet) {
+                                            WelcomeDialogSheet.show(
                                               context,
-                                              S
-                                                  .of(context)
-                                                  .passphrase_are_not_match);
+                                              viewModel.userEmail,
+                                            );
+                                          }
                                         }
                                       },
                                       text: S.of(context).create_new_wallet,

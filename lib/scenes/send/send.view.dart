@@ -1,4 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:card_loading/card_loading.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,9 +143,9 @@ class SendView extends ViewBase<SendViewModel> {
                                           ExchangeCalculator
                                               .getNotionalInFiatCurrency(
                                         viewModel.exchangeRate,
-                                        viewModel.balance -
-                                            viewModel.estimatedFeeInSAT -
-                                            100,
+                                        viewModel.maxBalanceToSend - 10,
+
+                                        /// TODO:: fix me, some low value issue
                                       ).toStringAsFixed(ExchangeCalculator
                                               .getDisplayDigit(
                                                   viewModel.exchangeRate));
@@ -723,131 +724,172 @@ class SendView extends ViewBase<SendViewModel> {
   Widget buildAddRecipient(BuildContext context) {
     return Container(
         color: ProtonColors.white,
-        child: Column(children: [
-          Expanded(
-              child: SingleChildScrollView(
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding),
-                      child: Center(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            const SizedBox(height: 20),
-                            Column(children: [
-                              ProtonMailAutoComplete(
-                                  labelText: S.of(context).send_to_recipient_s,
-                                  emails: viewModel.contactsEmail,
-                                  color: ProtonColors.white,
-                                  focusNode: viewModel.addressFocusNode,
-                                  textEditingController:
-                                      viewModel.recipientTextController,
-                                  callback: () {
-                                    viewModel.addressAutoCompleteCallback();
-                                  }),
-                              const SizedBox(height: 5),
+        child: viewModel.initialized == false
+            ? const Column(children: [
+                SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: CardLoading(
+                    height: 50,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    margin: EdgeInsets.only(top: 4),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: CardLoading(
+                    height: 20,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    margin: EdgeInsets.only(top: 4),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: CardLoading(
+                    height: 50,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    margin: EdgeInsets.only(top: 4),
+                  ),
+                ),
+                SizedBox(height: 20),
+              ])
+            : Column(children: [
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding),
+                            child: Center(
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                  const SizedBox(height: 20),
+                                  Column(children: [
+                                    ProtonMailAutoComplete(
+                                        labelText:
+                                            S.of(context).send_to_recipient_s,
+                                        emails: viewModel.contactsEmail,
+                                        color: ProtonColors.white,
+                                        focusNode: viewModel.addressFocusNode,
+                                        textEditingController:
+                                            viewModel.recipientTextController,
+                                        callback: () {
+                                          viewModel
+                                              .addressAutoCompleteCallback();
+                                        }),
+                                    const SizedBox(height: 5),
 
-                              /// TODO:: add account selector or use default one for wallet view
-                              // if (Provider.of<ProtonWalletProvider>(context)
-                              //             .protonWallet
-                              //             .currentAccount ==
-                              //         null &&
-                              //     Provider.of<ProtonWalletProvider>(context)
-                              //             .protonWallet
-                              //             .currentAccounts
-                              //             .length >
-                              //         1)
-                              //   WalletAccountDropdown(
-                              //       labelText: S.of(context).trans_from,
-                              //       backgroundColor: ProtonColors.white,
-                              //       width: MediaQuery.of(context).size.width -
-                              //           defaultPadding * 2,
-                              //       accounts: Provider.of<ProtonWalletProvider>(
-                              //               context)
-                              //           .protonWallet
-                              //           .currentAccounts,
-                              //       valueNotifier: viewModel.initialized
-                              //           ? viewModel.accountValueNotifier
-                              //           : ValueNotifier(
-                              //               Provider.of<ProtonWalletProvider>(
-                              //                       context)
-                              //                   .protonWallet
-                              //                   .currentAccounts
-                              //                   .first)),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(width: defaultPadding),
-                                    Text(
-                                      "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
-                                      style: FontManager.captionRegular(
-                                          ProtonColors.textWeak),
+                                    /// TODO:: add account selector or use default one for wallet view
+                                    // if (Provider.of<ProtonWalletProvider>(context)
+                                    //             .protonWallet
+                                    //             .currentAccount ==
+                                    //         null &&
+                                    //     Provider.of<ProtonWalletProvider>(context)
+                                    //             .protonWallet
+                                    //             .currentAccounts
+                                    //             .length >
+                                    //         1)
+                                    //   WalletAccountDropdown(
+                                    //       labelText: S.of(context).trans_from,
+                                    //       backgroundColor: ProtonColors.white,
+                                    //       width: MediaQuery.of(context).size.width -
+                                    //           defaultPadding * 2,
+                                    //       accounts: Provider.of<ProtonWalletProvider>(
+                                    //               context)
+                                    //           .protonWallet
+                                    //           .currentAccounts,
+                                    //       valueNotifier: viewModel.initialized
+                                    //           ? viewModel.accountValueNotifier
+                                    //           : ValueNotifier(
+                                    //               Provider.of<ProtonWalletProvider>(
+                                    //                       context)
+                                    //                   .protonWallet
+                                    //                   .currentAccounts
+                                    //                   .first)),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: defaultPadding),
+                                          Text(
+                                            "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
+                                            style: FontManager.captionRegular(
+                                                ProtonColors.textWeak),
+                                          ),
+                                        ]),
+                                    const SizedBox(
+                                      height: 10,
                                     ),
                                   ]),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ]),
-                            if (viewModel.recipients.isNotEmpty)
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 20, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  S.of(context).recipients,
-                                  style: FontManager.captionMedian(
-                                      ProtonColors.textNorm),
-                                ),
-                              ),
-                            for (int index = 0;
-                                index < viewModel.recipients.length;
-                                index++)
-                              RecipientDetail(
-                                name: viewModel.recipients[index].email,
-                                email: viewModel.recipients[index].email,
-                                bitcoinAddress: viewModel.bitcoinAddresses
-                                        .containsKey(
-                                            viewModel.recipients[index].email)
-                                    ? viewModel.bitcoinAddresses[viewModel
-                                            .recipients[index].email] ??
-                                        ""
-                                    : "",
-                                isSignatureInvalid: viewModel
-                                            .bitcoinAddressesInvalidSignature[
-                                        viewModel.recipients[index].email] ??
-                                    false,
-                                isSelfBitcoinAddress:
-                                    viewModel.selfBitcoinAddresses.contains(
-                                        viewModel.bitcoinAddresses[viewModel
-                                                .recipients[index].email] ??
-                                            ""),
-                                callback: () {
-                                  viewModel.removeRecipient(index);
-                                },
-                              ),
-                          ]))))),
-          if (MediaQuery.of(context).viewInsets.bottom < 80)
-            Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                margin: const EdgeInsets.symmetric(
-                    horizontal: defaultButtonPadding),
-                child: SafeArea(
-                  child: ButtonV5(
-                      onPressed: () {
-                        viewModel.updatePageStatus(SendFlowStatus.editAmount);
-                      },
-                      enable: viewModel.validRecipientCount() > 0,
-                      text: S.of(context).continue_buttion,
-                      width: MediaQuery.of(context).size.width,
-                      backgroundColor: ProtonColors.protonBlue,
-                      textStyle: FontManager.body1Median(ProtonColors.white),
-                      height: 48),
-                )),
-        ]));
+                                  if (viewModel.recipients.isNotEmpty)
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 20, bottom: 10),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Text(
+                                        S.of(context).recipients,
+                                        style: FontManager.captionMedian(
+                                            ProtonColors.textNorm),
+                                      ),
+                                    ),
+                                  for (int index = 0;
+                                      index < viewModel.recipients.length;
+                                      index++)
+                                    RecipientDetail(
+                                      name: viewModel.recipients[index].email,
+                                      email: viewModel.recipients[index].email,
+                                      bitcoinAddress: viewModel.bitcoinAddresses
+                                              .containsKey(viewModel
+                                                  .recipients[index].email)
+                                          ? viewModel.bitcoinAddresses[viewModel
+                                                  .recipients[index].email] ??
+                                              ""
+                                          : "",
+                                      isSignatureInvalid: viewModel
+                                                  .bitcoinAddressesInvalidSignature[
+                                              viewModel
+                                                  .recipients[index].email] ??
+                                          false,
+                                      isSelfBitcoinAddress: viewModel
+                                          .selfBitcoinAddresses
+                                          .contains(viewModel.bitcoinAddresses[
+                                                  viewModel.recipients[index]
+                                                      .email] ??
+                                              ""),
+                                      callback: () {
+                                        viewModel.removeRecipient(index);
+                                      },
+                                    ),
+                                ]))))),
+                if (MediaQuery.of(context).viewInsets.bottom < 80)
+                  Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: defaultButtonPadding),
+                      child: SafeArea(
+                        child: ButtonV5(
+                            onPressed: () {
+                              viewModel
+                                  .updatePageStatus(SendFlowStatus.editAmount);
+                            },
+                            enable: viewModel.validRecipientCount() > 0,
+                            text: S.of(context).continue_buttion,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: ProtonColors.protonBlue,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.white),
+                            height: 48),
+                      )),
+              ]));
   }
 
   Widget buildBroadcastingContent(BuildContext context) {

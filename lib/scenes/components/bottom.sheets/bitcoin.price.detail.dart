@@ -19,6 +19,7 @@ class BitcoinPriceDetailSheet {
     double priceChange,
   ) {
     HomeModalBottomSheet.show(context,
+        backgroundColor: ProtonColors.white,
         child: Column(
           children: [
             Align(
@@ -32,7 +33,7 @@ class BitcoinPriceDetailSheet {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      S.of(context).current_btc_price,
+                      S.of(context).btc_price,
                       style: FontManager.body2Regular(ProtonColors.textHint),
                       textAlign: TextAlign.left,
                     ),
@@ -44,7 +45,7 @@ class BitcoinPriceDetailSheet {
                         prefix: Provider.of<UserSettingProvider>(
                           context,
                           listen: false,
-                        ).getFiatCurrencyName(
+                        ).getFiatCurrencySign(
                             fiatCurrency: exchangeRate.fiatCurrency),
                         value: ExchangeCalculator.getNotionalInFiatCurrency(
                             exchangeRate, 100000000),
@@ -58,7 +59,7 @@ class BitcoinPriceDetailSheet {
                     priceChange > 0
                         ? AnimatedFlipCounter(
                             duration: const Duration(milliseconds: 500),
-                            prefix: "▲",
+                            prefix: "+",
                             value: priceChange,
                             suffix: "% (1d)",
                             fractionDigits: 2,
@@ -66,7 +67,7 @@ class BitcoinPriceDetailSheet {
                                 ProtonColors.signalSuccess))
                         : AnimatedFlipCounter(
                             duration: const Duration(milliseconds: 500),
-                            prefix: "▼",
+                            prefix: "-",
                             value: priceChange,
                             suffix: "% (1d)",
                             fractionDigits: 2,

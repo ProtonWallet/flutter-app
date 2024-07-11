@@ -309,7 +309,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                 ),
-                color: ProtonColors.backgroundProton,
+                color: ProtonColors.white,
                 foregroundStyle: FontManager.body2Regular(
                   ProtonColors.textNorm,
                 ),
