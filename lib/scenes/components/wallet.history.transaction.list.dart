@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
@@ -78,11 +79,12 @@ class WalletHistoryTransactionListState
             index++)
           TransactionListTitle(
             width: MediaQuery.of(context).size.width,
-            address: WalletManager.getEmailFromWalletTransaction(
-                transactionsFiltered[index].amountInSATS > 0
-                    ? transactionsFiltered[index].sender
-                    : transactionsFiltered[index].toList,
-                selfEmailAddresses: widget.selfEmailAddresses),
+            address: CommonHelper.shorterBitcoinAddress(
+                WalletManager.getEmailFromWalletTransaction(
+                    transactionsFiltered[index].amountInSATS > 0
+                        ? transactionsFiltered[index].sender
+                        : transactionsFiltered[index].toList,
+                    selfEmailAddresses: widget.selfEmailAddresses)),
             bitcoinAmount: BitcoinAmount(
               amountInSatoshi: transactionsFiltered[index].amountInSATS,
               bitcoinUnit: widget.bitcoinUnit,

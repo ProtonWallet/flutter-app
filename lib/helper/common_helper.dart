@@ -64,6 +64,13 @@ class CommonHelper {
     }
   }
 
+  static String shorterBitcoinAddress(String bitcoinAddress) {
+    if (isBitcoinAddress(bitcoinAddress)) {
+      return "${bitcoinAddress.substring(0, 8)}...${bitcoinAddress.substring(bitcoinAddress.length - 4)}";
+    }
+    return bitcoinAddress;
+  }
+
   static void showErrorDialog(String errorMessage) {
     BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
     if (context != null) {
@@ -103,7 +110,7 @@ class CommonHelper {
     double number, {
     int? displayDigits = defaultDisplayDigits,
   }) {
-    if (displayDigits == 0) {
+    if (displayDigits == 0 || number == number.toInt()) {
       return NumberFormat('#,###').format(number);
     }
     String zero = '0';
@@ -122,8 +129,7 @@ class CommonHelper {
     var now = DateTime.now();
     var difference = now.difference(dt);
     if (difference.inDays >= 1) {
-      var dateLocalFormat =
-          DateFormat.yMd(Platform.localeName).add_jm().format(dt);
+      var dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
       return dateLocalFormat.toString();
     } else if (difference.inHours >= 1) {
       return S.of(context).n_hour_ago(difference.inHours.toInt());
@@ -139,8 +145,7 @@ class CommonHelper {
     var now = DateTime.now();
     var difference = now.difference(dt);
     if (difference.inDays >= 1) {
-      var dateLocalFormat =
-          DateFormat.yMd(Platform.localeName).add_jm().format(dt);
+      var dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
       return isSend
           ? S.of(context).sent_on(dateLocalFormat.toString())
           : S.of(context).received_on(dateLocalFormat.toString());

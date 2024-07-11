@@ -153,10 +153,10 @@ class TransactionListTitle extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 isSend
-                    ? Text(bitcoinAmount.toFiatCurrencyString(),
+                    ? Text(bitcoinAmount.toFiatCurrencySignString(),
                         style: FontManager.captionRegular(
                             ProtonColors.signalError))
-                    : Text("+${bitcoinAmount.toFiatCurrencyString()}",
+                    : Text("+${bitcoinAmount.toFiatCurrencySignString()}",
                         style: FontManager.captionRegular(
                             ProtonColors.signalSuccess)),
                 // isSend
