@@ -10,7 +10,11 @@ import 'package:wallet/theme/theme.font.dart';
 
 class AdvanceWalletAccountSettingSheet {
   static void show(
-      BuildContext context, HomeViewModel viewModel, WalletModel userWallet, AccountMenuModel userAccount) {
+    BuildContext context,
+    HomeViewModel viewModel,
+    WalletModel userWallet,
+    AccountMenuModel userAccount,
+  ) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -30,7 +34,8 @@ class AdvanceWalletAccountSettingSheet {
                           FontManager.body2Regular(ProtonColors.signalError))),
               onTap: () {
                 Navigator.of(context).pop();
-                DeleteAccountSheet.show(context, viewModel, userWallet, userAccount);
+                DeleteAccountSheet.show(
+                    context, viewModel, userWallet, userAccount);
               }),
         ],
       );

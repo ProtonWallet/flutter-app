@@ -30,8 +30,10 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
       ));
 
       /// load currency
-      add(const LoadCurrencyEvent());
-      add(const GetQuoteEvent());
+      if (!isClosed) {
+        add(const LoadCurrencyEvent());
+        add(const GetQuoteEvent());
+      }
     });
 
     /// load currency
@@ -57,7 +59,9 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           selectedModel:
               state.selectedModel.copyWith(fiatCurrency: defaultCountry)));
 
-      add(SelectCurrencyEvent(defaultCountry.symbol));
+      if (!isClosed) {
+        add(SelectCurrencyEvent(defaultCountry.symbol));
+      }
     });
 
     /// select country
@@ -72,8 +76,10 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           selectedModel: state.selectedModel.copyWith(country: apiCountry)));
 
       /// load currency
-      add(const LoadCurrencyEvent());
-      add(const GetQuoteEvent());
+      if (!isClosed) {
+        add(const LoadCurrencyEvent());
+        add(const GetQuoteEvent());
+      }
     });
 
     /// select currency
@@ -97,8 +103,9 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           amount: numericAmountg,
         ),
       ));
-
-      add(const GetQuoteEvent());
+      if (!isClosed) {
+        add(const GetQuoteEvent());
+      }
     });
 
     /// get quote event

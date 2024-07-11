@@ -1,17 +1,14 @@
 //bitcoin.address.list
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
-import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/scenes/components/custom.loading.with.child.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.bitcoin.address.list.dart';

@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+38
+version: 1.0.0+39
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
@@ -123,6 +123,11 @@ dependencies:
 
   # keyboard visibility check. for toolbar on top of ios device
   flutter_keyboard_visibility: ^6.0.0
+
+  # unleash proxy client
+  unleash_proxy_client_flutter: ^1.5.3
+  # sentry_flutter: ^8.3.0
+  sentry: ^8.3.0
 
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)

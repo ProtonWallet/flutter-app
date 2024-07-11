@@ -7,12 +7,22 @@ typedef Logic = Future<void> Function();
 class PreferencesManager implements Manager {
   // storage interface
   final PreferencesInterface storage;
+  final firstTimeEntryKey = "firstTimeEntry";
 
   PreferencesManager(this.storage);
 
   /// function
   Future<void> deleteAll() async {
     await storage.deleteAll();
+    await rebuild();
+  }
+
+  Future<void> rebuild() async {
+    await storage.write(firstTimeEntryKey, false);
+  }
+
+  Future<void> isFirstTimeEntry(Logic run) async {
+    await checkif(firstTimeEntryKey, false, run);
   }
 
   Future<void> checkif(String key, dynamic value, Logic run) async {
