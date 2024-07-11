@@ -15,7 +15,7 @@ const int freeUserWalletAccountLimit = 2; // TODO:: get from api to avoid abuse
 const int maxMemoTextCharSize = 256;
 const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
-const int reSyncTime = 600; // trigger sync after 600 seconds (1 block)
+const int reSyncTime = 120; // trigger sync at least after 120 seconds
 
 const String latestAddressIndex = "bitcoinAddress.latest";
 

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -355,16 +354,7 @@ class SidebarWalletItems extends StatelessWidget {
             style: FontManager.overlineRegular(ProtonColors.textHint))
       ]);
     } else {
-      return Blur(
-        blur: 3,
-        blurColor: ProtonColors.drawerBackground,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text(accountModel.currencyBalance,
-              style: FontManager.captionSemiBold(textColor)),
-          Text(accountModel.btcBalance,
-              style: FontManager.overlineRegular(ProtonColors.textHint))
-        ]),
-      );
+      return const SizedBox();
     }
   }
 }

@@ -49,7 +49,7 @@ class TransactionList extends StatelessWidget {
                       controller: viewModel.transactionSearchController,
                     )
                   : Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.only(top: 8, bottom: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -79,7 +79,7 @@ class TransactionList extends StatelessWidget {
                                 ? CustomLoadingWithChild(
                                     durationInMilliSeconds: 800,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(3),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                                       child: Icon(
                                         Icons.refresh_rounded,
                                         size: 20,
@@ -93,7 +93,7 @@ class TransactionList extends StatelessWidget {
                                           .syncWallet(true);
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.all(3),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                                       child: Icon(
                                         Icons.refresh_rounded,
                                         size: 20,
@@ -109,7 +109,7 @@ class TransactionList extends StatelessWidget {
                                       context, viewModel);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                   child: SvgPicture.asset(
                                       "assets/images/icon/setup-preference.svg",
                                       fit: BoxFit.fill,
@@ -124,9 +124,12 @@ class TransactionList extends StatelessWidget {
                                   viewModel.setSearchHistoryTextField(true);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: Icon(Icons.search_rounded,
-                                      color: ProtonColors.textNorm, size: 20),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/search.svg",
+                                      fit: BoxFit.fill,
+                                      width: 16,
+                                      height: 16),
                                 ),
                               ),
                             const SizedBox(width: 4),

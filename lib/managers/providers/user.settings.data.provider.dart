@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
@@ -14,6 +15,13 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class UserSettingDataUpdated extends DataState {
   UserSettingDataUpdated();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FiatCurrencyDataUpdated extends DataState {
+  FiatCurrencyDataUpdated();
 
   @override
   List<Object?> get props => [];
@@ -65,7 +73,10 @@ class UserSettingsDataProvider extends DataProvider {
       StreamController<UserSettingDataUpdated>();
 
   StreamController<ExchangeRateDataUpdated> exchangeRateUpdateController =
-      StreamController<ExchangeRateDataUpdated>();
+  StreamController<ExchangeRateDataUpdated>();
+
+  StreamController<FiatCurrencyDataUpdated> fiatCurrencyUpdateController =
+  StreamController<FiatCurrencyDataUpdated>();
 
   StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
       StreamController<BitcoinUnitDataUpdated>();
@@ -123,6 +134,7 @@ class UserSettingsDataProvider extends DataProvider {
             await ExchangeRateService.getExchangeRate(fiatCurrency);
         updateExchangeRate(exchangeRate);
       }
+      fiatCurrencyUpdateController.add(FiatCurrencyDataUpdated());
     }
   }
 
@@ -164,9 +176,7 @@ class UserSettingsDataProvider extends DataProvider {
     } else {
       fiatCurrency ??= FiatCurrency.usd;
     }
-    return fiatCurrency2Info.containsKey(fiatCurrency)
-        ? fiatCurrency2Info[fiatCurrency]!.sign
-        : "\$";
+    return CommonHelper.getFiatCurrencySign(fiatCurrency);
   }
 
   Future<void> preLoad() async {
@@ -179,6 +189,7 @@ class UserSettingsDataProvider extends DataProvider {
     settingsQueries.clearTable();
     dataUpdateController.close();
     exchangeRateUpdateController.close();
+    fiatCurrencyUpdateController.close();
     bitcoinUnitUpdateController.close();
   }
 }

@@ -8,6 +8,7 @@ import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
@@ -133,6 +134,7 @@ class DataProviderManager extends Manager {
   late BalanceDataProvider balanceDataProvider;
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
+  late BlockInfoDataProvider blockInfoDataProvider;
 
   DataProviderManager(
     this.storage,
@@ -219,6 +221,10 @@ class DataProviderManager extends Manager {
 
     protonAddressProvider = ProtonAddressProvider(
       DBHelper.addressDao!,
+    );
+
+    blockInfoDataProvider = BlockInfoDataProvider(
+      apiService.getBlockClient(),
     );
 
     // TODO:: fix this

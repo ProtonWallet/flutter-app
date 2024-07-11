@@ -19,18 +19,16 @@ class LoginAndSignupBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-            margin:
-                const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
-            child: ButtonV5(
-                onPressed: signupPressed,
-                text: S.of(context).create_new_wallet,
-                width: MediaQuery.of(context).size.width,
-                backgroundColor: ProtonColors.interactionNorm,
-                borderColor: ProtonColors.clear,
-                textStyle: FontManager.body1Median(ProtonColors.white),
-                height: 48,
-                maximumSize: const Size(300, 48))),
+        ButtonV5(
+            onPressed: signupPressed,
+            text: S.of(context).create_new_wallet,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.interactionNorm,
+            borderColor: ProtonColors.clear,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
+            radius: 8,
+            maximumSize: const Size(560, 48)),
         const SizedBox(height: 4),
         CupertinoButton(
           onPressed: signinPressed,

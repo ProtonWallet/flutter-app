@@ -104,6 +104,17 @@ class FontManager {
         color: color);
   }
 
+
+  static TextStyle actionButtonText(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 15,
+        height: 1.5,
+        // lineHeight = 24
+        fontWeight: FontWeight.w500,
+        color: color);
+  }
+
   static TextStyle body1Regular(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,
