@@ -82,7 +82,7 @@ class BitcoinPriceBox extends StatelessWidget {
                                             const Duration(milliseconds: 500),
                                         prefix: Provider.of<
                                                 UserSettingProvider>(context)
-                                            .getFiatCurrencyName(
+                                            .getFiatCurrencySign(
                                                 fiatCurrency:
                                                     exchangeRate.fiatCurrency),
                                         value: ExchangeCalculator
@@ -99,7 +99,7 @@ class BitcoinPriceBox extends StatelessWidget {
                                         ? AnimatedFlipCounter(
                                             duration: const Duration(
                                                 milliseconds: 500),
-                                            prefix: "▲",
+                                            prefix: "+",
                                             value: priceChange,
                                             suffix: "% (1d)",
                                             fractionDigits: 2,
@@ -108,7 +108,7 @@ class BitcoinPriceBox extends StatelessWidget {
                                         : AnimatedFlipCounter(
                                             duration: const Duration(
                                                 milliseconds: 500),
-                                            prefix: "▼",
+                                            prefix: "-",
                                             value: priceChange,
                                             suffix: "% (1d)",
                                             fractionDigits: 2,

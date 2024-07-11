@@ -19,6 +19,9 @@ import 'package:wallet/theme/theme.font.dart';
 class PassphraseSheet {
   static void show(BuildContext context, HomeViewModel viewModel,
       WalletMenuModel walletMenuModel) {
+    Future.delayed(const Duration(milliseconds: 200), () {
+      viewModel.walletRecoverPassphraseFocusNode.requestFocus();
+    });
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
       return Column(
@@ -32,27 +35,40 @@ class PassphraseSheet {
             //     S.of(context).config_wallet_passphrase_guide,
             //     width: MediaQuery.of(context).size.width),
             // const SizedBox(height: 12),
+            Text(
+              walletMenuModel.walletName,
+              style: FontManager.titleHeadline(ProtonColors.textNorm),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              S.of(context).wallet_passphrase_unlock_desc,
+              style: FontManager.body2Regular(ProtonColors.textWeak),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: TextFieldTextV2(
-                labelText: S.of(context).passphrase_label,
-                hintText: S.of(context).passphrase_recovery_hint,
-                alwaysShowHint: true,
-                textController: viewModel.walletRecoverPassphraseController,
-                myFocusNode: viewModel.walletRecoverPassphraseFocusNode,
-                validation: (String value) {
-                  if (value.isEmpty) {
-                    return "Required";
-                  }
-                  return "";
-                },
-                isPassword: true,
-              ),
+              child: Column(children: [
+                TextFieldTextV2(
+                  labelText: S.of(context).passphrase_label,
+                  hintText: S.of(context).passphrase_recovery_hint,
+                  alwaysShowHint: true,
+                  textController: viewModel.walletRecoverPassphraseController,
+                  myFocusNode: viewModel.walletRecoverPassphraseFocusNode,
+                  validation: (String value) {
+                    if (value.isEmpty) {
+                      return "Required";
+                    }
+                    return "";
+                  },
+                  isPassword: true,
+                ),
+              ]),
             ),
             if (viewModel.isWalletPassphraseMatch == false)
               Text(S.of(context).wrong_passphrase,
                   style: FontManager.body2Median(ProtonColors.signalError)),
-            const SizedBox(height: 12),
+            const SizedBox(height: 6),
             Container(
                 padding: const EdgeInsets.only(top: 20),
                 margin: const EdgeInsets.symmetric(

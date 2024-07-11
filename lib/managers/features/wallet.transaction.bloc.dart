@@ -461,16 +461,16 @@ class WalletTransactionBloc
   List<HistoryTransaction> sortHistoryTransaction(
       List<HistoryTransaction> historyTransactions) {
     historyTransactions.sort((a, b) {
-      if (a.createTimestamp == null && b.createTimestamp == null) {
+      if (a.updateTimestamp == null && b.updateTimestamp == null) {
         return -1;
       }
-      if (a.createTimestamp == null) {
+      if (a.updateTimestamp == null) {
         return -1;
       }
-      if (b.createTimestamp == null) {
+      if (b.updateTimestamp == null) {
         return 1;
       }
-      return a.createTimestamp! > b.createTimestamp! ? -1 : 1;
+      return a.updateTimestamp! > b.updateTimestamp! ? -1 : 1;
     });
     return historyTransactions;
   }
@@ -684,22 +684,23 @@ class WalletTransactionBloc
 
       TransactionTime transactionTime = transactionDetail.time;
       int? time;
+      int? lastSeenTime;
       transactionTime.when(
         confirmed: (confirmationTime) {
           logger.d('Confirmed transaction time: $confirmationTime');
           time = confirmationTime.toInt();
+          lastSeenTime = confirmationTime.toInt();
         },
         unconfirmed: (lastSeen) {
           logger.d('Unconfirmed transaction last seen: $lastSeen');
-          // needs to show in progress if it's not confirmed
-          // time = lastSeen;
+          lastSeenTime = lastSeen.toInt();
         },
       );
 
       newHistoryTransactionsMap[key] = HistoryTransaction(
         txID: txID,
         createTimestamp: time,
-        updateTimestamp: time,
+        updateTimestamp: lastSeenTime,
         amountInSATS: amountInSATS,
         sender: sender.isNotEmpty ? sender : "Unknown",
         toList:
@@ -767,6 +768,7 @@ class WalletTransactionBloc
 
         newHistoryTransactionsMap[key] = HistoryTransaction(
           txID: txID,
+          updateTimestamp: transactionInfoModels.first.transactionTime,
           amountInSATS: amountInSATS,
           sender: sender.isNotEmpty ? sender : "Unknown",
           toList: toList.isNotEmpty ? toList : "Unknown",
@@ -845,6 +847,7 @@ class WalletTransactionBloc
                   await getExchangeRateFromTransactionModel(transactionModel);
               newHistoryTransactionsMap[key] = HistoryTransaction(
                 txID: txID,
+                updateTimestamp: transactionDetailFromBlockChain.timestamp,
                 amountInSATS: me.amountInSATS,
                 sender: sender.isNotEmpty ? sender : "Unknown",
                 toList: toList.isNotEmpty ? toList : "Unknown",

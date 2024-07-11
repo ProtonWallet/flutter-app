@@ -107,6 +107,14 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
 
+  /// File path: assets/images/icon/bve_disable.svg
+  SvgGenImage get bveDisable =>
+      const SvgGenImage('assets/images/icon/bve_disable.svg');
+
+  /// File path: assets/images/icon/bve_enable.svg
+  SvgGenImage get bveEnable =>
+      const SvgGenImage('assets/images/icon/bve_enable.svg');
+
   /// File path: assets/images/icon/credit_card.svg
   SvgGenImage get creditCard =>
       const SvgGenImage('assets/images/icon/credit_card.svg');
@@ -341,6 +349,8 @@ class $AssetsImagesIconGen {
         bankTransfer,
         bitcoin,
         btc,
+        bveDisable,
+        bveEnable,
         creditCard,
         deleteWarning,
         discoverPlaceholder0,

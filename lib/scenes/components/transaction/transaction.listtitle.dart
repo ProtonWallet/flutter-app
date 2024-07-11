@@ -67,13 +67,9 @@ class TransactionListTitle extends StatelessWidget {
                         timestamp != null
                             ? Expanded(
                                 child: Text(
-                                isSend
-                                    ? S.of(context).sent_on(
-                                        CommonHelper.formatLocaleTime(
-                                            context, timestamp!))
-                                    : S.of(context).received_on(
-                                        CommonHelper.formatLocaleTime(
-                                            context, timestamp!)),
+                                CommonHelper
+                                    .formatLocaleTimeWithSendOrReceiveOn(
+                                        context, isSend, timestamp!),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint),
                                 maxLines: 1,
@@ -140,7 +136,9 @@ class TransactionListTitle extends StatelessWidget {
                       //         size: 10, color: ProtonColors.textHint)),
                       Expanded(
                           child: Text(
-                        S.of(context).trans_body((body ?? "").replaceAll("\n", " ")),
+                        S
+                            .of(context)
+                            .trans_body((body ?? "").replaceAll("\n", " ")),
                         style: FontManager.captionMedian(ProtonColors.textWeak),
                         overflow: TextOverflow.ellipsis,
                       ))
@@ -156,11 +154,11 @@ class TransactionListTitle extends StatelessWidget {
               children: [
                 isSend
                     ? Text(bitcoinAmount.toFiatCurrencyString(),
-                        style:
-                            FontManager.captionRegular(ProtonColors.signalError))
+                        style: FontManager.captionRegular(
+                            ProtonColors.signalError))
                     : Text("+${bitcoinAmount.toFiatCurrencyString()}",
-                        style:
-                            FontManager.captionRegular(ProtonColors.signalSuccess)),
+                        style: FontManager.captionRegular(
+                            ProtonColors.signalSuccess)),
                 // isSend
                 //     ? Text(bitcoinAmount.toString(),
                 //         style: FontManager.captionRegular(
