@@ -528,11 +528,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   ) async {
     for (var tranMode in transactions) {
       String encryptedTxID = tranMode.transactionID;
-      String clearTxID = proton_crypto.decrypt(
-        userKey.privateKey,
-        userKey.passphrase,
-        encryptedTxID,
-      );
+      String clearTxID = "";
+      try {
+        clearTxID = proton_crypto.decrypt(
+          userKey.privateKey,
+          userKey.passphrase,
+          encryptedTxID,
+        );
+      } catch (e, stacktrace) {
+        logger.i(
+          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        );
+      }
       if (clearTxID.isEmpty) {
         for (AddressKey addressKey in addressKeys) {
           try {

@@ -599,15 +599,19 @@ class WalletTransactionBloc
       try {
         txid = proton_crypto.decrypt(
             userPrivateKey, userPassphrase, transactionModel.transactionID);
-      } catch (e) {
-        logger.e(e);
+      } catch (e, stacktrace) {
+        logger.i(
+          "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        );
       }
       if (txid.isEmpty) {
         for (AddressKey addressKey in addressKeys) {
           try {
             txid = addressKey.decrypt(transactionModel.transactionID);
-          } catch (e) {
-            // logger.e(e.toString());
+          } catch (e, stacktrace) {
+            logger.e(
+              "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+            );
           }
           if (txid.isNotEmpty) {
             break;
