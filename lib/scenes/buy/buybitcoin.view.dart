@@ -4,7 +4,12 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.keyboard.done.dart';
+import 'package:wallet/scenes/buy/dropdown.dialog.dart';
+import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
+import 'package:wallet/scenes/buy/payment.dropdown.item.view.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/constants/assets.gen.dart';
@@ -243,7 +248,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               top: 16,
                               left: 24,
                               right: 16,
-                              bottom: 16,
                             ),
                             decoration: const ShapeDecoration(
                               color: Colors.white,
@@ -287,16 +291,17 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             TextFormField(
                                               decoration: const InputDecoration(
                                                 hintText: 'Enter text',
-                                                border: InputBorder
-                                                    .none, // Remove the underline
-                                                enabledBorder: InputBorder
-                                                    .none, // Remove the underline when the field is enabled
-                                                focusedBorder: InputBorder
-                                                    .none, // Remove the underline when the field is focused
-                                                errorBorder: InputBorder
-                                                    .none, // Remove the underline when the field has an error
-                                                disabledBorder: InputBorder
-                                                    .none, // Remove the underline when the field is disabled
+                                                // Remove the underline
+                                                border: InputBorder.none,
+                                                // Remove the underline when the field is enabled
+                                                enabledBorder: InputBorder.none,
+                                                // Remove the underline when the field is focused
+                                                focusedBorder: InputBorder.none,
+                                                // Remove the underline when the field has an error
+                                                errorBorder: InputBorder.none,
+                                                // Remove the underline when the field is disabled
+                                                disabledBorder:
+                                                    InputBorder.none,
                                               ),
                                               controller: viewModel.controller,
                                               focusNode: viewModel.focusNode,
@@ -432,26 +437,36 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         builder: (context, state) {
                           return GestureDetector(
                             onTap: () => {
-                              // showDialog(
-                              //     context: context,
-                              //     barrierDismissible: true,
-                              //     builder: (BuildContext context) {
-                              //       return AccountDropdown(
-                              //         widgets: [
-                              //           for (final provider
-                              //               in viewModel.providers)
-                              //             PaymentDropdownItem(
-                              //               item: DropdownItem(
-                              //                 icon:
-                              //                     'assets/images/credit-card.png',
-                              //                 title: provider.title,
-                              //                 subtitle: 'Take minutes',
-                              //               ),
-                              //             ),
-                              //         ],
-                              //         title: 'Choose your provider',
-                              //       );
-                              //     })
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) {
+                                    return AccountDropdown(
+                                      widgets: [
+                                        for (final provider
+                                            in viewModel.providers)
+                                          PaymentDropdownItem(
+                                            icon: Assets.images.icon.ramp.svg(
+                                              fit: BoxFit.fill,
+                                            ),
+                                            item: DropdownItem(
+                                              icon: Assets.images.icon.ramp.svg(
+                                                fit: BoxFit.fill,
+                                              ),
+                                              title: provider.title,
+                                              subtitle:
+                                                  '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
+                                            ),
+                                            selected: true,
+                                            onTap: () {
+                                              logger.i(provider.title);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                      ],
+                                      title: 'Choose your provider',
+                                    );
+                                  })
                             },
                             child: Container(
                               padding: const EdgeInsets.only(
@@ -743,21 +758,28 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               builder: (context, state) {
                 return GestureDetector(
                   onTap: () {
-                    // showDialog(
-                    //   context: context,
-                    //   barrierDismissible: true,
-                    //   builder: (BuildContext context) {
-                    //     return AccountDropdown(
-                    //       widgets: [
-                    //         for (var pay in viewModel.payments)
-                    //           PaymentDropdownItem(
-                    //             item: pay,
-                    //           ),
-                    //       ],
-                    //       title: 'Pay with',
-                    //     );
-                    //   },
-                    // );
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return AccountDropdown(
+                          widgets: [
+                            for (var pay in viewModel.payments)
+                              PaymentDropdownItem(
+                                selected: pay.method ==
+                                    viewModel.selectedPaymentMethod,
+                                item: pay,
+                                icon: pay.icon,
+                                onTap: () {
+                                  viewModel.selectPayment(pay.method);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                          ],
+                          title: 'Pay with',
+                        );
+                      },
+                    );
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
@@ -795,11 +817,22 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Assets.images.icon.creditCard.svg(
-                                      fit: BoxFit.fitHeight,
-                                      width: 20,
-                                      height: 20,
-                                    ),
+                                    if (viewModel.selectedPaymentMethod ==
+                                        PaymentMethod.applePay) ...[
+                                      Assets.images.icon.applePay.svg(
+                                        fit: BoxFit.fitHeight,
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ],
+                                    if (viewModel.selectedPaymentMethod ==
+                                        PaymentMethod.card) ...[
+                                      Assets.images.icon.creditCard.svg(
+                                        fit: BoxFit.fitHeight,
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ]
                                   ],
                                 ),
                               ),
@@ -823,7 +856,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       ),
                                     ),
                                     Text(
-                                      S.of(context).credit_card,
+                                      viewModel.selectedPaymentMethod
+                                          .enumToString(),
                                       style: const TextStyle(
                                         color: Color(0xFF191C32),
                                         fontSize: 16,
