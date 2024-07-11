@@ -169,6 +169,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.walletKeysProvider,
       dataProviderManager.localBitcoinAddressDataProvider,
       dataProviderManager.walletDataProvider,
+      dataProviderManager.userSettingsDataProvider,
     );
 
     var walletBalanceBloc = WalletBalanceBloc(

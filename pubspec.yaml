@@ -76,7 +76,6 @@ dependencies:
   fl_chart: ^0.66.0
   crypto: ^3.0.3
   url_launcher: ^6.2.2
-  blur: ^4.0.0
   #Simple, fast generation of RFC4122 UUIDs.
   uuid: ^4.2.2
   #Contains utility functions and classes in the style of dart:collection to make working with collections easier.

@@ -104,6 +104,15 @@ class BDKTransactionDataProvider extends DataProvider {
     return bdkTransactionData;
   }
 
+  bool lastSyncTimeCheck(WalletModel walletModel, AccountModel accountModel) {
+    int timeDiff = DateTime.now().millisecondsSinceEpoch -
+        (lastSyncedTime[accountModel.accountID] ?? 0);
+    if (timeDiff > reSyncTime) {
+      return true;
+    }
+    return false;
+  }
+
   bool isSyncing(WalletModel walletModel, AccountModel accountModel) {
     return isWalletSyncing[accountModel.accountID] ?? false;
   }
@@ -143,20 +152,16 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet full sync End");
             success = true;
           } else {
-            int timeDiff = DateTime.now().millisecondsSinceEpoch -
-                (lastSyncedTime[accountModel.accountID] ?? 0);
-            if (timeDiff > reSyncTime) {
-              logger.i("Bdk wallet partial sync check");
+            logger.i("Bdk wallet partial sync check");
 
-              /// TODO:: check if it's needed
-              // if (await blockchain!.shouldSync(account: account)) {
-              logger.i("Bdk wallet partial sync Started");
-              await blockchain!.partialSync(account: account);
-              logger.i("Bdk wallet partial sync End");
-              success = true;
-              lastSyncedTime[accountModel.accountID] =
-                  DateTime.now().microsecondsSinceEpoch;
-            }
+            /// TODO:: check if it's needed
+            // if (await blockchain!.shouldSync(account: account)) {
+            logger.i("Bdk wallet partial sync Started");
+            await blockchain!.partialSync(account: account);
+            logger.i("Bdk wallet partial sync End");
+            success = true;
+            lastSyncedTime[accountModel.accountID] =
+                DateTime.now().microsecondsSinceEpoch;
           }
         }
       } on BridgeError catch (e, stacktrace) {

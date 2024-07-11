@@ -288,6 +288,7 @@ class HomeViewModelImpl extends HomeViewModel {
   CryptoPriceDataService cryptoPriceDataService =
       CryptoPriceDataService(duration: const Duration(seconds: 10));
   late StreamSubscription _subscription;
+  late StreamSubscription _blockInfoDataSubscription;
 
   @override
   void dispose() {
@@ -310,10 +311,17 @@ class HomeViewModelImpl extends HomeViewModel {
       btcPriceInfo = event;
       datasourceStreamSinkAdd();
     });
+
+    _blockInfoDataSubscription = dataProviderManager
+        .blockInfoDataProvider.dataUpdateController.stream
+        .listen((onData) {
+      walletTransactionBloc.syncWallet();
+    });
   }
 
   void disposeServices() {
     _subscription.cancel();
+    _blockInfoDataSubscription.cancel();
     cryptoPriceDataService.dispose();
   }
 

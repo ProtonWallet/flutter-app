@@ -254,6 +254,7 @@ class EventLoop implements Manager {
         dataProviderManager.userSettingsDataProvider.fiatCurrency);
     dataProviderManager.userSettingsDataProvider
         .updateExchangeRate(exchangeRate);
+    await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
 
     /// TODO:: add logic here
     // fetch for account setting's exchange rate, used for sidebar balance
