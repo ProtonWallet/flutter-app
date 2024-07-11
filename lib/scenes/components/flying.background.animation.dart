@@ -21,6 +21,7 @@ class FlyingBackgroundAnimationState extends State<FlyingBackgroundAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
+  bool isDisposed = false;
 
   @override
   void initState() {
@@ -32,13 +33,17 @@ class FlyingBackgroundAnimationState extends State<FlyingBackgroundAnimation>
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          controller.reset();
-          controller.forward();
+          if (isDisposed == false) {
+            controller.reset();
+            controller.forward();
+          }
         });
       }
     });
-    Future.delayed( Duration(milliseconds: widget.delayMilliSeconds), (){
-      controller.forward();
+    Future.delayed(Duration(milliseconds: widget.delayMilliSeconds), () {
+      if (isDisposed == false) {
+        controller.forward();
+      }
     });
     animation = Tween<double>(
       begin: 1.0,
@@ -51,6 +56,7 @@ class FlyingBackgroundAnimationState extends State<FlyingBackgroundAnimation>
 
   @override
   void dispose() {
+    isDisposed = true;
     controller.dispose();
     super.dispose();
   }

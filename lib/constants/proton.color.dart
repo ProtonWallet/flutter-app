@@ -8,10 +8,11 @@ class ProtonColors {
   static Color textNorm = const Color(0xFF0C0C14);
   static Color backgroundBlack = const Color(0xFF000000);
   static Color primaryColor = const Color(0xFF0E0E0E);
+  static Color homeActionButtonBackground = const Color(0xFFE3E6ED);
   static Color textWeak = const Color(0xFF535964);
   static Color textWeakPressed = const Color(0xFFE2E2E2);
   static Color errorBackground = const Color(0xFFFFE0E0);
-  static Color textHint = const Color(0xFF999693);
+  static Color textHint = const Color(0xFF9395A4);
   static Color iconWeak = const Color(0xFF706D6B);
   static Color wMajor1 = const Color(0xFFDEDBD9);
   static Color nMajor1 = const Color(0xFF6243E6);

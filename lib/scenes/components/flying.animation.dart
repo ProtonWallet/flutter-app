@@ -49,8 +49,8 @@ class RotateChildState extends State<FlyingAnimation>
 
   @override
   void dispose() {
-    controller.dispose();
     isDisposed = true;
+    controller.dispose();
     super.dispose();
   }
 

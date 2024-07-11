@@ -74,22 +74,16 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
                   height:
                       max((MediaQuery.of(context).size.height - 900) / 2, 0)),
               const WelcomeImage(),
-              Row(
-                children: [
-                  const Spacer(),
-                  Expanded(
-                    flex: 8,
-                    child: LoginAndSignupBtn(
-                      signupPressed: () {
-                        viewModel.move(NavID.nativeSignup);
-                      },
-                      signinPressed: () {
-                        viewModel.move(NavID.nativeSignin);
-                      },
-                    ),
-                  ),
-                  const Spacer(),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: LoginAndSignupBtn(
+                  signupPressed: () {
+                    viewModel.move(NavID.nativeSignup);
+                  },
+                  signinPressed: () {
+                    viewModel.move(NavID.nativeSignin);
+                  },
+                ),
               ),
             ],
           ),

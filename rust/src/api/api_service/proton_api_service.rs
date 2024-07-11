@@ -6,11 +6,11 @@ use super::proton_settings_client::ProtonSettingsClient;
 use super::proton_users_client::ProtonUsersClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
 use super::{
-    bitcoin_address_client::BitcoinAddressClient, email_integration_client::EmailIntegrationClient,
-    event_client::EventClient, exchange_rate_client::ExchangeRateClient,
-    proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
-    settings_client::SettingsClient, transaction_client::TransactionClient,
-    wallet_client::WalletClient,
+    bitcoin_address_client::BitcoinAddressClient, block_client::BlockClient,
+    email_integration_client::EmailIntegrationClient, event_client::EventClient,
+    exchange_rate_client::ExchangeRateClient, proton_contacts_client::ContactsClient,
+    proton_email_addr_client::ProtonEmailAddressClient, settings_client::SettingsClient,
+    transaction_client::TransactionClient, wallet_client::WalletClient,
 };
 use crate::api::proton_api::{logout, set_proton_api};
 use crate::api::srp::srp_client::SrpClient;
@@ -177,6 +177,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_transaction_client(&self) -> TransactionClient {
         TransactionClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_block_client(&self) -> BlockClient {
+        BlockClient::new(&self)
     }
 
     #[frb(sync)]
