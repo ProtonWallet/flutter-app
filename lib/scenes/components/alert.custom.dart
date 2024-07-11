@@ -94,23 +94,23 @@ class AlertCustomState extends State<AlertCustom> {
                                         padding: const EdgeInsets.only(top: 4),
                                         child: widget.learnMore!),
                                 ])),
+                            if (widget.canClose ?? true)
+                              SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isClose = true;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.close_rounded,
+                                        size: 16,
+                                        color: ProtonColors.textNorm,
+                                      )))
                           ],
                         )),
-                    if (widget.canClose ?? true)
-                      Positioned(
-                          right: 10,
-                          top: 10,
-                          child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isClose = true;
-                                });
-                              },
-                              child: Icon(
-                                Icons.close_rounded,
-                                size: 16,
-                                color: ProtonColors.textNorm,
-                              )))
                   ],
                 )));
   }

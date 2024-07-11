@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/bottom.sheets/seed.phrase.tutorial.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -15,6 +16,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -150,24 +152,31 @@ class ImportView extends ViewBase<ImportViewModel> {
                       ),
                     ]),
                 const SizedBox(height: 40),
-                ButtonV5(
+                ButtonV6(
                     onPressed: () async {
-                      EasyLoading.show(
-                          status: "creating wallet..",
-                          maskType: EasyLoadingMaskType.black);
-                      await viewModel.importWallet();
-                      viewModel.coordinator.end();
-                      EasyLoading.dismiss();
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                        if (viewModel.errorMessage.isEmpty) {
-                          CommonHelper.showSnackbar(
-                              context, S.of(context).wallet_imported);
-                        } else {
-                          CommonHelper.showSnackbar(
-                              context, viewModel.errorMessage,
-                              isError: true);
+                      if (viewModel.isImporting == false) {
+                        viewModel.isImporting = true;
+                        await viewModel.importWallet();
+                        viewModel.coordinator.end();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                          if (viewModel.errorMessage.isEmpty) {
+                            if (viewModel.isFirstWallet) {
+                              WelcomeDialogSheet.show(
+                                  context,
+                                  viewModel
+                                          .protonAddresses.firstOrNull?.email ??
+                                      "");
+                            }
+                            CommonHelper.showSnackbar(
+                                context, S.of(context).wallet_imported);
+                          } else {
+                            CommonHelper.showSnackbar(
+                                context, viewModel.errorMessage,
+                                isError: true);
+                          }
                         }
+                        viewModel.isImporting = false;
                       }
                     },
                     enable: viewModel.isValidMnemonic,

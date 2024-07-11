@@ -93,35 +93,35 @@ class BitcoinAddressList extends StatelessWidget {
                                     ),
                                   ]),
                                 ),
-                                if (state.bitcoinAddresses.isNotEmpty)
-                                  Row(children: [
-                                    state.isSyncing
-                                        ? CustomLoadingWithChild(
-                                            durationInMilliSeconds: 800,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(3),
-                                              child: Icon(
-                                                Icons.refresh_rounded,
-                                                size: 20,
-                                                color: ProtonColors.textWeak,
-                                              ),
-                                            ),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () {
-                                              viewModel.walletTransactionBloc
-                                                  .syncWallet(true);
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(3),
-                                              child: Icon(
-                                                Icons.refresh_rounded,
-                                                size: 20,
-                                                color: ProtonColors.textWeak,
-                                              ),
+                                Row(children: [
+                                  state.isSyncing
+                                      ? CustomLoadingWithChild(
+                                          durationInMilliSeconds: 800,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(3),
+                                            child: Icon(
+                                              Icons.refresh_rounded,
+                                              size: 20,
+                                              color: ProtonColors.textWeak,
                                             ),
                                           ),
-                                    const SizedBox(width: 4),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            viewModel.walletTransactionBloc
+                                                .syncWallet(true);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(3),
+                                            child: Icon(
+                                              Icons.refresh_rounded,
+                                              size: 20,
+                                              color: ProtonColors.textWeak,
+                                            ),
+                                          ),
+                                        ),
+                                  const SizedBox(width: 4),
+                                  if (state.bitcoinAddresses.isNotEmpty)
                                     GestureDetector(
                                       onTap: () {
                                         AddressFilterSheet.show(
@@ -136,7 +136,8 @@ class BitcoinAddressList extends StatelessWidget {
                                             height: 16),
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
+                                  const SizedBox(width: 4),
+                                  if (state.bitcoinAddresses.isNotEmpty)
                                     GestureDetector(
                                       onTap: () {
                                         viewModel
@@ -149,8 +150,8 @@ class BitcoinAddressList extends StatelessWidget {
                                             size: 20),
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
-                                  ]),
+                                  const SizedBox(width: 4),
+                                ]),
                               ],
                             )),
                   ),

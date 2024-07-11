@@ -179,10 +179,10 @@ class WalletSettingSheet {
                                   CustomPlaceholder.show(context);
                                 },
                                 child: Text(S.of(context).learn_more,
-                                    style: FontManager.body2Median(
-                                        ProtonColors.textNorm))),
+                                    style: FontManager.body2Regular(
+                                        ProtonColors.protonBlue))),
                             leadingWidget: SvgPicture.asset(
-                                "assets/images/icon/send_2.svg",
+                                "assets/images/icon/bve_enable.svg",
                                 fit: BoxFit.fill,
                                 width: 30,
                                 height: 30),
@@ -190,7 +190,7 @@ class WalletSettingSheet {
                               color: Colors.transparent,
                               width: 0,
                             ),
-                            backgroundColor: ProtonColors.alertEnableBackground,
+                            backgroundColor: ProtonColors.white,
                             color: ProtonColors.textNorm,
                           )
                         : AlertCustom(
@@ -201,10 +201,10 @@ class WalletSettingSheet {
                                   CustomPlaceholder.show(context);
                                 },
                                 child: Text(S.of(context).learn_more,
-                                    style: FontManager.body2Median(
-                                        ProtonColors.textNorm))),
+                                    style: FontManager.body2Regular(
+                                        ProtonColors.protonBlue))),
                             leadingWidget: SvgPicture.asset(
-                                "assets/images/icon/send_2.svg",
+                                "assets/images/icon/bve_disable.svg",
                                 fit: BoxFit.fill,
                                 width: 30,
                                 height: 30),
@@ -213,7 +213,7 @@ class WalletSettingSheet {
                               width: 0,
                             ),
                             backgroundColor:
-                                ProtonColors.alertDisableBackground,
+                                ProtonColors.white,
                             color: ProtonColors.textNorm,
                           ),
                     const SizedBox(

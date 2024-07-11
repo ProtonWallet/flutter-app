@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.expansion.dart';
 import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
@@ -327,60 +328,59 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         : BitcoinAddressList(
                                             viewModel: viewModel),
                                   ])),
-                              const SizedBox(height: 20),
-                              // if (walletTransactionState
-                              //     .historyTransaction.isEmpty)
-                              //   Column(children: [
-                              //     const SizedBox(
-                              //       height: 40,
-                              //     ),
-                              //     Row(
-                              //         mainAxisAlignment:
-                              //             MainAxisAlignment.center,
-                              //         children: [
-                              //           ButtonV5(
-                              //               onPressed: () {
-                              //                 viewModel.move(NavID.receive);
-                              //               },
-                              //               backgroundColor: ProtonColors.white,
-                              //               text: S.of(context).receive,
-                              //               width: MediaQuery.of(context)
-                              //                           .size
-                              //                           .width >
-                              //                       424
-                              //                   ? 180
-                              //                   : MediaQuery.of(context)
-                              //                               .size
-                              //                               .width /
-                              //                           2 -
-                              //                       defaultPadding * 2,
-                              //               textStyle: FontManager.body1Median(
-                              //                   ProtonColors.protonBlue),
-                              //               height: 48),
-                              //           const SizedBox(
-                              //             width: 10,
-                              //           ),
-                              //           ButtonV5(
-                              //               onPressed: () {},
-                              //               backgroundColor:
-                              //                   ProtonColors.backgroundBlack,
-                              //               text: S.of(context).buy,
-                              //               width: MediaQuery.of(context)
-                              //                           .size
-                              //                           .width >
-                              //                       424
-                              //                   ? 180
-                              //                   : MediaQuery.of(context)
-                              //                               .size
-                              //                               .width /
-                              //                           2 -
-                              //                       defaultPadding * 2,
-                              //               textStyle: FontManager.body1Median(
-                              //                   ProtonColors
-                              //                       .backgroundSecondary),
-                              //               height: 48),
-                              //         ]),
-                              //   ]),
+                              if (walletTransactionState
+                                  .historyTransaction.isEmpty)
+                                Column(children: [
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ButtonV5(
+                                            onPressed: () {
+                                              viewModel.move(NavID.receive);
+                                            },
+                                            backgroundColor: ProtonColors.white,
+                                            text: S.of(context).receive,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width >
+                                                    424
+                                                ? 180
+                                                : MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2 -
+                                                    defaultPadding * 2,
+                                            textStyle: FontManager.body1Median(
+                                                ProtonColors.protonBlue),
+                                            height: 48),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        ButtonV5(
+                                            onPressed: () {},
+                                            backgroundColor:
+                                                ProtonColors.backgroundBlack,
+                                            text: S.of(context).buy,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width >
+                                                    424
+                                                ? 180
+                                                : MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2 -
+                                                    defaultPadding * 2,
+                                            textStyle: FontManager.body1Median(
+                                                ProtonColors
+                                                    .backgroundSecondary),
+                                            height: 48),
+                                      ]),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ]),
                               const SizedBox(height: 20),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -424,7 +424,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: BitcoinPriceBox(
-                        title: S.of(context).current_btc_price,
+                        title: S.of(context).btc_price,
                         price: viewModel.btcPriceInfo.price,
                         priceChange: viewModel.btcPriceInfo.priceChange24h,
                         exchangeRate: viewModel.currentExchangeRate,

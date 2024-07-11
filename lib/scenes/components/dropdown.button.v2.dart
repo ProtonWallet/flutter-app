@@ -141,7 +141,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
       backgroundColor: ProtonColors.white,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
-        maxHeight: MediaQuery.of(context).size.height / 3,
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(

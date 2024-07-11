@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -18,6 +18,7 @@ class DeleteAccountSheet {
       WalletModel userWallet, AccountMenuModel userAccount) {
     HomeModalBottomSheet.show(context, child:
         StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      bool isDeleting = false;
       return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,15 +77,19 @@ class DeleteAccountSheet {
                                 style: FontManager.body2Regular(
                                     ProtonColors.textWeak)),
                             const SizedBox(height: 40),
-                            ButtonV5(
+                            ButtonV6(
                                 onPressed: () async {
-                                  await viewModel.deleteAccount(
-                                      userWallet, userAccount.accountModel);
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                    CommonHelper.showSnackbar(
-                                        context, S.of(context).account_deleted);
+                                  if (isDeleting == false) {
+                                    isDeleting = true;
+                                    await viewModel.deleteAccount(
+                                        userWallet, userAccount.accountModel);
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      CommonHelper.showSnackbar(context,
+                                          S.of(context).account_deleted);
+                                    }
+                                    isDeleting = false;
                                   }
                                 },
                                 backgroundColor: ProtonColors.signalError,

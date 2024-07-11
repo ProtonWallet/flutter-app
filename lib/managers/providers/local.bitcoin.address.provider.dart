@@ -80,10 +80,21 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             addressIndex2bitcoinAddressModel[
                 bitcoinAddressModel.bitcoinAddressIndex] = bitcoinAddressModel;
           }
-          var frbAccount = (await WalletManager.loadWalletWithID(
+          var frbAccountOrNull = (await WalletManager.loadWalletWithID(
             walletModel.walletID,
             accountModel.accountID,
-          ))!;
+          ));
+          if (frbAccountOrNull == null) {
+            /// in-case that passphrase wallet is not unlocked
+            LocalBitcoinAddressData localBitcoinAddressData =
+                LocalBitcoinAddressData(
+              accountModel: accountModel,
+              bitcoinAddresses: [],
+            );
+            bitcoinAddressDataList.add(localBitcoinAddressData);
+            continue;
+          }
+          FrbAccount frbAccount = frbAccountOrNull;
           List<BitcoinAddressDetail> finalBitcoinAddresses = [];
           for (int addressIndex = 0;
               addressIndex <= accountModel.lastUsedIndex;

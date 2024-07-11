@@ -169,6 +169,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late FrbPsbt frbPsbt;
   late FrbPsbt frbDraftPsbt;
 
+  int maxBalanceToSend = 0;
+
   // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
@@ -241,8 +243,6 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> loadData() async {
-    EasyLoading.show(
-        status: "loading exchange rate..", maskType: EasyLoadingMaskType.black);
     try {
       context = Coordinator.rootNavigatorKey.currentContext!;
       addressFocusNode = FocusNode();
@@ -304,7 +304,8 @@ class SendViewModelImpl extends SendViewModel {
         accountModel = accountValueNotifier.value;
         await updateWallet();
       });
-      updateWallet();
+      /// await for balance to be loaded
+      await updateWallet();
       logger.i(DateTime.now().toString());
     } on BridgeError catch (e, stacktrace) {
       _processError(e, stacktrace);
@@ -312,7 +313,6 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     initialized = true;
-    EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -416,6 +416,7 @@ class SendViewModelImpl extends SendViewModel {
         await initEstimatedFee();
 
         /// build draft psbt first to get fee
+        maxBalanceToSend = balance - estimatedFeeInSAT;
       }
       sendFlowStatus = status;
     }
@@ -745,6 +746,18 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
       if (hasValidRecipient == false) {
+        return false;
+      }
+      if (totalAmountInSAT > maxBalanceToSend) {
+        /// no sufficient money
+        BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          CommonHelper.showSnackbar(
+            context,
+            S.of(context).error_you_dont_have_sufficient_balance,
+            isError: true,
+          );
+        }
         return false;
       }
       var network = appConfig.coinType.network;
