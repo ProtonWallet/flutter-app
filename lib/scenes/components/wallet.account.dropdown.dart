@@ -94,8 +94,8 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
             labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
             suffixIconConstraints: const BoxConstraints(maxWidth: 24.0),
             contentPadding: const EdgeInsets.only(top: 4, bottom: 16),
-            suffixIcon: Icon(Icons.arrow_drop_down,
-                color: ProtonColors.textNorm, size: 24),
+            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
+                color: ProtonColors.textWeak  , size: 24),
           ),
         ));
   }

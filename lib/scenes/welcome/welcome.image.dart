@@ -22,18 +22,20 @@ class WelcomeImage extends StatelessWidget {
           child: Column(
             children: [
               const Expanded(child: SizedBox()),
-              Assets.images.welcome.walletWelcomeHeadPng.image(),
+              Assets.images.welcome.walletWelcomeHeadPng.image(
+                fit: BoxFit.fill,
+              ),
             ],
           ),
         ),
-        const SizedBox(height: defaultPadding),
+        const SizedBox(height: 30),
         SizedBox(
-          width: 220,
-          height: 45,
+          width: 264,
+          height: 54,
           child: Assets.images.walletCreation.protonWalletLogoLight
               .svg(fit: BoxFit.fitHeight),
         ),
-        const SizedBox(height: 28),
+        const SizedBox(height: 24),
         SizedBox(
           width: max(MediaQuery.of(context).size.width, 450),
           child: Padding(

@@ -4,6 +4,7 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
@@ -409,6 +410,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 value: ExchangeCalculator
                                     .getNotionalInFiatCurrency(
                                         viewModel.exchangeRate, estimatedFee),
+                                thousandSeparator: ",",
                                 prefix:
                                     "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
                                 fractionDigits:
@@ -685,7 +687,7 @@ class SendView extends ViewBase<SendViewModel> {
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
-          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${amountInFiatCurrency.toStringAsFixed(displayDigit)}",
+          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${CommonHelper.formatDouble(amountInFiatCurrency, displayDigits: displayDigit)}",
           style: FontManager.sendAmount(ProtonColors.textNorm)),
       ExchangeCalculator.getBitcoinUnitLabelWidget(
           viewModel.userSettingsDataProvider.bitcoinUnit, amountInSATS,
@@ -709,6 +711,7 @@ class SendView extends ViewBase<SendViewModel> {
       content: AnimatedFlipCounter(
         duration: const Duration(milliseconds: 500),
         value: estimatedFeeInNotional + estimatedTotalValueInNotional,
+        thousandSeparator: ",",
         prefix:
             "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
         fractionDigits: displayDigit,
@@ -1020,6 +1023,13 @@ class SendView extends ViewBase<SendViewModel> {
                               S.of(context).send_broadcasting_title,
                               style: FontManager.titleHeadline(
                                   ProtonColors.textNorm),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              S.of(context).send_broadcasting_content,
+                              style: FontManager.body2Regular(
+                                  ProtonColors.textWeak),
                               textAlign: TextAlign.center,
                             ),
                           ]))))),

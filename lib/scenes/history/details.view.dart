@@ -116,7 +116,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 Row(
                                   children: [
                                     Text(
-                                        "$fiatCurrencySign${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs().toStringAsFixed(displayDigits)}",
+                                        "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
                                         style: FontManager
                                             .transactionHistoryAmountTitle(
                                                 ProtonColors.textNorm)),
@@ -314,7 +314,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             title: S.of(context).trans_metwork_fee,
                             titleTooltip: S.of(context).trans_metwork_fee_desc,
                             content:
-                                "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()).toStringAsFixed(displayDigits)}",
+                                "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()), displayDigits: displayDigits)}",
                             memo: ExchangeCalculator.getBitcoinUnitLabel(
                                 viewModel.userSettingsDataProvider.bitcoinUnit,
                                 viewModel.fee.toInt()),
@@ -328,8 +328,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           TransactionHistoryItem(
                             title: S.of(context).trans_total,
                             content: viewModel.isSend
-                                ? "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}"
-                                : "$fiatCurrencyName ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs().toStringAsFixed(displayDigits)}",
+                                ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
+                                : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
                             memo: viewModel.isSend
                                 ? ExchangeCalculator.getBitcoinUnitLabel(
                                     viewModel

@@ -95,20 +95,25 @@ class AlertCustomState extends State<AlertCustom> {
                                         child: widget.learnMore!),
                                 ])),
                             if (widget.canClose ?? true)
-                              SizedBox(
+                              Transform.translate(
+                                offset: const Offset(8, 0),
+                                child: SizedBox(
                                   width: 16,
                                   height: 16,
                                   child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isClose = true;
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.close_rounded,
-                                        size: 16,
-                                        color: ProtonColors.textNorm,
-                                      )))
+                                    onTap: () {
+                                      setState(() {
+                                        isClose = true;
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.close_rounded,
+                                      size: 16,
+                                      color: ProtonColors.textNorm,
+                                    ),
+                                  ),
+                                ),
+                              )
                           ],
                         )),
                   ],

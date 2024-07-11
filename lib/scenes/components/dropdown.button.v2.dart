@@ -112,8 +112,8 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                 BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
             contentPadding: EdgeInsets.only(
                 top: 4, bottom: widget.padding != null ? 2 : 16),
-            suffixIcon: Icon(Icons.arrow_drop_down,
-                color: ProtonColors.textNorm, size: 24),
+            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
+                color: ProtonColors.textWeak, size: 24),
           ),
         ));
   }

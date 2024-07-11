@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -12,7 +11,6 @@ import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
@@ -21,6 +19,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
@@ -40,7 +39,6 @@ import 'package:wallet/rust/common/address_info.dart';
 import 'package:wallet/rust/common/transaction_time.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 
 // Define the events
 abstract class WalletTransactionEvent extends Equatable {
@@ -140,11 +138,13 @@ class WalletTransactionBloc
   final WalletKeysProvider walletKeysProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final WalletsDataProvider walletsDataProvider;
+  final UserSettingsDataProvider userSettingsDataProvider;
 
   StreamSubscription? serverTransactionDataSubscription;
   StreamSubscription? localTransactionDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? walletsDataSubscription;
+  StreamSubscription? fiatCurrencySettingSubscription;
 
   // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
@@ -159,6 +159,7 @@ class WalletTransactionBloc
     this.walletKeysProvider,
     this.localBitcoinAddressDataProvider,
     this.walletsDataProvider,
+    this.userSettingsDataProvider,
   ) : super(const WalletTransactionState(
           isSyncing: false,
           historyTransaction: [],
@@ -217,6 +218,11 @@ class WalletTransactionBloc
         /// clear all
         add(StartLoading());
       }
+    });
+    fiatCurrencySettingSubscription = userSettingsDataProvider
+        .fiatCurrencyUpdateController.stream
+        .listen((_) {
+      handleTransactionDataProviderUpdate();
     });
 
     bdkTransactionDataSubscription =
@@ -909,11 +915,7 @@ class WalletTransactionBloc
 
     /// TODO:: replace with exchangeRateProvider
     exchangeRate ??= await ExchangeRateService.getExchangeRate(
-        Provider.of<UserSettingProvider>(
-                Coordinator.rootNavigatorKey.currentContext!,
-                listen: false)
-            .walletUserSetting
-            .fiatCurrency,
+        userSettingsDataProvider.exchangeRate.fiatCurrency,
         time: transactionModel?.transactionTime != null
             ? int.parse(transactionModel?.transactionTime ?? "0")
             : null);
@@ -1002,25 +1004,45 @@ class WalletTransactionBloc
       if (lastEvent is SelectWallet) {
         WalletMenuModel walletMenuModel =
             (lastEvent as SelectWallet).walletMenuModel;
+        bool hadTriggerSync = false;
         for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-          bdkTransactionDataProvider.syncWallet(
+          bool isAccountSyncing = bdkTransactionDataProvider.isSyncing(
             walletMenuModel.walletModel,
             accountMenuModel.accountModel,
-            forceSync,
           );
+          if (isAccountSyncing == false) {
+            bdkTransactionDataProvider.syncWallet(
+              walletMenuModel.walletModel,
+              accountMenuModel.accountModel,
+              forceSync,
+            );
+            hadTriggerSync = true;
+          }
         }
-        add(SyncWallet());
+        if (hadTriggerSync) {
+          add(SyncWallet());
+        }
       } else if (lastEvent is SelectAccount) {
         WalletMenuModel walletMenuModel =
             (lastEvent as SelectAccount).walletMenuModel;
         AccountMenuModel accountMenuModel =
             (lastEvent as SelectAccount).accountMenuModel;
-        bdkTransactionDataProvider.syncWallet(
+        bool hadTriggerSync = false;
+        bool isAccountSyncing = bdkTransactionDataProvider.isSyncing(
           walletMenuModel.walletModel,
           accountMenuModel.accountModel,
-          forceSync,
         );
-        add(SyncWallet());
+        if (isAccountSyncing == false) {
+          bdkTransactionDataProvider.syncWallet(
+            walletMenuModel.walletModel,
+            accountMenuModel.accountModel,
+            forceSync,
+          );
+          hadTriggerSync = true;
+        }
+        if (hadTriggerSync) {
+          add(SyncWallet());
+        }
       }
     }
   }

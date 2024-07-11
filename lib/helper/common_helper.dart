@@ -7,6 +7,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -91,6 +92,23 @@ class CommonHelper {
         },
       );
     }
+  }
+
+  static String getFiatCurrencySign(FiatCurrency fiatCurrency) {
+    FiatCurrencyInfo? fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency];
+    return fiatCurrencyInfo != null ? fiatCurrencyInfo.sign : "\$";
+  }
+
+  static String formatDouble(
+    double number, {
+    int? displayDigits = defaultDisplayDigits,
+  }) {
+    if (displayDigits == 0) {
+      return NumberFormat('#,###').format(number);
+    }
+    String zero = '0';
+    String repeated = zero * displayDigits!;
+    return NumberFormat('#,##0.$repeated').format(number);
   }
 
   static FiatCurrency getFiatCurrencyByName(String name) {

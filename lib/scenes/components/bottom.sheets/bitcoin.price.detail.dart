@@ -42,6 +42,7 @@ class BitcoinPriceDetailSheet {
                     ),
                     AnimatedFlipCounter(
                         duration: const Duration(milliseconds: 500),
+                        thousandSeparator: ",",
                         prefix: Provider.of<UserSettingProvider>(
                           context,
                           listen: false,
@@ -67,7 +68,7 @@ class BitcoinPriceDetailSheet {
                                 ProtonColors.signalSuccess))
                         : AnimatedFlipCounter(
                             duration: const Duration(milliseconds: 500),
-                            prefix: "-",
+                            prefix: "",
                             value: priceChange,
                             suffix: "% (1d)",
                             fractionDigits: 2,
