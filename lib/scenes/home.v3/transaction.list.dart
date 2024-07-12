@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/custom.loading.with.child.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/constants/constants.dart';
@@ -79,7 +80,8 @@ class TransactionList extends StatelessWidget {
                                 ? CustomLoadingWithChild(
                                     durationInMilliSeconds: 800,
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 3),
                                       child: Icon(
                                         Icons.refresh_rounded,
                                         size: 20,
@@ -93,7 +95,8 @@ class TransactionList extends StatelessWidget {
                                           .syncWallet(true);
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 3),
                                       child: Icon(
                                         Icons.refresh_rounded,
                                         size: 20,
@@ -109,7 +112,8 @@ class TransactionList extends StatelessWidget {
                                       context, viewModel);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
                                   child: SvgPicture.asset(
                                       "assets/images/icon/setup-preference.svg",
                                       fit: BoxFit.fill,
@@ -124,7 +128,8 @@ class TransactionList extends StatelessWidget {
                                   viewModel.setSearchHistoryTextField(true);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
                                   child: SvgPicture.asset(
                                       "assets/images/icon/search.svg",
                                       fit: BoxFit.fill,
@@ -166,13 +171,30 @@ class TransactionList extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          S.of(context).loading_transactions,
-                          style: FontManager.body2Regular(
-                            ProtonColors.textWeak,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                S.of(context).loading_transactions,
+                                style: FontManager.body2Regular(
+                                  ProtonColors.textWeak,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              const SizedBox(width: 4),
+                              Transform.translate(
+                                  offset: const Offset(0, 1),
+                                  child: CustomTooltip(
+                                    message: S
+                                        .of(context)
+                                        .loading_transactions_desc,
+                                    child: SvgPicture.asset(
+                                        "assets/images/icon/ic-info-circle-dark.svg",
+                                        fit: BoxFit.fill,
+                                        width: 16,
+                                        height: 16),
+                                  )),
+                            ]),
                       ],
                     )
                   : Column(

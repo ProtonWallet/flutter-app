@@ -6,6 +6,7 @@ import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/constants/constants.dart';
@@ -34,27 +35,23 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               color: ProtonColors.backgroundProton,
             ),
             child: SafeArea(
-              child: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
-                  child: Column(children: [
-                    Expanded(
-                        child: SingleChildScrollView(
+              child: Column(children: [
+                CustomHeader(
+                  title: S.of(context).receive_bitcoin,
+                  closeButtonDirection: AxisDirection.left,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: defaultPadding,
+                      right: defaultPadding,
+                      bottom: 20,
+                    ),
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: CloseButtonV1(onPressed: () {
-                                Navigator.of(context).pop();
-                              })),
-                          Text(
-                            S.of(context).receive_bitcoin,
-                            style:
-                                FontManager.body1Median(ProtonColors.textNorm),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10),
                           Text(
                             S.of(context).receive_desc,
                             style:
@@ -86,8 +83,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         color: Colors.transparent,
                                         width: 0,
                                       ),
-                                      backgroundColor:
-                                          ProtonColors.white,
+                                      backgroundColor: ProtonColors.white,
                                       color: ProtonColors.textNorm,
                                     )
                                   : AlertCustom(
@@ -110,8 +106,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         color: Colors.transparent,
                                         width: 0,
                                       ),
-                                      backgroundColor:
-                                          ProtonColors.white,
+                                      backgroundColor: ProtonColors.white,
                                       color: ProtonColors.textNorm,
                                     ),
                             const SizedBox(height: 10),
@@ -270,8 +265,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               height: 48),
                         ],
                       ),
-                    )),
-                  ])),
+                    ),
+                  ),
+                ),
+              ]),
             )));
   }
 }

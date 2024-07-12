@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
@@ -208,17 +209,14 @@ class SendView extends ViewBase<SendViewModel> {
                                                   v))
                                           .toList(),
                                       itemsLeadingIcons: fiatCurrencies
-                                          .map((v) => Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 4),
-                                              child:
-                                                  CountryFlag.fromCountryCode(
+                                          .map((v) =>
+                                              CountryFlag.fromCountryCode(
                                                 FiatCurrencyHelper
                                                     .toCountryCode(v),
                                                 shape: const Circle(),
                                                 width: 20,
                                                 height: 20,
-                                              )))
+                                              ))
                                           .toList(),
                                       valueNotifier:
                                           viewModel.fiatCurrencyNotifier)),
@@ -847,30 +845,42 @@ class SendView extends ViewBase<SendViewModel> {
                                   for (int index = 0;
                                       index < viewModel.recipients.length;
                                       index++)
-                                    RecipientDetail(
-                                      name: viewModel.recipients[index].email,
-                                      email: viewModel.recipients[index].email,
-                                      bitcoinAddress: viewModel.bitcoinAddresses
-                                              .containsKey(viewModel
-                                                  .recipients[index].email)
-                                          ? viewModel.bitcoinAddresses[viewModel
-                                                  .recipients[index].email] ??
-                                              ""
-                                          : "",
-                                      isSignatureInvalid: viewModel
-                                                  .bitcoinAddressesInvalidSignature[
-                                              viewModel
-                                                  .recipients[index].email] ??
-                                          false,
-                                      isSelfBitcoinAddress: viewModel
-                                          .selfBitcoinAddresses
-                                          .contains(viewModel.bitcoinAddresses[
-                                                  viewModel.recipients[index]
-                                                      .email] ??
-                                              ""),
-                                      callback: () {
-                                        viewModel.removeRecipient(index);
-                                      },
+                                    if (viewModel.recipients[index].isValid)
+                                      RecipientDetail(
+                                        name: viewModel.recipients[index].email,
+                                        email:
+                                            viewModel.recipients[index].email,
+                                        bitcoinAddress: viewModel
+                                                .bitcoinAddresses
+                                                .containsKey(viewModel
+                                                    .recipients[index].email)
+                                            ? viewModel.bitcoinAddresses[
+                                                    viewModel.recipients[index]
+                                                        .email] ??
+                                                ""
+                                            : "",
+                                        isSignatureInvalid: viewModel
+                                                    .bitcoinAddressesInvalidSignature[
+                                                viewModel
+                                                    .recipients[index].email] ??
+                                            false,
+                                        isSelfBitcoinAddress: viewModel
+                                            .selfBitcoinAddresses
+                                            .contains(
+                                                viewModel.bitcoinAddresses[
+                                                        viewModel
+                                                            .recipients[index]
+                                                            .email] ??
+                                                    ""),
+                                        callback: () {
+                                          viewModel.removeRecipient(index);
+                                        },
+                                      ),
+                                  if (viewModel.isLoadingBvE)
+                                    const CustomLoading(
+                                      size: 40,
+                                      durationInMilliSeconds: 1600,
+                                      strokeWidth: 3,
                                     ),
                                 ]))))),
                 if (MediaQuery.of(context).viewInsets.bottom < 80)
