@@ -4,6 +4,7 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
@@ -31,19 +32,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
-        ),
-        backgroundColor: ProtonColors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-        ),
-        scrolledUnderElevation:
-            0.0, // don't change background color when scroll down
-      ),
       body: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: buildNoHistory(context, viewModel)),
@@ -71,10 +59,20 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               .round();
     }
     return Container(
+      height: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
         color: ProtonColors.white,
-        height: double.infinity,
-        child: SingleChildScrollView(
-            child: Padding(
+      ),
+      child: Column(
+        children: [
+          CustomHeader(
+            title: S.of(context).transaction_detail,
+            closeButtonDirection: AxisDirection.left,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -360,7 +358,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           const SizedBox(height: 20),
                         ])
                   ],
-                ))));
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildSendInfo(BuildContext context) {

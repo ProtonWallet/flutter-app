@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -159,116 +161,129 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
           }
           return SafeArea(
             child: Container(
-                padding: const EdgeInsets.only(
-                    bottom: defaultPadding,
-                    top: defaultPadding * 2,
-                    left: defaultPadding,
-                    right: defaultPadding),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (widget.canSearch)
-                    TextFieldTextV2(
-                      borderColor: ProtonColors.textWeak,
-                      textController: searchBoxController,
-                      myFocusNode: searchBoxFocusNode,
-                      validation: (value) {
-                        return "";
-                      },
-                      prefixIcon: Icon(Icons.search_rounded,
-                          size: 20, color: ProtonColors.textWeak),
-                      paddingSize: 2,
-                      labelText: S.of(context).search,
-                    ),
-                  Expanded(
-                      child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            for (int index = 0;
-                                index < widget.items.length;
-                                index++)
-                              if (widget.itemsText[index]
-                                  .toString()
-                                  .toLowerCase()
-                                  .contains(keyWord.toLowerCase()))
-                                Container(
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    child: Column(children: [
-                                      ListTile(
-                                        trailing: selected ==
-                                                widget.items[index]
-                                            ? SvgPicture.asset(
-                                                "assets/images/icon/ic-checkmark.svg",
-                                                fit: BoxFit.fill,
-                                                width: 20,
-                                                height: 20)
-                                            : null,
-                                        leading: widget.itemsMoreDetail != null
-                                            ? CustomTooltip(
-                                                message: widget
-                                                    .itemsMoreDetail![index],
-                                                child: SvgPicture.asset(
-                                                    "assets/images/icon/ic-info-circle.svg",
-                                                    fit: BoxFit.fill,
-                                                    width: 16,
-                                                    height: 16),
-                                              )
-                                            : null,
-                                        title: widget.itemsLeadingIcons != null
-                                            ? Row(
-                                                children: [
-                                                  widget.itemsLeadingIcons?[
-                                                      index],
-                                                  Expanded(
-                                                    child: Text(
-                                                      widget.itemsText[index],
-                                                      style: FontManager
-                                                          .body2Regular(
-                                                              ProtonColors
-                                                                  .textNorm),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
+              padding: const EdgeInsets.only(
+                  bottom: defaultPadding,
+                  top: 10,
+                  left: defaultPadding,
+                  right: defaultPadding),
+              child: IntrinsicHeight(
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: CloseButtonV1(onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                if (widget.canSearch)
+                  TextFieldTextV2(
+                    borderColor: ProtonColors.textWeak,
+                    textController: searchBoxController,
+                    myFocusNode: searchBoxFocusNode,
+                    validation: (value) {
+                      return "";
+                    },
+                    prefixIcon: Icon(Icons.search_rounded,
+                        size: 20, color: ProtonColors.textWeak),
+                    paddingSize: 2,
+                    labelText: S.of(context).search,
+                  ),
+                Expanded(
+                    child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          for (int index = 0;
+                              index < widget.items.length;
+                              index++)
+                            if (widget.itemsText[index]
+                                .toString()
+                                .toLowerCase()
+                                .contains(keyWord.toLowerCase()))
+                              Container(
+                                  height: 60,
+                                  alignment: Alignment.center,
+                                  child: Column(children: [
+                                    ListTile(
+                                      trailing: selected == widget.items[index]
+                                          ? SvgPicture.asset(
+                                              "assets/images/icon/ic-checkmark.svg",
+                                              fit: BoxFit.fill,
+                                              width: 20,
+                                              height: 20)
+                                          : null,
+                                      leading: widget.itemsMoreDetail != null
+                                          ? CustomTooltip(
+                                              message: widget
+                                                  .itemsMoreDetail![index],
+                                              child: SvgPicture.asset(
+                                                  "assets/images/icon/ic-info-circle.svg",
+                                                  fit: BoxFit.fill,
+                                                  width: 16,
+                                                  height: 16),
+                                            )
+                                          : null,
+                                      title: widget.itemsLeadingIcons != null
+                                          ? Row(
+                                              children: [
+                                                widget
+                                                    .itemsLeadingIcons?[index],
+                                                const SizedBox(
+                                                  width: 6,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.itemsText[index],
+                                                    style: FontManager
+                                                        .body2Regular(
+                                                            ProtonColors
+                                                                .textNorm),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                ],
-                                              )
-                                            : Text(widget.itemsText[index],
-                                                style: FontManager.body2Regular(
-                                                    ProtonColors.textNorm)),
-                                        onTap: () {
-                                          setState(() {
-                                            selected = widget.items[index];
-                                            int selectedIndex = max(
-                                                widget.items.indexOf(selected),
-                                                0);
-                                            _textEditingController.text =
-                                                getDisplayText(selectedIndex);
-                                            widget.valueNotifier?.value =
-                                                selected;
-                                            Navigator.of(context).pop();
-                                          });
-                                        },
-                                      ),
-                                      const Divider(
-                                        thickness: 0.2,
-                                        height: 1,
-                                      )
-                                    ])),
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
-                ])),
+                                                ),
+                                              ],
+                                            )
+                                          : Text(widget.itemsText[index],
+                                              style: FontManager.body2Regular(
+                                                  ProtonColors.textNorm)),
+                                      onTap: () {
+                                        setState(() {
+                                          selected = widget.items[index];
+                                          int selectedIndex = max(
+                                              widget.items.indexOf(selected),
+                                              0);
+                                          _textEditingController.text =
+                                              getDisplayText(selectedIndex);
+                                          widget.valueNotifier?.value =
+                                              selected;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    const Divider(
+                                      thickness: 0.2,
+                                      height: 1,
+                                    )
+                                  ])),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+              ])),
+            ),
           );
         });
       },

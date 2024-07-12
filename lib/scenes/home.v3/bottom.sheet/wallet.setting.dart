@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:wallet/scenes/components/add.button.v1.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -44,14 +45,17 @@ class WalletSettingSheet {
         break;
       }
     }
-    HomeModalBottomSheet.show(context, scrollController: scrollController,
-        child: StatefulBuilder(
+    HomeModalBottomSheet.show(context,
+        scrollController: scrollController,
+        header: CustomHeader(
+          title: S.of(context).wallet_preference,
+          closeButtonDirection: AxisDirection.left,
+        ), child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return BlocBuilder<WalletListBloc, WalletListState>(
           bloc: viewModel.walletListBloc,
           builder: (context, state) {
             /// TODO:: change to walletMenuModel
-
             for (WalletMenuModel walletMenuModel2 in state.walletsModel) {
               if (walletMenuModel.walletModel.walletID ==
                   walletMenuModel2.walletModel.walletID) {
@@ -94,9 +98,6 @@ class WalletSettingSheet {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CloseButtonV1(onPressed: () {
-                  Navigator.of(context).pop();
-                }),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,8 +213,7 @@ class WalletSettingSheet {
                               color: Colors.transparent,
                               width: 0,
                             ),
-                            backgroundColor:
-                                ProtonColors.white,
+                            backgroundColor: ProtonColors.white,
                             color: ProtonColors.textNorm,
                           ),
                     const SizedBox(
@@ -337,18 +337,14 @@ class WalletSettingSheet {
                                                     .getFullName(v))
                                                 .toList(),
                                             itemsLeadingIcons: fiatCurrencies
-                                                .map((v) => Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 4),
-                                                    child: CountryFlag
-                                                        .fromCountryCode(
+                                                .map((v) =>
+                                                    CountryFlag.fromCountryCode(
                                                       FiatCurrencyHelper
                                                           .toCountryCode(v),
                                                       shape: const Circle(),
                                                       width: 20,
                                                       height: 20,
-                                                    )))
+                                                    ))
                                                 .toList(),
                                             valueNotifier:
                                                 accountFiatCurrencyNotifier[
@@ -483,7 +479,8 @@ class WalletSettingSheet {
                           ]);
                         }),
                     Theme(
-                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
                       child: ExpansionTile(
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
@@ -514,7 +511,10 @@ class WalletSettingSheet {
                                   context,
                                   viewModel,
                                   walletMenuModel,
-                                  walletMenuModel.walletModel.balance > 0,
+                                  walletMenuModel.accounts
+                                          .map((v) => v.balance)
+                                          .sum >
+                                      0,
                                 );
                               },
                               text: S.of(context).delete_wallet,
