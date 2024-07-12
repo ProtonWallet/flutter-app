@@ -24,42 +24,42 @@ class CryptoException implements Exception {
 }
 
 class PassphraseException extends CryptoException {
-  PassphraseException(String message) : super(message);
+  PassphraseException(super.message);
 
   @override
   String toString() => message;
 }
 
 class ArmorException extends CryptoException {
-  ArmorException(String message) : super(message);
+  ArmorException(super.message);
 
   @override
   String toString() => message;
 }
 
 class EncryptionException extends CryptoException {
-  EncryptionException(String message) : super(message);
+  EncryptionException(super.message);
 
   @override
   String toString() => message;
 }
 
 class DecryptionException extends CryptoException {
-  DecryptionException(String message) : super(message);
+  DecryptionException(super.message);
 
   @override
   String toString() => message;
 }
 
 class SignException extends CryptoException {
-  SignException(String message) : super(message);
+  SignException(super.message);
 
   @override
   String toString() => message;
 }
 
 class KeyRingException extends CryptoException {
-  KeyRingException(String message) : super(message);
+  KeyRingException(super.message);
 
   @override
   String toString() => message;
