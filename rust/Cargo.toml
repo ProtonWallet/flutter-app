@@ -12,7 +12,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 
 [build-dependencies]
-flutter_rust_bridge_codegen = { version = "2.0.0-dev.33" }
+flutter_rust_bridge_codegen = { version = "2.1.0" }
 
 [dependencies]
 thiserror = "1.0.61"
@@ -42,7 +42,6 @@ openssl = { version = "*", features = ["vendored"] }
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2.12", features = ["js"] }
 openssl = { version = "*", features = ["vendored"] }
-
 # Platform-specific dependencies
 # serde-wasm-bindgen = { version = "0.6.1", optional = true }
 # wasm-bindgen = { version = "0.2.88", features=["serde-serialize"], optional = true  }
@@ -61,15 +60,7 @@ panic = "abort"
 # Required
 build_targets = ["aarch64-apple-ios"]
 
-[patch.crates-io]
-# esplora-client = { version = "0.6.0", path = "../vendor/esplora-client" }
-# muon = { version = "0.2.0", path = "../vendor/muon" }
-
-# [profile.default]
-# retries = 0
-# slow-timeout = { period = "30s", terminate-after = 10 }
-# [env] #not useable 
-# RUST_BACKTRACE = "1"
+# [patch.crates-io]
 
 [features]
 default = []
