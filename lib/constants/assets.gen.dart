@@ -272,6 +272,9 @@ class $AssetsImagesIconGen {
   SvgGenImage get receive =>
       const SvgGenImage('assets/images/icon/receive.svg');
 
+  /// File path: assets/images/icon/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/images/icon/search.svg');
+
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
 
@@ -391,6 +394,7 @@ class $AssetsImagesIconGen {
         protect,
         ramp,
         receive,
+        search,
         send,
         send1,
         send2,

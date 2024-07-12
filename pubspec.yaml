@@ -20,6 +20,7 @@ version: 1.0.0+39
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.22.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -142,8 +143,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
-  ffigen: ^9.0.1
+  flutter_lints: ^4.0.0
+  ffigen: ^12.0.0
   build_runner: ^2.4.6
   #auto gen assets to const
   flutter_gen_runner: ^5.4.0
