@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -65,11 +64,13 @@ class ProtonRecipient {
   TextEditingController amountController;
   FocusNode focusNode;
   int? amountInSATS;
+  bool isValid;
 
   ProtonRecipient({
     required this.email,
     required this.amountController,
     required this.focusNode,
+    required this.isValid,
   });
 }
 
@@ -112,6 +113,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int estimatedFeeInSATLowPriority = 0;
   int amountInSATS = 0; // per recipient
   bool allowDust = false;
+  bool isLoadingBvE = false;
   int totalAmountInSAT = 0; // total value
   SendFlowStatus sendFlowStatus = SendFlowStatus.addRecipient;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
@@ -119,6 +121,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   bool amountFiatCurrencyTextControllerChanged = false;
   bool hasEmailIntegrationRecipient = false;
   bool showInvite = false;
+  bool showInviteBvE = false;
   bool isBitcoinBase = false; // TODO:: add bitcoin base logic
   WalletModel? walletModel;
   AccountModel? accountModel;
@@ -160,8 +163,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   void updateTransactionFeeMode(TransactionFeeMode transactionFeeMode);
 
   Future<bool> buildTransactionScript();
-
-  Future<bool> sendInvite(String email);
 
   List<ContactsModel> contactsEmail = [];
 
@@ -304,6 +305,7 @@ class SendViewModelImpl extends SendViewModel {
         accountModel = accountValueNotifier.value;
         await updateWallet();
       });
+
       /// await for balance to be loaded
       await updateWallet();
       logger.i(DateTime.now().toString());
@@ -436,6 +438,7 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> loadBitcoinAddresses() async {
     showInvite = false;
+    showInviteBvE = false;
     for (ProtonRecipient protonRecipient in recipients) {
       String email = protonRecipient.email;
       if (bitcoinAddresses.containsKey(email)) {
@@ -444,6 +447,7 @@ class SendViewModelImpl extends SendViewModel {
       String? bitcoinAddress;
       if (CommonHelper.isBitcoinAddress(email)) {
         bitcoinAddress = email;
+        protonRecipient.isValid = true;
       } else {
         try {
           if (email.contains("@")) {
@@ -467,6 +471,7 @@ class SendViewModelImpl extends SendViewModel {
               }
               if (verifySignature == true) {
                 bitcoinAddress = emailIntegrationBitcoinAddress.bitcoinAddress;
+                protonRecipient.isValid = true;
               } else {
                 BuildContext? context =
                     Coordinator.rootNavigatorKey.currentContext;
@@ -486,10 +491,24 @@ class SendViewModelImpl extends SendViewModel {
           }
           // TODO:: handle banned bitcoin address alert here
         } on BridgeError catch (e, stacktrace) {
-          _processError(e, stacktrace);
+          var err = parseResponseError(e);
+          var msg = parseSampleDisplayError(e);
+          if (err != null) {
+            if (err.code == 2001) {
+              /// cannot find the email address in BvE pool
+              /// should send invite
+              showInvite = true;
+            } else if (err.code == 2050 && msg.isNotEmpty) {
+              /// Invalid email address
+            } else if (err.code == 2011) {
+              /// Address is not configured to receive Bitcoin
+              showInviteBvE = true;
+            }
+          } else {
+            _processError(e, stacktrace);
+          }
         } catch (e) {
           logger.e(e.toString());
-          showInvite = true;
         }
       }
       bitcoinAddresses[email] = bitcoinAddress ?? "";
@@ -521,6 +540,8 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> addRecipient() async {
+    isLoadingBvE = true;
+    datasourceChangedStreamController.sinkAddSafe(this); // inform UI to refresh
     String email = recipientTextController.text.trim();
     recipientTextController.text = "";
     if (isRecipientExists(email) == false) {
@@ -554,11 +575,9 @@ class SendViewModelImpl extends SendViewModel {
         email: email,
         amountController: textEditingController,
         focusNode: focusNode,
+        isValid: false,
       )); // TODO:: every recipient has own amountTextController
     }
-    EasyLoading.show(
-        status: "loading bitcoin address..",
-        maskType: EasyLoadingMaskType.black);
     try {
       await loadBitcoinAddresses();
       String bitcoinAddress = bitcoinAddresses[email] ?? "";
@@ -597,7 +616,7 @@ class SendViewModelImpl extends SendViewModel {
       } else {
         // not a valid bitcoinAddress, remove it
         removeRecipientByEmail(email);
-        if (showInvite == false) {
+        if (showInvite == false && showInviteBvE == false) {
           CommonHelper.showSnackbar(
               context!, S.of(context!).incorrect_bitcoin_address,
               isError: true);
@@ -608,7 +627,8 @@ class SendViewModelImpl extends SendViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
+    isLoadingBvE = false;
+    datasourceChangedStreamController.sinkAddSafe(this); // inform UI to refresh
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -618,7 +638,17 @@ class SendViewModelImpl extends SendViewModel {
       removeRecipientByEmail(email);
       BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        InviteSheet.show(context, this, email);
+        InviteSheet.show(context, email, () {
+          _sendInviteForNewComer(email);
+        });
+      }
+    } else if (showInviteBvE) {
+      removeRecipientByEmail(email);
+      BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
+      if (context.mounted) {
+        InviteSheet.show(context, email, () {
+          _sendInviteForEmailIntegration(email);
+        });
       }
     }
     if (isRecipientExists(email) == false && recipients.isEmpty) {
@@ -1007,13 +1037,6 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     datasourceChangedStreamController.sinkAddSafe(this);
-  }
-
-  @override
-  Future<bool> sendInvite(String email) async {
-    await _sendInviteForNewComer(email);
-    await _sendInviteForEmailIntegration(email);
-    return true;
   }
 
   Future<void> _sendInviteForEmailIntegration(String email) async {

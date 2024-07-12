@@ -474,7 +474,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   textStyle:
                       FontManager.balanceInFiatCurrency(ProtonColors.textNorm))
               : Text(
-                  "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}--.--",
+                  "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}****",
                   style:
                       FontManager.balanceInFiatCurrency(ProtonColors.textNorm)),
           const SizedBox(width: 10),
@@ -509,7 +509,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 ),
                 style: FontManager.balanceInBTC(ProtonColors.textHint))
             : Text(
-                "---- ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
+                "**** ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
                 style: FontManager.balanceInBTC(ProtonColors.textHint),
               ),
       ],

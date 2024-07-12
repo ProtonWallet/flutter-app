@@ -207,7 +207,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
               ]),
         ),
         Icon(
-          Icons.keyboard_arrow_down_rounded,
+          Icons.keyboard_arrow_up_rounded,
           size: 24,
           color: ProtonColors.textHint,
         ),
