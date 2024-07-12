@@ -1,13 +1,13 @@
 import CommonCrypto
 import CryptoKit
 import Flutter
+import flutter_local_notifications
 import ProtonCoreAuthentication
 import ProtonCoreChallenge
-import ProtonCoreCryptoGoImplementation
 import ProtonCoreCryptoGoInterface
+import ProtonCoreCryptoGoImplementation
 import ProtonCoreDataModel
 import ProtonCoreFeatureFlags
-import ProtonCoreFoundations
 import ProtonCoreFoundations
 import ProtonCoreHumanVerification
 import ProtonCoreLog
@@ -19,7 +19,6 @@ import ProtonCoreServices
 import ProtonCoreSettings
 import ProtonCoreUIFoundations
 import UIKit
-import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SimpleViewDelegate {
@@ -27,11 +26,12 @@ import flutter_local_notifications
     /// native code and this need to be refactored later
     private var apiService: PMAPIService?
     private var login: LoginAndSignup?
+    private var paymentsManager: PaymentsManager?
     private var navigationChannel: FlutterMethodChannel?
     private var humanVerificationDelegate: HumanVerifyDelegate?
-    var authManager: AuthHelper?
+    private var authManager: AuthHelper?
     private let serviceDelegate = WalletApiServiceManager()
-    
+
     private var getInAppTheme: () -> InAppTheme {
         return { .matchSystem }
     }
@@ -44,7 +44,7 @@ import flutter_local_notifications
         injectDefaultCryptoImplementation()
         let rootViewController = self.window?.rootViewController as! FlutterViewController
 
-        let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views", 
+        let nativeViewChannel = FlutterMethodChannel(name: "me.proton.wallet/native.views",
                                                      binaryMessenger: rootViewController.binaryMessenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             guard let self = self else { return }
@@ -61,6 +61,23 @@ import flutter_local_notifications
                 }
             case "native.navigation.plan.upgrade":
                 print("native.navigation.plan.upgrade:", call.arguments ?? "")
+                guard let arguments = call.arguments as? [Any] else {
+                    PMLog.error("Call to native.navigation.plan.upgrade includes unknown arguments")
+                    return
+                }
+
+                guard let sessionKey = arguments[0] as? String else {
+                    PMLog.error("Call to native.navigation.plan.upgrade is missing session-key")
+                    return
+                }
+
+                guard let authInfo = arguments[1] as? [String: Any] else {
+                    PMLog.error("Call to native.navigation.plan.upgrade has malformed auth information")
+                    return
+                }
+
+                self.showSubscriptionManagementScreen(sessionKey: sessionKey,
+                                                      authInfo: authInfo)
             case "native.initialize.core.environment":
                 print("native.initialize.core.environment data:", call.arguments ?? "")
                 if let arguments = call.arguments as? [String: Any] {
@@ -92,12 +109,14 @@ import flutter_local_notifications
                 self.authManager = AuthHelper()
                 apiService?.authDelegate = authManager
                 print("native.account.logout triggered")
+                FeatureFlagsRepository.shared.clearUserId()
+                FeatureFlagsRepository.shared.resetFlags()
             default:
                 result(FlutterMethodNotImplemented)
             }
         }
-        
-        navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view", 
+
+        navigationChannel = FlutterMethodChannel(name: "me.proton.wallet/app.view",
                                                  binaryMessenger: rootViewController.binaryMessenger)
         Brand.currentBrand = .wallet
 
@@ -108,13 +127,14 @@ import flutter_local_notifications
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
         }
 
-         // disable 
+        // disable
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     func initAPIService(env: Environment) {
         PMAPIService.noTrustKit = true
+
         let challengeParametersProvider = ChallengeParametersProvider.forAPIService(clientApp: .wallet,
                                                                                     challenge: PMChallenge())
         let apiService = PMAPIService.createAPIServiceWithoutSession(
@@ -165,7 +185,7 @@ import flutter_local_notifications
             signupAvailability: getSignupAvailability
         )
     }
-    
+
     private var getSignupAvailability: SignupAvailability {
         let signupAvailability: SignupAvailability
         let summaryScreenVariant: SummaryScreenVariant = .noSummaryScreen
@@ -174,7 +194,7 @@ import flutter_local_notifications
                                                                      summaryScreenVariant: summaryScreenVariant))
         return signupAvailability
     }
-    
+
     private var getShowWelcomeScreen: WelcomeScreenVariant? {
         return .wallet(.init(body: "Create a new account or sign in with your existing Proton account to start using Proton Wallet."))
     }
@@ -187,7 +207,7 @@ import flutter_local_notifications
             }
         }
     }
-    
+
     private var getHelpDecorator: ([[HelpItem]]) -> [[HelpItem]] {
         // guard veryStrangeHelpScreenSwitch.isOn else { return { $0 } }
         return { [weak self] _ in
@@ -218,7 +238,7 @@ import flutter_local_notifications
             ]
         }
     }
-    
+
     func showAlert(
         title: String,
         message: String,
@@ -233,11 +253,11 @@ import flutter_local_notifications
         }))
         over.present(alert, animated: true, completion: nil)
     }
-    
+
     func onButtonTap() {
         //  switchToFlutterView()
     }
-    
+
     private func sendDataToFlutter(jsonData: String) {
         navigationChannel?.invokeMethod("flutter.navigation.to.home", arguments: jsonData)
     }
@@ -259,10 +279,10 @@ import flutter_local_notifications
             "mailboxpasswordKeySalt": loginData.credential.passwordKeySalt,
             "mailboxpassword": loginData.credential.mailboxpassword,
         ]
-        
+
         let jsonData = try! JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
         let convertedString = String(data: jsonData, encoding: .utf8)!
-        
+
         sendDataToFlutter(jsonData: convertedString)
     }
 
@@ -297,7 +317,34 @@ import flutter_local_notifications
                                     inAppTheme: getInAppTheme
                                  ), updateBlock: processLoginResult)
     }
-    
+
+    func showSubscriptionManagementScreen(sessionKey: String, authInfo: [String: Any]) {
+        guard let userId = authInfo["userId"] as? String else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
+            return
+        }
+
+        guard let apiService = self.apiService else {
+            PMLog.error("Cannot show subscription management screen before APIService is set.")
+            return
+        }
+
+        guard let authManager = self.authManager else {
+            PMLog.error("Cannot show subscription management screen before auth manager is set.")
+            return
+        }
+
+        apiService.setSessionUID(uid: userId)
+        self.paymentsManager = PaymentsManager(storage: UserDefaults(),
+                                               apiService: apiService,
+                                               authManager: authManager)
+
+        self.paymentsManager?.upgradeSubscription(completion: { [weak self] result in
+            guard let self else { return }
+            // nothing for now
+        })
+    }
+
     private func processLoginResult(_ result: LoginAndSignupResult) {
         switch result {
         case .loginStateChanged(.loginFinished):
