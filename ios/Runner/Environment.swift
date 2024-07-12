@@ -40,7 +40,7 @@ struct Environment {
     func toCoreEnv() -> ProtonCoreEnvironment.Environment {
        switch type {
        case .prod:
-        return .mailProd
+           return .walletProd
        case .atlasCustom(let custom):
            return .custom("\(custom).proton.black")
        default:
