@@ -29,6 +29,34 @@ extension BitcoinUnitToStringExtension on BitcoinUnit {
 
 extension GatewayProviderToStringExtension on GatewayProvider {
   String enumToString() {
-    return toString().split('.').last;
+    switch (this) {
+      case GatewayProvider.banxa:
+        return 'Banxa';
+      case GatewayProvider.ramp:
+        return 'Ramp';
+      case GatewayProvider.moonPay:
+        return 'MoonPay';
+      case GatewayProvider.unsupported:
+        return 'Unsupported';
+    }
+  }
+}
+
+extension PaymentMethodToStringExtension on PaymentMethod {
+  String enumToString() {
+    switch (this) {
+      case PaymentMethod.applePay:
+        return "Apple Pay";
+      case PaymentMethod.bankTransfer:
+        return "Bank Transfer";
+      case PaymentMethod.card:
+        return "Credit Card";
+      case PaymentMethod.googlePay:
+        return "Google Pay";
+      case PaymentMethod.instantPayment:
+        return "Instant Payment";
+      case PaymentMethod.unsupported:
+        return "Unknown Payment Method";
+    }
   }
 }

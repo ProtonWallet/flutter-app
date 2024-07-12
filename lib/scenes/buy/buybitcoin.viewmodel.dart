@@ -60,12 +60,16 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   void selectAmount(String amount);
 
+  void selectPayment(PaymentMethod method);
+
   void pay(SelectedInfoModel selected);
   void keyboardDone();
 
   FocusNode get focusNode;
   TextEditingController get controller;
   OverlayEntry? overlayEntry;
+
+  PaymentMethod selectedPaymentMethod = PaymentMethod.card;
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
@@ -121,31 +125,41 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     apiKey = Env.rampApiKey ?? "";
 
     payments.add(DropdownItem(
-      icon: 'assets/images/credit-card.png',
+      icon: Assets.images.icon.creditCard.svg(
+        fit: BoxFit.fill,
+      ),
       title: 'Credit Card',
-      subtitle: 'Take minutes',
+      subtitle: '',
+      method: PaymentMethod.card,
     ));
+    // payments.add(DropdownItem(
+    //   icon: 'assets/images/bank-transfer.png',
+    //   title: 'Bank Transfer',
+    //   selected: false,
+    //   subtitle: 'Take days',
+    // ));
     payments.add(DropdownItem(
-      icon: 'assets/images/bank-transfer.png',
-      title: 'Bank Transfer',
-      subtitle: 'Take days',
-    ));
-    payments.add(DropdownItem(
-      icon: 'assets/images/apple-pay.png',
+      icon: Assets.images.icon.applePay.svg(
+        fit: BoxFit.fill,
+      ),
       title: 'Apple Pay',
-      subtitle: 'Up to 2 business days',
+      subtitle: '',
+      method: PaymentMethod.applePay,
     ));
 
     providers.add(DropdownItem(
-      icon: 'assets/images/coinbase.png',
+      icon: Assets.images.icon.ramp.svg(
+        fit: BoxFit.fill,
+      ),
       title: 'Ramp',
       subtitle: '0.00155 BTC',
     ));
-    providers.add(DropdownItem(
-      icon: 'assets/images/binance.png',
-      title: 'Banxa',
-      subtitle: '0.00155 BTC',
-    ));
+    // providers.add(DropdownItem(
+    //   icon: 'assets/images/binance.png',
+    //   title: 'Banxa',
+    //   subtitle: '0.00155 BTC',
+    //   selected: false,
+    // ));
 
     configuration = Configuration()
       ..hostApiKey = apiKey
@@ -386,7 +400,12 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     if (availableCountries.contains(currentCode)) {
       return [currentCode];
     }
-
     return null;
+  }
+
+  @override
+  void selectPayment(PaymentMethod method) {
+    selectedPaymentMethod = method;
+    datasourceChangedStreamController.sinkAddSafe(this);
   }
 }

@@ -17,7 +17,6 @@ class AccountDropdown extends StatelessWidget {
     return Dialog(
       // insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           color: Colors.white,
@@ -37,8 +36,8 @@ class AccountDropdown extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(
             top: 12,
-            left: 16,
-            right: 16,
+            left: 8,
+            right: 8,
             bottom: 8,
           ),
           decoration: const BoxDecoration(color: Color(0x00575D6B)),
@@ -52,6 +51,7 @@ class AccountDropdown extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBoxes.box16,
                   Expanded(
                     child: Text(
                       title,
@@ -78,10 +78,10 @@ class AccountDropdown extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBoxes.box24,
+              SizedBoxes.box12,
               for (final widget in widgets) ...<Widget>{
                 widget,
-                SizedBoxes.box24
+                SizedBoxes.box12
               },
             ],
           ),
