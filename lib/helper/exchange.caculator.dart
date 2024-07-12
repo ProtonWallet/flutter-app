@@ -50,7 +50,7 @@ class ExchangeCalculator {
         return "${amount.toStringAsFixed(8)} ${bitcoinUnit.name.toUpperCase()}";
       case BitcoinUnit.mbtc:
         amount = amountInSatoshi / 100000;
-        return "${amount.toStringAsFixed(5)} mBTC}";
+        return "${amount.toStringAsFixed(5)} mBTC";
       default:
         break;
     }

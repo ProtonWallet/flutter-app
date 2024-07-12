@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
@@ -70,7 +71,10 @@ class HomeCoordinator extends Coordinator {
 
   void showSend(String walletID, String accountID) {
     var view = SendCoordinator(walletID, accountID).start();
-    showInBottomSheet(view);
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void showSetupBackup(String walletID) {
@@ -117,7 +121,10 @@ class HomeCoordinator extends Coordinator {
       txID,
       userFiatCurrency,
     ).start();
-    showInBottomSheet(view);
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void showTwoFactorAuthSetup() {

@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
@@ -33,6 +33,10 @@ class OnboardingGuideSheet {
     bool passphraseConfirmed = true;
     bool isCreatingWallet = false;
     HomeModalBottomSheet.show(context,
+        header: CustomHeader(
+          title: S.of(context).wallet_setup,
+          closeButtonDirection: AxisDirection.right,
+        ),
         child: BlocBuilder<WalletListBloc, WalletListState>(
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
@@ -42,19 +46,9 @@ class OnboardingGuideSheet {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Align(
-                          alignment: Alignment.centerRight,
-                          child: CloseButtonV1(onPressed: () {
-                            Navigator.of(context).pop();
-                          })),
                       Transform.translate(
-                          offset: const Offset(0, -20),
+                          offset: const Offset(0, -10),
                           child: Column(children: [
-                            Text(
-                              S.of(context).wallet_setup,
-                              style: FontManager.titleHeadline(
-                                  ProtonColors.textNorm),
-                            ),
                             Text(
                               S.of(context).wallet_setup_desc,
                               style: FontManager.body2Regular(
@@ -98,15 +92,12 @@ class OnboardingGuideSheet {
                                         FiatCurrencyHelper.getFullName(v))
                                     .toList(),
                                 itemsLeadingIcons: fiatCurrencies
-                                    .map((v) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 4),
-                                        child: CountryFlag.fromCountryCode(
+                                    .map((v) => CountryFlag.fromCountryCode(
                                           FiatCurrencyHelper.toCountryCode(v),
                                           shape: const Circle(),
                                           width: 20,
                                           height: 20,
-                                        )))
+                                        ))
                                     .toList(),
                                 valueNotifier: viewModel.fiatCurrencyNotifier),
                             const SizedBox(height: 10),

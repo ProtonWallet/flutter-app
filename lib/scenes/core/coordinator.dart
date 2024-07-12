@@ -37,18 +37,30 @@ abstract class Coordinator implements ViewNavigator {
     throw UnimplementedError();
   }
 
-  void showInBottomSheet(Widget view) {
+  void showInBottomSheet(
+    Widget view, {
+    Color? backgroundColor,
+  }) {
     Future.delayed(Duration.zero, () {
       if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
-        _showMobileBottomSheet(view);
+        _showMobileBottomSheet(
+          view,
+          backgroundColor: backgroundColor,
+        );
       } else {
         // desktop and tablet
-        _showDesktopBottomSheet(view);
+        _showDesktopBottomSheet(
+          view,
+          backgroundColor: backgroundColor,
+        );
       }
     });
   }
 
-  void _showMobileBottomSheet(Widget view) {
+  void _showMobileBottomSheet(
+    Widget view, {
+    Color? backgroundColor,
+  }) {
     BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
@@ -66,7 +78,10 @@ abstract class Coordinator implements ViewNavigator {
         });
   }
 
-  void _showDesktopBottomSheet(Widget view) {
+  void _showDesktopBottomSheet(
+    Widget view, {
+    Color? backgroundColor,
+  }) {
     BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
@@ -86,7 +101,7 @@ abstract class Coordinator implements ViewNavigator {
               alignment: Alignment.center,
               child: Container(
                   decoration: BoxDecoration(
-                    color: ProtonColors.backgroundProton,
+                    color: backgroundColor ?? ProtonColors.backgroundProton,
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 30),
