@@ -29,6 +29,9 @@ class TextFieldTextV2 extends StatefulWidget {
   final bool alwaysShowHint;
 
   const TextFieldTextV2({
+    required this.textController,
+    required this.myFocusNode,
+    required this.validation,
     super.key,
     this.labelText = "",
     this.onFinish,
@@ -36,12 +39,9 @@ class TextFieldTextV2 extends StatefulWidget {
     this.borderColor,
     this.autofocus = false,
     this.showCounterText = false,
-    required this.textController,
-    required this.myFocusNode,
     this.inputFormatters = const [],
     this.keyboardType,
     this.textInputAction,
-    required this.validation,
     this.isPassword = false,
     this.paddingSize,
     this.maxLines = 1,
@@ -64,7 +64,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
   String errorString = "";
   bool isObscureText = true;
 
-  getBorderColor(isFocus) {
+  Color getBorderColor(isFocus) {
     return isFocus
         ? ProtonColors.interactionNorm
         : widget.borderColor ?? Colors.transparent;
@@ -73,7 +73,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -83,14 +83,14 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                 setState(() {
                   getBorderColor(focus);
                   if (focus) {
-                    // TODO:: remove this workaround, textfield will lose focus when ModalBottomSheet add padding for keyboard
+                    // TODO(fix): remove this workaround, textfield will lose focus when ModalBottomSheet add padding for keyboard
                     Future.delayed(const Duration(milliseconds: 200), () {
-                      if (widget.myFocusNode.hasFocus == false) {
+                      if (!widget.myFocusNode.hasFocus) {
                         widget.myFocusNode.requestFocus();
                       }
                     });
                   }
-                  if (focus == false) {
+                  if (!focus) {
                     if (widget.onFinish != null) {
                       widget.onFinish!();
                     }
@@ -118,8 +118,6 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     borderRadius:
                         BorderRadius.all(Radius.circular(widget.radius)),
                     border: Border.all(
-                      width: 1,
-                      style: BorderStyle.solid,
                       color: isError
                           ? ProtonColors.signalError
                           : getBorderColor(widget.myFocusNode.hasFocus),

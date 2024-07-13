@@ -93,13 +93,13 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
     selectedWalletChangeSubscription = walletsDataProvider
         .selectedWalletUpdateController.stream
         .listen((data) async {
-      WalletData? walletData =
+      final WalletData? walletData =
           await walletsDataProvider.getWalletByServerWalletID(
               walletsDataProvider.selectedServerWalletID);
       if (walletData != null) {
-        WalletMenuModel walletMenuModel = WalletMenuModel(walletData.wallet);
+        final WalletMenuModel walletMenuModel = WalletMenuModel(walletData.wallet);
         walletMenuModel.accounts =
-            walletData.accounts.map((item) => AccountMenuModel(item)).toList();
+            walletData.accounts.map(AccountMenuModel.new).toList();
         if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
           /// wallet view
           add(SelectWallet(
@@ -148,11 +148,11 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
       ));
       lastEvent = event;
       int balance = 0;
-      WalletModel walletModel = event.walletMenuModel.walletModel;
+      final WalletModel walletModel = event.walletMenuModel.walletModel;
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
         // update account balance
-        BDKBalanceData bdkBalanceData =
+        final BDKBalanceData bdkBalanceData =
             await balanceDataProvider.getBDKBalanceDataByWalletAccount(
           walletModel,
           accountMenuModel.accountModel,
@@ -170,13 +170,13 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
         balanceInSatoshi: 0,
       ));
       lastEvent = event;
-      WalletModel walletModel = event.walletMenuModel.walletModel;
-      BDKBalanceData bdkBalanceData =
+      final WalletModel walletModel = event.walletMenuModel.walletModel;
+      final BDKBalanceData bdkBalanceData =
           await balanceDataProvider.getBDKBalanceDataByWalletAccount(
         walletModel,
         event.accountMenuModel.accountModel,
       );
-      int balance = await bdkBalanceData.getBalance();
+      final int balance = await bdkBalanceData.getBalance();
       emit(state.copyWith(
         balanceInSatoshi: balance,
       ));
@@ -186,12 +186,12 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   void handleTransactionUpdate() {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
-        SelectWallet selectWallet = (lastEvent as SelectWallet);
+        final SelectWallet selectWallet = (lastEvent! as SelectWallet);
         add(SelectWallet(
           selectWallet.walletMenuModel,
         ));
       } else if (lastEvent is SelectAccount) {
-        SelectAccount selectAccount = (lastEvent as SelectAccount);
+        final SelectAccount selectAccount = (lastEvent! as SelectAccount);
         add(SelectAccount(
           selectAccount.walletMenuModel,
           selectAccount.accountMenuModel,

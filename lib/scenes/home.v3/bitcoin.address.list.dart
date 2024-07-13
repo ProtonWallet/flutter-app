@@ -22,8 +22,8 @@ class BitcoinAddressList extends StatelessWidget {
   final HomeViewModel viewModel;
 
   const BitcoinAddressList({
-    super.key,
     required this.viewModel,
+    super.key,
   });
 
   @override
@@ -31,7 +31,7 @@ class BitcoinAddressList extends StatelessWidget {
     return BlocBuilder<WalletListBloc, WalletListState>(
         bloc: viewModel.walletListBloc,
         builder: (context, state) {
-          Map<String, String> accountID2Name = {};
+          final Map<String, String> accountID2Name = {};
           for (WalletMenuModel walletMenuModel in state.walletsModel) {
             for (AccountMenuModel accountMenuModel
                 in walletMenuModel.accounts) {
@@ -54,9 +54,8 @@ class BitcoinAddressList extends StatelessWidget {
                             color: ProtonColors.backgroundSecondary,
                             suffixIcon: const Icon(Icons.close, size: 16),
                             prefixIcon: const Icon(Icons.search, size: 16),
-                            showSuffixIcon: true,
                             suffixIconOnPressed: () {
-                              viewModel.setSearchAddressTextField(false);
+                              viewModel.setSearchAddressTextField(show: false);
                             },
                             scrollPadding: EdgeInsets.only(
                                 bottom:
@@ -95,7 +94,8 @@ class BitcoinAddressList extends StatelessWidget {
                                       ? CustomLoadingWithChild(
                                           durationInMilliSeconds: 800,
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 3),
                                             child: Icon(
                                               Icons.refresh_rounded,
                                               size: 20,
@@ -106,10 +106,11 @@ class BitcoinAddressList extends StatelessWidget {
                                       : GestureDetector(
                                           onTap: () {
                                             viewModel.walletTransactionBloc
-                                                .syncWallet(true);
+                                                .syncWallet(forceSync: true);
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 3),
                                             child: Icon(
                                               Icons.refresh_rounded,
                                               size: 20,
@@ -125,7 +126,8 @@ class BitcoinAddressList extends StatelessWidget {
                                             context, viewModel);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 5),
                                         child: SvgPicture.asset(
                                             "assets/images/icon/setup-preference.svg",
                                             fit: BoxFit.fill,
@@ -137,11 +139,12 @@ class BitcoinAddressList extends StatelessWidget {
                                   if (state.bitcoinAddresses.isNotEmpty)
                                     GestureDetector(
                                       onTap: () {
-                                        viewModel
-                                            .setSearchAddressTextField(true);
+                                        viewModel.setSearchAddressTextField(
+                                            show: true);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 5),
                                         child: SvgPicture.asset(
                                             "assets/images/icon/search.svg",
                                             fit: BoxFit.fill,
@@ -163,9 +166,7 @@ class BitcoinAddressList extends StatelessWidget {
                           await DBHelper.accountDao!.findByServerID(accountID);
                       viewModel.move(NavID.historyDetails);
                     }),
-                    showMoreCallback: () {
-                      viewModel.showMoreAddress();
-                    },
+                    showMoreCallback: viewModel.showMoreAddress,
                     filter: viewModel.addressListFilterBy,
                     keyWord: viewModel.addressSearchController.text,
                     accountID2Name: accountID2Name,

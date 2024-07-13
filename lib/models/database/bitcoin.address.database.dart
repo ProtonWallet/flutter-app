@@ -3,7 +3,7 @@ import 'package:wallet/models/database/base.database.dart';
 class BitcoinAddressDatabase extends BaseDatabase {
   @override
   Future<void> migration_0() async {
-    return await createTable('''
+    await createTable('''
         CREATE TABLE IF NOT EXISTS `bitcoinAddress` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           walletID INTEGER,

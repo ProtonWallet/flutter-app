@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
+import 'package:wallet/managers/providers/gateway.data.provider.dart';
 
 /// On rampe buying flow features
 class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
@@ -12,12 +12,13 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     on<LoadCountryEvent>((event, emit) async {
       emit(state.copyWith(isCountryLoaded: false));
       //
-      var selectedProvider = state.selectedModel.provider;
-      var countries = await gatewayDataProvider.getCountries(selectedProvider);
+      final selectedProvider = state.selectedModel.provider;
+      final countries =
+          await gatewayDataProvider.getCountries(selectedProvider);
 
       //
-      var selectedCountry = state.selectedModel.country;
-      var defaultCountry = gatewayDataProvider.getApiCountry(
+      final selectedCountry = state.selectedModel.country;
+      final defaultCountry = gatewayDataProvider.getApiCountry(
         selectedProvider,
         selectedCountry.code,
       );
@@ -41,15 +42,15 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
       emit(state.copyWith(isCurrencyLoaded: false));
       //
 
-      var selectedProvider = state.selectedModel.provider;
-      var selectedCountry = state.selectedModel.country;
+      final selectedProvider = state.selectedModel.provider;
+      final selectedCountry = state.selectedModel.country;
 
-      var currencies = await gatewayDataProvider.getCurrencies(
+      final currencies = await gatewayDataProvider.getCurrencies(
         selectedProvider,
         selectedCountry.code,
       );
 
-      var defaultCountry = gatewayDataProvider.getApiCountryFiatCurrency(
+      final defaultCountry = gatewayDataProvider.getApiCountryFiatCurrency(
         selectedProvider,
         selectedCountry.fiatCurrency,
       );
@@ -66,9 +67,9 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// select country
     on<SelectCountryEvent>((event, emit) async {
-      var selectedCode = event.code;
-      var selectedProvider = state.selectedModel.provider;
-      var apiCountry = gatewayDataProvider.getApiCountry(
+      final selectedCode = event.code;
+      final selectedProvider = state.selectedModel.provider;
+      final apiCountry = gatewayDataProvider.getApiCountry(
         selectedProvider,
         selectedCode,
       );
@@ -84,10 +85,10 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// select currency
     on<SelectCurrencyEvent>((event, emit) async {
-      var fiatCurrency = event.fiatCurrency;
-      var selectedProvider = state.selectedModel.provider;
+      final fiatCurrency = event.fiatCurrency;
+      final selectedProvider = state.selectedModel.provider;
       // var selectedCountry = state.selectedModel.country;
-      var apiCountry = gatewayDataProvider.getApiCountryFiatCurrency(
+      final apiCountry = gatewayDataProvider.getApiCountryFiatCurrency(
           selectedProvider, fiatCurrency);
       emit(state.copyWith(
           selectedModel:
@@ -96,8 +97,8 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// select amount
     on<SelectAmountEvent>((event, emit) async {
-      String amount = event.amount;
-      String numericAmountg = toNumberAmount(amount);
+      final String amount = event.amount;
+      final String numericAmountg = toNumberAmount(amount);
       emit(state.copyWith(
         selectedModel: state.selectedModel.copyWith(
           amount: numericAmountg,
@@ -111,16 +112,16 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     /// get quote event
     on<GetQuoteEvent>((event, emit) async {
       emit(state.copyWith(isQuoteLoaded: false, isQuoteFailed: false));
-      var amount = state.selectedModel.amount.toString();
-      var fiatCurrency = state.selectedModel.fiatCurrency.symbol;
-      var provider = state.selectedModel.provider;
-      var quotes = await gatewayDataProvider.getQuote(
+      final amount = state.selectedModel.amount;
+      final fiatCurrency = state.selectedModel.fiatCurrency.symbol;
+      final provider = state.selectedModel.provider;
+      final quotes = await gatewayDataProvider.getQuote(
         fiatCurrency,
         amount,
         provider,
       );
 
-      var quote = quotes[provider];
+      final quote = quotes[provider];
       if (quote == null) {
         emit(state.copyWith(
           isQuoteLoaded: true,
@@ -141,7 +142,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
   }
 
   String toNumberAmount(String textAmount) {
-    String numericAmountg = textAmount.replaceAll(RegExp(r'[^\d.]'), '');
+    final String numericAmountg = textAmount.replaceAll(RegExp(r'[^\d.]'), '');
     if (numericAmountg.isEmpty) {
       return '0';
     }

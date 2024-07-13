@@ -15,7 +15,7 @@ class TwoFactorAuthCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = TwoFactorAuthViewModelImpl(this);
+    final viewModel = TwoFactorAuthViewModelImpl(this);
     widget = TwoFactorAuthView(
       viewModel,
     );

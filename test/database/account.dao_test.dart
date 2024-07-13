@@ -6,8 +6,8 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/database/app.database.dart';
 
 Future<void> main() async {
-  AppDatabase appDatabase = AppDatabase();
-  DateTime now = DateTime.now();
+  final AppDatabase appDatabase = AppDatabase();
+  final DateTime now = DateTime.now();
 
   setUpAll(() async {
     databaseFactory = databaseFactoryFfi;
@@ -106,7 +106,7 @@ Future<void> main() async {
     });
 
     test('findAll case 1', () async {
-      var walletID = "server_walletid_12";
+      const walletID = "server_walletid_12";
       var results = await appDatabase.accountDao.findAllByWalletID(walletID);
       // Verify that the data was inserted and retrieved correctly
       expect(results.length, 3);
@@ -158,7 +158,8 @@ Future<void> main() async {
 
     test('findByID case 1', () async {
       // findByID
-      AccountModel accountModel = await appDatabase.accountDao.findById(3);
+      final AccountModel accountModel =
+          await appDatabase.accountDao.findById(3);
       expect(accountModel.id, 3);
       expect(accountModel.priority, 3);
       expect(accountModel.lastUsedIndex, 30);
@@ -188,10 +189,11 @@ Future<void> main() async {
     test('delete case 1', () async {
       // Delete record
       await appDatabase.accountDao.delete(2);
-      var walletID = "server_walletid_12";
+      const walletID = "server_walletid_12";
 
       // Verify new result after delete
-      List results = await appDatabase.accountDao.findAllByWalletID(walletID);
+      final List results =
+          await appDatabase.accountDao.findAllByWalletID(walletID);
       // Verify that the data was inserted and retrieved correctly
       expect(results[0].id, 3);
       expect(results[0].priority, 3);
@@ -229,7 +231,8 @@ Future<void> main() async {
         priority: 12,
         lastUsedIndex: 13,
       ));
-      AccountModel accountModel = await appDatabase.accountDao.findById(3);
+      final AccountModel accountModel =
+          await appDatabase.accountDao.findById(3);
       expect(accountModel.id, 3);
       expect(accountModel.walletID, "server_id_112");
       expect(accountModel.derivationPath, "m/84'/1'/12'/0");

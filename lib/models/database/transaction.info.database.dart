@@ -5,7 +5,7 @@ import 'package:wallet/models/database/base.database.dart';
 class TransactionInfoDatabase extends BaseDatabase {
   @override
   Future<void> migration_0() async {
-    return await createTable('''
+    await createTable('''
         CREATE TABLE IF NOT EXISTS `transactionInfo` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           externalTransactionID BLOB,

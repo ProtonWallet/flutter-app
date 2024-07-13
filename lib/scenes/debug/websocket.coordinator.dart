@@ -12,7 +12,7 @@ class WebSocketCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = WebSocketViewModelImpl(this);
+    final viewModel = WebSocketViewModelImpl(this);
     widget = WebSocketView(
       viewModel,
     );

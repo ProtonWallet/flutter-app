@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
-import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
+import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
@@ -188,7 +188,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     walletsDataSubscription =
         walletsDataProvider.dataUpdateController.stream.listen((onData) {
-      //TODO:: improve me
+      // TODO(fix): improve me
       add(StartLoading());
     });
 
@@ -199,13 +199,13 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     walletPassDataSubscription =
         walletPassProvider.dataUpdateController.stream.listen((onData) {
-      //TODO:: improve me
+      // TODO(fix): improve me
       add(StartLoading());
     });
 
     on<StartLoading>((event, emit) async {
       // loading wallet data
-      var wallets = await walletsDataProvider.getWallets();
+      final wallets = await walletsDataProvider.getWallets();
       if (wallets == null || wallets.isEmpty) {
         onboardingCallback?.call();
         emit(state.copyWith(initialized: true, walletsModel: []));
@@ -215,11 +215,11 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       bool hasSelected = false;
 
       /// get user key
-      var firstUserKey = await userManager.getFirstKey();
-      List<WalletMenuModel> walletsModel = [];
+      final firstUserKey = await userManager.getFirstKey();
+      final List<WalletMenuModel> walletsModel = [];
       int index = 0;
       for (WalletData wallet in wallets) {
-        WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
+        final WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
         walletModel.currentIndex = index++;
         if (walletModel.walletModel.walletID ==
                 walletsDataProvider.selectedServerWalletID &&
@@ -233,7 +233,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           walletPassProvider,
         );
 
-        var walletKey = await walletKeysProvider.getWalletKey(
+        final walletKey = await walletKeysProvider.getWalletKey(
           wallet.wallet.walletID,
         );
         SecretKey? secretKey;
@@ -243,7 +243,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             walletKey,
           );
 
-          var isValidWalletKeySignature =
+          final isValidWalletKeySignature =
               await WalletKeyHelper.verifySecretKeySignature(
             firstUserKey,
             walletKey,
@@ -267,7 +267,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           }
         }
         for (AccountModel account in wallet.accounts) {
-          AccountMenuModel accMenuModel = AccountMenuModel(account);
+          final AccountMenuModel accMenuModel = AccountMenuModel(account);
           if (walletModel.walletModel.walletID ==
                   walletsDataProvider.selectedServerWalletID &&
               accMenuModel.accountModel.accountID ==
@@ -276,7 +276,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             accMenuModel.isSelected = true;
           }
           if (secretKey != null) {
-            var encrypted = base64Encode(account.label);
+            final encrypted = base64Encode(account.label);
             try {
               accMenuModel.label = await WalletKeyHelper.decrypt(
                 secretKey,
@@ -287,28 +287,29 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             }
           }
 
-          var balance = await WalletManager.getWalletAccountBalance(
+          final balance = await WalletManager.getWalletAccountBalance(
             wallet.wallet.walletID,
             account.accountID,
           );
 
-          accMenuModel.balance = balance.toInt();
+          accMenuModel.balance = balance;
           double estimateValue = 0.0;
-          var settings = await userSettingsDataProvider.getSettings();
+          final settings = await userSettingsDataProvider.getSettings();
           // Tempary need to use providers
-          var fiatCurrency = WalletManager.getAccountFiatCurrency(account);
-          ProtonExchangeRate? exchangeRate =
+          final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
+          final ProtonExchangeRate exchangeRate =
               await ExchangeRateService.getExchangeRate(fiatCurrency);
           estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
             exchangeRate,
-            balance.toInt(),
+            balance,
           );
-          String fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
+          final String fiatSign =
+              CommonHelper.getFiatCurrencySign(fiatCurrency);
           accMenuModel.currencyBalance =
-              "$fiatSign${CommonHelper.formatDouble(estimateValue, displayDigits: defaultDisplayDigits)}";
+              "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
           accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
             (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-            balance.toInt(),
+            balance,
           );
 
           accMenuModel.emailIds =
@@ -318,7 +319,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         walletsModel.add(walletModel);
       }
       emit(state.copyWith(initialized: true, walletsModel: walletsModel));
-      if (hasSelected == false) {
+      if (!hasSelected) {
         /// trigger startLoadingCallback to select default wallet
         startLoadingCallback?.call();
       }
@@ -336,7 +337,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         bool hasUpdateUserSetting = false;
         for (AccountMenuModel account in walletModel.accounts) {
           account.isSelected = false;
-          if (isSelectedWallet && hasUpdateUserSetting == false) {
+          if (isSelectedWallet && !hasUpdateUserSetting) {
             userSettingsDataProvider.updateFiatCurrency(
                 account.accountModel.fiatCurrency.toFiatCurrency());
             hasUpdateUserSetting = true;
@@ -374,7 +375,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           walletModel.walletName = event.newName;
 
-          /// TODO:: infomr data provider to update name? but this is WalletMenuModel only, data provider need walletMdoel
+          // TODO(fix): infomr data provider to update name? but this is WalletMenuModel only, data provider need walletMdoel
           break;
         }
       }
@@ -386,7 +387,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           if (walletModel.isSelected) {
             /// wallet view, check if the update fiat is the default account
-            AccountMenuModel? accountMenuModel =
+            final AccountMenuModel? accountMenuModel =
                 walletModel.accounts.firstOrNull;
             if (accountMenuModel != null) {
               if (accountMenuModel.accountModel.accountID ==
@@ -400,7 +401,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           for (AccountMenuModel account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
-              /// TODO:: handle wallet account view change here
+              // TODO(fix): handle wallet account view change here
               if (account.isSelected) {
                 userSettingsDataProvider.updateFiatCurrency(
                   event.fiatName.toFiatCurrency(),
@@ -411,27 +412,28 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
                   accountModel: event.accountModel);
 
               double estimateValue = 0.0;
-              var settings = await userSettingsDataProvider.getSettings();
+              final settings = await userSettingsDataProvider.getSettings();
 
-              var balance = await WalletManager.getWalletAccountBalance(
+              final balance = await WalletManager.getWalletAccountBalance(
                 walletModel.walletModel.walletID,
                 account.accountModel.accountID,
               );
               // Tempary need to use providers
-              var fiatCurrency =
+              final fiatCurrency =
                   WalletManager.getAccountFiatCurrency(account.accountModel);
-              ProtonExchangeRate? exchangeRate =
+              final ProtonExchangeRate exchangeRate =
                   await ExchangeRateService.getExchangeRate(fiatCurrency);
               estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
                 exchangeRate,
-                balance.toInt(),
+                balance,
               );
-              String fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
+              final String fiatSign =
+                  CommonHelper.getFiatCurrencySign(fiatCurrency);
               account.currencyBalance =
-                  "$fiatSign${CommonHelper.formatDouble(estimateValue, displayDigits: defaultDisplayDigits)}";
+                  "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
               account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
                 (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-                balance.toInt(),
+                balance,
               );
               break;
             }
@@ -464,7 +466,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           for (AccountMenuModel account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
-              if (account.emailIds.contains(event.emailID) == false) {
+              if (!account.emailIds.contains(event.emailID)) {
                 account.emailIds.add(event.emailID);
               }
               break;
@@ -493,32 +495,33 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<UpdateBalance>((event, emit) async {
-      var wallets = state.walletsModel;
+      final wallets = state.walletsModel;
       for (WalletMenuModel walletModel in wallets) {
         for (AccountMenuModel account in walletModel.accounts) {
-          var balance = await WalletManager.getWalletAccountBalance(
+          final balance = await WalletManager.getWalletAccountBalance(
             walletModel.walletModel.walletID,
             account.accountModel.accountID,
           );
-          account.balance = balance.toInt();
+          account.balance = balance;
           double estimateValue = 0.0;
-          var settings = await userSettingsDataProvider.getSettings();
+          final settings = await userSettingsDataProvider.getSettings();
           // Tempary need to use providers
-          var fiatCurrency =
+          final fiatCurrency =
               WalletManager.getAccountFiatCurrency(account.accountModel);
-          ProtonExchangeRate? exchangeRate =
+          final ProtonExchangeRate exchangeRate =
               await ExchangeRateService.getExchangeRate(fiatCurrency);
           estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
             exchangeRate,
-            balance.toInt(),
+            balance,
           );
 
-          String fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
+          final String fiatSign =
+              CommonHelper.getFiatCurrencySign(fiatCurrency);
           account.currencyBalance =
-              "$fiatSign${CommonHelper.formatDouble(estimateValue, displayDigits: defaultDisplayDigits)}";
+              "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
           account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
             (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-            balance.toInt(),
+            balance,
           );
         }
       }
@@ -527,8 +530,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   }
 
   void init({
-    VoidCallback? startLoadingCallback,
     required VoidCallback onboardingCallback,
+    VoidCallback? startLoadingCallback,
   }) {
     this.startLoadingCallback = startLoadingCallback;
     this.onboardingCallback = onboardingCallback;
@@ -587,6 +590,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     walletsDataSubscription?.cancel();
     walletPassDataSubscription?.cancel();
     bdkTransactionDataSubscription?.cancel();
+    selectedWalletChangeSubscription?.cancel();
     return super.close();
   }
 }

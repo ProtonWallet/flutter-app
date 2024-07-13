@@ -41,7 +41,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod('native.navigation.signup');
     } on Exception catch (e) {
-      logger.e("Failed to switch to native signup view: '${e.toString()}'.");
+      logger.e("Failed to switch to native signup view: '$e'.");
     }
   }
 
@@ -53,7 +53,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod('native.navigation.login');
     } on Exception catch (e) {
-      logger.e("Failed to switch to native login view: '${e.toString()}'.");
+      logger.e("Failed to switch to native login view: '$e'.");
     }
   }
 
@@ -65,7 +65,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod('native.navigation.restartApp');
     } on Exception catch (e) {
-      logger.e("Failed to restart native: '${e.toString()}'.");
+      logger.e("Failed to restart native: '$e'.");
     }
   }
 
@@ -79,7 +79,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod(upgrade, [key, session.toJson()]);
     } on Exception catch (e) {
-      logger.e("Failed to switch to upgrade view: '${e.toString()}'.");
+      logger.e("Failed to switch to upgrade view: '$e'.");
     }
   }
 
@@ -96,14 +96,14 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     const appVersionKey = "app-version";
     const userAgentKey = "user-agent";
     try {
-      var strEnv = env.toString();
+      final strEnv = env.toString();
       await toNativeChannel.invokeMethod('native.initialize.core.environment', {
         envKey: strEnv,
         appVersionKey: appVersion,
         userAgentKey: userAgent,
       });
     } on Exception catch (e) {
-      logger.e("Failed to initialize native environment: '${e.toString()}'.");
+      logger.e("Failed to initialize native environment: '$e'.");
     }
   }
 
@@ -115,7 +115,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod('native.account.logout');
     } on Exception catch (e) {
-      logger.e("Failed to native logout: '${e.toString()}'.");
+      logger.e("Failed to native logout: '$e'.");
     }
   }
 
@@ -127,17 +127,17 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     try {
       await toNativeChannel.invokeMethod('native.navigation.report');
     } on Exception catch (e) {
-      logger.e("Failed to native report bugs: '${e.toString()}'.");
+      logger.e("Failed to native report bugs: '$e'.");
     }
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'flutter.navigation.to.home':
-        String data = call.arguments;
+        final String data = call.arguments;
         logger.d("Data received from Swift: $data");
-        Map<String, dynamic> map = json.decode(data);
-        UserInfo userInfo = UserInfo.fromJson(map);
+        final Map<String, dynamic> map = json.decode(data);
+        final UserInfo userInfo = UserInfo.fromJson(map);
 
         directEmitExample(NativeLoginSucess(userInfo));
     }
@@ -152,7 +152,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> login(String userID) async {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }

@@ -7,9 +7,7 @@ class AccountDropdown extends StatelessWidget {
   final List<Widget> widgets;
 
   const AccountDropdown({
-    super.key,
-    required this.widgets,
-    required this.title,
+    required this.widgets, required this.title, super.key,
   });
 
   @override
@@ -21,7 +19,7 @@ class AccountDropdown extends StatelessWidget {
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFE6E8EC)),
+            side: const BorderSide(color: Color(0xFFE6E8EC)),
             borderRadius: BorderRadius.circular(16),
           ),
           shadows: const [
@@ -29,7 +27,6 @@ class AccountDropdown extends StatelessWidget {
               color: Color(0x28000000),
               blurRadius: 24,
               offset: Offset(0, 8),
-              spreadRadius: 0,
             )
           ],
         ),
@@ -44,12 +41,9 @@ class AccountDropdown extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBoxes.box16,
                   Expanded(

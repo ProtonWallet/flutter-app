@@ -6,18 +6,18 @@ import 'package:wallet/helper/crypto.price.info.dart';
 class CryptoPriceHelper {
   /*
   Get crypto price via binance API
-  TODO:: change to rust backend if needed
+  TODO(fix): change to rust backend if needed
   */
   static Future<CryptoPriceInfo> getPriceInfo(String symbol) async {
-    HttpClient httpClient = HttpClient();
-    var uri =
+    final HttpClient httpClient = HttpClient();
+    final uri =
         Uri.https('api.binance.com', '/api/v3/ticker/24hr', {'symbol': symbol});
-    var request = await httpClient.getUrl(uri);
-    var response = await request.close();
+    final request = await httpClient.getUrl(uri);
+    final response = await request.close();
 
     if (response.statusCode == 200) {
-      var responseBody = await response.transform(utf8.decoder).join();
-      var jsonData = jsonDecode(responseBody);
+      final responseBody = await response.transform(utf8.decoder).join();
+      final jsonData = jsonDecode(responseBody);
       return CryptoPriceInfo(
         symbol: jsonData['symbol'],
         price: double.parse(jsonData['lastPrice']),
@@ -26,8 +26,6 @@ class CryptoPriceHelper {
     } else {
       return CryptoPriceInfo(
         symbol: symbol,
-        price: 0.0,
-        priceChange24h: 0.0,
       );
     }
   }
@@ -45,17 +43,17 @@ class CryptoPriceHelper {
 
   /*
   Get bitcoin transaction fee
-  TODO:: change to rust backend if needed
+  TODO(fix): change to rust backend if needed
   */
   static Future<double> getBitcoinTransactionFeeByBlock(int block) async {
     try {
-      HttpClient httpClient = HttpClient();
-      var uri = Uri.https('blockstream.info', '/api/fee-estimates');
-      var request = await httpClient.getUrl(uri);
-      var response = await request.close();
+      final HttpClient httpClient = HttpClient();
+      final uri = Uri.https('blockstream.info', '/api/fee-estimates');
+      final request = await httpClient.getUrl(uri);
+      final response = await request.close();
       if (response.statusCode == 200) {
-        var responseBody = await response.transform(utf8.decoder).join();
-        var jsonData = jsonDecode(responseBody);
+        final responseBody = await response.transform(utf8.decoder).join();
+        final jsonData = jsonDecode(responseBody);
         final double feePerByte = jsonData[block.toString()]; // ? sat/vB
         return feePerByte;
       } else {

@@ -18,7 +18,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<WalletModel?> findById(int id) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
@@ -32,7 +32,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<WalletModel?> findByServerID(String serverID) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'walletID = ?',
       whereArgs: [serverID],
@@ -46,7 +46,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<WalletModel?> getFirstPriorityWallet(String userID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'status = ? AND userID = ?',
         whereArgs: [WalletModel.statusActive, userID],
         orderBy: 'priority asc',
@@ -60,7 +60,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<int> insert(item) async {
-    int id = await db.insert(
+    final int id = await db.insert(
       tableName,
       item.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -80,7 +80,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<int> counts(String userID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return maps.length;
   }
 
@@ -104,7 +104,7 @@ class WalletDaoImpl extends WalletDao {
 
   @override
   Future<List<WalletModel>> findAllByUserID(String userID) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'userID = ?',
       whereArgs: [userID],

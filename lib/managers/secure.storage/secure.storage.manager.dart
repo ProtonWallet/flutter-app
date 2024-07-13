@@ -29,15 +29,15 @@ class SecureStorageManager implements Manager {
   ///
   Future<void> set(String key, String value) async {
     if (Platform.isWindows) {
-      // TODO:: figure out why windows can not write to storage, this is current workaround
+      // TODO(fix): figure out why windows can not write to storage, this is current workaround
       for (int i = 0; i < 1000; i++) {
         await storage.write(key, value);
-        bool saved = await storage.containsKey(key);
-        if (saved == true) {
+        final bool saved = await storage.containsKey(key);
+        if (saved) {
           break;
         }
       }
-      if (keys.contains(key) == false) {
+      if (!keys.contains(key)) {
         keys.add(key);
       }
     } else {
@@ -46,7 +46,7 @@ class SecureStorageManager implements Manager {
   }
 
   Future<String> get(String key) async {
-    return await storage.read(key);
+    return storage.read(key);
   }
 
   @override
@@ -62,7 +62,7 @@ class SecureStorageManager implements Manager {
 
   @override
   Future<void> login(String userID) async {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }

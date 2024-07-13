@@ -10,8 +10,9 @@ const int eventLoopRefreshThreshold = 30;
 const int defaultBitcoinAddressCountForOneEmail = 10;
 const int defaultTransactionPerPage = 5;
 const int defaultDisplayDigits = 2;
-const int freeUserWalletLimit = 2; // TODO:: get from api to avoid abuse
-const int freeUserWalletAccountLimit = 2; // TODO:: get from api to avoid abuse
+const int freeUserWalletLimit = 2; // TODO(fix): get from api to avoid abuse
+const int freeUserWalletAccountLimit =
+    2; // TODO(fix): get from api to avoid abuse
 const int maxMemoTextCharSize = 256;
 const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
@@ -33,7 +34,7 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.sats,
 ];
 
-const String srpModulusKey = r"""
+const String srpModulusKey = """
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 xjMEXAHLgxYJKwYBBAHaRw8BAQdAFurWXXwjTemqjD7CXjXVyKf0of7n9Ctm

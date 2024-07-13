@@ -8,8 +8,8 @@ class Underline extends StatelessWidget {
   final VoidCallback? onTap;
 
   const Underline({
-    super.key,
     required this.child,
+    super.key,
     this.color,
     this.onTap,
   });

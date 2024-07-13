@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
-import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class RecipientDetail extends StatelessWidget {
@@ -21,13 +21,13 @@ class RecipientDetail extends StatelessWidget {
   final FocusNode? amountFocusNode;
 
   const RecipientDetail({
+    required this.bitcoinAddress,
     super.key,
     this.name,
     this.email,
     this.isSelfBitcoinAddress = false,
     this.isSignatureInvalid = false,
     this.isBlocked = false,
-    required this.bitcoinAddress,
     this.callback,
     this.amountController,
     this.amountFocusNode,
@@ -37,16 +37,17 @@ class RecipientDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6.0),
-      padding:
-          const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
+      padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
       decoration: BoxDecoration(
-          color: ProtonColors.white,
-          borderRadius: BorderRadius.circular(12.0)),
-      child: buildContent(context, CommonHelper.isBitcoinAddress(name ?? "")),
+          color: ProtonColors.white, borderRadius: BorderRadius.circular(12.0)),
+      child: buildContent(
+        context,
+        isBitcoinAddress: CommonHelper.isBitcoinAddress(name ?? ""),
+      ),
     );
   }
 
-  Widget buildContent(BuildContext context, bool isBitcoinAddress) {
+  Widget buildContent(BuildContext context, {required bool isBitcoinAddress}) {
     return Column(
       children: [
         Row(
@@ -107,7 +108,6 @@ class RecipientDetail extends StatelessWidget {
                             });
                           },
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
@@ -215,7 +215,7 @@ class RecipientDetail extends StatelessWidget {
                         name,
                         email,
                         bitcoinAddress,
-                        isBitcoinAddress,
+                        isBitcoinAddress: isBitcoinAddress,
                       );
                     },
                     child: Icon(Icons.expand_more_rounded,

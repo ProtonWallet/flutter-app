@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/database/bitcoin.address.database.dart';
 
 abstract class BitcoinAddressDao extends BitcoinAddressDatabase
@@ -53,7 +53,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => BitcoinAddressModel.fromMap(maps[index]));
   }
@@ -90,7 +90,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
       required int bitcoinAddressIndex,
       required int inEmailIntegrationPool,
       required int used}) async {
-    BitcoinAddressModel? bitcoinAddressModel =
+    final BitcoinAddressModel? bitcoinAddressModel =
         await findBitcoinAddressInAccount(bitcoinAddress, serverAccountID);
     if (bitcoinAddressModel != null) {
       await update({
@@ -126,7 +126,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
     String bitcoinAddress,
     String serverAccountID,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'bitcoinAddress = ? and serverAccountID = ?',
         whereArgs: [bitcoinAddress, serverAccountID]);
     if (maps.isNotEmpty) {
@@ -140,7 +140,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
     String serverWalletID,
     String serverAccountID,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where:
             'serverWalletID = ? and serverAccountID = ? and inEmailIntegrationPool = ?',
         whereArgs: [serverWalletID, serverAccountID, 0],
@@ -156,7 +156,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
     String serverWalletID,
     String serverAccountID,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where:
             'serverWalletID = ? and serverAccountID = ? and inEmailIntegrationPool = ?',
         whereArgs: [serverWalletID, serverAccountID, 1],
@@ -170,7 +170,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   @override
   Future<bool> isMine(String serverWalletID, String serverAccountID,
       String bitcoinAddress) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where:
             'serverWalletID = ? and serverAccountID = ? and bitcoinAddress = ?',
         whereArgs: [serverWalletID, serverAccountID, bitcoinAddress],
@@ -181,7 +181,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   @override
   Future<List<BitcoinAddressModel>> findByWallet(String serverWalletID,
       {String orderBy = "desc"}) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverWalletID = ?',
         whereArgs: [serverWalletID],
         orderBy: 'bitcoinAddressIndex $orderBy');
@@ -193,7 +193,7 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
   Future<List<BitcoinAddressModel>> findByWalletAccount(
       String serverWalletID, String serverAccountID,
       {String orderBy = "desc"}) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverWalletID = ? and serverAccountID = ?',
         whereArgs: [serverWalletID, serverAccountID],
         orderBy: 'bitcoinAddressIndex $orderBy');
@@ -203,13 +203,13 @@ class BitcoinAddressDaoImpl extends BitcoinAddressDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO: implement deleteByServerID
+    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 
   @override
   Future findByServerID(String serverID) {
-    // TODO: implement findByServerID
+    // TODO(fix): implement findByServerID
     throw UnimplementedError();
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -11,9 +9,9 @@ class CustomHeader extends StatelessWidget {
   final AxisDirection closeButtonDirection;
 
   const CustomHeader({
-    super.key,
     required this.title,
     required this.closeButtonDirection,
+    super.key,
   });
 
   @override
@@ -30,7 +28,6 @@ class CustomHeader extends StatelessWidget {
           children: [
             closeButtonDirection == AxisDirection.left
                 ? Expanded(
-                    flex: 1,
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: CloseButtonV1(onPressed: () {
@@ -49,7 +46,6 @@ class CustomHeader extends StatelessWidget {
             ),
             closeButtonDirection == AxisDirection.right
                 ? Expanded(
-                    flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: CloseButtonV1(onPressed: () {

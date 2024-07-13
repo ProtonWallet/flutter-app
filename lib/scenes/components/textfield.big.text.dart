@@ -13,8 +13,8 @@ class TextFieldBigText extends StatefulWidget {
   final Color color;
 
   const TextFieldBigText({
-    super.key,
     required this.width,
+    super.key,
     this.height,
     this.controller,
     this.focusNode,
@@ -43,9 +43,7 @@ class TextFieldTextState extends State<TextFieldBigText> {
           child: TextField(
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.center,
-            style:
-                FontManager.sendAmount(ProtonColors.textNorm),
-            maxLines: 1,
+            style: FontManager.sendAmount(ProtonColors.textNorm),
             minLines: 1,
             controller: widget.controller,
             focusNode: widget.focusNode,
@@ -57,14 +55,13 @@ class TextFieldTextState extends State<TextFieldBigText> {
               hintText: widget.hintText,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: widget.color, width: 1),
+                borderSide: BorderSide(color: widget.color),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide:
                     BorderSide(color: ProtonColors.interactionNorm, width: 2),
               ),
-              suffixIcon: null,
             ),
           ),
         ));

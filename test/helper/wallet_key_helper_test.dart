@@ -10,37 +10,38 @@ void main() {
   }
   group('WalletKeyHelper', () {
     test('generate and restore walletKey', () async {
-      SecretKey secretKeyOrg = WalletKeyHelper.generateSecretKey();
-      String encodedEntropy =
+      final SecretKey secretKeyOrg = WalletKeyHelper.generateSecretKey();
+      final String encodedEntropy =
           await WalletKeyHelper.getEncodedEntropy(secretKeyOrg);
-      String plainText = "Hello world";
-      String encryptText =
+      const String plainText = "Hello world";
+      final String encryptText =
           await WalletKeyHelper.encrypt(secretKeyOrg, plainText);
 
-      SecretKey secretKeyNew =
+      final SecretKey secretKeyNew =
           WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(encodedEntropy);
-      String decryptText =
+      final String decryptText =
           await WalletKeyHelper.decrypt(secretKeyNew, encryptText);
       expect(decryptText, equals(plainText));
     });
 
     test('restore walletKey and decrypt', () async {
-      String plainText = "Hello AES-256-GCM";
-      String encryptText =
+      const String plainText = "Hello AES-256-GCM";
+      const String encryptText =
           "dTb2Z1bsWkpo2TTCWOK09tanO3n5Ipepbj5WlCRZSuvlkEAxfePeUBCu4Qo6";
-      SecretKey secretKey = WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(
-          "MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=");
-      String decryptText =
+      final SecretKey secretKey =
+          WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(
+              "MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=");
+      final String decryptText =
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plainText));
     });
 
     test('restore walletKey and encrypt', () async {
-      String plaintext =
+      const String plaintext =
           "benefit indoor helmet wine exist height grain spot rely half beef nothing";
-      String encryptText =
+      const String encryptText =
           "iqhZVY2PePoksxUDO5H8HT8FroYZ31DauI6SgfXtHao1s4OU5N45LWO29odlCt21Rvr7I30jsW3zweZcernm9Fsb0xH4KcP3YFarPTDm7C57WRJRRoT+28HKmtcWs5jTPPzMsUk=";
-      SecretKey secretKey =
+      final SecretKey secretKey =
           WalletKeyHelper.restoreSecretKeyFromEntropy(Uint8List.fromList([
         239,
         203,
@@ -76,11 +77,12 @@ void main() {
         218
       ]));
 
-      String encryptText2 = await WalletKeyHelper.encrypt(secretKey, plaintext,
+      final String encryptText2 = await WalletKeyHelper.encrypt(
+          secretKey, plaintext,
           initIV: [138, 168, 89, 85, 141, 143, 120, 250, 36, 179, 21, 3]);
       expect(encryptText2, equals(encryptText));
 
-      String decryptText =
+      final String decryptText =
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plaintext));
     });

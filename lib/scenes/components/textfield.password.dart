@@ -8,8 +8,8 @@ class TextFieldPassword extends StatefulWidget {
   final String? hintText;
 
   const TextFieldPassword({
-    super.key,
     required this.width,
+    super.key,
     this.controller,
     this.hintText,
   });
@@ -27,16 +27,14 @@ class TextFieldPasswordState extends State<TextFieldPassword> {
         width: widget.width,
         child: Center(
           child: TextField(
-            style:
-                FontManager.body2Regular(ProtonColors.textNorm),
+            style: FontManager.body2Regular(ProtonColors.textNorm),
             controller: widget.controller,
             obscureText: isTextVisible,
             decoration: InputDecoration(
               hintText: widget.hintText,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                    color: ProtonColors.textNorm, width: 1),
+                borderSide: BorderSide(color: ProtonColors.textNorm),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),

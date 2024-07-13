@@ -15,12 +15,23 @@ class WalletKey {
   WalletKey(
       this.walletId, this.userKeyId, this.walletKey, this.walletKeySignature);
 
+  WalletKey.fromApiWalletKey(ApiWalletKey item)
+      : this(
+          item.walletId,
+          item.userKeyId,
+          item.walletKey,
+          item.walletKeySignature,
+        );
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
-    final WalletKey otherKey = other as WalletKey;
-    return walletId == otherKey.walletId;
+    return other is WalletKey &&
+        walletId == other.walletId &&
+        userKeyId == other.userKeyId &&
+        walletKey == other.walletKey &&
+        walletKeySignature == other.walletKeySignature;
   }
 
   @override
@@ -36,7 +47,9 @@ class WalletKey {
 
   /// Handling a list of WalletPassphrase instances
   static List<WalletKey> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => WalletKey.fromJson(json)).toList();
+    return jsonList
+        .map((json) => WalletKey.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   static List<Map<String, dynamic>> toJsonList(List<WalletKey> items) {
@@ -64,14 +77,5 @@ class WalletKey {
               item.walletKeySignature,
             ))
         .toList();
-  }
-
-  static WalletKey fromApiWalletKey(ApiWalletKey item) {
-    return WalletKey(
-      item.walletId,
-      item.userKeyId,
-      item.walletKey,
-      item.walletKeySignature,
-    );
   }
 }

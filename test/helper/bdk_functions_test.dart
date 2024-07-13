@@ -17,12 +17,12 @@ FrbAccount prepareWallet(
   String strMnemonic,
   String strDerivationPath,
 ) {
-  var wallet = FrbWallet(
+  final wallet = FrbWallet(
     bip39Mnemonic: strMnemonic,
     network: Network.testnet,
   );
-  var storageFactory = OnchainStoreFactory(folderPath: "./");
-  var account = wallet.addAccount(
+  final storageFactory = OnchainStoreFactory(folderPath: "./");
+  final account = wallet.addAccount(
     scriptType: ScriptType.nativeSegwit,
     derivationPath: strDerivationPath,
     storageFactory: storageFactory,
@@ -91,9 +91,9 @@ Future<void> main() async {
     });
 
     test('createMnemonic case 1', () {
-      List<String> words12 = mnemonic12!.asString().split(" ");
-      List<String> words18 = mnemonic18!.asString().split(" ");
-      List<String> words24 = mnemonic24!.asString().split(" ");
+      final List<String> words12 = mnemonic12!.asString().split(" ");
+      final List<String> words18 = mnemonic18!.asString().split(" ");
+      final List<String> words24 = mnemonic24!.asString().split(" ");
       expect(words12.length, equals(12));
       expect(words18.length, equals(18));
       expect(words24.length, equals(24));

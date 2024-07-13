@@ -27,7 +27,7 @@ class PreferencesManager implements Manager {
 
   Future<void> checkif(String key, dynamic value, Logic run) async {
     // Get the value
-    dynamic checkValue = await storage.read(key);
+    final dynamic checkValue = await storage.read(key);
     // Check if the value is false
     if (checkValue != value) {
       logger.d('Running logic because checkValue $key is not match');
@@ -37,7 +37,7 @@ class PreferencesManager implements Manager {
   }
 
   Future<dynamic> read(String key) async {
-    return await storage.read(key);
+    return storage.read(key);
   }
 
   Future<void> write(String key, dynamic value) async {
@@ -57,7 +57,7 @@ class PreferencesManager implements Manager {
 
   @override
   Future<void> login(String userID) async {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }

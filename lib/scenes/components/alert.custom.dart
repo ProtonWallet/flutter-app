@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AlertCustom extends StatefulWidget {
@@ -16,8 +16,8 @@ class AlertCustom extends StatefulWidget {
   final bool? canClose;
 
   const AlertCustom({
-    super.key,
     required this.content,
+    super.key,
     this.width,
     this.learnMore,
     this.leadingWidget,
@@ -57,7 +57,6 @@ class AlertCustomState extends State<AlertCustom> {
                     border: widget.border ??
                         Border.all(
                           color: ProtonColors.alertWaning,
-                          width: 1.0,
                         )),
                 child: Stack(
                   children: [

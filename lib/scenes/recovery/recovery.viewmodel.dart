@@ -14,11 +14,12 @@ abstract class RecoveryViewModel extends ViewModel<RecoveryCoordinator> {
 
   ///
   bool recoveryEnabled = false;
-  void updateRecovery(bool value);
+  void disableRecovery();
+  void enableRecovery();
   void stateReset();
 
-  void disableRecover(String pwd, String twofa);
-  void enableRecover(String pwd, String twofa);
+  void disableRecoverAuth(String pwd, String twofa);
+  void enableRecoverAuth(String pwd, String twofa);
 }
 
 class RecoveryViewModelImpl extends RecoveryViewModel {
@@ -57,13 +58,13 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
   }
 
   @override
-  void updateRecovery(bool value) {
-    // get user recovery phrase
-    if (!value) {
-      protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));
-    } else {
-      protonRecoveryBloc.add(EnableRecovery(RecoverySteps.start));
-    }
+  void disableRecovery() {
+    protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));
+  }
+
+  @override
+  void enableRecovery() {
+    protonRecoveryBloc.add(EnableRecovery(RecoverySteps.start));
   }
 
   @override
@@ -72,7 +73,7 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
   }
 
   @override
-  void disableRecover(String pwd, String twofa) {
+  void disableRecoverAuth(String pwd, String twofa) {
     protonRecoveryBloc.add(DisableRecovery(
       RecoverySteps.auth,
       password: pwd,
@@ -81,7 +82,7 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
   }
 
   @override
-  void enableRecover(String pwd, String twofa) {
+  void enableRecoverAuth(String pwd, String twofa) {
     protonRecoveryBloc.add(EnableRecovery(
       RecoverySteps.auth,
       password: pwd,

@@ -3,17 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/onboarding/content.dart';
-import 'package:wallet/scenes/components/textfield.2fa.dart';
-import 'package:wallet/scenes/components/textfield.password.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/onboarding/content.dart';
+import 'package:wallet/scenes/components/textfield.2fa.dart';
+import 'package:wallet/scenes/components/textfield.password.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 import 'two.factor.auth.viewmodel.dart';
 
@@ -39,7 +39,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildMain(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
           width: MediaQuery.of(context).size.width,
@@ -53,7 +52,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
               ),
               child: SvgPicture.asset(
                 'assets/images/wallet_creation/passphrase_icon.svg',
-                fit: BoxFit.contain,
               ),
             )),
             AppBar(
@@ -70,7 +68,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
         Expanded(
           child: OnboardingContent(
               totalPages: 4,
-              currentPage: 1,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 4 * 3,
               title: S.of(context).setting_2fa_setup,
@@ -106,7 +103,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildQRcodeForSecret(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Stack(children: [
           Container(
@@ -123,7 +119,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                   ),
                   child: SvgPicture.asset(
                     'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
                   ),
                 )),
           ),
@@ -153,7 +148,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                     child: QrImageView(
                       size: min(MediaQuery.of(context).size.width, 200),
                       data: viewModel.otpAuthString,
-                      version: QrVersions.auto,
                     ),
                   ),
                 ]),
@@ -186,7 +180,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildTextViewForSecret(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Stack(children: [
           Container(
@@ -203,7 +196,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                   ),
                   child: SvgPicture.asset(
                     'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
                   ),
                 )),
           ),
@@ -305,7 +297,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget build2FAConfirm(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Stack(children: [
           Container(
@@ -322,7 +313,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                   ),
                   child: SvgPicture.asset(
                     'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
                   ),
                 )),
           ),
@@ -349,7 +339,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                               height: 50,
                               suffixIcon: const Icon(Icons.close),
                               showSuffixIcon: false,
-                              showEnabledBorder: true,
                               centerHorizontal: true,
                               maxLength: 1,
                               controller: viewModel.digitControllers[i],
@@ -382,7 +371,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                 SizedBoxes.box41,
                 ButtonV5(
                     onPressed: () async {
-                      bool result = await viewModel.setup2FA();
+                      final bool result = await viewModel.setup2FA();
                       if (context.mounted) {
                         if (result) {
                           viewModel.updatePage(4);
@@ -416,7 +405,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildBackupPage(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Stack(children: [
           Container(
@@ -433,7 +421,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                   ),
                   child: SvgPicture.asset(
                     'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
                   ),
                 )),
           ),

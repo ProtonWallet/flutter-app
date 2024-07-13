@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -16,7 +17,6 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/common/network.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 
@@ -69,51 +69,51 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     String walletPassphrase,
   ) async {
     /// Generate a wallet secret key
-    SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    final SecretKey secretKey = WalletKeyHelper.generateSecretKey();
+    final Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
 
     /// get first user key (primary user key)
-    var firstUserKey = await userManager.getFirstKey();
-    String userPrivateKey = firstUserKey.privateKey;
-    String userKeyID = firstUserKey.keyID;
-    String passphrase = firstUserKey.passphrase;
+    final firstUserKey = await userManager.getFirstKey();
+    final String userPrivateKey = firstUserKey.privateKey;
+    final String userKeyID = firstUserKey.keyID;
+    final String passphrase = firstUserKey.passphrase;
 
     /// encrypt mnemonic with wallet key
-    String encryptedMnemonic = await WalletKeyHelper.encrypt(
+    final String encryptedMnemonic = await WalletKeyHelper.encrypt(
       secretKey,
       mnemonicStr,
     );
 
     /// encrypt wallet name with wallet key
-    String clearWalletName = walletName.isNotEmpty ? walletName : "My Wallet";
-    String encryptedWalletName = await WalletKeyHelper.encrypt(
+    final String clearWalletName = walletName.isNotEmpty ? walletName : "My Wallet";
+    final String encryptedWalletName = await WalletKeyHelper.encrypt(
       secretKey,
       clearWalletName,
     );
 
     /// get fingerprint from mnemonic
-    var frbWallet = FrbWallet(
+    final frbWallet = FrbWallet(
       network: network,
       bip39Mnemonic: mnemonicStr,
       bip38Passphrase: walletPassphrase.isNotEmpty ? walletPassphrase : null,
     );
-    String fingerprint = frbWallet.getFingerprint();
+    final String fingerprint = frbWallet.getFingerprint();
 
     /// encrypt wallet key with user private key
-    String encryptedWalletKey = proton_crypto.encryptBinaryArmor(
+    final String encryptedWalletKey = proton_crypto.encryptBinaryArmor(
       userPrivateKey,
       entropy,
     );
 
     /// sign wallet key with user private key
-    String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
+    final String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
       userPrivateKey,
       passphrase,
       entropy,
       gpgContextWalletKey,
     );
 
-    CreateWalletReq walletReq = _buildWalletRequest(
+    final CreateWalletReq walletReq = _buildWalletRequest(
         encryptedWalletName,
         walletType,
         encryptedMnemonic,
@@ -125,7 +125,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
         walletPassphrase.isNotEmpty);
 
     /// save wallet to server through provder
-    ApiWalletData walletData =
+    final ApiWalletData walletData =
         await walletsDataProvider.createWallet(walletReq);
 
     /// save wallet key to local storage
@@ -151,31 +151,31 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     FiatCurrency fiatCurrency,
     int accountIndex,
   ) async {
-    String serverWalletID = walletID;
+    final String serverWalletID = walletID;
 
-    var firstUserKey = await userManager.getFirstKey();
-    var walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
+    final firstUserKey = await userManager.getFirstKey();
+    final walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
-    var secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
+    final secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
     // var signature = walletKey.walletKeySignature;
 
     /// get new derivation path
-    String derivationPath = await walletsDataProvider.getNewDerivationPathBy(
+    final String derivationPath = await walletsDataProvider.getNewDerivationPathBy(
       serverWalletID,
       scriptType,
       appConfig.coinType,
       accountIndex: accountIndex,
     );
 
-    CreateWalletAccountReq request = CreateWalletAccountReq(
+    final CreateWalletAccountReq request = CreateWalletAccountReq(
       label: await WalletKeyHelper.encrypt(secretKey, label),
       derivationPath: derivationPath,
       scriptType: appConfig.scriptTypeInfo.index,
     );
 
-    var apiWalletAccount = await walletsDataProvider.createWalletAccount(
+    final apiWalletAccount = await walletsDataProvider.createWalletAccount(
         serverWalletID, request, fiatCurrency);
 
     return apiWalletAccount;

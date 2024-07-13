@@ -25,12 +25,12 @@ class BitcoinAmount {
   }
 
   String toFiatCurrencyString() {
-    int displayDigits = getDisplayDigit();
-    double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
-    String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
+    final int displayDigits = getDisplayDigit();
+    final double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
+    final String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
         displayDigits: displayDigits);
-    String fiatCurrencyName =
-    exchangeRate.fiatCurrency.name.toString().toUpperCase();
+    final String fiatCurrencyName =
+        exchangeRate.fiatCurrency.name.toUpperCase();
     if (amountInSatoshi > 0) {
       return "$fiatCurrencyName $amountString";
     }
@@ -38,11 +38,12 @@ class BitcoinAmount {
   }
 
   String toFiatCurrencySignString() {
-    int displayDigits = getDisplayDigit();
-    double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
-    String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
+    final int displayDigits = getDisplayDigit();
+    final double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
+    final String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
         displayDigits: displayDigits);
-    String sign = CommonHelper.getFiatCurrencySign(exchangeRate.fiatCurrency);
+    final String sign =
+        CommonHelper.getFiatCurrencySign(exchangeRate.fiatCurrency);
     if (amountInSatoshi > 0) {
       return "$sign$amountString";
     }

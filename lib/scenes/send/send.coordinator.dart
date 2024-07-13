@@ -20,12 +20,12 @@ class SendCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var eventLoop = serviceManager.get<EventLoop>();
-    var walletManager = serviceManager.get<ProtonWalletManager>();
-    var dataProvider = serviceManager.get<DataProviderManager>();
-    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final eventLoop = serviceManager.get<EventLoop>();
+    final walletManager = serviceManager.get<ProtonWalletManager>();
+    final dataProvider = serviceManager.get<DataProviderManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
 
-    var viewModel = SendViewModelImpl(
+    final viewModel = SendViewModelImpl(
       this,
       walletID,
       accountID,

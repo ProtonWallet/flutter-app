@@ -8,7 +8,7 @@ part 'user.keys.queries.g.dart';
 @DriftAccessor(tables: [UserKeysTable])
 class UserKeysQueries extends DatabaseAccessor<AppDatabase>
     with _$UserKeysQueriesMixin {
-  UserKeysQueries(super.db);
+  UserKeysQueries(super.attachedDatabase);
 
   Future<List<UserKey>> getUseKeys(String userId) {
     return (select(userKeysTable)..where((tbl) => tbl.userId.equals(userId)))

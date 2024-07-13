@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/tag.proton.discover.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/scenes/components/tag.proton.discover.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 /// Discover Box
@@ -17,7 +17,6 @@ class DiscoverBox extends StatelessWidget {
   final Widget avatar;
 
   const DiscoverBox({
-    super.key,
     required this.title,
     required this.description,
     required this.avatar,
@@ -25,6 +24,7 @@ class DiscoverBox extends StatelessWidget {
     required this.link,
     required this.category,
     required this.author,
+    super.key,
     this.backgroundColor,
     this.paddingSize = defaultPadding,
   });
@@ -91,7 +91,7 @@ class _Details extends StatelessWidget {
         const SizedBox(height: 2),
         Text(pubDate, style: FontManager.captionRegular(ProtonColors.textWeak)),
         Wrap(
-            children: [
+          children: [
             TagProtonDiscover(text: category),
             TagProtonDiscover(text: author),
           ],

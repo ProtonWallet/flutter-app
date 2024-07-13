@@ -1,22 +1,24 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:crypto/crypto.dart' as crypto;
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:cryptography/cryptography.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 
 class WalletKeyHelper {
   static SecretKey generateSecretKey() {
-    SecretKey secretKey = SecretKey(getRandomValues(32));
+    final SecretKey secretKey = SecretKey(getRandomValues(32));
     return secretKey;
   }
 
   static Uint8List getRandomValues(int length) {
-    Random random = Random();
-    List<int> bytes = List<int>.generate(length, (_) => random.nextInt(256));
+    final Random random = Random();
+    final List<int> bytes =
+        List<int>.generate(length, (_) => random.nextInt(256));
     return Uint8List.fromList(bytes);
   }
 
@@ -24,24 +26,24 @@ class WalletKeyHelper {
     return base64Encode(await secretKey.extractBytes());
   }
 
-  static restoreSecretKeyFromEncodedEntropy(String encodedEntropy) {
+  static SecretKey restoreSecretKeyFromEncodedEntropy(String encodedEntropy) {
     return SecretKey(base64Decode(encodedEntropy));
   }
 
-  static restoreSecretKeyFromEntropy(Uint8List entropy) {
+  static SecretKey restoreSecretKeyFromEntropy(Uint8List entropy) {
     return SecretKey(entropy);
   }
 
   static Future<String> encrypt(SecretKey secretKey, String plaintext,
       {List<int>? initIV}) async {
-    Uint8List bytes = utf8.encode(plaintext); // for UTF-8 Strings
+    final Uint8List bytes = utf8.encode(plaintext); // for UTF-8 Strings
     List<int> iv = AesGcm.with256bits().newNonce();
     if (initIV != null) {
       iv = initIV;
     }
-    SecretBox secretBox = await AesGcm.with256bits()
+    final SecretBox secretBox = await AesGcm.with256bits()
         .encrypt(bytes, nonce: iv, secretKey: secretKey);
-    String encryptText = base64Encode(
+    final String encryptText = base64Encode(
         secretBox.concatenation()); // Base64 encoding of: IV | ciphertext | MAC
     return encryptText;
   }
@@ -50,11 +52,11 @@ class WalletKeyHelper {
     SecretKey secretKey,
     String message,
   ) async {
-    var key = await secretKey.extractBytes();
-    var bytes = utf8.encode(message);
+    final key = await secretKey.extractBytes();
+    final bytes = utf8.encode(message);
 
-    var hmacSha256 = crypto.Hmac(crypto.sha256, key);
-    var digest = hmacSha256.convert(bytes);
+    final hmacSha256 = crypto.Hmac(crypto.sha256, key);
+    final digest = hmacSha256.convert(bytes);
     return base64Encode(digest.bytes);
   }
 
@@ -62,14 +64,14 @@ class WalletKeyHelper {
     if (encryptText.isEmpty) {
       return "";
     }
-    Uint8List bytes = base64Decode(encryptText);
-    Uint8List iv = bytes.sublist(0, 12);
-    Uint8List ciphertext = bytes.sublist(12, bytes.length - 16);
-    Uint8List mac = bytes.sublist(bytes.length - 16);
-    SecretBox secretBox = SecretBox(ciphertext, nonce: iv, mac: Mac(mac));
-    List<int> decrypted =
+    final Uint8List bytes = base64Decode(encryptText);
+    final Uint8List iv = bytes.sublist(0, 12);
+    final Uint8List ciphertext = bytes.sublist(12, bytes.length - 16);
+    final Uint8List mac = bytes.sublist(bytes.length - 16);
+    final SecretBox secretBox = SecretBox(ciphertext, nonce: iv, mac: Mac(mac));
+    final List<int> decrypted =
         await AesGcm.with256bits().decrypt(secretBox, secretKey: secretKey);
-    String plaintext = utf8.decode(decrypted);
+    final String plaintext = utf8.decode(decrypted);
     return plaintext;
   }
 
@@ -78,13 +80,13 @@ class WalletKeyHelper {
     UserKey userKey,
     WalletKey walletKey,
   ) {
-    var pgpBinaryMessage = walletKey.walletKey;
-    var entropy = proton_crypto.decryptBinaryPGP(
+    final pgpBinaryMessage = walletKey.walletKey;
+    final entropy = proton_crypto.decryptBinaryPGP(
       userKey.privateKey,
       userKey.passphrase,
       pgpBinaryMessage,
     );
-    var secretKey = restoreSecretKeyFromEntropy(entropy);
+    final secretKey = restoreSecretKeyFromEntropy(entropy);
     return secretKey;
   }
 
@@ -94,11 +96,12 @@ class WalletKeyHelper {
     WalletKey walletKey,
     SecretKey secretKey,
   ) async {
-    var userPublicKey = proton_crypto.getArmoredPublicKey(userKey.privateKey);
-    var signature = walletKey.walletKeySignature;
-    Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    final userPublicKey = proton_crypto.getArmoredPublicKey(userKey.privateKey);
+    final signature = walletKey.walletKeySignature;
+    final Uint8List entropy =
+        Uint8List.fromList(await secretKey.extractBytes());
     // check signature
-    var isValidWalletKeySignature =
+    final isValidWalletKeySignature =
         proton_crypto.verifyBinarySignatureWithContext(
       userPublicKey,
       entropy,

@@ -6,7 +6,7 @@ void showLogoutErrorDialog(
   String errorMessage,
   VoidCallback onLogout,
 ) {
-  BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+  final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
   if (context != null) {
     showDialog(
       context: context,

@@ -8,7 +8,7 @@ part 'users.queries.g.dart';
 @DriftAccessor(tables: [UsersTable])
 class UserQueries extends DatabaseAccessor<AppDatabase>
     with _$UserQueriesMixin {
-  UserQueries(super.db);
+  UserQueries(super.attachedDatabase);
 
   Future<ProtonUser> getUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))

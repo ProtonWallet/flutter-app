@@ -5,8 +5,7 @@ class WelcomBackground extends StatelessWidget {
   final Widget child;
   final AlignmentGeometry alignment;
   const WelcomBackground({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.alignment = Alignment.topCenter,
   });
 

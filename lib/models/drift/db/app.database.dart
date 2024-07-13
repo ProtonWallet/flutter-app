@@ -1,10 +1,10 @@
 import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
-
 // Include the tables file
 import 'package:wallet/models/drift/tables/user.keys.dart';
 import 'package:wallet/models/drift/tables/users.dart';
@@ -38,7 +38,7 @@ class AppDatabase extends _$AppDatabase {
 
 Future<void> rebuildDatabase() async {
   final file = await _getPath();
-  if (await file.exists()) {
+  if (file.existsSync()) {
     await file.delete();
   }
 }

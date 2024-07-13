@@ -6,10 +6,10 @@ class FlyingBackgroundAnimation extends StatefulWidget {
   final int delayMilliSeconds;
 
   const FlyingBackgroundAnimation({
-    super.key,
     required this.child,
     required this.animationMilliSeconds,
     required this.delayMilliSeconds,
+    super.key,
   });
 
   @override
@@ -29,11 +29,11 @@ class FlyingBackgroundAnimationState extends State<FlyingBackgroundAnimation>
     controller = AnimationController(
       duration: Duration(milliseconds: widget.animationMilliSeconds),
       vsync: this,
-    )..repeat(reverse: false);
+    )..repeat();
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          if (isDisposed == false) {
+          if (!isDisposed) {
             controller.reset();
             controller.forward();
           }
@@ -41,7 +41,7 @@ class FlyingBackgroundAnimationState extends State<FlyingBackgroundAnimation>
       }
     });
     Future.delayed(Duration(milliseconds: widget.delayMilliSeconds), () {
-      if (isDisposed == false) {
+      if (!isDisposed) {
         controller.forward();
       }
     });

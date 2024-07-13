@@ -5,9 +5,9 @@ class FlyingAnimation extends StatefulWidget {
   final Widget child;
 
   const FlyingAnimation({
+    required this.child,
     super.key,
     this.controller,
-    required this.child,
   });
 
   @override
@@ -32,13 +32,13 @@ class RotateChildState extends State<FlyingAnimation>
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 300), () {
-          if (isDisposed == false) {
+          if (!isDisposed) {
             controller.reverse();
           }
         });
       } else if (status == AnimationStatus.dismissed) {
         Future.delayed(const Duration(milliseconds: 300), () {
-          if (isDisposed == false) {
+          if (!isDisposed) {
             controller.reverse();
           }
         });

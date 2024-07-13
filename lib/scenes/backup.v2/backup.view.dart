@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/tag.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/scenes/backup.v2/backup.viewmodel.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   const SetupBackupView(SetupBackupViewModel viewModel)
@@ -49,7 +49,6 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                       color: ProtonColors.backgroundProton,
                       padding: const EdgeInsets.all(defaultPadding * 2),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Column(
@@ -90,7 +89,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
               child: ButtonV5(
                   onPressed: () {
-                    viewModel.setIntroduce(false);
+                    viewModel.setIntroduce(introduce: false);
                   },
                   backgroundColor: ProtonColors.protonBlue,
                   text: S.of(context).view_wallet_mnemonic,
@@ -126,7 +125,6 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   child: Container(
                       color: ProtonColors.backgroundProton,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Column(
                             children: [
@@ -235,7 +233,6 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   child: Container(
                       color: ProtonColors.backgroundProton,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Column(
                             children: [
@@ -336,54 +333,45 @@ void showConfirm(BuildContext context, SetupBackupViewModel viewModel) {
         return Container(
             padding: const EdgeInsets.symmetric(
                 vertical: 30, horizontal: defaultPadding),
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 10),
-                  Text(S.of(context).mnemonic_backup_confirm_title,
-                      style: FontManager.titleHero(ProtonColors.textNorm)),
-                  const SizedBox(height: 10),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding),
-                      child: Text(
-                          S.of(context).mnemonic_backup_confirm_subtitle,
-                          style:
-                              FontManager.body1Regular(ProtonColors.textHint))),
-                  const SizedBox(height: 30),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ButtonV5(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            backgroundColor: ProtonColors.protonGrey,
-                            text: S.of(context).cancel,
-                            width: MediaQuery.of(context).size.width / 2 -
-                                defaultPadding -
-                                5,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.textNorm),
-                            radius: 40,
-                            height: 55),
-                        ButtonV5(
-                            onPressed: () {
-                              viewModel.setBackup();
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            backgroundColor: ProtonColors.protonBlue,
-                            text: S.of(context).done,
-                            width: MediaQuery.of(context).size.width / 2 -
-                                defaultPadding -
-                                5,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.white),
-                            radius: 40,
-                            height: 55),
-                      ])
-                ]));
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              const SizedBox(height: 10),
+              Text(S.of(context).mnemonic_backup_confirm_title,
+                  style: FontManager.titleHero(ProtonColors.textNorm)),
+              const SizedBox(height: 10),
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: Text(S.of(context).mnemonic_backup_confirm_subtitle,
+                      style: FontManager.body1Regular(ProtonColors.textHint))),
+              const SizedBox(height: 30),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                ButtonV5(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    backgroundColor: ProtonColors.protonGrey,
+                    text: S.of(context).cancel,
+                    width: MediaQuery.of(context).size.width / 2 -
+                        defaultPadding -
+                        5,
+                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                    radius: 40,
+                    height: 55),
+                ButtonV5(
+                    onPressed: () {
+                      viewModel.setBackup();
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    backgroundColor: ProtonColors.protonBlue,
+                    text: S.of(context).done,
+                    width: MediaQuery.of(context).size.width / 2 -
+                        defaultPadding -
+                        5,
+                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    radius: 40,
+                    height: 55),
+              ])
+            ]));
       });
 }

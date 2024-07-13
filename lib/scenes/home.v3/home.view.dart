@@ -1,5 +1,6 @@
 // home.view.dart
 import 'dart:math';
+
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/common/errors.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/custom.expansion.dart';
-import 'package:wallet/scenes/components/custom.todo.dart';
-import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
-import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
-import 'package:wallet/scenes/components/home/btc.actions.view.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
@@ -28,8 +23,15 @@ import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.expansion.dart';
+import 'package:wallet/scenes/components/custom.todo.dart';
+import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
+import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
+import 'package:wallet/scenes/components/home/btc.actions.view.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -46,7 +48,6 @@ import 'package:wallet/scenes/home.v3/sidebar.wallet.items.dart';
 import 'package:wallet/scenes/home.v3/transaction.list.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 const double drawerMaxWidth = 400;
 
@@ -59,22 +60,16 @@ class HomeView extends ViewBase<HomeViewModel> {
     return buildDrawerNavigator(
       context,
       drawerMaxWidth: drawerMaxWidth,
-      appBar: (BuildContext context) {
-        return buildAppBar(context);
-      },
-      drawer: (BuildContext context) {
-        return buildDrawer(context);
-      },
+      appBar: buildAppBar,
+      drawer: buildDrawer,
       onDrawerChanged: (bool isOpen) {
-        if (isOpen == false) {
+        if (!isOpen) {
           viewModel.updateDrawerStatus(WalletDrawerStatus.close);
         } else {
           viewModel.updateDrawerStatus(WalletDrawerStatus.openSetting);
         }
       },
-      content: (BuildContext context) {
-        return buildContent(context);
-      },
+      content: buildContent,
     );
   }
 
@@ -108,284 +103,261 @@ class HomeView extends ViewBase<HomeViewModel> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 70),
-                            child: ListView(
-                                scrollDirection: Axis.vertical,
-                                children: [
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 20,
+                            child: ListView(children: [
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: defaultPadding,
                                         ),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: defaultPadding,
+                                        child: Column(
+                                          children: [
+                                            getMainBalanceWidget(
+                                              context,
+                                              viewModel,
+                                              accountName,
+                                              walletBalanceState,
+                                              walletTransactionState,
                                             ),
-                                            child: Column(
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                          ],
+                                        )),
+                                    BtcTitleActionsView(onSend: () {
+                                      viewModel.move(NavID.send);
+                                    }, onBuy: () {
+                                      viewModel.move(NavID.buy);
+                                    }, onReceive: () {
+                                      move(context, NavID.receive);
+                                    }),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    if (walletTransactionState
+                                        .historyTransaction.isEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: defaultPadding),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            SecureYourWalletSheet.show(
+                                                context, viewModel);
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: defaultPadding,
+                                                bottom: defaultPadding),
+                                            decoration: BoxDecoration(
+                                                color: ProtonColors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        24.0)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                getMainBalanceWidget(
-                                                  context,
-                                                  viewModel,
-                                                  accountName,
-                                                  walletBalanceState,
-                                                  walletTransactionState,
+                                                Text(
+                                                  S
+                                                      .of(context)
+                                                      .secure_your_wallet,
+                                                  style:
+                                                      FontManager.body2Median(
+                                                          ProtonColors
+                                                              .protonBlue),
                                                 ),
-                                                const SizedBox(
-                                                  height: 20,
+                                                Transform.translate(
+                                                  offset: const Offset(6, 0),
+                                                  child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: ProtonColors
+                                                          .protonBlue,
+                                                      size: 14),
                                                 ),
                                               ],
-                                            )),
-                                        BtcTitleActionsView(onSend: () {
-                                          viewModel.move(NavID.send);
-                                        }, onBuy: () {
-                                          viewModel.move(NavID.buy);
-                                        }, onReceive: () {
-                                          move(context, NavID.receive);
-                                        }),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        if (walletTransactionState
-                                            .historyTransaction.isEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: defaultPadding),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                SecureYourWalletSheet.show(
-                                                    context, viewModel);
-                                              },
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                padding: const EdgeInsets.only(
-                                                    left: 20,
-                                                    right: 20,
-                                                    top: defaultPadding,
-                                                    bottom: defaultPadding),
-                                                decoration: BoxDecoration(
-                                                    color: ProtonColors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      S
-                                                          .of(context)
-                                                          .secure_your_wallet,
-                                                      style: FontManager
-                                                          .body2Median(
-                                                              ProtonColors
-                                                                  .protonBlue),
-                                                    ),
-                                                    Transform.translate(
-                                                      offset:
-                                                          const Offset(6, 0),
-                                                      child: Icon(
-                                                          Icons
-                                                              .arrow_forward_ios_rounded,
-                                                          color: ProtonColors
-                                                              .protonBlue,
-                                                          size: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
                                             ),
                                           ),
-                                        if (viewModel.currentTodoStep <
-                                                viewModel.totalTodoSteps &&
-                                            walletTransactionState
-                                                .historyTransaction.isNotEmpty)
-                                          CustomExpansion(
-                                              totalSteps:
-                                                  viewModel.totalTodoSteps,
-                                              currentStep:
-                                                  viewModel.currentTodoStep,
-                                              children: [
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_proton_account,
-                                                    checked: viewModel
-                                                        .hadBackupProtonAccount,
-                                                    callback: () {}),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_wallet_mnemonic,
-                                                    checked: viewModel
-                                                            .showWalletRecovery ==
-                                                        false,
-                                                    callback: () {
-                                                      move(context,
-                                                          NavID.setupBackup);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_setup_2fa,
-                                                    checked:
-                                                        viewModel.hadSetup2FA,
-                                                    callback: () {}),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                              ]),
-                                        const SizedBox(
-                                          height: 20,
                                         ),
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  getTransactionAndAddressesBackground(
-                                                      walletTransactionState,
-                                                      viewModel.bodyListStatus),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(24.0),
-                                                topRight: Radius.circular(24.0),
-                                                bottomLeft:
-                                                    Radius.circular(24.0),
-                                                bottomRight:
-                                                    Radius.circular(24.0),
-                                              ),
-                                            ),
-                                            padding: const EdgeInsets.only(
-                                                bottom: 20, top: 10),
-                                            child: Column(children: [
-                                              viewModel.bodyListStatus ==
-                                                      BodyListStatus
-                                                          .transactionList
-                                                  ? TransactionList(
-                                                      viewModel: viewModel)
-                                                  : BitcoinAddressList(
-                                                      viewModel: viewModel),
-                                            ])),
-                                        if (walletTransactionState
-                                            .historyTransaction.isEmpty)
-                                          Column(children: [
+                                      ),
+                                    if (viewModel.currentTodoStep <
+                                            viewModel.totalTodoSteps &&
+                                        walletTransactionState
+                                            .historyTransaction.isNotEmpty)
+                                      CustomExpansion(
+                                          totalSteps: viewModel.totalTodoSteps,
+                                          currentStep:
+                                              viewModel.currentTodoStep,
+                                          children: [
                                             const SizedBox(
-                                              height: defaultPadding,
+                                              height: 5,
                                             ),
-                                            Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  ButtonV5(
-                                                      onPressed: () {
-                                                        viewModel.move(
-                                                            NavID.receive);
-                                                      },
-                                                      backgroundColor:
-                                                          ProtonColors.white,
-                                                      text:
-                                                          S.of(context).receive,
-                                                      width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width >
-                                                              424
-                                                          ? 180
-                                                          : MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  2 -
-                                                              defaultPadding *
-                                                                  2,
-                                                      textStyle: FontManager
-                                                          .body1Median(
-                                                              ProtonColors
-                                                                  .protonBlue),
-                                                      height: 48),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  ButtonV5(
-                                                      onPressed: () {},
-                                                      backgroundColor:
-                                                          ProtonColors
-                                                              .backgroundBlack,
-                                                      text: S.of(context).buy,
-                                                      width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width >
-                                                              424
-                                                          ? 180
-                                                          : MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  2 -
-                                                              defaultPadding *
-                                                                  2,
-                                                      textStyle: FontManager
-                                                          .body1Median(ProtonColors
-                                                              .backgroundSecondary),
-                                                      height: 48),
-                                                ]),
+                                            CustomTodos(
+                                                title: S
+                                                    .of(context)
+                                                    .todos_backup_proton_account,
+                                                checked: viewModel
+                                                    .hadBackupProtonAccount,
+                                                callback: () {}),
                                             const SizedBox(
-                                              height: 10,
+                                              height: 5,
+                                            ),
+                                            CustomTodos(
+                                                title: S
+                                                    .of(context)
+                                                    .todos_backup_wallet_mnemonic,
+                                                checked: !viewModel
+                                                    .showWalletRecovery,
+                                                callback: () {
+                                                  move(context,
+                                                      NavID.setupBackup);
+                                                }),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            CustomTodos(
+                                                title: S
+                                                    .of(context)
+                                                    .todos_setup_2fa,
+                                                checked: viewModel.hadSetup2FA,
+                                                callback: () {}),
+                                            const SizedBox(
+                                              height: 5,
                                             ),
                                           ]),
-                                        const SizedBox(height: 20),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: defaultPadding,
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          color:
+                                              getTransactionAndAddressesBackground(
+                                                  walletTransactionState,
+                                                  viewModel.bodyListStatus),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(24.0),
+                                            topRight: Radius.circular(24.0),
+                                            bottomLeft: Radius.circular(24.0),
+                                            bottomRight: Radius.circular(24.0),
                                           ),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (viewModel.protonFeedItems
-                                                        .isNotEmpty &&
-                                                    walletTransactionState
-                                                        .historyTransaction
-                                                        .isEmpty)
-                                                  Text(
-                                                      S
-                                                          .of(context)
-                                                          .explore_wallet,
-                                                      style: FontManager
-                                                          .body1Median(
-                                                              ProtonColors
-                                                                  .textNorm)),
-                                                const SizedBox(height: 10),
-                                                if (walletTransactionState
-                                                    .historyTransaction.isEmpty)
-                                                  Column(children: [
-                                                    DiscoverFeedsView(
-                                                      onTap: (String link) {
-                                                        launchUrl(
-                                                            Uri.parse(link));
-                                                      },
-                                                      protonFeedItems: viewModel
-                                                          .protonFeedItems,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 40,
-                                                    ),
-                                                  ]),
-                                              ]),
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                            bottom: 20, top: 10),
+                                        child: Column(children: [
+                                          viewModel.bodyListStatus ==
+                                                  BodyListStatus.transactionList
+                                              ? TransactionList(
+                                                  viewModel: viewModel)
+                                              : BitcoinAddressList(
+                                                  viewModel: viewModel),
+                                        ])),
+                                    if (walletTransactionState
+                                        .historyTransaction.isEmpty)
+                                      Column(children: [
+                                        const SizedBox(
+                                          height: defaultPadding,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ButtonV5(
+                                                  onPressed: () {
+                                                    viewModel
+                                                        .move(NavID.receive);
+                                                  },
+                                                  backgroundColor:
+                                                      ProtonColors.white,
+                                                  text: S.of(context).receive,
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width >
+                                                          424
+                                                      ? 180
+                                                      : MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2 -
+                                                          defaultPadding * 2,
+                                                  textStyle:
+                                                      FontManager.body1Median(
+                                                          ProtonColors
+                                                              .protonBlue),
+                                                  height: 48),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              ButtonV5(
+                                                  onPressed: () {},
+                                                  backgroundColor: ProtonColors
+                                                      .backgroundBlack,
+                                                  text: S.of(context).buy,
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width >
+                                                          424
+                                                      ? 180
+                                                      : MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2 -
+                                                          defaultPadding * 2,
+                                                  textStyle: FontManager
+                                                      .body1Median(ProtonColors
+                                                          .backgroundSecondary),
+                                                  height: 48),
+                                            ]),
+                                        const SizedBox(
+                                          height: 10,
                                         ),
                                       ]),
-                                ]),
+                                    const SizedBox(height: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: defaultPadding,
+                                      ),
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            if (viewModel.protonFeedItems
+                                                    .isNotEmpty &&
+                                                walletTransactionState
+                                                    .historyTransaction.isEmpty)
+                                              Text(S.of(context).explore_wallet,
+                                                  style:
+                                                      FontManager.body1Median(
+                                                          ProtonColors
+                                                              .textNorm)),
+                                            const SizedBox(height: 10),
+                                            if (walletTransactionState
+                                                .historyTransaction.isEmpty)
+                                              Column(children: [
+                                                DiscoverFeedsView(
+                                                  onTap: (String link) {
+                                                    launchUrl(Uri.parse(link));
+                                                  },
+                                                  protonFeedItems:
+                                                      viewModel.protonFeedItems,
+                                                ),
+                                                const SizedBox(
+                                                  height: 40,
+                                                ),
+                                              ]),
+                                          ]),
+                                    ),
+                                  ]),
+                            ]),
                           ),
                         ),
                         Positioned(
@@ -469,7 +441,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                     walletBalanceState.balanceInSatoshi,
                   ),
 
-                  /// TODO:: use actual balance
+                  // TODO(fix): use actual balance
                   fractionDigits: defaultDisplayDigits,
                   textStyle:
                       FontManager.balanceInFiatCurrency(ProtonColors.textNorm))
@@ -481,7 +453,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           viewModel.displayBalance
               ? GestureDetector(
                   onTap: () {
-                    viewModel.setDisplayBalance(false);
+                    viewModel.setDisplayBalance(display: false);
                   },
                   child: Icon(
                     Icons.visibility_off_outlined,
@@ -490,7 +462,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   ))
               : GestureDetector(
                   onTap: () {
-                    viewModel.setDisplayBalance(true);
+                    viewModel.setDisplayBalance(display: true);
                   },
                   child: Icon(
                     Icons.visibility_outlined,
@@ -532,10 +504,7 @@ class HomeView extends ViewBase<HomeViewModel> {
 
   Drawer buildDrawer(BuildContext context) {
     return Drawer(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
-        ),
+        shape: const RoundedRectangleBorder(),
         backgroundColor: ProtonColors.drawerBackground,
         width: min(MediaQuery.of(context).size.width - 70, drawerMaxWidth),
         child: buildSidebar(context, viewModel));
@@ -588,9 +557,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                 icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
                     fit: BoxFit.fill, width: 40, height: 40),
                 onPressed: () {
-                  // TODO:: wallet settings could be a new View/view model. move to wallet settings.
+                  // TODO(fix): wallet settings could be a new View/view model. move to wallet settings.
                   /// temperay
-                  var context = Coordinator.rootNavigatorKey.currentContext;
+                  final context = Coordinator.rootNavigatorKey.currentContext;
                   if (context != null) {
                     for (WalletMenuModel walletMenuModel
                         in state.walletsModel) {
@@ -648,7 +617,7 @@ class HomeView extends ViewBase<HomeViewModel> {
 }
 
 Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
-  /// TODO:: fixme
+  // TODO(fix): fixme
   return BlocBuilder<WalletListBloc, WalletListState>(
       bloc: viewModel.walletListBloc,
       builder: (context, state) {
@@ -747,13 +716,23 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               }
                               viewModel.selectWallet(wallet);
                             },
-                            // delete wallet when un valid
-                            onDelete: (wallet, hasBalance, isInvalidWallet) {
+
+                            /// delete wallet when un valid
+                            onDelete: (
+                              wallet, {
+                              required hasBalance,
+                              required isInvalidWallet,
+                            }) {
                               DeleteWalletSheet.show(
-                                  context, viewModel, wallet, false,
-                                  isInvalidWallet: true);
+                                context,
+                                viewModel,
+                                wallet,
+                                hasBalance: false,
+                                isInvalidWallet: true,
+                              );
                             },
-                            // update passphrase
+
+                            /// update passphrase
                             updatePassphrase: (wallet) {
                               PassphraseSheet.show(
                                 context,
@@ -761,7 +740,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 wallet,
                               );
                             },
-                            // add new account into wallet
+
+                            /// add new account into wallet
                             addAccount: (wallet) {
                               AddWalletAccountSheet.show(
                                   context, viewModel, wallet);
@@ -915,7 +895,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
 
 Widget showUpdateWalletPassphraseDialog(
     BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
-  TextEditingController textEditingController = TextEditingController();
+  final TextEditingController textEditingController = TextEditingController();
   textEditingController.text = "";
   return AlertDialog(
     title: Text(S.of(context).set_passphrase),
@@ -941,7 +921,7 @@ Widget showUpdateWalletPassphraseDialog(
                 walletModel.walletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
           } on BridgeError catch (e, stacktrace) {
-            // TODO:: fix me
+            // TODO(fix): fix me
             viewModel.errorMessage = parseSampleDisplayError(e);
             logger.e("importWallet error: $e, stacktrace: $stacktrace");
           } catch (e) {
@@ -968,9 +948,9 @@ Widget getWalletAccountBalanceWidget(
 ) {
   FiatCurrency? fiatCurrency =
       WalletManager.getAccountFiatCurrency(accountModel);
-  ProtonExchangeRate? exchangeRate =
+  final ProtonExchangeRate? exchangeRate =
       ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
-  double estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+  final double estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
       exchangeRate ?? viewModel.currentExchangeRate,
       accountModel.balance.toInt());
   if (exchangeRate == null) {

@@ -18,7 +18,7 @@ abstract class BaseDatabase {
     final result = await db.rawQuery('PRAGMA table_info($tableName)');
 
     // Check if column already exists
-    bool columnExists = result.any((column) => column['name'] == columnName);
+    final bool columnExists = result.any((column) => column['name'] == columnName);
     // Add column if it doesn't exist
     if (!columnExists) {
       await db.execute(
@@ -76,7 +76,7 @@ abstract class BaseDatabase {
         await db.rawQuery('PRAGMA table_info($tableName)');
 
     for (var column in schema) {
-      String columnDetails = '''
+      final String columnDetails = '''
         Column: ${column['name']}
         Type: ${column['type']}
         Not Null: ${column['notnull']}

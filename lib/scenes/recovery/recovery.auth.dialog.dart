@@ -24,7 +24,6 @@ Future<void> showAuthDialog(
             width: 360,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment:
                   CrossAxisAlignment.start, // Align text to the left
               children: <Widget>[
@@ -94,8 +93,8 @@ Future<void> showAuthDialog(
               ),
               ButtonV5(
                 onPressed: () {
-                  var password = passwordController.value.text;
-                  var tfa = twofaController.value.text;
+                  final password = passwordController.value.text;
+                  final tfa = twofaController.value.text;
                   onAuth(password, tfa);
                   Navigator.of(context).pop();
                 },

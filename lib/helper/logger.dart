@@ -7,12 +7,7 @@ import 'package:path_provider/path_provider.dart';
 var logger = Logger(
   printer: PrettyPrinter(
     methodCount: 1,
-    errorMethodCount: 8,
-    lineLength: 120,
-    colors: true,
-    printEmojis: true,
     printTime: true,
-    noBoxingByDefault: false,
   ),
   output: MultiOutput([
     ConsoleOutput(),
@@ -28,12 +23,7 @@ class LoggerService {
     logger = Logger(
       printer: PrettyPrinter(
         methodCount: 1,
-        errorMethodCount: 8,
-        lineLength: 120,
-        colors: true,
-        printEmojis: true,
         printTime: true,
-        noBoxingByDefault: false,
       ),
       output: MultiOutput([
         ConsoleOutput(),
@@ -51,18 +41,13 @@ class LoggerService {
     final logsPath = join(directory.path, "logs");
 
     final logFile = File('$logsPath/app.log');
-    if (await logFile.exists()) {
+    if (logFile.existsSync()) {
       await logFile.delete();
     }
     logger = Logger(
       printer: PrettyPrinter(
         methodCount: 1,
-        errorMethodCount: 8,
-        lineLength: 120,
-        colors: true,
-        printEmojis: true,
         printTime: true,
-        noBoxingByDefault: false,
       ),
       output: MultiOutput([
         ConsoleOutput(),

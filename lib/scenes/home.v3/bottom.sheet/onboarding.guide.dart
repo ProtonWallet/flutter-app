@@ -2,12 +2,6 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/dropdown.button.v2.dart';
-import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -16,8 +10,14 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
+import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
@@ -44,7 +44,6 @@ class OnboardingGuideSheet {
                   builder: (BuildContext context, StateSetter setState) {
                 return Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Transform.translate(
                           offset: const Offset(0, -10),
@@ -88,8 +87,7 @@ class OnboardingGuideSheet {
                                 items: fiatCurrencies,
                                 canSearch: true,
                                 itemsText: fiatCurrencies
-                                    .map((v) =>
-                                        FiatCurrencyHelper.getFullName(v))
+                                    .map(FiatCurrencyHelper.getFullName)
                                     .toList(),
                                 itemsLeadingIcons: fiatCurrencies
                                     .map((v) => CountryFlag.fromCountryCode(
@@ -102,10 +100,9 @@ class OnboardingGuideSheet {
                                 valueNotifier: viewModel.fiatCurrencyNotifier),
                             const SizedBox(height: 10),
                             if (state.walletsModel.isNotEmpty &&
-                                firstWallet == false)
+                                !firstWallet)
                               ExpansionTile(
                                   shape: const Border(),
-                                  initiallyExpanded: false,
                                   title: Transform.translate(
                                       offset: const Offset(-12, 0),
                                       child: Text(
@@ -224,7 +221,7 @@ class OnboardingGuideSheet {
                                 child: Column(children: [
                                   ButtonV6(
                                       onPressed: () async {
-                                        if (isCreatingWallet == false) {
+                                        if (!isCreatingWallet) {
                                           isCreatingWallet = true;
                                           if (viewModel.passphraseTextController
                                                   .text ==

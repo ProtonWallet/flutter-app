@@ -6,16 +6,16 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/account.dao.impl.dart';
+import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/bitcoin.address.dao.impl.dart';
 import 'package:wallet/models/contacts.dao.impl.dart';
-import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/exchangerate.dao.impl.dart';
 import 'package:wallet/models/transaction.dao.impl.dart';
 import 'package:wallet/models/transaction.info.dao.impl.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 
-import 'migration.dart';
 import 'migration.container.dart';
+import 'migration.dart';
 
 class AppDatabase {
   static String dbFolder = "databases";
@@ -73,7 +73,7 @@ class AppDatabase {
   }
 
   void buildMigration() {
-    List<Migration> migrations = [
+    final List<Migration> migrations = [
       Migration(1, 2, () async {}),
       Migration(2, 3, () async {
         await transactionDao.migration_0();
@@ -140,7 +140,7 @@ class AppDatabase {
     String dbPath = "";
     if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
-      var databaseFactory = databaseFactoryFfi;
+      final databaseFactory = databaseFactoryFfi;
 
       final Directory appDocumentsDir =
           await getApplicationDocumentsDirectory();
@@ -149,7 +149,7 @@ class AppDatabase {
         dbPath,
       );
     } else {
-      var path = await getDatabasesPath();
+      final path = await getDatabasesPath();
       dbPath = join(path, dbFolder, dbName);
       database = await openDatabase(
         dbPath,
@@ -163,7 +163,7 @@ class AppDatabase {
     Database database;
     if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
-      var databaseFactory = databaseFactoryFfi;
+      final databaseFactory = databaseFactoryFfi;
       database = await databaseFactory.openDatabase(
         inMemoryDatabasePath,
       );
@@ -188,11 +188,11 @@ class AppDatabase {
     db = database;
   }
 
-  // TODO:: fix me. the oldversion somehow is not correct. we should try to use the version from the database `user_version`.
-  // TODO:: future we also need to check the db schema is correct or not. then decide to rebuild it or not.
+  // TODO(fix): fix me. the oldversion somehow is not correct. we should try to use the version from the database `user_version`.
+  // TODO(fix): future we also need to check the db schema is correct or not. then decide to rebuild it or not.
   Future<void> buildDatabase(
       {bool isTesting = false, int oldVersion = 1}) async {
-    List<Migration>? upgradeMigrations =
+    final List<Migration>? upgradeMigrations =
         migrationContainer.findMigrationPath(oldVersion, version);
     logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");
     if (upgradeMigrations != null) {
@@ -216,8 +216,8 @@ class AppDatabase {
   // not inused for future use
   Future<void> checkAndUpdateVersion() async {
     // Get the current version from the database
-    int currentVersion =
-        (await db.rawQuery('PRAGMA user_version')).first.values.first as int;
+    final int currentVersion =
+        (await db.rawQuery('PRAGMA user_version')).first.values.first! as int;
     if (currentVersion < version) {
       // If current version is less than the required version
       logger.i(
