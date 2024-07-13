@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/contacts.model.dart';
+import 'package:wallet/models/database/base.dao.dart';
 import 'package:wallet/models/database/contacts.database.dart';
 
 abstract class ContactsDao extends ContactsDatabase implements BaseDao {
@@ -27,7 +27,7 @@ class ContactsDaoImpl extends ContactsDao {
 
   @override
   Future<List<ContactsModel>> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => ContactsModel.fromMap(maps[index]));
   }
@@ -59,7 +59,8 @@ class ContactsDaoImpl extends ContactsDao {
   @override
   Future<void> insertOrUpdate(String serverContactID, String name, String email,
       String canonicalEmail, int isProton) async {
-    ContactsModel? contactsModel = await findByServerContactID(serverContactID);
+    final ContactsModel? contactsModel =
+        await findByServerContactID(serverContactID);
     if (contactsModel != null) {
       await update({
         "id": contactsModel.id,
@@ -86,7 +87,7 @@ class ContactsDaoImpl extends ContactsDao {
 
   @override
   Future<ContactsModel?> findByServerContactID(String serverContactID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverContactID = ?', whereArgs: [serverContactID]);
     if (maps.isNotEmpty) {
       return ContactsModel.fromMap(maps.first);
@@ -96,7 +97,7 @@ class ContactsDaoImpl extends ContactsDao {
 
   @override
   Future findByServerID(String serverID) {
-    // TODO: implement findByServerID
+    // TODO(fix): implement findByServerID
     throw UnimplementedError();
   }
 }

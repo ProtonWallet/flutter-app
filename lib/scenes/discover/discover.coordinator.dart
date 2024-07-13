@@ -12,7 +12,7 @@ class DiscoverCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = DiscoverViewModelImpl(this);
+    final viewModel = DiscoverViewModelImpl(this);
     widget = DiscoverView(
       viewModel,
     );

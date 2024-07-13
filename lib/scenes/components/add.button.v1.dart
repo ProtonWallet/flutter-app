@@ -13,7 +13,7 @@ class AddButtonV1 extends StatelessWidget {
         height: 20,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(width: 1, color: ProtonColors.protonBlue)),
+            border: Border.all(color: ProtonColors.protonBlue)),
         child: GestureDetector(
           onTap: onPressed,
           child: Icon(Icons.add_rounded,

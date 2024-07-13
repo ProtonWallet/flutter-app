@@ -78,12 +78,10 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         } else {
           coordinator.showFlutterSignin(env);
         }
-        break;
       case NavID.nativeSignup:
         if (mobile) {
           coordinator.showNativeSignup();
         }
-        break;
       default:
         break;
     }

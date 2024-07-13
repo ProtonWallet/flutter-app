@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
-import 'dart:convert';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 
 class BitcoinPriceHomepageChart extends StatefulWidget {
@@ -17,10 +18,10 @@ class BitcoinPriceHomepageChart extends StatefulWidget {
   final double priceChange;
 
   const BitcoinPriceHomepageChart({
-    super.key,
     required this.exchangeRate,
     required this.width,
     required this.priceChange,
+    super.key,
   });
 
   @override
@@ -49,6 +50,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.exchangeRate.fiatCurrency !=
         widget.exchangeRate.fiatCurrency) {
+      // TODO(check): this code doesnt look right
+      // ignore: unnecessary_lambdas
       setState(() {
         fetchData();
       });
@@ -70,43 +73,38 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
       case BitcoinPriceChartDataRange.past1Day:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=24'));
-        break;
       case BitcoinPriceChartDataRange.past7Days:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=168'));
-        break;
       case BitcoinPriceChartDataRange.past1Month:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=30'));
-        break;
       case BitcoinPriceChartDataRange.past6Month:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=180'));
-        break;
       case BitcoinPriceChartDataRange.past1Year:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=365'));
-        break;
     }
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
-      List<FlSpot> spots = [];
+      final List<FlSpot> spots = [];
       int index = 0;
 
-      /// TODO:: fix logic here
+      // TODO(fix): fix logic here
       double rate2Fiat = 1.0;
-      int amountInSatoshi = 10000;
+      const int amountInSatoshi = 10000;
       if (widget.exchangeRate.fiatCurrency != FiatCurrency.usd) {
-        ProtonExchangeRate exchangeRateInUSD =
+        final ProtonExchangeRate exchangeRateInUSD =
             await ExchangeRateService.getExchangeRate(FiatCurrency.usd);
         rate2Fiat = ExchangeCalculator.getNotionalInFiatCurrency(
                 widget.exchangeRate, amountInSatoshi) /
             ExchangeCalculator.getNotionalInFiatCurrency(
                 exchangeRateInUSD, amountInSatoshi);
       }
-      List<double> values = [];
+      final List<double> values = [];
       for (var data in json) {
-        double bitcoinNotionalInFiat = double.parse(data[4]) * rate2Fiat;
+        final double bitcoinNotionalInFiat = double.parse(data[4]) * rate2Fiat;
         spots.add(FlSpot(
           index.toDouble(),
           double.parse(bitcoinNotionalInFiat.toStringAsFixed(2)),
@@ -134,77 +132,60 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      child: Row(children: [
         Expanded(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: Responsive.isDesktop(context)
-                      ? MediaQuery.of(context).size.width * 2 / 3 - 300
-                      : null,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  height: 40,
-                  child: isLoading
-                      ? SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: ProtonColors.protonBlue,
-                            ),
-                          ),
-                        )
-                      : LineChart(
-                          LineChartData(
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: dataPoints,
-                                isCurved: false,
-                                barWidth: 2,
-                                dotData: const FlDotData(
-                                  show: false,
-                                ),
-                                color: widget.priceChange >= 0
-                                    ? ProtonColors.signalSuccess
-                                    : ProtonColors.signalError,
-                              ),
-                            ],
-                            borderData: FlBorderData(
+          child: Column(children: [
+            Container(
+              width: Responsive.isDesktop(context)
+                  ? MediaQuery.of(context).size.width * 2 / 3 - 300
+                  : null,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              height: 40,
+              child: isLoading
+                  ? SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: ProtonColors.protonBlue,
+                        ),
+                      ),
+                    )
+                  : LineChart(
+                      LineChartData(
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: dataPoints,
+                            dotData: const FlDotData(
                               show: false,
                             ),
-                            lineTouchData: const LineTouchData(
-                              enabled: false,
-                            ),
-                            gridData: const FlGridData(
-                              drawVerticalLine: false,
-                              drawHorizontalLine: false,
-                            ),
-                            titlesData: const FlTitlesData(
-                              leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                showTitles: false,
-                              )),
-                              bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                showTitles: false,
-                              )),
-                              rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                showTitles: false,
-                              )),
-                              topTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                showTitles: false,
-                              )),
-                            ),
+                            color: widget.priceChange >= 0
+                                ? ProtonColors.signalSuccess
+                                : ProtonColors.signalError,
                           ),
+                        ],
+                        borderData: FlBorderData(
+                          show: false,
                         ),
-                ),
-              ]),
+                        lineTouchData: const LineTouchData(
+                          enabled: false,
+                        ),
+                        gridData: const FlGridData(
+                          drawVerticalLine: false,
+                          drawHorizontalLine: false,
+                        ),
+                        titlesData: const FlTitlesData(
+                          leftTitles: AxisTitles(),
+                          bottomTitles: AxisTitles(),
+                          rightTitles: AxisTitles(),
+                          topTitles: AxisTitles(),
+                        ),
+                      ),
+                    ),
+            ),
+          ]),
         ),
         Icon(
           Icons.keyboard_arrow_up_rounded,

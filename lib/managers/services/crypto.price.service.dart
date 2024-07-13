@@ -8,7 +8,7 @@ class CryptoPriceDataService extends Service<CryptoPriceInfo> {
 
   @override
   Future<CryptoPriceInfo> onUpdate() async {
-    // TODO:: change static to property
-    return await CryptoPriceHelper.getPriceInfo("BTCUSDT");
+    // TODO(fix): change static to property
+    return CryptoPriceHelper.getPriceInfo("BTCUSDT");
   }
 }

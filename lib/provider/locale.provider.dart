@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class LocaleProvider extends ChangeNotifier {
   final String key = 'locale'; // preference key
@@ -38,24 +38,24 @@ class LocaleProvider extends ChangeNotifier {
   }
 
   // init SharedPreferences
-  _initialPreferences() async {
+  Future<void> _initialPreferences() async {
     _preferences ??= await SharedPreferences.getInstance();
   }
 
   // save
-  _savePreferences() async {
+  Future<void> _savePreferences() async {
     await _initialPreferences();
     _preferences?.setString(key, _language);
   }
 
   // read
-  _loadFromPreferences() async {
+  Future<void> _loadFromPreferences() async {
     await _initialPreferences();
     _language = _preferences?.getString(key) ?? '';
     notifyListeners(); //
   }
 
-  toggleChangeLocale(String language) {
+  void toggleChangeLocale(String language) {
     _language = language;
     logger.d('current locale: $language');
     _savePreferences();

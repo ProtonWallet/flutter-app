@@ -62,9 +62,13 @@ class BDKTransactionDataProvider extends DataProvider {
   Future<void> init(List<WalletModel> wallets) async {
     bdkTransactionDataList.clear();
     for (WalletModel walletModel in wallets) {
-      var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
+      final accounts = await accountDao.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accounts) {
-        syncWallet(walletModel, accountModel);
+        syncWallet(
+          walletModel,
+          accountModel,
+          forceSync: false,
+        );
         bdkTransactionDataList.add(await _getBDKTransactionData(
           walletModel,
           accountModel,
@@ -77,7 +81,7 @@ class BDKTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    FrbAccount? account = await WalletManager.loadWalletWithID(
+    final FrbAccount? account = await WalletManager.loadWalletWithID(
       walletModel.walletID,
       accountModel.accountID,
     );
@@ -91,21 +95,21 @@ class BDKTransactionDataProvider extends DataProvider {
 
   Future<BDKTransactionData> getBDKTransactionDataByWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
-    /// TODO:: use cache to enhance performance
+    // TODO(fix): use cache to enhance performance
     // for (BDKTransactionData bdkTransactionData in bdkTransactionDataList) {
     //   if (bdkTransactionData.accountModel.serverAccountID ==
     //       accountModel.serverAccountID) {
     //     return bdkTransactionData;
     //   }
     // }
-    BDKTransactionData bdkTransactionData =
+    final BDKTransactionData bdkTransactionData =
         await _getBDKTransactionData(walletModel, accountModel);
     // bdkTransactionDataList.add(bdkTransactionData);
     return bdkTransactionData;
   }
 
   bool lastSyncTimeCheck(WalletModel walletModel, AccountModel accountModel) {
-    int timeDiff = DateTime.now().millisecondsSinceEpoch -
+    final int timeDiff = DateTime.now().millisecondsSinceEpoch -
         (lastSyncedTime[accountModel.accountID] ?? 0);
     if (timeDiff > reSyncTime) {
       return true;
@@ -119,29 +123,29 @@ class BDKTransactionDataProvider extends DataProvider {
 
   Future<void> syncWallet(
     WalletModel walletModel,
-    AccountModel accountModel, [
-    bool forceSync = false,
-  ]) async {
-    bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
+    AccountModel accountModel, {
+    required bool forceSync,
+  }) async {
+    final bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
         ? isWalletSyncing[accountModel.accountID]!
         : false;
     bool success = false;
-    if (isSyncing == false) {
+    if (!isSyncing) {
       try {
         isWalletSyncing[accountModel.accountID] = true;
         blockchain ??= await Api.createEsploraBlockchainWithApi();
 
-        String serverWalletID = walletModel.walletID;
-        String serverAccountID = accountModel.accountID;
-        String syncCheckID =
+        final String serverWalletID = walletModel.walletID;
+        final String serverAccountID = accountModel.accountID;
+        final String syncCheckID =
             "is_wallet_full_synced_${serverWalletID}_$serverAccountID";
 
-        FrbAccount? account = await WalletManager.loadWalletWithID(
+        final FrbAccount? account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
         );
         if (account != null) {
-          bool isSynced = await shared.read(syncCheckID) ?? false;
+          final bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
             logger.i("Bdk wallet full sync Started");
             await blockchain?.fullSync(
@@ -154,7 +158,7 @@ class BDKTransactionDataProvider extends DataProvider {
           } else {
             logger.i("Bdk wallet partial sync check");
 
-            /// TODO:: check if it's needed
+            // TODO(fix): check if it's needed
             // if (await blockchain!.shouldSync(account: account)) {
             logger.i("Bdk wallet partial sync Started");
             await blockchain!.partialSync(account: account);
@@ -165,17 +169,17 @@ class BDKTransactionDataProvider extends DataProvider {
           }
         }
       } on BridgeError catch (e, stacktrace) {
-        var errorMessage = parseSampleDisplayError(e);
+        final errorMessage = parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
         CommonHelper.showErrorDialog(
           errorMessage,
         );
       } catch (e, stacktrace) {
-        String errorMessage =
-            "Bdk wallet full sync error: ${e.toString()} \nstacktrace: ${stacktrace.toString()}";
+        final String errorMessage =
+            "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
         logger.e(errorMessage);
 
-        /// TODO:: remove this debug message
+        // TODO(fix): remove this debug message
         CommonHelper.showErrorDialog(
           errorMessage,
         );

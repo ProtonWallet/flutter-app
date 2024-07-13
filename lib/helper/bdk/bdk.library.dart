@@ -27,11 +27,11 @@ class BdkLibrary {
     }
 
     final dir = Directory(path);
-    if (await dir.exists()) {
-      List<FileSystemEntity> entities = dir.listSync();
+    if (dir.existsSync()) {
+      final List<FileSystemEntity> entities = dir.listSync();
       for (FileSystemEntity entity in entities) {
         if (entity is File) {
-          String fileName = basename(entity.path);
+          final String fileName = basename(entity.path);
           bool delete = false;
           if (!delete && fileName.endsWith(".sqlite")) {
             delete = true;
@@ -63,8 +63,9 @@ class BdkLibrary {
       // Define the function to be run in the isolate
       Future<void> isolateTask(String walletID, String accountID) async {
         await RustLib.init();
-        var account = await WalletManager.loadWalletWithID(walletID, accountID);
-        var blockClient = await Api.createEsploraBlockchainWithApi();
+        final account =
+            await WalletManager.loadWalletWithID(walletID, accountID);
+        final blockClient = await Api.createEsploraBlockchainWithApi();
         await blockClient.fullSync(
           account: account!,
           stopGap: BigInt.from(appConfig.stopGap),
@@ -76,11 +77,11 @@ class BdkLibrary {
       return true;
     } on FormatException catch (e, stacktrace) {
       logger.e(
-        "Bdk wallet full sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "Bdk wallet full sync error: $e stacktrace: $stacktrace",
       );
     } catch (e, stacktrace) {
       logger.e(
-        "Bdk wallet full sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "Bdk wallet full sync error: $e stacktrace: $stacktrace",
       );
     }
     return false;
@@ -101,7 +102,7 @@ class BdkLibrary {
           });
     } on FormatException catch (e, stacktrace) {
       logger.e(
-        "Bdk wallet partial sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "Bdk wallet partial sync error: $e stacktrace: $stacktrace",
       );
     }
   }
@@ -117,11 +118,9 @@ class BdkLibrary {
       );
       return true;
     } on FormatException catch (e, stacktrace) {
-      logger.e(
-          "Bdk wallet full sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
+      logger.e("Bdk wallet full sync error: $e stacktrace: $stacktrace");
     } catch (e, stacktrace) {
-      logger.e(
-          "Bdk wallet full sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
+      logger.e("Bdk wallet full sync error: $e stacktrace: $stacktrace");
     }
     return false;
   }
@@ -138,8 +137,7 @@ class BdkLibrary {
             RustLib.dispose()
           });
     } on FormatException catch (e, stacktrace) {
-      logger.e(
-          "Bdk wallet partial sync error: ${e.toString()} stacktrace: ${stacktrace.toString()}");
+      logger.e("Bdk wallet partial sync error: $e stacktrace: $stacktrace");
     }
   }
 }

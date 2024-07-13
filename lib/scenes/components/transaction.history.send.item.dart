@@ -1,10 +1,10 @@
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistorySendItem extends StatelessWidget {
@@ -15,9 +15,9 @@ class TransactionHistorySendItem extends StatelessWidget {
   final bool isLoading;
 
   const TransactionHistorySendItem({
-    super.key,
     required this.content,
     required this.bitcoinAddress,
+    super.key,
     this.walletAccountName,
     this.bitcoinAmount,
     this.isLoading = false,
@@ -32,7 +32,7 @@ class TransactionHistorySendItem extends StatelessWidget {
           content,
           content,
           bitcoinAddress,
-          bitcoinAddress == content,
+          isBitcoinAddress: bitcoinAddress == content,
         );
       },
       child: Container(
@@ -45,7 +45,6 @@ class TransactionHistorySendItem extends StatelessWidget {
                 margin: EdgeInsets.only(top: 4),
               )
             : Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -79,7 +78,6 @@ class TransactionHistorySendItem extends StatelessWidget {
                         if (bitcoinAmount != null)
                           Column(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(bitcoinAmount!.toFiatCurrencyString(),

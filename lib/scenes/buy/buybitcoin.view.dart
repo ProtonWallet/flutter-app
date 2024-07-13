@@ -1,10 +1,19 @@
 import 'package:card_loading/card_loading.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.keyboard.done.dart';
 import 'package:wallet/scenes/buy/dropdown.dialog.dart';
@@ -12,18 +21,10 @@ import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.view.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
-import 'package:wallet/constants/assets.gen.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/extension/enum.extension.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
-import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
+
 import 'buybitcoin.viewmodel.dart';
-import 'package:currency_picker/currency_picker.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   const BuyBitcoinView(BuyBitcoinViewModel viewModel)
@@ -32,11 +33,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   @override
   Widget build(BuildContext context) {
     viewModel.focusNode.addListener(() {
-      bool hasFocus = viewModel.focusNode.hasFocus;
+      final bool hasFocus = viewModel.focusNode.hasFocus;
       if (hasFocus) {
-        showOverlay(context, () {
-          viewModel.keyboardDone();
-        });
+        showOverlay(context, viewModel.keyboardDone);
       } else {
         removeOverlay();
       }
@@ -52,13 +51,11 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
 
             /// switch button [buy / sell]
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -80,7 +77,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         S.of(context).sell,
@@ -124,15 +120,10 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   ? viewModel
                                       .getFavoriteCountry(state.countryCodes)
                                   : null,
-
-                              //Optional. Shows phone code before the country name.
-                              showPhoneCode: false,
                               useSafeArea: true,
                               onSelect: (Country country) {
                                 viewModel.selectCountry(country.countryCode);
                               },
-                              // Optional. Sheet moves when keyboard opens.
-                              moveAlongWithKeyboard: false,
                               // Optional. Sets the theme for the country list picker.
                               countryListTheme: CountryListThemeData(
                                 // Optional. Sets the border radius for the bottomsheet.
@@ -171,7 +162,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
                               side: const BorderSide(
-                                  width: 1, color: Color(0xFFE6E8EC)),
+                                  color: Color(0xFFE6E8EC)),
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -233,8 +224,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               children: [
                 Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       /// you pay input
                       BlocSelector<BuyBitcoinBloc, BuyBitcoinState,
@@ -253,7 +242,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
-                                    width: 1, color: Color(0xFFE6E8EC)),
+                                    color: Color(0xFFE6E8EC)),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16),
@@ -267,7 +256,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 }
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     /// currency input
                                     Expanded(
@@ -317,9 +305,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                 ),
                                               ],
                                               onChanged: (value) {},
-                                              onFieldSubmitted: (value) {
-                                                viewModel.selectAmount(value);
-                                              },
+                                              onFieldSubmitted:
+                                                  viewModel.selectAmount,
                                               keyboardType:
                                                   TextInputType.number,
                                             ),
@@ -342,10 +329,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           showCurrencyPicker(
                                             context: context,
                                             currencyFilter: state.currencyNames,
-                                            showFlag: true,
-                                            showSearchField: true,
-                                            showCurrencyName: true,
-                                            showCurrencyCode: true,
                                             // favorite: ['USD'],
                                             onSelect: (Currency currency) {
                                               viewModel.selectCurrency(
@@ -396,8 +379,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           mainAxisSize: MainAxisSize.min,
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
                                           children: [
                                             if (state.isCurrencyLoaded)
                                               Text(
@@ -439,7 +420,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             onTap: () => {
                               showDialog(
                                   context: context,
-                                  barrierDismissible: true,
                                   builder: (BuildContext context) {
                                     return AccountDropdown(
                                       widgets: [
@@ -479,7 +459,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
-                                      width: 1, color: Color(0xFFE6E8EC)),
+                                      color: Color(0xFFE6E8EC)),
                                   borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(16),
                                     bottomRight: Radius.circular(16),
@@ -491,8 +471,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   : Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: Column(
@@ -549,8 +527,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             return Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Assets.images.icon.ramp.svg(
                                                   fit: BoxFit.fill,
@@ -611,8 +587,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
                                           if (!state.isQuoteLoaded)
                                             const CardLoading(
@@ -656,8 +630,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
                                           if (!state.isQuoteLoaded)
                                             const CardLoading(
@@ -700,8 +672,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
                                           if (!state.isQuoteLoaded)
                                             const CardLoading(
@@ -760,7 +730,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                   onTap: () {
                     showDialog(
                       context: context,
-                      barrierDismissible: true,
                       builder: (BuildContext context) {
                         return AccountDropdown(
                           widgets: [
@@ -792,15 +761,13 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         side: const BorderSide(
-                            width: 1, color: Color(0xFFE6E8EC)),
+                            color: Color(0xFFE6E8EC)),
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: !state.isQuoteLoaded
                         ? const CardLoading(height: 44)
                         : Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               /// payment type icon
                               Container(
@@ -815,7 +782,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     if (viewModel.selectedPaymentMethod ==
                                         PaymentMethod.applePay) ...[
@@ -940,10 +906,10 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   }
 
   /// when platform is ios. we show overlay on top of keyboard Done button
-  showOverlay(BuildContext context, VoidCallback? onTap) {
+  void showOverlay(BuildContext context, VoidCallback? onTap) {
     if (TargetPlatform.iOS != defaultTargetPlatform) return;
     if (viewModel.overlayEntry != null) return;
-    OverlayState overlayState = Overlay.of(context);
+    final OverlayState overlayState = Overlay.of(context);
     viewModel.overlayEntry = OverlayEntry(builder: (context) {
       return Positioned(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -956,7 +922,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   }
 
   /// remove the overlay
-  removeOverlay() {
+  void removeOverlay() {
     if (viewModel.overlayEntry != null) {
       viewModel.overlayEntry!.remove();
       viewModel.overlayEntry = null;

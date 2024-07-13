@@ -21,10 +21,10 @@ typedef SelectedCallback = void Function(
   AccountMenuModel account,
 );
 typedef DeleteCallback = void Function(
-  WalletMenuModel wallet,
-  bool hasBalance,
-  bool isInvalidWallet,
-);
+  WalletMenuModel wallet, {
+  required bool hasBalance,
+  required bool isInvalidWallet,
+});
 
 class SidebarWalletItems extends StatelessWidget {
   final WalletListBloc walletListBloc;
@@ -36,8 +36,8 @@ class SidebarWalletItems extends StatelessWidget {
   final HomeViewModel? viewModel;
 
   const SidebarWalletItems({
-    super.key,
     required this.walletListBloc,
+    super.key,
     this.addAccount,
     this.selectAccount,
     this.onDelete,
@@ -119,7 +119,11 @@ class SidebarWalletItems extends StatelessWidget {
                             ),
                             trailing: GestureDetector(
                               onTap: () {
-                                onDelete?.call(wlMenu, false, true);
+                                onDelete?.call(
+                                  wlMenu,
+                                  hasBalance: false,
+                                  isInvalidWallet: true,
+                                );
                               },
                               child: Icon(Icons.delete_forever_rounded,
                                   size: 24, color: ProtonColors.signalError),
@@ -150,7 +154,6 @@ class SidebarWalletItems extends StatelessWidget {
       return GestureDetector(
         onTap: () => {selectWallet?.call(wlModel)},
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +281,7 @@ class SidebarWalletItems extends StatelessWidget {
                       actModel,
                       AvatarColorHelper.getTextColor(
                           state.walletsModel.indexOf(wlModel)),
-                      viewModel?.displayBalance ?? true,
+                      displayBalance: viewModel?.displayBalance ?? true,
                     ),
                   ],
                 ),
@@ -343,9 +346,9 @@ class SidebarWalletItems extends StatelessWidget {
   Widget getWalletAccountBalanceWidget(
     BuildContext context,
     AccountMenuModel accountModel,
-    Color textColor,
-    bool displayBalance,
-  ) {
+    Color textColor, {
+    required bool displayBalance,
+  }) {
     if (displayBalance) {
       return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Text(accountModel.currencyBalance,

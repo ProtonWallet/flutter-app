@@ -17,8 +17,8 @@ class WalletPassphraseProvider extends DataProvider {
       StreamController<DataUpdated>();
 
   Future<String?> getPassphrase(String walletID) async {
-    var passphrases = await _getWalletPassphrases();
-    var pwd = passphrases
+    final passphrases = await _getWalletPassphrases();
+    final pwd = passphrases
         .where((passphrase) => passphrase.walletID == walletID)
         .toList()
         .firstOrNull;
@@ -26,11 +26,11 @@ class WalletPassphraseProvider extends DataProvider {
   }
 
   Future<void> saveWalletPassphrase(WalletPassphrase walletPassphrase) async {
-    String? passphrase = await getPassphrase(walletPassphrase.walletID);
+    final String? passphrase = await getPassphrase(walletPassphrase.walletID);
     if (passphrase == null) {
-      List<WalletPassphrase>? passphrases = await _getWalletPassphrases();
+      final List<WalletPassphrase> passphrases = await _getWalletPassphrases();
       passphrases.add(walletPassphrase);
-      List<Map<String, dynamic>> jsonList =
+      final List<Map<String, dynamic>> jsonList =
           WalletPassphrase.toJsonList(passphrases);
       await storage.set(key, json.encode(jsonList));
       walletPassphrases = await _getFromSecureStorage();
@@ -40,7 +40,7 @@ class WalletPassphraseProvider extends DataProvider {
 
   Future<List<WalletPassphrase>> _getFromSecureStorage() async {
     List<WalletPassphrase> passphrases = [];
-    var json = await storage.get(key);
+    final json = await storage.get(key);
     if (json.isNotEmpty) {
       passphrases = await WalletPassphrase.loadJsonString(json);
     }

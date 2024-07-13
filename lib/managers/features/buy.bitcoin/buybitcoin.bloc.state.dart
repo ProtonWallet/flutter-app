@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
+import 'package:wallet/rust/proton_api/payment_gateway.dart';
 
 class BuyBitcoinState extends Equatable {
   final bool isCountryLoaded;

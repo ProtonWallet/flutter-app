@@ -13,7 +13,7 @@ class ProtonAddressProvider extends DataProvider {
   );
 
   Future<AddressModel?> getAddressModel(String serverID) async {
-    AddressModel? addressModel = await addressDao.findByServerID(serverID);
+    final AddressModel? addressModel = await addressDao.findByServerID(serverID);
     return addressModel;
   }
 

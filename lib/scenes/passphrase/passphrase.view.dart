@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/alert.warning.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/onboarding/content.dart';
-import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
-import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/alert.warning.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/onboarding/content.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   const SetupPassPhraseView(SetupPassPhraseViewModel viewModel)
@@ -35,10 +35,10 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
             onPressed: () {
-              if (viewModel.isAddingPassPhrase == false) {
+              if (!viewModel.isAddingPassPhrase) {
                 Navigator.pop(context);
               } else {
-                viewModel.updateState(false);
+                viewModel.updateState(isAddingPassPhrase: false);
               }
             },
           ),
@@ -108,46 +108,42 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               MediaQuery.of(context).padding.top,
           // AppBar default height is 56
           margin: const EdgeInsets.symmetric(horizontal: defaultPadding),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ButtonV5(
-                    onPressed: () async {
-                      if (viewModel.checkPassphrase()) {
-                        EasyLoading.show(
-                            status: "creating wallet..",
-                            maskType: EasyLoadingMaskType.black);
-                        await viewModel.updateDB();
-                        EasyLoading.dismiss();
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                          if (viewModel.errorMessage.isEmpty) {
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).wallet_created);
-                          } else {
-                            CommonHelper.showSnackbar(
-                                context, viewModel.errorMessage,
-                                isError: true);
-                          }
-                        }
+          child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            ButtonV5(
+                onPressed: () async {
+                  if (viewModel.checkPassphrase()) {
+                    EasyLoading.show(
+                        status: "creating wallet..",
+                        maskType: EasyLoadingMaskType.black);
+                    await viewModel.updateDB();
+                    EasyLoading.dismiss();
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      if (viewModel.errorMessage.isEmpty) {
+                        CommonHelper.showSnackbar(
+                            context, S.of(context).wallet_created);
                       } else {
                         CommonHelper.showSnackbar(
-                            context, S.of(context).passphrase_are_not_match);
+                            context, viewModel.errorMessage,
+                            isError: true);
                       }
-                    },
-                    text: S.of(context).save_passphrase_button,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    backgroundColor: ProtonColors.protonBlue,
-                    height: 48),
-              ]))
+                    }
+                  } else {
+                    CommonHelper.showSnackbar(
+                        context, S.of(context).passphrase_are_not_match);
+                  }
+                },
+                text: S.of(context).save_passphrase_button,
+                width: MediaQuery.of(context).size.width,
+                textStyle: FontManager.body1Median(ProtonColors.white),
+                backgroundColor: ProtonColors.protonBlue,
+                height: 48),
+          ]))
     ])));
   }
 
   Widget buildMain(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
           width: MediaQuery.of(context).size.width,
@@ -164,7 +160,6 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 ),
                 child: SvgPicture.asset(
                   'assets/images/wallet_creation/passphrase_icon.svg',
-                  fit: BoxFit.contain,
                 ),
               )),
         ),
@@ -224,7 +219,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               SizedBoxes.box12,
               ButtonV5(
                   onPressed: () {
-                    viewModel.updateState(true);
+                    viewModel.updateState(isAddingPassPhrase: true);
                   },
                   text: S.of(context).yes_use_a_passphrase_button,
                   width: MediaQuery.of(context).size.width,

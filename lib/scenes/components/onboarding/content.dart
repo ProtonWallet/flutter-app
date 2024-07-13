@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/progress.dot.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/scenes/components/progress.dot.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class OnboardingContent extends StatelessWidget {
@@ -15,9 +15,7 @@ class OnboardingContent extends StatelessWidget {
   final int currentPage;
 
   const OnboardingContent({
-    super.key,
-    required this.width,
-    required this.height,
+    required this.width, required this.height, super.key,
     this.title = "",
     this.content = "",
     this.totalPages = 5,
@@ -49,7 +47,6 @@ class OnboardingContent extends StatelessWidget {
           ),
           SizedBoxes.box32,
           Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: children),
         ]));

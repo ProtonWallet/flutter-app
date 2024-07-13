@@ -26,10 +26,9 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
-
-import 'package:wallet/models/drift/db/app.database.dart';
 
 /// data state
 abstract class DataState extends Equatable {}
@@ -162,9 +161,9 @@ class DataProviderManager extends Manager {
       DBHelper.accountDao!,
       DBHelper.addressDao!,
       apiService.getWalletClient(),
-      // TODO:: put selected wallet server id here
+      // TODO(fix): put selected wallet server id here
       "",
-      // TODO:: put selected wallet account server id here
+      // TODO(fix): put selected wallet account server id here
       "",
       userID,
     );
@@ -233,9 +232,9 @@ class DataProviderManager extends Manager {
       apiService.getBlockClient(),
     );
 
-    var userAgent = UserAgent();
-    var uid = userManager.userInfo.sessionId;
-    var accessToken = userManager.userInfo.accessToken;
+    final userAgent = UserAgent();
+    final uid = userManager.userInfo.sessionId;
+    final accessToken = userManager.userInfo.accessToken;
     unleashDataProvider = UnleashDataProvider(
       apiEnv,
       await userAgent.appVersion,
@@ -243,7 +242,7 @@ class DataProviderManager extends Manager {
       uid,
       accessToken,
     );
-    // TODO:: fix this
+    // TODO(fix): fix this
     WalletManager.walletKeysProvider = walletKeysProvider;
     WalletManager.walletPassphraseProvider = walletPassphraseProvider;
     WalletManager.walletDataProvider = walletDataProvider;

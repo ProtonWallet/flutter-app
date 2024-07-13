@@ -5,9 +5,9 @@ class SectionUserInfo extends StatelessWidget {
   final String displayEmail;
 
   const SectionUserInfo({
-    super.key,
     required this.displayName,
     required this.displayEmail,
+    super.key,
   });
 
   @override

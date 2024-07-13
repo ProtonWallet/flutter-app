@@ -23,8 +23,7 @@ class TextFieldText extends StatefulWidget {
   final EdgeInsets? scrollPadding;
 
   const TextFieldText(
-      {super.key,
-      required this.width,
+      {required this.width, super.key,
       this.height,
       this.controller,
       this.focusNode,
@@ -92,13 +91,12 @@ class TextFieldTextState extends State<TextFieldText> {
                       borderSide: BorderSide(
                           color: widget.showEnabledBorder
                               ? Colors.transparent
-                              : widget.color,
-                          width: 1),
+                              : widget.color),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide: BorderSide(
-                          color: ProtonColors.interactionNorm, width: 1),
+                          color: ProtonColors.interactionNorm),
                     ),
                     suffixIcon: widget.showSuffixIcon
                         ? IconButton(

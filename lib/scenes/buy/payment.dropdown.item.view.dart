@@ -8,9 +8,7 @@ class PaymentDropdownItem extends StatelessWidget {
   final bool selected;
   final VoidCallback? onTap;
   const PaymentDropdownItem({
-    super.key,
-    required this.item,
-    required this.icon,
+    required this.item, required this.icon, super.key,
     this.selected = false,
     this.onTap,
   });
@@ -29,8 +27,6 @@ class PaymentDropdownItem extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             /// payment icon
             Container(
@@ -44,7 +40,6 @@ class PaymentDropdownItem extends StatelessWidget {
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     width: 16,

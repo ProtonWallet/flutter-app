@@ -12,10 +12,10 @@ class CustomNewsBoxV2 extends StatelessWidget {
   final Color headerBackground;
 
   const CustomNewsBoxV2({
-    super.key,
     required this.title,
     required this.content,
     required this.iconPath,
+    super.key,
     this.headerBackground = Colors.redAccent,
     this.width = 440,
   });

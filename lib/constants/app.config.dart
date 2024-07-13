@@ -11,7 +11,7 @@ class AppConfig {
   ApiEnv apiEnv;
   String esploraWebpageUrl;
   String esploraApiUrl;
-  // TODO:: use this flag to enable / disable test output
+  // TODO(fix): use this flag to enable / disable test output
   bool testMode;
   int stopGap;
 
@@ -26,7 +26,7 @@ class AppConfig {
     required this.stopGap,
   });
 
-  /// TODO:: conver this to enum
+  // TODO(fix): conver this to enum
   static void initAppEnv() {
     const environment = String.fromEnvironment('appEnv', defaultValue: 'prod');
     logger.i('App environment: $environment');
@@ -48,7 +48,7 @@ final appConfigForTestNet = AppConfig(
   esploraWebpageUrl: "https://proton.me/wallet/explorer/testnet/",
 
   /// use https://blockstream.info as api service since our own esplora service is not public yet
-  /// TODO:: change to our own esplora client once it's public
+  // TODO(fix): change to our own esplora client once it's public
   esploraApiUrl: "https://blockstream.info/testnet/",
   testMode: true,
   stopGap: 50,
@@ -62,7 +62,7 @@ final appConfigForPayments = AppConfig(
   esploraWebpageUrl: "https://payments.proton.me/wallet/explorer/testnet/",
 
   /// use https://blockstream.info as api service since our own esplora service is not public yet
-  /// TODO:: change to our own esplora client once it's public
+  // TODO(fix): change to our own esplora client once it's public
   esploraApiUrl: "https://blockstream.info/testnet/",
   testMode: true,
   stopGap: 30,
@@ -76,7 +76,7 @@ final appConfigForProduction = AppConfig(
   esploraWebpageUrl: "https://proton.me/wallet/explorer/",
 
   /// use https://blockstream.info as api service since our own esplora service is not public yet
-  /// TODO:: change to our own esplora client once it's public
+  // TODO(fix): change to our own esplora client once it's public
   esploraApiUrl: "https://blockstream.info/",
   testMode: false,
   stopGap: 50,

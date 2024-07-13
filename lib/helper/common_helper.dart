@@ -29,7 +29,7 @@ class CommonHelper {
 
   static void showSnackbar(BuildContext context, String message,
       {bool isError = false}) {
-    var snackBar = SnackBar(
+    final snackBar = SnackBar(
       backgroundColor: isError ? ProtonColors.signalError : null,
       content: Center(
           child: Text(
@@ -51,7 +51,7 @@ class CommonHelper {
   }
 
   static bool isBitcoinAddress(String bitcoinAddress) {
-    /// TODO:: improve me
+    // TODO(fix): improve me
     if (appConfig.coinType == bitcoin) {
       return (bitcoinAddress.toLowerCase().startsWith("bc") ||
               bitcoinAddress.toLowerCase().startsWith("1") ||
@@ -72,7 +72,7 @@ class CommonHelper {
   }
 
   static void showErrorDialog(String errorMessage) {
-    BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
     if (context != null) {
       showDialog(
         context: context,
@@ -102,7 +102,7 @@ class CommonHelper {
   }
 
   static String getFiatCurrencySign(FiatCurrency fiatCurrency) {
-    FiatCurrencyInfo? fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency];
+    final FiatCurrencyInfo? fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency];
     return fiatCurrencyInfo != null ? fiatCurrencyInfo.sign : "\$";
   }
 
@@ -113,8 +113,8 @@ class CommonHelper {
     if (displayDigits == 0 || number == number.toInt()) {
       return NumberFormat('#,###').format(number);
     }
-    String zero = '0';
-    String repeated = zero * displayDigits!;
+    const String zero = '0';
+    final String repeated = zero * displayDigits!;
     return NumberFormat('#,##0.$repeated').format(number);
   }
 
@@ -124,39 +124,41 @@ class CommonHelper {
   }
 
   static String formatLocaleTime(BuildContext context, int timestamp) {
-    var millis = timestamp;
-    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
-    var now = DateTime.now();
-    var difference = now.difference(dt);
+    final millis = timestamp;
+    final dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
+    final now = DateTime.now();
+    final difference = now.difference(dt);
     if (difference.inDays >= 1) {
-      var dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
-      return dateLocalFormat.toString();
+      final dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
+      return dateLocalFormat;
     } else if (difference.inHours >= 1) {
-      return S.of(context).n_hour_ago(difference.inHours.toInt());
+      return S.of(context).n_hour_ago(difference.inHours);
     } else {
-      return S.of(context).n_minutes_ago(difference.inMinutes.toInt());
+      return S.of(context).n_minutes_ago(difference.inMinutes);
     }
   }
 
   static String formatLocaleTimeWithSendOrReceiveOn(
-      BuildContext context, bool isSend, int timestamp) {
-    var millis = timestamp;
-    var dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
-    var now = DateTime.now();
-    var difference = now.difference(dt);
+    BuildContext context,
+    int timestamp, {
+    required bool isSend,
+  }) {
+    final millis = timestamp;
+    final dt = DateTime.fromMillisecondsSinceEpoch(millis * 1000);
+    final now = DateTime.now();
+    final difference = now.difference(dt);
     if (difference.inDays >= 1) {
-      var dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
+      final dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
       return isSend
-          ? S.of(context).sent_on(dateLocalFormat.toString())
-          : S.of(context).received_on(dateLocalFormat.toString());
+          ? S.of(context).sent_on(dateLocalFormat)
+          : S.of(context).received_on(dateLocalFormat);
     } else if (difference.inHours >= 1) {
-      String timeAgo = S.of(context).n_hour_ago(difference.inHours.toInt());
+      final String timeAgo = S.of(context).n_hour_ago(difference.inHours);
       return isSend
           ? S.of(context).sent_time_ago(timeAgo)
           : S.of(context).received_time_ago(timeAgo);
     } else {
-      String timeAgo =
-          S.of(context).n_minutes_ago(difference.inMinutes.toInt());
+      final String timeAgo = S.of(context).n_minutes_ago(difference.inMinutes);
       return isSend
           ? S.of(context).sent_time_ago(timeAgo)
           : S.of(context).received_time_ago(timeAgo);

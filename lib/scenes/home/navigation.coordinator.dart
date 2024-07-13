@@ -23,7 +23,7 @@ class HomeNavigationCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
     pageViews.add(HomeCoordinator(apiEnv, nativeViewChannel).start());
-    var viewModel = HomeNavigationViewModelImpl(
+    final viewModel = HomeNavigationViewModelImpl(
       this,
       apiEnv,
     );

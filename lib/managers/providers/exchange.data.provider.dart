@@ -15,7 +15,7 @@ class ExchangeDataProvider extends DataProvider {
       StreamController<DataUpdated>();
 
   Future<void> runOnce(FiatCurrency fiatCurrency, {int? time}) async {
-    String key = getKey(fiatCurrency, time: time);
+    final String key = getKey(fiatCurrency, time: time);
     fiatCurrency2exchangeRate[key] = await exchangeRateClient.getExchangeRate(
       fiatCurrency: fiatCurrency,
       time: time == null ? null : BigInt.from(time),
@@ -24,15 +24,15 @@ class ExchangeDataProvider extends DataProvider {
 
   Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
-    String key = getKey(fiatCurrency, time: time);
-    if (fiatCurrency2exchangeRate.containsKey(key) == false) {
+    final String key = getKey(fiatCurrency, time: time);
+    if (!fiatCurrency2exchangeRate.containsKey(key)) {
       await runOnce(fiatCurrency, time: time);
     }
     return fiatCurrency2exchangeRate[key]!;
   }
 
   ProtonExchangeRate? getExchangeRateOrNull(FiatCurrency fiatCurrency) {
-    String key = getKey(fiatCurrency, time: null);
+    final String key = getKey(fiatCurrency);
     return fiatCurrency2exchangeRate[key];
   }
 

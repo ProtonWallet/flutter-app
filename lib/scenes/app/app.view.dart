@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
 class AppView extends ViewBase<AppViewModel> {
   const AppView(AppViewModel viewModel, this.rootView)
@@ -37,8 +37,7 @@ class AppView extends ViewBase<AppViewModel> {
       child: Consumer2<ThemeProvider, LocaleProvider>(builder: (context,
           ThemeProvider themeProvider, LocaleProvider localeProvider, child) {
         return MaterialApp(
-          debugShowMaterialGrid: false,
-          showSemanticsDebugger: false,
+          // ignore: avoid_redundant_argument_values
           debugShowCheckedModeBanner: kDebugMode,
           title: "Proton Wallet",
           onGenerateTitle: (context) {

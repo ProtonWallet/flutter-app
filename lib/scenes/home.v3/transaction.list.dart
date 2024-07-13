@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/custom.loading.with.child.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.bitcoinaddress.switch.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
@@ -20,8 +20,8 @@ class TransactionList extends StatelessWidget {
   final HomeViewModel viewModel;
 
   const TransactionList({
-    super.key,
     required this.viewModel,
+    super.key,
   });
 
   @override
@@ -40,9 +40,8 @@ class TransactionList extends StatelessWidget {
                       color: ProtonColors.backgroundSecondary,
                       suffixIcon: const Icon(Icons.close, size: 16),
                       prefixIcon: const Icon(Icons.search, size: 16),
-                      showSuffixIcon: true,
                       suffixIconOnPressed: () {
-                        viewModel.setSearchHistoryTextField(false);
+                        viewModel.setSearchHistoryTextField(show: false);
                       },
                       scrollPadding: EdgeInsets.only(
                           bottom:
@@ -92,7 +91,7 @@ class TransactionList extends StatelessWidget {
                                 : GestureDetector(
                                     onTap: () {
                                       viewModel.walletTransactionBloc
-                                          .syncWallet(true);
+                                          .syncWallet(forceSync: true);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -125,7 +124,8 @@ class TransactionList extends StatelessWidget {
                             if (state.historyTransaction.isNotEmpty)
                               GestureDetector(
                                 onTap: () {
-                                  viewModel.setSearchHistoryTextField(true);
+                                  viewModel.setSearchHistoryTextField(
+                                      show: true);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -145,9 +145,7 @@ class TransactionList extends StatelessWidget {
             WalletHistoryTransactionList(
               transactions: state.historyTransaction,
               currentPage: viewModel.currentHistoryPage,
-              showMoreCallback: () {
-                viewModel.showMoreTransactionHistory();
-              },
+              showMoreCallback: viewModel.showMoreTransactionHistory,
               showDetailCallback: ((txid, accountModel) {
                 viewModel.selectedTXID = txid;
                 viewModel.historyAccountModel = accountModel;
@@ -165,7 +163,6 @@ class TransactionList extends StatelessWidget {
                       children: [
                         const CustomLoading(
                           size: 40,
-                          durationInMilliSeconds: 1600,
                           strokeWidth: 3,
                         ),
                         const SizedBox(
@@ -185,9 +182,8 @@ class TransactionList extends StatelessWidget {
                               Transform.translate(
                                   offset: const Offset(0, 1),
                                   child: CustomTooltip(
-                                    message: S
-                                        .of(context)
-                                        .loading_transactions_desc,
+                                    message:
+                                        S.of(context).loading_transactions_desc,
                                     child: SvgPicture.asset(
                                         "assets/images/icon/ic-info-circle-dark.svg",
                                         fit: BoxFit.fill,

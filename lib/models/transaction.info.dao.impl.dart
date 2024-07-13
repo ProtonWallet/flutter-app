@@ -47,7 +47,7 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => TransactionInfoModel.fromMap(maps[index]));
   }
@@ -89,7 +89,7 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
     required String toEmail,
     required String toBitcoinAddress,
   }) async {
-    TransactionInfoModel? transactionInfoModel = await find(
+    final TransactionInfoModel? transactionInfoModel = await find(
         externalTransactionID,
         serverWalletID,
         serverAccountID,
@@ -148,7 +148,7 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
       return TransactionInfoModel.fromMap(maps.first);
     }
 
-    // TODO:: deprecated it for old version
+    // TODO(fix): deprecated it for old version
     maps = await db.query(tableName,
         where:
             'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
@@ -162,8 +162,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
   @override
   Future<List<TransactionInfoModel>> findAllByServerAccountID(
       String serverAccountID) async {
-    List<TransactionInfoModel> results = [];
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<TransactionInfoModel> results = [];
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
     if (maps.isNotEmpty) {
       for (var map in maps) {
@@ -178,8 +178,8 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
       Uint8List externalTransactionID,
       String serverWalletID,
       String serverAccountID) async {
-    List<TransactionInfoModel> results = [];
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<TransactionInfoModel> results = [];
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where:
             'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
         whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
@@ -193,13 +193,13 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO: implement deleteByServerID
+    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 
   @override
   Future findByServerID(String serverID) {
-    // TODO: implement findByServerID
+    // TODO(fix): implement findByServerID
     throw UnimplementedError();
   }
 }

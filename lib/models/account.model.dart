@@ -14,7 +14,7 @@ class AccountModel {
   String derivationPath;
   // encrypted label
   Uint8List label;
-  // TODO:: map to script type object
+  // TODO(fix): map to script type object
   int scriptType;
   int createTime;
   int modifyTime;
@@ -22,9 +22,9 @@ class AccountModel {
   int priority;
   int lastUsedIndex;
 
-  //TODO:: move to other place
+  // TODO(fix): move to other place
   String labelDecrypt = "Default Account";
-  //TODO:: move to other place
+  // TODO(fix): move to other place
   double balance = 0;
 
   AccountModel({
@@ -57,10 +57,10 @@ class AccountModel {
   }
 
   Future<void> decrypt(SecretKey secretKey) async {
-    //TODO:: fix me why 5 times
+    // TODO(fix): fix me why 5 times
     for (int i = 0; i < 5; i++) {
       try {
-        String value = base64Encode(label);
+        final String value = base64Encode(label);
         if (value != "") {
           labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
         }
@@ -73,7 +73,7 @@ class AccountModel {
   }
 
   factory AccountModel.fromMap(Map<String, dynamic> map) {
-    AccountModel accountModel = AccountModel(
+    final AccountModel accountModel = AccountModel(
       id: map['id'],
       accountID: map['accountID'] ?? "",
       walletID: map['walletID'],

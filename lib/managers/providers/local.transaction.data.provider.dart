@@ -38,18 +38,19 @@ class LocalTransactionDataProvider extends DataProvider {
   List<LocalTransactionData> transactionDataList = [];
 
   Future<List<LocalTransactionData>> _getFromDB() async {
-    List<LocalTransactionData> transactionDataList = [];
-    var wallets = await walletDao.findAllByUserID(userID);
+    final List<LocalTransactionData> transactionDataList = [];
+    final wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
-        List<AccountModel> accounts =
+        final List<AccountModel> accounts =
             (await accountDao.findAllByWalletID(walletModel.walletID))
                 .cast<AccountModel>();
         for (AccountModel accountModel in accounts) {
-          var transactions = await transactionInfoDao
+          final transactions = await transactionInfoDao
               .findAllByServerAccountID(accountModel.accountID);
-          LocalTransactionData localTransactionData = LocalTransactionData(
-              accountModel: accountModel, transactions: transactions);
+          final LocalTransactionData localTransactionData =
+              LocalTransactionData(
+                  accountModel: accountModel, transactions: transactions);
           transactionDataList.add(localTransactionData);
         }
       }
@@ -60,7 +61,7 @@ class LocalTransactionDataProvider extends DataProvider {
 
   Future<LocalTransactionData> getLocalTransactionDataByWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
-    var localTransactionsData = await getLocalTransactionData();
+    final localTransactionsData = await getLocalTransactionData();
     for (LocalTransactionData localTransactionData in localTransactionsData) {
       if (localTransactionData.accountModel.accountID ==
           accountModel.accountID) {
@@ -83,7 +84,7 @@ class LocalTransactionDataProvider extends DataProvider {
     await transactionInfoDao.insert(transactionInfoModel);
     transactionDataList = await _getFromDB();
     // dataUpdateController.add(DataUpdated("Local transaction data update"));
-    /// TODO:: enhance performance
+    // TODO(fix): enhance performance
   }
 
   @override

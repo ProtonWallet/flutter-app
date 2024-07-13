@@ -8,7 +8,7 @@ class DiscoverFeedsView extends StatelessWidget {
   final List<ProtonFeedItem> protonFeedItems;
   final void Function(String)? onTap;
   const DiscoverFeedsView(
-      {super.key, this.onTap, required this.protonFeedItems});
+      {required this.protonFeedItems, super.key, this.onTap});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,7 +34,7 @@ class _DiscoverFeedView extends StatelessWidget {
   // final
 
   const _DiscoverFeedView(
-      {required this.protonFeedItem, this.onTap, required this.avatar});
+      {required this.protonFeedItem, required this.avatar, this.onTap});
 
   @override
   Widget build(BuildContext context) {

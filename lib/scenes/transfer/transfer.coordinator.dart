@@ -13,7 +13,7 @@ class TransferCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = TransferViewModelImpl(this);
+    final viewModel = TransferViewModelImpl(this);
     widget = TransferView(
       viewModel,
     );

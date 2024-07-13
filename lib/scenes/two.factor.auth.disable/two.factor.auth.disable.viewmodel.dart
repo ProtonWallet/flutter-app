@@ -22,12 +22,12 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
     //   totp += textEditingController.text;
     // }
     try {
-      // TODO:: enable 2fa
+      // TODO(fix): enable 2fa
       // int result = await proton_api.disable2FaTotp(
       //     username: "ProtonWallet",
       //     password: passwordController.text,
       //     twoFactorCode: totp);
-      int result = 0;
+      const int result = 0;
       return result == 0; // disabled
     } catch (e) {
       return false;

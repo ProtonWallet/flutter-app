@@ -19,12 +19,14 @@ class WalletPassphrase {
   factory WalletPassphrase.fromJson(Map<String, dynamic> json) =>
       _$WalletPassphraseFromJson(json);
 
-  /// Connect the generated [_$RWalletPassphraseToJson] function to the `toJson` method.
+  /// Connect the generated [_$WalletPassphraseToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$WalletPassphraseToJson(this);
 
   /// Handling a list of WalletPassphrase instances
   static List<WalletPassphrase> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => WalletPassphrase.fromJson(json)).toList();
+    return jsonList
+        .map((json) => WalletPassphrase.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   static List<Map<String, dynamic>> toJsonList(List<WalletPassphrase> items) {

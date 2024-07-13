@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -14,18 +9,26 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/scenes/components/alert.custom.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class DeleteWalletSheet {
-  static void show(BuildContext context, HomeViewModel viewModel,
-      WalletMenuModel walletMenuModel, bool hasBalance,
-      {bool isInvalidWallet = false}) {
+  static void show(
+    BuildContext context,
+    HomeViewModel viewModel,
+    WalletMenuModel walletMenuModel, {
+    required bool hasBalance,
+    bool isInvalidWallet = false,
+  }) {
     bool isDeleting = false;
     HomeModalBottomSheet.show(context,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Align(
                 alignment: Alignment.centerRight,
@@ -43,7 +46,6 @@ class DeleteWalletSheet {
                           horizontal: defaultPadding),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
                               S.of(context).confirm_to_delete_wallet(
@@ -103,12 +105,12 @@ class DeleteWalletSheet {
                             ),
                             ButtonV6(
                               onPressed: () async {
-                                if (isDeleting == false) {
+                                if (!isDeleting) {
                                   isDeleting = true;
                                   await viewModel.deleteWallet(
                                       walletMenuModel.walletModel);
                                   if (context.mounted) {
-                                    if (isInvalidWallet == false) {
+                                    if (!isInvalidWallet) {
                                       Navigator.of(context)
                                           .pop(); // pop up this bottomSheet
                                       Navigator.of(context)

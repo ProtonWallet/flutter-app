@@ -7,8 +7,8 @@ class TextFieldAutoComplete extends StatelessWidget {
   final Color color;
 
   const TextFieldAutoComplete({
-    super.key,
     required this.options,
+    super.key,
     this.color = Colors.transparent,
   });
 
@@ -49,7 +49,7 @@ class TextFieldAutoComplete extends StatelessWidget {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: color, width: 1),
+                      borderSide: BorderSide(color: color),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -64,11 +64,11 @@ class TextFieldAutoComplete extends StatelessWidget {
 // The default Material-style Autocomplete options.
 class _AutocompleteOptions<T extends Object> extends StatelessWidget {
   const _AutocompleteOptions({
-    super.key,
     required this.displayStringForOption,
     required this.onSelected,
     required this.options,
     required this.maxOptionsHeight,
+    super.key,
   });
 
   final AutocompleteOptionToString<T> displayStringForOption;

@@ -7,7 +7,7 @@ class AccountInfoV2 extends StatelessWidget {
   final String displayName;
   final String userEmail;
   const AccountInfoV2(
-      {super.key, required this.displayName, required this.userEmail});
+      {required this.displayName, required this.userEmail, super.key});
 
   @override
   Widget build(BuildContext context) {

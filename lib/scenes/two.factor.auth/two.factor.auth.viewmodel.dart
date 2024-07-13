@@ -29,7 +29,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     //   totp += textEditingController.text;
     // }
     try {
-      // TODO:: enable 2fa
+      // TODO(fix): enable 2fa
       // backupPhrases = await proton_api.set2FaTotp(
       //     username: "ProtonWallet",
       //     password: passwordController.text,

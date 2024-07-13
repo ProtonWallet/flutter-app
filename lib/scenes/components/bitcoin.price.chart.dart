@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'dart:convert';
 
+import 'package:chips_choice/chips_choice.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:chips_choice/chips_choice.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -26,9 +26,9 @@ class BitcoinPriceChart extends StatefulWidget {
   final double priceChange;
 
   const BitcoinPriceChart({
-    super.key,
     required this.exchangeRate,
     required this.priceChange,
+    super.key,
   });
 
   @override
@@ -56,9 +56,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.exchangeRate.fiatCurrency !=
         widget.exchangeRate.fiatCurrency) {
-      setState(() {
-        fetchData();
-      });
+      setState(fetchData);
     }
   }
 
@@ -77,43 +75,38 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
       case BitcoinPriceChartDataRange.past1Day:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=24'));
-        break;
       case BitcoinPriceChartDataRange.past7Days:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=168'));
-        break;
       case BitcoinPriceChartDataRange.past1Month:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=30'));
-        break;
       case BitcoinPriceChartDataRange.past6Month:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=180'));
-        break;
       case BitcoinPriceChartDataRange.past1Year:
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=365'));
-        break;
     }
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
-      List<FlSpot> spots = [];
+      final List<FlSpot> spots = [];
       int index = 0;
 
-      /// TODO:: fix logic here
+      // TODO(feng): fix logic here
       double rate2Fiat = 1.0;
-      int amountInSatoshi = 10000;
+      const int amountInSatoshi = 10000;
       if (widget.exchangeRate.fiatCurrency != FiatCurrency.usd) {
-        ProtonExchangeRate exchangeRateInUSD =
+        final ProtonExchangeRate exchangeRateInUSD =
             await ExchangeRateService.getExchangeRate(FiatCurrency.usd);
         rate2Fiat = ExchangeCalculator.getNotionalInFiatCurrency(
                 widget.exchangeRate, amountInSatoshi) /
             ExchangeCalculator.getNotionalInFiatCurrency(
                 exchangeRateInUSD, amountInSatoshi);
       }
-      List<double> values = [];
+      final List<double> values = [];
       for (var data in json) {
-        double bitcoinNotionalInFiat = double.parse(data[4]) * rate2Fiat;
+        final double bitcoinNotionalInFiat = double.parse(data[4]) * rate2Fiat;
         spots.add(FlSpot(
           index.toDouble(),
           double.parse(bitcoinNotionalInFiat.toStringAsFixed(2)),
@@ -162,8 +155,6 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                         lineBarsData: [
                           LineChartBarData(
                             spots: dataPoints,
-                            isCurved: false,
-                            barWidth: 2,
                             dotData: const FlDotData(
                               show: false,
                             ),
@@ -185,10 +176,8 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                           touchTooltipData: LineTouchTooltipData(
                               tooltipBgColor: ProtonColors.white,
                               tooltipBorder: BorderSide(
-                                width: 1.0,
                                 color: ProtonColors.textWeak,
                               )),
-                          handleBuiltInTouches: true,
                         ),
                         gridData: const FlGridData(
                           drawVerticalLine: false,
@@ -202,7 +191,6 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                               color: ProtonColors.textHint,
                               strokeWidth: 0.4,
                               label: HorizontalLineLabel(
-                                show: false,
                                 alignment: Alignment.topRight,
                               ),
                             ),
@@ -212,7 +200,6 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                               color: ProtonColors.textHint,
                               strokeWidth: 0.4,
                               label: HorizontalLineLabel(
-                                show: false,
                                 alignment: Alignment.topRight,
                               ),
                             ),
@@ -259,18 +246,9 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                             },
                             reservedSize: 50,
                           )),
-                          bottomTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                          rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
-                          topTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: false,
-                          )),
+                          bottomTitles: const AxisTitles(),
+                          rightTitles: const AxisTitles(),
+                          topTitles: const AxisTitles(),
                         ),
                       ),
                     ),
@@ -300,7 +278,6 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                 tooltip: (i, v) => v,
               ),
               padding: EdgeInsets.zero,
-              choiceCheckmark: false,
               choiceStyle: C2ChipStyle.filled(
                 selectedStyle: C2ChipStyle(
                   backgroundColor: ProtonColors.textHint,

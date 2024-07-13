@@ -1,6 +1,14 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/avatar.color.helper.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/bottom.sheets/seed.phrase.tutorial.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
@@ -8,18 +16,10 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/avatar.color.helper.dart';
-import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
-import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
   const ImportView(ImportViewModel viewModel)
@@ -80,7 +80,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                           items: fiatCurrencies,
                           canSearch: true,
                           itemsText: fiatCurrencies
-                              .map((v) => FiatCurrencyHelper.getFullName(v))
+                              .map(FiatCurrencyHelper.getFullName)
                               .toList(),
                           itemsLeadingIcons: fiatCurrencies
                               .map((v) => CountryFlag.fromCountryCode(
@@ -114,7 +114,6 @@ class ImportView extends ViewBase<ImportViewModel> {
                       SizedBoxes.box24,
                       ExpansionTile(
                           shape: const Border(),
-                          initiallyExpanded: false,
                           title: Text(S.of(context).my_wallet_has_passphrase,
                               style: FontManager.body2Median(
                                   ProtonColors.textWeak)),
@@ -153,7 +152,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                       const SizedBox(height: 40),
                       ButtonV6(
                           onPressed: () async {
-                            if (viewModel.isImporting == false) {
+                            if (!viewModel.isImporting) {
                               viewModel.isImporting = true;
                               await viewModel.importWallet();
                               viewModel.coordinator.end();
@@ -210,19 +209,18 @@ class ImportView extends ViewBase<ImportViewModel> {
         myFocusNode: viewModel.mnemonicFocusNode,
         maxLines: 6,
         validation: (String strMnemonic) {
-          var check = viewModel.mnemonicValidation(strMnemonic);
-          if (check.$1 == false) {
+          final check = viewModel.mnemonicValidation(strMnemonic);
+          if (!check.$1) {
             return S.of(context).not_a_valid_mnemonic + check.$2;
           }
           return "";
         },
-        isPassword: false,
         onFinish: () {
           viewModel.mnemonicTextController.text =
               viewModel.mnemonicTextController.text.trim();
-          var check = viewModel
+          final check = viewModel
               .mnemonicValidation(viewModel.mnemonicTextController.text);
-          viewModel.updateValidMnemonic(check.$1);
+          viewModel.updateValidMnemonic(isValidMnemonic: check.$1);
         },
       ),
     ]);
@@ -230,12 +228,12 @@ class ImportView extends ViewBase<ImportViewModel> {
 
   bool verifyMnemonic(String strMnemonic) {
     final RegExp regex = RegExp(r'^[a-z ]*$');
-    bool matchPattern = regex.hasMatch(strMnemonic);
-    if (matchPattern == false) {
+    final bool matchPattern = regex.hasMatch(strMnemonic);
+    if (!matchPattern) {
       logger.i("pattern not match!");
       return false;
     }
-    int mnemonicLength = strMnemonic.split(" ").length;
+    final int mnemonicLength = strMnemonic.split(" ").length;
     if (mnemonicLength != 12 && mnemonicLength != 18 && mnemonicLength != 24) {
       logger.i("length not match! ($mnemonicLength)");
       return false;
@@ -246,9 +244,7 @@ class ImportView extends ViewBase<ImportViewModel> {
   Widget buildManualInputMode(BuildContext context) {
     return Column(children: [
       GestureDetector(
-          onTap: () {
-            viewModel.switchToPasteMode();
-          },
+          onTap: viewModel.switchToPasteMode,
           child: Text(S.of(context).import_paste_input,
               style: FontManager.body2Median(ProtonColors.protonBlue))),
       SizedBoxes.box8,

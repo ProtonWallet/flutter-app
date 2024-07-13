@@ -1,16 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 typedef ShowDetailCallback = void Function(
@@ -29,7 +29,6 @@ class WalletHistoryTransactionList extends StatefulWidget {
   final BitcoinUnit bitcoinUnit;
 
   const WalletHistoryTransactionList({
-    super.key,
     required this.transactions,
     required this.currentPage,
     required this.showMoreCallback,
@@ -38,6 +37,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
     required this.filter,
     required this.keyWord,
     required this.bitcoinUnit,
+    super.key,
   });
 
   @override
@@ -132,18 +132,18 @@ List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(String filter,
   }
 
   if (keyword.isNotEmpty) {
-    keyword = keyword.toLowerCase();
+    final lowerCaseKeyword = keyword.toLowerCase();
     newHistoryTransactions = newHistoryTransactions.where((t) {
-      if ((t.label ?? "").toLowerCase().contains(keyword)) {
+      if ((t.label ?? "").toLowerCase().contains(lowerCaseKeyword)) {
         return true;
       }
-      if (t.sender.toLowerCase().contains(keyword)) {
+      if (t.sender.toLowerCase().contains(lowerCaseKeyword)) {
         return true;
       }
-      if (t.toList.toLowerCase().contains(keyword)) {
+      if (t.toList.toLowerCase().contains(lowerCaseKeyword)) {
         return true;
       }
-      if (t.body != null && t.body!.toLowerCase().contains(keyword)) {
+      if (t.body != null && t.body!.toLowerCase().contains(lowerCaseKeyword)) {
         return true;
       }
       return false;

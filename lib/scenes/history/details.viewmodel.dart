@@ -1,35 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -37,8 +40,6 @@ import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 abstract class HistoryDetailViewModel
     extends ViewModel<HistoryDetailCoordinator> {
@@ -95,7 +96,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.coordinator,
     super.walletID,
     super.accountID,
-    super.txid,
+    super.txID,
     super.userFiatCurrency,
     this.userManager,
     this.protonWalletManager,
@@ -128,9 +129,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   Future<void> loadData() async {
     memoController = TextEditingController();
     memoFocusNode = FocusNode();
-    memoFocusNode.addListener(() {
-      userFinishMemo();
-    });
+    memoFocusNode.addListener(userFinishMemo);
 
     if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();
@@ -142,8 +141,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     );
 
     /// get user key
-    var firstUserKey = await userManager.getFirstKey();
-    WalletKey? walletKey = await walletKeysProvider.getWalletKey(
+    final firstUserKey = await userManager.getFirstKey();
+    final WalletKey? walletKey = await walletKeysProvider.getWalletKey(
       walletID,
     );
     if (walletKey != null) {
@@ -168,7 +167,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       walletID,
       accountID,
     ))!;
-    List<FrbTransactionDetails> history = await _frbAccount.getTransactions();
+    final List<FrbTransactionDetails> history =
+        await _frbAccount.getTransactions();
     strWallet = await WalletManager.getNameWithID(walletID);
     strAccount = await WalletManager.getAccountLabelWithID(accountID);
 
@@ -180,7 +180,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       );
     } catch (e, stacktrace) {
       logger.e(
-        "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "details.viewmodel error: $e stacktrace: $stacktrace",
       );
     }
 
@@ -210,14 +210,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         foundedInBDKHistory = true;
         if (isSend) {
           if (recipients.isEmpty) {
-            TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+            final TransactionDetailFromBlockChain?
+                transactionDetailFromBlockChain =
                 await WalletManager.getTransactionDetailsFromBlockStream(txID);
             if (transactionDetailFromBlockChain != null) {
               isRecipientsFromBlockChain = true;
               bool hasFindMineBitcoinAddress = false;
               for (Recipient recipient
                   in transactionDetailFromBlockChain.recipients) {
-                if (hasFindMineBitcoinAddress == false) {
+                if (!hasFindMineBitcoinAddress) {
                   if (await WalletManager.isMineBitcoinAddress(
                       _frbAccount, recipient.bitcoinAddress)) {
                     hasFindMineBitcoinAddress = true;
@@ -241,7 +242,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
         } else {
           addresses.add(txID);
-          TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+          final TransactionDetailFromBlockChain?
+              transactionDetailFromBlockChain =
               await WalletManager.getTransactionDetailsFromBlockStream(txID);
           if (transactionDetailFromBlockChain != null) {
             for (Recipient recipient
@@ -259,7 +261,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       }
     }
 
-    if (foundedInBDKHistory == false) {
+    if (!foundedInBDKHistory) {
       try {
         if (recipients.isNotEmpty) {
           // get transaction info locally, for sender
@@ -270,14 +272,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             amount -= recipient.amountInSATS.toDouble();
           }
         } else {
-          TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+          final TransactionDetailFromBlockChain?
+              transactionDetailFromBlockChain =
               await WalletManager.getTransactionDetailsFromBlockStream(txID);
           if (transactionDetailFromBlockChain != null) {
             fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
             Recipient? me;
             for (Recipient recipient
                 in transactionDetailFromBlockChain.recipients) {
-              BitcoinAddressModel? bitcoinAddressModel =
+              final BitcoinAddressModel? bitcoinAddressModel =
                   await DBHelper.bitcoinAddressDao!.findBitcoinAddressInAccount(
                 recipient.bitcoinAddress,
                 accountID,
@@ -296,32 +299,34 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       } catch (e, stacktrace) {
         logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
       }
     }
     logger.i("transactionModel == null ? ${transactionModel == null}");
     if (transactionModel == null && secretKey != null) {
-      String hashedTransactionID = await WalletKeyHelper.getHmacHashedString(
+      final String hashedTransactionID =
+          await WalletKeyHelper.getHmacHashedString(
         secretKey!,
         txID,
       );
 
       /// default label
-      String encryptedLabel = await WalletKeyHelper.encrypt(secretKey!, "");
-      String userPrivateKey = firstUserKey.privateKey;
-      String transactionId = proton_crypto.encrypt(userPrivateKey, txID);
-      DateTime now = DateTime.now();
+      final String encryptedLabel =
+          await WalletKeyHelper.encrypt(secretKey!, "");
+      final String userPrivateKey = firstUserKey.privateKey;
+      final String transactionId = proton_crypto.encrypt(userPrivateKey, txID);
+      final DateTime now = DateTime.now();
       try {
-        // TODO:: move this to provider
-        var walletTransaction = await proton_api.createWalletTransactions(
+        // TODO(fix): move this to provider
+        final walletTransaction = await proton_api.createWalletTransactions(
           walletId: walletID,
           walletAccountId: accountID,
           transactionId: transactionId,
           hashedTransactionId: hashedTransactionID,
           label: encryptedLabel,
           exchangeRateId: userSettingsDataProvider
-              .exchangeRate.id, // TODO:: fix it after finalize logic
+              .exchangeRate.id, // TODO(fix): fix it after finalize logic
         );
 
         String exchangeRateID = userSettingsDataProvider.exchangeRate.id;
@@ -352,10 +357,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
       } on BridgeError catch (e, stacktrace) {
         logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
         // parse the server error code
-        var responseError = parseResponseError(e);
+        final responseError = parseResponseError(e);
         if (responseError != null) {
           if (responseError.code == 2011) {
             if (transactionModel == null) {
@@ -384,7 +389,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       } catch (e, stacktrace) {
         logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
       }
     }
@@ -393,7 +398,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         userLabel = await WalletKeyHelper.decrypt(
             secretKey!, utf8.decode(transactionModel!.label));
       }
-      var walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+      final walletModel = await DBHelper.walletDao!.findByServerID(walletID);
       try {
         strWallet = await WalletKeyHelper.decrypt(
           secretKey!,
@@ -432,7 +437,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       } catch (e, stacktrace) {
         logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
       }
     }
@@ -444,13 +449,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
 
     if (recipients.isNotEmpty && isRecipientsFromBlockChain) {
-      // TODO:: clean logic here and make sure toEmail structure in backend,
-      // TODO:: abstract this logic and if toEmail is "" we can skip this logic
+      // TODO(fix): clean logic here and make sure toEmail structure in backend,
+      // TODO(fix): abstract this logic and if toEmail is "" we can skip this logic
       // It can be [{}, {}], or {"key": "value", "key2": "value2"}...
       try {
-        var jsonList = jsonDecode(toEmail) as Map<String, dynamic>;
+        final jsonList = jsonDecode(toEmail) as Map<String, dynamic>;
         for (String bitcoinAddress in jsonList.keys) {
-          String email = jsonList[bitcoinAddress];
+          final String email = jsonList[bitcoinAddress];
           for (TransactionInfoModel recipient in recipients) {
             if (recipient.toBitcoinAddress == bitcoinAddress) {
               recipient.toEmail = email;
@@ -460,13 +465,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       } catch (e, stacktrace) {
         logger.e(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
         try {
-          var jsonList = jsonDecode(toEmail) as List<dynamic>;
+          final jsonList = jsonDecode(toEmail) as List<dynamic>;
           for (dynamic map in jsonList) {
-            String bitcoinAddress = map.keys.first;
-            String email = map.values.first;
+            final String bitcoinAddress = map.keys.first;
+            final String email = map.values.first;
             for (TransactionInfoModel recipient in recipients) {
               if (recipient.toBitcoinAddress == bitcoinAddress) {
                 recipient.toEmail = email;
@@ -476,21 +481,22 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           }
         } catch (e, stacktrace) {
           logger.e(
-            "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+            "details.viewmodel error: $e stacktrace: $stacktrace",
           );
         }
       }
     }
     if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
-      ExchangeRateModel? exchangeRateModel = await DBHelper.exchangeRateDao!
+      final ExchangeRateModel? exchangeRateModel = await DBHelper
+          .exchangeRateDao!
           .findByServerID(transactionModel!.exchangeRateID);
       if (exchangeRateModel != null) {
-        BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
+        final BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
             (v) =>
                 v.name.toUpperCase() ==
                 exchangeRateModel.bitcoinUnit.toUpperCase(),
             orElse: () => defaultBitcoinUnit);
-        FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
+        final FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
             (v) =>
                 v.name.toUpperCase() ==
                 exchangeRateModel.fiatCurrency.toUpperCase(),
@@ -527,7 +533,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String lookupTxID,
   ) async {
     for (var tranMode in transactions) {
-      String encryptedTxID = tranMode.transactionID;
+      final String encryptedTxID = tranMode.transactionID;
       String clearTxID = "";
       try {
         clearTxID = proton_crypto.decrypt(
@@ -537,7 +543,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       } catch (e, stacktrace) {
         logger.i(
-          "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "details.viewmodel error: $e stacktrace: $stacktrace",
         );
       }
       if (clearTxID.isEmpty) {
@@ -546,7 +552,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             clearTxID = addressKey.decrypt(encryptedTxID);
           } catch (e, stacktrace) {
             logger.e(
-              "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+              "details.viewmodel error: $e stacktrace: $stacktrace",
             );
           }
           if (clearTxID.isNotEmpty) {
@@ -570,11 +576,11 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   Future<void> userFinishMemo() async {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
     try {
-      WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
+      final WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
       if (!memoFocusNode.hasFocus) {
         if (userLabel != memoController.text && secretKey != null) {
           userLabel = memoController.text;
-          String encryptedLabel =
+          final String encryptedLabel =
               await WalletKeyHelper.encrypt(secretKey!, userLabel);
           transactionModel!.label = utf8.encode(encryptedLabel);
           await proton_api.updateWalletTransactionLabel(
@@ -590,7 +596,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       }
     } catch (e, stacktrace) {
       logger.e(
-        "details.viewmodel error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "details.viewmodel error: $e stacktrace: $stacktrace",
       );
       errorMessage = e.toString();
     }
@@ -617,15 +623,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String senderName,
     String senderEmail,
   ) async {
-    UserKey userkey = await userManager.getFirstKey();
-    Map<String, dynamic> jsonMap = {
+    final UserKey userkey = await userManager.getFirstKey();
+    final Map<String, dynamic> jsonMap = {
       "name": senderName,
       "email": senderEmail,
     };
-    String jsonString = jsonEncode(jsonMap);
-    String encryptedName = userkey.encrypt(jsonString);
+    final String jsonString = jsonEncode(jsonMap);
+    final String encryptedName = userkey.encrypt(jsonString);
     transactionModel!.sender = encryptedName;
-    WalletTransaction _ =
+    final WalletTransaction _ =
         await walletClient.updateExternalWalletTransactionSender(
             walletId: transactionModel!.serverWalletID,
             walletAccountId: transactionModel!.serverAccountID,

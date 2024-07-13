@@ -13,7 +13,7 @@ class WalletAccountManager implements Manager {
 
   @override
   Future<void> login(String userID) async {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }

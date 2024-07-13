@@ -14,19 +14,14 @@ Future setupLogger() async {
     switch (msg.logLevel) {
       case Level.error:
         logger.e("${msg.lbl.padRight(8)}: ${msg.msg}");
-        break;
       case Level.warn:
         logger.w("${msg.lbl.padRight(8)}: ${msg.msg}");
-        break;
       case Level.info:
         logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
-        break;
       case Level.debug:
         logger.d("${msg.lbl.padRight(8)}: ${msg.msg}");
-        break;
       case Level.trace:
         logger.t("${msg.lbl.padRight(8)}: ${msg.msg}");
-        break;
     }
     // This should use a logging framework in real applications
     // print("${msg.logLevel} ${msg.lbl.padRight(8)}: ${msg.msg}");
@@ -54,7 +49,7 @@ void main() async {
   PlatformDispatcher.instance.onError = (error, stack) {
     if (kDebugMode) {
       logger.e(
-        "PlatformDispatcher.instance.onError: ${error.toString()} stacktrace: ${stack.toString()}",
+        "PlatformDispatcher.instance.onError: $error stacktrace: $stack",
       );
     } else {
       // In release mode, report to Sentry
@@ -75,7 +70,7 @@ void main() async {
     AppConfig.initAppEnv();
     await RustLib.init();
     setupLogger();
-    var app = AppCoordinator();
+    final app = AppCoordinator();
     runApp(app.start());
   });
 }

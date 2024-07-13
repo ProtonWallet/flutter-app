@@ -6,22 +6,22 @@ class ExchangeRateService {
   static Map<String, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
 
   static Future<void> runOnce(FiatCurrency fiatCurrency, {int? time}) async {
-    String key = getKey(fiatCurrency, time: time);
+    final String key = getKey(fiatCurrency, time: time);
     fiatCurrency2exchangeRate[key] =
         await WalletManager.getExchangeRate(fiatCurrency, time: time);
   }
 
   static Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
-    String key = getKey(fiatCurrency, time: time);
-    if (fiatCurrency2exchangeRate.containsKey(key) == false) {
+    final String key = getKey(fiatCurrency, time: time);
+    if (!fiatCurrency2exchangeRate.containsKey(key)) {
       await runOnce(fiatCurrency, time: time);
     }
     return fiatCurrency2exchangeRate[key]!;
   }
 
   static ProtonExchangeRate? getExchangeRateOrNull(FiatCurrency fiatCurrency) {
-    String key = getKey(fiatCurrency, time: null);
+    final String key = getKey(fiatCurrency);
     return fiatCurrency2exchangeRate[key];
   }
 

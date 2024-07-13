@@ -38,7 +38,7 @@ class WalletKeysProvider extends DataProvider {
 
   WalletKey? _findFromMemory(String walletID) {
     if (walletKeys != null) {
-      var key = walletKeys
+      final key = walletKeys
           ?.where((key) => key.walletId == walletID)
           .toList()
           .firstOrNull;
@@ -49,10 +49,10 @@ class WalletKeysProvider extends DataProvider {
 
   /// fetch from server
   Future<void> _fetchFromServer() async {
-    List<ApiWalletData> apiWallets = await walletClient.getWallets();
-    List<WalletKey> tmpKeys = [];
+    final List<ApiWalletData> apiWallets = await walletClient.getWallets();
+    final List<WalletKey> tmpKeys = [];
     for (var apiWallet in apiWallets) {
-      var key = WalletKey.fromApiWalletKey(apiWallet.walletKey);
+      final key = WalletKey.fromApiWalletKey(apiWallet.walletKey);
       tmpKeys.add(key);
     }
     await saveWalletKeys(tmpKeys);
@@ -63,7 +63,7 @@ class WalletKeysProvider extends DataProvider {
     if (walletKeys != null) {
       return walletKeys!;
     }
-    var json = await storage.get(key);
+    final json = await storage.get(key);
     if (json.isEmpty) {
       return null;
     }
@@ -94,12 +94,12 @@ class WalletKeysProvider extends DataProvider {
     }
 
     walletKeys = mergedMap.values.toList();
-    var jsonString = WalletKey.toJsonString(keys);
+    final jsonString = WalletKey.toJsonString(keys);
     await storage.set(key, jsonString);
   }
 
   Future<void> saveApiWalletKeys(List<ApiWalletKey> items) async {
-    var keys = WalletKey.fromApiWalletKeys(items);
+    final keys = WalletKey.fromApiWalletKeys(items);
     saveWalletKeys(keys);
   }
 

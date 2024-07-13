@@ -9,8 +9,8 @@ class CustomTodos extends StatelessWidget {
   final VoidCallback? callback;
 
   const CustomTodos({
-    super.key,
     required this.title,
+    super.key,
     this.callback,
     this.checked = false,
   });

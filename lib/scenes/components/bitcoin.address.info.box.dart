@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
-import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 typedef ShowTransactionDetailCallback = void Function(
@@ -18,10 +18,10 @@ class BitcoinAddressInfoBox extends StatelessWidget {
   final ShowTransactionDetailCallback showTransactionDetailCallback;
 
   const BitcoinAddressInfoBox({
-    super.key,
     required this.bitcoinAddressDetail,
     required this.accountName,
     required this.showTransactionDetailCallback,
+    super.key,
   });
 
   @override
@@ -111,7 +111,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
             ],
           ),
 
-          /// TODO:: add btc amount of address
+          // TODO(fix): add btc amount of address
           // Row(
           //   children: [
           //     Text(

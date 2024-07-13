@@ -17,10 +17,10 @@ class ButtonV6 extends StatefulWidget {
   final Size? maximumSize;
 
   const ButtonV6({
-    super.key,
     required this.text,
     required this.width,
     required this.height,
+    super.key,
     this.onPressed,
     this.radius = 24.0,
     this.backgroundColor = const Color(0xFF6D4AFF),
@@ -46,7 +46,7 @@ class ButtonV6State extends State<ButtonV6>
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO(fix): implement initState
     super.initState();
     enable = widget.enable;
   }
@@ -54,8 +54,7 @@ class ButtonV6State extends State<ButtonV6>
   @override
   void didUpdateWidget(ButtonV6 oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.enable !=
-        widget.enable) {
+    if (oldWidget.enable != widget.enable) {
       setState(() {
         enable = widget.enable;
       });
@@ -74,7 +73,7 @@ class ButtonV6State extends State<ButtonV6>
             // foreground
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(widget.radius),
-              side: BorderSide(width: 1, color: widget.borderColor),
+              side: BorderSide(color: widget.borderColor),
             ),
             elevation: 0.4),
         onPressed: widget.enable

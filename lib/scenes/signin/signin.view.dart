@@ -20,7 +20,7 @@ class SigninView extends ViewBase<SigninViewModel> {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (viewModel.errorMessage.isEmpty == false) {
+      if (viewModel.errorMessage.isNotEmpty) {
         LocalToast.showErrorToast(context, viewModel.errorMessage);
         viewModel.errorMessage = "";
       }
@@ -61,7 +61,6 @@ class SigninView extends ViewBase<SigninViewModel> {
       constraints: const BoxConstraints(minWidth: 300),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
         children: <Widget>[
           const Text(

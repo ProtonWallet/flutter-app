@@ -18,17 +18,17 @@ class HistoryTransaction {
 
   HistoryTransaction({
     required this.txID,
-    this.createTimestamp,
-    this.updateTimestamp,
     required this.amountInSATS,
     required this.feeInSATS,
     required this.exchangeRate,
-    this.label,
     required this.sender,
     required this.toList,
-    this.inProgress = false,
-    this.body,
     required this.accountModel,
     required this.bitcoinAddresses,
+    this.createTimestamp,
+    this.updateTimestamp,
+    this.label,
+    this.inProgress = false,
+    this.body,
   });
 }

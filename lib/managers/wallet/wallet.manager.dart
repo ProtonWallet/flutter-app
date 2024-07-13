@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:cryptography/cryptography.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -12,8 +16,11 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -22,33 +29,27 @@ import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
-import 'package:wallet/rust/api/bdk_wallet/account.dart';
-import 'package:wallet/rust/api/bdk_wallet/address.dart';
-import 'package:wallet/rust/api/bdk_wallet/balance.dart';
-import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/address.dart';
+import 'package:wallet/rust/api/bdk_wallet/balance.dart';
 import 'package:wallet/rust/api/bdk_wallet/storage.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as p;
 
 // this is service // per wallet account
 class WalletManager implements Manager {
   static final BdkLibrary bdkLib = BdkLibrary();
   static bool isFetchingWallets = false;
 
-  //TODO:: fix me
+  // TODO(fix): fix me
   static late UserManager userManager;
   static late ProtonWalletManager protonWallet;
 
@@ -63,24 +64,24 @@ class WalletManager implements Manager {
   ///
   static HashMap<String, FrbWallet> frbWallets = HashMap<String, FrbWallet>();
 
-  // TODO:: before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
-  // TODO:: return Wallet? to avoid issue, add try-catch here
+  // TODO(fix): before new_wallet need to check if network changed. if yes need to delete the wallet and create a new one
+  // TODO(fix): return Wallet? to avoid issue, add try-catch here
   static Future<FrbAccount?> loadWalletWithID(
     String walletID,
     String accountID,
   ) async {
-    WalletModel? walletModel =
+    final WalletModel? walletModel =
         await DBHelper.walletDao!.findByServerID(walletID);
     if (walletModel == null) return null;
-    var walletServerID = walletModel.walletID;
+    final walletServerID = walletModel.walletID;
 
     var frbWallet = frbWallets[walletServerID];
     if (frbWallet == null) {
       // try restore wallet first;
-      var passphrase = await walletPassphraseProvider.getPassphrase(
+      final passphrase = await walletPassphraseProvider.getPassphrase(
         walletServerID,
       );
-      var mnemonic = await WalletManager.getMnemonicWithID(walletID);
+      final mnemonic = await WalletManager.getMnemonicWithID(walletID);
       if (walletModel.passphrase == 1 && passphrase == null) {
         /// wallet has passphrase, but user didn't set correct passphrase yet
         return null;
@@ -94,15 +95,15 @@ class WalletManager implements Manager {
     }
 
     final String derivationPath = await getDerivationPathWithID(accountID);
-    var found = frbWallet.getAccount(derivationPath: derivationPath);
+    final found = frbWallet.getAccount(derivationPath: derivationPath);
     if (found != null) {
       return found;
     }
 
-    var dbPath = await _getDatabaseFolderPath();
-    var storage = OnchainStoreFactory(folderPath: dbPath);
+    final dbPath = await _getDatabaseFolderPath();
+    final storage = OnchainStoreFactory(folderPath: dbPath);
 
-    var account = frbWallet.addAccount(
+    final account = frbWallet.addAccount(
         scriptType: appConfig.scriptTypeInfo.type,
         derivationPath: derivationPath,
         storageFactory: storage);
@@ -110,21 +111,21 @@ class WalletManager implements Manager {
     return account;
   }
 
-  /// TODO:: fix me .temp move to better place
+  // TODO(fix): fix me .temp move to better place
   static Future<Directory> _getDatabaseFolder() async {
     const dbFolder = "databases";
     final appDocumentsDir = await getApplicationDocumentsDirectory();
     final folderPath = Directory(p.join(appDocumentsDir.path, dbFolder));
 
-    if (!await folderPath.exists()) {
+    if (!folderPath.existsSync()) {
       await folderPath.create(recursive: true);
     }
     return folderPath;
   }
 
-  /// TODO:: fix me .temp move to better place
+  // TODO(fix): fix me .temp move to better place
   static Future<String> _getDatabaseFolderPath() async {
-    var folder = await _getDatabaseFolder();
+    final folder = await _getDatabaseFolder();
     return folder.path;
   }
 
@@ -132,16 +133,16 @@ class WalletManager implements Manager {
   static Future<void> cleanBDKCache() async {
     frbWallets.clear();
     bdkLib.clearLocalCache();
-    // TODO:: add clear cache to bdk library
+    // TODO(fix): add clear cache to bdk library
   }
 
   static Future<void> cleanSharedPreference() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
   }
 
   static Future<List<ProtonAddress>> getProtonAddress() async {
-    return await proton_api.getProtonAddress();
+    return proton_api.getProtonAddress();
   }
 
   // static Future<void> addEmailAddressToWalletAccount(
@@ -180,7 +181,7 @@ class WalletManager implements Manager {
         network: appConfig.coinType.network,
         bip39Mnemonic: strMnemonic,
         bip38Passphrase: passphrase);
-    String fingerprint = wallet.getFingerprint();
+    final String fingerprint = wallet.getFingerprint();
     logger.i("fingerprint = $fingerprint");
     return fingerprint;
   }
@@ -194,7 +195,7 @@ class WalletManager implements Manager {
       String userKeyID,
       String encryptedWalletKey,
       String walletKeySignature,
-      bool hasPassphrase) {
+      {required bool hasPassphrase}) {
     return CreateWalletReq(
       name: encryptedName,
       isImported: type,
@@ -219,23 +220,23 @@ class WalletManager implements Manager {
   }
 
   static Future<String> getDerivationPathWithID(String accountID) async {
-    AccountModel accountModel =
+    final AccountModel accountModel =
         await DBHelper.accountDao!.findByServerID(accountID);
     logger.w("$accountID: ${accountModel.derivationPath}");
     return accountModel.derivationPath;
   }
 
   static Future<String> getAccountLabelWithID(String accountID) async {
-    AccountModel accountModel =
+    final AccountModel accountModel =
         await DBHelper.accountDao!.findByServerID(accountID);
-    SecretKey secretKey = await getWalletKey(accountModel.walletID);
+    final SecretKey secretKey = await getWalletKey(accountModel.walletID);
     await accountModel.decrypt(secretKey);
     return accountModel.labelDecrypt;
   }
 
   static Future<String> getNameWithID(String walletID) async {
     String name = "Default Name";
-    WalletModel walletRecord =
+    final WalletModel walletRecord =
         await DBHelper.walletDao!.findByServerID(walletID);
     name = walletRecord.name;
     return name;
@@ -246,7 +247,7 @@ class WalletManager implements Manager {
     String walletAccountID,
   ) async {
     try {
-      FrbAccount? frbAccount = await WalletManager.loadWalletWithID(
+      final FrbAccount? frbAccount = await WalletManager.loadWalletWithID(
         walletID,
         walletAccountID,
       );
@@ -255,7 +256,7 @@ class WalletManager implements Manager {
         return 0;
       }
 
-      FrbBalance balance = await frbAccount.getBalance();
+      final FrbBalance balance = await frbAccount.getBalance();
 
       return balance.trustedSpendable().toSat().toInt();
     } catch (e) {
@@ -266,7 +267,8 @@ class WalletManager implements Manager {
 
   static Future<double> getWalletBalance(String walletID) async {
     double balance = 0.0;
-    List accounts = await DBHelper.accountDao!.findAllByWalletID(walletID);
+    final List accounts =
+        await DBHelper.accountDao!.findAllByWalletID(walletID);
     for (AccountModel accountModel in accounts) {
       balance += await getWalletAccountBalance(walletID, accountModel.walletID);
     }
@@ -274,15 +276,15 @@ class WalletManager implements Manager {
   }
 
   static Future<String> getMnemonicWithID(String walletID) async {
-    WalletModel walletModel =
+    final WalletModel walletModel =
         await DBHelper.walletDao!.findByServerID(walletID);
-    var firstUserKey = await userManager.getFirstKey();
-    var walletKey = await walletKeysProvider.getWalletKey(walletID);
+    final firstUserKey = await userManager.getFirstKey();
+    final walletKey = await walletKeysProvider.getWalletKey(walletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
-    var secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
-    String mnemonic = await WalletKeyHelper.decrypt(
+    final secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
+    final String mnemonic = await WalletKeyHelper.decrypt(
       secretKey,
       base64Encode(walletModel.mnemonic),
     );
@@ -291,7 +293,7 @@ class WalletManager implements Manager {
 
   static Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
-    ProtonExchangeRate exchangeRate = await proton_api.getExchangeRate(
+    final ProtonExchangeRate exchangeRate = await proton_api.getExchangeRate(
         fiatCurrency: fiatCurrency,
         time: time == null ? null : BigInt.from(time));
     return exchangeRate;
@@ -303,7 +305,7 @@ class WalletManager implements Manager {
 
   static Future<List<String>> getAccountAddressIDs(
       String serverAccountID) async {
-    List<AddressModel> result =
+    final List<AddressModel> result =
         await DBHelper.addressDao!.findByServerAccountID(serverAccountID);
     return result.map((e) => e.serverID).toList();
   }
@@ -312,9 +314,9 @@ class WalletManager implements Manager {
     await DBHelper.addressDao!.deleteByServerID(addressID);
   }
 
-  /// TODO:: this function logic looks strange
+  // TODO(fix): this function logic looks strange
   static Future<void> autoBindEmailAddresses(String userID) async {
-    int walletCounts = await DBHelper.walletDao!.counts(userID);
+    final int walletCounts = await DBHelper.walletDao!.counts(userID);
     if (walletCounts > 1) {
       return;
     }
@@ -322,15 +324,16 @@ class WalletManager implements Manager {
     List<ProtonAddress> protonAddresses = await proton_api.getProtonAddress();
     protonAddresses =
         protonAddresses.where((element) => element.status == 1).toList();
-    ProtonAddress? protonAddress =
+    final ProtonAddress? protonAddress =
         protonAddresses.firstOrNull; // PW-470, can only use primary address
-    WalletModel? walletModel = await DBHelper.walletDao!.getFirstPriorityWallet(
+    final WalletModel? walletModel =
+        await DBHelper.walletDao!.getFirstPriorityWallet(
       userID,
     );
     if (walletModel != null) {
-      var accountModels =
+      final accountModels =
           await DBHelper.accountDao!.findAllByWalletID(walletModel.walletID);
-      AccountModel? accountModel = accountModels.firstOrNull;
+      final AccountModel? accountModel = accountModels.firstOrNull;
       if (accountModel != null && protonAddress != null) {
         await addEmailAddress(
             walletModel.walletID, accountModel.accountID, protonAddress.id);
@@ -343,7 +346,7 @@ class WalletManager implements Manager {
     String serverAccountID,
     String serverAddressID,
   ) async {
-    ApiWalletAccount walletAccount = await proton_api.addEmailAddress(
+    final ApiWalletAccount walletAccount = await proton_api.addEmailAddress(
       walletId: serverWalletID,
       walletAccountId: serverAccountID,
       addressId: serverAddressID,
@@ -362,9 +365,9 @@ class WalletManager implements Manager {
     String encodedEncryptedBinary,
   ) async {
     // get user key
-    var firstUserKey = await userManager.getFirstKey();
-    String userPrivateKey = firstUserKey.privateKey;
-    String userPassphrase = firstUserKey.passphrase;
+    final firstUserKey = await userManager.getFirstKey();
+    final String userPrivateKey = firstUserKey.privateKey;
+    final String userPassphrase = firstUserKey.passphrase;
 
     Uint8List result = Uint8List(0);
     try {
@@ -377,9 +380,9 @@ class WalletManager implements Manager {
   }
 
   static Future<String> decryptWithUserKeys(String encryptedMessage) async {
-    var firstUserKey = await userManager.getFirstKey();
-    String userPrivateKey = firstUserKey.privateKey;
-    String userPassphrase = firstUserKey.passphrase;
+    final firstUserKey = await userManager.getFirstKey();
+    final String userPrivateKey = firstUserKey.privateKey;
+    final String userPassphrase = firstUserKey.passphrase;
     String result = "";
     try {
       result = proton_crypto.decrypt(
@@ -395,20 +398,20 @@ class WalletManager implements Manager {
   }
 
   static Future<void> setLatestEventId(String latestEventId) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("latestEventId", latestEventId);
   }
 
   static Future<String?> getLatestEventId() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString("latestEventId");
   }
 
   static Future<EmailIntegrationBitcoinAddress?> lookupBitcoinAddress(
       String email) async {
-    EmailIntegrationBitcoinAddress emailIntegrationBitcoinAddress =
+    final EmailIntegrationBitcoinAddress emailIntegrationBitcoinAddress =
         await proton_api.lookupBitcoinAddress(email: email);
-    // TODO:: check signature!
+    // TODO(fix): check signature!
     return emailIntegrationBitcoinAddress;
   }
 
@@ -416,18 +419,18 @@ class WalletManager implements Manager {
     List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
-    var firstUserKey = await userManager.getFirstKey();
-    String userPrivateKey = firstUserKey.privateKey;
-    String userPassphrase = firstUserKey.passphrase;
+    final firstUserKey = await userManager.getFirstKey();
+    final String userPrivateKey = firstUserKey.privateKey;
+    final String userPassphrase = firstUserKey.passphrase;
 
-    List<AddressKey> addressKeys = [];
+    final List<AddressKey> addressKeys = [];
 
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
-        String addressKeyPrivateKey = addressKey.privateKey ?? "";
-        String addressKeyToken = addressKey.token ?? "";
+        final String addressKeyPrivateKey = addressKey.privateKey ?? "";
+        final String addressKeyToken = addressKey.token ?? "";
         try {
-          String addressKeyPassphrase = proton_crypto.decrypt(
+          final String addressKeyPassphrase = proton_crypto.decrypt(
             userPrivateKey,
             userPassphrase,
             addressKeyToken,
@@ -443,7 +446,7 @@ class WalletManager implements Manager {
       }
     }
 
-    // TODO:: remove this, use old version decrypt method to get addresskeys' passphrase
+    // TODO(fix): remove this, use old version decrypt method to get addresskeys' passphrase
     addressKeys.add(AddressKey(
       id: "firstUserKey",
       privateKey: userPrivateKey,
@@ -454,9 +457,9 @@ class WalletManager implements Manager {
 
   static Future<bool> checkFingerprint(
       WalletModel walletModel, String passphrase) async {
-    String strMnemonic =
+    final String strMnemonic =
         await WalletManager.getMnemonicWithID(walletModel.walletID);
-    String fingerprint =
+    final String fingerprint =
         await getFingerPrintFromMnemonic(strMnemonic, passphrase: passphrase);
     logger.i("$fingerprint == ${walletModel.fingerprint}");
     return walletModel.fingerprint == fingerprint;
@@ -467,7 +470,7 @@ class WalletManager implements Manager {
     String serverWalletID,
     String serverAccountID,
   ) async {
-    List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
+    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
@@ -482,9 +485,9 @@ class WalletManager implements Manager {
         continue;
       }
       if (walletBitcoinAddress.bitcoinAddress == null) {
-        WalletModel? walletModel =
+        final WalletModel? walletModel =
             await DBHelper.walletDao!.findByServerID(serverWalletID);
-        if (hasSyncedBitcoinAddressIndex == false) {
+        if (!hasSyncedBitcoinAddressIndex) {
           hasSyncedBitcoinAddressIndex = true;
           if (walletModel != null) {
             await syncBitcoinAddressIndex(
@@ -501,16 +504,16 @@ class WalletManager implements Manager {
           continue;
         }
         // need plus 2 since the lastUsedIndex + 1 is used for manual receive
-        int addressIndex = accountModel.lastUsedIndex + 2;
-        var addressInfo = await account.getAddress(index: addressIndex);
-        String address = addressInfo.address;
-        String signature = await getSignature(
+        final int addressIndex = accountModel.lastUsedIndex + 2;
+        final addressInfo = await account.getAddress(index: addressIndex);
+        final String address = addressInfo.address;
+        final String signature = await getSignature(
           serverAccountID,
           address,
           gpgContextWalletBitcoinAddress,
         );
         logger.i(signature);
-        BitcoinAddress bitcoinAddress = BitcoinAddress(
+        final BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
             bitcoinAddressIndex: BigInt.from(addressIndex));
@@ -540,8 +543,8 @@ class WalletManager implements Manager {
       WalletModel walletModel, AccountModel accountModel) async {
     /// check if local highest used bitcoin address index is higher than the one store in wallet account
     /// this will happen when some one send bitcoin via qr code
-    int localUsedIndex = await localBitcoinAddressDataProvider.getLastUsedIndex(
-        walletModel, accountModel);
+    final int localUsedIndex = await localBitcoinAddressDataProvider
+        .getLastUsedIndex(walletModel, accountModel);
     if (localUsedIndex > accountModel.lastUsedIndex) {
       accountModel.lastUsedIndex = localUsedIndex;
       await updateLastUsedIndex(accountModel);
@@ -574,12 +577,12 @@ class WalletManager implements Manager {
     String serverAccountID,
   ) async {
     int unFetchedBitcoinAddressCount = 0;
-    List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
+    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
         await proton_api.getWalletBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 0);
-    List<String> addressIDs =
+    final List<String> addressIDs =
         await WalletManager.getAccountAddressIDs(serverAccountID);
     List<AddressKey> addressKeys = await getAddressKeys();
     addressKeys = addressKeys
@@ -587,8 +590,8 @@ class WalletManager implements Manager {
         .toList();
     for (var walletBitcoinAddress in walletBitcoinAddresses) {
       try {
-        String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
-        int addressIndex =
+        final String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
+        final int addressIndex =
             walletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? -1;
         if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
@@ -609,24 +612,24 @@ class WalletManager implements Manager {
       if (walletBitcoinAddress.bitcoinAddress != null &&
           walletBitcoinAddress.bitcoinAddressSignature != null) {
         for (AddressKey addressKey in addressKeys) {
-          String armoredPublicKey =
+          final String armoredPublicKey =
               proton_crypto.getArmoredPublicKey(addressKey.privateKey);
           isValidSignature = await verifySignature(
               armoredPublicKey,
               walletBitcoinAddress.bitcoinAddress!,
               walletBitcoinAddress.bitcoinAddressSignature!,
               gpgContextWalletBitcoinAddress);
-          if (isValidSignature == true) {
+          if (isValidSignature) {
             break;
           }
         }
       }
       logger.i("bitcoinAddressSignature valid is $isValidSignature");
     }
-    int addingCount = max(0,
+    final int addingCount = max(0,
         defaultBitcoinAddressCountForOneEmail - unFetchedBitcoinAddressCount);
     if (walletBitcoinAddresses.isEmpty) {
-      int _ = await DBHelper.bitcoinAddressDao!.getUnusedPoolCount(
+      final int _ = await DBHelper.bitcoinAddressDao!.getUnusedPoolCount(
         serverWalletID,
         serverAccountID,
       );
@@ -638,7 +641,7 @@ class WalletManager implements Manager {
     logger.i(
         "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount");
     if (addingCount > 0) {
-      WalletModel? walletModel =
+      final WalletModel? walletModel =
           await DBHelper.walletDao!.findByServerID(serverWalletID);
       AccountModel? accountModel =
           await DBHelper.accountDao!.findByServerID(serverAccountID);
@@ -655,20 +658,20 @@ class WalletManager implements Manager {
         return;
       }
       for (int offset = 0; offset < addingCount; offset++) {
-        int addressIndex = accountModel.lastUsedIndex +
+        final int addressIndex = accountModel.lastUsedIndex +
             offset +
             2; // need plus 2 since the lastUsedIndex + 1 is used for manual receive
         logger.i(
             "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID");
 
-        var addressInfo = await account.getAddress(index: addressIndex);
-        String address = addressInfo.address;
-        String signature = await getSignature(
+        final addressInfo = await account.getAddress(index: addressIndex);
+        final String address = addressInfo.address;
+        final String signature = await getSignature(
           serverAccountID,
           address,
           gpgContextWalletBitcoinAddress,
         );
-        BitcoinAddress bitcoinAddress = BitcoinAddress(
+        final BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
             bitcoinAddressIndex: BigInt.from(addressInfo.index));
@@ -701,13 +704,14 @@ class WalletManager implements Manager {
     String bitcoinAddress,
     String gpgContext,
   ) async {
-    var addressIDs = await WalletManager.getAccountAddressIDs(serverAccountID);
+    final addressIDs =
+        await WalletManager.getAccountAddressIDs(serverAccountID);
     List<AddressKey> addressKeys = await getAddressKeys();
     addressKeys = addressKeys
         .where((addressKey) => addressIDs.contains(addressKey.id))
         .toList();
 
-    List<String> signatures = [];
+    final List<String> signatures = [];
     for (AddressKey addressKey in addressKeys) {
       signatures.add(proton_crypto.getSignatureWithContext(
           addressKey.privateKey,
@@ -718,7 +722,7 @@ class WalletManager implements Manager {
     return signatures.isNotEmpty
         ? signatures[0]
         : "-----BEGIN PGP SIGNATURE-----*-----END PGP SIGNATURE-----";
-    // return signatures.join("\n"); // TODO:: add back after check with backend
+    // return signatures.join("\n"); // `TODO`:: add back after check with backend
   }
 
   static Future<bool> verifySignature(String publicAddressKey, String message,
@@ -732,17 +736,17 @@ class WalletManager implements Manager {
     List<String> selfEmailAddresses = const [],
   }) {
     try {
-      var jsonList = jsonDecode(jsonString) as List<dynamic>;
-      List<String> emails = [];
+      final jsonList = jsonDecode(jsonString) as List<dynamic>;
+      final List<String> emails = [];
       for (var item in jsonList) {
         emails.add(item.values);
       }
       return emails.join(", ");
     } catch (e) {
       try {
-        var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
-        List<String> emails = [];
-        List<String> keys = [];
+        final jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
+        final List<String> emails = [];
+        final List<String> keys = [];
         for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
           // bitcoinAddress as key, emailAddress as value
           keys.add(keyValues.key.toLowerCase());
@@ -766,11 +770,11 @@ class WalletManager implements Manager {
   static String getBitcoinAddressFromWalletTransaction(String jsonString,
       {List<String> selfEmailAddresses = const []}) {
     try {
-      var jsonList = jsonDecode(jsonString) as List<dynamic>;
+      final jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList[0].keys.first;
     } catch (e) {
       try {
-        var jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
+        final jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
         for (MapEntry<String, dynamic> keyValues in jsonList.entries) {
           // bitcoinAddress as key, emailAddress as value
           if (selfEmailAddresses.contains(keyValues.value)) {
@@ -787,18 +791,18 @@ class WalletManager implements Manager {
 
   static Future<TransactionDetailFromBlockChain?>
       getTransactionDetailsFromBlockStream(String txid) async {
-    String baseUrl = "${appConfig.esploraApiUrl}api";
+    final String baseUrl = "${appConfig.esploraApiUrl}api";
     try {
       final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        TransactionDetailFromBlockChain transactionDetailFromBlockChain =
+        final TransactionDetailFromBlockChain transactionDetailFromBlockChain =
             TransactionDetailFromBlockChain(
                 txid: txid,
                 feeInSATS: data['fee'],
                 blockHeight: data['status']['block_height'] ?? 0,
                 timestamp: data['status']['block_time'] ?? 0);
-        List<dynamic> recipientMapList = data['vout']
+        final List<dynamic> recipientMapList = data['vout']
             .map((output) => {
                   'address': output['scriptpubkey_address'],
                   'value': output['value']
@@ -821,7 +825,7 @@ class WalletManager implements Manager {
     FrbAccount account,
     String bitcoinAddress,
   ) async {
-    var network = appConfig.coinType.network;
+    final network = appConfig.coinType.network;
     return account.isMine(
         address: FrbAddress(address: bitcoinAddress, network: network));
   }
@@ -829,7 +833,7 @@ class WalletManager implements Manager {
   static Future<FiatCurrency> getDefaultAccountFiatCurrency(
       WalletModel? walletModel) async {
     if (walletModel != null) {
-      AccountModel? accountModel = await DBHelper.accountDao
+      final AccountModel? accountModel = await DBHelper.accountDao
           ?.findDefaultAccountByWalletID(walletModel.walletID);
       if (accountModel != null) {
         return getAccountFiatCurrency(accountModel);
@@ -849,18 +853,18 @@ class WalletManager implements Manager {
   /// ################################################################
 
   /// trying to get wallet key from secrue store and decrypt it use userkey
-  /// TODO:: remove the static
+  // TODO(fix): remove the static
   static Future<SecretKey> getWalletKey(String serverWalletID) async {
-    var firstUserKey = await userManager.getFirstKey();
-    var walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
+    final firstUserKey = await userManager.getFirstKey();
+    final walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
-    var secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
+    final secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
     return secretKey;
   }
 
-  /// TODO:: remove the static
+  // TODO(fix): remove the static
   static Future<void> setWalletKey(List<ApiWalletKey> apiWalletKey) async {
     await walletKeysProvider.saveApiWalletKeys(apiWalletKey);
   }
@@ -878,7 +882,7 @@ class WalletManager implements Manager {
 
   @override
   Future<void> login(String userID) async {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }

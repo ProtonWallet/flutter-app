@@ -5,13 +5,13 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 class WalletAccountDropdown extends StatefulWidget {
   final double width;
@@ -22,9 +22,9 @@ class WalletAccountDropdown extends StatefulWidget {
   final BitcoinUnit? bitcoinUnit;
 
   const WalletAccountDropdown({
-    super.key,
     required this.width,
     required this.accounts,
+    super.key,
     this.labelText,
     this.valueNotifier,
     this.backgroundColor,
@@ -43,7 +43,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
   @override
   void initState() {
     selected = widget.valueNotifier?.value;
-    int selectedIndex = _getIndexOfAccount(selected);
+    final int selectedIndex = _getIndexOfAccount(selected);
     _textEditingController.text = widget.accounts[selectedIndex].labelDecrypt;
     super.initState();
   }
@@ -95,7 +95,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
             suffixIconConstraints: const BoxConstraints(maxWidth: 24.0),
             contentPadding: const EdgeInsets.only(top: 4, bottom: 16),
             suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
-                color: ProtonColors.textWeak  , size: 24),
+                color: ProtonColors.textWeak, size: 24),
           ),
         ));
   }
@@ -116,8 +116,8 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
 
   Widget getWalletAccountBalanceWidget(
       BuildContext context, AccountModel accountModel) {
-    var fiatCurrency = WalletManager.getAccountFiatCurrency(accountModel);
-    ProtonExchangeRate? exchangeRate =
+    final fiatCurrency = WalletManager.getAccountFiatCurrency(accountModel);
+    final ProtonExchangeRate? exchangeRate =
         ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
     double estimatedValue = 0.0;
     if (exchangeRate != null) {

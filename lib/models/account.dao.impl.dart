@@ -39,7 +39,7 @@ class AccountDaoImpl extends AccountDao {
 
   @override
   Future findById(int id) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return AccountModel.fromMap(maps.first);
@@ -53,7 +53,7 @@ class AccountDaoImpl extends AccountDao {
     String walletID,
     String derivationPath,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'walletID = ? AND derivationPath = ?',
       whereArgs: [walletID, derivationPath],
@@ -67,7 +67,7 @@ class AccountDaoImpl extends AccountDao {
 
   @override
   Future<int> insert(item) async {
-    int id = await db.insert(
+    final int id = await db.insert(
       tableName,
       item.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -87,19 +87,19 @@ class AccountDaoImpl extends AccountDao {
 
   @override
   Future<int> getAccountCount(String walletID) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'walletID = ?', whereArgs: [walletID]);
     return maps.length;
   }
 
   @override
   Future<List<AccountModel>> findAllByWalletID(String walletID) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'walletID = ?',
       whereArgs: [walletID],
     );
-    List<AccountModel> accounts = List.generate(
+    final List<AccountModel> accounts = List.generate(
       maps.length,
       (index) => AccountModel.fromMap(maps[index]),
     );
@@ -108,7 +108,7 @@ class AccountDaoImpl extends AccountDao {
 
   @override
   Future<AccountModel?> findDefaultAccountByWalletID(String walletID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'walletID = ?',
         whereArgs: [walletID],
         orderBy: 'derivationPath asc');
@@ -124,8 +124,8 @@ class AccountDaoImpl extends AccountDao {
     String walletID,
     List<String> serverAccountIDs,
   ) async {
-    String notIn = serverAccountIDs.join('","');
-    String sql =
+    final String notIn = serverAccountIDs.join('","');
+    final String sql =
         'DELETE FROM $tableName WHERE walletID = $walletID AND accountID NOT IN ("$notIn")';
     await db.rawDelete(sql);
   }
@@ -141,7 +141,7 @@ class AccountDaoImpl extends AccountDao {
 
   @override
   Future<AccountModel?> findByServerID(String accountID) async {
-    List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       tableName,
       where: 'accountID = ?',
       whereArgs: [accountID],

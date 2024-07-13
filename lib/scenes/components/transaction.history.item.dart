@@ -2,12 +2,12 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistoryItem extends StatelessWidget {
@@ -24,9 +24,7 @@ class TransactionHistoryItem extends StatelessWidget {
   final bool isLoading;
 
   const TransactionHistoryItem({
-    super.key,
-    required this.title,
-    required this.content,
+    required this.title, required this.content, super.key,
     this.memo,
     this.titleOptionsCallback,
     this.titleTooltip,
@@ -55,11 +53,8 @@ class TransactionHistoryItem extends StatelessWidget {
               children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(title,
                                 style: FontManager.body2Median(
@@ -152,7 +147,6 @@ class TransactionHistoryItem extends StatelessWidget {
                     },
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(bitcoinAddress!,
                               style: FontManager.body2Median(

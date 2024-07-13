@@ -28,13 +28,13 @@ class HistoryDetailCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var walletManager = serviceManager.get<ProtonWalletManager>();
-    var serverTransactionDataProvider =
+    final userManager = serviceManager.get<UserManager>();
+    final walletManager = serviceManager.get<ProtonWalletManager>();
+    final serverTransactionDataProvider =
         serviceManager.get<DataProviderManager>().serverTransactionDataProvider;
-    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var viewModel = HistoryDetailViewModelImpl(
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final viewModel = HistoryDetailViewModelImpl(
       this,
       walletID,
       accountID,

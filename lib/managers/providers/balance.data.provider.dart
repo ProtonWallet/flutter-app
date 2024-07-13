@@ -19,7 +19,7 @@ class BDKBalanceData {
 
   Future<int> getBalance() async {
     if (account != null) {
-      var balance = await account!.getBalance();
+      final balance = await account!.getBalance();
       return balance.trustedSpendable().toSat().toInt();
     }
     return 0;
@@ -41,7 +41,7 @@ class BalanceDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    FrbAccount? account = await WalletManager.loadWalletWithID(
+    final FrbAccount? account = await WalletManager.loadWalletWithID(
       walletModel.walletID,
       accountModel.accountID,
     );

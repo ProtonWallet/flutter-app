@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/helper/extension/platform.extension.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/helper/extension/platform.extension.dart';
 
 abstract class ViewModel<T extends Coordinator>
     extends NavigationFlowInterface {

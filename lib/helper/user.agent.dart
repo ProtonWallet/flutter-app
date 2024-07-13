@@ -25,7 +25,7 @@ class UserAgent {
 
   Future<String> get ua async {
     if (_cachedUA == null) {
-      return await _computeUA();
+      return _computeUA();
     } else {
       return _cachedUA!;
     }
@@ -33,7 +33,7 @@ class UserAgent {
 
   Future<String> get appVersion async {
     if (_cachedAppVersion == null) {
-      return await _computeAppVersion();
+      return _computeAppVersion();
     } else {
       return _cachedAppVersion!;
     }
@@ -41,7 +41,7 @@ class UserAgent {
 
   Future<String> get display async {
     if (_cachedDisplay == null) {
-      return await _computeDisplay();
+      return _computeDisplay();
     } else {
       return _cachedDisplay!;
     }
@@ -50,7 +50,7 @@ class UserAgent {
   /// Sentry inital release string
   Future<String> get sentryRelease async {
     if (_cachedSentryRelease == null) {
-      return await _computeSentryRelease();
+      return _computeSentryRelease();
     } else {
       return _cachedSentryRelease!;
     }
@@ -61,7 +61,7 @@ class UserAgent {
     final info = await packageInfo;
     final version = info.version;
     final build = info.buildNumber;
-    String platformName = _getPlatformName();
+    final String platformName = _getPlatformName();
     return "$platformName-wallet@$version+$build";
   }
 
@@ -82,7 +82,7 @@ class UserAgent {
   Future<String> _computeAppVersion() async {
     final info = await packageInfo;
     final version = info.version;
-    String platformName = _getPlatformName();
+    final String platformName = _getPlatformName();
     var suffix = "";
     if (kDebugMode) {
       suffix = "-dev";

@@ -15,7 +15,6 @@ class WelcomeImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,

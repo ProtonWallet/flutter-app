@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/strings.dart';
@@ -12,9 +13,8 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.event.dart';
 import 'package:wallet/managers/users/user.manager.state.dart';
 import 'package:wallet/models/native.session.model.dart';
-import 'package:wallet/rust/proton_api/auth_credential.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:wallet/rust/proton_api/auth_credential.dart';
 
 class UserKey {
   final String keyID;
@@ -28,9 +28,9 @@ class UserKey {
 
   String decryptBinary(String? binaryEncryptedString) {
     if (binaryEncryptedString != null) {
-      Uint8List bytes = proton_crypto.decryptBinary(
+      final Uint8List bytes = proton_crypto.decryptBinary(
           privateKey, passphrase, binaryEncryptedString.base64decode());
-      String? decryptedMessage = utf8.decode(bytes);
+      final String decryptedMessage = utf8.decode(bytes);
       if (decryptedMessage != "null") {
         return decryptedMessage;
       }
@@ -85,7 +85,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   Future<FlutterSession> getChildSession() async {
-    var childSession = await proton_api.fork();
+    final childSession = await proton_api.fork();
     return FlutterSession(
         userId: userInfo.userId,
         userName: userInfo.userName,
@@ -142,9 +142,9 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   Future<UserKey> getFirstKey() async {
-    var userKeyID = userInfo.userKeyID;
-    var privateKey = userInfo.userPrivateKey;
-    var passphrase = userInfo.userPassphrase;
+    final userKeyID = userInfo.userKeyID;
+    final privateKey = userInfo.userPrivateKey;
+    final passphrase = userInfo.userPassphrase;
     if (userKeyID == "" || privateKey == "" || passphrase == "") {
       throw Exception(
           "First key is null, cannot decrypt wallet key. relogin  or debug.");
@@ -172,7 +172,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
 
   @override
   Future<void> login(String userID) {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 }
