@@ -1,6 +1,6 @@
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
@@ -18,7 +18,6 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
       ViewSize viewSize) {
     return Scaffold(
       body: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SideMenu(
             // Page controller to manage a PageView

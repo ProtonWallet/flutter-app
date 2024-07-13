@@ -4,24 +4,24 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/transaction.info.model.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
-import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/bitcoin.amount.dart';
-import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/history/bottom.sheet/edit.sender.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
@@ -75,22 +75,18 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    viewModel.initialized == false
+                    !viewModel.initialized
                         ? const CardLoading(
                             height: 50,
                             borderRadius: BorderRadius.all(Radius.circular(4)),
                             margin: EdgeInsets.only(top: 4),
                           )
                         : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
                                         margin: const EdgeInsets.only(
@@ -146,7 +142,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         content: CommonHelper.formatLocaleTime(
                             context, viewModel.transactionTime!),
                         backgroundColor: ProtonColors.white,
-                        isLoading: viewModel.initialized == false,
+                        isLoading: !viewModel.initialized,
                       ),
                     const Divider(
                       thickness: 0.2,
@@ -163,7 +159,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           ? ProtonColors.signalSuccess
                           : ProtonColors.signalError,
                       backgroundColor: ProtonColors.white,
-                      isLoading: viewModel.initialized == false,
+                      isLoading: !viewModel.initialized,
                     ),
                     const Divider(
                       thickness: 0.2,
@@ -177,14 +173,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               : S.of(context).trans_message_from_sender,
                           content: viewModel.body,
                           backgroundColor: ProtonColors.white,
-                          isLoading: viewModel.initialized == false,
+                          isLoading: !viewModel.initialized,
                         ),
                         const Divider(
                           thickness: 0.2,
                           height: 1,
                         ),
                       ]),
-                    viewModel.initialized == false
+                    !viewModel.initialized
                         ? const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: defaultPadding),
@@ -195,7 +191,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               margin: EdgeInsets.only(top: 4),
                             ),
                           )
-                        : viewModel.isEditing == false
+                        : !viewModel.isEditing
                             ? GestureDetector(
                                 onTap: () {
                                   viewModel.editMemo();
@@ -211,10 +207,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                         borderRadius:
                                             BorderRadius.circular(32.0)),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
                                             "assets/images/icon/ic_note.svg",
@@ -301,7 +293,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               ),
                     ExpansionTile(
                         shape: const Border(),
-                        initiallyExpanded: false,
                         title: Text(S.of(context).view_more,
                             style:
                                 FontManager.body2Median(ProtonColors.textWeak)),
@@ -317,7 +308,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 viewModel.userSettingsDataProvider.bitcoinUnit,
                                 viewModel.fee.toInt()),
                             backgroundColor: ProtonColors.white,
-                            isLoading: viewModel.initialized == false,
+                            isLoading: !viewModel.initialized,
                           ),
                           const Divider(
                             thickness: 0.2,
@@ -341,7 +332,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                     viewModel.amount.toInt() +
                                         viewModel.fee.toInt()),
                             backgroundColor: ProtonColors.white,
-                            isLoading: viewModel.initialized == false,
+                            isLoading: !viewModel.initialized,
                           ),
                           const SizedBox(height: 20),
                           ButtonV5(
@@ -368,11 +359,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   }
 
   Widget buildSendInfo(BuildContext context) {
-    String yourEmail =
+    final String yourEmail =
         WalletManager.getEmailFromWalletTransaction(viewModel.fromEmail);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         viewModel.recipients.isEmpty
             ? buildTransToInfo(
@@ -403,13 +393,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 content: "$yourEmail (You)",
                 memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
                 backgroundColor: ProtonColors.white,
-                isLoading: viewModel.initialized == false,
+                isLoading: !viewModel.initialized,
               )
             : TransactionHistoryItem(
                 title: S.of(context).trans_from,
                 content: "${viewModel.strWallet} - ${viewModel.strAccount}",
                 backgroundColor: ProtonColors.white,
-                isLoading: viewModel.initialized == false,
+                isLoading: !viewModel.initialized,
               ),
       ],
     );
@@ -417,11 +407,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
 
   Widget buildTransToInfo(
     BuildContext context, {
+    required bool multiRecipient,
     String? email,
     String? bitcoinAddress,
     String? walletAccountName,
     int? amountInSatoshi,
-    required bool multiRecipient,
   }) {
     return Column(children: [
       if (viewModel.exchangeRate != null && amountInSatoshi != null)
@@ -434,7 +424,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
                   exchangeRate: viewModel.exchangeRate!)
               : null,
-          isLoading: viewModel.initialized == false,
+          isLoading: !viewModel.initialized,
         ),
       const Divider(
         thickness: 0.2,
@@ -446,7 +436,6 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   Widget buildReceiveInfo(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Stack(children: [
           TransactionHistoryItem(
@@ -456,9 +445,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     viewModel.fromEmail)
                 : "Unknown",
             backgroundColor: ProtonColors.white,
-            isLoading: viewModel.initialized == false,
+            isLoading: !viewModel.initialized,
           ),
-          if (viewModel.isInternalTransaction == false && viewModel.initialized)
+          if (!viewModel.isInternalTransaction && viewModel.initialized)
             Positioned(
                 top: 20,
                 right: defaultPadding,
@@ -483,8 +472,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               : "${viewModel.strWallet} - ${viewModel.strAccount}",
           walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
           bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
-          bitcoinAmount: null,
-          isLoading: viewModel.initialized == false,
+          isLoading: !viewModel.initialized,
         ),
       ],
     );

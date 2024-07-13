@@ -19,7 +19,7 @@ class ExchangeRateDaoImpl extends ExchangeRateDao {
 
   @override
   Future<List> findAll(String userID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => ExchangeRateModel.fromMap(maps[index]));
   }
@@ -49,7 +49,7 @@ class ExchangeRateDaoImpl extends ExchangeRateDao {
 
   @override
   Future<ExchangeRateModel?> findByServerID(String serverID) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'serverID = ?', whereArgs: [serverID]);
     if (maps.isNotEmpty) {
       return ExchangeRateModel.fromMap(maps.first);
@@ -59,7 +59,7 @@ class ExchangeRateDaoImpl extends ExchangeRateDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO: implement deleteByServerID
+    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 }

@@ -3,10 +3,10 @@ import 'package:wallet/theme/theme.font.dart';
 
 class Indicator extends StatelessWidget {
   const Indicator({
-    super.key,
     required this.color,
     required this.text,
     required this.isSquare,
+    super.key,
     this.size = 16,
     this.textColor = Colors.black54,
   });

@@ -10,9 +10,9 @@ class CustomExpansion extends StatefulWidget {
   final int currentStep;
 
   const CustomExpansion(
-      {super.key,
-      required this.totalSteps,
+      {required this.totalSteps,
       required this.currentStep,
+      super.key,
       this.children = const []});
 
   @override
@@ -45,7 +45,8 @@ class CustomExpansionState extends State<CustomExpansion>
               Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: defaultPadding),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 20),
                   decoration: BoxDecoration(
                     color: ProtonColors.protonBlue,
                     borderRadius: BorderRadius.circular(24.0),
@@ -88,7 +89,7 @@ class CustomExpansionState extends State<CustomExpansion>
                               color: ProtonColors.white,
                             )),
                       ])),
-              if (_isExpanded == false)
+              if (!_isExpanded)
                 Container(
                     margin: const EdgeInsets.symmetric(horizontal: 36),
                     padding: const EdgeInsets.all(5),
@@ -98,7 +99,7 @@ class CustomExpansionState extends State<CustomExpansion>
                           bottomLeft: Radius.circular(24),
                           bottomRight: Radius.circular(24)),
                     )),
-              if (_isExpanded == false)
+              if (!_isExpanded)
                 Container(
                     margin: const EdgeInsets.symmetric(horizontal: 56),
                     padding: const EdgeInsets.all(3),

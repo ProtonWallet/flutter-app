@@ -60,7 +60,7 @@ class LogsViewModelImpl extends LogsViewModel {
   Future<void> loadLogs() async {
     final directory = await getApplicationDocumentsDirectory();
     final logFile = File('${directory.path}/logs/app.log');
-    if (await logFile.exists()) {
+    if (logFile.existsSync()) {
       final logs = await logFile.readAsString();
       this.logs = logs;
     }
@@ -72,7 +72,7 @@ class LogsViewModelImpl extends LogsViewModel {
   }
 
   @override
-  void clearLogs() async {
+  Future<void> clearLogs() async {
     await LoggerService.reset();
     loadLogs();
 

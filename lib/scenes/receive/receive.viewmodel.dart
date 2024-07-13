@@ -28,9 +28,9 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   ReceiveViewModel(
     super.coordinator,
     this.serverWalletID,
-    this.serverAccountID,
-    this.isWalletView,
-  );
+    this.serverAccountID, {
+    required this.isWalletView,
+  });
 
   String serverWalletID;
   String serverAccountID;
@@ -68,13 +68,13 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     super.coordinator,
     super.serverWalletID,
     super.serverAccountID,
-    super.isWalletView,
     this.userManager,
     this.walletDataProvider,
     this.protonAddressProvider,
     this.walletKeysProvider,
-    this.localBitcoinAddressDataProvider,
-  );
+    this.localBitcoinAddressDataProvider, {
+    required super.isWalletView,
+  });
 
   late FrbAccount _frbAccount;
   final datasourceChangedStreamController =
@@ -102,7 +102,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       for (AccountModel accModel in walletData?.accounts ?? []) {
         accModel.labelDecrypt =
             await decryptAccountName(base64Encode(accModel.label));
-        var balance = await WalletManager.getWalletAccountBalance(
+        final balance = await WalletManager.getWalletAccountBalance(
           walletModel?.walletID ?? "",
           accModel.accountID,
         );
@@ -152,7 +152,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      if (localLastUsedIndex == -1 && accountModel!.lastUsedIndex == 0){
+      if (localLastUsedIndex == -1 && accountModel!.lastUsedIndex == 0) {
         addressIndex = accountModel!.lastUsedIndex;
       } else {
         addressIndex = accountModel!.lastUsedIndex + 1;
@@ -166,7 +166,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           accountModel?.accountID ?? "",
         );
         if (emailIntegrationAddresses.isNotEmpty) {
-          AddressModel? addressModel = await protonAddressProvider
+          final AddressModel? addressModel = await protonAddressProvider
               .getAddressModel(emailIntegrationAddresses.first);
           if (addressModel != null) {
             bitcoinViaEmailAddress = addressModel.email;
@@ -174,7 +174,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         }
         hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
       }
-      var addressInfo = await _frbAccount.getAddress(index: addressIndex);
+      final addressInfo = await _frbAccount.getAddress(index: addressIndex);
       address = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
@@ -194,8 +194,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   Future<String> decryptAccountName(String encryptedName) async {
     if (secretKey == null) {
-      var firstUserKey = await userManager.getFirstKey();
-      var walletKey = await walletKeysProvider.getWalletKey(
+      final firstUserKey = await userManager.getFirstKey();
+      final walletKey = await walletKeysProvider.getWalletKey(
         serverWalletID,
       );
       if (walletKey != null) {

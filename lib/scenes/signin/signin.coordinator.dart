@@ -15,17 +15,17 @@ class SigninCoordinator extends Coordinator {
   void end() {}
 
   void showHome(ApiEnv env) {
-    var view = HomeNavigationCoordinator(env).start();
+    final view = HomeNavigationCoordinator(env).start();
     pushReplacement(view);
   }
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
-    var apiService = apiServiceManager.getApiService();
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var viewModel = SigninViewModelImpl(
+    final userManager = serviceManager.get<UserManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final apiService = apiServiceManager.getApiService();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final viewModel = SigninViewModelImpl(
       this,
       userManager,
       apiService,

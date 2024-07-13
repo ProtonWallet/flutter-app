@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
@@ -9,7 +10,6 @@ import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
 import 'package:wallet/rust/common/errors.dart';
@@ -75,11 +75,10 @@ class ProtonRecoveryBloc
           error: "",
           isRecoveryEnabled: false,
           mnemonic: "",
-          authInfo: null,
           requireAuthModel: const RequireAuthModel()));
 
-      var userInfo = await protonUsersApi.getUserInfo();
-      var status = userInfo.mnemonicStatus == 3;
+      final userInfo = await protonUsersApi.getUserInfo();
+      final status = userInfo.mnemonicStatus == 3;
 
       emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
     });
@@ -91,11 +90,10 @@ class ProtonRecoveryBloc
           isRecoveryEnabled: false,
           mnemonic:
               "banner tag desk cart mirror horse name minimum hen sport sadness evidence",
-          authInfo: null,
           requireAuthModel: const RequireAuthModel()));
 
-      var userInfo = await protonUsersApi.getUserInfo();
-      var status = userInfo.mnemonicStatus == 3;
+      final userInfo = await protonUsersApi.getUserInfo();
+      final status = userInfo.mnemonicStatus == 3;
 
       emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
     });
@@ -103,8 +101,8 @@ class ProtonRecoveryBloc
     on<EnableRecovery>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: ""));
       // get user info
-      var userInfo = await protonUsersApi.getUserInfo();
-      var status = userInfo.mnemonicStatus;
+      final userInfo = await protonUsersApi.getUserInfo();
+      final status = userInfo.mnemonicStatus;
       // 0 - Mnemonic is disabled
       // 1 - Mnemonic is enabled but not set
       // 2 - Mnemonic is enabled but needs to be re-activated
@@ -117,21 +115,21 @@ class ProtonRecoveryBloc
           // var status = userInfo.mnemonicStatus;
           // check if the status is disabled already skip the process
           /// get auth info
-          var authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
+          final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 
           /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
-          var twoFaEnable = authInfo.twoFa.enabled;
-          var authSetp = RequireAuthModel(
-              requireAuth: true, twofaStatus: twoFaEnable, isDisable: false);
+          final twoFaEnable = authInfo.twoFa.enabled;
+          final authSetp = RequireAuthModel(
+              requireAuth: true, twofaStatus: twoFaEnable);
           emit(state.copyWith(requireAuthModel: authSetp, authInfo: authInfo));
         } else if (event.step == RecoverySteps.auth) {
-          var loginPassword = event.password;
-          var loginTwoFa = event.twofa;
-          var authInfo = state.authInfo ??
+          final loginPassword = event.password;
+          final loginTwoFa = event.twofa;
+          final authInfo = state.authInfo ??
               await protonUsersApi.getAuthInfo(intent: "Proton");
 
           /// build srp client proof
-          var clientProofs = await SrpClient.generateProofs(
+          final clientProofs = await SrpClient.generateProofs(
               loginPassword: loginPassword,
               version: authInfo.version,
               salt: authInfo.salt,
@@ -139,7 +137,7 @@ class ProtonRecoveryBloc
               serverEphemeral: authInfo.serverEphemeral);
 
           /// password scop unlock password change  ---  add 2fa code if needed
-          var proofs = authInfo.twoFa.enabled == 1
+          final proofs = authInfo.twoFa.enabled == 1
               ? ProtonSrpClientProofs(
                   clientEphemeral: clientProofs.clientEphemeral,
                   clientProof: clientProofs.clientProof,
@@ -150,32 +148,32 @@ class ProtonRecoveryBloc
                   clientProof: clientProofs.clientProof,
                   srpSession: authInfo.srpSession);
 
-          var serverProofs =
+          final serverProofs =
               await protonUsersApi.unlockPasswordChange(proofs: proofs);
 
           /// check if the server proofs are valid
-          var check = clientProofs.expectedServerProof == serverProofs;
+          final check = clientProofs.expectedServerProof == serverProofs;
           logger.i("EnableRecovery password server proofs: $check");
           if (!check) {
             return Future.error('Invalid server proofs');
           }
 
           /// generate new entropy and mnemonic
-          var salt = WalletKeyHelper.getRandomValues(16);
-          var randomEntropy = WalletKeyHelper.getRandomValues(16);
+          final salt = WalletKeyHelper.getRandomValues(16);
+          final randomEntropy = WalletKeyHelper.getRandomValues(16);
 
-          FrbMnemonic mnemonic = FrbMnemonic.newWith(entropy: randomEntropy);
-          var mnemonicWords = mnemonic.asWords();
+          final FrbMnemonic mnemonic = FrbMnemonic.newWith(entropy: randomEntropy);
+          final mnemonicWords = mnemonic.asWords();
           logger.d("Recovery Mnemonic: $mnemonicWords");
-          var recoveryPassword = randomEntropy.base64encode();
+          final recoveryPassword = randomEntropy.base64encode();
 
-          var hashedPassword = await SrpClient.computeKeyPassword(
+          final hashedPassword = await SrpClient.computeKeyPassword(
             password: recoveryPassword,
             salt: salt,
           );
 
-          var userFirstKey = await userManager.getFirstKey();
-          var userKeys = userInfo.keys;
+          final userFirstKey = await userManager.getFirstKey();
+          final userKeys = userInfo.keys;
           if (userKeys == null) {
             return Future.error('User keys not found');
           }
@@ -183,13 +181,13 @@ class ProtonRecoveryBloc
             return Future.error('More then one key is not supported yet');
           }
 
-          var oldPassphrase = userFirstKey.passphrase;
+          final oldPassphrase = userFirstKey.passphrase;
 
-          List<MnemonicUserKey> mnUserKeys = [];
+          final List<MnemonicUserKey> mnUserKeys = [];
 
           /// reencrypt password for now only support one
           for (ProtonUserKey key in userKeys) {
-            var newKey = proton_crypto.changePrivateKeyPassword(
+            final newKey = proton_crypto.changePrivateKeyPassword(
               key.privateKey,
               oldPassphrase,
               hashedPassword,
@@ -198,22 +196,22 @@ class ProtonRecoveryBloc
           }
 
           /// get srp module
-          var serverModule = await protonUsersApi.getAuthModule();
+          final serverModule = await protonUsersApi.getAuthModule();
 
           /// get clear text and verify signature
-          SRPVerifierB64 verifier = await SrpClient.generateVerifer(
+          final SRPVerifierB64 verifier = await SrpClient.generateVerifer(
             password: recoveryPassword,
             serverModulus: serverModule.modulus,
           );
 
-          var auth = MnemonicAuth(
+          final auth = MnemonicAuth(
             modulusId: serverModule.modulusId,
             salt: verifier.salt,
             version: verifier.version,
             verifier: verifier.verifier,
           );
 
-          var req = UpdateMnemonicSettingsRequestBody(
+          final req = UpdateMnemonicSettingsRequestBody(
             mnemonicUserKeys: mnUserKeys,
             mnemonicSalt: salt.base64encode(),
             mnemonicAuth: auth,
@@ -228,7 +226,6 @@ class ProtonRecoveryBloc
               emit(state.copyWith(
                 isLoading: false,
                 requireAuthModel: const RequireAuthModel(),
-                authInfo: null,
                 error: "Eanble recovery failed, please try again. code: $code",
               ));
               return;
@@ -238,20 +235,17 @@ class ProtonRecoveryBloc
                 error: "",
                 isRecoveryEnabled: true,
                 requireAuthModel: const RequireAuthModel(),
-                mnemonic: mnemonicWords.join(" "),
-                authInfo: null));
+                mnemonic: mnemonicWords.join(" ")));
           } on BridgeError catch (e) {
-            var errorMessage = parseSampleDisplayError(e);
+            final errorMessage = parseSampleDisplayError(e);
             emit(state.copyWith(
                 isLoading: false,
                 requireAuthModel: const RequireAuthModel(),
-                authInfo: null,
                 error: errorMessage));
           } catch (e) {
             emit(state.copyWith(
                 isLoading: false,
                 requireAuthModel: const RequireAuthModel(),
-                authInfo: null,
                 error: e.toString()));
           }
         }
@@ -260,21 +254,21 @@ class ProtonRecoveryBloc
       } else if (status == 2 || status == 4) {
         /// reactive flow
         /// generate new entropy and mnemonic
-        var salt = WalletKeyHelper.getRandomValues(16);
-        var randomEntropy = WalletKeyHelper.getRandomValues(16);
+        final salt = WalletKeyHelper.getRandomValues(16);
+        final randomEntropy = WalletKeyHelper.getRandomValues(16);
 
-        FrbMnemonic mnemonic = FrbMnemonic.newWith(entropy: randomEntropy);
-        var mnemonicWords = mnemonic.asWords();
+        final FrbMnemonic mnemonic = FrbMnemonic.newWith(entropy: randomEntropy);
+        final mnemonicWords = mnemonic.asWords();
         logger.d("Recovery Mnemonic: $mnemonicWords");
-        var recoveryPassword = randomEntropy.base64encode();
+        final recoveryPassword = randomEntropy.base64encode();
 
-        var hashedPassword = await SrpClient.computeKeyPassword(
+        final hashedPassword = await SrpClient.computeKeyPassword(
           password: recoveryPassword,
           salt: salt,
         );
 
-        var userFirstKey = await userManager.getFirstKey();
-        var userKeys = userInfo.keys;
+        final userFirstKey = await userManager.getFirstKey();
+        final userKeys = userInfo.keys;
         if (userKeys == null) {
           return Future.error('User keys not found');
         }
@@ -282,13 +276,13 @@ class ProtonRecoveryBloc
           return Future.error('More then one key is not supported yet');
         }
 
-        var oldPassphrase = userFirstKey.passphrase;
+        final oldPassphrase = userFirstKey.passphrase;
 
-        List<MnemonicUserKey> mnUserKeys = [];
+        final List<MnemonicUserKey> mnUserKeys = [];
 
         /// reencrypt password for now only support one
         for (ProtonUserKey key in userKeys) {
-          var newKey = proton_crypto.changePrivateKeyPassword(
+          final newKey = proton_crypto.changePrivateKeyPassword(
             key.privateKey,
             oldPassphrase,
             hashedPassword,
@@ -297,35 +291,34 @@ class ProtonRecoveryBloc
         }
 
         /// get srp module
-        var serverModule = await protonUsersApi.getAuthModule();
+        final serverModule = await protonUsersApi.getAuthModule();
 
         /// get clear text and verify signature
-        SRPVerifierB64 verifier = await SrpClient.generateVerifer(
+        final SRPVerifierB64 verifier = await SrpClient.generateVerifer(
           password: recoveryPassword,
           serverModulus: serverModule.modulus,
         );
 
-        var auth = MnemonicAuth(
+        final auth = MnemonicAuth(
           modulusId: serverModule.modulusId,
           salt: verifier.salt,
           version: verifier.version,
           verifier: verifier.verifier,
         );
 
-        var req = UpdateMnemonicSettingsRequestBody(
+        final req = UpdateMnemonicSettingsRequestBody(
           mnemonicUserKeys: mnUserKeys,
           mnemonicSalt: salt.base64encode(),
           mnemonicAuth: auth,
         );
 
         try {
-          var code = await protonSettingsApi.reactiveMnemonicSettings(req: req);
+          final code = await protonSettingsApi.reactiveMnemonicSettings(req: req);
           logger.i("EnableRecovery response code: $code");
           if (code != 1000) {
             emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const RequireAuthModel(),
-              authInfo: null,
               error: "Eanble recovery failed, please try again. code: $code",
             ));
             return;
@@ -335,20 +328,17 @@ class ProtonRecoveryBloc
               error: "",
               isRecoveryEnabled: true,
               requireAuthModel: const RequireAuthModel(),
-              mnemonic: mnemonicWords.join(" "),
-              authInfo: null));
+              mnemonic: mnemonicWords.join(" ")));
         } on BridgeError catch (e) {
-          var errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const RequireAuthModel(),
-              authInfo: null,
               error: errorMessage));
         } catch (e) {
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const RequireAuthModel(),
-              authInfo: null,
               error: e.toString()));
         }
       }
@@ -363,28 +353,28 @@ class ProtonRecoveryBloc
         // var status = userInfo.mnemonicStatus;
         // check if the status is disabled already skip the process
         /// get auth info
-        var authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
+        final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 
         /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
-        var twoFaEnable = authInfo.twoFa.enabled;
-        var authSetp = RequireAuthModel(
+        final twoFaEnable = authInfo.twoFa.enabled;
+        final authSetp = RequireAuthModel(
             requireAuth: true, twofaStatus: twoFaEnable, isDisable: true);
         emit(state.copyWith(requireAuthModel: authSetp, authInfo: authInfo));
       } else if (event.step == RecoverySteps.auth) {
-        var loginPassword = event.password;
-        var loginTwoFa = event.twofa;
-        var authInfo = state.authInfo ??
+        final loginPassword = event.password;
+        final loginTwoFa = event.twofa;
+        final authInfo = state.authInfo ??
             await protonUsersApi.getAuthInfo(intent: "Proton");
 
         /// build srp client proof
-        var clientProofs = await SrpClient.generateProofs(
+        final clientProofs = await SrpClient.generateProofs(
             loginPassword: loginPassword,
             version: authInfo.version,
             salt: authInfo.salt,
             modulus: authInfo.modulus,
             serverEphemeral: authInfo.serverEphemeral);
 
-        var proofs = authInfo.twoFa.enabled == 1
+        final proofs = authInfo.twoFa.enabled == 1
             ? ProtonSrpClientProofs(
                 clientEphemeral: clientProofs.clientEphemeral,
                 clientProof: clientProofs.clientProof,
@@ -397,31 +387,28 @@ class ProtonRecoveryBloc
 
         try {
           /// build request
-          var serverProofs = await protonSettingsApi.disableMnemonicSettings(
+          final serverProofs = await protonSettingsApi.disableMnemonicSettings(
             proofs: proofs,
           );
 
           /// check if the server proofs are valid
-          var check = clientProofs.expectedServerProof == serverProofs;
+          final check = clientProofs.expectedServerProof == serverProofs;
           logger.i("DisableRecovery server proofs: $check");
 
           emit(state.copyWith(
               isLoading: false,
               isRecoveryEnabled: false,
-              requireAuthModel: const RequireAuthModel(),
-              authInfo: null));
+              requireAuthModel: const RequireAuthModel()));
         } on BridgeError catch (e) {
-          var errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const RequireAuthModel(),
-              authInfo: null,
               error: errorMessage));
         } catch (e) {
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const RequireAuthModel(),
-              authInfo: null,
               error: e.toString()));
         }
       } else {}

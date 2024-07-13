@@ -18,7 +18,7 @@ class AddressPublicKey {
 
   static String encryptWithKeys(
       List<AddressPublicKey> publicKeys, String plainText) {
-    String userPublicKeysSepInComma =
+    final String userPublicKeysSepInComma =
         publicKeys.map((e) => e.publicKey).toList().join(",");
     return proton_crypto.encryptWithKeyRing(
         userPublicKeysSepInComma, plainText);

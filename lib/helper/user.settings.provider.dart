@@ -53,9 +53,11 @@ class UserSettingProvider with ChangeNotifier {
   }
 
   double getNotionalInBTC(double amountInFiatCurrency) {
-    FiatCurrency fiatCurrency = walletUserSetting.exchangeRate.fiatCurrency;
+    final FiatCurrency fiatCurrency =
+        walletUserSetting.exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      final FiatCurrencyInfo fiatCurrencyInfo =
+          fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
           (walletUserSetting.exchangeRate.exchangeRate /
               BigInt.from(fiatCurrencyInfo.cents));
@@ -66,7 +68,7 @@ class UserSettingProvider with ChangeNotifier {
 
   String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
     fiatCurrency ??= walletUserSetting.fiatCurrency;
-    return fiatCurrency.name.toString().toUpperCase();
+    return fiatCurrency.name.toUpperCase();
   }
 
   String getFiatCurrencySign({FiatCurrency? fiatCurrency}) {

@@ -8,10 +8,10 @@ class TextChoices extends StatefulWidget {
   final String selectedValue;
 
   TextChoices({
-    super.key,
-    this.controller,
     required this.choices,
     required this.selectedValue,
+    super.key,
+    this.controller,
   }) {
     if (controller != null) {
       controller!.text = selectedValue;
@@ -39,8 +39,6 @@ class TextFieldTextState extends State<TextChoices> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Wrap(
                 spacing: 2.0,

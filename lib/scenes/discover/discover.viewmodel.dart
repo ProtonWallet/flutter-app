@@ -1,13 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
+import 'package:http/http.dart' as http;
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:xml/xml.dart' as xml;
-import 'package:http/http.dart' as http;
 
 abstract class DiscoverViewModel extends ViewModel<DiscoverCoordinator> {
   DiscoverViewModel(super.coordinator);
@@ -74,7 +75,7 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
   String _findElementOrDefault(
       xml.XmlElement item, String tagName, String defaultValue) {
     try {
-      var element = item.findElements(tagName).single;
+      final element = item.findElements(tagName).single;
       return element.innerText.trim().isEmpty
           ? defaultValue
           : element.innerText;

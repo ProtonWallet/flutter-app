@@ -4,13 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/add.button.v1.dart';
-import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/dropdown.button.v2.dart';
-import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
@@ -20,9 +13,16 @@ import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/scenes/components/add.button.v1.dart';
+import 'package:wallet/scenes/components/alert.custom.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
+import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
+import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -31,9 +31,9 @@ import 'package:wallet/theme/theme.font.dart';
 class WalletSettingSheet {
   static void show(BuildContext context, HomeViewModel viewModel,
       WalletMenuModel walletMenuModel) {
-    ScrollController scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
     bool hasEmailIntegration = false;
-    Map<String, bool> emailIntegrationEnables = {
+    final Map<String, bool> emailIntegrationEnables = {
       for (var accountMenuModel in walletMenuModel.accounts)
         accountMenuModel.accountModel.accountID:
             accountMenuModel.emailIds.isNotEmpty
@@ -55,29 +55,29 @@ class WalletSettingSheet {
       return BlocBuilder<WalletListBloc, WalletListState>(
           bloc: viewModel.walletListBloc,
           builder: (context, state) {
-            /// TODO:: change to walletMenuModel
+            // TODO(fix): change to walletMenuModel
             for (WalletMenuModel walletMenuModel2 in state.walletsModel) {
               if (walletMenuModel.walletModel.walletID ==
                   walletMenuModel2.walletModel.walletID) {
                 walletMenuModel =
-                    walletMenuModel2; // TODO:: fix this workaround, or the value is old one
+                    walletMenuModel2; // TODO(fix): fix this workaround, or the value is old one
                 break;
               }
             }
-            TextEditingController walletNameController =
+            final TextEditingController walletNameController =
                 TextEditingController(text: walletMenuModel.walletName);
-            FocusNode walletNameFocusNode = FocusNode();
-            WalletModel userWallet = walletMenuModel.walletModel;
-            List<AccountModel> userAccounts =
+            final FocusNode walletNameFocusNode = FocusNode();
+            final WalletModel userWallet = walletMenuModel.walletModel;
+            final List<AccountModel> userAccounts =
                 walletMenuModel.accounts.map((e) => e.accountModel).toList();
-            Map<String, TextEditingController> accountNameControllers = {
+            final Map<String, TextEditingController> accountNameControllers = {
               for (var accountMenuModel in walletMenuModel.accounts)
                 accountMenuModel.accountModel.accountID:
                     TextEditingController(text: accountMenuModel.label)
             };
-            Map<String, ValueNotifier> accountFiatCurrencyNotifier =
+            final Map<String, ValueNotifier> accountFiatCurrencyNotifier =
                 viewModel.getAccountFiatCurrencyNotifiers(userAccounts);
-            Map<String, FocusNode> accountNameFocusNodes = {
+            final Map<String, FocusNode> accountNameFocusNodes = {
               for (var item in userAccounts) item.accountID: FocusNode()
             };
             for (AccountModel item in userAccounts) {
@@ -88,12 +88,12 @@ class WalletSettingSheet {
                 }
               });
             }
-            Map<String, ValueNotifier> _ = {
+            final Map<String, ValueNotifier> _ = {
               for (var item in userAccounts)
                 item.accountID:
                     ValueNotifier(viewModel.protonAddresses.firstOrNull)
             };
-            int indexOfWallet = walletMenuModel.currentIndex;
+            final int indexOfWallet = walletMenuModel.currentIndex;
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,8 +333,8 @@ class WalletSettingSheet {
                                             items: fiatCurrencies,
                                             canSearch: true,
                                             itemsText: fiatCurrencies
-                                                .map((v) => FiatCurrencyHelper
-                                                    .getFullName(v))
+                                                .map(FiatCurrencyHelper
+                                                    .getFullName)
                                                 .toList(),
                                             itemsLeadingIcons: fiatCurrencies
                                                 .map((v) =>
@@ -511,7 +511,7 @@ class WalletSettingSheet {
                                   context,
                                   viewModel,
                                   walletMenuModel,
-                                  walletMenuModel.accounts
+                                  hasBalance: walletMenuModel.accounts
                                           .map((v) => v.balance)
                                           .sum >
                                       0,

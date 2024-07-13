@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/scenes/components/bitcoin.address.info.box.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -23,7 +23,6 @@ class WalletBitcoinAddressList extends StatefulWidget {
   final Map<String, String> accountID2Name;
 
   const WalletBitcoinAddressList({
-    super.key,
     required this.addresses,
     required this.currentPage,
     required this.showTransactionDetailCallback,
@@ -31,6 +30,7 @@ class WalletBitcoinAddressList extends StatefulWidget {
     required this.filter,
     required this.keyWord,
     required this.accountID2Name,
+    super.key,
   });
 
   @override
@@ -74,7 +74,8 @@ class WalletBitcoinAddressListState extends State<WalletBitcoinAddressList> {
               accountName:
                   widget.accountID2Name[addressesFiltered[index].accountID] ??
                       addressesFiltered[index].accountID,
-              showTransactionDetailCallback: widget.showTransactionDetailCallback),
+              showTransactionDetailCallback:
+                  widget.showTransactionDetailCallback),
         if (addressesFiltered.length >
             defaultTransactionPerPage * widget.currentPage +
                 defaultTransactionPerPage)
@@ -93,7 +94,10 @@ class WalletBitcoinAddressListState extends State<WalletBitcoinAddressList> {
 }
 
 List<BitcoinAddressDetail> applyBitcoinAddressDetailFilterAndKeyword(
-    String filter, String keyword, List<BitcoinAddressDetail> addresses) {
+  String filter,
+  String keyword,
+  List<BitcoinAddressDetail> addresses,
+) {
   List<BitcoinAddressDetail> newAddresses = [];
   if (filter.isNotEmpty) {
     if (filter == "used") {
@@ -108,11 +112,11 @@ List<BitcoinAddressDetail> applyBitcoinAddressDetailFilterAndKeyword(
   }
 
   if (keyword.isNotEmpty) {
-    keyword = keyword.toLowerCase();
+    final lowerCaseKeyword = keyword.toLowerCase();
     newAddresses = newAddresses.where((t) {
       if (t.bitcoinAddressModel.bitcoinAddress
           .toLowerCase()
-          .contains(keyword)) {
+          .contains(lowerCaseKeyword)) {
         return true;
       }
       return false;

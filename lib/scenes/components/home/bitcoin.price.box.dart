@@ -2,13 +2,13 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
-import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
+import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class BitcoinPriceBox extends StatelessWidget {
@@ -18,11 +18,9 @@ class BitcoinPriceBox extends StatelessWidget {
   final ProtonExchangeRate exchangeRate;
 
   const BitcoinPriceBox({
-    super.key,
-    required this.title,
+    required this.title, required this.exchangeRate, super.key,
     this.price = 0,
     this.priceChange = 0,
-    required this.exchangeRate,
   });
 
   @override

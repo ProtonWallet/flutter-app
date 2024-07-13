@@ -51,7 +51,6 @@ class SettingsViewModelImpl extends SettingsViewModel {
     switch (to) {
       case NavID.natvieReportBugs:
         nativeViewChannel.nativeReportBugs();
-        break;
       case NavID.logs:
         coordinator.showLogs();
       default:

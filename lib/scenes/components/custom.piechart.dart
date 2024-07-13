@@ -18,7 +18,7 @@ class CustomPieChart extends StatefulWidget {
   final double width;
   final double height;
   final List data;
-  //TODO:: move this to constants/proton.color.dart when design is finalized
+  // TODO(fix): move this to constants/proton.color.dart when design is finalized
   static List colors = [
     const Color.fromARGB(255, 112, 49, 172),
     const Color.fromARGB(255, 60, 157, 78),
@@ -65,12 +65,9 @@ class CustomPieChartState extends State<CustomPieChart> {
                     sectionsSpace: 0,
                     centerSpaceRadius: 40,
                   ),
-                  swapAnimationDuration: const Duration(milliseconds: 60),
-                  // Optional
-                  swapAnimationCurve: Curves.linear)),
+                  swapAnimationDuration: const Duration(milliseconds: 60))),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               for (int i = 0; i < min(5, widget.data.length); i++)
                 Row(children: [
@@ -90,7 +87,7 @@ class CustomPieChartState extends State<CustomPieChart> {
   }
 
   List<PieChartSectionData>? getSections() {
-    List<PieChartSectionData> sections = [];
+    final List<PieChartSectionData> sections = [];
     for (int i = 0; i < min(5, widget.data.length); i++) {
       final isTouched = i == touchedIndex;
       final textStyle = isTouched

@@ -17,11 +17,11 @@ class TransactionListTitle extends StatelessWidget {
   final String? body;
 
   const TransactionListTitle({
-    super.key,
     required this.width,
     required this.address,
     required this.isSend,
     required this.bitcoinAmount,
+    super.key,
     this.timestamp,
     this.note = "",
     this.onTap,
@@ -45,7 +45,7 @@ class TransactionListTitle extends StatelessWidget {
           //     width: 0.5,
           //   )),
           // ),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          child: Row(children: [
             SvgPicture.asset(
                 isSend
                     ? "assets/images/icon/send.svg"
@@ -69,7 +69,8 @@ class TransactionListTitle extends StatelessWidget {
                                 child: Text(
                                 CommonHelper
                                     .formatLocaleTimeWithSendOrReceiveOn(
-                                        context, isSend, timestamp!),
+                                        context, timestamp!,
+                                        isSend: isSend),
                                 style: FontManager.captionRegular(
                                     ProtonColors.textHint),
                                 maxLines: 1,
@@ -124,7 +125,7 @@ class TransactionListTitle extends StatelessWidget {
                   //     ))
                   //   ]),
                   if ((body ?? "").isNotEmpty)
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Row(children: [
                       // Container(
                       //     decoration: BoxDecoration(
                       //       shape: BoxShape.circle,

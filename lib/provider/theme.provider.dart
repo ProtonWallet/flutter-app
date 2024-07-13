@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class ThemeProvider extends ChangeNotifier {
   final String key = 'theme'; // preference key
@@ -45,18 +45,18 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   // init SharedPreferences
-  _initialPreferences() async {
+  Future<void> _initialPreferences() async {
     _preferences ??= await SharedPreferences.getInstance();
   }
 
   //  save
-  _savePreferences() async {
+  Future<void> _savePreferences() async {
     await _initialPreferences();
     _preferences?.setString(key, _themeMode);
   }
 
   // read
-  _loadFromPreferences() async {
+  Future<void> _loadFromPreferences() async {
     await _initialPreferences();
     _themeMode = _preferences?.getString(key) ?? 'light';
     if (_themeMode == "light") {
@@ -67,7 +67,7 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners(); // notify
   }
 
-  toggleChangeTheme(val) {
+  void toggleChangeTheme(val) {
     _themeMode = val;
     logger.d('current theme mode: $_themeMode');
     if (_themeMode == "light") {

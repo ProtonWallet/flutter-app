@@ -12,12 +12,9 @@ class RecoverySection extends StatelessWidget {
   final bool? isSwitched;
 
   const RecoverySection({
-    super.key,
-    required this.title,
-    required this.description,
+    required this.title, required this.description, required this.isLoading, super.key,
     this.logo,
     this.warning,
-    required this.isLoading,
     this.onChanged,
     this.isSwitched,
   });
@@ -34,14 +31,11 @@ class RecoverySection extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// header
           Row(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Column(
@@ -82,8 +76,6 @@ class RecoverySection extends StatelessWidget {
           /// description
           Row(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(

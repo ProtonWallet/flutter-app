@@ -33,7 +33,9 @@ class RampCountry {
 
   /// Handling a list of ProtonFeedItem instances
   static List<RampCountry> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => RampCountry.fromJson(json)).toList();
+    return jsonList
+        .map((json) => RampCountry.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   static List<Map<String, dynamic>> toJsonList(List<RampCountry> items) {
@@ -41,7 +43,7 @@ class RampCountry {
   }
 
   static Future<List<RampCountry>> loadJsonFromAsset() async {
-    String jsonString =
+    final String jsonString =
         await rootBundle.loadString('assets/json/ramp_countries.json');
     final decodedJsonList = json.decode(jsonString) as List<dynamic>;
     return fromJsonList(decodedJsonList);

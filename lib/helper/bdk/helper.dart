@@ -37,7 +37,6 @@
 //     return this;
 //   }
 
-/// Finish building the transaction. Returns the  [TxBuilderResult].
 // Future<TxBuilderResult> finish(Wallet wallet) async {
 //   try {
 //     final res = await RustFFIProvider.api
@@ -64,7 +63,6 @@
 
 //   Descriptor._(this._descriptorInstance, this._network);
 
-///  [Descriptor] constructor
 // static Future<Descriptor> create(
 //     {required String descriptor, required Network network}) async {
 //   try {
@@ -386,23 +384,6 @@ class FeeRate {
 
   double asSatPerVb() {
     return _feeRate;
-  }
-}
-
-/// A key-value map for an input of the corresponding index in the unsigned
-/// transaction.
-class Input {
-  final String _input;
-
-  Input._(this._input);
-
-  @override
-  String toString() {
-    return _input.toString();
-  }
-
-  static Input create(String internal) {
-    return Input._(internal);
   }
 }
 

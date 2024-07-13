@@ -1,24 +1,24 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/scenes/core/view.dart';
-import 'package:flutter/services.dart';
-import 'package:wallet/scenes/receive/receive.viewmodel.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/alert.custom.dart';
+import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
+import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/receive/receive.viewmodel.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class ReceiveView extends ViewBase<ReceiveViewModel> {
   const ReceiveView(ReceiveViewModel viewModel)
@@ -49,8 +49,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     ),
                     child: SingleChildScrollView(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             S.of(context).receive_desc,
@@ -123,7 +121,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               ),
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const SizedBox(height: 10),
                                     if (viewModel.isWalletView &&
@@ -157,7 +154,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                       .width,
                                                   200),
                                               data: viewModel.address,
-                                              version: QrVersions.auto,
                                             )
                                           : CircularProgressIndicator(
                                               color: ProtonColors.protonBlue,
@@ -191,8 +187,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                       height: 6,
                                     ),
                                     Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [

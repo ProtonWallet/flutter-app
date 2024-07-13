@@ -36,14 +36,14 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => TransactionModel.fromMap(maps[index]));
   }
 
   @override
   Future findById(int id) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return TransactionModel.fromMap(maps.first);
@@ -78,7 +78,7 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<void> insertOrUpdate(TransactionModel transactionModel) async {
-    TransactionModel? transactionModelExists =
+    final TransactionModel? transactionModelExists =
         await findByServerID(transactionModel.serverID);
     //DateTime now = DateTime.now();
     if (transactionModelExists != null) {
@@ -96,7 +96,7 @@ class TransactionDaoImpl extends TransactionDao {
     String serverWalletID,
     String serverAccountID,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where:
             'externalTransactionID = ? and serverWalletID = ? and serverAccountID = ?',
         whereArgs: [externalTransactionID, serverWalletID, serverAccountID]);
@@ -108,7 +108,7 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<TransactionModel?> findByServerID(String serverID) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'serverID = ?', whereArgs: [serverID]);
     if (maps.isNotEmpty) {
       return TransactionModel.fromMap(maps.first);
@@ -120,11 +120,11 @@ class TransactionDaoImpl extends TransactionDao {
   Future<List<TransactionModel>> findAllByServerAccountID(
     String serverAccountID,
   ) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
     if (maps.isNotEmpty) {
       return maps
-          .map((e) => TransactionModel.fromMap(e))
+          .map(TransactionModel.fromMap)
           .toList()
           .cast<TransactionModel>();
     }
@@ -133,7 +133,7 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO: implement deleteByServerID
+    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 }

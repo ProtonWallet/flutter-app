@@ -16,17 +16,17 @@ class RecoveryCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
+    final userManager = serviceManager.get<UserManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
       userManager,
       apiServiceManager.getUsersApiClient(),
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
     );
 
-    var viewModel = RecoveryViewModelImpl(
+    final viewModel = RecoveryViewModelImpl(
       this,
       protonRecoveryBloc,
       apiServiceManager.getUsersApiClient(),

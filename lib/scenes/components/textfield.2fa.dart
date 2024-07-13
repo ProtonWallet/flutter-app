@@ -23,8 +23,8 @@ class TextField2FA extends StatefulWidget {
   final TextInputAction? textInputAction;
 
   const TextField2FA({
-    super.key,
     required this.width,
+    super.key,
     this.height,
     this.controller,
     this.focusNode,
@@ -59,58 +59,57 @@ class TextFieldTextState extends State<TextField2FA> {
         ),
         child: Center(
           child: (widget.controller!.text.endsWith("@proton.me") &&
-              widget.showMailTag)
+                  widget.showMailTag)
               ? Container(
-              alignment: Alignment.centerLeft,
-              child: buildTagWidget(widget.controller!.text))
+                  alignment: Alignment.centerLeft,
+                  child: buildTagWidget(widget.controller!.text))
               : TextField(
-            textAlignVertical: TextAlignVertical.center,
-            textAlign: widget.centerHorizontal
-                ? TextAlign.center
-                : TextAlign.left,
-            style: FontManager.body2Regular(
-                Theme.of(context).colorScheme.primary),
-            textInputAction: widget.textInputAction,
-            onChanged: widget.onChanged,
-            maxLines: widget.multiLine ? null : 1,
-            minLines: widget.multiLine ? 5 : 1,
-            maxLength: widget.maxLength,
-            controller: widget.controller,
-            focusNode: widget.focusNode,
-            keyboardType: widget.digitOnly
-                ? TextInputType.number
-                : widget.multiLine
-                ? TextInputType.multiline
-                : TextInputType.text,
-            inputFormatters: widget.digitOnly
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : [],
-            decoration: InputDecoration(
-                hintText: widget.hintText,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                      color: widget.showEnabledBorder
-                          ? Theme.of(context).colorScheme.primary
-                          : widget.color,
-                      width: 1),
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: widget.centerHorizontal
+                      ? TextAlign.center
+                      : TextAlign.left,
+                  style: FontManager.body2Regular(
+                      Theme.of(context).colorScheme.primary),
+                  textInputAction: widget.textInputAction,
+                  onChanged: widget.onChanged,
+                  maxLines: widget.multiLine ? null : 1,
+                  minLines: widget.multiLine ? 5 : 1,
+                  maxLength: widget.maxLength,
+                  controller: widget.controller,
+                  focusNode: widget.focusNode,
+                  keyboardType: widget.digitOnly
+                      ? TextInputType.number
+                      : widget.multiLine
+                          ? TextInputType.multiline
+                          : TextInputType.text,
+                  inputFormatters: widget.digitOnly
+                      ? [FilteringTextInputFormatter.digitsOnly]
+                      : [],
+                  decoration: InputDecoration(
+                      hintText: widget.hintText,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                            color: widget.showEnabledBorder
+                                ? Theme.of(context).colorScheme.primary
+                                : widget.color),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                            color: ProtonColors.interactionNorm, width: 2),
+                      ),
+                      suffixIcon: widget.showSuffixIcon
+                          ? IconButton(
+                              icon: widget.suffixIcon,
+                              onPressed: widget.suffixIconOnPressed ?? () {},
+                            )
+                          : null,
+                      counterStyle: const TextStyle(
+                        height: double.minPositive,
+                      ),
+                      counterText: ""),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                      color: ProtonColors.interactionNorm, width: 2),
-                ),
-                suffixIcon: widget.showSuffixIcon
-                    ? IconButton(
-                  icon: widget.suffixIcon,
-                  onPressed: widget.suffixIconOnPressed ?? () {},
-                )
-                    : null,
-                counterStyle: const TextStyle(
-                  height: double.minPositive,
-                ),
-                counterText: ""),
-          ),
         ));
   }
 

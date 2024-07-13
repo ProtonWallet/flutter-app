@@ -52,25 +52,18 @@ class _BarChart extends StatelessWidget {
     switch (value.toInt()) {
       case 0:
         text = 'Mn';
-        break;
       case 1:
         text = 'Te';
-        break;
       case 2:
         text = 'Wd';
-        break;
       case 3:
         text = 'Tu';
-        break;
       case 4:
         text = 'Fr';
-        break;
       case 5:
         text = 'St';
-        break;
       case 6:
         text = 'Sn';
-        break;
       default:
         text = '';
         break;
@@ -83,23 +76,15 @@ class _BarChart extends StatelessWidget {
   }
 
   FlTitlesData get titlesData => FlTitlesData(
-        show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: false,
             reservedSize: 30,
             getTitlesWidget: getTitles,
           ),
         ),
-        leftTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
+        leftTitles: const AxisTitles(),
+        topTitles: const AxisTitles(),
+        rightTitles: const AxisTitles(),
       );
 
   FlBorderData get borderData => FlBorderData(

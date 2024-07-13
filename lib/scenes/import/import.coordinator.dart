@@ -19,15 +19,15 @@ class ImportCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var userManager = serviceManager.get<UserManager>();
-    var bloc = CreateWalletBloc(
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final userManager = serviceManager.get<UserManager>();
+    final bloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletKeysProvider,
       dataProviderManager.walletPassphraseProvider,
     );
-    var viewModel = ImportViewModelImpl(
+    final viewModel = ImportViewModelImpl(
       this,
       dataProviderManager,
       preInputName,

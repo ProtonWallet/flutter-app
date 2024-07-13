@@ -13,15 +13,15 @@ class SettingsCoordinator extends Coordinator {
   void end() {}
 
   void showLogs() {
-    var view = LogsCoordinator().start();
+    final view = LogsCoordinator().start();
     push(view);
   }
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var nativeChannel = serviceManager.get<PlatformChannelManager>();
-    var viewModel = SettingsViewModelImpl(
+    final userManager = serviceManager.get<UserManager>();
+    final nativeChannel = serviceManager.get<PlatformChannelManager>();
+    final viewModel = SettingsViewModelImpl(
       this,
       userManager,
       nativeChannel,

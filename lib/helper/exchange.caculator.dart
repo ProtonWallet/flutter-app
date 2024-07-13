@@ -14,10 +14,10 @@ class ExchangeCalculator {
     ProtonExchangeRate exchangeRate,
     int amountInSatoshi,
   ) {
-    FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+    final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
-      var outValue = exchangeRate.exchangeRate *
+      final FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      final outValue = exchangeRate.exchangeRate *
           BigInt.from(amountInSatoshi) /
           BigInt.from(fiatCurrencyInfo.cents) /
           100000000;
@@ -88,7 +88,6 @@ class ExchangeCalculator {
       value: amount.toInt(),
       thousandSeparator: ",",
       suffix: " ${bitcoinUnit.name.toUpperCase()}",
-      fractionDigits: 0,
       textStyle: textStyle,
     );
   }
@@ -97,9 +96,9 @@ class ExchangeCalculator {
     ProtonExchangeRate exchangeRate,
     double amountInFiatCurrency,
   ) {
-    FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+    final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      final FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
           (exchangeRate.exchangeRate / BigInt.from(fiatCurrencyInfo.cents));
     }

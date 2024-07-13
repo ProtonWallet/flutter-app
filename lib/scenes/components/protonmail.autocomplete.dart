@@ -19,10 +19,10 @@ class ProtonMailAutoComplete extends StatelessWidget {
   final VoidCallback? callback;
 
   const ProtonMailAutoComplete({
-    super.key,
     required this.emails,
     required this.textEditingController,
     required this.focusNode,
+    super.key,
     this.callback,
     this.labelText,
     this.color = Colors.transparent,
@@ -102,7 +102,6 @@ class ProtonMailAutoComplete extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(18.0)),
                     border: Border.all(
                       width: 1.6,
-                      style: BorderStyle.solid,
                       color: focusNode.hasFocus
                           ? ProtonColors.interactionNorm
                           : ProtonColors.textHint,

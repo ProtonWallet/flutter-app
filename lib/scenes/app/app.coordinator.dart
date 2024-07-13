@@ -21,7 +21,7 @@ class AppCoordinator extends Coordinator {
 
   @override
   Widget start() {
-    var viewModel = AppViewModelImpl(this, serviceManager);
+    final viewModel = AppViewModelImpl(this, serviceManager);
     widget = AppView(
       viewModel,
       const SplashView(),
@@ -30,13 +30,13 @@ class AppCoordinator extends Coordinator {
   }
 
   void showHome(ApiEnv env) {
-    var view = HomeNavigationCoordinator(env).start();
+    final view = HomeNavigationCoordinator(env).start();
     pushReplacement(view);
   }
 
   void showWelcome(ApiEnv env) {
     final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
-    var view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
+    final view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
   }
 }

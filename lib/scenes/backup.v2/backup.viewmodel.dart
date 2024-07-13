@@ -22,7 +22,7 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
 
   void setBackup();
 
-  void setIntroduce(bool introduce);
+  void setIntroduce({required bool introduce});
 }
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
@@ -61,8 +61,8 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       datasourceChangedStreamController.stream;
 
   @override
-  void setBackup() async {
-    WalletModel walletModel =
+  Future<void> setBackup() async {
+    final WalletModel walletModel =
         await DBHelper.walletDao!.findByServerID(walletID);
     walletModel.showWalletRecovery = 0;
     walletsDataProvider.disableShowWalletRecovery(walletModel.walletID);
@@ -86,7 +86,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   Future<void> move(NavID to) async {}
 
   @override
-  void setIntroduce(bool introduce) {
+  void setIntroduce({required bool introduce}) {
     inIntroduce = introduce;
     datasourceChangedStreamController.sinkAddSafe(this);
   }

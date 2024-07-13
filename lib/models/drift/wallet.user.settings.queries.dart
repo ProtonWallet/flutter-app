@@ -8,7 +8,7 @@ part 'wallet.user.settings.queries.g.dart';
 @DriftAccessor(tables: [WalletUserSettingsTable])
 class WalletUserSettingsQueries extends DatabaseAccessor<AppDatabase>
     with _$WalletUserSettingsQueriesMixin {
-  WalletUserSettingsQueries(super.db);
+  WalletUserSettingsQueries(super.attachedDatabase);
 
   Future<WalletUserSettings?> getWalletUserSettings(String userId) {
     return (select(walletUserSettingsTable)

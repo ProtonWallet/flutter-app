@@ -1,5 +1,5 @@
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/helper/extension/platform.extension.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 
 abstract class StatelessViewModel<T extends Coordinator> {
   StatelessViewModel(this.coordinator);

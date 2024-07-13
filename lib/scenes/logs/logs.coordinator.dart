@@ -12,13 +12,13 @@ class LogsCoordinator extends Coordinator {
   void end() {}
 
   void showHome(ApiEnv env) {
-    var view = HomeNavigationCoordinator(env).start();
+    final view = HomeNavigationCoordinator(env).start();
     pushReplacement(view);
   }
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = LogsViewModelImpl(
+    final viewModel = LogsViewModelImpl(
       this,
     );
     widget = LogsView(

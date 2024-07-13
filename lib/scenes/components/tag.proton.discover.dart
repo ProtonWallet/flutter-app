@@ -16,7 +16,7 @@ class TagProtonDiscover extends StatelessWidget {
       alignment: Alignment.center,
       children: <Widget>[
         Container(
-                margin: const EdgeInsets.only(left: 0, right: 4, top: 4),
+                margin: const EdgeInsets.only(right: 4, top: 4),
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 10.0, top: 4.0, bottom: 4.0),
                 decoration: BoxDecoration(

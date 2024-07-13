@@ -20,15 +20,15 @@ class AddressKey {
   String decryptBinary(String? binaryEncryptedString) {
     if (binaryEncryptedString != null) {
       try {
-        Uint8List bytes = proton_crypto.decryptBinary(
+        final Uint8List bytes = proton_crypto.decryptBinary(
             privateKey, passphrase, binaryEncryptedString.base64decode());
-        String? decryptedMessage = utf8.decode(bytes);
+        final String decryptedMessage = utf8.decode(bytes);
         if (decryptedMessage != "null") {
           return decryptedMessage;
         }
       } catch (e, stacktrace) {
         logger.i(
-          "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+          "getHistoryTransactions error: $e stacktrace: $stacktrace",
         );
         return "";
       }
@@ -41,7 +41,7 @@ class AddressKey {
       return proton_crypto.decrypt(privateKey, passphrase, encryptedArmor);
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "getHistoryTransactions error: $e stacktrace: $stacktrace",
       );
       return "";
     }
@@ -52,7 +52,7 @@ class AddressKey {
       return proton_crypto.encrypt(privateKey, plainText);
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "getHistoryTransactions error: $e stacktrace: $stacktrace",
       );
       rethrow;
     }
@@ -63,7 +63,7 @@ class AddressKey {
       return proton_crypto.encryptBinary(privateKey, data).base64encode();
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: ${e.toString()} stacktrace: ${stacktrace.toString()}",
+        "getHistoryTransactions error: $e stacktrace: $stacktrace",
       );
       rethrow;
     }

@@ -32,10 +32,8 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
     switch (to) {
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
-        break;
       case NavID.twoFactorAuthDisable:
         coordinator.showTwoFactorAuthDisable();
-        break;
       default:
         break;
     }

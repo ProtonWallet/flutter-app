@@ -13,7 +13,7 @@ class TwoFactorAuthDisableCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = TwoFactorAuthDisableViewModelImpl(this);
+    final viewModel = TwoFactorAuthDisableViewModelImpl(this);
     widget = TwoFactorAuthDisableView(
       viewModel,
     );

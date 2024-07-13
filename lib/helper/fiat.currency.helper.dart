@@ -15,7 +15,7 @@ class FiatCurrencyInfo {
 
 class FiatCurrencyHelper {
   static String getSymbol(FiatCurrency apiFiatCurrency) {
-    String symbol = apiFiatCurrency.name.toUpperCase();
+    final String symbol = apiFiatCurrency.name.toUpperCase();
     return symbol;
   }
 

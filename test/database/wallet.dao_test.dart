@@ -7,8 +7,8 @@ import 'package:wallet/models/wallet.model.dart';
 
 Future<void> main() async {
   List? results;
-  AppDatabase appDatabase = AppDatabase();
-  DateTime now = DateTime.now();
+  final AppDatabase appDatabase = AppDatabase();
+  final DateTime now = DateTime.now();
 
   setUpAll(() async {
     databaseFactory = databaseFactoryFfi;
@@ -90,7 +90,7 @@ Future<void> main() async {
 
     test('findByID case 1', () async {
       // findByID
-      WalletModel walletModel = await appDatabase.walletDao.findById(2);
+      final WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);
       expect(walletModel.userID, "server_userid_2");
       expect(walletModel.name, 'Wallet for Test 2');
@@ -143,7 +143,7 @@ Future<void> main() async {
         walletID: "",
         showWalletRecovery: 0,
       ));
-      WalletModel walletModel = await appDatabase.walletDao.findById(2);
+      final WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);
       expect(walletModel.userID, "server_userid_33");
       expect(walletModel.name, 'Wallet for Test Updated');
