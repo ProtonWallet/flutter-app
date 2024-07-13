@@ -14,7 +14,7 @@ abstract class Service<T> {
   Service({required this.duration});
 
   void updateDuration(Duration duration) {
-    duration = duration;
+    this.duration = duration;
   }
 
   void start() {
@@ -38,9 +38,7 @@ abstract class Service<T> {
   Future<void> _runTasks() async {
     while (_isRunning && !_isPaused) {
       try {
-        await onUpdate().then((value) {
-          _dataController.sinkAddSafe(value);
-        });
+        await onUpdate().then(_dataController.sinkAddSafe);
       } catch (e, statcktrace) {
         logger.e('Service $runtimeType runTask: $e statcktrac: $statcktrace');
       }

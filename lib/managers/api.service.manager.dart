@@ -35,7 +35,7 @@ class ProtonApiServiceManager implements Manager {
 
   Future<void> saveSession(ChildSession session) async {
     // Notes:: the user manager saving the session in parallel make sure await each other
-    // TODO:: merge this with user manager.dart. maybe have a different class to handle session only
+    // TODO(fix): merge this with user manager.dart. maybe have a different class to handle session only
     await storage.set("sessionId", session.sessionId);
     await storage.set("accessToken", session.accessToken);
     await storage.set("refreshToken", session.refreshToken);
@@ -44,15 +44,15 @@ class ProtonApiServiceManager implements Manager {
 
   Future<void> initalOldApiService() async {
     // Notes:: the user manager saving the session in parallel make sure await each other
-    String scopes = await storage.get("scopes");
-    String uid = await storage.get("sessionId");
-    String accessToken = await storage.get("accessToken");
-    String refreshToken = await storage.get("refreshToken");
+    final String scopes = await storage.get("scopes");
+    final String uid = await storage.get("sessionId");
+    final String accessToken = await storage.get("accessToken");
+    final String refreshToken = await storage.get("refreshToken");
     logger.i("sessionId = '$uid';");
     logger.i("accessToken = '$accessToken';");
     logger.i("refreshToken = '$refreshToken';");
 
-    var apiService = _apiService;
+    final apiService = _apiService;
     if (apiService != null) {
       logger.w("ApiService already initalized, updating the session");
       await apiService.updateAuth(
@@ -118,7 +118,7 @@ class ProtonApiServiceManager implements Manager {
 
   @override
   Future<void> login(String userID) {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 

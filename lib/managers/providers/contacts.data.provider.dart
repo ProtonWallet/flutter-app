@@ -36,7 +36,7 @@ class ContactsDataProvider extends DataProvider {
 
   Future<List<ContactsModel>?> _getFromDB() async {
     // try to find it fro cache
-    var contacts = (await contactsDao.findAll()).cast<ContactsModel>();
+    final contacts = (await contactsDao.findAll()).cast<ContactsModel>();
     // if found cache.
     if (contacts.isNotEmpty) {
       return contacts;
@@ -55,7 +55,7 @@ class ContactsDataProvider extends DataProvider {
     }
 
     // try to fetch from server:
-    List<ApiContactEmails> apiContacts = await contactClient.getContacts();
+    final List<ApiContactEmails> apiContacts = await contactClient.getContacts();
     for (ApiContactEmails apiContactEmail in apiContacts) {
       // update and insert contact
       await insertUpdate(apiContactEmail);

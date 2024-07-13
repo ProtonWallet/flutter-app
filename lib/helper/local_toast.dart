@@ -7,28 +7,23 @@ class LocalToast {
   static final LocalAuthentication auth = LocalAuthentication();
   static final FToast fToast = FToast();
 
-  static showErrorToast(BuildContext context, String message) {
+  static void showErrorToast(BuildContext context, String message) {
     showToast(context, message,
         isWarning: true,
         icon: const Icon(Icons.warning, color: Colors.white),
         duration: 2);
   }
 
-  static showToast(BuildContext context, String message,
+  static void showToast(BuildContext context, String message,
       {int duration = 1,
       Icon? icon = const Icon(Icons.check),
       bool isWarning = false}) {
     fToast.init(context);
-    Widget toast = Container(
+    final Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
-        border: isWarning == false
-            ? Border.all(
-                color: Colors.black,
-                width: 1.0,
-              )
-            : const Border(),
+        border: !isWarning ? Border.all() : const Border(),
         color: isWarning
             ? Theme.of(context).colorScheme.error
             : ProtonColors.backgroundProton,

@@ -19,7 +19,7 @@ class LocalBitcoinAddress2TransactionData {
   });
 
   void addTXID(String txid) {
-    if (txids.contains(txid) == false) {
+    if (!txids.contains(txid)) {
       txids.add(txid);
     }
   }
@@ -66,27 +66,29 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
       bitcoinAddress2TransactionDataMap = {};
 
   Future<List<LocalBitcoinAddressData>> _getFromDB() async {
-    List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
-    var wallets = await walletDao.findAllByUserID(userID);
+    final List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
+    final wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
-        var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
+        final accounts =
+            await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
-          List<BitcoinAddressModel> bitcoinAddresses =
+          final List<BitcoinAddressModel> bitcoinAddresses =
               await bitcoinAddressDao.findByWalletAccount(
                   walletModel.walletID, accountModel.accountID);
-          Map<int, BitcoinAddressModel> addressIndex2bitcoinAddressModel = {};
+          final Map<int, BitcoinAddressModel> addressIndex2bitcoinAddressModel =
+              {};
           for (BitcoinAddressModel bitcoinAddressModel in bitcoinAddresses) {
             addressIndex2bitcoinAddressModel[
                 bitcoinAddressModel.bitcoinAddressIndex] = bitcoinAddressModel;
           }
-          var frbAccountOrNull = (await WalletManager.loadWalletWithID(
+          final frbAccountOrNull = (await WalletManager.loadWalletWithID(
             walletModel.walletID,
             accountModel.accountID,
           ));
           if (frbAccountOrNull == null) {
             /// in-case that passphrase wallet is not unlocked
-            LocalBitcoinAddressData localBitcoinAddressData =
+            final LocalBitcoinAddressData localBitcoinAddressData =
                 LocalBitcoinAddressData(
               accountModel: accountModel,
               bitcoinAddresses: [],
@@ -94,14 +96,13 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             bitcoinAddressDataList.add(localBitcoinAddressData);
             continue;
           }
-          FrbAccount frbAccount = frbAccountOrNull;
-          List<BitcoinAddressDetail> finalBitcoinAddresses = [];
+          final FrbAccount frbAccount = frbAccountOrNull;
+          final List<BitcoinAddressDetail> finalBitcoinAddresses = [];
           for (int addressIndex = 0;
               addressIndex <= accountModel.lastUsedIndex;
               addressIndex++) {
-            if (addressIndex2bitcoinAddressModel.containsKey(addressIndex) ==
-                false) {
-              var addressInfo =
+            if (!addressIndex2bitcoinAddressModel.containsKey(addressIndex)) {
+              final addressInfo =
                   await frbAccount.getAddress(index: addressIndex);
               addressIndex2bitcoinAddressModel[addressIndex] =
                   BitcoinAddressModel(
@@ -126,7 +127,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             ));
           }
 
-          LocalBitcoinAddressData localBitcoinAddressData =
+          final LocalBitcoinAddressData localBitcoinAddressData =
               LocalBitcoinAddressData(
             accountModel: accountModel,
             bitcoinAddresses: finalBitcoinAddresses.reversed.toList(),
@@ -155,11 +156,11 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     if (account == null) {
       return {};
     }
-    Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
+    final Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
     for (int bitcoinAddressIndex = 0;
         bitcoinAddressIndex <= maxAddressIndex;
         bitcoinAddressIndex++) {
-      FrbAddressInfo addressInfo =
+      final FrbAddressInfo addressInfo =
           await account.getAddress(index: bitcoinAddressIndex);
       bitcoinAddressInfos[addressInfo.address] = addressInfo;
     }
@@ -173,8 +174,8 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     AccountModel? accountModel,
   ) async {
     if (walletModel != null && accountModel != null) {
-      /// TODO: improve performance
-      LocalBitcoinAddressData localBitcoinAddressData =
+      // TODO(fix): improve performance
+      final LocalBitcoinAddressData localBitcoinAddressData =
           await getDataByWalletAccount(walletModel, accountModel);
       int highestUsedIndex = -1;
       for (BitcoinAddressDetail bitcoinAddressDetail
@@ -193,7 +194,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    List<LocalBitcoinAddressData> localBitcoinAddressDataList =
+    final List<LocalBitcoinAddressData> localBitcoinAddressDataList =
         await _getFromDB();
     for (LocalBitcoinAddressData localBitcoinAddressData
         in localBitcoinAddressDataList) {
@@ -210,7 +211,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   }
 
   Future<void> insertOrUpdate(BitcoinAddressModel bitcoinAddressModel) async {
-    /// TODO:: enhance performance here
+    // TODO(fix): enhance performance here
     await bitcoinAddressDao.insertOrUpdate(
       serverWalletID: bitcoinAddressModel.serverWalletID,
       serverAccountID: bitcoinAddressModel.serverAccountID,
@@ -224,8 +225,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
 
   void updateBitcoinAddress2TransactionDataMap(
       String bitcoinAddress, String txid) {
-    if (bitcoinAddress2TransactionDataMap.containsKey(bitcoinAddress) ==
-        false) {
+    if (!bitcoinAddress2TransactionDataMap.containsKey(bitcoinAddress)) {
       bitcoinAddress2TransactionDataMap[bitcoinAddress] =
           LocalBitcoinAddress2TransactionData(txids: []);
     }
@@ -234,7 +234,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
 
   Future<BitcoinAddressModel?> findBitcoinAddressInAccount(
       String bitcoinAddress, String serverAccountID) async {
-    BitcoinAddressModel? bitcoinAddressModel = await bitcoinAddressDao
+    final BitcoinAddressModel? bitcoinAddressModel = await bitcoinAddressDao
         .findBitcoinAddressInAccount(bitcoinAddress, serverAccountID);
     return bitcoinAddressModel;
   }

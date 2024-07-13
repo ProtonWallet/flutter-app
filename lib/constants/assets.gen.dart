@@ -242,6 +242,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/ic_note.svg
   SvgGenImage get icNote => const SvgGenImage('assets/images/icon/ic_note.svg');
 
+  /// File path: assets/images/icon/invite_success.svg
+  SvgGenImage get inviteSuccess =>
+      const SvgGenImage('assets/images/icon/invite_success.svg');
+
   /// File path: assets/images/icon/launch_icon.png
   AssetGenImage get launchIcon =>
       const AssetGenImage('assets/images/icon/launch_icon.png');
@@ -386,6 +390,7 @@ class $AssetsImagesIconGen {
         icWallet,
         icMessage,
         icNote,
+        inviteSuccess,
         launchIcon,
         logoText,
         mobile,

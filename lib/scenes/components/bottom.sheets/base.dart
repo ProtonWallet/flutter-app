@@ -52,7 +52,6 @@ class HomeModalBottomSheet {
         ),
         builder: (BuildContext context) {
           return Align(
-            alignment: Alignment.center,
             child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor ?? ProtonColors.backgroundProton,

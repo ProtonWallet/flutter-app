@@ -14,10 +14,10 @@ class ButtonV5 extends StatelessWidget {
   final Size? maximumSize;
 
   const ButtonV5(
-      {super.key,
-      required this.text,
+      {required this.text,
       required this.width,
       required this.height,
+      super.key,
       this.onPressed,
       this.radius = 24.0,
       this.elevation = 0.4,
@@ -44,7 +44,7 @@ class ButtonV5 extends StatelessWidget {
           // foreground
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
-            side: BorderSide(width: 1, color: borderColor),
+            side: BorderSide(color: borderColor),
           ),
           elevation: elevation,
         ),

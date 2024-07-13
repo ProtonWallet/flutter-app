@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/scenes/components/page_route.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/manager.factory.dart';
+import 'package:wallet/scenes/components/page_route.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/view.navigator.dart';
 
@@ -61,7 +61,7 @@ abstract class Coordinator implements ViewNavigator {
     Widget view, {
     Color? backgroundColor,
   }) {
-    BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
+    final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -82,7 +82,7 @@ abstract class Coordinator implements ViewNavigator {
     Widget view, {
     Color? backgroundColor,
   }) {
-    BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
+    final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -98,7 +98,6 @@ abstract class Coordinator implements ViewNavigator {
         ),
         builder: (BuildContext context) {
           return Align(
-              alignment: Alignment.center,
               child: Container(
                   decoration: BoxDecoration(
                     color: backgroundColor ?? ProtonColors.backgroundProton,

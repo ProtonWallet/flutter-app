@@ -25,7 +25,7 @@ class AddressDaoImpl extends AddressDao {
 
   @override
   Future<List> findAll() async {
-    List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(
         maps.length, (index) => AddressModel.fromMap(maps[index]));
   }
@@ -62,10 +62,10 @@ class AddressDaoImpl extends AddressDao {
   @override
   Future<List<AddressModel>> findByServerAccountID(
       String serverAccountID) async {
-    List<Map<String, dynamic>> maps = await db.query(tableName,
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
         where: 'serverAccountID = ?', whereArgs: [serverAccountID]);
     if (maps.isNotEmpty) {
-      return maps.map((e) => AddressModel.fromMap(e)).toList();
+      return maps.map(AddressModel.fromMap).toList();
     }
     return [];
   }
@@ -77,7 +77,7 @@ class AddressDaoImpl extends AddressDao {
 
   @override
   Future<AddressModel?> findByServerID(String serverID) async {
-    List<Map<String, dynamic>> maps =
+    final List<Map<String, dynamic>> maps =
         await db.query(tableName, where: 'serverID = ?', whereArgs: [serverID]);
     if (maps.isNotEmpty) {
       return AddressModel.fromMap(maps.first);

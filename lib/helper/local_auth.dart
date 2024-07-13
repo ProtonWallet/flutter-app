@@ -37,7 +37,7 @@ class LocalAuth {
     if (!isPlatformSupported()) {
       return false;
     }
-    if (_canCheckBiometrics == false) {
+    if (!_canCheckBiometrics) {
       return false;
     }
     bool authenticated = false;

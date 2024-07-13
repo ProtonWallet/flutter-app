@@ -8,12 +8,10 @@ class SettingsItem extends StatelessWidget {
   final bool hidden;
 
   const SettingsItem({
-    super.key,
-    required this.title,
+    required this.title, required this.onTap, super.key,
     this.subtitle,
     this.logo,
     this.hidden = false,
-    required this.onTap,
   });
 
   @override

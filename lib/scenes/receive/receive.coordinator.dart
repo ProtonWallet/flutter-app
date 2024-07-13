@@ -14,27 +14,27 @@ class ReceiveCoordinator extends Coordinator {
 
   ReceiveCoordinator(
     this.serverWalletID,
-    this.serverAccountID,
-    this.isWalletView,
-  );
+    this.serverAccountID, {
+    required this.isWalletView,
+  });
 
   @override
   void end() {}
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var viewModel = ReceiveViewModelImpl(
+    final userManager = serviceManager.get<UserManager>();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final viewModel = ReceiveViewModelImpl(
       this,
       serverWalletID,
       serverAccountID,
-      isWalletView,
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.protonAddressProvider,
       dataProviderManager.walletKeysProvider,
       dataProviderManager.localBitcoinAddressDataProvider,
+      isWalletView: isWalletView,
     );
     widget = ReceiveView(
       viewModel,

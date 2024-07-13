@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/onboarding/content.dart';
 import 'package:wallet/scenes/components/textfield.2fa.dart';
 import 'package:wallet/scenes/components/textfield.password.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 
 import 'two.factor.auth.disable.viewmodel.dart';
 
@@ -24,7 +24,6 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
 
   Widget build2FAConfirm(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Stack(children: [
           Container(
@@ -41,7 +40,6 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                   ),
                   child: SvgPicture.asset(
                     'assets/images/wallet_creation/passphrase_icon.svg',
-                    fit: BoxFit.contain,
                   ),
                 )),
           ),
@@ -68,7 +66,6 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                               height: 50,
                               suffixIcon: const Icon(Icons.close),
                               showSuffixIcon: false,
-                              showEnabledBorder: true,
                               centerHorizontal: true,
                               maxLength: 1,
                               controller: viewModel.digitControllers[i],
@@ -100,7 +97,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                 ]),
                 ButtonV5(
                     onPressed: () async {
-                      bool result = await viewModel.disable2FA();
+                      final bool result = await viewModel.disable2FA();
                       if (context.mounted) {
                         if (result) {
                           Navigator.pop(context);

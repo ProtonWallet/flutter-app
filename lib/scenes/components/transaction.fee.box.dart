@@ -8,10 +8,10 @@ class TransactionFeeBox extends StatelessWidget {
   final double fee;
 
   const TransactionFeeBox({
-    super.key,
     required this.priorityText,
     required this.timeEstimate,
     required this.fee,
+    super.key,
   });
 
   @override
@@ -25,7 +25,6 @@ class TransactionFeeBox extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(priorityText,
               style: FontManager.body1Median(ProtonColors.textNorm)),

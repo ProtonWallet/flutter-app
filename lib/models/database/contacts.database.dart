@@ -5,7 +5,7 @@ class ContactsDatabase extends BaseDatabase {
 
   @override
   Future<void> migration_0() async {
-    return await createTable('''
+    await createTable('''
         CREATE TABLE IF NOT EXISTS `contacts` (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           serverContactID TEXT,

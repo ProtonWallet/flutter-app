@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV1 extends StatefulWidget {
   final double width;
@@ -15,13 +15,13 @@ class DropdownButtonV1 extends StatefulWidget {
   final Color? backgroundColor;
 
   const DropdownButtonV1(
-      {super.key,
-      required this.width,
+      {required this.width,
       required this.items,
       required this.itemsText,
+      super.key,
       this.labelText,
       this.paddingSize,
-        this.backgroundColor,
+      this.backgroundColor,
       this.defaultOption,
       this.valueNotifier});
 
@@ -46,9 +46,12 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
     return Container(
         width: widget.width,
         padding: EdgeInsets.only(
-            left: defaultPadding, right: 8, top: widget.paddingSize ?? 12, bottom: widget.paddingSize ?? 12),
+            left: defaultPadding,
+            right: 8,
+            top: widget.paddingSize ?? 12,
+            bottom: widget.paddingSize ?? 12),
         decoration: BoxDecoration(
-          color: widget.backgroundColor??ProtonColors.white,
+          color: widget.backgroundColor ?? ProtonColors.white,
           // border: Border.all(color: Colors.black, width: 1.0),
           borderRadius: BorderRadius.circular(18.0),
         ),
@@ -58,7 +61,8 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
             border: InputBorder.none,
             labelText: widget.labelText,
             labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
-            contentPadding: EdgeInsets.only(top: 4, bottom: widget.paddingSize?? 16),
+            contentPadding:
+                EdgeInsets.only(top: 4, bottom: widget.paddingSize ?? 16),
           ),
           isExpanded: true,
           dropdownColor: ProtonColors.white,
@@ -73,7 +77,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
   }
 
   List<DropdownMenuItem> getDropdownMenuItems() {
-    List<DropdownMenuItem> dropdownMenuItems = [];
+    final List<DropdownMenuItem> dropdownMenuItems = [];
     if (widget.defaultOption != null) {
       dropdownMenuItems.add(DropdownMenuItem<String>(
           value: widget.defaultOption,

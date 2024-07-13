@@ -22,19 +22,19 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final ProtonExchangeRate exchangeRate;
 
   const TextFieldSendBTCV2(
-      {super.key,
+      {required this.textController,
+      required this.myFocusNode,
+      required this.validation,
+      required this.bitcoinUnit,
+      required this.exchangeRate,
+      super.key,
       this.labelText = "",
       this.onFinish,
       this.backgroundColor,
       this.autofocus = false,
-      required this.textController,
-      required this.myFocusNode,
       this.inputFormatters = const [],
       this.keyboardType,
       this.textInputAction,
-      required this.validation,
-      required this.bitcoinUnit,
-      required this.exchangeRate,
       this.checkOfErrorOnFocusChange = true});
 
   @override
@@ -46,7 +46,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   String errorString = "";
   int estimatedSATS = 0;
 
-  getBorderColor(isFocus) {
+  Color getBorderColor(isFocus) {
     return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
   }
 
@@ -55,9 +55,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.exchangeRate.id != widget.exchangeRate.id ||
         oldWidget.bitcoinUnit.name != widget.bitcoinUnit.name) {
-      setState(() {
-        updateEstimateSATS();
-      });
+      setState(updateEstimateSATS);
     }
   }
 
@@ -76,7 +74,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -85,7 +83,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
               onFocusChange: (focus) {
                 setState(() {
                   getBorderColor(focus);
-                  if (focus == false) {
+                  if (!focus) {
                     if (widget.onFinish != null) {
                       widget.onFinish!();
                     }
@@ -111,8 +109,6 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                     color: widget.backgroundColor ?? ProtonColors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(18.0)),
                     border: Border.all(
-                      width: 1,
-                      style: BorderStyle.solid,
                       color: isError
                           ? ProtonColors.signalError
                           : getBorderColor(widget.myFocusNode.hasFocus),
@@ -199,7 +195,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
     } catch (e) {
       amount = 0.0;
     }
-    double btcAmount =
+    final double btcAmount =
         ExchangeCalculator.getNotionalInBTC(widget.exchangeRate, amount);
     setState(() {
       estimatedSATS = (btcAmount * 100000000).ceil();

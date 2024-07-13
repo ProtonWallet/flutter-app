@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
 import 'package:wallet/scenes/recovery/recovery.disable.dialog.dart';
@@ -32,19 +32,15 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                 twofa,
               ) {
                 if (state.requireAuthModel.isDisable) {
-                  viewModel.disableRecover(password, twofa);
+                  viewModel.disableRecoverAuth(password, twofa);
                 } else {
-                  viewModel.enableRecover(password, twofa);
+                  viewModel.enableRecoverAuth(password, twofa);
                 }
-              }, () {
-                viewModel.stateReset();
-              });
+              }, viewModel.stateReset);
             }
 
             if (state.mnemonic.isNotEmpty) {
-              showMnemonicDialog(context, state.mnemonic, () {
-                viewModel.stateReset();
-              });
+              showMnemonicDialog(context, state.mnemonic, viewModel.stateReset);
             }
           },
           child: BlocSelector<ProtonRecoveryBloc, ProtonRecoveryState,
@@ -72,11 +68,9 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                     onChanged: (bool newValue) {
                       // try to disable recovery
                       if (!newValue) {
-                        showDisableDialog(context, () {
-                          viewModel.updateRecovery(newValue);
-                        });
+                        showDisableDialog(context, viewModel.disableRecovery);
                       } else {
-                        viewModel.updateRecovery(newValue);
+                        viewModel.enableRecovery();
                       }
                     },
                   ),

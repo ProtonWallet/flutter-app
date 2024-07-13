@@ -70,8 +70,8 @@ class SelectedInfoModel {
   }
 
   String roundUpToTwoDecimalPlaces(String value) {
-    double number = double.parse(value);
-    double roundedUpNumber = (number * 100).ceil() / 100;
+    final double number = double.parse(value);
+    final double roundedUpNumber = (number * 100).ceil() / 100;
     return "$roundedUpNumber";
   }
 }

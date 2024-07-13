@@ -81,7 +81,7 @@ class UserSettingsDataProvider extends DataProvider {
       StreamController<BitcoinUnitDataUpdated>();
 
   Future<WalletUserSettings?> _getFromDB() async {
-    var settings = settingsQueries.getWalletUserSettings(userID);
+    final settings = settingsQueries.getWalletUserSettings(userID);
     return settings;
   }
 
@@ -97,7 +97,7 @@ class UserSettingsDataProvider extends DataProvider {
 
     // try to fetch from server:
     try {
-      ApiWalletUserSettings apiSettings =
+      final ApiWalletUserSettings apiSettings =
           await settingsClient.getUserSettings();
       insertUpdate(apiSettings);
     } catch (e, stacktrace) {
@@ -120,7 +120,7 @@ class UserSettingsDataProvider extends DataProvider {
     if (this.fiatCurrency != fiatCurrency) {
       this.fiatCurrency = fiatCurrency;
 
-      var settings = await getSettings();
+      final settings = await getSettings();
       if (settings != null) {
         insertUpdate(ApiWalletUserSettings(
           bitcoinUnit: settings.bitcoinUnit.toBitcoinUnit(),
@@ -129,7 +129,7 @@ class UserSettingsDataProvider extends DataProvider {
           twoFactorAmountThreshold:
               BigInt.from(settings.twoFactorAmountThreshold),
         ));
-        ProtonExchangeRate exchangeRate =
+        final ProtonExchangeRate exchangeRate =
             await ExchangeRateService.getExchangeRate(fiatCurrency);
         updateExchangeRate(exchangeRate);
       }
@@ -161,20 +161,14 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
-    if (settingsData != null) {
-      fiatCurrency ??= settingsData!.fiatCurrency.toFiatCurrency();
-    } else {
-      fiatCurrency ??= FiatCurrency.usd;
-    }
-    return fiatCurrency.name.toString().toUpperCase();
+    fiatCurrency ??=
+        settingsData?.fiatCurrency.toFiatCurrency() ?? FiatCurrency.usd;
+    return fiatCurrency.name.toUpperCase();
   }
 
   String getFiatCurrencySign({FiatCurrency? fiatCurrency}) {
-    if (settingsData != null) {
-      fiatCurrency ??= settingsData!.fiatCurrency.toFiatCurrency();
-    } else {
-      fiatCurrency ??= FiatCurrency.usd;
-    }
+    fiatCurrency ??=
+        settingsData?.fiatCurrency.toFiatCurrency() ?? FiatCurrency.usd;
     return CommonHelper.getFiatCurrencySign(fiatCurrency);
   }
 

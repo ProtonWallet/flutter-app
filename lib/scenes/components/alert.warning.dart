@@ -7,9 +7,9 @@ class AlertWarning extends StatelessWidget {
   final double width;
 
   const AlertWarning({
-    super.key,
     required this.content,
     required this.width,
+    super.key,
   });
 
   @override
@@ -23,7 +23,6 @@ class AlertWarning extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
               color: ProtonColors.alertWaning,
-              width: 1.0,
             )),
         child: Column(
           children: [

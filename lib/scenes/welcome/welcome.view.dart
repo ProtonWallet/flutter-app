@@ -1,18 +1,18 @@
-import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:wallet/scenes/welcome/login.signup.button.dart';
-import 'package:wallet/scenes/welcome/welcom.backgroud.dart';
-import 'package:wallet/constants/assets.gen.dart';
-import 'package:wallet/l10n/generated/locale.dart';
+
 import 'package:flutter/material.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:flutter/services.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/core/responsive.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-
+import 'package:wallet/scenes/welcome/login.signup.button.dart';
+import 'package:wallet/scenes/welcome/welcom.backgroud.dart';
 import 'package:wallet/scenes/welcome/welcome.image.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -32,7 +32,6 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
       child: SafeArea(
         child: Responsive(
           desktop: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
@@ -68,7 +67,6 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
             ],
           ),
           mobile: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
                   height:
@@ -92,7 +90,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
     ));
   }
 
-  // TODO:: old build function remove after testing
+  // TODO(fix): old build function remove after testing
   Widget buildWelcome(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark,

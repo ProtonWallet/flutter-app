@@ -4,27 +4,27 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
 import 'package:wallet/scenes/components/recipient.detail.dart';
-import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/textfield.send.btc.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/bitcoin.amount.dart';
-import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
@@ -123,170 +123,155 @@ class SendView extends ViewBase<SendViewModel> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: Center(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            const SizedBox(height: 20),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(width: defaultPadding),
-                                  Text(
-                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
-                                    style: FontManager.captionRegular(
-                                        ProtonColors.textWeak),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  GestureDetector(
-                                    onTap: () {
-                                      // TODO:: fix logic to use more specific amount
-                                      viewModel.amountTextController.text =
-                                          ExchangeCalculator
-                                              .getNotionalInFiatCurrency(
-                                        viewModel.exchangeRate,
-                                        viewModel.maxBalanceToSend - 10,
-
-                                        /// TODO:: fix me, some low value issue
-                                      ).toStringAsFixed(ExchangeCalculator
-                                              .getDisplayDigit(
-                                                  viewModel.exchangeRate));
-                                      viewModel.splitAmountToRecipients();
-                                    },
-                                    child: Text(S.of(context).send_all,
-                                        style: FontManager.captionMedian(
-                                            ProtonColors.protonBlue)),
-                                  )
-                                ]),
-                            const SizedBox(height: 4),
-                            Row(children: [
-                              Expanded(
-                                  child: TextFieldSendBTCV2(
-                                backgroundColor: ProtonColors.backgroundProton,
-                                labelText: S.of(context).amount,
-                                textController: viewModel.amountTextController,
-                                myFocusNode: viewModel.amountFocusNode,
-                                exchangeRate: viewModel.exchangeRate,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^\d*\.?\d*$'))
-                                ],
-                                bitcoinUnit: viewModel
-                                    .userSettingsDataProvider.bitcoinUnit,
-                                validation: (String value) {
-                                  return "";
-                                },
-                              )),
-                              const SizedBox(
-                                width: 10,
+                          child: Column(children: [
+                        const SizedBox(height: 20),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: defaultPadding),
+                              Text(
+                                "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
+                                style: FontManager.captionRegular(
+                                    ProtonColors.textWeak),
                               ),
-                              Container(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: DropdownButtonV2(
-                                      width: 80,
-                                      padding: const EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 4,
-                                          bottom: 2),
-                                      maxSuffixIconWidth: 20,
-                                      textStyle: FontManager.captionMedian(
-                                          ProtonColors.textNorm),
-                                      backgroundColor:
-                                          ProtonColors.backgroundProton,
-                                      items: fiatCurrencies,
-                                      canSearch: true,
-                                      itemsText: fiatCurrencies
-                                          .map((v) =>
-                                              FiatCurrencyHelper.getFullName(v))
-                                          .toList(),
-                                      itemsTextForDisplay: fiatCurrencies
-                                          .map((v) =>
-                                              FiatCurrencyHelper.getDisplayName(
-                                                  v))
-                                          .toList(),
-                                      itemsLeadingIcons: fiatCurrencies
-                                          .map((v) =>
-                                              CountryFlag.fromCountryCode(
-                                                FiatCurrencyHelper
-                                                    .toCountryCode(v),
-                                                shape: const Circle(),
-                                                width: 20,
-                                                height: 20,
-                                              ))
-                                          .toList(),
-                                      valueNotifier:
-                                          viewModel.fiatCurrencyNotifier)),
-                            ]),
-                            if (viewModel.recipients.isNotEmpty)
-                              Row(children: [
-                                Expanded(
-                                    child: Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 20, bottom: 10),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    S.of(context).recipients,
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  // TODO(fix): fix logic to use more specific amount
+                                  viewModel.amountTextController.text =
+                                      ExchangeCalculator
+                                          .getNotionalInFiatCurrency(
+                                    viewModel.exchangeRate,
+                                    viewModel.maxBalanceToSend - 10,
+
+                                    // TODO(fix): fix me, some low value issue
+                                  ).toStringAsFixed(
+                                          ExchangeCalculator.getDisplayDigit(
+                                              viewModel.exchangeRate));
+                                  viewModel.splitAmountToRecipients();
+                                },
+                                child: Text(S.of(context).send_all,
                                     style: FontManager.captionMedian(
-                                        ProtonColors.textNorm),
-                                  ),
-                                )),
-                                GestureDetector(
-                                    onTap: () {
-                                      viewModel.updatePageStatus(
-                                          SendFlowStatus.addRecipient);
-                                    },
-                                    child: Text(
-                                      S.of(context).add_recipient,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.protonBlue),
-                                    ))
-                              ]),
-                            for (int index = 0;
-                                index < viewModel.recipients.length;
-                                index++)
-                              RecipientDetail(
-                                name: viewModel.recipients[index].email,
-                                email: viewModel.recipients[index].email,
-                                bitcoinAddress: viewModel.bitcoinAddresses
-                                        .containsKey(
-                                            viewModel.recipients[index].email)
-                                    ? viewModel.bitcoinAddresses[viewModel
-                                            .recipients[index].email] ??
-                                        ""
-                                    : "",
-                                isSignatureInvalid: viewModel
-                                            .bitcoinAddressesInvalidSignature[
+                                        ProtonColors.protonBlue)),
+                              )
+                            ]),
+                        const SizedBox(height: 4),
+                        Row(children: [
+                          Expanded(
+                              child: TextFieldSendBTCV2(
+                            backgroundColor: ProtonColors.backgroundProton,
+                            labelText: S.of(context).amount,
+                            textController: viewModel.amountTextController,
+                            myFocusNode: viewModel.amountFocusNode,
+                            exchangeRate: viewModel.exchangeRate,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d*$'))
+                            ],
+                            bitcoinUnit:
+                                viewModel.userSettingsDataProvider.bitcoinUnit,
+                            validation: (String value) {
+                              return "";
+                            },
+                          )),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: DropdownButtonV2(
+                                  width: 80,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, top: 4, bottom: 2),
+                                  maxSuffixIconWidth: 20,
+                                  textStyle: FontManager.captionMedian(
+                                      ProtonColors.textNorm),
+                                  backgroundColor:
+                                      ProtonColors.backgroundProton,
+                                  items: fiatCurrencies,
+                                  canSearch: true,
+                                  itemsText: fiatCurrencies
+                                      .map(FiatCurrencyHelper.getFullName)
+                                      .toList(),
+                                  itemsTextForDisplay: fiatCurrencies
+                                      .map(FiatCurrencyHelper.getDisplayName)
+                                      .toList(),
+                                  itemsLeadingIcons: fiatCurrencies
+                                      .map((v) => CountryFlag.fromCountryCode(
+                                            FiatCurrencyHelper.toCountryCode(v),
+                                            shape: const Circle(),
+                                            width: 20,
+                                            height: 20,
+                                          ))
+                                      .toList(),
+                                  valueNotifier:
+                                      viewModel.fiatCurrencyNotifier)),
+                        ]),
+                        if (viewModel.recipients.isNotEmpty)
+                          Row(children: [
+                            Expanded(
+                                child: Container(
+                              margin:
+                                  const EdgeInsets.only(top: 20, bottom: 10),
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(
+                                S.of(context).recipients,
+                                style: FontManager.captionMedian(
+                                    ProtonColors.textNorm),
+                              ),
+                            )),
+                            GestureDetector(
+                                onTap: () {
+                                  viewModel.updatePageStatus(
+                                      SendFlowStatus.addRecipient);
+                                },
+                                child: Text(
+                                  S.of(context).add_recipient,
+                                  style: FontManager.body2Median(
+                                      ProtonColors.protonBlue),
+                                ))
+                          ]),
+                        for (int index = 0;
+                            index < viewModel.recipients.length;
+                            index++)
+                          RecipientDetail(
+                            name: viewModel.recipients[index].email,
+                            email: viewModel.recipients[index].email,
+                            bitcoinAddress: viewModel.bitcoinAddresses
+                                    .containsKey(
+                                        viewModel.recipients[index].email)
+                                ? viewModel.bitcoinAddresses[
+                                        viewModel.recipients[index].email] ??
+                                    ""
+                                : "",
+                            isSignatureInvalid:
+                                viewModel.bitcoinAddressesInvalidSignature[
                                         viewModel.recipients[index].email] ??
                                     false,
-                                isSelfBitcoinAddress:
-                                    viewModel.selfBitcoinAddresses.contains(
-                                        viewModel.bitcoinAddresses[viewModel
-                                                .recipients[index].email] ??
-                                            ""),
-                                callback: () {
-                                  viewModel.removeRecipient(index);
-                                },
-                                amountController:
-                                    viewModel.recipients.length > 1
-                                        ? viewModel
-                                            .recipients[index].amountController
-                                        : null,
-                                amountFocusNode: viewModel.recipients.length > 1
-                                    ? viewModel.recipients[index].focusNode
-                                    : null,
-                              ),
-                            const SizedBox(height: 20),
-                            if (viewModel.errorMessage.isNotEmpty)
-                              Text(
-                                viewModel.errorMessage,
-                                style: FontManager.body2Median(
-                                    ProtonColors.signalError),
-                              ),
-                          ]))))),
+                            isSelfBitcoinAddress: viewModel.selfBitcoinAddresses
+                                .contains(viewModel.bitcoinAddresses[
+                                        viewModel.recipients[index].email] ??
+                                    ""),
+                            callback: () {
+                              viewModel.removeRecipient(index);
+                            },
+                            amountController: viewModel.recipients.length > 1
+                                ? viewModel.recipients[index].amountController
+                                : null,
+                            amountFocusNode: viewModel.recipients.length > 1
+                                ? viewModel.recipients[index].focusNode
+                                : null,
+                          ),
+                        const SizedBox(height: 20),
+                        if (viewModel.errorMessage.isNotEmpty)
+                          Text(
+                            viewModel.errorMessage,
+                            style: FontManager.body2Median(
+                                ProtonColors.signalError),
+                          ),
+                      ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
             Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -336,13 +321,10 @@ class SendView extends ViewBase<SendViewModel> {
     switch (viewModel.userTransactionFeeMode) {
       case TransactionFeeMode.highPriority:
         estimatedFee = viewModel.estimatedFeeInSATHighPriority;
-        break;
       case TransactionFeeMode.medianPriority:
         estimatedFee = viewModel.estimatedFeeInSATMedianPriority;
-        break;
       case TransactionFeeMode.lowPriority:
         estimatedFee = viewModel.estimatedFeeInSATLowPriority;
-        break;
     }
     return Container(
         color: ProtonColors.white,
@@ -352,290 +334,253 @@ class SendView extends ViewBase<SendViewModel> {
                   child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 40),
-                            getTransactionValueWidget(context),
-                            const SizedBox(height: 20),
-                            for (ProtonRecipient protonRecipient
-                                in viewModel.recipients)
-                              if (viewModel.bitcoinAddresses
-                                      .containsKey(protonRecipient.email) &&
+                      child: Column(children: [
+                        const SizedBox(height: 40),
+                        getTransactionValueWidget(context),
+                        const SizedBox(height: 20),
+                        for (ProtonRecipient protonRecipient
+                            in viewModel.recipients)
+                          if (viewModel.bitcoinAddresses
+                                  .containsKey(protonRecipient.email) &&
+                              viewModel.bitcoinAddresses[
+                                      protonRecipient.email]! !=
+                                  "" &&
+                              !viewModel.selfBitcoinAddresses.contains(
                                   viewModel.bitcoinAddresses[
-                                          protonRecipient.email]! !=
-                                      "" &&
-                                  viewModel.selfBitcoinAddresses.contains(
-                                          viewModel.bitcoinAddresses[
-                                                  protonRecipient.email] ??
-                                              "") ==
-                                      false)
-                                Column(children: [
-                                  TransactionHistorySendItem(
-                                    content: protonRecipient.email,
-                                    bitcoinAddress: viewModel.bitcoinAddresses[
-                                            protonRecipient.email] ??
-                                        "",
-                                    bitcoinAmount: viewModel.recipients.length >
-                                            1
-                                        ? BitcoinAmount(
-                                            amountInSatoshi:
-                                                protonRecipient.amountInSATS ??
-                                                    0,
-                                            bitcoinUnit: viewModel
-                                                .userSettingsDataProvider
-                                                .bitcoinUnit,
-                                            exchangeRate:
-                                                viewModel.exchangeRate)
-                                        : null,
-                                  ),
-                                  const Divider(
-                                    thickness: 0.2,
-                                    height: 1,
-                                  ),
-                                ]),
-                            TransactionHistoryItemV2(
-                              title: S.of(context).trans_metwork_fee,
-                              titleTooltip:
-                                  S.of(context).trans_metwork_fee_desc,
-                              titleOptionsCallback: () {
-                                showSelectTransactionFeeMode(
-                                    context, viewModel);
-                              },
-                              backgroundColor: ProtonColors.white,
-                              content: AnimatedFlipCounter(
-                                duration: const Duration(milliseconds: 500),
-                                value: ExchangeCalculator
-                                    .getNotionalInFiatCurrency(
-                                        viewModel.exchangeRate, estimatedFee),
-                                thousandSeparator: ",",
-                                prefix:
-                                    "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
-                                fractionDigits:
-                                    ExchangeCalculator.getDisplayDigit(
-                                        viewModel.exchangeRate),
-                                textStyle: FontManager.body2Median(
-                                    ProtonColors.textNorm),
+                                          protonRecipient.email] ??
+                                      ""))
+                            Column(children: [
+                              TransactionHistorySendItem(
+                                content: protonRecipient.email,
+                                bitcoinAddress: viewModel.bitcoinAddresses[
+                                        protonRecipient.email] ??
+                                    "",
+                                bitcoinAmount: viewModel.recipients.length > 1
+                                    ? BitcoinAmount(
+                                        amountInSatoshi:
+                                            protonRecipient.amountInSATS ?? 0,
+                                        bitcoinUnit: viewModel
+                                            .userSettingsDataProvider
+                                            .bitcoinUnit,
+                                        exchangeRate: viewModel.exchangeRate)
+                                    : null,
                               ),
-                              memo:
-                                  ExchangeCalculator.getBitcoinUnitLabelWidget(
-                                      viewModel
-                                          .userSettingsDataProvider.bitcoinUnit,
-                                      estimatedFee,
-                                      textStyle: FontManager.body2Regular(
-                                          ProtonColors.textHint)),
-                            ),
-                            const Divider(
-                              thickness: 0.2,
-                              height: 1,
-                            ),
-                            getTransactionTotalValueWidget(
-                                context, viewModel, estimatedFee),
-                            const Divider(
-                              thickness: 0.2,
-                              height: 1,
-                            ),
-                            const SizedBox(height: 10),
-                            if (viewModel.hasEmailIntegrationRecipient)
-                              viewModel.isEditingEmailBody == false
-                                  ? Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      padding:
-                                          const EdgeInsets.all(defaultPadding),
-                                      decoration: BoxDecoration(
-                                          color: ProtonColors
-                                              .transactionNoteBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(40.0)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                              "assets/images/icon/ic_message.svg",
-                                              fit: BoxFit.fill,
-                                              width: 32,
-                                              height: 32),
-                                          const SizedBox(width: 10),
-                                          GestureDetector(
-                                              onTap: () {
-                                                viewModel.editEmailBody();
-                                              },
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  if (viewModel
-                                                      .emailBodyController
-                                                      .text
-                                                      .isNotEmpty)
-                                                    SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
+                              const Divider(
+                                thickness: 0.2,
+                                height: 1,
+                              ),
+                            ]),
+                        TransactionHistoryItemV2(
+                          title: S.of(context).trans_metwork_fee,
+                          titleTooltip: S.of(context).trans_metwork_fee_desc,
+                          titleOptionsCallback: () {
+                            showSelectTransactionFeeMode(context, viewModel);
+                          },
+                          backgroundColor: ProtonColors.white,
+                          content: AnimatedFlipCounter(
+                            duration: const Duration(milliseconds: 500),
+                            value: ExchangeCalculator.getNotionalInFiatCurrency(
+                                viewModel.exchangeRate, estimatedFee),
+                            thousandSeparator: ",",
+                            prefix:
+                                "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
+                            fractionDigits: ExchangeCalculator.getDisplayDigit(
+                                viewModel.exchangeRate),
+                            textStyle:
+                                FontManager.body2Median(ProtonColors.textNorm),
+                          ),
+                          memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
+                              viewModel.userSettingsDataProvider.bitcoinUnit,
+                              estimatedFee,
+                              textStyle: FontManager.body2Regular(
+                                  ProtonColors.textHint)),
+                        ),
+                        const Divider(
+                          thickness: 0.2,
+                          height: 1,
+                        ),
+                        getTransactionTotalValueWidget(
+                            context, viewModel, estimatedFee),
+                        const Divider(
+                          thickness: 0.2,
+                          height: 1,
+                        ),
+                        const SizedBox(height: 10),
+                        if (viewModel.hasEmailIntegrationRecipient)
+                          !viewModel.isEditingEmailBody
+                              ? Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  padding: const EdgeInsets.all(defaultPadding),
+                                  decoration: BoxDecoration(
+                                      color: ProtonColors
+                                          .transactionNoteBackground,
+                                      borderRadius:
+                                          BorderRadius.circular(40.0)),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/images/icon/ic_message.svg",
+                                          fit: BoxFit.fill,
+                                          width: 32,
+                                          height: 32),
+                                      const SizedBox(width: 10),
+                                      GestureDetector(
+                                          onTap: viewModel.editEmailBody,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (viewModel.emailBodyController
+                                                  .text.isNotEmpty)
+                                                SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
                                                                 .size
                                                                 .width -
                                                             defaultPadding * 6 -
                                                             10,
-                                                        child: Flex(
-                                                            direction:
-                                                                Axis.horizontal,
-                                                            children: [
-                                                              Flexible(
-                                                                  child: Text(
-                                                                      viewModel
-                                                                          .emailBodyController
-                                                                          .text,
-                                                                      style: FontManager.body2Median(
+                                                    child: Flex(
+                                                        direction:
+                                                            Axis.horizontal,
+                                                        children: [
+                                                          Flexible(
+                                                              child: Text(
+                                                                  viewModel
+                                                                      .emailBodyController
+                                                                      .text,
+                                                                  style: FontManager
+                                                                      .body2Median(
                                                                           ProtonColors
                                                                               .textNorm)))
-                                                            ])),
-                                                  Text(
-                                                      S
-                                                          .of(context)
-                                                          .message_to_recipient_optional(
-                                                              viewModel
-                                                                  .validRecipientCount()),
-                                                      style: FontManager
-                                                          .body2Median(
-                                                              ProtonColors
-                                                                  .textHint)),
-                                                ],
-                                              ))
-                                        ],
-                                      ))
-                                  : Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      child: TextFieldTextV2(
-                                        labelText: S
-                                            .of(context)
-                                            .message_to_recipient_optional(
-                                                viewModel
-                                                    .validRecipientCount()),
-                                        textController:
-                                            viewModel.emailBodyController,
-                                        myFocusNode:
-                                            viewModel.emailBodyFocusNode,
-                                        paddingSize: 7,
-                                        maxLines: null,
-                                        maxLength: maxMemoTextCharSize,
-                                        showCounterText: true,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                100),
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(
-                                              maxMemoTextCharSize)
-                                        ],
-                                        validation: (String value) {
-                                          return "";
-                                        },
-                                      ),
-                                    ),
-                            viewModel.isEditingMemo == false
-                                ? Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    padding:
-                                        const EdgeInsets.all(defaultPadding),
-                                    decoration: BoxDecoration(
-                                        color: ProtonColors
-                                            .transactionNoteBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(40.0)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                            "assets/images/icon/ic_note.svg",
-                                            fit: BoxFit.fill,
-                                            width: 32,
-                                            height: 32),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                            onTap: () {
-                                              viewModel.editMemo();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (viewModel.memoTextController
-                                                    .text.isNotEmpty)
-                                                  SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width -
-                                                              defaultPadding *
-                                                                  6 -
-                                                              10,
-                                                      child: Flex(
-                                                          direction:
-                                                              Axis.horizontal,
-                                                          children: [
-                                                            Flexible(
-                                                                child: Text(
-                                                                    viewModel
-                                                                        .memoTextController
-                                                                        .text,
-                                                                    style: FontManager.body2Median(
+                                                        ])),
+                                              Text(
+                                                  S
+                                                      .of(context)
+                                                      .message_to_recipient_optional(
+                                                          viewModel
+                                                              .validRecipientCount()),
+                                                  style:
+                                                      FontManager.body2Median(
+                                                          ProtonColors
+                                                              .textHint)),
+                                            ],
+                                          ))
+                                    ],
+                                  ))
+                              : Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
+                                  child: TextFieldTextV2(
+                                    labelText: S
+                                        .of(context)
+                                        .message_to_recipient_optional(
+                                            viewModel.validRecipientCount()),
+                                    textController:
+                                        viewModel.emailBodyController,
+                                    myFocusNode: viewModel.emailBodyFocusNode,
+                                    paddingSize: 7,
+                                    maxLines: null,
+                                    maxLength: maxMemoTextCharSize,
+                                    showCounterText: true,
+                                    scrollPadding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom +
+                                            100),
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(
+                                          maxMemoTextCharSize)
+                                    ],
+                                    validation: (String value) {
+                                      return "";
+                                    },
+                                  ),
+                                ),
+                        !viewModel.isEditingMemo
+                            ? Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                padding: const EdgeInsets.all(defaultPadding),
+                                decoration: BoxDecoration(
+                                    color:
+                                        ProtonColors.transactionNoteBackground,
+                                    borderRadius: BorderRadius.circular(40.0)),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/images/icon/ic_note.svg",
+                                        fit: BoxFit.fill,
+                                        width: 32,
+                                        height: 32),
+                                    const SizedBox(width: 10),
+                                    GestureDetector(
+                                        onTap: viewModel.editMemo,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            if (viewModel.memoTextController
+                                                .text.isNotEmpty)
+                                              SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      defaultPadding * 6 -
+                                                      10,
+                                                  child: Flex(
+                                                      direction:
+                                                          Axis.horizontal,
+                                                      children: [
+                                                        Flexible(
+                                                            child: Text(
+                                                                viewModel
+                                                                    .memoTextController
+                                                                    .text,
+                                                                style: FontManager
+                                                                    .body2Median(
                                                                         ProtonColors
                                                                             .textNorm)))
-                                                          ])),
-                                                Text(
-                                                    S
-                                                        .of(context)
-                                                        .message_to_myself,
-                                                    style:
-                                                        FontManager.body2Median(
-                                                            ProtonColors
-                                                                .textHint)),
-                                              ],
-                                            ))
-                                      ],
-                                    ))
-                                : Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: TextFieldTextV2(
-                                      labelText:
-                                          S.of(context).message_to_myself,
-                                      textController:
-                                          viewModel.memoTextController,
-                                      myFocusNode: viewModel.memoFocusNode,
-                                      paddingSize: 7,
-                                      maxLines: null,
-                                      maxLength: maxMemoTextCharSize,
-                                      showCounterText: true,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              100),
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(
-                                            maxMemoTextCharSize)
-                                      ],
-                                      validation: (String value) {
-                                        return "";
-                                      },
-                                    ),
-                                  ),
-                            const SizedBox(height: 10),
-                          ])))),
+                                                      ])),
+                                            Text(
+                                                S.of(context).message_to_myself,
+                                                style: FontManager.body2Median(
+                                                    ProtonColors.textHint)),
+                                          ],
+                                        ))
+                                  ],
+                                ))
+                            : Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: TextFieldTextV2(
+                                  labelText: S.of(context).message_to_myself,
+                                  textController: viewModel.memoTextController,
+                                  myFocusNode: viewModel.memoFocusNode,
+                                  paddingSize: 7,
+                                  maxLines: null,
+                                  maxLength: maxMemoTextCharSize,
+                                  showCounterText: true,
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          100),
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(
+                                        maxMemoTextCharSize)
+                                  ],
+                                  validation: (String value) {
+                                    return "";
+                                  },
+                                ),
+                              ),
+                        const SizedBox(height: 10),
+                      ])))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -652,16 +597,16 @@ class SendView extends ViewBase<SendViewModel> {
                       // e.toString();
                     }
 
-                    /// TODO:: improve this to update transactionBloc faster
+                    // TODO(fix): improve this to update transactionBloc faster
                     await Future.delayed(const Duration(seconds: 1));
                     viewModel.isSending = false;
-                    if (success == false) {
+                    if (!success) {
                       viewModel
                           .updatePageStatus(SendFlowStatus.reviewTransaction);
                     }
                     if (context.mounted && success) {
                       viewModel.updatePageStatus(SendFlowStatus.sendSuccess);
-                    } else if (context.mounted && success == false) {
+                    } else if (context.mounted && !success) {
                       LocalToast.showErrorToast(
                           context, viewModel.errorMessage);
                       viewModel.errorMessage = "";
@@ -677,11 +622,11 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget getTransactionValueWidget(BuildContext context) {
-    int amountInSATS = getTotalAmountInSATS();
-    double amountInFiatCurrency = getTotalAmountInFiatCurrency();
-    int displayDigit =
+    final int amountInSATS = getTotalAmountInSATS();
+    final double amountInFiatCurrency = getTotalAmountInFiatCurrency();
+    final int displayDigit =
         ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+    return Column(children: [
       Text(S.of(context).you_are_sending,
           style: FontManager.titleSubHeadline(ProtonColors.textHint)),
       Text(
@@ -695,13 +640,13 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionTotalValueWidget(
       BuildContext context, SendViewModel viewModel, int estimatedFee) {
-    double estimatedFeeInNotional =
+    final double estimatedFeeInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
             viewModel.exchangeRate, estimatedFee);
-    double estimatedTotalValueInNotional =
+    final double estimatedTotalValueInNotional =
         ExchangeCalculator.getNotionalInFiatCurrency(
             viewModel.exchangeRate, viewModel.totalAmountInSAT);
-    int displayDigit =
+    final int displayDigit =
         ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return TransactionHistoryItemV2(
       backgroundColor: ProtonColors.white,
@@ -725,7 +670,7 @@ class SendView extends ViewBase<SendViewModel> {
   Widget buildAddRecipient(BuildContext context) {
     return Container(
         color: ProtonColors.white,
-        child: viewModel.initialized == false
+        child: !viewModel.initialized
             ? const Column(children: [
                 SizedBox(height: 20),
                 Padding(
@@ -764,125 +709,111 @@ class SendView extends ViewBase<SendViewModel> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: defaultPadding),
                             child: Center(
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                  const SizedBox(height: 20),
-                                  Column(children: [
-                                    ProtonMailAutoComplete(
-                                        labelText:
-                                            S.of(context).send_to_recipient_s,
-                                        emails: viewModel.contactsEmail,
-                                        color: ProtonColors.white,
-                                        focusNode: viewModel.addressFocusNode,
-                                        textEditingController:
-                                            viewModel.recipientTextController,
-                                        callback: () {
-                                          viewModel
-                                              .addressAutoCompleteCallback();
-                                        }),
-                                    const SizedBox(height: 5),
+                                child: Column(children: [
+                              const SizedBox(height: 20),
+                              Column(children: [
+                                ProtonMailAutoComplete(
+                                    labelText:
+                                        S.of(context).send_to_recipient_s,
+                                    emails: viewModel.contactsEmail,
+                                    color: ProtonColors.white,
+                                    focusNode: viewModel.addressFocusNode,
+                                    textEditingController:
+                                        viewModel.recipientTextController,
+                                    callback:
+                                        viewModel.addressAutoCompleteCallback),
+                                const SizedBox(height: 5),
 
-                                    /// TODO:: add account selector or use default one for wallet view
-                                    // if (Provider.of<ProtonWalletProvider>(context)
-                                    //             .protonWallet
-                                    //             .currentAccount ==
-                                    //         null &&
-                                    //     Provider.of<ProtonWalletProvider>(context)
-                                    //             .protonWallet
-                                    //             .currentAccounts
-                                    //             .length >
-                                    //         1)
-                                    //   WalletAccountDropdown(
-                                    //       labelText: S.of(context).trans_from,
-                                    //       backgroundColor: ProtonColors.white,
-                                    //       width: MediaQuery.of(context).size.width -
-                                    //           defaultPadding * 2,
-                                    //       accounts: Provider.of<ProtonWalletProvider>(
-                                    //               context)
-                                    //           .protonWallet
-                                    //           .currentAccounts,
-                                    //       valueNotifier: viewModel.initialized
-                                    //           ? viewModel.accountValueNotifier
-                                    //           : ValueNotifier(
-                                    //               Provider.of<ProtonWalletProvider>(
-                                    //                       context)
-                                    //                   .protonWallet
-                                    //                   .currentAccounts
-                                    //                   .first)),
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(width: defaultPadding),
-                                          Text(
-                                            "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
-                                            style: FontManager.captionRegular(
-                                                ProtonColors.textWeak),
-                                          ),
-                                        ]),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ]),
-                                  if (viewModel.recipients.isNotEmpty)
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 20, bottom: 10),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Text(
-                                        S.of(context).recipients,
-                                        style: FontManager.captionMedian(
-                                            ProtonColors.textNorm),
+                                // TODO(fix): add account selector or use default one for wallet view
+                                // if (Provider.of<ProtonWalletProvider>(context)
+                                //             .protonWallet
+                                //             .currentAccount ==
+                                //         null &&
+                                //     Provider.of<ProtonWalletProvider>(context)
+                                //             .protonWallet
+                                //             .currentAccounts
+                                //             .length >
+                                //         1)
+                                //   WalletAccountDropdown(
+                                //       labelText: S.of(context).trans_from,
+                                //       backgroundColor: ProtonColors.white,
+                                //       width: MediaQuery.of(context).size.width -
+                                //           defaultPadding * 2,
+                                //       accounts: Provider.of<ProtonWalletProvider>(
+                                //               context)
+                                //           .protonWallet
+                                //           .currentAccounts,
+                                //       valueNotifier: viewModel.initialized
+                                //           ? viewModel.accountValueNotifier
+                                //           : ValueNotifier(
+                                //               Provider.of<ProtonWalletProvider>(
+                                //                       context)
+                                //                   .protonWallet
+                                //                   .currentAccounts
+                                //                   .first)),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: defaultPadding),
+                                      Text(
+                                        "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
+                                        style: FontManager.captionRegular(
+                                            ProtonColors.textWeak),
                                       ),
-                                    ),
-                                  for (int index = 0;
-                                      index < viewModel.recipients.length;
-                                      index++)
-                                    if (viewModel.recipients[index].isValid)
-                                      RecipientDetail(
-                                        name: viewModel.recipients[index].email,
-                                        email:
-                                            viewModel.recipients[index].email,
-                                        bitcoinAddress: viewModel
-                                                .bitcoinAddresses
-                                                .containsKey(viewModel
-                                                    .recipients[index].email)
-                                            ? viewModel.bitcoinAddresses[
-                                                    viewModel.recipients[index]
-                                                        .email] ??
-                                                ""
-                                            : "",
-                                        isSignatureInvalid: viewModel
-                                                    .bitcoinAddressesInvalidSignature[
-                                                viewModel
+                                    ]),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ]),
+                              if (viewModel.recipients.isNotEmpty)
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      top: 20, bottom: 10),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    S.of(context).recipients,
+                                    style: FontManager.captionMedian(
+                                        ProtonColors.textNorm),
+                                  ),
+                                ),
+                              for (int index = 0;
+                                  index < viewModel.recipients.length;
+                                  index++)
+                                if (viewModel.recipients[index].isValid)
+                                  RecipientDetail(
+                                    name: viewModel.recipients[index].email,
+                                    email: viewModel.recipients[index].email,
+                                    bitcoinAddress: viewModel.bitcoinAddresses
+                                            .containsKey(viewModel
+                                                .recipients[index].email)
+                                        ? viewModel.bitcoinAddresses[viewModel
+                                                .recipients[index].email] ??
+                                            ""
+                                        : "",
+                                    isSignatureInvalid: viewModel
+                                                .bitcoinAddressesInvalidSignature[
+                                            viewModel
+                                                .recipients[index].email] ??
+                                        false,
+                                    isSelfBitcoinAddress:
+                                        viewModel.selfBitcoinAddresses.contains(
+                                            viewModel.bitcoinAddresses[viewModel
                                                     .recipients[index].email] ??
-                                            false,
-                                        isSelfBitcoinAddress: viewModel
-                                            .selfBitcoinAddresses
-                                            .contains(
-                                                viewModel.bitcoinAddresses[
-                                                        viewModel
-                                                            .recipients[index]
-                                                            .email] ??
-                                                    ""),
-                                        callback: () {
-                                          viewModel.removeRecipient(index);
-                                        },
-                                      ),
-                                  if (viewModel.isLoadingBvE)
-                                    const CustomLoading(
-                                      size: 40,
-                                      durationInMilliSeconds: 1600,
-                                      strokeWidth: 3,
-                                    ),
-                                ]))))),
+                                                ""),
+                                    callback: () {
+                                      viewModel.removeRecipient(index);
+                                    },
+                                  ),
+                              if (viewModel.isLoadingBvE)
+                                const CustomLoading(
+                                  size: 40,
+                                  strokeWidth: 3,
+                                ),
+                            ]))))),
                 if (MediaQuery.of(context).viewInsets.bottom < 80)
                   Container(
                       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -915,134 +846,132 @@ class SendView extends ViewBase<SendViewModel> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: Center(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            Stack(children: [
-                              Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 16,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 2400,
-                                    delayMilliSeconds: 0,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 16,
-                                          height: 16),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 16,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 3200,
-                                    delayMilliSeconds: 800,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 20,
-                                          height: 20),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 2000,
-                                    delayMilliSeconds: 300,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 16,
-                                          height: 16),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 14,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 4500,
-                                    delayMilliSeconds: 150,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 20,
-                                          height: 20),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 1800,
-                                    delayMilliSeconds: 700,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 12,
-                                          height: 12),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 31,
-                                  ),
-                                  FlyingBackgroundAnimation(
-                                    animationMilliSeconds: 2600,
-                                    delayMilliSeconds: 500,
-                                    child: Transform.rotate(
-                                      angle: 40,
-                                      child: SvgPicture.asset(
-                                          "assets/images/icon/star.svg",
-                                          fit: BoxFit.fill,
-                                          width: 16,
-                                          height: 16),
-                                    ),
-                                  ),
-                                ],
+                          child: Column(children: [
+                        Stack(children: [
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 16,
                               ),
-                              Column(children: [
-                                const SizedBox(
-                                  height: 80,
-                                ),
-                                FlyingAnimation(
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 2400,
+                                delayMilliSeconds: 0,
+                                child: Transform.rotate(
+                                  angle: 40,
                                   child: SvgPicture.asset(
-                                      "assets/images/icon/send_1.svg",
+                                      "assets/images/icon/star.svg",
                                       fit: BoxFit.fill,
-                                      width: 80,
-                                      height: 80),
+                                      width: 16,
+                                      height: 16),
                                 ),
-                                const SizedBox(
-                                  height: 80,
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 3200,
+                                delayMilliSeconds: 800,
+                                child: Transform.rotate(
+                                  angle: 40,
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/star.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
                                 ),
-                              ]),
-                            ]),
-                            Text(
-                              S.of(context).send_broadcasting_title,
-                              style: FontManager.titleHeadline(
-                                  ProtonColors.textNorm),
-                              textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 2000,
+                                delayMilliSeconds: 300,
+                                child: Transform.rotate(
+                                  angle: 40,
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/star.svg",
+                                      fit: BoxFit.fill,
+                                      width: 16,
+                                      height: 16),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 14,
+                              ),
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 4500,
+                                delayMilliSeconds: 150,
+                                child: Transform.rotate(
+                                  angle: 40,
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/star.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 1800,
+                                delayMilliSeconds: 700,
+                                child: Transform.rotate(
+                                  angle: 40,
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/star.svg",
+                                      fit: BoxFit.fill,
+                                      width: 12,
+                                      height: 12),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 31,
+                              ),
+                              FlyingBackgroundAnimation(
+                                animationMilliSeconds: 2600,
+                                delayMilliSeconds: 500,
+                                child: Transform.rotate(
+                                  angle: 40,
+                                  child: SvgPicture.asset(
+                                      "assets/images/icon/star.svg",
+                                      fit: BoxFit.fill,
+                                      width: 16,
+                                      height: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(children: [
+                            const SizedBox(
+                              height: 80,
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              S.of(context).send_broadcasting_content,
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textWeak),
-                              textAlign: TextAlign.center,
+                            FlyingAnimation(
+                              child: SvgPicture.asset(
+                                  "assets/images/icon/send_1.svg",
+                                  fit: BoxFit.fill,
+                                  width: 80,
+                                  height: 80),
                             ),
-                          ]))))),
+                            const SizedBox(
+                              height: 80,
+                            ),
+                          ]),
+                        ]),
+                        Text(
+                          S.of(context).send_broadcasting_title,
+                          style:
+                              FontManager.titleHeadline(ProtonColors.textNorm),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          S.of(context).send_broadcasting_content,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textWeak),
+                          textAlign: TextAlign.center,
+                        ),
+                      ]))))),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Column(children: [
@@ -1063,7 +992,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      // TODO:: add invite friend dialog and api call here
+                      // TODO(fix): add invite friend dialog and api call here
                       LocalToast.showToast(context, "TODO");
                     },
                     enable: false,
@@ -1088,29 +1017,24 @@ class SendView extends ViewBase<SendViewModel> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: Center(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            SvgPicture.asset(
-                                "assets/images/icon/send_success.svg",
-                                fit: BoxFit.fill,
-                                width: 240,
-                                height: 240),
-                            Text(
-                              S.of(context).send_success_title,
-                              style: FontManager.titleHeadline(
-                                  ProtonColors.textNorm),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              S.of(context).send_success_content,
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textWeak),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 40),
-                          ]))))),
+                          child: Column(children: [
+                        SvgPicture.asset("assets/images/icon/send_success.svg",
+                            fit: BoxFit.fill, width: 240, height: 240),
+                        Text(
+                          S.of(context).send_success_title,
+                          style:
+                              FontManager.titleHeadline(ProtonColors.textNorm),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          S.of(context).send_success_content,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textWeak),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 40),
+                      ]))))),
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Column(children: [
@@ -1130,7 +1054,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      // TODO:: add invite friend dialog and api call here
+                      // TODO(fix): add invite friend dialog and api call here
                       LocalToast.showToast(context, "TODO");
                     },
                     text: S.of(context).invite_a_friend,
@@ -1181,12 +1105,13 @@ void showSelectTransactionFeeMode(
                               height: 20)
                           : null,
                       onTap: () async {
-                        TransactionFeeMode originTransactionFeeMode =
+                        final TransactionFeeMode originTransactionFeeMode =
                             viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.highPriority);
-                        bool success = await viewModel.buildTransactionScript();
-                        if (success == false) {
+                        final bool success =
+                            await viewModel.buildTransactionScript();
+                        if (!success) {
                           viewModel.updateTransactionFeeMode(
                               originTransactionFeeMode);
                         }
@@ -1213,12 +1138,13 @@ void showSelectTransactionFeeMode(
                               height: 20)
                           : null,
                       onTap: () async {
-                        TransactionFeeMode originTransactionFeeMode =
+                        final TransactionFeeMode originTransactionFeeMode =
                             viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.medianPriority);
-                        bool success = await viewModel.buildTransactionScript();
-                        if (success == false) {
+                        final bool success =
+                            await viewModel.buildTransactionScript();
+                        if (!success) {
                           viewModel.updateTransactionFeeMode(
                               originTransactionFeeMode);
                         }
@@ -1246,12 +1172,13 @@ void showSelectTransactionFeeMode(
                       title: getEstimatedFeeInfo(
                           context, viewModel, TransactionFeeMode.lowPriority),
                       onTap: () async {
-                        TransactionFeeMode originTransactionFeeMode =
+                        final TransactionFeeMode originTransactionFeeMode =
                             viewModel.userTransactionFeeMode;
                         viewModel.updateTransactionFeeMode(
                             TransactionFeeMode.lowPriority);
-                        bool success = await viewModel.buildTransactionScript();
-                        if (success == false) {
+                        final bool success =
+                            await viewModel.buildTransactionScript();
+                        if (!success) {
                           viewModel.updateTransactionFeeMode(
                               originTransactionFeeMode);
                         }
@@ -1273,20 +1200,18 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
     case TransactionFeeMode.highPriority:
       feeModeStr = S.of(context).high_priority;
       estimatedFee = viewModel.estimatedFeeInSATHighPriority;
-      break;
     case TransactionFeeMode.medianPriority:
       feeModeStr = S.of(context).median_priority;
       estimatedFee = viewModel.estimatedFeeInSATMedianPriority;
-      break;
     case TransactionFeeMode.lowPriority:
       feeModeStr = S.of(context).low_priority;
       estimatedFee = viewModel.estimatedFeeInSATLowPriority;
-      break;
   }
-  int displayDigit = ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
-  String estimatedFeeInFiatCurrency =
+  final int displayDigit =
+      ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
+  final String estimatedFeeInFiatCurrency =
       "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(displayDigit)}";
-  String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
+  final String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
       viewModel.userSettingsDataProvider.bitcoinUnit, estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),

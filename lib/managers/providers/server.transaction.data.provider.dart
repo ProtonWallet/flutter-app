@@ -48,16 +48,17 @@ class ServerTransactionDataProvider extends DataProvider {
   bool initialized = false;
 
   Future<List<ServerTransactionData>> _getFromDB() async {
-    List<ServerTransactionData> transactionDataList = [];
-    var wallets = await walletDao.findAllByUserID(userID);
+    final List<ServerTransactionData> transactionDataList = [];
+    final wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
-        var accounts = await accountDao.findAllByWalletID(walletModel.walletID);
+        final accounts =
+            await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
-          var transactions = await transactionDao.findAllByServerAccountID(
+          final transactions = await transactionDao.findAllByServerAccountID(
             accountModel.accountID,
           );
-          var serverTransactionData = ServerTransactionData(
+          final serverTransactionData = ServerTransactionData(
             accountModel: accountModel,
             transactions: transactions,
           );
@@ -70,7 +71,7 @@ class ServerTransactionDataProvider extends DataProvider {
   }
 
   Future<List<TransactionModel>> _getFromDBByAccount(String accountID) async {
-    var transactions = await transactionDao.findAllByServerAccountID(
+    final transactions = await transactionDao.findAllByServerAccountID(
       accountID,
     );
 
@@ -81,7 +82,7 @@ class ServerTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    List<ServerTransactionData> serverTransactionsData =
+    final List<ServerTransactionData> serverTransactionsData =
         await getServerTransactionData();
     for (ServerTransactionData serverTransactionData
         in serverTransactionsData) {
@@ -99,7 +100,7 @@ class ServerTransactionDataProvider extends DataProvider {
     String accountID,
   ) async {
     // check cache first
-    List<ServerTransactionData> transactionDataList =
+    final List<ServerTransactionData> transactionDataList =
         await getServerTransactionData();
     for (ServerTransactionData serverTransactionData in transactionDataList) {
       if (serverTransactionData.accountModel.walletID == walletID &&
@@ -111,7 +112,7 @@ class ServerTransactionDataProvider extends DataProvider {
     await fetchTransactions(walletID, accountID);
 
     // fetch from db
-    var dbTrans = await _getFromDBByAccount(accountID);
+    final dbTrans = await _getFromDBByAccount(accountID);
     if (dbTrans.isNotEmpty) {
       return dbTrans;
     }
@@ -123,7 +124,7 @@ class ServerTransactionDataProvider extends DataProvider {
       return serverTransactionDataList;
     }
     // fetch from server
-    var wallets = await walletDao.findAllByUserID(userID);
+    final wallets = await walletDao.findAllByUserID(userID);
     for (WalletModel walletModel in wallets) {
       await fetchTransactions(
         walletModel.walletID,
@@ -141,7 +142,7 @@ class ServerTransactionDataProvider extends DataProvider {
     String? accountID, {
     bool isInitializeProcess = false,
   }) async {
-    var walletTransactions = await walletClient.getWalletTransactions(
+    final walletTransactions = await walletClient.getWalletTransactions(
       walletId: walletID,
       walletAccountId: accountID,
     );
@@ -159,12 +160,12 @@ class ServerTransactionDataProvider extends DataProvider {
     bool notifyDataUpdate = false,
     bool isInitializeProcess = false,
   }) async {
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
 
     String exchangeRateID = "";
     if (walletTransaction.exchangeRate != null) {
       exchangeRateID = walletTransaction.exchangeRate!.id;
-      ExchangeRateModel exchangeRateModel = ExchangeRateModel(
+      final ExchangeRateModel exchangeRateModel = ExchangeRateModel(
         id: null,
         serverID: walletTransaction.exchangeRate!.id,
         bitcoinUnit:
@@ -172,7 +173,7 @@ class ServerTransactionDataProvider extends DataProvider {
         fiatCurrency:
             walletTransaction.exchangeRate!.fiatCurrency.name.toUpperCase(),
         sign: "",
-        // TODO:: add sign once apiClient update for it
+        // TODO(fix): add sign once apiClient update for it
         exchangeRateTime: walletTransaction.exchangeRate!.exchangeRateTime,
         exchangeRate: walletTransaction.exchangeRate!.exchangeRate.toInt(),
         cents: walletTransaction.exchangeRate!.cents.toInt(),
@@ -180,7 +181,7 @@ class ServerTransactionDataProvider extends DataProvider {
       await exchangeRateDao.insert(exchangeRateModel);
     }
 
-    TransactionModel transactionModel = TransactionModel(
+    final TransactionModel transactionModel = TransactionModel(
         id: -1,
         type:
             walletTransaction.type?.index ?? TransactionType.unsupported.index,
@@ -215,9 +216,9 @@ class ServerTransactionDataProvider extends DataProvider {
     bool isInitializeProcess = false,
     UpdateType? updateType,
   }) async {
-    TransactionModel? transactionModelInDB =
+    final TransactionModel? transactionModelInDB =
         await transactionDao.findByServerID(transactionModel.serverID);
-    bool transactionModelExists = transactionModelInDB != null;
+    final bool transactionModelExists = transactionModelInDB != null;
     if (transactionModelInDB != null) {
       transactionModel.id = transactionModelInDB
           .id; // need to update id since the update function is based on auto increase id
@@ -225,8 +226,8 @@ class ServerTransactionDataProvider extends DataProvider {
     await transactionDao.insertOrUpdate(transactionModel);
 
     /// refresh cache
-    /// TODO:: improve performance
-    if (isInitializeProcess == false) {
+    // TODO(fix): improve performance
+    if (!isInitializeProcess) {
       /// only need to update cached serverTransactionDataList after initialized
       serverTransactionDataList = await _getFromDB();
     }

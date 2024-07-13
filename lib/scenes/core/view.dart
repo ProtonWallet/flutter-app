@@ -22,7 +22,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   }
 
   Future<void> handleRefresh() async {
-    return await viewModel.loadData();
+    return viewModel.loadData();
   }
 
   void dispose() {

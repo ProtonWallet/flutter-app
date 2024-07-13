@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/proton.color.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomTooltip extends StatelessWidget {
@@ -8,9 +8,9 @@ class CustomTooltip extends StatelessWidget {
   final Widget child;
 
   const CustomTooltip({
-    super.key,
     required this.message,
     required this.child,
+    super.key,
   });
 
   @override
@@ -23,8 +23,11 @@ class CustomTooltip extends StatelessWidget {
         triggerMode: TooltipTriggerMode.tap,
         content: Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(message,
-                style: FontManager.body2Regular(ProtonColors.white), textAlign: TextAlign.center,)),
+            child: Text(
+              message,
+              style: FontManager.body2Regular(ProtonColors.white),
+              textAlign: TextAlign.center,
+            )),
         child: child);
   }
 }

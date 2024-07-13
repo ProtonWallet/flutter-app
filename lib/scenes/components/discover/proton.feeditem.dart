@@ -35,7 +35,9 @@ class ProtonFeedItem {
 
   /// Handling a list of ProtonFeedItem instances
   static List<ProtonFeedItem> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => ProtonFeedItem.fromJson(json)).toList();
+    return jsonList
+        .map((json) => ProtonFeedItem.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   static List<Map<String, dynamic>> toJsonList(List<ProtonFeedItem> items) {
@@ -43,7 +45,7 @@ class ProtonFeedItem {
   }
 
   static Future<List<ProtonFeedItem>> loadJsonFromAsset() async {
-    String jsonString =
+    final String jsonString =
         await rootBundle.loadString('assets/json/custom_discovers.json');
     final decodedJsonList = json.decode(jsonString) as List<dynamic>;
     return fromJsonList(decodedJsonList);

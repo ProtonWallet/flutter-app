@@ -11,12 +11,12 @@ class SecuritySettingCoordinator extends Coordinator {
   late ViewBase widget;
 
   void showTwoFactorAuthSetup() {
-    var view = TwoFactorAuthCoordinator().start();
+    final view = TwoFactorAuthCoordinator().start();
     push(view);
   }
 
   void showTwoFactorAuthDisable() {
-    var view = TwoFactorAuthDisableCoordinator().start();
+    final view = TwoFactorAuthDisableCoordinator().start();
     push(view);
   }
 
@@ -25,7 +25,7 @@ class SecuritySettingCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var viewModel = SecuritySettingViewModelImpl(this);
+    final viewModel = SecuritySettingViewModelImpl(this);
     widget = SecuritySettingView(
       viewModel,
     );

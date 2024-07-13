@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -8,9 +9,9 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
 
 abstract class SetupPassPhraseViewModel
@@ -32,13 +33,13 @@ abstract class SetupPassPhraseViewModel
   late FocusNode passphraseFocusNode;
   late FocusNode passphraseConfirmFocusNode;
 
-  void updateUserPhraseList(String title, bool remove);
+  void updateUserPhraseList(String title, {required bool remove});
 
   bool checkUserMnemonic();
 
-  void setPhraseItem(String title, bool active);
+  void setPhraseItem(String title, {required bool isActive});
 
-  void updateState(bool isAddingPassPhrase);
+  void updateState({required bool isAddingPassPhrase});
 
   Future<void> updateDB();
 
@@ -96,7 +97,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   }
 
   @override
-  void updateUserPhraseList(String title, bool remove) {
+  void updateUserPhraseList(String title, {required bool remove}) {
     if (title == "") {
       return;
     }
@@ -104,13 +105,13 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       if (remove) {
         if (userPhraseList[index] == title) {
           userPhraseList[index] = "";
-          setPhraseItem(title, true);
+          setPhraseItem(title, isActive: true);
           break;
         }
       } else {
         if (userPhraseList[index] == "") {
           userPhraseList[index] = title;
-          setPhraseItem(title, false);
+          setPhraseItem(title, isActive: false);
           break;
         }
       }
@@ -120,13 +121,13 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   }
 
   @override
-  void setPhraseItem(String title, bool active) {
+  void setPhraseItem(String title, {required bool isActive}) {
     for (int index = 0; index < itemListShuffled.length; index++) {
       if (itemListShuffled[index].title == title) {
         itemListShuffled[index] = Item(
           title: itemListShuffled[index].title,
           index: itemListShuffled[index].index,
-          active: active,
+          active: isActive,
         );
         break;
       }
@@ -144,7 +145,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   }
 
   @override
-  void updateState(bool isAddingPassPhrase) {
+  void updateState({required bool isAddingPassPhrase}) {
     this.isAddingPassPhrase = isAddingPassPhrase;
     datasourceChangedStreamController.sinkAddSafe(this);
   }
@@ -152,11 +153,11 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   @override
   Future<void> updateDB() async {
     try {
-      String walletName = nameTextController.text;
-      String strPassphrase = passphraseTextController.text;
-      ScriptTypeInfo scriptTypeInfo = appConfig.scriptTypeInfo;
+      final String walletName = nameTextController.text;
+      final String strPassphrase = passphraseTextController.text;
+      final ScriptTypeInfo scriptTypeInfo = appConfig.scriptTypeInfo;
 
-      var apiWallet = await createWalletBloc.createWallet(
+      final apiWallet = await createWalletBloc.createWallet(
         walletName,
         strMnemonic,
         appConfig.coinType.network,
@@ -182,8 +183,8 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
 
   @override
   bool checkPassphrase() {
-    String passphrase1 = passphraseTextController.text;
-    String passphrase2 = passphraseTextConfirmController.text;
+    final String passphrase1 = passphraseTextController.text;
+    final String passphrase2 = passphraseTextConfirmController.text;
     // TO-DO: check passphrase is strong enough?
     return passphrase1 == passphrase2;
   }

@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 
 class AddressKeyProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
@@ -26,16 +26,16 @@ class AddressKeyProvider extends DataProvider {
         await protonEmailAddressClient.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
-    var firstUserkey = await WalletManager.userManager.getFirstKey();
-    String userPrivateKey = firstUserkey.privateKey;
-    String userPassphrase = firstUserkey.passphrase;
+    final firstUserkey = await WalletManager.userManager.getFirstKey();
+    final String userPrivateKey = firstUserkey.privateKey;
+    final String userPassphrase = firstUserkey.passphrase;
 
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
-        String addressKeyPrivateKey = addressKey.privateKey ?? "";
-        String addressKeyToken = addressKey.token ?? "";
+        final String addressKeyPrivateKey = addressKey.privateKey ?? "";
+        final String addressKeyToken = addressKey.token ?? "";
         try {
-          String addressKeyPassphrase = proton_crypto.decrypt(
+          final String addressKeyPassphrase = proton_crypto.decrypt(
               userPrivateKey, userPassphrase, addressKeyToken);
           addressKeys.add(AddressKey(
               id: address.id,
@@ -47,7 +47,7 @@ class AddressKeyProvider extends DataProvider {
       }
     }
 
-    // TODO:: remove this, use old version decrypt method to get addresskeys' passphrase
+    // TODO(fix): remove this, use old version decrypt method to get addresskeys' passphrase
     addressKeys.add(AddressKey(
         id: "firstUserKey",
         privateKey: userPrivateKey,

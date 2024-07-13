@@ -32,8 +32,8 @@ class GatewayDataProvider extends DataProvider {
     }
 
     //set default country
-    Set<String> uniqueCodesSet = {"US", "CA"};
-    var providerCountries = countries[provider];
+    final Set<String> uniqueCodesSet = {"US", "CA"};
+    final providerCountries = countries[provider];
     if (providerCountries != null) {
       for (var country in providerCountries) {
         uniqueCodesSet.add(country.code);
@@ -44,7 +44,7 @@ class GatewayDataProvider extends DataProvider {
 
   ApiCountry getApiCountry(GatewayProvider provider, String localCode) {
     ApiCountry? apiCountry;
-    var providerCountries = countries[provider];
+    final providerCountries = countries[provider];
     if (providerCountries != null) {
       for (var country in providerCountries) {
         if (country.code == localCode) {
@@ -69,8 +69,8 @@ class GatewayDataProvider extends DataProvider {
       fiatCurrencies = await onRampGatewayClient.getFiatCurrencies();
     }
     //set default country
-    Set<String> uniqueCodesSet = {};
-    var providerCountries = countries[provider];
+    final Set<String> uniqueCodesSet = {};
+    final providerCountries = countries[provider];
     if (providerCountries != null) {
       for (var country in providerCountries) {
         if (country.code == localCode) {
@@ -100,7 +100,7 @@ class GatewayDataProvider extends DataProvider {
   ) {
     ApiCountryFiatCurrency? apiCountry;
 
-    var countryFiatCurrencies = fiatCurrencies[provider];
+    final countryFiatCurrencies = fiatCurrencies[provider];
     if (countryFiatCurrencies != null) {
       for (var country in countryFiatCurrencies) {
         if (country.symbol == fiatCurrency) {
@@ -124,8 +124,8 @@ class GatewayDataProvider extends DataProvider {
 
   Future<Map<GatewayProvider, List<Quote>>> getQuote(
       String fiatCurrency, String amount, GatewayProvider provider) async {
-    var doubleAmount = double.parse(amount);
-    var quote = await onRampGatewayClient.getQuotes(
+    final doubleAmount = double.parse(amount);
+    final quote = await onRampGatewayClient.getQuotes(
         amount: doubleAmount, fiatCurrency: fiatCurrency, provider: provider);
     return quote;
   }

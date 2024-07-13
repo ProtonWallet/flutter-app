@@ -53,7 +53,7 @@ class SecureStorage implements SecureStorageInterface {
 
   @override
   Future<bool> containsKey(String key) async {
-    return await storage.containsKey(key: key);
+    return storage.containsKey(key: key);
   }
 
   @override

@@ -21,7 +21,7 @@ class AppStateManager extends DataProvider implements Manager {
   AppStateManager();
 
   Future<void> handleError(BridgeError exception) async {
-    var message = parseSessionExpireError(exception);
+    final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
       return;
@@ -35,13 +35,13 @@ class AppStateManager extends DataProvider implements Manager {
 
   @override
   Future<void> dispose() {
-    // TODO: implement dispose
+    // TODO(fix): implement dispose
     throw UnimplementedError();
   }
 
   @override
   Future<void> login(String userID) {
-    // TODO: implement login
+    // TODO(fix): implement login
     throw UnimplementedError();
   }
 

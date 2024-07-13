@@ -17,9 +17,9 @@ class SetupBackupCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var userManager = serviceManager.get<UserManager>();
-    var viewModel = SetupBackupViewModelImpl(
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final userManager = serviceManager.get<UserManager>();
+    final viewModel = SetupBackupViewModelImpl(
       this,
       walletID,
       dataProviderManager.walletDataProvider,

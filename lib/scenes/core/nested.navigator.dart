@@ -7,9 +7,9 @@ class NestedNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
 
   const NestedNavigator({
-    super.key,
     required this.navigatorKey,
     required this.builder,
+    super.key,
   });
 
   @override

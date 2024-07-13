@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ramp_flutter/configuration.dart';
@@ -13,16 +14,16 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
+import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
-import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
-import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
-import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -130,7 +131,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       ),
       title: 'Credit Card',
       subtitle: '',
-      method: PaymentMethod.card,
     ));
     // payments.add(DropdownItem(
     //   icon: 'assets/images/bank-transfer.png',
@@ -267,7 +267,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   Future<String> getBase64ImageUrl(String path) async {
-    String base64String = await loadAssetAsBase64(path);
+    final String base64String = await loadAssetAsBase64(path);
     return 'data:image/png;base64,$base64String';
   }
 
@@ -287,7 +287,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
       /// check if local highest used bitcoin address index is higher than the one store in wallet account
       /// this will happen when some one send bitcoin via qr code
-      int localLastUsedIndex = await localBitcoinAddressDataProvider
+      final int localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
       if (localLastUsedIndex > accountModel.lastUsedIndex) {
         accountModel.lastUsedIndex = localLastUsedIndex;
@@ -300,7 +300,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         addressIndex = accountModel.lastUsedIndex + 1;
       }
 
-      var addressInfo = await account!.getAddress(index: addressIndex);
+      final addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
@@ -360,8 +360,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void keyboardDone() {
-    var amount = bloc.state.selectedModel.amount.toString();
-    var check = buyBloc.toNumberAmount(controller.text);
+    final amount = bloc.state.selectedModel.amount;
+    final check = buyBloc.toNumberAmount(controller.text);
     if (amount != check) {
       selectAmount(check);
     }
@@ -369,8 +369,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void pay(SelectedInfoModel selected) {
-    var amount = selected.amount.toString();
-    var check = buyBloc.toNumberAmount(controller.text);
+    final amount = selected.amount;
+    final check = buyBloc.toNumberAmount(controller.text);
     if (amount != check) {
       selectAmount(check);
     }
@@ -379,7 +379,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
           "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
       configuration.enabledFlows =
           supportOffRamp ? ["ONRAMP", "OFFRAMP"] : ["ONRAMP"];
-
       configuration.swapAsset = "BTC_BTC";
       configuration.defaultAsset = "BTC";
       configuration.fiatValue = check;
@@ -396,7 +395,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   List<String>? getFavoriteCountry(List<String> availableCountries) {
-    var currentCode = PlatformDispatcher.instance.locale.countryCode ?? "US";
+    final currentCode = PlatformDispatcher.instance.locale.countryCode ?? "US";
     if (availableCountries.contains(currentCode)) {
       return [currentCode];
     }

@@ -59,18 +59,18 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showRecovery() {
-    var view = RecoveryCoordinator().start();
+    final view = RecoveryCoordinator().start();
     showInBottomSheet(view);
   }
 
   void showSettings() {
-    var view = SettingsCoordinator().start();
+    final view = SettingsCoordinator().start();
     // showInBottomSheet(view);
     push(view);
   }
 
   void showSend(String walletID, String accountID) {
-    var view = SendCoordinator(walletID, accountID).start();
+    final view = SendCoordinator(walletID, accountID).start();
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
@@ -78,34 +78,40 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showSetupBackup(String walletID) {
-    var view = SetupBackupCoordinator(walletID).start();
-    push(view, fullscreenDialog: false);
+    final view = SetupBackupCoordinator(walletID).start();
+    push(view);
   }
 
   void showReceive(
-      String serverWalletID, String serverAccountID, bool isWalletView) {
-    var view = ReceiveCoordinator(serverWalletID, serverAccountID, isWalletView)
-        .start();
+    String serverWalletID,
+    String serverAccountID, {
+    required bool isWalletView,
+  }) {
+    final view = ReceiveCoordinator(
+      serverWalletID,
+      serverAccountID,
+      isWalletView: isWalletView,
+    ).start();
     showInBottomSheet(view);
   }
 
   void showWebSocket() {
-    var view = WebSocketCoordinator().start();
+    final view = WebSocketCoordinator().start();
     push(view, fullscreenDialog: true);
   }
 
   void showDiscover() {
-    var view = DiscoverCoordinator().start();
+    final view = DiscoverCoordinator().start();
     push(view);
   }
 
   void showBuy(String walletID, String accountID) {
-    var view = BuyBitcoinCoordinator(walletID, accountID).start();
+    final view = BuyBitcoinCoordinator(walletID, accountID).start();
     push(view);
   }
 
   void showSecuritySetting() {
-    var view = SecuritySettingCoordinator().start();
+    final view = SecuritySettingCoordinator().start();
     push(view);
   }
 
@@ -115,7 +121,7 @@ class HomeCoordinator extends Coordinator {
     String txID,
     FiatCurrency userFiatCurrency,
   ) {
-    var view = HistoryDetailCoordinator(
+    final view = HistoryDetailCoordinator(
       walletID,
       accountID,
       txID,
@@ -128,37 +134,38 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showTwoFactorAuthSetup() {
-    var view = TwoFactorAuthCoordinator().start();
+    final view = TwoFactorAuthCoordinator().start();
     push(view);
   }
 
   void showTwoFactorAuthDisable() {
-    var view = TwoFactorAuthDisableCoordinator().start();
+    final view = TwoFactorAuthDisableCoordinator().start();
     push(view);
   }
 
   void logout() {
     serviceManager.logout();
-    var view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
+    final view =
+        WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
   }
 
   void showImportWallet(String preInputName) {
-    var view = ImportCoordinator(preInputName).start();
+    final view = ImportCoordinator(preInputName).start();
     showInBottomSheet(view);
   }
 
   @override
   ViewBase<ViewModel> start() {
-    var userManager = serviceManager.get<UserManager>();
-    var event = serviceManager.get<EventLoop>();
-    var wallet = serviceManager.get<ProtonWalletManager>();
-    var apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
-    var dataProviderManager = serviceManager.get<DataProviderManager>();
-    var channelManager = serviceManager.get<PlatformChannelManager>();
-    var appStateManager = serviceManager.get<AppStateManager>();
+    final userManager = serviceManager.get<UserManager>();
+    final event = serviceManager.get<EventLoop>();
+    final wallet = serviceManager.get<ProtonWalletManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final channelManager = serviceManager.get<PlatformChannelManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
 
-    var walletBloc = WalletListBloc(
+    final walletBloc = WalletListBloc(
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletPassphraseProvider,
       dataProviderManager.walletKeysProvider,
@@ -167,7 +174,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.bdkTransactionDataProvider,
     );
 
-    var walletTransactionBloc = WalletTransactionBloc(
+    final walletTransactionBloc = WalletTransactionBloc(
       userManager,
       dataProviderManager.localTransactionDataProvider,
       dataProviderManager.bdkTransactionDataProvider,
@@ -179,31 +186,31 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.userSettingsDataProvider,
     );
 
-    var walletBalanceBloc = WalletBalanceBloc(
+    final walletBalanceBloc = WalletBalanceBloc(
       dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.balanceDataProvider,
       dataProviderManager.walletDataProvider,
       dataProviderManager.serverTransactionDataProvider,
     );
 
-    var createWalletBloc = CreateWalletBloc(
+    final createWalletBloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletKeysProvider,
       dataProviderManager.walletPassphraseProvider,
     );
 
-    var viewModel = HomeViewModelImpl(
+    final viewModel = HomeViewModelImpl(
       this,
-      userManager,
-      event,
-      wallet,
-      apiServiceManager,
       walletBloc,
       walletTransactionBloc,
       walletBalanceBloc,
       dataProviderManager,
       createWalletBloc,
+      userManager,
+      event,
+      wallet,
+      apiServiceManager,
 
       ///
       channelManager,

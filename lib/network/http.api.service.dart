@@ -1,8 +1,9 @@
-import 'api.response.dart';
-import 'api.service.dart';
 import 'package:http/http.dart' as http;
 
-// TODO:: Use Rust to replace code here
+import 'api.response.dart';
+import 'api.service.dart';
+
+// TODO(fix): Use Rust to replace code here
 class HttpApiService implements ApiService {
   final String baseUrl;
 

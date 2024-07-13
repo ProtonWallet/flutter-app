@@ -2,15 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/theme/theme.font.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV2 extends StatefulWidget {
   final double width;
@@ -29,10 +28,10 @@ class DropdownButtonV2 extends StatefulWidget {
   final bool canSearch;
 
   const DropdownButtonV2({
-    super.key,
     required this.width,
     required this.items,
     required this.itemsText,
+    super.key,
     this.itemsTextForDisplay,
     this.itemsMoreDetail,
     this.labelText,
@@ -69,7 +68,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   @override
   void initState() {
     selected = widget.valueNotifier?.value;
-    int selectedIndex = max(widget.items.indexOf(selected), 0);
+    final int selectedIndex = max(widget.items.indexOf(selected), 0);
     _textEditingController.text = getDisplayText(selectedIndex);
     super.initState();
   }
@@ -135,8 +134,8 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
   }
 
   void showOptionsInBottomSheet(BuildContext context) {
-    TextEditingController searchBoxController = TextEditingController();
-    FocusNode searchBoxFocusNode = FocusNode();
+    final TextEditingController searchBoxController = TextEditingController();
+    final FocusNode searchBoxFocusNode = FocusNode();
     String keyWord = "";
     showModalBottomSheet(
       context: context,
@@ -261,7 +260,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                       onTap: () {
                                         setState(() {
                                           selected = widget.items[index];
-                                          int selectedIndex = max(
+                                          final int selectedIndex = max(
                                               widget.items.indexOf(selected),
                                               0);
                                           _textEditingController.text =
