@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:wallet/rust/proton_api/payment_gateway.dart';
 
 abstract class BuyBitcoinEvent extends Equatable {
   const BuyBitcoinEvent();
@@ -49,6 +50,22 @@ class SelectAmountEvent extends BuyBitcoinEvent {
   List<Object?> get props => [amount];
 }
 
+class SelectProviderEvent extends BuyBitcoinEvent {
+  final GatewayProvider provider;
+  const SelectProviderEvent(this.provider);
+
+  @override
+  List<Object?> get props => [provider];
+}
+
+class SelectPaymentEvent extends BuyBitcoinEvent {
+  final PaymentMethod method;
+  const SelectPaymentEvent(this.method);
+
+  @override
+  List<Object?> get props => [method];
+}
+
 class GetQuoteEvent extends BuyBitcoinEvent {
   const GetQuoteEvent();
 
@@ -57,8 +74,20 @@ class GetQuoteEvent extends BuyBitcoinEvent {
 }
 
 class CheckoutEvnet extends BuyBitcoinEvent {
-  const CheckoutEvnet();
+  final String btcAddress;
 
+  const CheckoutEvnet(this.btcAddress);
+
+  @override
+  List<Object?> get props => [btcAddress];
+}
+
+class CheckoutLoadingEvnet extends BuyBitcoinEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class CheckoutFinishedEvnet extends BuyBitcoinEvent {
   @override
   List<Object?> get props => [];
 }

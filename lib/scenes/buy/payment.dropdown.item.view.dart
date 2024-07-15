@@ -4,11 +4,13 @@ import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 
 class PaymentDropdownItem extends StatelessWidget {
   final DropdownItem item;
-  final Widget icon;
+  final Widget? icon;
   final bool selected;
   final VoidCallback? onTap;
   const PaymentDropdownItem({
-    required this.item, required this.icon, super.key,
+    required this.item,
+    required this.icon,
+    super.key,
     this.selected = false,
     this.onTap,
   });

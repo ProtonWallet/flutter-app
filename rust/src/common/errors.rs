@@ -91,7 +91,7 @@ impl From<proton_srp::SRPError> for BridgeError {
 impl From<AndromedaBitcoinError> for BridgeError {
     fn from(error: AndromedaBitcoinError) -> Self {
         if let Some(inner_error) = find_error_type::<AndromedaApiError>(&error) {
-            if let AndromedaApiError::ErrorCode(error) = inner_error {
+            if let AndromedaApiError::ErrorCode(_, error) = inner_error {
                 return BridgeError::ApiResponse(error.into());
             }
             if let AndromedaApiError::AuthSession(kind) = inner_error {
@@ -110,7 +110,7 @@ impl From<AndromedaBitcoinError> for BridgeError {
                     source = me.source(),
                 ));
             }
-            if let AndromedaApiError::ErrorCode(error) = inner_error {
+            if let AndromedaApiError::ErrorCode(_, error) = inner_error {
                 return BridgeError::ApiResponse(error.into());
             }
         }
@@ -148,7 +148,7 @@ impl From<AndromedaApiError> for BridgeError {
                 hde.source()
             )),
             AndromedaApiError::Http => BridgeError::Generic("HTTP error occurred".to_string()),
-            AndromedaApiError::ErrorCode(error) => BridgeError::ApiResponse(error.into()),
+            AndromedaApiError::ErrorCode(_, error) => BridgeError::ApiResponse(error.into()),
             AndromedaApiError::Deserialize(err) => BridgeError::Generic(err),
             AndromedaApiError::MuonAppVersion(err) => BridgeError::MuonSession(format!(
                 "Muon MuonAppVersion occurred: {:?}",

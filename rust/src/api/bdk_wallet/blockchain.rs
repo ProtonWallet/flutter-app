@@ -35,10 +35,7 @@ impl FrbBlockchainClient {
         stop_gap: Option<usize>,
     ) -> Result<(), BridgeError> {
         let account_inner = account.get_inner();
-
-        let read_lock = account_inner.get_wallet().await;
-        let update = self.inner.full_sync(read_lock, stop_gap).await?;
-
+        let update = self.inner.full_sync(&account_inner, stop_gap).await?;
         account_inner.apply_update(update).await?;
 
         Ok(())
