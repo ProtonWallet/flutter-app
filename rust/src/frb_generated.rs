@@ -10540,6 +10540,7 @@ const _: fn() = || {
         let _: Option<u8> = ApiWalletUserSettings.ReceiveInviterNotification;
         let _: Option<u8> = ApiWalletUserSettings.ReceiveEmailIntegrationNotification;
         let _: Option<u8> = ApiWalletUserSettings.WalletCreated;
+        let _: Option<u8> = ApiWalletUserSettings.AcceptTermsAndConditions;
     }
     {
         let ChildSession = None::<crate::proton_api::auth_credential::ChildSession>.unwrap();
@@ -12054,6 +12055,7 @@ impl SseDecode for crate::proton_api::user_settings::ApiWalletUserSettings {
         let mut var_receiveInviterNotification = <Option<u8>>::sse_decode(deserializer);
         let mut var_receiveEmailIntegrationNotification = <Option<u8>>::sse_decode(deserializer);
         let mut var_walletCreated = <Option<u8>>::sse_decode(deserializer);
+        let mut var_acceptTermsAndConditions = <Option<u8>>::sse_decode(deserializer);
         return crate::proton_api::user_settings::ApiWalletUserSettings {
             BitcoinUnit: var_bitcoinUnit,
             FiatCurrency: var_fiatCurrency,
@@ -12062,6 +12064,7 @@ impl SseDecode for crate::proton_api::user_settings::ApiWalletUserSettings {
             ReceiveInviterNotification: var_receiveInviterNotification,
             ReceiveEmailIntegrationNotification: var_receiveEmailIntegrationNotification,
             WalletCreated: var_walletCreated,
+            AcceptTermsAndConditions: var_acceptTermsAndConditions,
         };
     }
 }
@@ -15654,6 +15657,7 @@ impl flutter_rust_bridge::IntoDart
                 .into_into_dart()
                 .into_dart(),
             self.0.WalletCreated.into_into_dart().into_dart(),
+            self.0.AcceptTermsAndConditions.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -18295,6 +18299,7 @@ impl SseEncode for crate::proton_api::user_settings::ApiWalletUserSettings {
         <Option<u8>>::sse_encode(self.ReceiveInviterNotification, serializer);
         <Option<u8>>::sse_encode(self.ReceiveEmailIntegrationNotification, serializer);
         <Option<u8>>::sse_encode(self.WalletCreated, serializer);
+        <Option<u8>>::sse_encode(self.AcceptTermsAndConditions, serializer);
     }
 }
 

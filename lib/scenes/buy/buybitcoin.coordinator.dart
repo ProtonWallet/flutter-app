@@ -1,7 +1,7 @@
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/scenes/buy/sample.webview.dart';
+import 'package:wallet/scenes/buy/buybitcoin.banxa.webview.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -43,7 +43,9 @@ class BuyBitcoinCoordinator extends Coordinator {
     return widget;
   }
 
-  void pushWebview() {
-    push(const WebViewExample());
+  void pushWebview(String url) {
+    push(WebViewExample(
+      checkoutUrl: url,
+    ));
   }
 }

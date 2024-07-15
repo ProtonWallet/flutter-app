@@ -12,29 +12,27 @@ class GatewayDataProvider extends DataProvider {
   Map<GatewayProvider, List<ApiCountry>> countries = {};
   Map<GatewayProvider, List<ApiCountryFiatCurrency>> fiatCurrencies = {};
   Map<GatewayProvider, List<PaymentMethod>> paymentMethods = {};
+
+  /// find the list of available providers
   List<GatewayProvider> supportedProviders = [];
 
-  // find the list of available providers
-  List<GatewayProvider> providers = [];
+  /// latest quotes
+  Map<GatewayProvider, List<Quote>> quoted = {};
 
   /// constructor
   GatewayDataProvider(this.onRampGatewayClient);
 
-  Future<List<String>> getCountries(GatewayProvider provider) async {
-    // read from cache
-
-    countries = await onRampGatewayClient.getCountries();
-
-    supportedProviders = countries.keys.toList();
-    //
-    for (var element in countries.keys) {
-      providers.add(element);
+  Future<List<String>> getCountries() async {
+    if (countries.isEmpty) {
+      countries = await onRampGatewayClient.getCountries();
     }
 
-    //set default country
+    /// update supported providers
+    supportedProviders = countries.keys.toList();
+
     final Set<String> uniqueCodesSet = {"US", "CA"};
-    final providerCountries = countries[provider];
-    if (providerCountries != null) {
+    for (var entry in countries.entries) {
+      final providerCountries = entry.value;
       for (var country in providerCountries) {
         uniqueCodesSet.add(country.code);
       }
@@ -44,14 +42,20 @@ class GatewayDataProvider extends DataProvider {
 
   ApiCountry getApiCountry(GatewayProvider provider, String localCode) {
     ApiCountry? apiCountry;
-    final providerCountries = countries[provider];
-    if (providerCountries != null) {
-      for (var country in providerCountries) {
+    final Set<GatewayProvider> providers = {};
+    for (final entry in countries.entries) {
+      for (var country in entry.value) {
         if (country.code == localCode) {
           apiCountry = country;
+          providers.add(entry.key);
         }
       }
     }
+
+    if (providers.isNotEmpty) {
+      supportedProviders = providers.toList();
+    }
+
     return apiCountry ??
         const ApiCountry(
           code: "US",
@@ -82,16 +86,6 @@ class GatewayDataProvider extends DataProvider {
       uniqueCodesSet.add("USD");
     }
     return uniqueCodesSet.toList();
-
-    // fiatCurrencies = await onRampGatewayClient.getFiatCurrencies();
-    // Set<String> uniqueCodesSet = {};
-    // // Iterate over the values in the map
-    // for (var countryList in fiatCurrencies.values) {
-    //   for (var country in countryList) {
-    //     uniqueCodesSet.add(country.symbol);
-    //   }
-    // }
-    // return uniqueCodesSet.toList();
   }
 
   ApiCountryFiatCurrency getApiCountryFiatCurrency(
@@ -122,15 +116,74 @@ class GatewayDataProvider extends DataProvider {
     );
   }
 
-  Future<Map<GatewayProvider, List<Quote>>> getQuote(
-      String fiatCurrency, String amount, GatewayProvider provider) async {
+  Future<Map<GatewayProvider, List<Quote>>> getQuotes(
+    String fiatCurrency,
+    String amount,
+    List<GatewayProvider> providers,
+  ) async {
     final doubleAmount = double.parse(amount);
-    final quote = await onRampGatewayClient.getQuotes(
-        amount: doubleAmount, fiatCurrency: fiatCurrency, provider: provider);
-    return quote;
+
+    final Map<GatewayProvider, List<Quote>> newQuoted = {};
+    for (var item in providers) {
+      final quote = await onRampGatewayClient.getQuotes(
+        amount: doubleAmount,
+        fiatCurrency: fiatCurrency,
+        provider: item,
+      );
+      if (quote.isNotEmpty) {
+        for (var entry in quote.entries) {
+          if (entry.value.isNotEmpty) {
+            newQuoted[entry.key] = entry.value;
+          }
+        }
+      }
+    }
+    if (newQuoted.isNotEmpty) {
+      quoted = newQuoted;
+    } else {
+      quoted = {};
+    }
+
+    return quoted;
   }
 
-  Future<void> checkout() async {}
+  Future<List<Quote>?> getCachedQuote(
+    String fiatCurrency,
+    String amount,
+    GatewayProvider provider,
+  ) async {
+    final quotes = quoted[provider];
+    if (quotes == null) {
+      return null;
+    }
+    // TODO(fix): get the quote for the selected payment method and amount
+    // final doubleAmount = double.parse(amount);
+    // final quote = await onRampGatewayClient.getQuotes(
+    //   amount: doubleAmount,
+    //   fiatCurrency: fiatCurrency,
+    //   provider: provider,
+    // );
+    // if (quote.isNotEmpty) {
+    //   for (var entry in quote.entries) {
+    //     quoted[entry.key] = entry.value;
+    //   }
+    // }
+
+    return quotes;
+  }
+
+  Future<String> checkout(String amount, String btcAddress, String fiatCurrency,
+      PaymentMethod payMethod, GatewayProvider provider) async {
+    final url = await onRampGatewayClient.createOnRampCheckout(
+      amount: amount,
+      btcAddress: btcAddress,
+      fiatCurrency: fiatCurrency,
+      payMethod: payMethod,
+      provider: provider,
+    );
+
+    return url;
+  }
 
   @override
   Future<void> clear() async {}

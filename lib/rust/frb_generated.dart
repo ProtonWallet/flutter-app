@@ -11018,8 +11018,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ApiWalletUserSettings dco_decode_api_wallet_user_settings(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
     return ApiWalletUserSettings(
       bitcoinUnit: dco_decode_bitcoin_unit(arr[0]),
       fiatCurrency: dco_decode_fiat_currency(arr[1]),
@@ -11029,6 +11029,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       receiveEmailIntegrationNotification:
           dco_decode_opt_box_autoadd_u_8(arr[5]),
       walletCreated: dco_decode_opt_box_autoadd_u_8(arr[6]),
+      acceptTermsAndConditions: dco_decode_opt_box_autoadd_u_8(arr[7]),
     );
   }
 
@@ -14071,6 +14072,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_receiveEmailIntegrationNotification =
         sse_decode_opt_box_autoadd_u_8(deserializer);
     var var_walletCreated = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_acceptTermsAndConditions =
+        sse_decode_opt_box_autoadd_u_8(deserializer);
     return ApiWalletUserSettings(
         bitcoinUnit: var_bitcoinUnit,
         fiatCurrency: var_fiatCurrency,
@@ -14079,7 +14082,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         receiveInviterNotification: var_receiveInviterNotification,
         receiveEmailIntegrationNotification:
             var_receiveEmailIntegrationNotification,
-        walletCreated: var_walletCreated);
+        walletCreated: var_walletCreated,
+        acceptTermsAndConditions: var_acceptTermsAndConditions);
   }
 
   @protected
@@ -17608,6 +17612,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_box_autoadd_u_8(
         self.receiveEmailIntegrationNotification, serializer);
     sse_encode_opt_box_autoadd_u_8(self.walletCreated, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.acceptTermsAndConditions, serializer);
   }
 
   @protected

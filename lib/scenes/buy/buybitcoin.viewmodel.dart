@@ -63,14 +63,14 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   void selectPayment(PaymentMethod method);
 
-  void pay(SelectedInfoModel selected);
+  void selectProvider(GatewayProvider provider);
+
+  Future<void> pay(SelectedInfoModel selected);
   void keyboardDone();
 
   FocusNode get focusNode;
   TextEditingController get controller;
   OverlayEntry? overlayEntry;
-
-  PaymentMethod selectedPaymentMethod = PaymentMethod.card;
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
@@ -126,9 +126,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     apiKey = Env.rampApiKey ?? "";
 
     payments.add(DropdownItem(
-      icon: Assets.images.icon.creditCard.svg(
-        fit: BoxFit.fill,
-      ),
       title: 'Credit Card',
       subtitle: '',
     ));
@@ -139,18 +136,12 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     //   subtitle: 'Take days',
     // ));
     payments.add(DropdownItem(
-      icon: Assets.images.icon.applePay.svg(
-        fit: BoxFit.fill,
-      ),
       title: 'Apple Pay',
       subtitle: '',
       method: PaymentMethod.applePay,
     ));
 
     providers.add(DropdownItem(
-      icon: Assets.images.icon.ramp.svg(
-        fit: BoxFit.fill,
-      ),
       title: 'Ramp',
       subtitle: '0.00155 BTC',
     ));
@@ -213,7 +204,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     if (to == NavID.rampExternal) {
       ramp.showRamp(configuration);
     } else if (to == NavID.banaxExternal) {
-      coordinator.pushWebview();
+      coordinator.pushWebview("https://banxa.com/");
     }
   }
 
@@ -368,7 +359,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   @override
-  void pay(SelectedInfoModel selected) {
+  Future<void> pay(SelectedInfoModel selected) async {
+    bloc.add(CheckoutLoadingEvnet());
     final amount = selected.amount;
     final check = buyBloc.toNumberAmount(controller.text);
     if (amount != check) {
@@ -390,7 +382,13 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       configuration.variant = "auto";
 
       move(NavID.rampExternal);
+    } else if (selected.provider == GatewayProvider.banxa) {
+      final checkOutUrl = await bloc.checkout(receiveAddress);
+      if (checkOutUrl.isNotEmpty) {
+        coordinator.pushWebview(checkOutUrl);
+      }
     }
+    bloc.add(CheckoutFinishedEvnet());
   }
 
   @override
@@ -404,7 +402,11 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void selectPayment(PaymentMethod method) {
-    selectedPaymentMethod = method;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    bloc.add(SelectPaymentEvent(method));
+  }
+
+  @override
+  void selectProvider(GatewayProvider provider) {
+    bloc.add(SelectProviderEvent(provider));
   }
 }

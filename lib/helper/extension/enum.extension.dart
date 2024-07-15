@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
@@ -42,6 +44,30 @@ extension GatewayProviderToStringExtension on GatewayProvider {
   }
 }
 
+extension GatewayProviderImageExtension on GatewayProvider {
+  Widget getIcon() {
+    switch (this) {
+      case GatewayProvider.banxa:
+        return Assets.images.icon.banxa.svg(
+          fit: BoxFit.fill,
+        );
+      case GatewayProvider.ramp:
+        break;
+      case GatewayProvider.moonPay:
+        return Assets.images.icon.moonpay.svg(
+          fit: BoxFit.fill,
+        );
+      case GatewayProvider.unsupported:
+        break;
+    }
+
+    /// default return ramp icon
+    return Assets.images.icon.ramp.svg(
+      fit: BoxFit.fill,
+    );
+  }
+}
+
 extension PaymentMethodToStringExtension on PaymentMethod {
   String enumToString() {
     switch (this) {
@@ -58,5 +84,30 @@ extension PaymentMethodToStringExtension on PaymentMethod {
       case PaymentMethod.unsupported:
         return "Unknown Payment Method";
     }
+  }
+}
+
+extension PaymentMethodImageExtension on PaymentMethod {
+  Widget getIcon() {
+    switch (this) {
+      case PaymentMethod.applePay:
+        return Assets.images.icon.applePay.svg(
+          fit: BoxFit.fill,
+        );
+      case PaymentMethod.bankTransfer:
+        break;
+      case PaymentMethod.card:
+        break;
+      case PaymentMethod.googlePay:
+        break;
+      case PaymentMethod.instantPayment:
+        break;
+      case PaymentMethod.unsupported:
+    }
+
+    /// default return card icon
+    return Assets.images.icon.creditCard.svg(
+      fit: BoxFit.fill,
+    );
   }
 }
