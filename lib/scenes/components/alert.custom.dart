@@ -65,11 +65,12 @@ class AlertCustomState extends State<AlertCustom> {
                             top: 16, bottom: 16, right: 20, left: 20),
                         child: Row(
                           children: [
-                            widget.leadingWidget ??
-                                Icon(Icons.warning,
-                                    color: widget.color ??
-                                        ProtonColors.alertWaning),
-                            const SizedBox(width: 8),
+                            if (widget.leadingWidget != null)
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 8,
+                                  ),
+                                  child: widget.leadingWidget!),
                             Expanded(
                                 child: Column(
                                     crossAxisAlignment:

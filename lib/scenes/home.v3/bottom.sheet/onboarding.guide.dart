@@ -35,7 +35,7 @@ class OnboardingGuideSheet {
     HomeModalBottomSheet.show(context,
         header: CustomHeader(
           title: S.of(context).wallet_setup,
-          closeButtonDirection: AxisDirection.right,
+          buttonDirection: AxisDirection.right,
         ),
         child: BlocBuilder<WalletListBloc, WalletListState>(
             bloc: viewModel.walletListBloc,

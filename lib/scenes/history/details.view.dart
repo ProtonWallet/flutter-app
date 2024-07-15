@@ -15,6 +15,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.dart';
@@ -68,7 +69,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         children: [
           CustomHeader(
             title: S.of(context).transaction_detail,
-            closeButtonDirection: AxisDirection.left,
+            buttonDirection: AxisDirection.left,
+            button: CloseButtonV1(
+                backgroundColor: ProtonColors.backgroundProton,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
           ),
           Expanded(
             child: SingleChildScrollView(

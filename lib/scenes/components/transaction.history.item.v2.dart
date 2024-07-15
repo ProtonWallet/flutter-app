@@ -34,22 +34,26 @@ class TransactionHistoryItemV2 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: [
-              Text(title,
-                  style: FontManager.body2Median(ProtonColors.textWeak)),
-              const SizedBox(width: 2),
-              if (titleTooltip != null)
-                Transform.translate(
-                  offset: const Offset(0, 1),
-                  child: CustomTooltip(
-                      message: titleTooltip ?? "",
-                      child: SvgPicture.asset(
-                          "assets/images/icon/ic-info-circle.svg",
-                          fit: BoxFit.fill,
-                          width: 16,
-                          height: 16)),
-                )
-            ]),
+            titleTooltip != null
+                ? CustomTooltip(
+                    message: titleTooltip ?? "",
+                    child: Row(
+                      children: [
+                        Text(title,
+                            style:
+                                FontManager.body2Median(ProtonColors.textWeak)),
+                        const SizedBox(width: 2),
+                        if (titleTooltip != null)
+                          SvgPicture.asset(
+                              "assets/images/icon/ic-info-circle.svg",
+                              fit: BoxFit.fill,
+                              width: 20,
+                              height: 20),
+                      ],
+                    ),
+                  )
+                : Text(title,
+                    style: FontManager.body2Median(ProtonColors.textWeak)),
             if (titleOptionsCallback != null)
               GestureDetector(
                   onTap: titleOptionsCallback,

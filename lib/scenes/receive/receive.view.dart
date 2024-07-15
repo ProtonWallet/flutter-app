@@ -38,7 +38,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               child: Column(children: [
                 CustomHeader(
                   title: S.of(context).receive_bitcoin,
-                  closeButtonDirection: AxisDirection.left,
+                  buttonDirection: AxisDirection.left,
                 ),
                 Expanded(
                   child: Padding(
@@ -159,29 +159,28 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                               color: ProtonColors.protonBlue,
                                             ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          S.of(context).bitcoin_address,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textNorm),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Transform.translate(
-                                            offset: const Offset(0, 1),
-                                            child: CustomTooltip(
-                                              message: S
-                                                  .of(context)
-                                                  .bitcoin_address_desc,
-                                              child: SvgPicture.asset(
-                                                  "assets/images/icon/ic-info-circle-dark.svg",
-                                                  fit: BoxFit.fill,
-                                                  width: 16,
-                                                  height: 16),
-                                            )),
-                                      ],
+                                    CustomTooltip(
+                                      preferredDirection: AxisDirection.down,
+                                      message:
+                                          S.of(context).bitcoin_address_desc,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            S.of(context).bitcoin_address,
+                                            style: FontManager.body2Median(
+                                                ProtonColors.textNorm),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          SvgPicture.asset(
+                                            "assets/images/icon/ic-info-circle-dark.svg",
+                                            fit: BoxFit.fill,
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 6,

@@ -6,6 +6,7 @@ import 'package:wallet/theme/theme.font.dart';
 class AccountInfoV2 extends StatelessWidget {
   final String displayName;
   final String userEmail;
+
   const AccountInfoV2(
       {required this.displayName, required this.userEmail, super.key});
 
@@ -13,7 +14,7 @@ class AccountInfoV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTileTheme(
         contentPadding: const EdgeInsets.only(left: defaultPadding, right: 10),
-        child: ExpansionTile(
+        child: ListTile(
           title:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(displayName,
@@ -21,8 +22,6 @@ class AccountInfoV2 extends StatelessWidget {
             Text(userEmail,
                 style: FontManager.body2Regular(ProtonColors.textHint)),
           ]),
-          iconColor: ProtonColors.textHint,
-          collapsedIconColor: ProtonColors.textHint,
         ));
   }
 }
