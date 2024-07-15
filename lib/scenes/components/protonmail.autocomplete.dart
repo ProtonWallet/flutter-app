@@ -61,7 +61,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
                     maxWidth: constraints.biggest.width,
                   ),
                   decoration: BoxDecoration(
-                    color: ProtonColors.backgroundProton,
+                    color: ProtonColors.white,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: ListView(
@@ -77,13 +77,13 @@ class ProtonMailAutoComplete extends StatelessWidget {
                             title: Text(option.name),
                             subtitle: Text(option.email),
                           ),
-                          const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: defaultPadding),
-                              child: Divider(
-                                thickness: 0.2,
-                                height: 1,
-                              )),
+                          // const Padding(
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: defaultPadding),
+                          //     child: Divider(
+                          //       thickness: 0.2,
+                          //       height: 1,
+                          //     )),
                         ]),
                       );
                     }).toList(),

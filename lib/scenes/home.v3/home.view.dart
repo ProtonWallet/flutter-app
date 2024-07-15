@@ -139,7 +139,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                       height: 20,
                                     ),
                                     if (walletTransactionState
-                                        .historyTransaction.isEmpty)
+                                        .historyTransaction.isEmpty && !walletTransactionState.isSyncing)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: defaultPadding),
@@ -262,7 +262,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   viewModel: viewModel),
                                         ])),
                                     if (walletTransactionState
-                                        .historyTransaction.isEmpty)
+                                        .historyTransaction.isEmpty && !walletTransactionState.isSyncing)
                                       Column(children: [
                                         const SizedBox(
                                           height: defaultPadding,

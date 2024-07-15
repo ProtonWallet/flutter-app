@@ -6,7 +6,7 @@ use andromeda_api::{
     core::ApiClient,
     proton_users::{
         GetAuthInfoRequest, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
-        ProtonUser,
+        ProtonUser, ProtonUserSettings,
     },
 };
 
@@ -23,6 +23,10 @@ impl ProtonUsersClient {
 
     pub async fn get_user_info(&self) -> Result<ProtonUser, BridgeError> {
         Ok(self.inner.get_user_info().await?)
+    }
+
+    pub async fn get_user_settings(&self) -> Result<ProtonUserSettings, BridgeError> {
+        Ok(self.inner.get_user_settings().await?)
     }
 
     pub async fn get_auth_info(

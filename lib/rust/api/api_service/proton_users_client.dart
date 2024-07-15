@@ -17,6 +17,8 @@ abstract class ProtonUsersClient implements RustOpaqueInterface {
 
   Future<ProtonUser> getUserInfo();
 
+  Future<ProtonUserSettings> getUserSettings();
+
   Future<int> lockSensitiveSettings();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.

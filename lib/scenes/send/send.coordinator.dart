@@ -1,4 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
@@ -10,10 +11,15 @@ import 'package:wallet/scenes/send/send.viewmodel.dart';
 
 class SendCoordinator extends Coordinator {
   late ViewBase widget;
+  final NativeViewChannel nativeViewChannel;
   final String walletID;
   final String accountID;
 
-  SendCoordinator(this.walletID, this.accountID);
+  SendCoordinator(this.nativeViewChannel, this.walletID, this.accountID);
+
+  void showNativeReportBugs() {
+    nativeViewChannel.nativeReportBugs();
+  }
 
   @override
   void end() {}

@@ -49,7 +49,7 @@ class WalletSettingSheet {
         scrollController: scrollController,
         header: CustomHeader(
           title: S.of(context).wallet_preference,
-          closeButtonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.left,
         ), child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return BlocBuilder<WalletListBloc, WalletListState>(
@@ -322,35 +322,39 @@ class WalletSettingSheet {
                                           thickness: 0.2,
                                           height: 1,
                                         ),
-                                        DropdownButtonV2(
-                                            labelText: S
-                                                .of(context)
-                                                .setting_fiat_currency_label,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                defaultPadding * 2,
-                                            items: fiatCurrencies,
-                                            canSearch: true,
-                                            itemsText: fiatCurrencies
-                                                .map(FiatCurrencyHelper
-                                                    .getFullName)
-                                                .toList(),
-                                            itemsLeadingIcons: fiatCurrencies
-                                                .map((v) =>
-                                                    CountryFlag.fromCountryCode(
-                                                      FiatCurrencyHelper
-                                                          .toCountryCode(v),
-                                                      shape: const Circle(),
-                                                      width: 20,
-                                                      height: 20,
-                                                    ))
-                                                .toList(),
-                                            valueNotifier:
-                                                accountFiatCurrencyNotifier[
-                                                    accountMenuModel
-                                                        .accountModel
-                                                        .accountID]),
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: DropdownButtonV2(
+                                              labelText: S
+                                                  .of(context)
+                                                  .setting_fiat_currency_label,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  defaultPadding * 2,
+                                              items: fiatCurrencies,
+                                              canSearch: true,
+                                              itemsText: fiatCurrencies
+                                                  .map(FiatCurrencyHelper
+                                                      .getFullName)
+                                                  .toList(),
+                                              itemsLeadingIcons: fiatCurrencies
+                                                  .map((v) => CountryFlag
+                                                          .fromCountryCode(
+                                                        FiatCurrencyHelper
+                                                            .toCountryCode(v),
+                                                        shape: const Circle(),
+                                                        width: 20,
+                                                        height: 20,
+                                                      ))
+                                                  .toList(),
+                                              valueNotifier:
+                                                  accountFiatCurrencyNotifier[
+                                                      accountMenuModel
+                                                          .accountModel
+                                                          .accountID]),
+                                        ),
                                         const Divider(
                                           thickness: 0.2,
                                           height: 1,
