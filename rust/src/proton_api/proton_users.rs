@@ -5,8 +5,10 @@ pub use andromeda_api::{
         ApiMnemonicUserKey, MnemonicAuth, MnemonicUserKey, UpdateMnemonicSettingsRequestBody,
     },
     proton_users::{
-        EmptyResponseBody, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
-        ProtonUser, ProtonUserKey, TwoFA,
+        EmailSettings, EmptyResponseBody, FlagsSettings, GetAuthInfoResponseBody,
+        GetAuthModulusResponse, HighSecuritySettings, PasswordSettings, PhoneSettings,
+        ProtonSrpClientProofs, ProtonUser, ProtonUserKey, ProtonUserSettings, ReferralSettings,
+        TwoFA, TwoFASettings,
     },
 };
 
@@ -53,6 +55,53 @@ pub struct _ProtonUser {
     pub DisplayName: String,
     pub Keys: Option<Vec<ProtonUserKey>>,
     pub MnemonicStatus: u32,
+}
+
+#[frb(mirror(PasswordSettings))]
+#[allow(non_snake_case)]
+pub struct _PasswordSettings {
+    // PasswordSettings is empty here we need it in the parser but we don't use it yet in our implementation
+}
+
+#[frb(mirror(PhoneSettings))]
+#[allow(non_snake_case)]
+pub struct _PhoneSettings {
+    // PhoneSettings is empty here we need it in the parser but we don't use it yet in our implementation
+}
+
+#[frb(mirror(TwoFASettings))]
+#[allow(non_snake_case)]
+pub struct _TwoFASettings {
+    Enabled: u32,
+    Allowed: u32,
+}
+
+#[frb(mirror(FlagsSettings))]
+#[allow(non_snake_case)]
+pub struct _FlagsSettings {
+    // FlagsSettings is empty here we need it in the parser but we don't use it yet in our implementation
+}
+
+#[frb(mirror(ReferralSettings))]
+#[allow(non_snake_case)]
+pub struct _ReferralSettings {
+    // ReferralSettings is empty here we need it in the parser but we don't use it yet in our implementation
+}
+
+#[frb(mirror(EmailSettings))]
+#[allow(non_snake_case)]
+pub struct _EmailSettings {
+    Value: Option<String>,
+    Status: u32,
+    Notify: u32,
+    Reset: u32,
+}
+
+#[frb(mirror(HighSecuritySettings))]
+#[allow(non_snake_case)]
+pub struct _HighSecuritySettings {
+    Eligible: u32,
+    Value: u32,
 }
 
 #[frb(mirror(TwoFA))]
@@ -117,4 +166,32 @@ pub struct _ApiMnemonicUserKey {
     pub ID: String,
     pub PrivateKey: String,
     pub Salt: String,
+}
+
+#[frb(mirror(ProtonUserSettings))]
+#[allow(non_snake_case)]
+pub struct _ProtonUserSettings {
+    Email: EmailSettings,
+    Password: Option<PasswordSettings>,
+    Phone: Option<PhoneSettings>,
+    two_fa: Option<TwoFASettings>,
+    News: u32,
+    Locale: String,
+    LogAuth: u32,
+    InvoiceText: String,
+    Density: u32,
+    WeekStart: u32,
+    DateFormat: u32,
+    TimeFormat: u32,
+    Welcome: u32,
+    WelcomeFlag: u32,
+    EarlyAccess: u32,
+    Flags: Option<FlagsSettings>,
+    Referral: Option<ReferralSettings>,
+    DeviceRecovery: u32,
+    Telemetry: u32,
+    CrashReports: u32,
+    HideSidePanel: u32,
+    HighSecurity: HighSecuritySettings,
+    SessionAccountRecovery: u32,
 }

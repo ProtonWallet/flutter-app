@@ -6,11 +6,13 @@ import 'package:wallet/theme/theme.font.dart';
 
 class CustomHeader extends StatelessWidget {
   final String title;
-  final AxisDirection closeButtonDirection;
+  final AxisDirection buttonDirection;
+  final Widget? button;
 
   const CustomHeader({
     required this.title,
-    required this.closeButtonDirection,
+    required this.buttonDirection,
+    this.button,
     super.key,
   });
 
@@ -26,13 +28,14 @@ class CustomHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            closeButtonDirection == AxisDirection.left
+            buttonDirection == AxisDirection.left
                 ? Expanded(
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: CloseButtonV1(onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
+                      child: button ??
+                          CloseButtonV1(onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
                     ),
                   )
                 : const Spacer(),
@@ -44,13 +47,14 @@ class CustomHeader extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            closeButtonDirection == AxisDirection.right
+            buttonDirection == AxisDirection.right
                 ? Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: CloseButtonV1(onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
+                      child: button ??
+                          CloseButtonV1(onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
                     ),
                   )
                 : const Spacer(),

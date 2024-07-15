@@ -972,6 +972,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw);
 
   @protected
+  FlagsSettings dco_decode_box_autoadd_flags_settings(dynamic raw);
+
+  @protected
   GatewayProvider dco_decode_box_autoadd_gateway_provider(dynamic raw);
 
   @protected
@@ -981,7 +984,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Pagination dco_decode_box_autoadd_pagination(dynamic raw);
 
   @protected
+  PasswordSettings dco_decode_box_autoadd_password_settings(dynamic raw);
+
+  @protected
   PaymentMethod dco_decode_box_autoadd_payment_method(dynamic raw);
+
+  @protected
+  PhoneSettings dco_decode_box_autoadd_phone_settings(dynamic raw);
 
   @protected
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw);
@@ -991,6 +1000,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  ReferralSettings dco_decode_box_autoadd_referral_settings(dynamic raw);
+
+  @protected
   ResponseError dco_decode_box_autoadd_response_error(dynamic raw);
 
   @protected
@@ -998,6 +1010,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionType dco_decode_box_autoadd_transaction_type(dynamic raw);
+
+  @protected
+  TwoFASettings dco_decode_box_autoadd_two_fa_settings(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -1047,10 +1062,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  EmailSettings dco_decode_email_settings(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
 
   @protected
   FiatCurrency dco_decode_fiat_currency(dynamic raw);
+
+  @protected
+  FlagsSettings dco_decode_flags_settings(dynamic raw);
 
   @protected
   FrbAddressInfo dco_decode_frb_address_info(dynamic raw);
@@ -1069,6 +1090,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GetAuthModulusResponse dco_decode_get_auth_modulus_response(dynamic raw);
+
+  @protected
+  HighSecuritySettings dco_decode_high_security_settings(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -1269,23 +1293,38 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
 
   @protected
+  FlagsSettings? dco_decode_opt_box_autoadd_flags_settings(dynamic raw);
+
+  @protected
   GatewayProvider? dco_decode_opt_box_autoadd_gateway_provider(dynamic raw);
 
   @protected
   Pagination? dco_decode_opt_box_autoadd_pagination(dynamic raw);
 
   @protected
+  PasswordSettings? dco_decode_opt_box_autoadd_password_settings(dynamic raw);
+
+  @protected
   PaymentMethod? dco_decode_opt_box_autoadd_payment_method(dynamic raw);
+
+  @protected
+  PhoneSettings? dco_decode_opt_box_autoadd_phone_settings(dynamic raw);
 
   @protected
   ProtonExchangeRate? dco_decode_opt_box_autoadd_proton_exchange_rate(
       dynamic raw);
 
   @protected
+  ReferralSettings? dco_decode_opt_box_autoadd_referral_settings(dynamic raw);
+
+  @protected
   SortOrder? dco_decode_opt_box_autoadd_sort_order(dynamic raw);
 
   @protected
   TransactionType? dco_decode_opt_box_autoadd_transaction_type(dynamic raw);
+
+  @protected
+  TwoFASettings? dco_decode_opt_box_autoadd_two_fa_settings(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
@@ -1336,7 +1375,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Pagination dco_decode_pagination(dynamic raw);
 
   @protected
+  PasswordSettings dco_decode_password_settings(dynamic raw);
+
+  @protected
   PaymentMethod dco_decode_payment_method(dynamic raw);
+
+  @protected
+  PhoneSettings dco_decode_phone_settings(dynamic raw);
 
   @protected
   ProtonAddress dco_decode_proton_address(dynamic raw);
@@ -1360,6 +1405,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtonUserKey dco_decode_proton_user_key(dynamic raw);
 
   @protected
+  ProtonUserSettings dco_decode_proton_user_settings(dynamic raw);
+
+  @protected
   Quote dco_decode_quote(dynamic raw);
 
   @protected
@@ -1381,6 +1429,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, double) dco_decode_record_string_f_64(dynamic raw);
+
+  @protected
+  ReferralSettings dco_decode_referral_settings(dynamic raw);
 
   @protected
   ResponseError dco_decode_response_error(dynamic raw);
@@ -1408,6 +1459,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TwoFA dco_decode_two_fa(dynamic raw);
+
+  @protected
+  TwoFASettings dco_decode_two_fa_settings(dynamic raw);
 
   @protected
   int dco_decode_u_16(dynamic raw);
@@ -2200,6 +2254,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  FlagsSettings sse_decode_box_autoadd_flags_settings(
+      SseDeserializer deserializer);
+
+  @protected
   GatewayProvider sse_decode_box_autoadd_gateway_provider(
       SseDeserializer deserializer);
 
@@ -2211,7 +2269,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Pagination sse_decode_box_autoadd_pagination(SseDeserializer deserializer);
 
   @protected
+  PasswordSettings sse_decode_box_autoadd_password_settings(
+      SseDeserializer deserializer);
+
+  @protected
   PaymentMethod sse_decode_box_autoadd_payment_method(
+      SseDeserializer deserializer);
+
+  @protected
+  PhoneSettings sse_decode_box_autoadd_phone_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2223,6 +2289,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  ReferralSettings sse_decode_box_autoadd_referral_settings(
+      SseDeserializer deserializer);
+
+  @protected
   ResponseError sse_decode_box_autoadd_response_error(
       SseDeserializer deserializer);
 
@@ -2231,6 +2301,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionType sse_decode_box_autoadd_transaction_type(
+      SseDeserializer deserializer);
+
+  @protected
+  TwoFASettings sse_decode_box_autoadd_two_fa_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2286,10 +2360,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  EmailSettings sse_decode_email_settings(SseDeserializer deserializer);
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer);
 
   @protected
   FiatCurrency sse_decode_fiat_currency(SseDeserializer deserializer);
+
+  @protected
+  FlagsSettings sse_decode_flags_settings(SseDeserializer deserializer);
 
   @protected
   FrbAddressInfo sse_decode_frb_address_info(SseDeserializer deserializer);
@@ -2309,6 +2389,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   GetAuthModulusResponse sse_decode_get_auth_modulus_response(
+      SseDeserializer deserializer);
+
+  @protected
+  HighSecuritySettings sse_decode_high_security_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2537,6 +2621,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  FlagsSettings? sse_decode_opt_box_autoadd_flags_settings(
+      SseDeserializer deserializer);
+
+  @protected
   GatewayProvider? sse_decode_opt_box_autoadd_gateway_provider(
       SseDeserializer deserializer);
 
@@ -2545,11 +2633,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  PasswordSettings? sse_decode_opt_box_autoadd_password_settings(
+      SseDeserializer deserializer);
+
+  @protected
   PaymentMethod? sse_decode_opt_box_autoadd_payment_method(
       SseDeserializer deserializer);
 
   @protected
+  PhoneSettings? sse_decode_opt_box_autoadd_phone_settings(
+      SseDeserializer deserializer);
+
+  @protected
   ProtonExchangeRate? sse_decode_opt_box_autoadd_proton_exchange_rate(
+      SseDeserializer deserializer);
+
+  @protected
+  ReferralSettings? sse_decode_opt_box_autoadd_referral_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2558,6 +2658,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TransactionType? sse_decode_opt_box_autoadd_transaction_type(
+      SseDeserializer deserializer);
+
+  @protected
+  TwoFASettings? sse_decode_opt_box_autoadd_two_fa_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2615,7 +2719,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Pagination sse_decode_pagination(SseDeserializer deserializer);
 
   @protected
+  PasswordSettings sse_decode_password_settings(SseDeserializer deserializer);
+
+  @protected
   PaymentMethod sse_decode_payment_method(SseDeserializer deserializer);
+
+  @protected
+  PhoneSettings sse_decode_phone_settings(SseDeserializer deserializer);
 
   @protected
   ProtonAddress sse_decode_proton_address(SseDeserializer deserializer);
@@ -2639,6 +2749,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonUserKey sse_decode_proton_user_key(SseDeserializer deserializer);
+
+  @protected
+  ProtonUserSettings sse_decode_proton_user_settings(
+      SseDeserializer deserializer);
 
   @protected
   Quote sse_decode_quote(SseDeserializer deserializer);
@@ -2666,6 +2780,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (String, double) sse_decode_record_string_f_64(SseDeserializer deserializer);
 
   @protected
+  ReferralSettings sse_decode_referral_settings(SseDeserializer deserializer);
+
+  @protected
   ResponseError sse_decode_response_error(SseDeserializer deserializer);
 
   @protected
@@ -2691,6 +2808,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TwoFA sse_decode_two_fa(SseDeserializer deserializer);
+
+  @protected
+  TwoFASettings sse_decode_two_fa_settings(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_16(SseDeserializer deserializer);
@@ -3498,6 +3618,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       CreateWalletReq self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_flags_settings(
+      FlagsSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_gateway_provider(
       GatewayProvider self, SseSerializer serializer);
 
@@ -3510,8 +3634,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Pagination self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_password_settings(
+      PasswordSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_payment_method(
       PaymentMethod self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_phone_settings(
+      PhoneSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_proton_exchange_rate(
@@ -3520,6 +3652,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_proton_srp_client_proofs(
       ProtonSrpClientProofs self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_referral_settings(
+      ReferralSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_response_error(
@@ -3532,6 +3668,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_transaction_type(
       TransactionType self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_two_fa_settings(
+      TwoFASettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
@@ -3587,10 +3727,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       EmailIntegrationBitcoinAddress self, SseSerializer serializer);
 
   @protected
+  void sse_encode_email_settings(EmailSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
 
   @protected
   void sse_encode_fiat_currency(FiatCurrency self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_flags_settings(FlagsSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_frb_address_info(
@@ -3614,6 +3760,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_get_auth_modulus_response(
       GetAuthModulusResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_high_security_settings(
+      HighSecuritySettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -3845,6 +3995,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_flags_settings(
+      FlagsSettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_gateway_provider(
       GatewayProvider? self, SseSerializer serializer);
 
@@ -3853,12 +4007,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Pagination? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_password_settings(
+      PasswordSettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_payment_method(
       PaymentMethod? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_phone_settings(
+      PhoneSettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_proton_exchange_rate(
       ProtonExchangeRate? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_referral_settings(
+      ReferralSettings? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_sort_order(
@@ -3867,6 +4033,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_transaction_type(
       TransactionType? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_two_fa_settings(
+      TwoFASettings? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
@@ -3923,7 +4093,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_pagination(Pagination self, SseSerializer serializer);
 
   @protected
+  void sse_encode_password_settings(
+      PasswordSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_payment_method(PaymentMethod self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_phone_settings(PhoneSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_proton_address(ProtonAddress self, SseSerializer serializer);
@@ -3950,6 +4127,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_proton_user_key(ProtonUserKey self, SseSerializer serializer);
 
   @protected
+  void sse_encode_proton_user_settings(
+      ProtonUserSettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_quote(Quote self, SseSerializer serializer);
 
   @protected
@@ -3972,6 +4153,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_record_string_f_64(
       (String, double) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_referral_settings(
+      ReferralSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_response_error(ResponseError self, SseSerializer serializer);
@@ -4002,6 +4187,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_two_fa(TwoFA self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_two_fa_settings(TwoFASettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_16(int self, SseSerializer serializer);

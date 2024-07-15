@@ -70,7 +70,8 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showSend(String walletID, String accountID) {
-    final view = SendCoordinator(walletID, accountID).start();
+    final view =
+        SendCoordinator(nativeViewChannel, walletID, accountID).start();
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,

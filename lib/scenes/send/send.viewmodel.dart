@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ enum SendFlowStatus {
 }
 
 class ProtonRecipient {
+  String? name;
   String email;
   TextEditingController amountController;
   FocusNode focusNode;
@@ -72,6 +74,7 @@ class ProtonRecipient {
     required this.amountController,
     required this.focusNode,
     required this.isValid,
+    this.name,
   });
 }
 
@@ -314,6 +317,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     initialized = true;
+    addressFocusNode.requestFocus();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -411,12 +415,18 @@ class SendViewModelImpl extends SendViewModel {
       }
     } else {
       if (status == SendFlowStatus.editAmount) {
-        await initEstimatedFee();
+        final success = await initEstimatedFee();
+        if (!success) {
+          return;
+        }
 
         /// build draft psbt first to get fee
         maxBalanceToSend = balance - estimatedFeeInSAT;
       }
       sendFlowStatus = status;
+      Future.delayed(const Duration(milliseconds: 100), () {
+        amountFocusNode.requestFocus();
+      });
     }
     datasourceChangedStreamController.sinkAddSafe(this);
   }
@@ -551,6 +561,9 @@ class SendViewModelImpl extends SendViewModel {
               S.of(context).error_this_bitcoin_address_already_in_recipients,
               isError: true);
         }
+        isLoadingBvE = false;
+        datasourceChangedStreamController
+            .sinkAddSafe(this); // inform UI to refresh
         return;
       }
       final TextEditingController textEditingController =
@@ -576,6 +589,7 @@ class SendViewModelImpl extends SendViewModel {
         amountController: textEditingController,
         focusNode: focusNode,
         isValid: false,
+        name: await contactsDataProvider.getContactName(email),
       )); // TODO(fix): every recipient has own amountTextController
     }
     try {
@@ -1056,7 +1070,36 @@ class SendViewModelImpl extends SendViewModel {
     );
     final msg = parseSampleDisplayError(error);
     if (msg.isNotEmpty) {
-      CommonHelper.showErrorDialog(msg);
+      /// TODO(fix): improve logic here
+      if (msg.toLowerCase().contains("incorrectchecksumerror")) {
+        final BuildContext? context =
+            Coordinator.rootNavigatorKey.currentContext;
+        if (context != null) {
+          CommonHelper.showSnackbar(
+            context,
+            S.of(context).error_this_bitcoin_address_incorrect_checksum,
+            isError: true,
+          );
+        } else {
+          CommonHelper.showErrorDialog(
+            msg,
+            callback: () {
+              if (Platform.isAndroid || Platform.isIOS) {
+                coordinator.showNativeReportBugs();
+              }
+            },
+          );
+        }
+      } else {
+        CommonHelper.showErrorDialog(
+          msg,
+          callback: () {
+            if (Platform.isAndroid || Platform.isIOS) {
+              coordinator.showNativeReportBugs();
+            }
+          },
+        );
+      }
     }
     return false;
   }

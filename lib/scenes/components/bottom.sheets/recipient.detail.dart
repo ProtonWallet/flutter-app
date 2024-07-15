@@ -17,50 +17,64 @@ class RecipientDetailSheet {
     String? email,
     String bitcoinAddress, {
     required bool isBitcoinAddress,
+    Color? avatarColor,
+    Color? avatarTextColor,
   }) {
     HomeModalBottomSheet.show(context,
+        backgroundColor: ProtonColors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Align(
                 alignment: Alignment.centerRight,
-                child: CloseButtonV1(onPressed: () {
-                  Navigator.of(context).pop();
-                })),
-            isBitcoinAddress
-                ? CircleAvatar(
-                    backgroundColor: ProtonColors.protonBlue,
-                    radius: 16,
-                    child: Text(
-                      "B",
-                      style: FontManager.captionSemiBold(ProtonColors.white),
-                    ),
-                  )
-                : CircleAvatar(
-                    backgroundColor: ProtonColors.protonBlue,
-                    radius: 16,
-                    child: Text(
-                      name != null
-                          ? CommonHelper.getFirstNChar(name, 1).toUpperCase()
+                child: CloseButtonV1(
+                    backgroundColor: ProtonColors.backgroundProton,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })),
+            if (!isBitcoinAddress)
+              CircleAvatar(
+                backgroundColor: avatarColor ?? ProtonColors.protonBlue,
+                radius: 30,
+                child: Text(
+                  name != null
+                      ? CommonHelper.getFirstNChar(name, 1).toUpperCase()
+                      : email != null
+                          ? CommonHelper.getFirstNChar(email, 1).toUpperCase()
                           : "",
-                      style: FontManager.captionSemiBold(ProtonColors.white),
-                    ),
-                  ),
-            if (name != null)
+                  style: FontManager.body1Median(
+                      avatarTextColor ?? ProtonColors.white),
+                ),
+              ),
+            const SizedBox(height: 10),
+            if (name != null && !isBitcoinAddress)
               Text(name, style: FontManager.body1Median(ProtonColors.textNorm)),
-            if (email != null && name != email && !isBitcoinAddress)
+            if (email != null &&
+                name != email &&
+                name == null &&
+                !isBitcoinAddress)
               Text(email,
-                  style: FontManager.body2Regular(ProtonColors.textNorm)),
+                  style: FontManager.body1Median(ProtonColors.textNorm)),
+            if (email != null &&
+                name != email &&
+                name != null &&
+                !isBitcoinAddress)
+              Text(email,
+                  style: FontManager.body2Regular(ProtonColors.textHint)),
             const SizedBox(height: defaultPadding),
             if (bitcoinAddress.isNotEmpty)
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(S.of(context).bitcoin_address,
-                      style: FontManager.captionRegular(ProtonColors.textWeak)),
+                  Text(
+                    S.of(context).bitcoin_address,
+                    style: FontManager.body1Median(ProtonColors.textWeak),
+                    textAlign: TextAlign.start,
+                  ),
                   Text(bitcoinAddress,
-                      overflow: TextOverflow.ellipsis,
-                      style: FontManager.body2Regular(ProtonColors.textNorm)),
-                  const SizedBox(height: 20),
+                      maxLines: 5,
+                      style: FontManager.body1Median(ProtonColors.textNorm)),
+                  const SizedBox(height: 40),
                   ButtonV5(
                       onPressed: () async {
                         Clipboard.setData(ClipboardData(text: bitcoinAddress))
@@ -72,11 +86,12 @@ class RecipientDetailSheet {
                           }
                         });
                       },
+                      elevation: 0,
                       text: S.of(context).copy_address,
                       width: MediaQuery.of(context).size.width,
                       textStyle: FontManager.body1Median(ProtonColors.textNorm),
-                      backgroundColor: ProtonColors.textWeakPressed,
-                      borderColor: ProtonColors.textWeakPressed,
+                      backgroundColor: ProtonColors.backgroundProton,
+                      borderColor: ProtonColors.backgroundProton,
                       height: 48),
                   const SizedBox(height: 8),
                 ],

@@ -85,7 +85,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
         width: widget.width,
         padding: widget.padding ??
             const EdgeInsets.only(
-                left: defaultPadding, right: 8, top: 12, bottom: 12),
+                left: defaultPadding, right: 8, top: 4, bottom: 4),
         decoration: BoxDecoration(
           color: widget.backgroundColor ?? ProtonColors.white,
           // border: Border.all(color: Colors.black, width: 1.0),
@@ -160,18 +160,16 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
           }
           return SafeArea(
             child: Container(
-              padding: const EdgeInsets.only(
-                  bottom: defaultPadding,
-                  top: 10,
-                  left: defaultPadding,
-                  right: defaultPadding),
+              padding: const EdgeInsets.all(defaultPadding),
               child: IntrinsicHeight(
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: CloseButtonV1(onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
+                  child: CloseButtonV1(
+                      backgroundColor: ProtonColors.backgroundProton,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
                 ),
                 const SizedBox(
                   height: 6,
@@ -227,10 +225,11 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                               message: widget
                                                   .itemsMoreDetail![index],
                                               child: SvgPicture.asset(
-                                                  "assets/images/icon/ic-info-circle.svg",
-                                                  fit: BoxFit.fill,
-                                                  width: 16,
-                                                  height: 16),
+                                                "assets/images/icon/ic-info-circle.svg",
+                                                fit: BoxFit.fill,
+                                                width: 20,
+                                                height: 20,
+                                              ),
                                             )
                                           : null,
                                       title: widget.itemsLeadingIcons != null

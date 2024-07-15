@@ -168,29 +168,26 @@ class TransactionList extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                S.of(context).loading_transactions,
-                                style: FontManager.body2Regular(
-                                  ProtonColors.textWeak,
+                        CustomTooltip(
+                          message: S.of(context).loading_transactions_desc,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  S.of(context).loading_transactions,
+                                  style: FontManager.body2Regular(
+                                    ProtonColors.textWeak,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                textAlign: TextAlign.left,
-                              ),
-                              const SizedBox(width: 4),
-                              Transform.translate(
-                                  offset: const Offset(0, 1),
-                                  child: CustomTooltip(
-                                    message:
-                                        S.of(context).loading_transactions_desc,
-                                    child: SvgPicture.asset(
-                                        "assets/images/icon/ic-info-circle-dark.svg",
-                                        fit: BoxFit.fill,
-                                        width: 16,
-                                        height: 16),
-                                  )),
-                            ]),
+                                const SizedBox(width: 4),
+                                SvgPicture.asset(
+                                    "assets/images/icon/ic-info-circle-dark.svg",
+                                    fit: BoxFit.fill,
+                                    width: 16,
+                                    height: 16),
+                              ]),
+                        ),
                       ],
                     )
                   : Column(

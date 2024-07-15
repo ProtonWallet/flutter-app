@@ -44,6 +44,7 @@ import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
+import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
@@ -143,9 +144,13 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool showSearchHistoryTextField = false;
   bool showSearchAddressTextField = false;
 
+  ProtonUserSettings? protonUserSettings;
+
   void setOnBoard();
 
   void selectWallet(WalletMenuModel walletMenuModel);
+
+  void updateHadSetup2FA();
 
   void selectAccount(
       WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel);
@@ -326,6 +331,23 @@ class HomeViewModelImpl extends HomeViewModel {
     cryptoPriceDataService.dispose();
   }
 
+  @override
+  Future<void> updateHadSetup2FA() async {
+    try {
+      protonUserSettings =
+          await apiServiceManager.getUsersApiClient().getUserSettings();
+    } catch (e) {
+      logger.e(e
+          .toString()); // only need to load once. keep it simple so maintain it in VM
+    }
+    if (protonUserSettings != null) {
+      if (protonUserSettings!.twoFa != null) {
+        hadSetup2FA = protonUserSettings!.twoFa!.enabled != 0;
+        datasourceStreamSinkAdd();
+      }
+    }
+  }
+
   Future<void> initControllers() async {
     hideEmptyUsedAddressesController = TextEditingController();
     twoFactorAmountThresholdController = TextEditingController(text: "3");
@@ -355,6 +377,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
     // user
     final userInfo = userManager.userInfo;
+    updateHadSetup2FA();
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);

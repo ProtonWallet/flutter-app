@@ -40,7 +40,7 @@ class ImportView extends ViewBase<ImportViewModel> {
             children: [
               CustomHeader(
                 title: S.of(context).import_your_wallet,
-                closeButtonDirection: AxisDirection.left,
+                buttonDirection: AxisDirection.left,
               ),
               Expanded(
                 child: Container(
