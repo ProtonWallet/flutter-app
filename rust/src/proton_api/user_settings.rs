@@ -120,4 +120,5 @@ pub struct _ApiWalletUserSettings {
     pub ReceiveInviterNotification: Option<u8>,
     pub ReceiveEmailIntegrationNotification: Option<u8>,
     pub WalletCreated: Option<u8>,
+    pub AcceptTermsAndConditions: Option<u8>,
 }

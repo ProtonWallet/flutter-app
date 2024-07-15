@@ -100,6 +100,9 @@ class $AssetsImagesIconGen {
   SvgGenImage get bankTransfer =>
       const SvgGenImage('assets/images/icon/bank_transfer.svg');
 
+  /// File path: assets/images/icon/banxa.svg
+  SvgGenImage get banxa => const SvgGenImage('assets/images/icon/banxa.svg');
+
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
@@ -257,6 +260,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/mobile.svg
   SvgGenImage get mobile => const SvgGenImage('assets/images/icon/mobile.svg');
 
+  /// File path: assets/images/icon/moonpay.svg
+  SvgGenImage get moonpay =>
+      const SvgGenImage('assets/images/icon/moonpay.svg');
+
   /// File path: assets/images/icon/no_wallet_found.svg
   SvgGenImage get noWalletFound =>
       const SvgGenImage('assets/images/icon/no_wallet_found.svg');
@@ -354,6 +361,7 @@ class $AssetsImagesIconGen {
         alertWarning,
         applePay,
         bankTransfer,
+        banxa,
         bitcoin,
         btc,
         bveDisable,
@@ -394,6 +402,7 @@ class $AssetsImagesIconGen {
         launchIcon,
         logoText,
         mobile,
+        moonpay,
         noWalletFound,
         passphraseLock,
         protect,
