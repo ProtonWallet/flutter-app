@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
@@ -10,6 +9,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/bottom.sheets/error.bottom.sheet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -71,32 +71,13 @@ class CommonHelper {
     return bitcoinAddress;
   }
 
-  static void showErrorDialog(String errorMessage) {
+  static void showErrorDialog(String errorMessage, {VoidCallback? callback}) {
     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
     if (context != null) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(S.of(context).something_went_wrong),
-            content: Text(errorMessage),
-            actions: <Widget>[
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-              TextButton(
-                child: Text(S.of(context).report_a_problem),
-                onPressed: () {
-                  Share.share(errorMessage,
-                      subject: S.of(context).something_went_wrong);
-                },
-              ),
-            ],
-          );
-        },
+      ErrorBottomSheet.show(
+        context,
+        errorMessage,
+        callback,
       );
     }
   }

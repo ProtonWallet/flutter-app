@@ -121,36 +121,49 @@ class AddWalletAccountSheet {
                         textAlign: TextAlign.center,
                       )),
                   const SizedBox(height: 20),
-                  DropdownButtonV2(
-                    labelText: S.of(context).script_type,
-                    width:
-                        MediaQuery.of(context).size.width - defaultPadding * 4,
-                    items: ScriptTypeInfo.scripts,
-                    itemsText:
-                        ScriptTypeInfo.scripts.map((v) => v.name).toList(),
-                    itemsMoreDetail: ScriptTypeInfo.scripts.map((v) {
-                      switch (v.bipVersion) {
-                        case 44:
-                          return S
-                              .of(context)
-                              .wallet_account_script_type_desc_bip44;
-                        case 49:
-                          return S
-                              .of(context)
-                              .wallet_account_script_type_desc_bip49;
-                        case 84:
-                          return S
-                              .of(context)
-                              .wallet_account_script_type_desc_bip84;
-                        case 86:
-                          return S
-                              .of(context)
-                              .wallet_account_script_type_desc_bip86;
-                        default:
-                          return "TODO";
-                      }
-                    }).toList(),
-                    valueNotifier: newAccountScriptTypeValueNotifier,
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: defaultPadding,
+                    ),
+                    decoration: BoxDecoration(
+                      color: ProtonColors.white,
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: DropdownButtonV2(
+                      labelText: S.of(context).script_type,
+                      width: MediaQuery.of(context).size.width -
+                          defaultPadding * 4,
+                      items: ScriptTypeInfo.scripts,
+                      itemsText:
+                          ScriptTypeInfo.scripts.map((v) => v.name).toList(),
+                      itemsMoreDetail: ScriptTypeInfo.scripts.map((v) {
+                        switch (v.bipVersion) {
+                          case 44:
+                            return S
+                                .of(context)
+                                .wallet_account_script_type_desc_bip44;
+                          case 49:
+                            return S
+                                .of(context)
+                                .wallet_account_script_type_desc_bip49;
+                          case 84:
+                            return S
+                                .of(context)
+                                .wallet_account_script_type_desc_bip84;
+                          case 86:
+                            return S
+                                .of(context)
+                                .wallet_account_script_type_desc_bip86;
+                          default:
+                            return "TODO";
+                        }
+                      }).toList(),
+                      valueNotifier: newAccountScriptTypeValueNotifier,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Underline(

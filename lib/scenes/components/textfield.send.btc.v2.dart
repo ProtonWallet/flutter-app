@@ -10,6 +10,7 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final FocusNode myFocusNode;
   final TextEditingController textController;
   final String labelText;
+  final String? hintText;
   final TextInputType? keyboardType;
   final bool autofocus;
   final TextInputAction? textInputAction;
@@ -21,21 +22,23 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final BitcoinUnit bitcoinUnit;
   final ProtonExchangeRate exchangeRate;
 
-  const TextFieldSendBTCV2(
-      {required this.textController,
-      required this.myFocusNode,
-      required this.validation,
-      required this.bitcoinUnit,
-      required this.exchangeRate,
-      super.key,
-      this.labelText = "",
-      this.onFinish,
-      this.backgroundColor,
-      this.autofocus = false,
-      this.inputFormatters = const [],
-      this.keyboardType,
-      this.textInputAction,
-      this.checkOfErrorOnFocusChange = true});
+  const TextFieldSendBTCV2({
+    required this.textController,
+    required this.myFocusNode,
+    required this.validation,
+    required this.bitcoinUnit,
+    required this.exchangeRate,
+    super.key,
+    this.labelText = "",
+    this.onFinish,
+    this.backgroundColor,
+    this.autofocus = false,
+    this.inputFormatters = const [],
+    this.keyboardType,
+    this.textInputAction,
+    this.checkOfErrorOnFocusChange = true,
+    this.hintText,
+  });
 
   @override
   State<StatefulWidget> createState() => TextFieldSendBTCV2State();
@@ -144,7 +147,11 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                       return null;
                     },
                     decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       labelText: widget.labelText,
+                      hintText: widget.hintText,
+                      hintStyle: FontManager.textFieldLabelStyle(
+                          ProtonColors.textHint),
                       labelStyle: isError
                           ? FontManager.textFieldLabelStyle(
                               ProtonColors.signalError)

@@ -71,7 +71,7 @@ class TransactionListTitle extends StatelessWidget {
                                     .formatLocaleTimeWithSendOrReceiveOn(
                                         context, timestamp!,
                                         isSend: isSend),
-                                style: FontManager.captionRegular(
+                                style: FontManager.body2Median(
                                     ProtonColors.textHint),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -85,7 +85,7 @@ class TransactionListTitle extends StatelessWidget {
                                         : S
                                             .of(context)
                                             .in_progress_waiting_for_confirm,
-                                    style: FontManager.captionRegular(
+                                    style: FontManager.body2Median(
                                         ProtonColors.protonBlue)),
                               ]),
                       ]),
@@ -95,10 +95,10 @@ class TransactionListTitle extends StatelessWidget {
                         Expanded(
                             child: Text(
                           isSend
-                              ? "${S.of(context).trans_to}: $address"
-                              : "${S.of(context).trans_from}: $address",
+                              ? "${S.of(context).trans_to} $address"
+                              : "${S.of(context).trans_from} $address",
                           style:
-                              FontManager.captionMedian(ProtonColors.textNorm),
+                              FontManager.actionButtonText(ProtonColors.textNorm),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),

@@ -741,7 +741,11 @@ class WalletManager implements Manager {
       for (var item in jsonList) {
         emails.add(item.values);
       }
-      return emails.join(", ");
+      if (emails.length > 1){
+        return "${emails.length} recipients";
+      } else {
+        return emails.join(", ");
+      }
     } catch (e) {
       try {
         final jsonList = jsonDecode(jsonString) as Map<String, dynamic>;
@@ -760,7 +764,11 @@ class WalletManager implements Manager {
         if (keys.contains("email") && keys.contains("name")) {
           return emails.join(" - ");
         }
-        return emails.join(", ");
+        if (emails.length > 1){
+          return "${emails.length} recipients";
+        } else {
+          return emails.join(", ");
+        }
       } catch (e) {
         return jsonString;
       }

@@ -5,6 +5,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
@@ -306,7 +307,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           final String fiatSign =
               CommonHelper.getFiatCurrencySign(fiatCurrency);
           accMenuModel.currencyBalance =
-              "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
+              "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
           accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
             (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
             balance,
@@ -430,7 +431,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               final String fiatSign =
                   CommonHelper.getFiatCurrencySign(fiatCurrency);
               account.currencyBalance =
-                  "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
+                  "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
               account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
                 (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
                 balance,
@@ -518,7 +519,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           final String fiatSign =
               CommonHelper.getFiatCurrencySign(fiatCurrency);
           account.currencyBalance =
-              "$fiatSign${CommonHelper.formatDouble(estimateValue)}";
+              "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
           account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
             (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
             balance,

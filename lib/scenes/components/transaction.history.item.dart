@@ -24,7 +24,9 @@ class TransactionHistoryItem extends StatelessWidget {
   final bool isLoading;
 
   const TransactionHistoryItem({
-    required this.title, required this.content, super.key,
+    required this.title,
+    required this.content,
+    super.key,
     this.memo,
     this.titleOptionsCallback,
     this.titleTooltip,
@@ -54,24 +56,27 @@ class TransactionHistoryItem extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                          children: [
-                            Text(title,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textWeak)),
-                            const SizedBox(width: 2),
-                            if (titleTooltip != null)
-                              Transform.translate(
-                                offset: const Offset(0, 1),
-                                child: CustomTooltip(
-                                    message: titleTooltip ?? "",
-                                    child: SvgPicture.asset(
+                      titleTooltip != null
+                          ? CustomTooltip(
+                              message: titleTooltip ?? "",
+                              child: Row(
+                                children: [
+                                  Text(title,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textWeak)),
+                                  const SizedBox(width: 2),
+                                  if (titleTooltip != null)
+                                    SvgPicture.asset(
                                         "assets/images/icon/ic-info-circle.svg",
                                         fit: BoxFit.fill,
-                                        width: 16,
-                                        height: 16)),
-                              )
-                          ]),
+                                        width: 20,
+                                        height: 20),
+                                ],
+                              ),
+                            )
+                          : Text(title,
+                              style: FontManager.body2Median(
+                                  ProtonColors.textWeak)),
                       if (titleOptionsCallback != null)
                         GestureDetector(
                             onTap: titleOptionsCallback,

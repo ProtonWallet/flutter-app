@@ -69,6 +69,18 @@ class ContactsDataProvider extends DataProvider {
     return null;
   }
 
+  Future<String?> getContactName(String email) async {
+    final List<ContactsModel>? contactsDataList = await getContacts();
+    if (contactsDataList!= null) {
+      for (ContactsModel contactsModel in contactsDataList){
+        if (contactsModel.email == email){
+          return contactsModel.name;
+        }
+      }
+    }
+    return null;
+  }
+
   Future<void> insertUpdate(ApiContactEmails contactEmail) async {
     await contactsDao.insertOrUpdate(
       contactEmail.id,
