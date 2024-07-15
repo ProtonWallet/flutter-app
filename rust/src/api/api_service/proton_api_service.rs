@@ -44,7 +44,7 @@ impl ProtonAPIService {
         );
         let box_store = Box::new(store.clone());
         let config = ApiConfig {
-            spec: Some((app_version, user_agent)),
+            spec: (app_version, user_agent),
             auth: None,
             url_prefix: None,
             env: Some(env),

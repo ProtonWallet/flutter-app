@@ -14,6 +14,7 @@ class ApiWalletUserSettings {
   final int? receiveInviterNotification;
   final int? receiveEmailIntegrationNotification;
   final int? walletCreated;
+  final int? acceptTermsAndConditions;
 
   const ApiWalletUserSettings({
     required this.bitcoinUnit,
@@ -23,6 +24,7 @@ class ApiWalletUserSettings {
     this.receiveInviterNotification,
     this.receiveEmailIntegrationNotification,
     this.walletCreated,
+    this.acceptTermsAndConditions,
   });
 
   @override
@@ -33,7 +35,8 @@ class ApiWalletUserSettings {
       twoFactorAmountThreshold.hashCode ^
       receiveInviterNotification.hashCode ^
       receiveEmailIntegrationNotification.hashCode ^
-      walletCreated.hashCode;
+      walletCreated.hashCode ^
+      acceptTermsAndConditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -47,7 +50,8 @@ class ApiWalletUserSettings {
           receiveInviterNotification == other.receiveInviterNotification &&
           receiveEmailIntegrationNotification ==
               other.receiveEmailIntegrationNotification &&
-          walletCreated == other.walletCreated;
+          walletCreated == other.walletCreated &&
+          acceptTermsAndConditions == other.acceptTermsAndConditions;
 }
 
 enum BitcoinUnit {

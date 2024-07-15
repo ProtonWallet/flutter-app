@@ -221,7 +221,7 @@ impl FrbTxBuilder {
      */
 
     pub async fn create_pbst(&self, network: Network) -> Result<FrbPsbt, BridgeError> {
-        let psbt = self.inner.create_psbt(false).await?;
+        let psbt = self.inner.create_psbt(false, false).await?;
 
         FrbPsbt::from_psbt(&psbt, network)
     }

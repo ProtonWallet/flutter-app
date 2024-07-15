@@ -2,7 +2,6 @@ import 'package:wallet/rust/proton_api/payment_gateway.dart';
 
 class SelectedInfoModel {
   final GatewayProvider provider;
-  final GatewayProviderInfo providerInfo;
   final ApiCountry country;
   final ApiCountryFiatCurrency fiatCurrency;
   final PaymentMethod paymentMethod;
@@ -10,13 +9,11 @@ class SelectedInfoModel {
   final Quote selectedQuote;
   final String paymentGatewayFee;
   final String networkFee;
+  final List<PaymentMethod> supportedPayments;
+  final String checkOutUrl;
 
   const SelectedInfoModel({
     this.provider = GatewayProvider.ramp,
-    this.providerInfo = const GatewayProviderInfo(
-      name: 'Ramp',
-      logo: "",
-    ),
     this.country = const ApiCountry(
       code: "US",
       fiatCurrency: "USD",
@@ -26,7 +23,7 @@ class SelectedInfoModel {
       name: 'United States',
       symbol: "USD",
     ),
-    this.paymentMethod = PaymentMethod.applePay,
+    this.paymentMethod = PaymentMethod.card,
     this.amount = "100",
     this.selectedQuote = const Quote(
       bitcoinAmount: "0.001",
@@ -38,16 +35,19 @@ class SelectedInfoModel {
     ),
     this.paymentGatewayFee = "",
     this.networkFee = "",
+    this.supportedPayments = const [PaymentMethod.card],
+    this.checkOutUrl = "",
   });
 
   SelectedInfoModel copyWith({
     GatewayProvider? provider,
-    GatewayProviderInfo? providerInfo,
     ApiCountry? country,
     ApiCountryFiatCurrency? fiatCurrency,
     PaymentMethod? paymentMethod,
     String? amount,
     Quote? quote,
+    List<PaymentMethod>? supportedPayments,
+    String? checkOutUrl,
   }) {
     var paymentGatewayFee = "";
     var networkFee = "";
@@ -58,7 +58,6 @@ class SelectedInfoModel {
 
     return SelectedInfoModel(
       provider: provider ?? this.provider,
-      providerInfo: providerInfo ?? this.providerInfo,
       country: country ?? this.country,
       fiatCurrency: fiatCurrency ?? this.fiatCurrency,
       paymentMethod: paymentMethod ?? this.paymentMethod,
@@ -66,6 +65,8 @@ class SelectedInfoModel {
       selectedQuote: quote ?? selectedQuote,
       paymentGatewayFee: paymentGatewayFee,
       networkFee: networkFee,
+      supportedPayments: supportedPayments ?? this.supportedPayments,
+      checkOutUrl: checkOutUrl ?? this.checkOutUrl,
     );
   }
 
@@ -74,39 +75,4 @@ class SelectedInfoModel {
     final double roundedUpNumber = (number * 100).ceil() / 100;
     return "$roundedUpNumber";
   }
-}
-
-class GatewayProviderInfo {
-  final String name;
-  final String logo;
-
-  const GatewayProviderInfo({
-    required this.name,
-    required this.logo,
-  });
-}
-
-// class FiatCurrencyInfo {
-
-/// These info comes from /api/wallet/v1/fiat-currencies
-/// Since change is unlikely, there's no need to load dynamically via API.
-final Map<GatewayProvider, GatewayProviderInfo> providersInfo = {
-  GatewayProvider.ramp: const GatewayProviderInfo(
-    name: 'Ramp',
-    logo: "",
-  ),
-  GatewayProvider.banxa: const GatewayProviderInfo(
-    name: 'Banxa',
-    logo: "",
-  ),
-};
-
-class BuyBitcoinProviderModel {
-  GatewayProvider selected = GatewayProvider.ramp;
-  GatewayProviderInfo providerInfo = providersInfo[GatewayProvider.ramp]!;
-  // supported features
-  List<GatewayProvider> supportedProvider = [
-    GatewayProvider.ramp,
-    GatewayProvider.banxa
-  ];
 }

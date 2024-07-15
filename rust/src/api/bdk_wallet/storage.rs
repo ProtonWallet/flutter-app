@@ -104,6 +104,10 @@ impl WalletStore for OnchainStore {
 
         Ok(())
     }
+
+    fn clear(&self) -> Result<(), Error> {
+        Ok(())
+    }
 }
 
 // #[derive(Clone, Debug)]

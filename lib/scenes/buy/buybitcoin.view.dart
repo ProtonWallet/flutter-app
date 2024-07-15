@@ -14,7 +14,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
-import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.keyboard.done.dart';
 import 'package:wallet/scenes/buy/dropdown.dialog.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
@@ -161,8 +160,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                           decoration: ShapeDecoration(
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  color: Color(0xFFE6E8EC)),
+                              side: const BorderSide(color: Color(0xFFE6E8EC)),
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
@@ -241,8 +239,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             decoration: const ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Color(0xFFE6E8EC)),
+                                side: BorderSide(color: Color(0xFFE6E8EC)),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16),
@@ -424,22 +421,20 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                     return AccountDropdown(
                                       widgets: [
                                         for (final provider
-                                            in viewModel.providers)
+                                            in state.supportedProviders)
                                           PaymentDropdownItem(
-                                            icon: Assets.images.icon.ramp.svg(
-                                              fit: BoxFit.fill,
-                                            ),
+                                            icon: provider.getIcon(),
                                             item: DropdownItem(
-                                              icon: Assets.images.icon.ramp.svg(
-                                                fit: BoxFit.fill,
-                                              ),
-                                              title: provider.title,
+                                              title: provider.enumToString(),
                                               subtitle:
-                                                  '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
+                                                  '${state.received[provider]} BTC',
                                             ),
-                                            selected: true,
+                                            selected: provider ==
+                                                state.selectedModel.provider,
                                             onTap: () {
-                                              logger.i(provider.title);
+                                              logger.i(provider.enumToString());
+                                              viewModel
+                                                  .selectProvider(provider);
                                               Navigator.of(context).pop();
                                             },
                                           ),
@@ -458,8 +453,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               decoration: const ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Color(0xFFE6E8EC)),
+                                  side: BorderSide(color: Color(0xFFE6E8EC)),
                                   borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(16),
                                     bottomRight: Radius.circular(16),
@@ -528,15 +522,12 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                Assets.images.icon.ramp.svg(
-                                                  fit: BoxFit.fill,
-                                                  width: 24,
-                                                  height: 24,
-                                                ),
+                                                state.selectedModel.provider
+                                                    .getIcon(),
                                                 const SizedBox(width: 8),
                                                 Text(
-                                                  state.providerModel
-                                                      .providerInfo.name,
+                                                  state.selectedModel.provider
+                                                      .enumToString(),
                                                   style: const TextStyle(
                                                     color: Color(0xFF191C32),
                                                     fontSize: 16,
@@ -733,14 +724,18 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                       builder: (BuildContext context) {
                         return AccountDropdown(
                           widgets: [
-                            for (var pay in viewModel.payments)
+                            for (var payment
+                                in state.selectedModel.supportedPayments)
                               PaymentDropdownItem(
-                                selected: pay.method ==
-                                    viewModel.selectedPaymentMethod,
-                                item: pay,
-                                icon: pay.icon,
+                                selected: payment ==
+                                    state.selectedModel.paymentMethod,
+                                item: DropdownItem(
+                                  title: payment.enumToString(),
+                                  subtitle: '',
+                                ),
+                                icon: payment.getIcon(),
                                 onTap: () {
-                                  viewModel.selectPayment(pay.method);
+                                  viewModel.selectPayment(payment);
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -760,8 +755,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(
-                            color: Color(0xFFE6E8EC)),
+                        side: const BorderSide(color: Color(0xFFE6E8EC)),
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
@@ -783,22 +777,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (viewModel.selectedPaymentMethod ==
-                                        PaymentMethod.applePay) ...[
-                                      Assets.images.icon.applePay.svg(
-                                        fit: BoxFit.fitHeight,
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    ],
-                                    if (viewModel.selectedPaymentMethod ==
-                                        PaymentMethod.card) ...[
-                                      Assets.images.icon.creditCard.svg(
-                                        fit: BoxFit.fitHeight,
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    ]
+                                    state.selectedModel.paymentMethod.getIcon(),
                                   ],
                                 ),
                               ),
@@ -822,7 +801,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                       ),
                                     ),
                                     Text(
-                                      viewModel.selectedPaymentMethod
+                                      state.selectedModel.paymentMethod
                                           .enumToString(),
                                       style: const TextStyle(
                                         color: Color(0xFF191C32),
@@ -869,7 +848,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   }
                               : null,
                           text:
-                              "Buy with ${state.providerModel.providerInfo.name}",
+                              "Buy with ${state.selectedModel.provider.enumToString()}",
                           width: MediaQuery.of(context).size.width - 100,
                           backgroundColor: ProtonColors.protonBlue,
                           textStyle:
