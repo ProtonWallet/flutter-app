@@ -116,6 +116,10 @@ class UserSettingsDataProvider extends DataProvider {
     bitcoinUnitUpdateController.add(BitcoinUnitDataUpdated());
   }
 
+  void acceptTermsAndConditions() {
+    settingsClient.acceptTermsAndConditions();
+  }
+
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
     if (this.fiatCurrency != fiatCurrency) {
       this.fiatCurrency = fiatCurrency;

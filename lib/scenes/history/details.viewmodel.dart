@@ -82,6 +82,7 @@ abstract class HistoryDetailViewModel
   bool isRecipientsFromBlockChain = false;
   String? selfBitcoinAddress;
   final UserSettingsDataProvider userSettingsDataProvider;
+  late ScrollController scrollController;
 
   void editMemo();
 
@@ -130,6 +131,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoController = TextEditingController();
     memoFocusNode = FocusNode();
     memoFocusNode.addListener(userFinishMemo);
+    scrollController = ScrollController();
 
     if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();

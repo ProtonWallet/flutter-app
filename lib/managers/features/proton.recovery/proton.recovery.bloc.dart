@@ -230,6 +230,7 @@ class ProtonRecoveryBloc
               ));
               return;
             }
+            userDataProvider.enabledRecovery(true);
             emit(state.copyWith(
                 isLoading: false,
                 error: "",
@@ -323,6 +324,7 @@ class ProtonRecoveryBloc
             ));
             return;
           }
+          userDataProvider.enabledRecovery(true);
           emit(state.copyWith(
               isLoading: false,
               error: "",
@@ -394,7 +396,7 @@ class ProtonRecoveryBloc
           /// check if the server proofs are valid
           final check = clientProofs.expectedServerProof == serverProofs;
           logger.i("DisableRecovery server proofs: $check");
-
+          userDataProvider.enabledRecovery(false);
           emit(state.copyWith(
               isLoading: false,
               isRecoveryEnabled: false,

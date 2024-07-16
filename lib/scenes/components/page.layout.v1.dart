@@ -14,8 +14,13 @@ class PageLayoutV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ProtonColors.backgroundProton,
-        body: SafeArea(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          color: ProtonColors.backgroundProton,
+        ),
+        child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: Column(
@@ -42,6 +47,8 @@ class PageLayoutV1 extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

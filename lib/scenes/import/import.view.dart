@@ -164,7 +164,11 @@ class ImportView extends ViewBase<ImportViewModel> {
                                         context,
                                         viewModel.protonAddresses.firstOrNull
                                                 ?.email ??
-                                            "");
+                                            "",
+                                        viewModel
+                                            .dataProviderManager
+                                            .userSettingsDataProvider
+                                            .acceptTermsAndConditions);
                                   }
                                   CommonHelper.showSnackbar(
                                       context, S.of(context).wallet_imported);
