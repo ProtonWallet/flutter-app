@@ -27,6 +27,7 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
@@ -74,6 +75,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.walletBalanceBloc,
     this.dataProviderManager,
     this.createWalletBloc,
+    this.protonRecoveryBloc,
   );
 
   CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
@@ -139,7 +141,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   bool hideEmptyUsedAddresses = false;
   bool showWalletRecovery = true;
-  bool hadBackupProtonAccount = false;
   bool hadSetup2FA = false;
   bool showSearchHistoryTextField = false;
   bool showSearchAddressTextField = false;
@@ -151,6 +152,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void selectWallet(WalletMenuModel walletMenuModel);
 
   void updateHadSetup2FA();
+
+  void loadProtonRecoveryState();
 
   void selectAccount(
       WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel);
@@ -201,6 +204,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String selectedTXID = "";
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
+  bool isRemovingBvE = false;
 
   late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
@@ -238,6 +242,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final WalletBalanceBloc walletBalanceBloc;
   final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
+  final ProtonRecoveryBloc protonRecoveryBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = ProtonExchangeRate(
       id: 'default',
@@ -259,6 +264,7 @@ class HomeViewModelImpl extends HomeViewModel {
     super.walletBalanceBloc,
     super.dataProviderManager,
     super.createWalletBloc,
+    super.protonRecoveryBloc,
     this.userManager,
     this.eventLoop,
     this.protonWalletManager,
@@ -409,6 +415,12 @@ class HomeViewModelImpl extends HomeViewModel {
         startLoadingCallback: selectDefaultWallet,
         onboardingCallback: setOnBoard,
       );
+
+      loadProtonRecoveryState();
+      dataProviderManager.userDataProvider.dataUpdateController.stream
+          .listen((data) {
+        loadProtonRecoveryState();
+      });
 
       // async
       dataProviderManager.contactsDataProvider.preLoad();
@@ -666,7 +678,6 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
     newTodoStep += showWalletRecovery ? 0 : 1;
-    newTodoStep += hadBackupProtonAccount ? 1 : 0;
     newTodoStep += hadSetup2FA ? 1 : 0;
     currentTodoStep = newTodoStep;
     datasourceStreamSinkAdd();
@@ -696,18 +707,11 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> removeEmailAddressFromWalletAccount(WalletModel walletModel,
-      AccountModel accountModel, String serverAddressID,
-      {bool isTriedRemove = false}) async {
-    if (!isTriedRemove) {
-      EasyLoading.show(
-          status: "removing email..", maskType: EasyLoadingMaskType.black);
-    } else {
-      EasyLoading.show(
-          status:
-              "email already in used, try removing previous email binding..",
-          maskType: EasyLoadingMaskType.black);
-    }
+  Future<void> removeEmailAddressFromWalletAccount(
+    WalletModel walletModel,
+    AccountModel accountModel,
+    String serverAddressID,
+  ) async {
     try {
       final ApiWalletAccount walletAccount =
           await proton_api.removeEmailAddress(
@@ -732,7 +736,6 @@ class HomeViewModelImpl extends HomeViewModel {
     } catch (e) {
       errorMessage = e.toString();
     }
-    EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -1109,5 +1112,10 @@ class HomeViewModelImpl extends HomeViewModel {
   void setDisplayBalance({required bool display}) {
     displayBalance = display;
     datasourceStreamSinkAdd();
+  }
+
+  @override
+  void loadProtonRecoveryState() {
+    protonRecoveryBloc.add(LoadingRecovery());
   }
 }

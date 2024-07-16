@@ -28,8 +28,10 @@ import 'package:wallet/scenes/import/import.coordinator.dart';
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   ImportViewModel(
     super.coordinator,
+    this.dataProviderManager,
   );
 
+  final DataProviderManager dataProviderManager;
   late TextEditingController mnemonicTextController;
   late TextEditingController nameTextController;
   late TextEditingController passphraseTextController;
@@ -57,15 +59,13 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
 }
 
 class ImportViewModelImpl extends ImportViewModel {
-  final DataProviderManager dataProviderManager;
-
   final String preInputWalletName;
 
   final CreateWalletBloc createWalletBloc;
 
   ImportViewModelImpl(
     super.coordinator,
-    this.dataProviderManager,
+    super.dataProviderManager,
     this.preInputWalletName,
     this.createWalletBloc,
   );

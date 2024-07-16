@@ -13,6 +13,7 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/back.button.v1.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
@@ -20,7 +21,6 @@ import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
-import 'package:wallet/scenes/components/previous.button.v1.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
 import 'package:wallet/scenes/components/recipient.detail.dart';
 import 'package:wallet/scenes/components/textfield.send.btc.v2.dart';
@@ -87,7 +87,7 @@ class SendView extends ViewBase<SendViewModel> {
     if (viewModel.sendFlowStatus == SendFlowStatus.broadcasting) {
       return const SizedBox();
     }
-    return PreviousButtonV1(
+    return BackButtonV1(
       backgroundColor: ProtonColors.backgroundProton,
       onPressed: () {
         if (viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction) {
@@ -1007,13 +1007,6 @@ class SendView extends ViewBase<SendViewModel> {
                             ),
                           ]),
                         ]),
-                        Text(
-                          S.of(context).send_broadcasting_title,
-                          style:
-                              FontManager.titleHeadline(ProtonColors.textNorm),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
                         Text(
                           S.of(context).send_broadcasting_content,
                           style:

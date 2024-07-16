@@ -16,6 +16,8 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
@@ -139,7 +141,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                       height: 20,
                                     ),
                                     if (walletTransactionState
-                                        .historyTransaction.isEmpty && !walletTransactionState.isSyncing)
+                                            .historyTransaction.isEmpty &&
+                                        !walletTransactionState.isSyncing)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: defaultPadding),
@@ -190,51 +193,68 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           ),
                                         ),
                                       ),
-                                    if (viewModel.currentTodoStep <
-                                            viewModel.totalTodoSteps &&
-                                        walletTransactionState
-                                            .historyTransaction.isNotEmpty)
-                                      CustomExpansion(
-                                          totalSteps: viewModel.totalTodoSteps,
-                                          currentStep:
-                                              viewModel.currentTodoStep,
-                                          children: [
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            CustomTodos(
-                                                title: S
-                                                    .of(context)
-                                                    .todos_backup_proton_account,
-                                                checked: viewModel
-                                                    .hadBackupProtonAccount,
-                                                callback: () {}),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            CustomTodos(
-                                                title: S
-                                                    .of(context)
-                                                    .todos_backup_wallet_mnemonic,
-                                                checked: !viewModel
-                                                    .showWalletRecovery,
-                                                callback: () {
-                                                  move(context,
-                                                      NavID.setupBackup);
-                                                }),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            CustomTodos(
-                                                title: S
-                                                    .of(context)
-                                                    .todos_setup_2fa,
-                                                checked: viewModel.hadSetup2FA,
-                                                callback: () {}),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                          ]),
+                                    BlocBuilder<ProtonRecoveryBloc,
+                                            ProtonRecoveryState>(
+                                        bloc: viewModel.protonRecoveryBloc,
+                                        builder: (context, state) {
+                                          final hadBackupProtonAccount =
+                                              state.isRecoveryEnabled;
+                                          final totalSteps = viewModel
+                                                  .currentTodoStep +
+                                              (hadBackupProtonAccount ? 1 : 0);
+                                          final visible = totalSteps <
+                                                  viewModel.totalTodoSteps &&
+                                              walletTransactionState
+                                                  .historyTransaction
+                                                  .isNotEmpty;
+                                          if (visible) {
+                                            return CustomExpansion(
+                                                totalSteps:
+                                                    viewModel.totalTodoSteps,
+                                                currentStep: totalSteps,
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  CustomTodos(
+                                                      title: S
+                                                          .of(context)
+                                                          .todos_backup_proton_account,
+                                                      checked:
+                                                          hadBackupProtonAccount,
+                                                      callback: () {
+                                                        viewModel.move(NavID.recovery);
+                                                      }),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  CustomTodos(
+                                                      title: S
+                                                          .of(context)
+                                                          .todos_backup_wallet_mnemonic,
+                                                      checked: !viewModel
+                                                          .showWalletRecovery,
+                                                      callback: () {
+                                                        move(context,
+                                                            NavID.setupBackup);
+                                                      }),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  CustomTodos(
+                                                      title: S
+                                                          .of(context)
+                                                          .todos_setup_2fa,
+                                                      checked:
+                                                          viewModel.hadSetup2FA,
+                                                      callback: () {}),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                ]);
+                                          }
+                                          return const SizedBox();
+                                        }),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -262,7 +282,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   viewModel: viewModel),
                                         ])),
                                     if (walletTransactionState
-                                        .historyTransaction.isEmpty && !walletTransactionState.isSyncing)
+                                            .historyTransaction.isEmpty &&
+                                        !walletTransactionState.isSyncing)
                                       Column(children: [
                                         const SizedBox(
                                           height: defaultPadding,
@@ -333,7 +354,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             if (viewModel.protonFeedItems
                                                     .isNotEmpty &&
                                                 walletTransactionState
-                                                    .historyTransaction.isEmpty)
+                                                    .historyTransaction
+                                                    .isEmpty &&
+                                                !walletTransactionState
+                                                    .isSyncing)
                                               Text(S.of(context).explore_wallet,
                                                   style:
                                                       FontManager.body1Median(
@@ -341,7 +365,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                               .textNorm)),
                                             const SizedBox(height: 10),
                                             if (walletTransactionState
-                                                .historyTransaction.isEmpty)
+                                                    .historyTransaction
+                                                    .isEmpty &&
+                                                !walletTransactionState
+                                                    .isSyncing)
                                               Column(children: [
                                                 DiscoverFeedsView(
                                                   onTap: (String link) {

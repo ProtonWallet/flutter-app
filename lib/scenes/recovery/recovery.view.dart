@@ -76,23 +76,24 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                   ),
 
                   const SizedBox(height: 8),
-                  RecoverySection(
-                    title: 'Wallet recovery seed',
-                    description:
-                        'Your secret seed is the ONLY way to recover your fund if you lose access to the wallet',
-                    logo: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 16,
-                      color: ProtonColors.textHint,
-                    ),
-                    warning: Icon(
-                      Icons.info_outline_rounded,
-                      color: ProtonColors.signalError,
-                      size: 14,
-                    ),
-                    isLoading: false,
-                  ),
-                  const SizedBox(height: 34),
+                  /// TODO(fix): check if we need to put `Wallet recovery` here
+                  // RecoverySection(
+                  //   title: 'Wallet recovery seed',
+                  //   description:
+                  //       'Your secret seed is the ONLY way to recover your fund if you lose access to the wallet',
+                  //   logo: Icon(
+                  //     Icons.arrow_forward_ios_rounded,
+                  //     size: 16,
+                  //     color: ProtonColors.textHint,
+                  //   ),
+                  //   warning: Icon(
+                  //     Icons.info_outline_rounded,
+                  //     color: ProtonColors.signalError,
+                  //     size: 14,
+                  //   ),
+                  //   isLoading: false,
+                  // ),
+                  // const SizedBox(height: 34),
                   // RecoverySection(
                   //   title: 'Recovery email and phone',
                   //   description:
