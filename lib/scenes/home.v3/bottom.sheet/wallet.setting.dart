@@ -13,18 +13,18 @@ import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/scenes/components/add.button.v1.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.v2.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -385,12 +385,65 @@ class WalletSettingSheet {
                                                     activeColor:
                                                         ProtonColors.protonBlue,
                                                     onChanged: (bool newValue) {
-                                                      setState(() {
-                                                        emailIntegrationEnables[
+                                                      setState(() async {
+                                                        if (newValue) {
+                                                          EmailIntegrationDropdownV2Sheet
+                                                              .show(
+                                                                  context,
+                                                                  viewModel,
+                                                                  userWallet,
+                                                                  accountMenuModel,
+                                                                  usedEmailIDs,
+                                                                  callback: () {
+                                                            setState(() {
+                                                              emailIntegrationEnables[
+                                                                  accountMenuModel
+                                                                      .accountModel
+                                                                      .accountID] = true;
+                                                              hasEmailIntegration =
+                                                                  true;
+                                                            });
+                                                          });
+                                                        } else if (!viewModel
+                                                            .isRemovingBvE) {
+                                                          setState(() {
+                                                            viewModel
+                                                                    .isRemovingBvE =
+                                                                true;
+                                                          });
+                                                          await viewModel
+                                                              .removeEmailAddressFromWalletAccount(
+                                                                  userWallet,
+                                                                  accountMenuModel
+                                                                      .accountModel,
+                                                                  accountMenuModel
+                                                                      .emailIds
+                                                                      .first);
+                                                          setState(() {
+                                                            emailIntegrationEnables[
                                                                 accountMenuModel
                                                                     .accountModel
-                                                                    .accountID] =
-                                                            newValue;
+                                                                    .accountID] = false;
+                                                            hasEmailIntegration =
+                                                                false;
+                                                            for (var accountMenuModel
+                                                                in walletMenuModel
+                                                                    .accounts) {
+                                                              if (emailIntegrationEnables[
+                                                                      accountMenuModel
+                                                                          .accountModel
+                                                                          .accountID] ??
+                                                                  false) {
+                                                                hasEmailIntegration =
+                                                                    true;
+                                                                break;
+                                                              }
+                                                            }
+                                                            viewModel
+                                                                    .isRemovingBvE =
+                                                                false;
+                                                          });
+                                                        }
                                                       });
                                                     },
                                                   )
@@ -411,73 +464,58 @@ class WalletSettingSheet {
                                                         .body2Regular(
                                                             ProtonColors
                                                                 .textNorm)),
-                                                trailing: IconButton(
-                                                  onPressed: () async {
-                                                    await viewModel
-                                                        .removeEmailAddressFromWalletAccount(
-                                                            userWallet,
-                                                            accountMenuModel
-                                                                .accountModel,
-                                                            addressID);
-                                                    setState(() {
-                                                      emailIntegrationEnables[
-                                                              accountMenuModel
-                                                                  .accountModel
-                                                                  .accountID] =
-                                                          false;
-                                                      hasEmailIntegration =
-                                                          false;
-                                                      for (var accountMenuModel
-                                                          in walletMenuModel
-                                                              .accounts) {
-                                                        if (emailIntegrationEnables[
+                                                trailing: viewModel
+                                                        .isRemovingBvE
+                                                    ? Transform.translate(
+                                                        offset: const Offset(
+                                                            -10, 0),
+                                                        child:
+                                                            const CustomLoading(
+                                                          size: 20,
+                                                        ),
+                                                      )
+                                                    : IconButton(
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            viewModel
+                                                                    .isRemovingBvE =
+                                                                true;
+                                                          });
+                                                          await viewModel
+                                                              .removeEmailAddressFromWalletAccount(
+                                                                  userWallet,
+                                                                  accountMenuModel
+                                                                      .accountModel,
+                                                                  addressID);
+                                                          setState(() {
+                                                            emailIntegrationEnables[
                                                                 accountMenuModel
                                                                     .accountModel
-                                                                    .accountID] ??
-                                                            false) {
-                                                          hasEmailIntegration =
-                                                              true;
-                                                          break;
-                                                        }
-                                                      }
-                                                    });
-                                                  },
-                                                  icon: const Icon(Icons.close),
-                                                ),
+                                                                    .accountID] = false;
+                                                            hasEmailIntegration =
+                                                                false;
+                                                            for (var accountMenuModel
+                                                                in walletMenuModel
+                                                                    .accounts) {
+                                                              if (emailIntegrationEnables[
+                                                                      accountMenuModel
+                                                                          .accountModel
+                                                                          .accountID] ??
+                                                                  false) {
+                                                                hasEmailIntegration =
+                                                                    true;
+                                                                break;
+                                                              }
+                                                            }
+                                                            viewModel
+                                                                    .isRemovingBvE =
+                                                                false;
+                                                          });
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.close),
+                                                      ),
                                               )),
-                                        if (emailIntegrationEnables[
-                                            accountMenuModel
-                                                .accountModel.accountID]!)
-                                          GestureDetector(
-                                              onTap: () {
-                                                EmailIntegrationDropdownSheet
-                                                    .show(
-                                                        context,
-                                                        viewModel,
-                                                        userWallet,
-                                                        accountMenuModel,
-                                                        usedEmailIDs,
-                                                        callback: () {
-                                                  setState(() {
-                                                    emailIntegrationEnables[
-                                                        accountMenuModel
-                                                            .accountModel
-                                                            .accountID] = true;
-                                                    hasEmailIntegration = true;
-                                                  });
-                                                });
-                                              },
-                                              child: Row(children: [
-                                                const SizedBox(
-                                                    width: defaultPadding),
-                                                const AddButtonV1(),
-                                                const SizedBox(width: 5),
-                                                Text(S.of(context).add,
-                                                    style: FontManager
-                                                        .body2Regular(
-                                                            ProtonColors
-                                                                .protonBlue)),
-                                              ])),
                                         const SizedBox(height: 20),
                                       ]))
                           ]);

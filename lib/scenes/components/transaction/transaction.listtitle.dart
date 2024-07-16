@@ -140,7 +140,7 @@ class TransactionListTitle extends StatelessWidget {
                         S
                             .of(context)
                             .trans_body((body ?? "").replaceAll("\n", " ")),
-                        style: FontManager.captionMedian(ProtonColors.textWeak),
+                        style: FontManager.body2Median(ProtonColors.textWeak),
                         overflow: TextOverflow.ellipsis,
                       ))
                     ]),

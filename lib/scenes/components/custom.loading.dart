@@ -10,7 +10,7 @@ class CustomLoading extends StatefulWidget {
 
   const CustomLoading(
       {super.key,
-      this.durationInMilliSeconds = 1600,
+      this.durationInMilliSeconds = 1200,
       this.size = 12,
       this.strokeWidth = 2.0,
       this.color,
@@ -39,21 +39,22 @@ class CustomLoadingState extends State<CustomLoading>
       duration: Duration(milliseconds: widget.durationInMilliSeconds),
     )..repeat();
 
-    return AnimatedBuilder(
-      animation: _controller!,
-      builder: (context, child) {
-        return SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: CircularProgressIndicator(
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: AnimatedBuilder(
+        animation: _controller!,
+        builder: (context, child) {
+          return CircularProgressIndicator.adaptive(
             value: _controller!.value,
-            color: widget.color ?? ProtonColors.protonBlue,
+            valueColor: AlwaysStoppedAnimation<Color>(
+                widget.color ?? ProtonColors.protonBlue),
             backgroundColor:
                 widget.backgroundColor ?? ProtonColors.protonBlueAlpha20,
             strokeWidth: widget.strokeWidth,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
