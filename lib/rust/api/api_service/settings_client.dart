@@ -11,6 +11,8 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<SettingsClient>>
 abstract class SettingsClient implements RustOpaqueInterface {
+  Future<ApiWalletUserSettings> acceptTermsAndConditions();
+
   Future<ApiWalletUserSettings> bitcoinUnit({required BitcoinUnit symbol});
 
   Future<ApiWalletUserSettings> fiatCurrency({required FiatCurrency symbol});

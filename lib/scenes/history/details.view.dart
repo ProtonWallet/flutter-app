@@ -78,6 +78,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: viewModel.scrollController,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(
@@ -304,6 +305,19 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 FontManager.body2Median(ProtonColors.textWeak)),
                         iconColor: ProtonColors.textHint,
                         collapsedIconColor: ProtonColors.textHint,
+                        onExpansionChanged: (isExpanded) {
+                          if (isExpanded) {
+                            Future.delayed(const Duration(milliseconds: 300),
+                                () {
+                              viewModel.scrollController.animateTo(
+                                viewModel
+                                    .scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              );
+                            });
+                          }
+                        },
                         children: [
                           TransactionHistoryItem(
                             title: S.of(context).trans_metwork_fee,

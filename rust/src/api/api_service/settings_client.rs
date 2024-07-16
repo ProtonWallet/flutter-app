@@ -60,6 +60,7 @@ impl SettingsClient {
             Err(err) => Err(err.into()),
         }
     }
+
     pub async fn hide_empty_used_addresses(
         &self,
         hide_empty_used_addresses: bool,
@@ -68,6 +69,14 @@ impl SettingsClient {
             .inner
             .update_hide_empty_used_addresses(hide_empty_used_addresses)
             .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn accept_terms_and_conditions(&self) -> Result<ApiWalletUserSettings, BridgeError> {
+        let result = self.inner.accept_terms_and_conditions().await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),

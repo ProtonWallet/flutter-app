@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
 
 class RecoverySection extends StatelessWidget {
   final String title;
@@ -12,7 +14,10 @@ class RecoverySection extends StatelessWidget {
   final bool? isSwitched;
 
   const RecoverySection({
-    required this.title, required this.description, required this.isLoading, super.key,
+    required this.title,
+    required this.description,
+    required this.isLoading,
+    super.key,
     this.logo,
     this.warning,
     this.onChanged,
@@ -61,8 +66,14 @@ class RecoverySection extends StatelessWidget {
               if (logo != null) SizedBox(width: 20, height: 20, child: logo),
               if (onChanged != null)
                 if (isLoading)
-                  const SizedBox(
-                      height: 39, child: CupertinoActivityIndicator())
+                  Container(
+                      height: 39,
+                      width: 40,
+                      padding: const EdgeInsets.only(
+                          top: 9, bottom: 10, right: 15, left: 5),
+                      child: const CustomLoading(
+                        size: 20,
+                      ))
                 else
                   CupertinoSwitch(
                     value: isSwitched ?? false,
