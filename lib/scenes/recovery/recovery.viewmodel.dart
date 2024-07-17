@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';

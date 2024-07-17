@@ -25,28 +25,24 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
   Widget build2FAConfirm(BuildContext context) {
     return Column(
       children: <Widget>[
-        Stack(children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            color: ProtonColors.backgroundSecondary,
-            child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 20,
-                    bottom: MediaQuery.of(context).size.height / 20),
-                child: Container(
-                  constraints: const BoxConstraints(
-                    maxWidth: 100.0,
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/images/wallet_creation/passphrase_icon.svg',
-                  ),
-                )),
-          ),
-        ]),
         Container(
-          alignment: Alignment.topCenter,
           width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 4,
+          color: ProtonColors.backgroundSecondary,
+          child: Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 20,
+                  bottom: MediaQuery.of(context).size.height / 20),
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 100.0,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/wallet_creation/passphrase_icon.svg',
+                ),
+              )),
+        ),
+        Expanded(
           child: OnboardingContent(
               totalPages: 3,
               currentPage: 3,
@@ -55,46 +51,44 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
               title: S.of(context).setting_2fa_disable,
               content: S.of(context).setting_2fa_code_hint,
               children: [
-                Column(children: [
-                  SizedBoxes.box12,
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        for (int i = 0; i < 6; i++)
-                          TextField2FA(
-                              width: 50,
-                              height: 50,
-                              suffixIcon: const Icon(Icons.close),
-                              showSuffixIcon: false,
-                              centerHorizontal: true,
-                              maxLength: 1,
-                              controller: viewModel.digitControllers[i],
-                              onChanged: (text) {
-                                if (text.isNotEmpty) {
-                                  if (i < 5) {
-                                    FocusScope.of(context).nextFocus();
-                                  }
-                                } else {
-                                  if (i > 0) {
-                                    FocusScope.of(context).previousFocus();
-                                  }
+                SizedBoxes.box12,
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (int i = 0; i < 6; i++)
+                        TextField2FA(
+                            width: 50,
+                            height: 50,
+                            suffixIcon: const Icon(Icons.close),
+                            showSuffixIcon: false,
+                            centerHorizontal: true,
+                            maxLength: 1,
+                            controller: viewModel.digitControllers[i],
+                            onChanged: (text) {
+                              if (text.isNotEmpty) {
+                                if (i < 5) {
+                                  FocusScope.of(context).nextFocus();
                                 }
-                              },
-                              textInputAction: i == 5
-                                  ? TextInputAction.done
-                                  : TextInputAction.next,
-                              digitOnly: true),
-                      ]),
-                  SizedBoxes.box18,
-                  Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Password",
-                          style:
-                              FontManager.body1Median(ProtonColors.textHint))),
-                  TextFieldPassword(
-                      width: MediaQuery.of(context).size.width,
-                      controller: viewModel.passwordController),
-                ]),
+                              } else {
+                                if (i > 0) {
+                                  FocusScope.of(context).previousFocus();
+                                }
+                              }
+                            },
+                            textInputAction: i == 5
+                                ? TextInputAction.done
+                                : TextInputAction.next,
+                            digitOnly: true),
+                    ]),
+                SizedBoxes.box18,
+                Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Password",
+                        style: FontManager.body1Median(ProtonColors.textHint))),
+                TextFieldPassword(
+                    width: MediaQuery.of(context).size.width,
+                    controller: viewModel.passwordController),
+                SizedBoxes.box18,
                 ButtonV5(
                     onPressed: () async {
                       final bool result = await viewModel.disable2FA();
@@ -102,8 +96,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                         if (result) {
                           Navigator.pop(context);
                         } else {
-                          LocalToast.showErrorToast(
-                              context, "Something error!");
+                          LocalToast.showErrorToast(context, viewModel.error);
                         }
                       }
                     },

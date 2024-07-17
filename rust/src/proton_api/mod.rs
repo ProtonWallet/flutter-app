@@ -10,5 +10,6 @@ pub mod wallet_settings;
 // auth
 pub mod auth_credential;
 
+pub mod invite;
 pub mod proton_address;
 pub mod proton_users;

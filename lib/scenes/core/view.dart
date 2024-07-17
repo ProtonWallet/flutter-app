@@ -11,10 +11,12 @@ enum ViewSize { mobile, desktop }
 
 abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   final V viewModel;
+  final Widget? locker;
+
   @protected
   Widget build(BuildContext context);
 
-  const ViewBase(this.viewModel, Key key) : super(key: key);
+  const ViewBase(this.viewModel, Key key, {this.locker}) : super(key: key);
 
   @override
   State<ViewBase> createState() {
@@ -65,19 +67,25 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     WidgetBuilder content,
     DrawerCallback onDrawerChanged,
   ) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: ProtonColors.backgroundProton,
-      drawer: viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
-      onDrawerChanged:
-          viewModel.currentSize == ViewSize.mobile ? null : onDrawerChanged,
-      body: _buildNavigatorView(
-        context,
-        appBar,
-        drawer,
-        content,
-        onDrawerChanged,
-      ),
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: ProtonColors.backgroundProton,
+          drawer:
+              viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
+          onDrawerChanged:
+              viewModel.currentSize == ViewSize.mobile ? null : onDrawerChanged,
+          body: _buildNavigatorView(
+            context,
+            appBar,
+            drawer,
+            content,
+            onDrawerChanged,
+          ),
+        ),
+        // const LockOverlay(),
+      ],
     );
   }
 
@@ -136,7 +144,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
 
 // view base state
 class ViewState<V extends ViewModel> extends State<ViewBase>
-    with AutomaticKeepAliveClientMixin<ViewBase>, WidgetsBindingObserver {
+    with AutomaticKeepAliveClientMixin<ViewBase> {
   late V viewModel;
   ViewSize? current;
   List<StreamSubscription> subscriptions = [];
@@ -145,19 +153,16 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
   void initState() {
     viewModel = widget.viewModel as V;
     super.initState();
-    StreamSubscription<ViewModel> streamDatasourceChanged;
-    streamDatasourceChanged = viewModel.datasourceChanged.listen((viewModel) {
+    final streamDatasourceChanged =
+        viewModel.datasourceChanged.listen((viewModel) {
       setState(() {});
     });
     subscriptions.add(streamDatasourceChanged);
     viewModel.loadData();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-
     for (var subscription in subscriptions) {
       subscription.cancel();
     }
@@ -184,7 +189,15 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
       }
     }
 
-    return widget.build(context);
+    final Widget? lockOverlay = widget.locker;
+    return lockOverlay == null
+        ? widget.build(context)
+        : Stack(
+            children: [
+              widget.build(context),
+              lockOverlay,
+            ],
+          );
   }
 
   @override

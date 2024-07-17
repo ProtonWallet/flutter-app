@@ -28,9 +28,11 @@ import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
+import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
+import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
@@ -49,6 +51,7 @@ import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
+import 'package:wallet/scenes/components/alerts/permission.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -376,6 +379,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
+    // await LocalAuth.authenticate('hint');
     // init network
     await apiServiceManager.initalOldApiService();
 
@@ -393,7 +397,19 @@ class HomeViewModelImpl extends HomeViewModel {
     appStateSubscription = appStateManager.stream.listen((state) {
       if (state is AppSessionFailed) {
         showLogoutErrorDialog(errorMessage, logout);
+      } else if (state is AppPermissionState) {
+        showPermissionErrorDialog(state.message);
+      } else if (state is AppUnlockFailedState) {
+        LocalAuthManager.auth.stopAuthentication();
+        logout();
       }
+      // else if (state is AppUnlockLogoutState) {
+      //   logout();
+      // }
+    }, onError: (e) {
+      logger.e(e.toString());
+    }, onDone: () {
+      logger.d("app state done");
     });
 
     // ----------------

@@ -4,12 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class WelcomeDialogSheet {
@@ -77,6 +75,7 @@ class WelcomeDialogSheet {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
+                              // TODO(improve): to use $[ExternalUrl];
                               launchUrl(Uri.parse(
                                   "https://proton.me/wallet/legal/terms"));
                             },

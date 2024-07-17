@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/local_auth.dart';
 import 'package:wallet/helper/local_notification.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -52,7 +52,11 @@ class AppViewModelImpl extends AppViewModel {
 
     /// setup local services
     LocalNotification.init();
-    LocalAuth.init();
+
+    /// local auth manager
+    final localAuth = LocalAuthManager();
+    await localAuth.init();
+    serviceManager.register(localAuth);
 
     /// platform channel manager
     final platform = PlatformChannelManager(config.apiEnv);
@@ -96,7 +100,7 @@ class AppViewModelImpl extends AppViewModel {
     serviceManager.register(apiServiceManager);
 
     /// app state manager
-    final appStateManger = AppStateManager();
+    final appStateManger = AppStateManager(storage);
     await appStateManger.init();
     serviceManager.register(appStateManger);
 
