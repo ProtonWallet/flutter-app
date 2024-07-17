@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/models/unlock.type.dart';
+import 'package:wallet/scenes/components/dropdown.button.v3.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/recovery/recovery.section.dart';
 import 'package:wallet/scenes/security.setting/security.setting.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -19,44 +23,49 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
       child: Column(
         children: [
           const SizedBox(height: defaultPadding),
-          GestureDetector(
-              onTap: () {
-                // viewModel.move(NavID.twoFactorAuthSetup); // `TODO`:: add back after fix ui
-              },
-              child: Container(
-                padding: const EdgeInsets.all(defaultPadding),
-                decoration: BoxDecoration(
-                  color: ProtonColors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(18.0)),
-                ),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            S.of(context).setting_2fa_setup,
-                            style:
-                                FontManager.body2Regular(ProtonColors.textNorm),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 12,
-                            color: ProtonColors.textHint,
-                          )
-                        ]),
-                  ],
-                ),
-              )),
+          if (viewModel.error.isNotEmpty)
+            Text(
+              viewModel.error,
+              style: FontManager.body2Regular(ProtonColors.signalError),
+            ),
           const SizedBox(height: 10),
-          DropdownButtonV2(
+          RecoverySection(
+            title: 'Two-factor authentication',
+            description:
+                'Add another layer of security to your account. You’ll need to verify yourself with 2FA every time you sign in.',
+            isLoading: viewModel.isLoading,
+            isSwitched: viewModel.hadSetup2FA,
+            onChanged: (bool newValue) {
+              // try to disable recovery
+              if (!newValue) {
+                viewModel.move(NavID.twoFactorAuthDisable);
+              } else {
+                viewModel.move(NavID.twoFactorAuthSetup);
+              }
+            },
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonV3(
+              padding: const EdgeInsets.only(
+                left: defaultPadding,
+                right: defaultPadding,
+                top: 14,
+                bottom: 14,
+              ),
+              selected: viewModel.selectedType,
               labelText: S.of(context).unlock_with,
               width: MediaQuery.of(context).size.width,
-              items: const ["Face ID", "Biometrics"],
-              itemsText: const ["Face ID", "Biometrics"],
-              valueNotifier: ValueNotifier("Face ID")),
+              items: const [UnlockType.none, UnlockType.biometrics],
+              itemsText: [
+                UnlockType.none.enumToString(),
+                UnlockType.biometrics.enumToString()
+              ],
+              onChanged: (newValue) async {
+                final error = await viewModel.updateType(newValue);
+                if (error.isNotEmpty && context.mounted) {
+                  LocalToast.showErrorToast(context, error);
+                }
+              }),
         ],
       ),
     );

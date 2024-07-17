@@ -11,8 +11,14 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonSettingsClient>>
 abstract class ProtonSettingsClient implements RustOpaqueInterface {
+  Future<ProtonUserSettings> disable2FaTotp(
+      {required ProtonSrpClientProofs req});
+
   Future<String> disableMnemonicSettings(
       {required ProtonSrpClientProofs proofs});
+
+  Future<SetTwoFaTOTPResponseBody> enable2FaTotp(
+      {required SetTwoFaTOTPRequestBody req});
 
   Future<List<ApiMnemonicUserKey>> getMnemonicSettings();
 

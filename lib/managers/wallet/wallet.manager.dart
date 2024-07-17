@@ -291,8 +291,10 @@ class WalletManager implements Manager {
     return mnemonic;
   }
 
-  static Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
-      {int? time}) async {
+  static Future<ProtonExchangeRate> getExchangeRate(
+    FiatCurrency fiatCurrency, {
+    int? time,
+  }) async {
     final ProtonExchangeRate exchangeRate = await proton_api.getExchangeRate(
         fiatCurrency: fiatCurrency,
         time: time == null ? null : BigInt.from(time));
@@ -741,7 +743,7 @@ class WalletManager implements Manager {
       for (var item in jsonList) {
         emails.add(item.values);
       }
-      if (emails.length > 1){
+      if (emails.length > 1) {
         return "${emails.length} recipients";
       } else {
         return emails.join(", ");
@@ -764,7 +766,7 @@ class WalletManager implements Manager {
         if (keys.contains("email") && keys.contains("name")) {
           return emails.join(" - ");
         }
-        if (emails.length > 1){
+        if (emails.length > 1) {
           return "${emails.length} recipients";
         } else {
           return emails.join(", ");

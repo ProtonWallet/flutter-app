@@ -20,6 +20,7 @@ import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.da
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -54,7 +55,7 @@ import 'package:wallet/theme/theme.font.dart';
 const double drawerMaxWidth = 400;
 
 class HomeView extends ViewBase<HomeViewModel> {
-  const HomeView(HomeViewModel viewModel)
+  const HomeView(HomeViewModel viewModel, {super.locker})
       : super(viewModel, const Key("HomeView"));
 
   @override

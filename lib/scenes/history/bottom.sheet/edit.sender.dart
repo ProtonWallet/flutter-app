@@ -101,7 +101,7 @@ class EditSenderSheet {
               //   validation: (String newAccountName) {
               //     // bool accountNameExists = false;
               //
-              //     // TODO(fix): check if accountName already used
+              // TODO(fix): check if accountName already used
               //     // if (accountNameExists) {
               //     //   return S.of(context).account_name_already_used;
               //     // }

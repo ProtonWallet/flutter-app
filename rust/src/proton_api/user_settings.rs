@@ -1,6 +1,7 @@
-pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
-pub use andromeda_api::settings::UserReceiveNotificationEmailTypes;
-pub use andromeda_api::settings::UserSettings as ApiWalletUserSettings;
+pub use andromeda_api::settings::{
+    FiatCurrencySymbol as FiatCurrency, UserReceiveNotificationEmailTypes,
+    UserSettings as ApiWalletUserSettings,
+};
 pub use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;
 

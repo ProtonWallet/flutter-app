@@ -1,3 +1,7 @@
+import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
+import 'package:wallet/managers/local.auth.manager.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -25,7 +29,18 @@ class SecuritySettingCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    final viewModel = SecuritySettingViewModelImpl(this);
+    final appState = serviceManager.get<AppStateManager>();
+    final localAuth = serviceManager.get<LocalAuthManager>();
+    final apiService = serviceManager.get<ProtonApiServiceManager>();
+    final dataProvider = serviceManager.get<DataProviderManager>();
+
+    final viewModel = SecuritySettingViewModelImpl(
+      this,
+      appState,
+      localAuth,
+      apiService.getUsersApiClient(),
+      dataProvider.protonUserDataProvider,
+    );
     widget = SecuritySettingView(
       viewModel,
     );

@@ -6,7 +6,7 @@ import 'package:wallet/scenes/app/app.view.dart';
 import 'package:wallet/scenes/app/app.viewmodel.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/home/navigation.coordinator.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 late ProtonApiService protonApiService; //temp. will need to move to manager
@@ -30,13 +30,16 @@ class AppCoordinator extends Coordinator {
   }
 
   void showHome(ApiEnv env) {
-    final view = HomeNavigationCoordinator(env).start();
+    final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
+    final view = HomeCoordinator(env, nativeViewChannel).start();
+
     pushReplacement(view);
   }
 
   void showWelcome(ApiEnv env) {
     final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
-    final view = WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
+    final view =
+        WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacement(view);
   }
 }
