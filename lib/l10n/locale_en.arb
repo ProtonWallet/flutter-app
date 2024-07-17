@@ -13,9 +13,10 @@
   "tab_history": "History",
   "tab_settings": "Settings",
   "welcome": "Welcome",
-  "welcome_to": "Welcome to Proton Wallet \uD83C\uDF89",
-  "welcome_to_content": "Welcome to your self-custody Bitcoin wallet! Any BTC you buy or receive will be fully controlled by you. Even Proton cannot take or seize your assets.\n\nTo avoid loss of assets from forget password or other access issues, back up your Proton recovery phrase and wallet seed phrase.\n\nWe have also enabled Bitcoin via Email on this wallet so other Proton Wallet users can easily send BTC to {email}.",
-  "welcome_to_confirm_content": "By continuing, you agree to our terms and conditions",
+  "welcome_to": "Welcome to Proton Wallet",
+  "welcome_to_content": "This is a self-custodial Bitcoin wallet, meaning any BTC you buy or receive will be fully controlled by you. Not even Proton can seize your assets.\nTo avoid losing assets due to forgetting your password or other access issues, back up your Proton recovery phrase and wallet seed phrase.\n\nWe have also enabled the Bitcoin via Email feature on this wallet so other Proton Wallet users can easily send BTC to {email}.",
+  "welcome_to_confirm_content": "By continuing, you agree to our ",
+  "welcome_to_term_and_condition": "terms and conditions",
   "welcome_hint": "Here is a checklist to get you started:",
   "@welcome_to": {
     "description": "The welcome message"
@@ -163,6 +164,8 @@
   "wallet_plus": "Upgrade",
   "discover": "Discover",
   "report_a_problem": "Report a problem",
+  "setting_receive_inviter_notification": "Receive Inviter Notification",
+  "setting_receive_bve_notification": "Receive BvE Notification",
   "two_factor_title": "2FA",
   "security": "Security",
   "recovery": "Recovery",

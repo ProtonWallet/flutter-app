@@ -223,7 +223,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       checked:
                                                           hadBackupProtonAccount,
                                                       callback: () {
-                                                        viewModel.move(NavID.recovery);
+                                                        viewModel.move(
+                                                            NavID.recovery);
                                                       }),
                                                   const SizedBox(
                                                     height: 5,
@@ -652,271 +653,288 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
             child: SingleChildScrollView(
                 child: SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 30),
-                          // logo section
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: defaultPadding),
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height,
+                        ),
+                        child: IntrinsicHeight(
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                      "assets/images/icon/logo_text.svg",
+                                children: <Widget>[
+                              const SizedBox(height: 30),
+                              // logo section
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/images/icon/logo_text.svg",
+                                          fit: BoxFit.fill,
+                                          width: 146.41,
+                                          height: 18),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                    ]),
+                              ),
+                              //account info section
+                              AccountInfoV2(
+                                  displayName: viewModel.displayName,
+                                  userEmail: viewModel.userEmail),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(thickness: 0.2),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: defaultPadding),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          S.of(context).wallets,
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textHint),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () {
+                                              if (state.walletsModel.length <
+                                                  freeUserWalletLimit) {
+                                                if (viewModel.currentSize ==
+                                                    ViewSize.mobile) {
+                                                  Navigator.of(context).pop();
+                                                }
+                                                viewModel.nameTextController
+                                                    .text = "";
+                                                viewModel
+                                                    .passphraseTextController
+                                                    .text = "";
+                                                viewModel
+                                                    .passphraseConfirmTextController
+                                                    .text = "";
+                                                OnboardingGuideSheet.show(
+                                                    context, viewModel);
+                                              } else {
+                                                UpgradeIntroSheet.show(
+                                                    context, viewModel);
+                                              }
+                                            },
+                                            child: SvgPicture.asset(
+                                                "assets/images/icon/ic-plus-circle.svg",
+                                                fit: BoxFit.fill,
+                                                width: 20,
+                                                height: 20)),
+                                      ])),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              // wallet
+                              SidebarWalletItems(
+                                walletListBloc: viewModel.walletListBloc,
+                                // select wallet
+                                selectAccount: (wallet, account) {
+                                  if (viewModel.currentSize ==
+                                      ViewSize.mobile) {
+                                    Navigator.of(context).pop();
+                                  }
+                                  viewModel.selectAccount(wallet, account);
+                                },
+                                selectWallet: (wallet) {
+                                  if (viewModel.currentSize ==
+                                      ViewSize.mobile) {
+                                    Navigator.of(context).pop();
+                                  }
+                                  viewModel.selectWallet(wallet);
+                                },
+
+                                /// delete wallet when un valid
+                                onDelete: (
+                                  wallet, {
+                                  required hasBalance,
+                                  required isInvalidWallet,
+                                }) {
+                                  DeleteWalletSheet.show(
+                                    context,
+                                    viewModel,
+                                    wallet,
+                                    hasBalance: false,
+                                    isInvalidWallet: true,
+                                  );
+                                },
+
+                                /// update passphrase
+                                updatePassphrase: (wallet) {
+                                  PassphraseSheet.show(
+                                    context,
+                                    viewModel,
+                                    wallet,
+                                  );
+                                },
+
+                                /// add new account into wallet
+                                addAccount: (wallet) {
+                                  AddWalletAccountSheet.show(
+                                      context, viewModel, wallet);
+                                },
+                                viewModel: viewModel,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Divider(thickness: 0.2),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: defaultPadding),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(S.of(context).more,
+                                            style: FontManager.body2Regular(
+                                                ProtonColors.textHint)),
+                                      ])),
+                              ListTile(
+                                  onTap: () async {
+                                    UpgradeIntroSheet.show(context, viewModel);
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-diamondwallet_plus.svg",
                                       fit: BoxFit.fill,
-                                      width: 146.41,
-                                      height: 18),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ]),
-                          ),
-                          //account info section
-                          AccountInfoV2(
-                              displayName: viewModel.displayName,
-                              userEmail: viewModel.userEmail),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Divider(thickness: 0.2),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: defaultPadding),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      S.of(context).wallets,
-                                      style: FontManager.body2Regular(
-                                          ProtonColors.textHint),
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).wallet_plus,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.drawerWalletPlus)))),
+                              ListTile(
+                                  onTap: () {
+                                    if (viewModel.currentSize ==
+                                        ViewSize.mobile) {
+                                      Navigator.of(context).pop();
+                                    }
+                                    viewModel.move(NavID.discover);
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-squares-in-squarediscover.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).discover,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)))),
+                              ListTile(
+                                  onTap: () {
+                                    if (viewModel.currentSize ==
+                                        ViewSize.mobile) {
+                                      Navigator.of(context).pop();
+                                    }
+                                    viewModel.move(NavID.settings);
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-cog-wheel.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).settings_title,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)))),
+                              ListTile(
+                                  onTap: () {
+                                    if (viewModel.currentSize ==
+                                        ViewSize.mobile) {
+                                      Navigator.of(context).pop();
+                                    }
+                                    viewModel.move(NavID.securitySetting);
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-shield.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).security,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)))),
+                              ListTile(
+                                  onTap: () {
+                                    if (viewModel.currentSize ==
+                                        ViewSize.mobile) {
+                                      Navigator.of(context).pop();
+                                    }
+                                    viewModel.move(NavID.recovery);
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-arrow-rotate-right.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).recovery,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)))),
+                              // ListTile(
+                              //     onTap: () {
+                              //       viewModel.move(NavID.natvieReportBugs);
+                              //     },
+                              //     leading: SvgPicture.asset(
+                              //         "assets/images/icon/ic-bugreport.svg",
+                              //         fit: BoxFit.fill,
+                              //         width: 20,
+                              //         height: 20),
+                              //     title: Transform.translate(
+                              //         offset: const Offset(-8, 0),
+                              //         child: Text(S.of(context).report_a_problem,
+                              //             style: FontManager.body2Median(
+                              //                 ProtonColors.textHint)))),
+                              ListTile(
+                                  onTap: () async {
+                                    await viewModel.logout();
+                                  },
+                                  leading: SvgPicture.asset(
+                                      "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
+                                      fit: BoxFit.fill,
+                                      width: 20,
+                                      height: 20),
+                                  title: Transform.translate(
+                                      offset: const Offset(-8, 0),
+                                      child: Text(S.of(context).logout,
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)))),
+                              const SizedBox(height: 10),
+                              const Expanded(
+                                child: SizedBox(height: 20),
+                              ),
+
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    viewModel.appVersion,
+                                    style: FontManager.captionRegular(
+                                      ProtonColors.textHint,
                                     ),
-                                    GestureDetector(
-                                        onTap: () {
-                                          if (state.walletsModel.length <
-                                              freeUserWalletLimit) {
-                                            if (viewModel.currentSize ==
-                                                ViewSize.mobile) {
-                                              Navigator.of(context).pop();
-                                            }
-                                            viewModel.nameTextController.text =
-                                                "";
-                                            viewModel.passphraseTextController
-                                                .text = "";
-                                            viewModel
-                                                .passphraseConfirmTextController
-                                                .text = "";
-                                            OnboardingGuideSheet.show(
-                                                context, viewModel);
-                                          } else {
-                                            UpgradeIntroSheet.show(
-                                                context, viewModel);
-                                          }
-                                        },
-                                        child: SvgPicture.asset(
-                                            "assets/images/icon/ic-plus-circle.svg",
-                                            fit: BoxFit.fill,
-                                            width: 20,
-                                            height: 20)),
-                                  ])),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          // wallet
-                          SidebarWalletItems(
-                            walletListBloc: viewModel.walletListBloc,
-                            // select wallet
-                            selectAccount: (wallet, account) {
-                              if (viewModel.currentSize == ViewSize.mobile) {
-                                Navigator.of(context).pop();
-                              }
-                              viewModel.selectAccount(wallet, account);
-                            },
-                            selectWallet: (wallet) {
-                              if (viewModel.currentSize == ViewSize.mobile) {
-                                Navigator.of(context).pop();
-                              }
-                              viewModel.selectWallet(wallet);
-                            },
-
-                            /// delete wallet when un valid
-                            onDelete: (
-                              wallet, {
-                              required hasBalance,
-                              required isInvalidWallet,
-                            }) {
-                              DeleteWalletSheet.show(
-                                context,
-                                viewModel,
-                                wallet,
-                                hasBalance: false,
-                                isInvalidWallet: true,
-                              );
-                            },
-
-                            /// update passphrase
-                            updatePassphrase: (wallet) {
-                              PassphraseSheet.show(
-                                context,
-                                viewModel,
-                                wallet,
-                              );
-                            },
-
-                            /// add new account into wallet
-                            addAccount: (wallet) {
-                              AddWalletAccountSheet.show(
-                                  context, viewModel, wallet);
-                            },
-                            viewModel: viewModel,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Divider(thickness: 0.2),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: defaultPadding),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(S.of(context).more,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textHint)),
-                                  ])),
-                          ListTile(
-                              onTap: () async {
-                                UpgradeIntroSheet.show(context, viewModel);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-diamondwallet_plus.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).wallet_plus,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.drawerWalletPlus)))),
-                          ListTile(
-                              onTap: () {
-                                if (viewModel.currentSize == ViewSize.mobile) {
-                                  Navigator.of(context).pop();
-                                }
-                                viewModel.move(NavID.discover);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-squares-in-squarediscover.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).discover,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
-                          ListTile(
-                              onTap: () {
-                                if (viewModel.currentSize == ViewSize.mobile) {
-                                  Navigator.of(context).pop();
-                                }
-                                viewModel.move(NavID.settings);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-cog-wheel.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).settings_title,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
-                          ListTile(
-                              onTap: () {
-                                if (viewModel.currentSize == ViewSize.mobile) {
-                                  Navigator.of(context).pop();
-                                }
-                                viewModel.move(NavID.securitySetting);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-shield.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).security,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
-                          ListTile(
-                              onTap: () {
-                                if (viewModel.currentSize == ViewSize.mobile) {
-                                  Navigator.of(context).pop();
-                                }
-                                viewModel.move(NavID.recovery);
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-arrow-rotate-right.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).recovery,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
-                          // ListTile(
-                          //     onTap: () {
-                          //       viewModel.move(NavID.natvieReportBugs);
-                          //     },
-                          //     leading: SvgPicture.asset(
-                          //         "assets/images/icon/ic-bugreport.svg",
-                          //         fit: BoxFit.fill,
-                          //         width: 20,
-                          //         height: 20),
-                          //     title: Transform.translate(
-                          //         offset: const Offset(-8, 0),
-                          //         child: Text(S.of(context).report_a_problem,
-                          //             style: FontManager.body2Median(
-                          //                 ProtonColors.textHint)))),
-                          ListTile(
-                              onTap: () async {
-                                await viewModel.logout();
-                              },
-                              leading: SvgPicture.asset(
-                                  "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
-                                  fit: BoxFit.fill,
-                                  width: 20,
-                                  height: 20),
-                              title: Transform.translate(
-                                  offset: const Offset(-8, 0),
-                                  child: Text(S.of(context).logout,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textHint)))),
-                          const SizedBox(height: 20),
-
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                viewModel.appVersion,
-                                style: FontManager.captionRegular(
-                                  ProtonColors.textHint,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ]))));
+                              const SizedBox(height: 10),
+                            ]))))));
       });
 }
 

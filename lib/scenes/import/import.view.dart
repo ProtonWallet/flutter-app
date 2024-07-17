@@ -1,4 +1,3 @@
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
@@ -83,12 +82,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                               .map(FiatCurrencyHelper.getFullName)
                               .toList(),
                           itemsLeadingIcons: fiatCurrencies
-                              .map((v) => CountryFlag.fromCountryCode(
-                                    FiatCurrencyHelper.toCountryCode(v),
-                                    shape: const Circle(),
-                                    width: 20,
-                                    height: 20,
-                                  ))
+                              .map(CommonHelper.getCountryIcon)
                               .toList(),
                           valueNotifier: viewModel.fiatCurrencyNotifier),
                       SizedBoxes.box12,
@@ -159,7 +153,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                                 if (viewModel.errorMessage.isEmpty) {
-                                  if (viewModel.isFirstWallet) {
+                                  if (viewModel.isFirstWallet &&
+                                      !viewModel.acceptTermsAndConditions) {
                                     WelcomeDialogSheet.show(
                                         context,
                                         viewModel.protonAddresses.firstOrNull

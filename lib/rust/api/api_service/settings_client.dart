@@ -28,5 +28,9 @@ abstract class SettingsClient implements RustOpaqueInterface {
       RustLib.instance.api
           .crateApiApiServiceSettingsClientSettingsClientNew(service: service);
 
+  Future<ApiWalletUserSettings> receiveNotificationEmail(
+      {required UserReceiveNotificationEmailTypes emailType,
+      required bool isEnable});
+
   Future<ApiWalletUserSettings> twoFaThreshold({required BigInt amount});
 }

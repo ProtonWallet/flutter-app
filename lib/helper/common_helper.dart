@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/coin_type.dart';
@@ -48,6 +50,24 @@ class CommonHelper {
       return "${str.substring(0, n)}..";
     }
     return str.substring(0, n);
+  }
+
+  static Widget getCountryIcon(FiatCurrency fiatCurrency) {
+    return fiatCurrency == FiatCurrency.eur
+        ? SizedBox(
+            width: 20,
+            height: 20,
+            child: ClipOval(
+              child: SvgPicture.asset("assets/images/icon/euro.svg",
+                  fit: BoxFit.cover, width: 20, height: 20),
+            ),
+          )
+        : CountryFlag.fromCountryCode(
+            FiatCurrencyHelper.toCountryCode(fiatCurrency),
+            shape: const Circle(),
+            width: 20,
+            height: 20,
+          );
   }
 
   static bool isBitcoinAddress(String bitcoinAddress) {

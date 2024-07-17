@@ -46,6 +46,7 @@ class HistoryDetailCoordinator extends Coordinator {
       apiServiceManager.getApiService().getWalletClient(),
       dataProviderManager.walletKeysProvider,
       dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.contactsDataProvider,
     );
     widget = HistoryDetailView(
       viewModel,

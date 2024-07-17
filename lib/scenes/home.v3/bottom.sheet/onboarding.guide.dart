@@ -1,4 +1,3 @@
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -87,12 +86,7 @@ class OnboardingGuideSheet {
                                 .map(FiatCurrencyHelper.getFullName)
                                 .toList(),
                             itemsLeadingIcons: fiatCurrencies
-                                .map((v) => CountryFlag.fromCountryCode(
-                                      FiatCurrencyHelper.toCountryCode(v),
-                                      shape: const Circle(),
-                                      width: 20,
-                                      height: 20,
-                                    ))
+                                .map(CommonHelper.getCountryIcon)
                                 .toList(),
                             valueNotifier: viewModel.fiatCurrencyNotifier),
                         const SizedBox(height: 10),
@@ -237,7 +231,9 @@ class OnboardingGuideSheet {
                                                 .passphrase_are_not_match);
                                       }
                                       isCreatingWallet = false;
-                                      if (context.mounted && firstWallet) {
+                                      if (context.mounted &&
+                                          firstWallet &&
+                                          !viewModel.acceptTermsAndConditions) {
                                         WelcomeDialogSheet.show(
                                           context,
                                           viewModel.userEmail,
