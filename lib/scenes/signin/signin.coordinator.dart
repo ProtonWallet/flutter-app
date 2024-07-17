@@ -1,11 +1,12 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home/navigation.coordinator.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/scenes/signin/signin.view.dart';
 import 'package:wallet/scenes/signin/signin.viewmodel.dart';
 
@@ -15,7 +16,8 @@ class SigninCoordinator extends Coordinator {
   void end() {}
 
   void showHome(ApiEnv env) {
-    final view = HomeNavigationCoordinator(env).start();
+    final nativeViewChannel = serviceManager.get<PlatformChannelManager>();
+    final view = HomeCoordinator(env, nativeViewChannel).start();
     pushReplacement(view);
   }
 

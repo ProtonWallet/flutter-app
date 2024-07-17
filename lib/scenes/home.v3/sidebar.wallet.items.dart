@@ -10,6 +10,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';

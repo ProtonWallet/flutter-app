@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 pub use andromeda_api::core::ApiClient;
+use andromeda_api::invite::InviteNotificationType;
 
 use crate::BridgeError;
 
@@ -22,18 +23,34 @@ impl InviteClient {
     pub async fn send_email_integration_invite(
         &self,
         invitee_email: String,
+        inviter_address_id: String,
     ) -> Result<(), BridgeError> {
         Ok(self
             .inner
-            .send_email_integration_invite(invitee_email)
+            .send_email_integration_invite(invitee_email, inviter_address_id)
             .await?)
     }
 
-    pub async fn send_newcomer_invite(&self, invitee_email: String) -> Result<(), BridgeError> {
-        Ok(self.inner.send_newcomer_invite(invitee_email).await?)
+    pub async fn send_newcomer_invite(
+        &self,
+        invitee_email: String,
+        inviter_address_id: String,
+    ) -> Result<(), BridgeError> {
+        Ok(self
+            .inner
+            .send_newcomer_invite(invitee_email, inviter_address_id)
+            .await?)
     }
 
-    pub async fn check_invite_status(&self, invitee_email: String) -> Result<(), BridgeError> {
-        Ok(self.inner.check_invite_status(invitee_email).await?)
+    pub async fn check_invite_status(
+        &self,
+        invitee_email: String,
+        invite_notification_type: InviteNotificationType,
+        inviter_address_id: String,
+    ) -> Result<u8, BridgeError> {
+        Ok(self
+            .inner
+            .check_invite_status(invitee_email, invite_notification_type, inviter_address_id)
+            .await?)
     }
 }

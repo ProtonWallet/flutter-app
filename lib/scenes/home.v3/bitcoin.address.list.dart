@@ -8,6 +8,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/components/custom.loading.with.child.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';

@@ -2,7 +2,8 @@ use flutter_rust_bridge::frb;
 
 pub use andromeda_api::{
     proton_settings::{
-        ApiMnemonicUserKey, MnemonicAuth, MnemonicUserKey, UpdateMnemonicSettingsRequestBody,
+        ApiMnemonicUserKey, MnemonicAuth, MnemonicUserKey, SetTwoFaTOTPRequestBody,
+        SetTwoFaTOTPResponseBody, UpdateMnemonicSettingsRequestBody,
     },
     proton_users::{
         EmailSettings, EmptyResponseBody, FlagsSettings, GetAuthInfoResponseBody,
@@ -194,4 +195,19 @@ pub struct _ProtonUserSettings {
     pub HideSidePanel: u32,
     pub HighSecurity: HighSecuritySettings,
     pub SessionAccountRecovery: u32,
+}
+
+#[frb(mirror(SetTwoFaTOTPResponseBody))]
+#[allow(non_snake_case)]
+pub struct _SetTwoFaTOTPResponseBody {
+    pub Code: u32,
+    pub TwoFactorRecoveryCodes: Vec<String>,
+    pub UserSettings: ProtonUserSettings,
+}
+
+#[frb(mirror(SetTwoFaTOTPRequestBody))]
+#[allow(non_snake_case)]
+pub struct _SetTwoFaTOTPRequestBody {
+    pub TOTPConfirmation: String,
+    pub TOTPSharedSecret: String,
 }

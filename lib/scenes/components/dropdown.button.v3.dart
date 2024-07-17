@@ -1,148 +1,206 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
+import 'package:wallet/theme/theme.font.dart';
 
-class DropdownButtonV3 extends StatefulWidget {
-  const DropdownButtonV3({super.key});
-  @override
-  CurrencyInputExampleState createState() => CurrencyInputExampleState();
-}
+class DropdownButtonV3<T> extends StatelessWidget {
+  final double width;
+  final List<T> items;
+  final List<String> itemsText;
+  final List? itemsLeadingIcons;
+  final List? itemsTextForDisplay;
+  final List? itemsMoreDetail;
+  final String? defaultOption;
+  final String? labelText;
+  final double? maxSuffixIconWidth;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
+  final T selected;
+  final void Function(T) onChanged;
 
-class CurrencyInputExampleState extends State<DropdownButtonV3> {
-  // final _formKey = GlobalKey<FormState>();
-  // final _moneyController = TextEditingController();
-  // final String _selectedRecommendation = 'Ramp';
-
-  // final FiatCurrencyInfo _selectedCountry = FiatCurrencyInfo(
-  // name: 'Swiss Franc', symbol: 'chf', sign: 'Fr', cents: 100);
-
-  // final Map<FiatCurrency, FiatCurrencyInfo> _countries = fiatCurrency2Info;
-  // final List<String> _recommendations = ['Ramp', 'Option 2', 'Option 3'];
-
-  @override
-  void initState() {
-    super.initState();
-    // _countries = FiatCurrency.values.map((e) => e.toString()).toList();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  DropdownButtonV3({
+    required this.width,
+    required this.items,
+    required this.itemsText,
+    required this.selected,
+    required this.onChanged,
+    super.key,
+    this.itemsTextForDisplay,
+    this.itemsMoreDetail,
+    this.labelText,
+    this.backgroundColor,
+    this.defaultOption,
+    this.padding,
+    this.textStyle,
+    this.maxSuffixIconWidth = 24,
+    this.itemsLeadingIcons,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              inputFormatters: [
-                CurrencyTextInputFormatter.currency(
-                  locale: 'ko',
-                  decimalDigits: 0,
-                  symbol: 'KRW(원)',
-                ),
-              ],
-              keyboardType: TextInputType.number,
+    _textEditingController.text = getDisplayText(items.indexOf(selected));
+    return items.isNotEmpty
+        ? buildWithList(context)
+        : Text(S.of(context).no_data);
+  }
+
+  final TextEditingController _textEditingController = TextEditingController();
+
+  String getDisplayText(int index) {
+    try {
+      if (itemsTextForDisplay != null) {
+        return itemsTextForDisplay![index];
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return itemsText[index];
+  }
+
+  Widget buildWithList(BuildContext context) {
+    return Container(
+        width: width,
+        padding: padding ??
+            const EdgeInsets.only(
+              left: defaultPadding,
+              right: defaultPadding,
+              top: 4,
+              bottom: 4,
+            ),
+        decoration: BoxDecoration(
+          color: backgroundColor ?? ProtonColors.white,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: TextField(
+          controller: _textEditingController,
+          readOnly: true,
+          onTap: () {
+            showOptionsInBottomSheet(context);
+          },
+          style: textStyle ?? FontManager.body1Median(ProtonColors.textNorm),
+          decoration: InputDecoration(
+            enabledBorder: InputBorder.none,
+            border: InputBorder.none,
+            labelText: labelText,
+            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+            suffixIconConstraints: BoxConstraints(
+              maxWidth: maxSuffixIconWidth ?? 24.0,
+            ),
+            contentPadding: EdgeInsets.only(
+              top: 4,
+              bottom: padding != null ? 2 : 16,
+            ),
+            suffixIcon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: ProtonColors.textWeak,
+              size: 24,
             ),
           ),
-          const SizedBox(width: 8),
-          // DropdownButton<FiatCurrencyInfo>(
-          //   value: _selectedCountry,
-          //   onChanged: (FiatCurrencyInfo? newValue) {
-          //     setState(() {
-          //       _selectedCountry = newValue!;
-          //       // _updateMoneyController(); // Update the formatting when the country changes
-          //     });
-          //   },
-          //   items: fiatCurrency2Info.values
-          //       .map<DropdownMenuItem<FiatCurrencyInfo>>(
-          //           (FiatCurrencyInfo value) {
-          //     return DropdownMenuItem<FiatCurrencyInfo>(
-          //       value: value,
-          //       child: Row(
-          //         children: [
-          //           const Icon(Icons.attach_money),
-          //           const SizedBox(width: 4),
-          //           Text(value.toString()),
-          //         ],
-          //       ),
-          //     );
-          //   }).toList(),
-          // ),
-        ],
+        ));
+  }
+
+  void showOptionsInBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: ProtonColors.white,
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width,
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+            child: Container(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: IntrinsicHeight(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              /// Title and close
+              Row(
+                children: [
+                  Expanded(child: Center(child: Text(labelText ?? ""))),
+                  CloseButtonV1(
+                    backgroundColor: ProtonColors.backgroundProton,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+
+              ///
+              const SizedBox(height: 6),
+
+              /// List of items
+              Expanded(
+                child: SingleChildScrollView(
+                    child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    ...List.generate(items.length, (index) {
+                      return Column(children: [
+                        ListTile(
+                          trailing: selected == items[index]
+                              ? Assets.images.icon.icCheckmark
+                                  .svg(fit: BoxFit.fill, width: 20, height: 20)
+                              : null,
+                          leading: itemsMoreDetail != null
+                              ? CustomTooltip(
+                                  message: itemsMoreDetail![index],
+                                  child: Assets.images.icon.icInfoCircle.svg(
+                                    fit: BoxFit.fill,
+                                    width: 20,
+                                    height: 20,
+                                  ))
+                              : null,
+                          title: itemsLeadingIcons != null
+                              ? Row(
+                                  children: [
+                                    itemsLeadingIcons?[index],
+                                    const SizedBox(
+                                      width: 6,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        itemsText[index],
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textNorm),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  itemsText[index],
+                                  style: FontManager.body2Regular(
+                                    ProtonColors.textNorm,
+                                  ),
+                                ),
+                          onTap: () {
+                            onChanged(items[index]);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const Divider(thickness: 0.2, height: 1)
+                      ]);
+                    })
+                  ],
+                )),
+              ),
+            ]),
+          ),
+        ));
+      },
     );
-
-    // return const Text("123123123213");
-    // return Padding(
-    //   padding: const EdgeInsets.all(16.0),
-    //   child: Form(
-    //     key: _formKey,
-    //     child: Row(
-    //       children: [
-    //         Row(
-    //           children: [
-    //             Expanded(
-    //               child: TextFormField(
-    //                 controller: _moneyController,
-    //                 decoration: const InputDecoration(labelText: 'You pay'),
-    //                 keyboardType: TextInputType.number,
-    //                 inputFormatters: [
-    //                   FilteringTextInputFormatter.allow(
-    //                       RegExp(r'^\d+\.?\d{0,2}')),
-    //                 ],
-    //                 validator: (value) {
-    //                   if (value == null || value.isEmpty) {
-    //                     return 'Please enter an amount';
-    //                   }
-    //                   if (double.tryParse(value) == null) {
-    //                     return 'Please enter a valid number';
-    //                   }
-    //                   return null;
-    //                 },
-    //               ),
-    //             ),
-    //             const SizedBox(width: 8),
-    //             DropdownButton<String>(
-    //               value: _selectedCountry,
-    //               onChanged: (String? newValue) {
-    //                 setState(() {
-    //                   _selectedCountry = newValue!;
-    //                   _updateMoneyController(); // Update the formatting when the country changes
-    //                 });
-    //               },
-    //               items:
-    //                   _countries.map<DropdownMenuItem<String>>((String value) {
-
-    //           ],
-    //         ),
-    //         const SizedBox(height: 20),
-    //         Row(
-    //           children: [
-    //             Expanded(
-    //               child: DropdownButtonFormField<String>(
-    //                 value: _selectedRecommendation,
-    //                 decoration: const InputDecoration(labelText: 'Recommended'),
-    //                 onChanged: (String? newValue) {
-    //                   setState(() {
-    //                     _selectedRecommendation = newValue!;
-    //                   });
-    //                 },
-    //                 items: _recommendations
-    //                     .map<DropdownMenuItem<String>>((String value) {
-    //                   return DropdownMenuItem<String>(
-    //                     value: value,
-    //                     child: Text(value),
-    //                   );
-    //                 }).toList(),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -44,6 +43,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 title: 'Subscription',
                 subtitle: 'free',
                 onTap: () {},
+                hidden: true,
               ),
               SettingsItem(
                 title: 'Sentinel Settings',
@@ -73,14 +73,17 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 title: 'Theme',
                 subtitle: 'System default / Light / Dark',
                 onTap: () {},
+                hidden: true,
               ),
               SettingsItem(
                 title: 'Default Browser',
                 subtitle: 'System default',
+                hidden: true,
                 onTap: () {},
               ),
               SettingsItem(
                 title: 'Languages',
+                hidden: true,
                 onTap: () {},
               ),
               SettingsItem(
@@ -125,10 +128,12 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 title: 'Force reload the application',
                 subtitle: 'Wipe cache and reload',
                 onTap: () {},
+                hidden: true,
               ),
               SettingsItem(
                 title: 'Clear all logs',
                 onTap: () {},
+                hidden: true,
               ),
             ],
           ),
@@ -148,6 +153,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 onTap: () {
                   viewModel.move(NavID.natvieReportBugs);
                 },
+                hidden: TargetPlatform.iOS == defaultTargetPlatform,
               ),
               SettingsItem(
                 title: 'Privacy policy',
@@ -168,7 +174,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   fit: BoxFit.fill,
                 ),
                 onTap: () {
-                  ExternalUrl.shared.lanuchPrivacy();
+                  ExternalUrl.shared.lanuchTerms();
                 },
               ),
               SettingsItem(

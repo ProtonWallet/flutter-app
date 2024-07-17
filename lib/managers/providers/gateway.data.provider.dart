@@ -168,7 +168,6 @@ class GatewayDataProvider extends DataProvider {
     //     quoted[entry.key] = entry.value;
     //   }
     // }
-
     return quotes;
   }
 

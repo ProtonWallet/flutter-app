@@ -11,6 +11,7 @@ import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';

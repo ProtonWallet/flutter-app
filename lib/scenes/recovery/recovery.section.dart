@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 

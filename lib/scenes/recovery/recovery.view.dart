@@ -76,7 +76,7 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                   ),
 
                   const SizedBox(height: 8),
-                  /// TODO(fix): check if we need to put `Wallet recovery` here
+                  // TODO(fix): check if we need to put `Wallet recovery` here
                   // RecoverySection(
                   //   title: 'Wallet recovery seed',
                   //   description:

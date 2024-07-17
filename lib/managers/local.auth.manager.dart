@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/manager.dart';
 
-class LocalAuth {
+class LocalAuthManager implements Manager {
   static bool _initialized = false;
-  static bool _canCheckBiometrics = false;
+  bool canCheckBiometrics = false;
   static final LocalAuthentication auth = LocalAuthentication();
 
   static bool isPlatformSupported() {
@@ -19,34 +20,55 @@ class LocalAuth {
     return false;
   }
 
-  static Future<void> init() async {
+  @override
+  Future<void> init() async {
     if (!isPlatformSupported()) {
       return;
     }
     if (!_initialized) {
       _initialized = true;
       try {
-        _canCheckBiometrics = await auth.canCheckBiometrics;
+        canCheckBiometrics = await auth.canCheckBiometrics;
       } on PlatformException catch (e) {
         logger.e(e);
       }
     }
   }
 
-  static Future<bool> authenticate(String hint) async {
+  Future<bool> authenticate(String hint) async {
     if (!isPlatformSupported()) {
       return false;
     }
-    if (!_canCheckBiometrics) {
+    if (!canCheckBiometrics) {
       return false;
     }
+    // final checkable = await auth.canCheckBiometrics;
     bool authenticated = false;
     try {
-      authenticated = await auth.authenticate(localizedReason: hint);
+      const option = AuthenticationOptions(
+        biometricOnly: true,
+      );
+      authenticated =
+          await auth.authenticate(localizedReason: hint, options: option);
     } on PlatformException catch (e) {
       logger.e(e);
       return false;
     }
     return authenticated;
   }
+
+  @override
+  Future<void> dispose() {
+    // TODO(fix): implement dispose
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> login(String userID) {
+    // TODO(fix): implement login
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> logout() async {}
 }
