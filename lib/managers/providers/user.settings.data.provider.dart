@@ -85,6 +85,16 @@ class UserSettingsDataProvider extends DataProvider {
     return settings;
   }
 
+  Future<void> loadFromServer() async {
+    try {
+      final ApiWalletUserSettings apiSettings =
+          await settingsClient.getUserSettings();
+      insertUpdate(apiSettings);
+    } catch (e, stacktrace) {
+      logger.e("error: $e, stacktrace: $stacktrace");
+    }
+  }
+
   Future<WalletUserSettings?> getSettings() async {
     if (settingsData != null) {
       return settingsData;
@@ -96,13 +106,8 @@ class UserSettingsDataProvider extends DataProvider {
     }
 
     // try to fetch from server:
-    try {
-      final ApiWalletUserSettings apiSettings =
-          await settingsClient.getUserSettings();
-      insertUpdate(apiSettings);
-    } catch (e, stacktrace) {
-      logger.e("error: $e, stacktrace: $stacktrace");
-    }
+    await loadFromServer();
+
     settingsData = await _getFromDB();
     if (settingsData != null) {
       return settingsData;
@@ -116,8 +121,12 @@ class UserSettingsDataProvider extends DataProvider {
     bitcoinUnitUpdateController.add(BitcoinUnitDataUpdated());
   }
 
-  void acceptTermsAndConditions() {
-    settingsClient.acceptTermsAndConditions();
+  Future<void> acceptTermsAndConditions() async {
+    await settingsClient.acceptTermsAndConditions();
+
+    /// reload local db and cache
+    await loadFromServer();
+    settingsData = await _getFromDB();
   }
 
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
@@ -132,6 +141,12 @@ class UserSettingsDataProvider extends DataProvider {
           hideEmptyUsedAddresses: settings.hideEmptyUsedAddresses ? 1 : 0,
           twoFactorAmountThreshold:
               BigInt.from(settings.twoFactorAmountThreshold),
+          receiveInviterNotification:
+              settings.receiveInviterNotification ? 1 : 0,
+          receiveEmailIntegrationNotification:
+              settings.receiveEmailIntegrationNotification ? 1 : 0,
+          walletCreated: settings.walletCreated ? 1 : 0,
+          acceptTermsAndConditions: settings.acceptTermsAndConditions ? 1 : 0,
         ));
         final ProtonExchangeRate exchangeRate =
             await ExchangeRateService.getExchangeRate(fiatCurrency);
@@ -139,6 +154,20 @@ class UserSettingsDataProvider extends DataProvider {
       }
       fiatCurrencyUpdateController.add(FiatCurrencyDataUpdated());
     }
+  }
+
+  Future<void> updateReceiveEmailIntegrationNotification(isEnable) async {
+    await settingsClient.receiveNotificationEmail(emailType: UserReceiveNotificationEmailTypes.emailIntegration, isEnable: isEnable);
+    /// reload local db and cache
+    await loadFromServer();
+    settingsData = await _getFromDB();
+  }
+
+  Future<void> updateReceiveInviterNotification(isEnable) async {
+    await settingsClient.receiveNotificationEmail(emailType: UserReceiveNotificationEmailTypes.notificationToInviter, isEnable: isEnable);
+    /// reload local db and cache
+    await loadFromServer();
+    settingsData = await _getFromDB();
   }
 
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
@@ -159,6 +188,11 @@ class UserSettingsDataProvider extends DataProvider {
       twoFactorAmountThreshold: (settings.twoFactorAmountThreshold ??
               BigInt.from(defaultTwoFactorAmountThreshold))
           .toDouble(),
+      receiveInviterNotification: settings.receiveInviterNotification == 1,
+      receiveEmailIntegrationNotification:
+          settings.receiveEmailIntegrationNotification == 1,
+      walletCreated: settings.walletCreated == 1,
+      acceptTermsAndConditions: settings.acceptTermsAndConditions == 1,
     ));
     settingsData = await _getFromDB();
     dataUpdateController.add(UserSettingDataUpdated());

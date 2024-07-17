@@ -15,6 +15,7 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -25,6 +26,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
+import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
@@ -55,11 +57,13 @@ abstract class HistoryDetailViewModel
     this.txID,
     this.userFiatCurrency,
     this.userSettingsDataProvider,
+      this.contactsDataProvider,
   );
 
   String strWallet = "";
   String strAccount = "";
   List<String> addresses = [];
+  List<ContactsModel> contactsEmail = [];
   List<TransactionInfoModel> recipients = [];
   int? transactionTime;
   double amount = 0.0;
@@ -82,6 +86,8 @@ abstract class HistoryDetailViewModel
   bool isRecipientsFromBlockChain = false;
   String? selfBitcoinAddress;
   final UserSettingsDataProvider userSettingsDataProvider;
+  // contact data provider
+  final ContactsDataProvider contactsDataProvider;
   late ScrollController scrollController;
 
   void editMemo();
@@ -105,6 +111,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.walletClient,
     this.walletKeysProvider,
     super.userSettingsDataProvider,
+      super.contactsDataProvider,
   );
 
   late FrbAccount _frbAccount;
@@ -132,6 +139,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode = FocusNode();
     memoFocusNode.addListener(userFinishMemo);
     scrollController = ScrollController();
+
+    contactsEmail = await contactsDataProvider.getContacts() ?? [];
 
     if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();

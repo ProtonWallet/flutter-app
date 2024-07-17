@@ -1,4 +1,5 @@
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -9,6 +10,7 @@ import 'package:wallet/scenes/settings/settings.viewmodel.dart';
 
 class SettingsCoordinator extends Coordinator {
   late ViewBase widget;
+
   @override
   void end() {}
 
@@ -21,10 +23,12 @@ class SettingsCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final userManager = serviceManager.get<UserManager>();
     final nativeChannel = serviceManager.get<PlatformChannelManager>();
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
     final viewModel = SettingsViewModelImpl(
       this,
       userManager,
       nativeChannel,
+      dataProviderManager.userSettingsDataProvider,
     );
     widget = SettingsView(
       viewModel,

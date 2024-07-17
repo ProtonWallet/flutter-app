@@ -1,7 +1,16 @@
 pub use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
+pub use andromeda_api::settings::UserReceiveNotificationEmailTypes;
 pub use andromeda_api::settings::UserSettings as ApiWalletUserSettings;
 pub use andromeda_common::BitcoinUnit;
 use flutter_rust_bridge::frb;
+
+#[frb(mirror(UserReceiveNotificationEmailTypes))]
+pub enum _UserReceiveNotificationEmailTypes {
+    NotificationToInviter = 1,
+    EmailIntegration = 2,
+    TransactionalBvE = 4,
+    Unsupported = 99,
+}
 
 #[frb(mirror(FiatCurrency))]
 pub enum _FiatCurrency {

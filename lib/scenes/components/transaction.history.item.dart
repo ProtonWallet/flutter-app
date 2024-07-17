@@ -41,7 +41,7 @@ class TransactionHistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(defaultPadding),
+      padding: const EdgeInsets.symmetric(vertical: defaultPadding),
       color: backgroundColor ?? ProtonColors.backgroundProton,
       child: isLoading
           ? const CardLoading(

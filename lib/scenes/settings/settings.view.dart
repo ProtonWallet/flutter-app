@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/url.external.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -78,6 +81,29 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
               ),
               SettingsItem(
                 title: 'Languages',
+                onTap: () {},
+              ),
+              SettingsItem(
+                title: S.of(context).setting_receive_inviter_notification,
+                logo: !viewModel.loadedWalletUserSettings
+                    ? const CustomLoading()
+                    : CupertinoSwitch(
+                        value: viewModel.receiveInviterNotification,
+                        activeColor: ProtonColors.protonBlue,
+                        onChanged: viewModel.updateReceiveInviterNotification,
+                      ),
+                onTap: () {},
+              ),
+              SettingsItem(
+                title: S.of(context).setting_receive_bve_notification,
+                logo: !viewModel.loadedWalletUserSettings
+                    ? const CustomLoading()
+                    : CupertinoSwitch(
+                        value: viewModel.receiveEmailIntegrationNotification,
+                        activeColor: ProtonColors.protonBlue,
+                        onChanged:
+                            viewModel.updateReceiveEmailIntegrationNotification,
+                      ),
                 onTap: () {},
               ),
             ],
