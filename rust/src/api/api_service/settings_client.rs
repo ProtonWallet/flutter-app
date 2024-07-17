@@ -85,7 +85,7 @@ impl SettingsClient {
     ) -> Result<ApiWalletUserSettings, BridgeError> {
         let result = self
             .inner
-            .update_receive_notification_email(email_type.into(), is_enable)
+            .update_receive_notification_email(email_type, is_enable)
             .await;
         match result {
             Ok(response) => Ok(response),

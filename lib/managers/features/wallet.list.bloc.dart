@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
@@ -11,7 +10,10 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.event.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -22,126 +24,8 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
-
-// Define the events
-abstract class WalletListEvent extends Equatable {
-  @override
-  List<Object> get props => [];
-}
-
-class SelectWallet extends WalletListEvent {
-  final String walletID;
-
-  SelectWallet(this.walletID);
-
-  @override
-  List<Object> get props => [walletID];
-}
-
-class UpdateWalletName extends WalletListEvent {
-  final WalletModel walletModel;
-  final String newName;
-
-  UpdateWalletName(this.walletModel, this.newName);
-
-  @override
-  List<Object> get props => [walletModel, newName];
-}
-
-class StartLoading extends WalletListEvent {
-  StartLoading();
-
-  @override
-  List<Object> get props => [];
-}
-
-class UpdateBalance extends WalletListEvent {
-  UpdateBalance();
-
-  @override
-  List<Object> get props => [];
-}
-
-class SelectAccount extends WalletListEvent {
-  final String walletID;
-  final String accountID;
-
-  SelectAccount(this.walletID, this.accountID);
-
-  @override
-  List<Object> get props => [walletID, accountID];
-}
-
-class UpdateAccountName extends WalletListEvent {
-  final WalletModel walletModel;
-  final AccountModel accountModel;
-  final String newName;
-
-  UpdateAccountName(this.walletModel, this.accountModel, this.newName);
-
-  @override
-  List<Object> get props => [walletModel, accountModel, newName];
-}
-
-class AddEmailIntegration extends WalletListEvent {
-  final WalletModel walletModel;
-  final AccountModel accountModel;
-  final String emailID;
-
-  AddEmailIntegration(this.walletModel, this.accountModel, this.emailID);
-
-  @override
-  List<Object> get props => [walletModel, accountModel, emailID];
-}
-
-class RemoveEmailIntegration extends WalletListEvent {
-  final WalletModel walletModel;
-  final AccountModel accountModel;
-  final String emailID;
-
-  RemoveEmailIntegration(this.walletModel, this.accountModel, this.emailID);
-
-  @override
-  List<Object> get props => [walletModel, accountModel, emailID];
-}
-
-class UpdateAccountFiat extends WalletListEvent {
-  final WalletModel walletModel;
-  final AccountModel accountModel;
-  final String fiatName;
-
-  UpdateAccountFiat(this.walletModel, this.accountModel, this.fiatName);
-
-  @override
-  List<Object> get props => [walletModel, accountModel, fiatName];
-}
-
-// Define the state
-class WalletListState extends Equatable {
-  final bool initialized;
-  final List<WalletMenuModel> walletsModel;
-
-  const WalletListState({
-    required this.initialized,
-    required this.walletsModel,
-  });
-
-  @override
-  List<Object?> get props => [initialized, walletsModel];
-}
-
-extension WalletListStateCopyWith on WalletListState {
-  WalletListState copyWith({
-    bool? initialized,
-    List<WalletMenuModel>? walletsModel,
-  }) {
-    return WalletListState(
-      initialized: initialized ?? this.initialized,
-      walletsModel: walletsModel ?? this.walletsModel,
-    );
-  }
-}
 
 /// Define the Bloc
 class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
@@ -151,6 +35,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final UserSettingsDataProvider userSettingsDataProvider;
   final UserManager userManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
+
+  /// app state manager
+  final AppStateManager appStateManager;
 
   StreamSubscription? walletPassDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
@@ -167,6 +54,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.userManager,
     this.userSettingsDataProvider,
     this.bdkTransactionDataProvider,
+    this.appStateManager,
   ) : super(const WalletListState(initialized: false, walletsModel: [])) {
     selectedWalletChangeSubscription = walletsDataProvider
         .selectedWalletUpdateController.stream
@@ -205,124 +93,131 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<StartLoading>((event, emit) async {
-      // loading wallet data
-      final wallets = await walletsDataProvider.getWallets();
-      if (wallets == null || wallets.isEmpty) {
-        onboardingCallback?.call();
-        emit(state.copyWith(initialized: true, walletsModel: []));
-        return; // error;
-      }
-
-      bool hasSelected = false;
-
-      /// get user key
-      final firstUserKey = await userManager.getFirstKey();
-      final List<WalletMenuModel> walletsModel = [];
-      int index = 0;
-      for (WalletData wallet in wallets) {
-        final WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
-        walletModel.currentIndex = index++;
-        if (walletModel.walletModel.walletID ==
-                walletsDataProvider.selectedServerWalletID &&
-            walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
-          walletModel.isSelected = true;
-          hasSelected = true;
+      try {
+        // loading wallet data
+        final wallets = await walletsDataProvider.getWallets();
+        if (wallets == null || wallets.isEmpty) {
+          onboardingCallback?.call();
+          emit(state.copyWith(initialized: true, walletsModel: []));
+          return; // error;
         }
-        // check if wallet has password valid. no password is valid
-        walletModel.hasValidPassword = await _hasValidPassphrase(
-          wallet.wallet,
-          walletPassProvider,
-        );
 
-        final walletKey = await walletKeysProvider.getWalletKey(
-          wallet.wallet.walletID,
-        );
-        SecretKey? secretKey;
-        if (walletKey != null) {
-          secretKey = WalletKeyHelper.decryptWalletKey(
-            firstUserKey,
-            walletKey,
-          );
+        bool hasSelected = false;
 
-          final isValidWalletKeySignature =
-              await WalletKeyHelper.verifySecretKeySignature(
-            firstUserKey,
-            walletKey,
-            secretKey,
-          );
-
-          walletModel.isSignatureValid = isValidWalletKeySignature;
-          logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
-        }
-        walletModel.accountSize = wallet.accounts.length;
-        walletModel.walletName = wallet.wallet.name;
-
-        if (secretKey != null) {
-          try {
-            walletModel.walletName = await WalletKeyHelper.decrypt(
-              secretKey,
-              wallet.wallet.name,
-            );
-          } catch (e) {
-            logger.e(e.toString());
-          }
-        }
-        for (AccountModel account in wallet.accounts) {
-          final AccountMenuModel accMenuModel = AccountMenuModel(account);
+        /// get user key
+        final firstUserKey = await userManager.getFirstKey();
+        final List<WalletMenuModel> walletsModel = [];
+        int index = 0;
+        for (WalletData wallet in wallets) {
+          final WalletMenuModel walletModel = WalletMenuModel(wallet.wallet);
+          walletModel.currentIndex = index++;
           if (walletModel.walletModel.walletID ==
                   walletsDataProvider.selectedServerWalletID &&
-              accMenuModel.accountModel.accountID ==
-                  walletsDataProvider.selectedServerWalletAccountID) {
+              walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+            walletModel.isSelected = true;
             hasSelected = true;
-            accMenuModel.isSelected = true;
           }
+          // check if wallet has password valid. no password is valid
+          walletModel.hasValidPassword = await _hasValidPassphrase(
+            wallet.wallet,
+            walletPassProvider,
+          );
+
+          final walletKey = await walletKeysProvider.getWalletKey(
+            wallet.wallet.walletID,
+          );
+          SecretKey? secretKey;
+          if (walletKey != null) {
+            secretKey = WalletKeyHelper.decryptWalletKey(
+              firstUserKey,
+              walletKey,
+            );
+
+            final isValidWalletKeySignature =
+                await WalletKeyHelper.verifySecretKeySignature(
+              firstUserKey,
+              walletKey,
+              secretKey,
+            );
+
+            walletModel.isSignatureValid = isValidWalletKeySignature;
+            logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
+          }
+          walletModel.accountSize = wallet.accounts.length;
+          walletModel.walletName = wallet.wallet.name;
+
           if (secretKey != null) {
-            final encrypted = base64Encode(account.label);
             try {
-              accMenuModel.label = await WalletKeyHelper.decrypt(
+              walletModel.walletName = await WalletKeyHelper.decrypt(
                 secretKey,
-                encrypted,
+                wallet.wallet.name,
               );
             } catch (e) {
               logger.e(e.toString());
             }
           }
+          for (AccountModel account in wallet.accounts) {
+            final AccountMenuModel accMenuModel = AccountMenuModel(account);
+            if (walletModel.walletModel.walletID ==
+                    walletsDataProvider.selectedServerWalletID &&
+                accMenuModel.accountModel.accountID ==
+                    walletsDataProvider.selectedServerWalletAccountID) {
+              hasSelected = true;
+              accMenuModel.isSelected = true;
+            }
+            if (secretKey != null) {
+              final encrypted = base64Encode(account.label);
+              try {
+                accMenuModel.label = await WalletKeyHelper.decrypt(
+                  secretKey,
+                  encrypted,
+                );
+              } catch (e) {
+                logger.e(e.toString());
+              }
+            }
 
-          final balance = await WalletManager.getWalletAccountBalance(
-            wallet.wallet.walletID,
-            account.accountID,
-          );
+            final balance = await WalletManager.getWalletAccountBalance(
+              wallet.wallet.walletID,
+              account.accountID,
+            );
 
-          accMenuModel.balance = balance;
-          double estimateValue = 0.0;
-          final settings = await userSettingsDataProvider.getSettings();
-          // Tempary need to use providers
-          final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
-          final ProtonExchangeRate exchangeRate =
-              await ExchangeRateService.getExchangeRate(fiatCurrency);
-          estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
-            exchangeRate,
-            balance,
-          );
-          final String fiatSign =
-              CommonHelper.getFiatCurrencySign(fiatCurrency);
-          accMenuModel.currencyBalance =
-              "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
-          accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
-            (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-            balance,
-          );
+            accMenuModel.balance = balance;
+            double estimateValue = 0.0;
+            final settings = await userSettingsDataProvider.getSettings();
+            // Tempary need to use providers
+            final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
+            final ProtonExchangeRate exchangeRate =
+                await ExchangeRateService.getExchangeRate(fiatCurrency);
+            estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+              exchangeRate,
+              balance,
+            );
+            final String fiatSign =
+                CommonHelper.getFiatCurrencySign(fiatCurrency);
+            accMenuModel.currencyBalance =
+                "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
+            accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
+              (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
+              balance,
+            );
 
-          accMenuModel.emailIds =
-              await WalletManager.getAccountAddressIDs(account.accountID);
-          walletModel.accounts.add(accMenuModel);
+            accMenuModel.emailIds =
+                await WalletManager.getAccountAddressIDs(account.accountID);
+            walletModel.accounts.add(accMenuModel);
+          }
+          walletsModel.add(walletModel);
         }
-        walletsModel.add(walletModel);
-      }
-      emit(state.copyWith(initialized: true, walletsModel: walletsModel));
-      if (!hasSelected) {
-        /// trigger startLoadingCallback to select default wallet
-        startLoadingCallback?.call();
+        emit(state.copyWith(initialized: true, walletsModel: walletsModel));
+        if (!hasSelected) {
+          /// trigger startLoadingCallback to select default wallet
+          startLoadingCallback?.call();
+        }
+      } on BridgeError catch (e, stacktrace) {
+        logger.e("wallet list bloc error: $e, stacktrace: $stacktrace");
+        appStateManager.handleWalletListError(e);
+      } catch (e) {
+        logger.e(e.toString());
       }
     });
 

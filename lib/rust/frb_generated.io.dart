@@ -64,6 +64,7 @@ import 'proton_api/auth_credential.dart';
 import 'proton_api/contacts.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
+import 'proton_api/invite.dart';
 import 'proton_api/payment_gateway.dart';
 import 'proton_api/proton_address.dart';
 import 'proton_api/proton_users.dart';
@@ -1006,6 +1007,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ResponseError dco_decode_box_autoadd_response_error(dynamic raw);
 
   @protected
+  SetTwoFaTOTPRequestBody dco_decode_box_autoadd_set_two_fa_totp_request_body(
+      dynamic raw);
+
+  @protected
   SortOrder dco_decode_box_autoadd_sort_order(dynamic raw);
 
   @protected
@@ -1099,6 +1104,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64 dco_decode_i_64(dynamic raw);
+
+  @protected
+  InviteNotificationType dco_decode_invite_notification_type(dynamic raw);
 
   @protected
   KeychainKind dco_decode_keychain_kind(dynamic raw);
@@ -1438,6 +1446,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScriptType dco_decode_script_type(dynamic raw);
+
+  @protected
+  SetTwoFaTOTPRequestBody dco_decode_set_two_fa_totp_request_body(dynamic raw);
+
+  @protected
+  SetTwoFaTOTPResponseBody dco_decode_set_two_fa_totp_response_body(
+      dynamic raw);
 
   @protected
   SortOrder dco_decode_sort_order(dynamic raw);
@@ -2301,6 +2316,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  SetTwoFaTOTPRequestBody sse_decode_box_autoadd_set_two_fa_totp_request_body(
+      SseDeserializer deserializer);
+
+  @protected
   SortOrder sse_decode_box_autoadd_sort_order(SseDeserializer deserializer);
 
   @protected
@@ -2404,6 +2423,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
+  InviteNotificationType sse_decode_invite_notification_type(
+      SseDeserializer deserializer);
 
   @protected
   KeychainKind sse_decode_keychain_kind(SseDeserializer deserializer);
@@ -2791,6 +2814,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScriptType sse_decode_script_type(SseDeserializer deserializer);
+
+  @protected
+  SetTwoFaTOTPRequestBody sse_decode_set_two_fa_totp_request_body(
+      SseDeserializer deserializer);
+
+  @protected
+  SetTwoFaTOTPResponseBody sse_decode_set_two_fa_totp_response_body(
+      SseDeserializer deserializer);
 
   @protected
   SortOrder sse_decode_sort_order(SseDeserializer deserializer);
@@ -3671,6 +3702,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ResponseError self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_set_two_fa_totp_request_body(
+      SetTwoFaTOTPRequestBody self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_sort_order(
       SortOrder self, SseSerializer serializer);
 
@@ -3779,6 +3814,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_invite_notification_type(
+      InviteNotificationType self, SseSerializer serializer);
 
   @protected
   void sse_encode_keychain_kind(KeychainKind self, SseSerializer serializer);
@@ -4172,6 +4211,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_script_type(ScriptType self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_set_two_fa_totp_request_body(
+      SetTwoFaTOTPRequestBody self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_set_two_fa_totp_response_body(
+      SetTwoFaTOTPResponseBody self, SseSerializer serializer);
 
   @protected
   void sse_encode_sort_order(SortOrder self, SseSerializer serializer);

@@ -519,6 +519,52 @@ class ReferralSettings {
       other is ReferralSettings && runtimeType == other.runtimeType;
 }
 
+class SetTwoFaTOTPRequestBody {
+  final String totpConfirmation;
+  final String totpSharedSecret;
+
+  const SetTwoFaTOTPRequestBody({
+    required this.totpConfirmation,
+    required this.totpSharedSecret,
+  });
+
+  @override
+  int get hashCode => totpConfirmation.hashCode ^ totpSharedSecret.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SetTwoFaTOTPRequestBody &&
+          runtimeType == other.runtimeType &&
+          totpConfirmation == other.totpConfirmation &&
+          totpSharedSecret == other.totpSharedSecret;
+}
+
+class SetTwoFaTOTPResponseBody {
+  final int code;
+  final List<String> twoFactorRecoveryCodes;
+  final ProtonUserSettings userSettings;
+
+  const SetTwoFaTOTPResponseBody({
+    required this.code,
+    required this.twoFactorRecoveryCodes,
+    required this.userSettings,
+  });
+
+  @override
+  int get hashCode =>
+      code.hashCode ^ twoFactorRecoveryCodes.hashCode ^ userSettings.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SetTwoFaTOTPResponseBody &&
+          runtimeType == other.runtimeType &&
+          code == other.code &&
+          twoFactorRecoveryCodes == other.twoFactorRecoveryCodes &&
+          userSettings == other.userSettings;
+}
+
 class TwoFA {
   final int enabled;
 

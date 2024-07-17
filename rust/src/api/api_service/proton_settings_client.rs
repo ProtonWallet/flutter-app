@@ -4,8 +4,11 @@ use super::proton_api_service::ProtonAPIService;
 pub use andromeda_api::proton_settings::ProtonSettingsClient as InnerProtonSettingsClient;
 use andromeda_api::{
     core::ApiClient,
-    proton_settings::{ApiMnemonicUserKey, UpdateMnemonicSettingsRequestBody},
-    proton_users::ProtonSrpClientProofs,
+    proton_settings::{
+        ApiMnemonicUserKey, SetTwoFaTOTPRequestBody, SetTwoFaTOTPResponseBody,
+        UpdateMnemonicSettingsRequestBody,
+    },
+    proton_users::{ProtonSrpClientProofs, ProtonUserSettings},
 };
 
 pub struct ProtonSettingsClient {
@@ -42,5 +45,19 @@ impl ProtonSettingsClient {
 
     pub async fn get_mnemonic_settings(&self) -> Result<Vec<ApiMnemonicUserKey>, BridgeError> {
         Ok(self.inner.get_mnemonic_settings().await?)
+    }
+
+    pub async fn enable_2fa_totp(
+        &self,
+        req: SetTwoFaTOTPRequestBody,
+    ) -> Result<SetTwoFaTOTPResponseBody, BridgeError> {
+        Ok(self.inner.enable_2fa_totp(req).await?)
+    }
+
+    pub async fn disable_2fa_totp(
+        &self,
+        req: ProtonSrpClientProofs,
+    ) -> Result<ProtonUserSettings, BridgeError> {
+        Ok(self.inner.disable_2fa_totp(req).await?)
     }
 }

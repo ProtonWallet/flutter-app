@@ -5,7 +5,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home/navigation.coordinator.dart';
+import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/scenes/signin/signin.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.view.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
@@ -28,7 +28,7 @@ class WelcomeCoordinator extends Coordinator {
   }
 
   void showHome(ApiEnv env) {
-    final view = HomeNavigationCoordinator(env).start();
+    final view = HomeCoordinator(env, nativeViewChannel).start();
     pushReplacement(view);
   }
 

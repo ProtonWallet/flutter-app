@@ -27,6 +27,7 @@ import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
+import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
@@ -167,6 +168,7 @@ class HomeCoordinator extends Coordinator {
     final channelManager = serviceManager.get<PlatformChannelManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
 
+    /// build wallet list feature bloc
     final walletBloc = WalletListBloc(
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletPassphraseProvider,
@@ -174,8 +176,10 @@ class HomeCoordinator extends Coordinator {
       userManager,
       dataProviderManager.userSettingsDataProvider,
       dataProviderManager.bdkTransactionDataProvider,
+      appStateManager,
     );
 
+    /// build wallet transaction feature bloc
     final walletTransactionBloc = WalletTransactionBloc(
       userManager,
       dataProviderManager.localTransactionDataProvider,
@@ -188,6 +192,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.userSettingsDataProvider,
     );
 
+    /// build wallet balance feature bloc
     final walletBalanceBloc = WalletBalanceBloc(
       dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.balanceDataProvider,
@@ -195,6 +200,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.serverTransactionDataProvider,
     );
 
+    /// build create wallet feature bloc
     final createWalletBloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
@@ -208,6 +214,9 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
     );
+
+    /// build locker overlay view
+    final overlayView = LockCoordinator().start();
 
     final viewModel = HomeViewModelImpl(
       this,
@@ -228,6 +237,7 @@ class HomeCoordinator extends Coordinator {
     );
     widget = HomeView(
       viewModel,
+      locker: overlayView,
     );
     return widget;
   }

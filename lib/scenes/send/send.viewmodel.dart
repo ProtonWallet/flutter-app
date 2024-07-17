@@ -1057,11 +1057,15 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> _sendInviteForEmailIntegration(String email) async {
-    await inviteClient.sendEmailIntegrationInvite(inviteeEmail: email);
+    // TODO(fix): fix inviterAddressId
+    await inviteClient.sendEmailIntegrationInvite(
+        inviteeEmail: email, inviterAddressId: "");
   }
 
   Future<void> _sendInviteForNewComer(String email) async {
-    await inviteClient.sendNewcomerInvite(inviteeEmail: email);
+    // TODO(fix): fix inviterAddressId
+    await inviteClient.sendNewcomerInvite(
+        inviteeEmail: email, inviterAddressId: "");
   }
 
   bool _processError(BridgeError error, Object stacktrace) {
@@ -1070,7 +1074,7 @@ class SendViewModelImpl extends SendViewModel {
     );
     final msg = parseSampleDisplayError(error);
     if (msg.isNotEmpty) {
-      /// TODO(fix): improve logic here
+      // TODO(fix): improve logic here
       if (msg.toLowerCase().contains("incorrectchecksumerror")) {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;

@@ -5,12 +5,16 @@
 
 import '../../common/errors.dart';
 import '../../frb_generated.dart';
+import '../../proton_api/invite.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InviteClient>>
 abstract class InviteClient implements RustOpaqueInterface {
-  Future<void> checkInviteStatus({required String inviteeEmail});
+  Future<int> checkInviteStatus(
+      {required String inviteeEmail,
+      required InviteNotificationType inviteNotificationType,
+      required String inviterAddressId});
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<InviteClient> newInstance(
@@ -18,7 +22,9 @@ abstract class InviteClient implements RustOpaqueInterface {
       RustLib.instance.api
           .crateApiApiServiceInviteClientInviteClientNew(service: service);
 
-  Future<void> sendEmailIntegrationInvite({required String inviteeEmail});
+  Future<void> sendEmailIntegrationInvite(
+      {required String inviteeEmail, required String inviterAddressId});
 
-  Future<void> sendNewcomerInvite({required String inviteeEmail});
+  Future<void> sendNewcomerInvite(
+      {required String inviteeEmail, required String inviterAddressId});
 }

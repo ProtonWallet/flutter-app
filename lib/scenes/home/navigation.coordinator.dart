@@ -7,6 +7,8 @@ import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 import 'package:wallet/scenes/home/navigation.view.dart';
 import 'package:wallet/scenes/home/navigation.viewmodel.dart';
 
+/// This is a unused approche to manager views in page view.
+/// keep it for future reference when UX changes
 class HomeNavigationCoordinator extends Coordinator {
   late ViewBase widget;
   ApiEnv apiEnv;

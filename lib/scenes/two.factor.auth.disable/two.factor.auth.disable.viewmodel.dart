@@ -1,5 +1,13 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/providers/proton.user.data.provider.dart';
+import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
+import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/rust/api/srp/srp_client.dart';
+import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
@@ -8,28 +16,51 @@ abstract class TwoFactorAuthDisableViewModel extends ViewModel {
   List<TextEditingController> digitControllers = [];
   late TextEditingController passwordController;
   Future<bool> disable2FA();
+  String error = "";
 }
 
 class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
-  TwoFactorAuthDisableViewModelImpl(super.coordinator);
+  TwoFactorAuthDisableViewModelImpl(super.coordinator, this.protonUsersApi,
+      this.protonSettingsApi, this.protonUserData);
   final datasourceChangedStreamController =
       StreamController<TwoFactorAuthDisableViewModel>.broadcast();
+  final ProtonUsersClient protonUsersApi;
+  final ProtonSettingsClient protonSettingsApi;
+  final ProtonUserDataProvider protonUserData;
 
   @override
   Future<bool> disable2FA() async {
-    // String totp = "";
-    // for (TextEditingController textEditingController in digitControllers) {
-    //   totp += textEditingController.text;
-    // }
+    error = "";
+    String loginTwoFaTotp = "";
+    final String loginPassword = passwordController.text;
+    for (TextEditingController textEditingController in digitControllers) {
+      loginTwoFaTotp += textEditingController.text;
+    }
     try {
-      // TODO(fix): enable 2fa
-      // int result = await proton_api.disable2FaTotp(
-      //     username: "ProtonWallet",
-      //     password: passwordController.text,
-      //     twoFactorCode: totp);
-      const int result = 0;
-      return result == 0; // disabled
+      final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
+      final clientProofs = await SrpClient.generateProofs(
+          loginPassword: loginPassword,
+          version: authInfo.version,
+          salt: authInfo.salt,
+          modulus: authInfo.modulus,
+          serverEphemeral: authInfo.serverEphemeral);
+
+      final proofs = ProtonSrpClientProofs(
+        clientEphemeral: clientProofs.clientEphemeral,
+        clientProof: clientProofs.clientProof,
+        srpSession: authInfo.srpSession,
+        twoFactorCode: loginTwoFaTotp,
+      );
+      final response = await protonSettingsApi.disable2FaTotp(req: proofs);
+      logger.i("enable2FaTotp response code: $response");
+      protonUserData.enabled2FA(false);
+      return true;
+    } on BridgeError catch (exception) {
+      error = parseSampleDisplayError(exception);
+      logger.e(exception.toString());
+      return false;
     } catch (e) {
+      logger.e(e.toString());
       return false;
     }
   }

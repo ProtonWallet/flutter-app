@@ -4,8 +4,9 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
+import 'package:wallet/managers/features/proton.twofa/proton.twofa.event.dart';
+import 'package:wallet/managers/features/proton.twofa/proton.twofa.state.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
@@ -17,21 +18,20 @@ import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/srp/proofs.dart';
 
 /// Define the Bloc
-class ProtonRecoveryBloc
-    extends Bloc<ProtonRecoveryEvent, ProtonRecoveryState> {
+class ProtonTwoFaBloc extends Bloc<ProtonTwoFaEvent, ProtonTwoFaState> {
   final UserManager userManager;
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
   final UserDataProvider userDataProvider;
 
   /// initialize the bloc with the initial state
-  ProtonRecoveryBloc(
+  ProtonTwoFaBloc(
     this.userManager,
     this.protonUsersApi,
     this.userDataProvider,
     this.protonSettingsApi,
-  ) : super(const ProtonRecoveryState()) {
-    on<LoadingRecovery>((event, emit) async {
+  ) : super(const ProtonTwoFaState()) {
+    on<LoadingTwoFa>((event, emit) async {
       emit(state.copyWith(
           isLoading: true,
           error: "",
@@ -45,22 +45,7 @@ class ProtonRecoveryBloc
       emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
     });
 
-    on<TestRecovery>((event, emit) async {
-      emit(state.copyWith(
-          isLoading: true,
-          error: "",
-          isRecoveryEnabled: false,
-          mnemonic:
-              "banner tag desk cart mirror horse name minimum hen sport sadness evidence",
-          requireAuthModel: const RequireAuthModel()));
-
-      final userInfo = await protonUsersApi.getUserInfo();
-      final status = userInfo.mnemonicStatus == 3;
-
-      emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
-    });
-
-    on<EnableRecovery>((event, emit) async {
+    on<EnableTwoFa>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: ""));
       // get user info
       final userInfo = await protonUsersApi.getUserInfo();
@@ -324,7 +309,7 @@ class ProtonRecoveryBloc
       /// build random srp verifier.
     });
 
-    on<DisableRecovery>((event, emit) async {
+    on<DisableTwoFa>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: ""));
 
       if (event.step == RecoverySteps.start) {
@@ -392,8 +377,4 @@ class ProtonRecoveryBloc
       } else {}
     });
   }
-
-  Future<void> enableRecovery() async {}
-
-  Future<void> disableRecovery() async {}
 }
