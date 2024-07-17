@@ -82,41 +82,50 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
 
   Widget buildWithList(BuildContext buildContext) {
     return Container(
-        width: widget.width,
-        padding: widget.padding ??
-            const EdgeInsets.only(
-                left: defaultPadding, right: 8, top: 4, bottom: 4),
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+        ),
         decoration: BoxDecoration(
-          color: widget.backgroundColor ?? ProtonColors.white,
-          // border: Border.all(color: Colors.black, width: 1.0),
+          color: ProtonColors.white,
           borderRadius: BorderRadius.circular(18.0),
         ),
-        child: TextField(
-          controller: _textEditingController,
-          readOnly: true,
-          onTap: () {
-            showOptionsInBottomSheet(context);
-            Future.delayed(const Duration(milliseconds: 100), () {
-              _scrollTo(widget.items.indexOf(selected) * 60 -
-                  MediaQuery.of(context).size.height / 6 +
-                  60);
-            });
-          },
-          style: widget.textStyle ??
-              FontManager.body1Median(ProtonColors.textNorm),
-          decoration: InputDecoration(
-            enabledBorder: InputBorder.none,
-            border: InputBorder.none,
-            labelText: widget.labelText,
-            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
-            suffixIconConstraints:
-                BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
-            contentPadding: EdgeInsets.only(
-                top: 4, bottom: widget.padding != null ? 2 : 16),
-            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
-                color: ProtonColors.textWeak, size: 24),
-          ),
-        ));
+        child: Container(
+            width: widget.width,
+            padding: widget.padding ??
+                const EdgeInsets.only(
+                    left: defaultPadding, right: 8, top: 4, bottom: 4),
+            decoration: BoxDecoration(
+              color: widget.backgroundColor ?? ProtonColors.white,
+              // border: Border.all(color: Colors.black, width: 1.0),
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+            child: TextField(
+              controller: _textEditingController,
+              readOnly: true,
+              onTap: () {
+                showOptionsInBottomSheet(context);
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  _scrollTo(widget.items.indexOf(selected) * 60 -
+                      MediaQuery.of(context).size.height / 6 +
+                      60);
+                });
+              },
+              style: widget.textStyle ??
+                  FontManager.body1Median(ProtonColors.textNorm),
+              decoration: InputDecoration(
+                enabledBorder: InputBorder.none,
+                border: InputBorder.none,
+                labelText: widget.labelText,
+                labelStyle:
+                    FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                suffixIconConstraints:
+                    BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
+                contentPadding: EdgeInsets.only(
+                    top: 4, bottom: widget.padding != null ? 2 : 16),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
+                    color: ProtonColors.textWeak, size: 24),
+              ),
+            )));
   }
 
   void _scrollTo(double offset) {

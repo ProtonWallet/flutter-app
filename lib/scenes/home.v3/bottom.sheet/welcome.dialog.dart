@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -60,17 +62,27 @@ class WelcomeDialogSheet {
                     const SizedBox(
                       height: 12,
                     ),
-                    Text(S.of(context).welcome_to_confirm_content),
-                    Underline(
-                        onTap: () {
-                          CommonHelper.showSnackbar(context, "TODO");
-                        },
-                        color: ProtonColors.protonBlue,
-                        child: Text(
-                          "proton.me/wallet/legal/terms",
-                          style:
-                              FontManager.body2Median(ProtonColors.protonBlue),
-                        ))
+                    Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: S.of(context).welcome_to_confirm_content,
+                          style: FontManager.captionRegular(
+                            ProtonColors.textHint,
+                          ),
+                        ),
+                        TextSpan(
+                          text: S.of(context).welcome_to_term_and_condition,
+                          style: FontManager.captionMedian(
+                            ProtonColors.protonBlue,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launchUrl(Uri.parse(
+                                  "https://proton.me/wallet/legal/terms"));
+                            },
+                        ),
+                      ]),
+                    ),
                   ])),
             ]))
       ]);

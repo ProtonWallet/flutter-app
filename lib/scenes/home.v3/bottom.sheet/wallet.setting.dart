@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
@@ -139,31 +139,15 @@ class WalletSettingSheet {
                     const SizedBox(
                       height: 10,
                     ),
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          color: ProtonColors.white,
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        child: Column(children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          DropdownButtonV2(
-                              labelText:
-                                  S.of(context).setting_bitcoin_unit_label,
-                              width: MediaQuery.of(context).size.width -
-                                  defaultPadding * 2,
-                              items: bitcoinUnits,
-                              itemsText: bitcoinUnits
-                                  .map((v) => v.name.toUpperCase())
-                                  .toList(),
-                              valueNotifier: viewModel.bitcoinUnitNotifier),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ])),
+                    DropdownButtonV2(
+                        labelText: S.of(context).setting_bitcoin_unit_label,
+                        width: MediaQuery.of(context).size.width -
+                            defaultPadding * 2,
+                        items: bitcoinUnits,
+                        itemsText: bitcoinUnits
+                            .map((v) => v.name.toUpperCase())
+                            .toList(),
+                        valueNotifier: viewModel.bitcoinUnitNotifier),
                     const SizedBox(
                       height: defaultPadding,
                     ),
@@ -322,39 +306,28 @@ class WalletSettingSheet {
                                           thickness: 0.2,
                                           height: 1,
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          child: DropdownButtonV2(
-                                              labelText: S
-                                                  .of(context)
-                                                  .setting_fiat_currency_label,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  defaultPadding * 2,
-                                              items: fiatCurrencies,
-                                              canSearch: true,
-                                              itemsText: fiatCurrencies
-                                                  .map(FiatCurrencyHelper
-                                                      .getFullName)
-                                                  .toList(),
-                                              itemsLeadingIcons: fiatCurrencies
-                                                  .map((v) => CountryFlag
-                                                          .fromCountryCode(
-                                                        FiatCurrencyHelper
-                                                            .toCountryCode(v),
-                                                        shape: const Circle(),
-                                                        width: 20,
-                                                        height: 20,
-                                                      ))
-                                                  .toList(),
-                                              valueNotifier:
-                                                  accountFiatCurrencyNotifier[
-                                                      accountMenuModel
-                                                          .accountModel
-                                                          .accountID]),
-                                        ),
+                                        DropdownButtonV2(
+                                            labelText: S
+                                                .of(context)
+                                                .setting_fiat_currency_label,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                defaultPadding * 2,
+                                            items: fiatCurrencies,
+                                            canSearch: true,
+                                            itemsText: fiatCurrencies
+                                                .map(FiatCurrencyHelper
+                                                    .getFullName)
+                                                .toList(),
+                                            itemsLeadingIcons: fiatCurrencies
+                                                .map(CommonHelper.getCountryIcon)
+                                                .toList(),
+                                            valueNotifier:
+                                                accountFiatCurrencyNotifier[
+                                                    accountMenuModel
+                                                        .accountModel
+                                                        .accountID]),
                                         const Divider(
                                           thickness: 0.2,
                                           height: 1,
@@ -531,6 +504,18 @@ class WalletSettingSheet {
                                     ProtonColors.textNorm))),
                         backgroundColor: Colors.transparent,
                         collapsedBackgroundColor: Colors.transparent,
+                        onExpansionChanged: (isExpanded) {
+                          if (isExpanded) {
+                            Future.delayed(const Duration(milliseconds: 300),
+                                () {
+                              scrollController.animateTo(
+                                scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              );
+                            });
+                          }
+                        },
                         children: [
                           const SizedBox(height: 4),
                           ButtonV5(

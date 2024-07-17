@@ -36,7 +36,7 @@ class TransactionHistorySendItem extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.symmetric(vertical: defaultPadding),
         color: ProtonColors.white,
         child: isLoading
             ? const CardLoading(

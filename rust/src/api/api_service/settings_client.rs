@@ -2,7 +2,10 @@ use super::proton_api_service::ProtonAPIService;
 use crate::BridgeError;
 use andromeda_api::{
     core::ApiClient,
-    settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},
+    settings::{
+        FiatCurrencySymbol as FiatCurrency, UserReceiveNotificationEmailTypes,
+        UserSettings as ApiWalletUserSettings,
+    },
 };
 use andromeda_common::BitcoinUnit;
 use std::sync::Arc;
@@ -68,6 +71,21 @@ impl SettingsClient {
         let result = self
             .inner
             .update_hide_empty_used_addresses(hide_empty_used_addresses)
+            .await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn receive_notification_email(
+        &self,
+        email_type: UserReceiveNotificationEmailTypes,
+        is_enable: bool,
+    ) -> Result<ApiWalletUserSettings, BridgeError> {
+        let result = self
+            .inner
+            .update_receive_notification_email(email_type.into(), is_enable)
             .await;
         match result {
             Ok(response) => Ok(response),

@@ -47,6 +47,15 @@ class LocalBitcoinAddressData {
   });
 }
 
+class AccountBitcoinAddressesInfo {
+  Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
+  int highestIndex = -1;
+
+  AccountBitcoinAddressesInfo({
+    required this.highestIndex,
+  });
+}
+
 class LocalBitcoinAddressDataProvider extends DataProvider {
   final WalletDao walletDao;
   final AccountDao accountDao;
@@ -60,6 +69,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     this.userID,
   );
 
+  Map<String, AccountBitcoinAddressesInfo> accountID2AddressesInfo = {};
   List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
 
   Map<String, LocalBitcoinAddress2TransactionData>
@@ -156,14 +166,32 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     if (account == null) {
       return {};
     }
-    final Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
-    for (int bitcoinAddressIndex = 0;
-        bitcoinAddressIndex <= maxAddressIndex;
-        bitcoinAddressIndex++) {
-      final FrbAddressInfo addressInfo =
-          await account.getAddress(index: bitcoinAddressIndex);
-      bitcoinAddressInfos[addressInfo.address] = addressInfo;
+    Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
+    int startIndex = 0;
+    if (accountID2AddressesInfo.containsKey(accountModel.accountID)) {
+      bitcoinAddressInfos =
+          accountID2AddressesInfo[accountModel.accountID]!.bitcoinAddressInfos;
+      startIndex =
+          accountID2AddressesInfo[accountModel.accountID]!.highestIndex;
+    } else {
+      accountID2AddressesInfo[accountModel.accountID] =
+          AccountBitcoinAddressesInfo(highestIndex: 0);
     }
+    if (startIndex <= maxAddressIndex) {
+      for (int bitcoinAddressIndex = startIndex;
+          bitcoinAddressIndex <= maxAddressIndex;
+          bitcoinAddressIndex++) {
+        final FrbAddressInfo addressInfo =
+            await account.getAddress(index: bitcoinAddressIndex);
+        bitcoinAddressInfos[addressInfo.address] = addressInfo;
+      }
+    }
+
+    /// update cahced data to improve performance
+    accountID2AddressesInfo[accountModel.accountID]!.bitcoinAddressInfos =
+        bitcoinAddressInfos;
+    accountID2AddressesInfo[accountModel.accountID]!.highestIndex =
+        maxAddressIndex + 1;
     return bitcoinAddressInfos;
   }
 
@@ -240,5 +268,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    accountID2AddressesInfo.clear();
+  }
 }

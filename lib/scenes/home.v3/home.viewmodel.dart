@@ -87,6 +87,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isFetching = false;
   bool isLogout = false;
   bool displayBalance = true;
+  bool acceptTermsAndConditions = false;
   int currentHistoryPage = 0;
   int currentAddressPage = 0;
   bool isShowingNoInternet = false;
@@ -410,7 +411,7 @@ class HomeViewModelImpl extends HomeViewModel {
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
-      loadUserSettings();
+      preloadSettings();
       walletListBloc.init(
         startLoadingCallback: selectDefaultWallet,
         onboardingCallback: setOnBoard,
@@ -424,7 +425,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
       // async
       dataProviderManager.contactsDataProvider.preLoad();
-      dataProviderManager.userSettingsDataProvider.preLoad();
       dataProviderManager
           .userSettingsDataProvider.exchangeRateUpdateController.stream
           .listen((onData) {
@@ -578,6 +578,7 @@ class HomeViewModelImpl extends HomeViewModel {
       hideEmptyUsedAddresses = settings.hideEmptyUsedAddresses;
       twoFactorAmountThresholdController.text =
           settings.twoFactorAmountThreshold.toString();
+      acceptTermsAndConditions = settings.acceptTermsAndConditions;
     }
     datasourceStreamSinkAdd();
   }

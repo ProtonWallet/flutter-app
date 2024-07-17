@@ -1224,6 +1224,44 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
   late final GeneratedColumn<double> twoFactorAmountThreshold =
       GeneratedColumn<double>('two_factor_amount_threshold', aliasedName, false,
           type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _receiveInviterNotificationMeta =
+      const VerificationMeta('receiveInviterNotification');
+  @override
+  late final GeneratedColumn<bool> receiveInviterNotification =
+      GeneratedColumn<bool>('receive_inviter_notification', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("receive_inviter_notification" IN (0, 1))'));
+  static const VerificationMeta _receiveEmailIntegrationNotificationMeta =
+      const VerificationMeta('receiveEmailIntegrationNotification');
+  @override
+  late final GeneratedColumn<bool> receiveEmailIntegrationNotification =
+      GeneratedColumn<bool>(
+          'receive_email_integration_notification', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("receive_email_integration_notification" IN (0, 1))'));
+  static const VerificationMeta _walletCreatedMeta =
+      const VerificationMeta('walletCreated');
+  @override
+  late final GeneratedColumn<bool> walletCreated = GeneratedColumn<bool>(
+      'wallet_created', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("wallet_created" IN (0, 1))'));
+  static const VerificationMeta _acceptTermsAndConditionsMeta =
+      const VerificationMeta('acceptTermsAndConditions');
+  @override
+  late final GeneratedColumn<bool> acceptTermsAndConditions =
+      GeneratedColumn<bool>(
+          'accept_terms_and_conditions', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("accept_terms_and_conditions" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns => [
         userId,
@@ -1231,7 +1269,11 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
         fiatCurrency,
         hideEmptyUsedAddresses,
         showWalletRecovery,
-        twoFactorAmountThreshold
+        twoFactorAmountThreshold,
+        receiveInviterNotification,
+        receiveEmailIntegrationNotification,
+        walletCreated,
+        acceptTermsAndConditions
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1290,6 +1332,41 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
     } else if (isInserting) {
       context.missing(_twoFactorAmountThresholdMeta);
     }
+    if (data.containsKey('receive_inviter_notification')) {
+      context.handle(
+          _receiveInviterNotificationMeta,
+          receiveInviterNotification.isAcceptableOrUnknown(
+              data['receive_inviter_notification']!,
+              _receiveInviterNotificationMeta));
+    } else if (isInserting) {
+      context.missing(_receiveInviterNotificationMeta);
+    }
+    if (data.containsKey('receive_email_integration_notification')) {
+      context.handle(
+          _receiveEmailIntegrationNotificationMeta,
+          receiveEmailIntegrationNotification.isAcceptableOrUnknown(
+              data['receive_email_integration_notification']!,
+              _receiveEmailIntegrationNotificationMeta));
+    } else if (isInserting) {
+      context.missing(_receiveEmailIntegrationNotificationMeta);
+    }
+    if (data.containsKey('wallet_created')) {
+      context.handle(
+          _walletCreatedMeta,
+          walletCreated.isAcceptableOrUnknown(
+              data['wallet_created']!, _walletCreatedMeta));
+    } else if (isInserting) {
+      context.missing(_walletCreatedMeta);
+    }
+    if (data.containsKey('accept_terms_and_conditions')) {
+      context.handle(
+          _acceptTermsAndConditionsMeta,
+          acceptTermsAndConditions.isAcceptableOrUnknown(
+              data['accept_terms_and_conditions']!,
+              _acceptTermsAndConditionsMeta));
+    } else if (isInserting) {
+      context.missing(_acceptTermsAndConditionsMeta);
+    }
     return context;
   }
 
@@ -1313,6 +1390,17 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
       twoFactorAmountThreshold: attachedDatabase.typeMapping.read(
           DriftSqlType.double,
           data['${effectivePrefix}two_factor_amount_threshold'])!,
+      receiveInviterNotification: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}receive_inviter_notification'])!,
+      receiveEmailIntegrationNotification: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}receive_email_integration_notification'])!,
+      walletCreated: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}wallet_created'])!,
+      acceptTermsAndConditions: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}accept_terms_and_conditions'])!,
     );
   }
 
@@ -1330,13 +1418,21 @@ class WalletUserSettings extends DataClass
   final bool hideEmptyUsedAddresses;
   final bool showWalletRecovery;
   final double twoFactorAmountThreshold;
+  final bool receiveInviterNotification;
+  final bool receiveEmailIntegrationNotification;
+  final bool walletCreated;
+  final bool acceptTermsAndConditions;
   const WalletUserSettings(
       {required this.userId,
       required this.bitcoinUnit,
       required this.fiatCurrency,
       required this.hideEmptyUsedAddresses,
       required this.showWalletRecovery,
-      required this.twoFactorAmountThreshold});
+      required this.twoFactorAmountThreshold,
+      required this.receiveInviterNotification,
+      required this.receiveEmailIntegrationNotification,
+      required this.walletCreated,
+      required this.acceptTermsAndConditions});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1347,6 +1443,13 @@ class WalletUserSettings extends DataClass
     map['show_wallet_recovery'] = Variable<bool>(showWalletRecovery);
     map['two_factor_amount_threshold'] =
         Variable<double>(twoFactorAmountThreshold);
+    map['receive_inviter_notification'] =
+        Variable<bool>(receiveInviterNotification);
+    map['receive_email_integration_notification'] =
+        Variable<bool>(receiveEmailIntegrationNotification);
+    map['wallet_created'] = Variable<bool>(walletCreated);
+    map['accept_terms_and_conditions'] =
+        Variable<bool>(acceptTermsAndConditions);
     return map;
   }
 
@@ -1358,6 +1461,11 @@ class WalletUserSettings extends DataClass
       hideEmptyUsedAddresses: Value(hideEmptyUsedAddresses),
       showWalletRecovery: Value(showWalletRecovery),
       twoFactorAmountThreshold: Value(twoFactorAmountThreshold),
+      receiveInviterNotification: Value(receiveInviterNotification),
+      receiveEmailIntegrationNotification:
+          Value(receiveEmailIntegrationNotification),
+      walletCreated: Value(walletCreated),
+      acceptTermsAndConditions: Value(acceptTermsAndConditions),
     );
   }
 
@@ -1373,6 +1481,13 @@ class WalletUserSettings extends DataClass
       showWalletRecovery: serializer.fromJson<bool>(json['showWalletRecovery']),
       twoFactorAmountThreshold:
           serializer.fromJson<double>(json['twoFactorAmountThreshold']),
+      receiveInviterNotification:
+          serializer.fromJson<bool>(json['receiveInviterNotification']),
+      receiveEmailIntegrationNotification: serializer
+          .fromJson<bool>(json['receiveEmailIntegrationNotification']),
+      walletCreated: serializer.fromJson<bool>(json['walletCreated']),
+      acceptTermsAndConditions:
+          serializer.fromJson<bool>(json['acceptTermsAndConditions']),
     );
   }
   @override
@@ -1386,6 +1501,13 @@ class WalletUserSettings extends DataClass
       'showWalletRecovery': serializer.toJson<bool>(showWalletRecovery),
       'twoFactorAmountThreshold':
           serializer.toJson<double>(twoFactorAmountThreshold),
+      'receiveInviterNotification':
+          serializer.toJson<bool>(receiveInviterNotification),
+      'receiveEmailIntegrationNotification':
+          serializer.toJson<bool>(receiveEmailIntegrationNotification),
+      'walletCreated': serializer.toJson<bool>(walletCreated),
+      'acceptTermsAndConditions':
+          serializer.toJson<bool>(acceptTermsAndConditions),
     };
   }
 
@@ -1395,7 +1517,11 @@ class WalletUserSettings extends DataClass
           String? fiatCurrency,
           bool? hideEmptyUsedAddresses,
           bool? showWalletRecovery,
-          double? twoFactorAmountThreshold}) =>
+          double? twoFactorAmountThreshold,
+          bool? receiveInviterNotification,
+          bool? receiveEmailIntegrationNotification,
+          bool? walletCreated,
+          bool? acceptTermsAndConditions}) =>
       WalletUserSettings(
         userId: userId ?? this.userId,
         bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
@@ -1405,6 +1531,14 @@ class WalletUserSettings extends DataClass
         showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
         twoFactorAmountThreshold:
             twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
+        receiveInviterNotification:
+            receiveInviterNotification ?? this.receiveInviterNotification,
+        receiveEmailIntegrationNotification:
+            receiveEmailIntegrationNotification ??
+                this.receiveEmailIntegrationNotification,
+        walletCreated: walletCreated ?? this.walletCreated,
+        acceptTermsAndConditions:
+            acceptTermsAndConditions ?? this.acceptTermsAndConditions,
       );
   @override
   String toString() {
@@ -1414,14 +1548,28 @@ class WalletUserSettings extends DataClass
           ..write('fiatCurrency: $fiatCurrency, ')
           ..write('hideEmptyUsedAddresses: $hideEmptyUsedAddresses, ')
           ..write('showWalletRecovery: $showWalletRecovery, ')
-          ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold')
+          ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold, ')
+          ..write('receiveInviterNotification: $receiveInviterNotification, ')
+          ..write(
+              'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ')
+          ..write('walletCreated: $walletCreated, ')
+          ..write('acceptTermsAndConditions: $acceptTermsAndConditions')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(userId, bitcoinUnit, fiatCurrency,
-      hideEmptyUsedAddresses, showWalletRecovery, twoFactorAmountThreshold);
+  int get hashCode => Object.hash(
+      userId,
+      bitcoinUnit,
+      fiatCurrency,
+      hideEmptyUsedAddresses,
+      showWalletRecovery,
+      twoFactorAmountThreshold,
+      receiveInviterNotification,
+      receiveEmailIntegrationNotification,
+      walletCreated,
+      acceptTermsAndConditions);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1431,7 +1579,12 @@ class WalletUserSettings extends DataClass
           other.fiatCurrency == this.fiatCurrency &&
           other.hideEmptyUsedAddresses == this.hideEmptyUsedAddresses &&
           other.showWalletRecovery == this.showWalletRecovery &&
-          other.twoFactorAmountThreshold == this.twoFactorAmountThreshold);
+          other.twoFactorAmountThreshold == this.twoFactorAmountThreshold &&
+          other.receiveInviterNotification == this.receiveInviterNotification &&
+          other.receiveEmailIntegrationNotification ==
+              this.receiveEmailIntegrationNotification &&
+          other.walletCreated == this.walletCreated &&
+          other.acceptTermsAndConditions == this.acceptTermsAndConditions);
 }
 
 class WalletUserSettingsTableCompanion
@@ -1442,6 +1595,10 @@ class WalletUserSettingsTableCompanion
   final Value<bool> hideEmptyUsedAddresses;
   final Value<bool> showWalletRecovery;
   final Value<double> twoFactorAmountThreshold;
+  final Value<bool> receiveInviterNotification;
+  final Value<bool> receiveEmailIntegrationNotification;
+  final Value<bool> walletCreated;
+  final Value<bool> acceptTermsAndConditions;
   final Value<int> rowid;
   const WalletUserSettingsTableCompanion({
     this.userId = const Value.absent(),
@@ -1450,6 +1607,10 @@ class WalletUserSettingsTableCompanion
     this.hideEmptyUsedAddresses = const Value.absent(),
     this.showWalletRecovery = const Value.absent(),
     this.twoFactorAmountThreshold = const Value.absent(),
+    this.receiveInviterNotification = const Value.absent(),
+    this.receiveEmailIntegrationNotification = const Value.absent(),
+    this.walletCreated = const Value.absent(),
+    this.acceptTermsAndConditions = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WalletUserSettingsTableCompanion.insert({
@@ -1459,13 +1620,22 @@ class WalletUserSettingsTableCompanion
     required bool hideEmptyUsedAddresses,
     required bool showWalletRecovery,
     required double twoFactorAmountThreshold,
+    required bool receiveInviterNotification,
+    required bool receiveEmailIntegrationNotification,
+    required bool walletCreated,
+    required bool acceptTermsAndConditions,
     this.rowid = const Value.absent(),
   })  : userId = Value(userId),
         bitcoinUnit = Value(bitcoinUnit),
         fiatCurrency = Value(fiatCurrency),
         hideEmptyUsedAddresses = Value(hideEmptyUsedAddresses),
         showWalletRecovery = Value(showWalletRecovery),
-        twoFactorAmountThreshold = Value(twoFactorAmountThreshold);
+        twoFactorAmountThreshold = Value(twoFactorAmountThreshold),
+        receiveInviterNotification = Value(receiveInviterNotification),
+        receiveEmailIntegrationNotification =
+            Value(receiveEmailIntegrationNotification),
+        walletCreated = Value(walletCreated),
+        acceptTermsAndConditions = Value(acceptTermsAndConditions);
   static Insertable<WalletUserSettings> custom({
     Expression<String>? userId,
     Expression<String>? bitcoinUnit,
@@ -1473,6 +1643,10 @@ class WalletUserSettingsTableCompanion
     Expression<bool>? hideEmptyUsedAddresses,
     Expression<bool>? showWalletRecovery,
     Expression<double>? twoFactorAmountThreshold,
+    Expression<bool>? receiveInviterNotification,
+    Expression<bool>? receiveEmailIntegrationNotification,
+    Expression<bool>? walletCreated,
+    Expression<bool>? acceptTermsAndConditions,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1485,6 +1659,14 @@ class WalletUserSettingsTableCompanion
         'show_wallet_recovery': showWalletRecovery,
       if (twoFactorAmountThreshold != null)
         'two_factor_amount_threshold': twoFactorAmountThreshold,
+      if (receiveInviterNotification != null)
+        'receive_inviter_notification': receiveInviterNotification,
+      if (receiveEmailIntegrationNotification != null)
+        'receive_email_integration_notification':
+            receiveEmailIntegrationNotification,
+      if (walletCreated != null) 'wallet_created': walletCreated,
+      if (acceptTermsAndConditions != null)
+        'accept_terms_and_conditions': acceptTermsAndConditions,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1496,6 +1678,10 @@ class WalletUserSettingsTableCompanion
       Value<bool>? hideEmptyUsedAddresses,
       Value<bool>? showWalletRecovery,
       Value<double>? twoFactorAmountThreshold,
+      Value<bool>? receiveInviterNotification,
+      Value<bool>? receiveEmailIntegrationNotification,
+      Value<bool>? walletCreated,
+      Value<bool>? acceptTermsAndConditions,
       Value<int>? rowid}) {
     return WalletUserSettingsTableCompanion(
       userId: userId ?? this.userId,
@@ -1506,6 +1692,14 @@ class WalletUserSettingsTableCompanion
       showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
       twoFactorAmountThreshold:
           twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
+      receiveInviterNotification:
+          receiveInviterNotification ?? this.receiveInviterNotification,
+      receiveEmailIntegrationNotification:
+          receiveEmailIntegrationNotification ??
+              this.receiveEmailIntegrationNotification,
+      walletCreated: walletCreated ?? this.walletCreated,
+      acceptTermsAndConditions:
+          acceptTermsAndConditions ?? this.acceptTermsAndConditions,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1533,6 +1727,21 @@ class WalletUserSettingsTableCompanion
       map['two_factor_amount_threshold'] =
           Variable<double>(twoFactorAmountThreshold.value);
     }
+    if (receiveInviterNotification.present) {
+      map['receive_inviter_notification'] =
+          Variable<bool>(receiveInviterNotification.value);
+    }
+    if (receiveEmailIntegrationNotification.present) {
+      map['receive_email_integration_notification'] =
+          Variable<bool>(receiveEmailIntegrationNotification.value);
+    }
+    if (walletCreated.present) {
+      map['wallet_created'] = Variable<bool>(walletCreated.value);
+    }
+    if (acceptTermsAndConditions.present) {
+      map['accept_terms_and_conditions'] =
+          Variable<bool>(acceptTermsAndConditions.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1548,6 +1757,11 @@ class WalletUserSettingsTableCompanion
           ..write('hideEmptyUsedAddresses: $hideEmptyUsedAddresses, ')
           ..write('showWalletRecovery: $showWalletRecovery, ')
           ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold, ')
+          ..write('receiveInviterNotification: $receiveInviterNotification, ')
+          ..write(
+              'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ')
+          ..write('walletCreated: $walletCreated, ')
+          ..write('acceptTermsAndConditions: $acceptTermsAndConditions, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2082,6 +2296,10 @@ typedef $$WalletUserSettingsTableTableInsertCompanionBuilder
   required bool hideEmptyUsedAddresses,
   required bool showWalletRecovery,
   required double twoFactorAmountThreshold,
+  required bool receiveInviterNotification,
+  required bool receiveEmailIntegrationNotification,
+  required bool walletCreated,
+  required bool acceptTermsAndConditions,
   Value<int> rowid,
 });
 typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder
@@ -2092,6 +2310,10 @@ typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder
   Value<bool> hideEmptyUsedAddresses,
   Value<bool> showWalletRecovery,
   Value<double> twoFactorAmountThreshold,
+  Value<bool> receiveInviterNotification,
+  Value<bool> receiveEmailIntegrationNotification,
+  Value<bool> walletCreated,
+  Value<bool> acceptTermsAndConditions,
   Value<int> rowid,
 });
 
@@ -2122,6 +2344,11 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             Value<bool> hideEmptyUsedAddresses = const Value.absent(),
             Value<bool> showWalletRecovery = const Value.absent(),
             Value<double> twoFactorAmountThreshold = const Value.absent(),
+            Value<bool> receiveInviterNotification = const Value.absent(),
+            Value<bool> receiveEmailIntegrationNotification =
+                const Value.absent(),
+            Value<bool> walletCreated = const Value.absent(),
+            Value<bool> acceptTermsAndConditions = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               WalletUserSettingsTableCompanion(
@@ -2131,6 +2358,11 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             hideEmptyUsedAddresses: hideEmptyUsedAddresses,
             showWalletRecovery: showWalletRecovery,
             twoFactorAmountThreshold: twoFactorAmountThreshold,
+            receiveInviterNotification: receiveInviterNotification,
+            receiveEmailIntegrationNotification:
+                receiveEmailIntegrationNotification,
+            walletCreated: walletCreated,
+            acceptTermsAndConditions: acceptTermsAndConditions,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -2140,6 +2372,10 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             required bool hideEmptyUsedAddresses,
             required bool showWalletRecovery,
             required double twoFactorAmountThreshold,
+            required bool receiveInviterNotification,
+            required bool receiveEmailIntegrationNotification,
+            required bool walletCreated,
+            required bool acceptTermsAndConditions,
             Value<int> rowid = const Value.absent(),
           }) =>
               WalletUserSettingsTableCompanion.insert(
@@ -2149,6 +2385,11 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             hideEmptyUsedAddresses: hideEmptyUsedAddresses,
             showWalletRecovery: showWalletRecovery,
             twoFactorAmountThreshold: twoFactorAmountThreshold,
+            receiveInviterNotification: receiveInviterNotification,
+            receiveEmailIntegrationNotification:
+                receiveEmailIntegrationNotification,
+            walletCreated: walletCreated,
+            acceptTermsAndConditions: acceptTermsAndConditions,
             rowid: rowid,
           ),
         ));
@@ -2200,6 +2441,28 @@ class $$WalletUserSettingsTableTableFilterComposer
           column: $state.table.twoFactorAmountThreshold,
           builder: (column, joinBuilders) =>
               ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get receiveInviterNotification =>
+      $state.composableBuilder(
+          column: $state.table.receiveInviterNotification,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get receiveEmailIntegrationNotification =>
+      $state.composableBuilder(
+          column: $state.table.receiveEmailIntegrationNotification,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get walletCreated => $state.composableBuilder(
+      column: $state.table.walletCreated,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get acceptTermsAndConditions => $state.composableBuilder(
+      column: $state.table.acceptTermsAndConditions,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$WalletUserSettingsTableTableOrderingComposer
@@ -2233,6 +2496,29 @@ class $$WalletUserSettingsTableTableOrderingComposer
   ColumnOrderings<double> get twoFactorAmountThreshold =>
       $state.composableBuilder(
           column: $state.table.twoFactorAmountThreshold,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get receiveInviterNotification =>
+      $state.composableBuilder(
+          column: $state.table.receiveInviterNotification,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get receiveEmailIntegrationNotification =>
+      $state.composableBuilder(
+          column: $state.table.receiveEmailIntegrationNotification,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get walletCreated => $state.composableBuilder(
+      column: $state.table.walletCreated,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get acceptTermsAndConditions =>
+      $state.composableBuilder(
+          column: $state.table.acceptTermsAndConditions,
           builder: (column, joinBuilders) =>
               ColumnOrderings(column, joinBuilders: joinBuilders));
 }
