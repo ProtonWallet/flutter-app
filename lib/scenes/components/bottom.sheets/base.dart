@@ -10,6 +10,8 @@ class HomeModalBottomSheet {
     Widget? header,
     ScrollController? scrollController,
     Color? backgroundColor,
+    bool? useIntrinsicHeight,
+    double? maxHeight,
   }) {
     if (Responsive.isMobile(context)) {
       _showMobile(
@@ -18,6 +20,8 @@ class HomeModalBottomSheet {
         header: header,
         scrollController: scrollController,
         backgroundColor: backgroundColor,
+        useIntrinsicHeight: useIntrinsicHeight,
+        maxHeight: maxHeight,
       );
     } else {
       // desktop and tablet
@@ -27,6 +31,8 @@ class HomeModalBottomSheet {
         header: header,
         scrollController: scrollController,
         backgroundColor: backgroundColor,
+        useIntrinsicHeight: useIntrinsicHeight,
+        maxHeight: maxHeight,
       );
     }
   }
@@ -37,6 +43,8 @@ class HomeModalBottomSheet {
     Widget? header,
     ScrollController? scrollController,
     Color? backgroundColor,
+    bool? useIntrinsicHeight,
+    double? maxHeight,
   }) {
     showModalBottomSheet(
         context: context,
@@ -44,8 +52,8 @@ class HomeModalBottomSheet {
         isScrollControlled: true,
         constraints: BoxConstraints(
           maxWidth: maxDeskTopSheetWidth,
-          maxHeight: MediaQuery.of(context).size.height,
-          minHeight: MediaQuery.of(context).size.height,
+          maxHeight: maxHeight ?? MediaQuery.of(context).size.height,
+          minHeight: maxHeight ?? MediaQuery.of(context).size.height,
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
@@ -62,27 +70,21 @@ class HomeModalBottomSheet {
               child: GestureDetector(
                 onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
                 child: SafeArea(
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (header != null) header,
-                        Expanded(
-                          child: SingleChildScrollView(
-                            controller: scrollController,
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: defaultPadding,
-                                    horizontal: defaultPadding),
-                                child: child),
+                  child: (useIntrinsicHeight ?? true)
+                      ? IntrinsicHeight(
+                          child: _buildContent(
+                            context,
+                            child: child,
+                            header: header,
+                            scrollController: scrollController,
                           ),
+                        )
+                      : _buildContent(
+                          context,
+                          child: child,
+                          header: header,
+                          scrollController: scrollController,
                         ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -96,6 +98,8 @@ class HomeModalBottomSheet {
     Widget? header,
     ScrollController? scrollController,
     Color? backgroundColor,
+    bool? useIntrinsicHeight,
+    double? maxHeight,
   }) {
     showModalBottomSheet(
         context: context,
@@ -103,7 +107,7 @@ class HomeModalBottomSheet {
         isScrollControlled: true,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height - 60,
+          maxHeight: maxHeight ?? MediaQuery.of(context).size.height - 60,
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
@@ -112,25 +116,45 @@ class HomeModalBottomSheet {
           return GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: SafeArea(
-              child: IntrinsicHeight(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (header != null) header,
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: defaultPadding,
-                              horizontal: defaultPadding),
-                          child: child),
+              child: (useIntrinsicHeight ?? true)
+                  ? IntrinsicHeight(
+                      child: _buildContent(
+                        context,
+                        child: child,
+                        header: header,
+                        scrollController: scrollController,
+                      ),
+                    )
+                  : _buildContent(
+                      context,
+                      child: child,
+                      header: header,
+                      scrollController: scrollController,
                     ),
-                  ),
-                ]),
-              ),
             ),
           );
         });
+  }
+
+  static Widget _buildContent(
+    BuildContext context, {
+    Widget? child,
+    Widget? header,
+    ScrollController? scrollController,
+  }) {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      if (header != null) header,
+      Expanded(
+        child: SingleChildScrollView(
+          controller: scrollController,
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+              padding: const EdgeInsets.symmetric(
+                  vertical: defaultPadding, horizontal: defaultPadding),
+              child: child),
+        ),
+      ),
+    ]);
   }
 }

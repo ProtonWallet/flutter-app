@@ -11,6 +11,10 @@ class WalletUserSettingsTable extends Table {
   // TODO(fix): showWalletRecovery need to be removed
   BoolColumn get showWalletRecovery => boolean()();
   RealColumn get twoFactorAmountThreshold => real()();
+  BoolColumn get receiveInviterNotification => boolean()();
+  BoolColumn get receiveEmailIntegrationNotification => boolean()();
+  BoolColumn get walletCreated => boolean()();
+  BoolColumn get acceptTermsAndConditions => boolean()();
 
   @override
   Set<Column> get primaryKey => {userId};

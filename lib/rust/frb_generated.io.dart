@@ -1483,6 +1483,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_update_mnemonic_settings_request_body(dynamic raw);
 
   @protected
+  UserReceiveNotificationEmailTypes
+      dco_decode_user_receive_notification_email_types(dynamic raw);
+
+  @protected
   BigInt dco_decode_usize(dynamic raw);
 
   @protected
@@ -2830,6 +2834,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   UpdateMnemonicSettingsRequestBody
       sse_decode_update_mnemonic_settings_request_body(
+          SseDeserializer deserializer);
+
+  @protected
+  UserReceiveNotificationEmailTypes
+      sse_decode_user_receive_notification_email_types(
           SseDeserializer deserializer);
 
   @protected
@@ -4209,6 +4218,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_update_mnemonic_settings_request_body(
       UpdateMnemonicSettingsRequestBody self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_user_receive_notification_email_types(
+      UserReceiveNotificationEmailTypes self, SseSerializer serializer);
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);

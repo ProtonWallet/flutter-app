@@ -122,16 +122,8 @@ class AddWalletAccountSheet {
                       )),
                   const SizedBox(height: 20),
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
                     margin: const EdgeInsets.symmetric(
                       horizontal: defaultPadding,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ProtonColors.white,
-                      borderRadius: BorderRadius.circular(18.0),
                     ),
                     child: DropdownButtonV2(
                       labelText: S.of(context).script_type,

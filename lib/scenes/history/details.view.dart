@@ -188,15 +188,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         ),
                       ]),
                     !viewModel.initialized
-                        ? const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: defaultPadding),
-                            child: CardLoading(
-                              height: 50,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              margin: EdgeInsets.only(top: 4),
-                            ),
+                        ? const CardLoading(
+                            height: 50,
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            margin: EdgeInsets.only(top: 4),
                           )
                         : !viewModel.isEditing
                             ? GestureDetector(
@@ -300,9 +295,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               ),
                     ExpansionTile(
                         shape: const Border(),
-                        title: Text(S.of(context).view_more,
-                            style:
-                                FontManager.body2Median(ProtonColors.textWeak)),
+                        title: Transform.translate(
+                          offset: const Offset(-16, 0),
+                          child: Text(S.of(context).view_more,
+                              style: FontManager.body2Median(
+                                  ProtonColors.textWeak)),
+                        ),
                         iconColor: ProtonColors.textHint,
                         collapsedIconColor: ProtonColors.textHint,
                         onExpansionChanged: (isExpanded) {

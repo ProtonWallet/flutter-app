@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -9,10 +9,12 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -36,13 +38,16 @@ class EditSenderSheet {
         TextEditingController(text: email);
     final FocusNode emailFocusNode = FocusNode();
     HomeModalBottomSheet.show(context,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
+        useIntrinsicHeight: false,
+        maxHeight: MediaQuery.of(context).size.height - 120,
+        // need to set false otherwise it will raise error since auto complete conflict with IntrinsicHeight
+        child: Column(children: [
           Align(
               alignment: Alignment.centerRight,
               child: CloseButtonV1(onPressed: () {
                 Navigator.of(context).pop();
               })),
-          Column(mainAxisSize: MainAxisSize.min, children: [
+          Column(children: [
             SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
                 fit: BoxFit.fill, width: 86, height: 87),
             const SizedBox(height: 10),
@@ -58,23 +63,51 @@ class EditSenderSheet {
             const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: TextFieldTextV2(
-                labelText: S.of(context).sender_name,
-                hintText: S.of(context).sender_name_hint,
-                alwaysShowHint: true,
-                maxLength: maxWalletNameSize,
-                textController: nameController,
-                myFocusNode: nameFocusNode,
-                validation: (String newAccountName) {
-                  // bool accountNameExists = false;
-
-                  // TODO(fix): check if accountName already used
-                  // if (accountNameExists) {
-                  //   return S.of(context).account_name_already_used;
-                  // }
-                  return "";
-                },
-              ),
+              child: Column(children: [
+                ProtonMailAutoComplete(
+                    labelText: S.of(context).sender_name,
+                    hintText: S.of(context).sender_name_hint,
+                    emails: viewModel.contactsEmail,
+                    color: ProtonColors.white,
+                    focusNode: nameFocusNode,
+                    textEditingController: nameController,
+                    showBorder: false,
+                    showQRcodeScanner: false,
+                    maxHeight:
+                        max(MediaQuery.of(context).size.height - 460, 190),
+                    callback: () {
+                      final String email = nameController.text;
+                      for (ContactsModel contactsModel
+                          in viewModel.contactsEmail) {
+                        if (email == contactsModel.email) {
+                          if (contactsModel.name.isNotEmpty) {
+                            nameController.text = contactsModel.name;
+                          }
+                          emailController.text = contactsModel.email;
+                          break;
+                        }
+                      }
+                    }),
+              ]),
+              //
+              //
+              // TextFieldTextV2(
+              //   labelText: S.of(context).sender_name,
+              //   hintText: S.of(context).sender_name_hint,
+              //   alwaysShowHint: true,
+              //   maxLength: maxWalletNameSize,
+              //   textController: nameController,
+              //   myFocusNode: nameFocusNode,
+              //   validation: (String newAccountName) {
+              //     // bool accountNameExists = false;
+              //
+              //     // TODO(fix): check if accountName already used
+              //     // if (accountNameExists) {
+              //     //   return S.of(context).account_name_already_used;
+              //     // }
+              //     return "";
+              //   },
+              // ),
             ),
             const SizedBox(height: 10),
             Padding(
@@ -101,12 +134,8 @@ class EditSenderSheet {
                 padding: const EdgeInsets.only(top: 20),
                 margin: const EdgeInsets.symmetric(
                     horizontal: defaultButtonPadding),
-                child: ButtonV5(
+                child: ButtonV6(
                     onPressed: () async {
-                      Navigator.of(context).pop();
-                      EasyLoading.show(
-                          status: "updating..",
-                          maskType: EasyLoadingMaskType.black);
                       try {
                         if (nameController.text.isNotEmpty) {
                           await viewModel.updateSender(
@@ -121,7 +150,9 @@ class EditSenderSheet {
                       } catch (e) {
                         CommonHelper.showErrorDialog(e.toString());
                       }
-                      EasyLoading.dismiss();
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     },
                     backgroundColor: ProtonColors.protonBlue,
                     text: S.of(context).update_details,

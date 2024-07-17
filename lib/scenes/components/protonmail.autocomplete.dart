@@ -15,7 +15,13 @@ class ProtonMailAutoComplete extends StatelessWidget {
   final TextEditingController textEditingController;
   final FocusNode focusNode;
   final String? labelText;
+  final String? hintText;
   final VoidCallback? callback;
+  final bool? showBorder;
+  final Color? itemBackgroundColor;
+  final bool updateTextController;
+  final bool showQRcodeScanner;
+  final double maxHeight;
 
   const ProtonMailAutoComplete({
     required this.emails,
@@ -24,7 +30,13 @@ class ProtonMailAutoComplete extends StatelessWidget {
     super.key,
     this.callback,
     this.labelText,
+    this.hintText,
     this.color = Colors.transparent,
+    this.showBorder = true,
+    this.maxHeight = 320,
+    this.itemBackgroundColor,
+    this.updateTextController = true,
+    this.showQRcodeScanner = true,
   });
 
   @override
@@ -39,11 +51,17 @@ class ProtonMailAutoComplete extends StatelessWidget {
               }
               return emails.where((ContactsModel protonContactEmail) {
                 return protonContactEmail.email
-                    .contains(textEditingValue.text.toLowerCase());
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase()) ||
+                    protonContactEmail.name
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
               });
             },
             onSelected: (ContactsModel selection) {
-              textEditingController.text = selection.email;
+              if (updateTextController) {
+                textEditingController.text = selection.email;
+              }
               if (callback != null) {
                 callback!();
               }
@@ -56,11 +74,11 @@ class ProtonMailAutoComplete extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: Container(
                   constraints: BoxConstraints(
-                    maxHeight: 320,
+                    maxHeight: maxHeight,
                     maxWidth: constraints.biggest.width,
                   ),
                   decoration: BoxDecoration(
-                    color: ProtonColors.white,
+                    color: itemBackgroundColor ?? ProtonColors.white,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: ListView(
@@ -95,16 +113,22 @@ class ProtonMailAutoComplete extends StatelessWidget {
                 FocusNode focusNode,
                 VoidCallback onFieldSubmitted) {
               return Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 4,
+                ),
                 decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
-                    border: Border.all(
-                      width: 1.6,
-                      color: focusNode.hasFocus
-                          ? ProtonColors.interactionNorm
-                          : ProtonColors.textHint,
-                    )),
+                  color: color,
+                  borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                  border: showBorder!
+                      ? Border.all(
+                          width: 1.6,
+                          color: focusNode.hasFocus
+                              ? ProtonColors.interactionNorm
+                              : ProtonColors.textHint,
+                        )
+                      : null,
+                ),
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: textEditingController,
@@ -115,19 +139,25 @@ class ProtonMailAutoComplete extends StatelessWidget {
                     }
                   },
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        if (Platform.isAndroid || Platform.isIOS) {
-                          showQRScanBottomSheet(
-                              context, textEditingController, callback);
-                        }
-                      },
-                      icon: Icon(Icons.qr_code_rounded,
-                          size: 26, color: ProtonColors.textWeak),
-                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: showQRcodeScanner
+                        ? IconButton(
+                            onPressed: () {
+                              if (Platform.isAndroid || Platform.isIOS) {
+                                showQRScanBottomSheet(
+                                    context, textEditingController, callback);
+                              }
+                            },
+                            icon: Icon(Icons.qr_code_rounded,
+                                size: 26, color: ProtonColors.textWeak),
+                          )
+                        : null,
                     labelText: labelText,
                     labelStyle:
                         FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                    hintText: hintText,
+                    hintStyle:
+                        FontManager.textFieldLabelStyle(ProtonColors.textHint),
                     contentPadding: const EdgeInsets.only(
                         left: 10, right: 10, top: 4, bottom: 16),
                     enabledBorder: InputBorder.none,

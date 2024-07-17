@@ -1,6 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -201,12 +200,7 @@ class SendView extends ViewBase<SendViewModel> {
                                       .map(FiatCurrencyHelper.getDisplayName)
                                       .toList(),
                                   itemsLeadingIcons: fiatCurrencies
-                                      .map((v) => CountryFlag.fromCountryCode(
-                                            FiatCurrencyHelper.toCountryCode(v),
-                                            shape: const Circle(),
-                                            width: 20,
-                                            height: 20,
-                                          ))
+                                      .map(CommonHelper.getCountryIcon)
                                       .toList(),
                                   valueNotifier:
                                       viewModel.fiatCurrencyNotifier)),
@@ -384,53 +378,57 @@ class SendView extends ViewBase<SendViewModel> {
                       !viewModel.selfBitcoinAddresses.contains(
                           viewModel.bitcoinAddresses[protonRecipient.email] ??
                               ""))
-                    Column(children: [
-                      TransactionHistorySendItem(
-                        content: protonRecipient.email,
-                        bitcoinAddress:
-                            viewModel.bitcoinAddresses[protonRecipient.email] ??
-                                "",
-                        bitcoinAmount: viewModel.recipients.length > 1
-                            ? BitcoinAmount(
-                                amountInSatoshi:
-                                    protonRecipient.amountInSATS ?? 0,
-                                bitcoinUnit: viewModel
-                                    .userSettingsDataProvider.bitcoinUnit,
-                                exchangeRate: viewModel.exchangeRate)
-                            : null,
-                      ),
-                      const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: defaultPadding),
-                        child: Divider(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: Column(children: [
+                        TransactionHistorySendItem(
+                          content: protonRecipient.email,
+                          bitcoinAddress: viewModel
+                                  .bitcoinAddresses[protonRecipient.email] ??
+                              "",
+                          bitcoinAmount: viewModel.recipients.length > 1
+                              ? BitcoinAmount(
+                                  amountInSatoshi:
+                                      protonRecipient.amountInSATS ?? 0,
+                                  bitcoinUnit: viewModel
+                                      .userSettingsDataProvider.bitcoinUnit,
+                                  exchangeRate: viewModel.exchangeRate)
+                              : null,
+                        ),
+                        const Divider(
                           thickness: 0.2,
                           height: 1,
                         ),
-                      ),
-                    ]),
-                TransactionHistoryItemV2(
-                  title: S.of(context).trans_metwork_fee,
-                  titleTooltip: S.of(context).trans_metwork_fee_desc,
-                  titleOptionsCallback: () {
-                    showSelectTransactionFeeMode(context, viewModel);
-                  },
-                  backgroundColor: ProtonColors.white,
-                  content: AnimatedFlipCounter(
-                    duration: const Duration(milliseconds: 500),
-                    value: ExchangeCalculator.getNotionalInFiatCurrency(
-                        viewModel.exchangeRate, estimatedFee),
-                    thousandSeparator: ",",
-                    prefix:
-                        "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
-                    fractionDigits: ExchangeCalculator.getDisplayDigit(
-                        viewModel.exchangeRate),
-                    textStyle: FontManager.body2Median(ProtonColors.textNorm),
+                      ]),
+                    ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: TransactionHistoryItemV2(
+                    title: S.of(context).trans_metwork_fee,
+                    titleTooltip: S.of(context).trans_metwork_fee_desc,
+                    titleOptionsCallback: () {
+                      showSelectTransactionFeeMode(context, viewModel);
+                    },
+                    backgroundColor: ProtonColors.white,
+                    content: AnimatedFlipCounter(
+                      duration: const Duration(milliseconds: 500),
+                      value: ExchangeCalculator.getNotionalInFiatCurrency(
+                          viewModel.exchangeRate, estimatedFee),
+                      thousandSeparator: ",",
+                      prefix:
+                          "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
+                      fractionDigits: ExchangeCalculator.getDisplayDigit(
+                          viewModel.exchangeRate),
+                      textStyle: FontManager.body2Median(ProtonColors.textNorm),
+                    ),
+                    memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
+                        viewModel.userSettingsDataProvider.bitcoinUnit,
+                        estimatedFee,
+                        textStyle:
+                            FontManager.body2Regular(ProtonColors.textHint)),
                   ),
-                  memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
-                      viewModel.userSettingsDataProvider.bitcoinUnit,
-                      estimatedFee,
-                      textStyle:
-                          FontManager.body2Regular(ProtonColors.textHint)),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -439,8 +437,12 @@ class SendView extends ViewBase<SendViewModel> {
                     height: 1,
                   ),
                 ),
-                getTransactionTotalValueWidget(
-                    context, viewModel, estimatedFee),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: getTransactionTotalValueWidget(
+                      context, viewModel, estimatedFee),
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: defaultPadding),
                   child: Divider(

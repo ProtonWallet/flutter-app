@@ -158,6 +158,9 @@ class $AssetsImagesIconGen {
   SvgGenImage get editUnknown =>
       const SvgGenImage('assets/images/icon/edit_unknown.svg');
 
+  /// File path: assets/images/icon/euro.svg
+  SvgGenImage get euro => const SvgGenImage('assets/images/icon/euro.svg');
+
   /// File path: assets/images/icon/ic-arrow-out-from-rectanglesignout.svg
   SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
       'assets/images/icon/ic-arrow-out-from-rectanglesignout.svg');
@@ -376,6 +379,7 @@ class $AssetsImagesIconGen {
         doTransactions,
         drawerMenu,
         editUnknown,
+        euro,
         icArrowOutFromRectanglesignout,
         icArrowOutSquare,
         icArrowRightArrowLeft,

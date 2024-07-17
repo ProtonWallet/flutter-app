@@ -162,3 +162,11 @@ enum FiatCurrency {
   vnd,
   ;
 }
+
+enum UserReceiveNotificationEmailTypes {
+  notificationToInviter,
+  emailIntegration,
+  transactionalBvE,
+  unsupported,
+  ;
+}

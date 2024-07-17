@@ -158,6 +158,9 @@ impl From<AndromedaApiError> for BridgeError {
                 "Muon MuonStatusError occurred: {:?}",
                 err.source()
             )),
+            AndromedaApiError::Utf8Error(err) => {
+                BridgeError::Generic(format!("Utf8Error error occurred: {:?}", err.source()))
+            }
         }
     }
 }

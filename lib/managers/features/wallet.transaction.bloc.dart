@@ -147,6 +147,8 @@ class WalletTransactionBloc
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? fiatCurrencySettingSubscription;
 
+  Map<String, int> accountID2lastSyncTime = {};
+
   // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
 
   WalletTransactionEvent? lastEvent;
@@ -273,13 +275,14 @@ class WalletTransactionBloc
         emit(state.copyWith(
           historyTransaction: [],
           bitcoinAddresses: [],
+          isSyncing: true,
         ));
       }
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = null;
       lastEvent = event;
       if (!event.triggerByDataProviderUpdate) {
-        syncWallet(forceSync: false);
+        // syncWallet(forceSync: false);
       }
 
       List<BitcoinAddressDetail> bitcoinAddresses = [];
@@ -363,13 +366,14 @@ class WalletTransactionBloc
         emit(state.copyWith(
           historyTransaction: [],
           bitcoinAddresses: [],
+          isSyncing: true,
         ));
       }
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = event.accountMenuModel.accountModel;
       lastEvent = event;
       if (!event.triggerByDataProviderUpdate) {
-        syncWallet(forceSync: false);
+        // syncWallet(forceSync: false);
       }
 
       final WalletModel walletModel = event.walletMenuModel.walletModel;
@@ -988,12 +992,20 @@ class WalletTransactionBloc
       walletMenuModel,
       triggerByDataProviderUpdate: false,
     ));
+    final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-      bdkTransactionDataProvider.syncWallet(
-        walletMenuModel.walletModel,
-        accountMenuModel.accountModel,
-        forceSync: false,
-      );
+      final int lastSyncTime =
+          accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
+      final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+      if (timeDiffSeconds > reSyncTime) {
+        accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
+            currentTimestamp;
+        bdkTransactionDataProvider.syncWallet(
+          walletMenuModel.walletModel,
+          accountMenuModel.accountModel,
+          forceSync: false,
+        );
+      }
     }
   }
 
@@ -1007,11 +1019,20 @@ class WalletTransactionBloc
       accountMenuModel,
       triggerByDataProviderUpdate: false,
     ));
-    bdkTransactionDataProvider.syncWallet(
-      walletMenuModel.walletModel,
-      accountMenuModel.accountModel,
-      forceSync: false,
-    );
+    final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final int lastSyncTime =
+        accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
+    final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+
+    if (timeDiffSeconds > reSyncTime) {
+      accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
+          currentTimestamp;
+      bdkTransactionDataProvider.syncWallet(
+        walletMenuModel.walletModel,
+        accountMenuModel.accountModel,
+        forceSync: false,
+      );
+    }
   }
 
   void syncWallet({required bool forceSync}) {
@@ -1069,6 +1090,7 @@ class WalletTransactionBloc
     bdkTransactionDataSubscription?.cancel();
     walletsDataSubscription?.cancel();
     fiatCurrencySettingSubscription?.cancel();
+    accountID2lastSyncTime.clear();
     return super.close();
   }
 }

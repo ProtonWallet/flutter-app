@@ -14,6 +14,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
@@ -45,6 +46,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   bool isValidMnemonic = false;
   bool isFirstWallet = false;
   bool isImporting = false;
+  bool acceptTermsAndConditions = false;
   List<ProtonAddress> protonAddresses = [];
 
   void switchToManualInputMode();
@@ -88,6 +90,11 @@ class ImportViewModelImpl extends ImportViewModel {
     passphraseFocusNode = FocusNode();
     fiatCurrencyNotifier = ValueNotifier(defaultFiatCurrency);
     nameTextController.text = preInputWalletName;
+    final WalletUserSettings? walletUserSettings =
+        await dataProviderManager.userSettingsDataProvider.getSettings();
+    if (walletUserSettings != null) {
+      acceptTermsAndConditions = walletUserSettings.acceptTermsAndConditions;
+    }
 
     final List<ProtonAddress> addresses = await proton_api.getProtonAddress();
     protonAddresses =
