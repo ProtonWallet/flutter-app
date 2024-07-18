@@ -269,6 +269,21 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
+      final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      for (AccountMenuModel accountMenuModel in event.walletMenuModel.accounts) {
+        final int lastSyncTime =
+            accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
+        final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+        if (timeDiffSeconds > reSyncTime) {
+          accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
+              currentTimestamp;
+          bdkTransactionDataProvider.syncWallet(
+            event.walletMenuModel.walletModel,
+            accountMenuModel.accountModel,
+            forceSync: false,
+          );
+        }
+      }
       if (currentWalletModel?.walletID !=
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel != null) {
@@ -359,6 +374,20 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
+      final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final int lastSyncTime =
+          accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] ?? 0;
+      final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+
+      if (timeDiffSeconds > reSyncTime) {
+        accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] =
+            currentTimestamp;
+        bdkTransactionDataProvider.syncWallet(
+          event.walletMenuModel.walletModel,
+          event.accountMenuModel.accountModel,
+          forceSync: false,
+        );
+      }
       if (currentWalletModel?.walletID !=
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel?.accountID !=
@@ -992,21 +1021,6 @@ class WalletTransactionBloc
       walletMenuModel,
       triggerByDataProviderUpdate: false,
     ));
-    final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-      final int lastSyncTime =
-          accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
-      final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-      if (timeDiffSeconds > reSyncTime) {
-        accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
-            currentTimestamp;
-        bdkTransactionDataProvider.syncWallet(
-          walletMenuModel.walletModel,
-          accountMenuModel.accountModel,
-          forceSync: false,
-        );
-      }
-    }
   }
 
   void selectAccount(
@@ -1019,20 +1033,6 @@ class WalletTransactionBloc
       accountMenuModel,
       triggerByDataProviderUpdate: false,
     ));
-    final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    final int lastSyncTime =
-        accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
-    final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-
-    if (timeDiffSeconds > reSyncTime) {
-      accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
-          currentTimestamp;
-      bdkTransactionDataProvider.syncWallet(
-        walletMenuModel.walletModel,
-        accountMenuModel.accountModel,
-        forceSync: false,
-      );
-    }
   }
 
   void syncWallet({required bool forceSync}) {

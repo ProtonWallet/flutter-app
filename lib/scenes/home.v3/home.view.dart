@@ -299,6 +299,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     viewModel
                                                         .move(NavID.receive);
                                                   },
+                                                  elevation: 0.0,
                                                   backgroundColor:
                                                       ProtonColors.white,
                                                   text: S.of(context).receive,
@@ -322,6 +323,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               ),
                                               ButtonV5(
                                                   onPressed: () {},
+                                                  elevation: 0.0,
                                                   backgroundColor: ProtonColors
                                                       .backgroundBlack,
                                                   text: S.of(context).buy,

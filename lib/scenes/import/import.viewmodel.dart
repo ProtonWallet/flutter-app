@@ -102,6 +102,8 @@ class ImportViewModelImpl extends ImportViewModel {
 
   @override
   Future<void> importWallet() async {
+    WalletModel? walletModel;
+    AccountModel? accountModel;
     try {
       final String walletName = nameTextController.text;
       // Validation for walletName if empty
@@ -126,14 +128,12 @@ class ImportViewModelImpl extends ImportViewModel {
         defaultFiatCurrency,
         0, // default wallet account index
       );
+      final String walletID = apiWallet.wallet.id;
+      final String accountID = apiWalletAccount.id;
+      walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+      accountModel = await DBHelper.accountDao!.findByServerID(accountID);
       if (isFirstWallet) {
         /// Auto bind email address if it's first wallet
-        final String walletID = apiWallet.wallet.id;
-        final String accountID = apiWalletAccount.id;
-        final WalletModel? walletModel =
-            await DBHelper.walletDao!.findByServerID(walletID);
-        final AccountModel? accountModel =
-            await DBHelper.accountDao!.findByServerID(accountID);
         if (walletModel != null && accountModel != null) {
           final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
           if (protonAddress != null) {
@@ -151,6 +151,13 @@ class ImportViewModelImpl extends ImportViewModel {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+    }
+    if (walletModel != null && accountModel != null) {
+      dataProviderManager.bdkTransactionDataProvider.syncWallet(
+        walletModel,
+        accountModel,
+        forceSync: true,
+      );
     }
   }
 

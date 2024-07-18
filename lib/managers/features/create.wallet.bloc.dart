@@ -70,7 +70,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
   ) async {
     /// Generate a wallet secret key
     final SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    final Uint8List entropy = Uint8List.fromList(await secretKey.extractBytes());
+    final Uint8List entropy =
+        Uint8List.fromList(await secretKey.extractBytes());
 
     /// get first user key (primary user key)
     final firstUserKey = await userManager.getFirstKey();
@@ -85,7 +86,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     /// encrypt wallet name with wallet key
-    final String clearWalletName = walletName.isNotEmpty ? walletName : "My Wallet";
+    final String clearWalletName =
+        walletName.isNotEmpty ? walletName : "My Wallet";
     final String encryptedWalletName = await WalletKeyHelper.encrypt(
       secretKey,
       clearWalletName,
@@ -106,7 +108,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     /// sign wallet key with user private key
-    final String walletKeySignature = proton_crypto.getBinarySignatureWithContext(
+    final String walletKeySignature =
+        proton_crypto.getBinarySignatureWithContext(
       userPrivateKey,
       passphrase,
       entropy,
@@ -133,7 +136,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
 
     /// save wallet passphrase to secure storage
     if (walletPassphrase.isNotEmpty) {
-      walletPassphraseProvider.saveWalletPassphrase(
+      await walletPassphraseProvider.saveWalletPassphrase(
         WalletPassphrase(
           walletID: walletData.wallet.id,
           passphrase: walletPassphrase,
@@ -162,7 +165,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     // var signature = walletKey.walletKeySignature;
 
     /// get new derivation path
-    final String derivationPath = await walletsDataProvider.getNewDerivationPathBy(
+    final String derivationPath =
+        await walletsDataProvider.getNewDerivationPathBy(
       serverWalletID,
       scriptType,
       appConfig.coinType,

@@ -1039,6 +1039,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> createWallet() async {
+    WalletModel? walletModel;
+    AccountModel? accountModel;
     try {
       bool isFirstWallet = false;
       final List<WalletData>? wallets =
@@ -1070,14 +1072,13 @@ class HomeViewModelImpl extends HomeViewModel {
         0, // default wallet account index
       );
 
+      final String walletID = apiWallet.wallet.id;
+      final String accountID = apiWalletAccount.id;
+      walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+      accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+
       /// Auto bind email address if it's first wallet
       if (isFirstWallet) {
-        final String walletID = apiWallet.wallet.id;
-        final String accountID = apiWalletAccount.id;
-        final WalletModel? walletModel =
-            await DBHelper.walletDao!.findByServerID(walletID);
-        final AccountModel? accountModel =
-            await DBHelper.accountDao!.findByServerID(accountID);
         if (walletModel != null && accountModel != null) {
           final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
           if (protonAddress != null) {
@@ -1105,6 +1106,7 @@ class HomeViewModelImpl extends HomeViewModel {
         isError: true,
       );
     }
+    // no need to sync since it's brand new walllet
   }
 
   @override
