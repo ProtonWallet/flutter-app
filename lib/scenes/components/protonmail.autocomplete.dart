@@ -89,11 +89,20 @@ class ProtonMailAutoComplete extends StatelessWidget {
                           onSelected(option);
                         },
                         child: Column(children: [
-                          ListTile(
-                            leading: getEmailAvatar(option.name),
-                            title: Text(option.name),
-                            subtitle: Text(option.email),
-                          ),
+                          option.name != option.email
+                              ? ListTile(
+                                  leading: getEmailAvatar(option.name),
+                                  title: Text(option.name),
+                                  subtitle: Text(option.email),
+                                )
+                              : Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: ListTile(
+                                    leading: getEmailAvatar(option.name),
+                                    title: Text(option.name),
+                                  ),
+                                ),
                           // const Padding(
                           //     padding: EdgeInsets.symmetric(
                           //         horizontal: defaultPadding),

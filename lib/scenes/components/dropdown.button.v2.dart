@@ -169,7 +169,13 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
           }
           return SafeArea(
             child: Container(
-              padding: const EdgeInsets.all(defaultPadding),
+              padding: EdgeInsets.only(
+                left: defaultPadding,
+                right: defaultPadding,
+                top: defaultPadding,
+                bottom:
+                    defaultPadding + MediaQuery.of(context).viewInsets.bottom,
+              ),
               child: IntrinsicHeight(
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Align(

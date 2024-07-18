@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -11,7 +10,7 @@ import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -70,8 +69,9 @@ class PassphraseSheet {
             padding: const EdgeInsets.only(top: 20),
             margin:
                 const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
-            child: ButtonV5(
+            child: ButtonV6(
                 onPressed: () async {
+                  // TODO(fix): move some logic to VM
                   final String passphrase =
                       viewModel.walletRecoverPassphraseController.text;
                   final bool match = await WalletManager.checkFingerprint(
@@ -80,12 +80,10 @@ class PassphraseSheet {
                     viewModel.isWalletPassphraseMatch = match;
                   });
                   if (match) {
-                    EasyLoading.show(
-                        status: "apply passphrase to wallet",
-                        maskType: EasyLoadingMaskType.black);
                     try {
                       viewModel.errorMessage = "";
-                      viewModel.dataProviderManager.walletPassphraseProvider
+                      await viewModel
+                          .dataProviderManager.walletPassphraseProvider
                           .saveWalletPassphrase(
                         WalletPassphrase(
                           walletID: walletMenuModel.walletModel.walletID,
@@ -93,7 +91,6 @@ class PassphraseSheet {
                         ),
                       );
                     } on BridgeError catch (e, stacktrace) {
-                      // TODO(fix): fix me
                       viewModel.errorMessage = parseSampleDisplayError(e);
                       logger
                           .e("importWallet error: $e, stacktrace: $stacktrace");
@@ -104,11 +101,19 @@ class PassphraseSheet {
                       CommonHelper.showErrorDialog(viewModel.errorMessage);
                       viewModel.errorMessage = "";
                     }
-                    EasyLoading.dismiss();
                   }
                   viewModel.walletRecoverPassphraseController.text = "";
                   if (context.mounted && match) {
                     walletMenuModel.hasValidPassword = true;
+                    for (AccountMenuModel accountMenuModel
+                        in walletMenuModel.accounts) {
+                      viewModel.dataProviderManager.bdkTransactionDataProvider
+                          .syncWallet(
+                        walletMenuModel.walletModel,
+                        accountMenuModel.accountModel,
+                        forceSync: true,
+                      );
+                    }
                     Navigator.of(context).pop();
                   }
                 },
