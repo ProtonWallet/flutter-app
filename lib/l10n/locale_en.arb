@@ -319,7 +319,7 @@
   "sun_short": "Sn",
   "in_progress": "In progress",
   "in_progress_broadcasted": "In progress: broadcasted",
-  "in_progress_waiting_for_confirm": "In progress: waiting for confirm",
+  "in_progress_waiting_for_confirm": "In progress: waiting for confirmation",
   "not_a_valid_mnemonic": "Sorry, this is not a valid wallet seed phrases",
   "confirmed": "Confirmed",
   "completed": "Completed",
