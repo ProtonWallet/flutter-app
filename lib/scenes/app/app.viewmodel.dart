@@ -32,17 +32,6 @@ class AppViewModelImpl extends AppViewModel {
   final ManagerFactory serviceManager;
 
   AppViewModelImpl(super.coordinator, this.serviceManager);
-  final datasourceChangedStreamController =
-      StreamController<AppViewModel>.broadcast();
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {

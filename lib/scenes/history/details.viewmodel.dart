@@ -12,7 +12,6 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
@@ -57,7 +56,7 @@ abstract class HistoryDetailViewModel
     this.txID,
     this.userFiatCurrency,
     this.userSettingsDataProvider,
-      this.contactsDataProvider,
+    this.contactsDataProvider,
   );
 
   String strWallet = "";
@@ -111,12 +110,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.walletClient,
     this.walletKeysProvider,
     super.userSettingsDataProvider,
-      super.contactsDataProvider,
+    super.contactsDataProvider,
   );
 
   late FrbAccount _frbAccount;
-  final datasourceChangedStreamController =
-      StreamController<HistoryDetailViewModel>.broadcast();
 
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
@@ -127,11 +124,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   Uint8List? entropy;
   SecretKey? secretKey;
   List<AddressKey> addressKeys = [];
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
@@ -173,7 +165,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                   TransactionType.protonToProtonReceive.index);
     }
 
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
     _frbAccount = (await WalletManager.loadWalletWithID(
       walletID,
       accountID,
@@ -267,7 +259,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             }
           }
         }
-        datasourceChangedStreamController.sinkAddSafe(this);
+        sinkAddSafe();
         break;
       }
     }
@@ -528,13 +520,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             ? int.parse(transactionModel?.transactionTime ?? "0")
             : null);
 
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
 
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
     initialized = true;
   }
 
@@ -580,10 +572,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     return null;
   }
 
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
-
   Future<void> userFinishMemo() async {
     EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
     try {
@@ -611,7 +599,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       );
       errorMessage = e.toString();
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
@@ -626,7 +614,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   void editMemo() {
     isEditing = true;
     memoFocusNode.requestFocus();
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -657,6 +645,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     /// walletTransaction update event will trigger ServerTransactionDataProvider update
     /// then it will notify wallet transaction bloc will update
     fromEmail = jsonString;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 }

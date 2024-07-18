@@ -13,7 +13,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -219,8 +218,6 @@ class SendViewModelImpl extends SendViewModel {
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
 
-  final datasourceChangedStreamController =
-      StreamController<SendViewModel>.broadcast();
   late FrbAccount? _frbAccount;
   FrbBlockchainClient? blockClient;
   Timer? _timer;
@@ -243,7 +240,7 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<void> dispose() async {
     stopExchangeRateUpdateService();
-    datasourceChangedStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -291,7 +288,7 @@ class SendViewModelImpl extends SendViewModel {
       });
       amountFocusNode.addListener(splitAmountToRecipients);
 
-      datasourceChangedStreamController.sinkAddSafe(this);
+      sinkAddSafe();
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
       contactsEmail = await contactsDataProvider.getContacts() ?? [];
@@ -322,7 +319,7 @@ class SendViewModelImpl extends SendViewModel {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> updateExchangeRateJob() async {
@@ -339,7 +336,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       logger.i(
           "updateExchangeRateJob result: ${exchangeRate.fiatCurrency.name} = ${exchangeRate.exchangeRate}");
-      datasourceChangedStreamController.sinkAddSafe(this);
+      sinkAddSafe();
     }
   }
 
@@ -376,7 +373,7 @@ class SendViewModelImpl extends SendViewModel {
       final walletBalance = await _frbAccount!.getBalance();
       balance = walletBalance.trustedSpendable().toSat().toInt();
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -391,7 +388,7 @@ class SendViewModelImpl extends SendViewModel {
       case TransactionFeeMode.lowPriority:
         feeRateSatPerVByte = feeRateLowPriority;
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -428,7 +425,7 @@ class SendViewModelImpl extends SendViewModel {
         amountFocusNode.requestFocus();
       });
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> updateExchangeRate(FiatCurrency fiatCurrency) async {
@@ -439,7 +436,7 @@ class SendViewModelImpl extends SendViewModel {
       exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
       buildTransactionScript();
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> loadBitcoinAddresses() async {
@@ -549,7 +546,7 @@ class SendViewModelImpl extends SendViewModel {
   @override
   Future<void> addRecipient() async {
     isLoadingBvE = true;
-    datasourceChangedStreamController.sinkAddSafe(this); // inform UI to refresh
+    sinkAddSafe(); // inform UI to refresh
     final String email = recipientTextController.text.trim();
     recipientTextController.text = "";
     if (!isRecipientExists(email)) {
@@ -562,8 +559,7 @@ class SendViewModelImpl extends SendViewModel {
               isError: true);
         }
         isLoadingBvE = false;
-        datasourceChangedStreamController
-            .sinkAddSafe(this); // inform UI to refresh
+        sinkAddSafe(); // inform UI to refresh
         return;
       }
       final TextEditingController textEditingController =
@@ -582,7 +578,7 @@ class SendViewModelImpl extends SendViewModel {
         }
         amountTextController.text = totalAmount
             .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
-        datasourceChangedStreamController.sinkAddSafe(this);
+        sinkAddSafe();
       });
       recipients.add(ProtonRecipient(
         email: email,
@@ -644,7 +640,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     isLoadingBvE = false;
-    datasourceChangedStreamController.sinkAddSafe(this); // inform UI to refresh
+    sinkAddSafe(); // inform UI to refresh
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
@@ -680,23 +676,19 @@ class SendViewModelImpl extends SendViewModel {
             isError: true);
       }
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void removeRecipient(int index) {
     if (index < recipients.length) {
       removeRecipientByEmail(recipients[index].email);
-      datasourceChangedStreamController.sinkAddSafe(this);
+      sinkAddSafe();
     }
     if (validRecipientCount() == 0) {
       updatePageStatus(SendFlowStatus.addRecipient);
     }
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   Future<bool> initEstimatedFee() async {
     try {
@@ -745,7 +737,7 @@ class SendViewModelImpl extends SendViewModel {
       // }
       return false;
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
     return true;
   }
 
@@ -853,7 +845,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       return false;
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
     return true;
   }
 
@@ -994,31 +986,31 @@ class SendViewModelImpl extends SendViewModel {
     feeRateMedianPriority = fees["6"] ?? 0;
     feeRateLowPriority = fees["12"] ?? 0;
 
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> userFinishEmailBody() async {
     isEditingEmailBody = false;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> userFinishMemo() async {
     isEditingMemo = false;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void editEmailBody() {
     isEditingEmailBody = true;
     emailBodyFocusNode.requestFocus();
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void editMemo() {
     isEditingMemo = true;
     memoFocusNode.requestFocus();
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -1053,7 +1045,7 @@ class SendViewModelImpl extends SendViewModel {
             .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
       }
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   Future<void> _sendInviteForEmailIntegration(String email) async {

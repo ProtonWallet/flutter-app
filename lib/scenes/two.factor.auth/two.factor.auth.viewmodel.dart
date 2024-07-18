@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/two_factor_auth_helper.dart';
 import 'package:wallet/managers/providers/proton.user.data.provider.dart';
@@ -38,8 +37,6 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     this.protonSettingsApi,
     this.protonUserData,
   );
-  final datasourceChangedStreamController =
-      StreamController<TwoFactorAuthViewModel>.broadcast();
 
   final UserManager userManager;
   final ProtonUsersClient protonUsersApi;
@@ -102,14 +99,9 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   }
 
   @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
-  @override
   void updatePage(int newPage) {
     page = newPage;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -120,154 +112,9 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     final userEmail = userManager.userInfo.userMail;
     otpAuthString =
         "otpauth://totp/$userEmail?secret=$secret&issuer=Proton&algorithm=SHA1&digits=6&period=30";
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {}
 }
-
-         
-
-        //   final loginPassword = event.password;
-        //   final loginTwoFa = event.twofa;
-        //   final authInfo = state.authInfo ??
-        //       await protonUsersApi.getAuthInfo(intent: "Proton");
-
-        //   /// build srp client proof
-        //   final clientProofs = await SrpClient.generateProofs(
-        //       loginPassword: loginPassword,
-        //       version: authInfo.version,
-        //       salt: authInfo.salt,
-        //       modulus: authInfo.modulus,
-        //       serverEphemeral: authInfo.serverEphemeral);
-
-        //   /// password scop unlock password change  ---  add 2fa code if needed
-        //   final proofs = authInfo.twoFa.enabled == 1
-        //       ? ProtonSrpClientProofs(
-        //           clientEphemeral: clientProofs.clientEphemeral,
-        //           clientProof: clientProofs.clientProof,
-        //           srpSession: authInfo.srpSession,
-        //           twoFactorCode: loginTwoFa)
-        //       : ProtonSrpClientProofs(
-        //           clientEphemeral: clientProofs.clientEphemeral,
-        //           clientProof: clientProofs.clientProof,
-        //           srpSession: authInfo.srpSession);
-
-        //   try {
-        //     final serverProofs = await protonUsersApi.unlockPasswordChange(
-        //       proofs: proofs,
-        //     );
-
-        //     /// check if the server proofs are valid
-        //     final check = clientProofs.expectedServerProof == serverProofs;
-        //     logger.i("EnableRecovery password server proofs: $check");
-        //     if (!check) {
-        //       return Future.error('Invalid server proofs');
-        //     }
-
-        //     /// generate new entropy and mnemonic
-        //     final salt = WalletKeyHelper.getRandomValues(16);
-        //     final randomEntropy = WalletKeyHelper.getRandomValues(16);
-
-        //     final FrbMnemonic mnemonic =
-        //         FrbMnemonic.newWith(entropy: randomEntropy);
-        //     final mnemonicWords = mnemonic.asWords();
-        //     logger.d("Recovery Mnemonic: $mnemonicWords");
-        //     final recoveryPassword = randomEntropy.base64encode();
-
-        //     final hashedPassword = await SrpClient.computeKeyPassword(
-        //       password: recoveryPassword,
-        //       salt: salt,
-        //     );
-
-        //     final userFirstKey = await userManager.getFirstKey();
-        //     final userKeys = userInfo.keys;
-        //     if (userKeys == null) {
-        //       return Future.error('User keys not found');
-        //     }
-        //     if (userKeys.length != 1) {
-        //       return Future.error('More then one key is not supported yet');
-        //     }
-
-        //     final oldPassphrase = userFirstKey.passphrase;
-
-        //     final List<MnemonicUserKey> mnUserKeys = [];
-
-        //     /// reencrypt password for now only support one
-        //     for (ProtonUserKey key in userKeys) {
-        //       final newKey = proton_crypto.changePrivateKeyPassword(
-        //         key.privateKey,
-        //         oldPassphrase,
-        //         hashedPassword,
-        //       );
-        //       mnUserKeys.add(MnemonicUserKey(id: key.id, privateKey: newKey));
-        //     }
-
-        //     /// get srp module
-        //     final serverModule = await protonUsersApi.getAuthModule();
-
-        //     /// get clear text and verify signature
-        //     final SRPVerifierB64 verifier = await SrpClient.generateVerifer(
-        //       password: recoveryPassword,
-        //       serverModulus: serverModule.modulus,
-        //     );
-
-        //     final auth = MnemonicAuth(
-        //       modulusId: serverModule.modulusId,
-        //       salt: verifier.salt,
-        //       version: verifier.version,
-        //       verifier: verifier.verifier,
-        //     );
-
-        //     final req = UpdateMnemonicSettingsRequestBody(
-        //       mnemonicUserKeys: mnUserKeys,
-        //       mnemonicSalt: salt.base64encode(),
-        //       mnemonicAuth: auth,
-        //     );
-        //     final recoveryCode =
-        //         await protonSettingsApi.setMnemonicSettings(req: req);
-        //     logger.i("EnableRecovery response code: $recoveryCode");
-        //     final lockCode = await protonUsersApi.lockSensitiveSettings();
-        //     if (recoveryCode != 1000) {
-        //       emit(state.copyWith(
-        //         isLoading: false,
-        //         requireAuthModel: const RequireAuthModel(),
-        //         error:
-        //             "Eanble recovery failed, please try again. code: $recoveryCode",
-        //       ));
-        //       return;
-        //     }
-        //     logger.i("EnableRecovery lockSensitiveSettings: $lockCode");
-        //     if (lockCode != 1000) {
-        //       emit(state.copyWith(
-        //         isLoading: false,
-        //         requireAuthModel: const RequireAuthModel(),
-        //         error:
-        //             "Eanble recovery failed, please try again. code: $lockCode",
-        //       ));
-        //       return;
-        //     }
-        //     userDataProvider.enabledRecovery(true);
-        //     emit(state.copyWith(
-        //         isLoading: false,
-        //         error: "",
-        //         isRecoveryEnabled: true,
-        //         requireAuthModel: const RequireAuthModel(),
-        //         mnemonic: mnemonicWords.join(" ")));
-        //   } on BridgeError catch (e) {
-        //     final errorMessage = parseSampleDisplayError(e);
-        //     emit(state.copyWith(
-        //         isLoading: false,
-        //         requireAuthModel: const RequireAuthModel(),
-        //         error: errorMessage));
-        //   } catch (e) {
-        //     emit(state.copyWith(
-        //         isLoading: false,
-        //         requireAuthModel: const RequireAuthModel(),
-        //         error: e.toString()));
-        //   }

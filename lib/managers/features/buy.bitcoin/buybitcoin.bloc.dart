@@ -3,8 +3,9 @@ import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart'
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
+import 'package:wallet/scenes/buy/buybitcoin.view.dart';
 
-/// On rampe buying flow features
+/// On rampe buying flow features. used in [BuyBitcoinView]
 class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
   final GatewayDataProvider gatewayDataProvider;
 

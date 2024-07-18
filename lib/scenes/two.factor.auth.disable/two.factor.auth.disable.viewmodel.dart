@@ -20,10 +20,14 @@ abstract class TwoFactorAuthDisableViewModel extends ViewModel {
 }
 
 class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
-  TwoFactorAuthDisableViewModelImpl(super.coordinator, this.protonUsersApi,
-      this.protonSettingsApi, this.protonUserData);
-  final datasourceChangedStreamController =
-      StreamController<TwoFactorAuthDisableViewModel>.broadcast();
+  TwoFactorAuthDisableViewModelImpl(
+    super.coordinator,
+    this.protonUsersApi,
+    this.protonSettingsApi,
+    this.protonUserData,
+  );
+
+  ///
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
   final ProtonUserDataProvider protonUserData;
@@ -66,19 +70,10 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
   }
 
   @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
-  @override
   Future<void> loadData() async {
     digitControllers = List.generate(6, (index) => TextEditingController());
     passwordController = TextEditingController();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {}
