@@ -14,16 +14,16 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
-import 'package:wallet/scenes/buy/buybitcoin.keyboard.done.dart';
-import 'package:wallet/scenes/buy/dropdown.dialog.dart';
-import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
-import 'package:wallet/scenes/buy/payment.dropdown.item.view.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
+import 'buybitcoin.keyboard.done.dart';
 import 'buybitcoin.viewmodel.dart';
+import 'dropdown.dialog.dart';
+import 'payment.dropdown.item.dart';
+import 'payment.dropdown.item.view.dart';
 
 class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
   const BuyBitcoinView(BuyBitcoinViewModel viewModel)

@@ -38,20 +38,14 @@ class SettingsViewModelImpl extends SettingsViewModel {
   );
 
   bool hadLocallogin = false;
-  final datasourceChangedStreamController =
-      StreamController<SettingsViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
     displayName = userManager.userInfo.userDisplayName;
     displayEmail = userManager.userInfo.userMail;
     loadSettings();
-    datasourceChangedStreamController.add(this);
+
+    sinkAddSafe();
   }
 
   Future<void> loadSettings() async {
@@ -63,12 +57,8 @@ class SettingsViewModelImpl extends SettingsViewModel {
           walletUserSettings!.receiveInviterNotification;
     }
     loadedWalletUserSettings = true;
-    datasourceChangedStreamController.add(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {
@@ -88,7 +78,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
       receiveEmailIntegrationNotification = enable;
       userSettingsDataProvider
           .updateReceiveEmailIntegrationNotification(enable);
-      datasourceChangedStreamController.add(this);
+      sinkAddSafe();
     }
   }
 
@@ -97,7 +87,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
     if (enable != receiveInviterNotification) {
       receiveInviterNotification = enable;
       userSettingsDataProvider.updateReceiveInviterNotification(enable);
-      datasourceChangedStreamController.add(this);
+      sinkAddSafe();
     }
   }
 }

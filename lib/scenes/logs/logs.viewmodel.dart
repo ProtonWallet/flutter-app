@@ -25,29 +25,18 @@ class LogsViewModelImpl extends LogsViewModel {
   );
 
   bool hadLocallogin = false;
-  final datasourceChangedStreamController =
-      StreamController<LogsViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
     await loadLogs();
 
-    datasourceChangedStreamController.add(this);
+    sinkAddSafe();
 
     // Scroll to the bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
     });
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {
@@ -75,9 +64,7 @@ class LogsViewModelImpl extends LogsViewModel {
   Future<void> clearLogs() async {
     await LoggerService.reset();
     loadLogs();
-
-    datasourceChangedStreamController.add(this);
-
+    sinkAddSafe();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
     });

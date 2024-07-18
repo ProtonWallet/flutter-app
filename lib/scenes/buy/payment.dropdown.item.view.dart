@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
+
+import 'payment.dropdown.item.dart';
 
 class PaymentDropdownItem extends StatelessWidget {
   final DropdownItem item;
