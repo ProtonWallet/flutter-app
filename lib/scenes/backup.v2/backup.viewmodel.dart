@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -36,14 +35,6 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
     this.userID,
   );
 
-  final datasourceChangedStreamController =
-      StreamController<SetupBackupViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
   @override
   Future<void> loadData() async {
     strMnemonic = await WalletManager.getMnemonicWithID(walletID);
@@ -53,12 +44,8 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
         index: index,
       ));
     });
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> setBackup() async {
@@ -88,6 +75,6 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   @override
   void setIntroduce({required bool introduce}) {
     inIntroduce = introduce;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 }

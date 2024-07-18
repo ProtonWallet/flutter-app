@@ -7,7 +7,6 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -72,14 +71,6 @@ class ImportViewModelImpl extends ImportViewModel {
     this.createWalletBloc,
   );
 
-  final datasourceChangedStreamController =
-      StreamController<ImportViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
   @override
   Future<void> loadData() async {
     mnemonicTextController = TextEditingController();
@@ -108,10 +99,6 @@ class ImportViewModelImpl extends ImportViewModel {
       isFirstWallet = true;
     }
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> importWallet() async {
@@ -195,19 +182,19 @@ class ImportViewModelImpl extends ImportViewModel {
   @override
   void switchToManualInputMode() {
     isPasteMode = false;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void switchToPasteMode() {
     isPasteMode = true;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void updateValidMnemonic({required bool isValidMnemonic}) {
     this.isValidMnemonic = isValidMnemonic;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override

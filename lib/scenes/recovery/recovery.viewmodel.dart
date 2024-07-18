@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
@@ -29,26 +28,15 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
     super.protonRecoveryBloc,
     this.protonUsersApi,
   );
-  final datasourceChangedStreamController =
-      StreamController<RecoveryViewModel>.broadcast();
   final ProtonUsersClient protonUsersApi;
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
     // get user recovery phrase
     stateReset();
 
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {

@@ -30,24 +30,13 @@ class SigninViewModelImpl extends SigninViewModel {
   );
 
   bool hadLocallogin = false;
-  final datasourceChangedStreamController =
-      StreamController<SigninViewModel>.broadcast();
 
   late ApiEnv env;
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
     env = appConfig.apiEnv;
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {
@@ -75,7 +64,7 @@ class SigninViewModelImpl extends SigninViewModel {
       coordinator.showHome(env);
     } catch (e) {
       errorMessage = e.toString();
-      datasourceChangedStreamController.add(this);
+      sinkAddSafe();
     }
   }
 }
