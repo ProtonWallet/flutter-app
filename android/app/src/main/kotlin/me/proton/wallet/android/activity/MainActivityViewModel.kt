@@ -116,8 +116,8 @@ class MainActivityViewModel @Inject constructor(
     }
 
     private suspend fun addOrUpdateAccount(accountSession: AccountSession): UserId {
-        // Make sure addAccount will not revoke the existing session.
-        accountRepository.deleteSession(accountSession.session.sessionId)
+        // Remove any existing session, without revoking.
+        sessionProvider.getSessions().forEach { accountRepository.deleteSession(it.sessionId) }
         accountManager.addAccount(accountSession.account, accountSession.session)
         return accountSession.account.userId
     }

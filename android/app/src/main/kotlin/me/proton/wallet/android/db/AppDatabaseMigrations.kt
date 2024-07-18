@@ -20,6 +20,9 @@ package me.proton.wallet.android.db
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import me.proton.core.account.data.db.AccountDatabase
+import me.proton.core.eventmanager.data.db.EventMetadataDatabase
+import me.proton.core.key.data.db.PublicAddressDatabase
 import me.proton.core.payment.data.local.db.PaymentDatabase
 import me.proton.core.user.data.db.UserKeyDatabase
 import me.proton.core.userrecovery.data.db.DeviceRecoveryDatabase
@@ -39,6 +42,15 @@ object AppDatabaseMigrations {
             DeviceRecoveryDatabase.MIGRATION_0.migrate(db)
             DeviceRecoveryDatabase.MIGRATION_1.migrate(db)
             UserKeyDatabase.MIGRATION_1.migrate(db)
+        }
+    }
+
+    val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            AccountDatabase.MIGRATION_8.migrate(db)
+            UserSettingsDatabase.MIGRATION_7.migrate(db)
+            PublicAddressDatabase.MIGRATION_3.migrate(db)
+            EventMetadataDatabase.MIGRATION_3.migrate(db)
         }
     }
 }
