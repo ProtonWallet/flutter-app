@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -38,10 +42,12 @@ class BitcoinPriceChart extends StatefulWidget {
 class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   List<FlSpot> dataPoints = [];
   bool isLoading = true;
+  double priceChange = 0.0;
   double percentile0 = 0.0;
   double percentile25 = 0.0;
   double percentile100 = 0.0;
   double percentile75 = 0.0;
+  String dataRangeString = "1D";
   BitcoinPriceChartDataRange dataRange = BitcoinPriceChartDataRange.past1Day;
   List<BitcoinPriceChartDataRange> dataRangeOptions = [
     BitcoinPriceChartDataRange.past1Day,
@@ -73,18 +79,23 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     Response? response;
     switch (dataRange) {
       case BitcoinPriceChartDataRange.past1Day:
+        dataRangeString = "1D";
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=24'));
       case BitcoinPriceChartDataRange.past7Days:
+        dataRangeString = "7D";
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=168'));
       case BitcoinPriceChartDataRange.past1Month:
+        dataRangeString = "1M";
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=30'));
       case BitcoinPriceChartDataRange.past6Month:
+        dataRangeString = "6M";
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=180'));
       case BitcoinPriceChartDataRange.past1Year:
+        dataRangeString = "1Y";
         response = await http.get(Uri.parse(
             'https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=365'));
     }
@@ -119,6 +130,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         setState(() {
           dataPoints = spots;
           isLoading = false;
+          priceChange = (values.last - values.first) / values.last * 100;
           if (values.isNotEmpty) {
             values.sort();
             percentile25 = values[(values.length * 0.25).floor()];
@@ -133,8 +145,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildChart(BuildContext context) {
     return SizedBox(
       height: 220,
       child: Column(children: [
@@ -158,7 +169,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                             dotData: const FlDotData(
                               show: false,
                             ),
-                            color: widget.priceChange >= 0
+                            color: priceChange >= 0
                                 ? ProtonColors.signalSuccess
                                 : ProtonColors.signalError,
                           ),
@@ -296,5 +307,56 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         ),
       ]),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        S.of(context).btc_price,
+        style: FontManager.body2Regular(ProtonColors.textHint),
+        textAlign: TextAlign.left,
+      ),
+      const SizedBox(
+        height: 2,
+      ),
+      AnimatedFlipCounter(
+          duration: const Duration(milliseconds: 500),
+          thousandSeparator: ",",
+          prefix: Provider.of<UserSettingProvider>(
+            context,
+            listen: false,
+          ).getFiatCurrencySign(fiatCurrency: widget.exchangeRate.fiatCurrency),
+          value: ExchangeCalculator.getNotionalInFiatCurrency(
+              widget.exchangeRate, 100000000),
+          // value: price,
+          fractionDigits: defaultDisplayDigits,
+          textStyle: FontManager.titleHeadline(ProtonColors.textNorm)),
+      const SizedBox(
+        height: 2,
+      ),
+      priceChange > 0
+          ? AnimatedFlipCounter(
+              duration: const Duration(milliseconds: 500),
+              prefix: "+",
+              value: priceChange,
+              suffix: "% ($dataRangeString)",
+              fractionDigits: 2,
+              textStyle: FontManager.body2Regular(ProtonColors.signalSuccess))
+          : AnimatedFlipCounter(
+              duration: const Duration(milliseconds: 500),
+              prefix: "",
+              value: priceChange,
+              suffix: "% ($dataRangeString)",
+              fractionDigits: 2,
+              textStyle: FontManager.body2Regular(ProtonColors.signalError)),
+      const SizedBox(
+        height: 8,
+      ),
+      buildChart(context),
+      const SizedBox(
+        height: 8,
+      ),
+    ]);
   }
 }

@@ -160,6 +160,9 @@ class EditSenderSheet {
                     textStyle: FontManager.body1Median(
                         ProtonColors.backgroundSecondary),
                     height: 48)),
+            SizedBox(
+              height: MediaQuery.of(context).viewInsets.bottom,
+            ),
           ])
         ]));
   }

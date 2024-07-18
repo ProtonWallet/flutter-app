@@ -39,6 +39,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   /// app state manager
   final AppStateManager appStateManager;
 
+  bool hasSynced = false;
+
   StreamSubscription? walletPassDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? walletsDataSubscription;
@@ -209,6 +211,19 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           walletsModel.add(walletModel);
         }
         emit(state.copyWith(initialized: true, walletsModel: walletsModel));
+        if (!hasSynced) {
+          hasSynced = true;
+          for (WalletMenuModel walletMenuModel in walletsModel) {
+            if (walletMenuModel.hasValidPassword) {
+              for (AccountMenuModel accountMenuModel
+                  in walletMenuModel.accounts) {
+                bdkTransactionDataProvider.syncWallet(
+                    walletMenuModel.walletModel, accountMenuModel.accountModel,
+                    forceSync: false);
+              }
+            }
+          }
+        }
         if (!hasSelected) {
           /// trigger startLoadingCallback to select default wallet
           startLoadingCallback?.call();
