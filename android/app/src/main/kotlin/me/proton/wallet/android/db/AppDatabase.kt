@@ -45,6 +45,8 @@ import me.proton.core.key.data.db.KeySaltDatabase
 import me.proton.core.key.data.db.PublicAddressDatabase
 import me.proton.core.key.data.entity.KeySaltEntity
 import me.proton.core.key.data.entity.PublicAddressEntity
+import me.proton.core.key.data.entity.PublicAddressInfoEntity
+import me.proton.core.key.data.entity.PublicAddressKeyDataEntity
 import me.proton.core.key.data.entity.PublicAddressKeyEntity
 import me.proton.core.notification.data.local.db.NotificationConverters
 import me.proton.core.notification.data.local.db.NotificationDatabase
@@ -91,6 +93,8 @@ import me.proton.core.usersettings.data.entity.UserSettingsEntity
         KeySaltEntity::class,
         PublicAddressEntity::class,
         PublicAddressKeyEntity::class,
+        PublicAddressInfoEntity::class,
+        PublicAddressKeyDataEntity::class,
         // human-verification
         HumanVerificationEntity::class,
         // user-settings
@@ -155,11 +159,12 @@ abstract class AppDatabase :
 
     companion object {
         const val name = "db-account-manager"
-        const val version = 3
+        const val version = 4
 
         private val migrations = listOf(
             AppDatabaseMigrations.MIGRATION_1_2,
             AppDatabaseMigrations.MIGRATION_2_3,
+            AppDatabaseMigrations.MIGRATION_3_4,
         )
 
         fun buildDatabase(context: Context): AppDatabase =
