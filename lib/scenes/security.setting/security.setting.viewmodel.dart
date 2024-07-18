@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/proton.user.data.provider.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/common/errors.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';
@@ -31,11 +29,6 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
     this.protonUserApi,
     this.protonUserDataProvider,
   );
-  @override
-  Stream<ViewModel<Coordinator>> get datasourceChanged =>
-      steamController.stream;
-  final steamController =
-      StreamController<SecuritySettingViewModel>.broadcast();
 
   ///
   final AppStateManager appStateManager;
@@ -48,7 +41,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
   @override
   void dispose() {
     protonUserDataSubscription?.cancel();
-    steamController.close();
+    super.dispose();
   }
 
   @override
@@ -56,7 +49,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
     protonUserDataSubscription = protonUserDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
         hadSetup2FA = state.updatedData;
-        steamController.sinkAddSafe(this);
+        sinkAddSafe();
       }
     });
 
@@ -65,7 +58,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
     isLoading = true;
 
-    steamController.sinkAddSafe(this);
+    sinkAddSafe();
 
     try {
       final protonUserSettings = await protonUserApi.getUserSettings();
@@ -78,7 +71,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
     } catch (e) {
       error = e.toString();
     }
-    steamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -93,7 +86,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
       if (authenticated) {
         selectedType = newValue;
         await appStateManager.saveUnlockType(UnlockModel(type: newValue));
-        steamController.sinkAddSafe(this);
+        sinkAddSafe();
       } else {
         if (!localAuthManager.canCheckBiometrics) {
           return "Please enable FaceID in system settings";

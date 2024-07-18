@@ -6,7 +6,6 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -57,14 +56,6 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   final CreateWalletBloc createWalletBloc;
   final String userID;
 
-  final datasourceChangedStreamController =
-      StreamController<SetupPassPhraseViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
   @override
   Future<void> loadData() async {
     passphraseTextController = TextEditingController();
@@ -84,7 +75,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         .toList();
     itemListShuffled.shuffle();
     userPhraseList = List<String>.filled(itemList.length, "");
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   void updateEditIndex() {
@@ -117,7 +108,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
       }
     }
     updateEditIndex();
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
@@ -132,12 +123,8 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         break;
       }
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   bool checkUserMnemonic() {
@@ -147,7 +134,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
   @override
   void updateState({required bool isAddingPassPhrase}) {
     this.isAddingPassPhrase = isAddingPassPhrase;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override

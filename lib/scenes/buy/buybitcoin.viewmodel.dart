@@ -12,7 +12,6 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
@@ -23,47 +22,53 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
-import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
-import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
+import 'buybitcoin.coordinator.dart';
+
 abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
-  BuyBitcoinViewModel(super.coordinator);
+  BuyBitcoinViewModel(super.coordinator, this.bloc);
+
+  final BuyBitcoinBloc bloc;
 
   bool get supportOffRamp;
-
   String receiveAddress = "";
 
   bool isloading = false;
-
-  void startLoading();
-
   bool isBuying = true;
   int index = 0;
-
-  BuyBitcoinBloc get bloc;
-
   void toggleButtons();
 
   void sellbutton();
 
-  List<DropdownItem> payments = [];
-  List<DropdownItem> providers = [];
-
   /// get prebuild country code
   List<String>? getFavoriteCountry(List<String> availableCountries);
 
-  ///
-  void selectCountry(String code);
+  /// bloc event wrappers
+  void selectCountry(String code) {
+    bloc.add(SelectCountryEvent(code));
+  }
 
-  void selectCurrency(String fiatCurrency);
+  void selectCurrency(String fiatCurrency) {
+    bloc.add(SelectCurrencyEvent(fiatCurrency));
+  }
 
-  void selectAmount(String amount);
+  void selectAmount(String amount) {
+    bloc.add(SelectAmountEvent(amount));
+  }
 
-  void selectPayment(PaymentMethod method);
+  void selectPayment(PaymentMethod method) {
+    bloc.add(SelectPaymentEvent(method));
+  }
 
-  void selectProvider(GatewayProvider provider);
+  void selectProvider(GatewayProvider provider) {
+    bloc.add(SelectProviderEvent(provider));
+  }
+
+  void loadCountry() {
+    bloc.add(const LoadCountryEvent());
+  }
 
   Future<void> pay(SelectedInfoModel selected);
   void keyboardDone();
@@ -76,26 +81,20 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   BuyBitcoinViewModelImpl(
     super.coordinator,
+    super.bloc,
     this.userEmail,
-    this.buyBloc,
     this.userID,
     this.walletID,
     this.accountID,
     this.localBitcoinAddressDataProvider,
   );
 
-  final datasourceChangedStreamController =
-      StreamController<BuyBitcoinViewModel>.broadcast();
-
   @override
   void dispose() {
     focusNode.dispose();
     controller.dispose();
-    datasourceChangedStreamController.close();
+    super.dispose();
   }
-
-  /// features
-  final BuyBitcoinBloc buyBloc;
 
   /// provider
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
@@ -112,10 +111,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   @override
   final FocusNode focusNode = FocusNode();
   @override
-  final TextEditingController controller = TextEditingController(text: "100");
-
-  @override
-  BuyBitcoinBloc get bloc => buyBloc;
+  final TextEditingController controller = TextEditingController(text: "200");
 
   @override
   bool get supportOffRamp => false;
@@ -125,47 +121,18 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> loadData() async {
     apiKey = Env.rampApiKey ?? "";
 
-    payments.add(DropdownItem(
-      title: 'Credit Card',
-      subtitle: '',
-    ));
-    // payments.add(DropdownItem(
-    //   icon: 'assets/images/bank-transfer.png',
-    //   title: 'Bank Transfer',
-    //   selected: false,
-    //   subtitle: 'Take days',
-    // ));
-    payments.add(DropdownItem(
-      title: 'Apple Pay',
-      subtitle: '',
-      method: PaymentMethod.applePay,
-    ));
-
-    providers.add(DropdownItem(
-      title: 'Ramp',
-      subtitle: '0.00155 BTC',
-    ));
-    // providers.add(DropdownItem(
-    //   icon: 'assets/images/binance.png',
-    //   title: 'Banxa',
-    //   subtitle: '0.00155 BTC',
-    //   selected: false,
-    // ));
-
     configuration = Configuration()
       ..hostApiKey = apiKey
       ..hostAppName = "Proton Wallet"
       ..defaultFlow = "ONRAMP";
 
-    ramp = RampFlutter();
-    ramp.onOnrampPurchaseCreated = onOnrampPurchaseCreated;
-    ramp.onSendCryptoRequested = onSendCryptoRequested;
-    ramp.onOfframpSaleCreated = onOfframpSaleCreated;
-    ramp.onRampClosed = onRampClosed;
+    ramp = RampFlutter()
+      ..onOnrampPurchaseCreated = onOnrampPurchaseCreated
+      ..onSendCryptoRequested = onSendCryptoRequested
+      ..onOfframpSaleCreated = onOfframpSaleCreated
+      ..onRampClosed = onRampClosed;
 
-    // bloc.add(const LoadCurrencyEvent());
-    bloc.add(const LoadCountryEvent());
-    // bloc.add(const GetquoteEvent());
+    loadCountry();
 
     try {
       WalletModel? walletModel;
@@ -183,21 +150,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       } else {
         accountModel = await DBHelper.accountDao!.findByServerID(accountID);
       }
-      // await WalletManager.syncBitcoinAddressIndex(
-      //     walletModel!.serverWalletID, accountModel.serverAccountID);
       await getAddress(walletModel, accountModel, init: true);
-    } catch (e) {
-      logger.e(e);
+    } catch (e, stacktrace) {
+      logger.i(
+        "buybitcoin loadData error: $e stacktrace: $stacktrace",
+      );
+      rethrow;
     }
-
-    datasourceChangedStreamController.sinkAddSafe(this);
-
-    // EasyLoading.dismiss();
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {
@@ -236,13 +197,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     // Load image bytes from asset
     final ByteData bytes = await rootBundle.load(Assets.images.wallet.path);
     final Uint8List list = bytes.buffer.asUint8List();
-
     // Encode bytes to Base64
     final String base64String = list.base64encode();
-
     // Create data URL
     final String dataUrl = 'data:image/png;base64,$base64String';
-
     return dataUrl;
   }
 
@@ -305,54 +263,26 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       } catch (e) {
         logger.e(e.toString());
       }
-      datasourceChangedStreamController.sinkAddSafe(this);
+      sinkAddSafe();
     }
-  }
-
-  @override
-  void startLoading() {
-    // bloc.add(const LoadCountryEvent());
-    // bloc.add(const LoadAddressEvent());
-    // presentRamp();
-    // isloading = true;
-    // datasourceChangedStreamController.sinkAddSafe(this);
-    // Simulate a network request or any async task
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   isloading = false;
-    // });
   }
 
   @override
   void toggleButtons() {
     isBuying = !isBuying;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override
   void sellbutton() {
     isBuying = false;
-    datasourceChangedStreamController.sinkAddSafe(this);
-  }
-
-  @override
-  void selectCountry(String code) {
-    bloc.add(SelectCountryEvent(code));
-  }
-
-  @override
-  void selectCurrency(String fiatCurrency) {
-    bloc.add(SelectCurrencyEvent(fiatCurrency));
-  }
-
-  @override
-  void selectAmount(String amount) {
-    bloc.add(SelectAmountEvent(amount));
+    sinkAddSafe();
   }
 
   @override
   void keyboardDone() {
     final amount = bloc.state.selectedModel.amount;
-    final check = buyBloc.toNumberAmount(controller.text);
+    final check = bloc.toNumberAmount(controller.text);
     if (amount != check) {
       selectAmount(check);
     }
@@ -362,7 +292,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> pay(SelectedInfoModel selected) async {
     bloc.add(CheckoutLoadingEvnet());
     final amount = selected.amount;
-    final check = buyBloc.toNumberAmount(controller.text);
+    final check = bloc.toNumberAmount(controller.text);
     if (amount != check) {
       selectAmount(check);
     }
@@ -398,15 +328,5 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       return [currentCode];
     }
     return null;
-  }
-
-  @override
-  void selectPayment(PaymentMethod method) {
-    bloc.add(SelectPaymentEvent(method));
-  }
-
-  @override
-  void selectProvider(GatewayProvider provider) {
-    bloc.add(SelectProviderEvent(provider));
   }
 }

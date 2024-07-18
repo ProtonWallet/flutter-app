@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.state.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -33,15 +32,13 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   bool hadLocallogin = false;
 
   late StreamSubscription<NativeLoginState> _subscription;
-  final datasourceChangedStreamController =
-      StreamController<WelcomeViewModel>.broadcast();
 
   late ApiEnv env;
 
   @override
   void dispose() {
     _subscription.cancel();
-    datasourceChangedStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -49,17 +46,12 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     // welcome start send event to native for
     env = appConfig.apiEnv;
     _subscription = nativeChannel.stream.listen(handleStateChanges);
-
-    // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    // PackageInfo packageInfo = await PacageInfo.fromPlatform();
     // setState(() {
     //   _appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
     // });
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   Future<void> handleStateChanges(NativeLoginState state) async {
     if (state is NativeLoginSucess) {

@@ -3,14 +3,16 @@ import 'dart:async';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home/navigation.coordinator.dart';
 
 abstract class HomeNavigationViewModel
     extends ViewModel<HomeNavigationCoordinator> {
-  HomeNavigationViewModel(super.coordinator, this.apiEnv);
+  HomeNavigationViewModel(
+    super.coordinator,
+    this.apiEnv,
+  );
 
   int selectedPage = 0;
   void updateSelected(int index);
@@ -27,13 +29,10 @@ abstract class HomeNavigationViewModel
 class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
   HomeNavigationViewModelImpl(super.coordinator, super.apiEnv);
 
-  final datasourceChangedStreamController =
-      StreamController<HomeNavigationViewModel>.broadcast();
-
   @override
   void dispose() {
-    datasourceChangedStreamController.close();
     pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,14 +67,10 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
   }
 
   @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
-
-  @override
   void updateSelected(int index) {
     selectedPage = index;
     pageController.jumpToPage(index);
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
   @override

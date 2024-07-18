@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
@@ -77,8 +76,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   });
 
   late FrbAccount _frbAccount;
-  final datasourceChangedStreamController =
-      StreamController<ReceiveViewModel>.broadcast();
 
   SecretKey? secretKey;
 
@@ -87,11 +84,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final ProtonAddressProvider protonAddressProvider;
   final WalletKeysProvider walletKeysProvider;
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
 
   @override
   Future<void> loadData() async {
@@ -133,12 +125,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       errorMessage = "";
     }
     initialized = true;
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> generateNewAddress() async {
@@ -188,7 +176,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       } catch (e) {
         logger.e(e.toString());
       }
-      datasourceChangedStreamController.sinkAddSafe(this);
+      sinkAddSafe();
     }
   }
 
@@ -241,6 +229,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     } catch (e) {
       logger.e(e.toString());
     }
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 }

@@ -15,13 +15,12 @@ abstract class WebSocketViewModel extends ViewModel<WebSocketCoordinator> {
 
 class WebSocketViewModelImpl extends WebSocketViewModel {
   WebSocketViewModelImpl(super.coordinator);
-  final datasourceChangedStreamController =
-      StreamController<WebSocketViewModel>.broadcast();
+
   @override
   void dispose() {
     channel.sink.close();
     textController.dispose();
-    datasourceChangedStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -31,10 +30,6 @@ class WebSocketViewModelImpl extends WebSocketViewModel {
       Uri.parse('wss://echo.websocket.events'),
     );
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> sendMessage() async {

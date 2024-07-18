@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -18,14 +17,6 @@ abstract class DiscoverViewModel extends ViewModel<DiscoverCoordinator> {
 class DiscoverViewModelImpl extends DiscoverViewModel {
   DiscoverViewModelImpl(super.coordinator);
 
-  final datasourceChangedStreamController =
-      StreamController<DiscoverViewModel>.broadcast();
-
-  @override
-  void dispose() {
-    datasourceChangedStreamController.close();
-  }
-
   @override
   Future<void> loadData() async {
     EasyLoading.show(
@@ -33,12 +24,8 @@ class DiscoverViewModelImpl extends DiscoverViewModel {
     protonFeedItems = await ProtonFeedItem.loadJsonFromAsset();
 
     EasyLoading.dismiss();
-    datasourceChangedStreamController.addSafe(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {}

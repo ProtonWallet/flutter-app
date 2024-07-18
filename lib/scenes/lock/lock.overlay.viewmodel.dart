@@ -34,13 +34,10 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     this.localAuthManager,
   );
 
-  final datasourceChangedStreamController =
-      StreamController<LockViewModel>.broadcast();
-
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    datasourceChangedStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -49,7 +46,7 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     final type = await appStateManager.getUnlockType();
     isLocked = type.type == UnlockType.biometrics;
     // check last lock timmer
-    datasourceChangedStreamController.add(this);
+    sinkAddSafe();
     if (isLocked) {
       await unlock();
     }
@@ -72,12 +69,8 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
       isLocked = true;
       await appStateManager.updateCount(count.plus());
     }
-    datasourceChangedStreamController.add(this);
+    sinkAddSafe();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   @override
   Future<void> move(NavID to) async {
@@ -96,7 +89,7 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
         if (isLocked) {
           // lock the app
           isLocked = true;
-          datasourceChangedStreamController.add(this);
+          sinkAddSafe();
 
           unlock();
         }
@@ -109,7 +102,7 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
         if (!isLocked) {
           // lock the app
           isLocked = true;
-          datasourceChangedStreamController.add(this);
+          sinkAddSafe();
         }
       // App goes to background
       case AppLifecycleState.detached:
