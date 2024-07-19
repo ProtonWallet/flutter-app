@@ -137,14 +137,14 @@ class ProtonRecoveryBloc
               salt: salt,
             );
 
-            final userFirstKey = await userManager.getFirstKey();
+            final userFirstKey = await userManager.getPrimaryKey();
             final userKeys = userInfo.keys;
             if (userKeys == null) {
               return Future.error('User keys not found');
             }
-            if (userKeys.length != 1) {
-              return Future.error('More then one key is not supported yet');
-            }
+            // if (userKeys.length != 1) {
+            //   return Future.error('More then one key is not supported yet');
+            // }
 
             final oldPassphrase = userFirstKey.passphrase;
 
@@ -243,14 +243,14 @@ class ProtonRecoveryBloc
           salt: salt,
         );
 
-        final userFirstKey = await userManager.getFirstKey();
+        final userFirstKey = await userManager.getPrimaryKey();
         final userKeys = userInfo.keys;
         if (userKeys == null) {
           return Future.error('User keys not found');
         }
-        if (userKeys.length != 1) {
-          return Future.error('More then one key is not supported yet');
-        }
+        // if (userKeys.length != 1) {
+        //   return Future.error('More then one key is not supported yet');
+        // }
 
         final oldPassphrase = userFirstKey.passphrase;
 

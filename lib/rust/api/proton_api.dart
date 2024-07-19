@@ -10,6 +10,7 @@ import '../proton_api/contacts.dart';
 import '../proton_api/event_routes.dart';
 import '../proton_api/exchange_rate.dart';
 import '../proton_api/proton_address.dart';
+import '../proton_api/proton_users.dart';
 import '../proton_api/user_settings.dart';
 import '../proton_api/wallet.dart';
 import '../proton_api/wallet_account.dart';

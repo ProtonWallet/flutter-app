@@ -10,13 +10,21 @@ class UserQueries extends DatabaseAccessor<AppDatabase>
     with _$UserQueriesMixin {
   UserQueries(super.attachedDatabase);
 
-  Future<ProtonUser> getUser(String userId) {
+  Future<DriftProtonUser> getUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))
         .getSingle();
   }
 
-  Stream<ProtonUser> watchUser(String userId) {
+  Stream<DriftProtonUser> watchUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))
         .watchSingle();
+  }
+
+  Future<void> insertOrUpdateItem(DriftProtonUser item) async {
+    await into(usersTable).insertOnConflictUpdate(item);
+  }
+
+  Future<void> clearTable() async {
+    await delete(usersTable).go();
   }
 }

@@ -94,7 +94,13 @@ class AppViewModelImpl extends AppViewModel {
     serviceManager.register(appStateManger);
 
     /// user manager
-    final userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
+    final userManager = UserManager(
+      storage,
+      shared,
+      apiEnv,
+      apiServiceManager,
+      dbConnection,
+    );
     serviceManager.register(userManager);
 
     /// data provider manager
@@ -129,6 +135,7 @@ class AppViewModelImpl extends AppViewModel {
       await userManager.tryRestoreUserInfo();
       final userInfo = userManager.userInfo;
       await dataProviderManager.login(userInfo.userId);
+      await userManager.login(userInfo.userId);
       coordinator.showHome(apiEnv);
     } else {
       coordinator.showWelcome(apiEnv);

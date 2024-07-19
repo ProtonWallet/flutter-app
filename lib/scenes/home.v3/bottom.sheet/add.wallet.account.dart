@@ -7,7 +7,7 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';

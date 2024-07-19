@@ -2,22 +2,22 @@
 import 'package:drift/drift.dart';
 import 'package:wallet/models/drift/tables/table.extension.dart';
 
-@DataClassName('ProtonUser')
+@DataClassName('DriftProtonUser')
 @TableIndex(name: 'user_id_index', columns: {#userId})
 class UsersTable extends Table with AutoIncrementingPrimaryKey {
   TextColumn get userId => text()();
   TextColumn get name => text().withLength(min: 1, max: 100)(); //username
-  IntColumn get usedSpace => integer()();
+  Int64Column get usedSpace => int64()();
   TextColumn get currency => text().withLength(min: 1, max: 32)();
   IntColumn get credit => integer()();
-  IntColumn get createTime => integer()();
-  IntColumn get maxSpace => integer()();
-  IntColumn get maxUpload => integer()();
+  Int64Column get createTime => int64()();
+  Int64Column get maxSpace => int64()();
+  Int64Column get maxUpload => int64()();
   IntColumn get role => integer()();
-  BoolColumn get private => boolean()();
-  BoolColumn get subscribed => boolean()();
-  BoolColumn get services => boolean()();
-  BoolColumn get delinquent => boolean()();
+  IntColumn get private => integer()();
+  IntColumn get subscribed => integer()();
+  IntColumn get services => integer()();
+  IntColumn get delinquent => integer()();
   TextColumn get organizationPrivateKey => text().nullable()();
   TextColumn get email => text().nullable()();
   TextColumn get displayName => text().nullable()();

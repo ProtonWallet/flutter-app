@@ -76,8 +76,8 @@ linter:
     # - use_raw_strings # https://dart.dev/tools/linter-rules/use_raw_strings
     # - use_named_constants # https://dart.dev/tools/linter-rules/use_named_constants
     # - use_enums # https://dart.dev/tools/linter-rules/use_enums # https://dart.dev/language/enums#declaring-enhanced-enums
-    # https://dart.dev/tools/linter-rules/use_decorated_box
-    # https://dart.dev/tools/linter-rules/use_colored_box
+    - use_decorated_box # https://dart.dev/tools/linter-rules/use_decorated_box
+    - use_colored_box # https://dart.dev/tools/linter-rules/use_colored_box
     - unnecessary_raw_strings # https://dart.dev/tools/linter-rules/unnecessary_raw_strings
     - unnecessary_null_aware_operator_on_extension_on_nullable #https://dart.dev/tools/linter-rules/unnecessary_null_aware_operator_on_extension_on_nullable
     - unnecessary_breaks # https://dart.dev/tools/linter-rules/unnecessary_breaks

@@ -57,6 +57,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     if (state is NativeLoginSucess) {
       await userManager.nativeLogin(state.userInfo);
       await dataProviderManager.login(state.userInfo.userId);
+      await userManager.login(state.userInfo.userId);
       coordinator.showHome(env);
     }
   }

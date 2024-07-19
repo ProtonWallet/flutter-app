@@ -15,12 +15,10 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -97,12 +95,12 @@ class HomeView extends ViewBase<HomeViewModel> {
               }
             }
           }
-          if (walletListState.walletsModel.isEmpty) {
+          if (walletListState.initialized && walletListState.walletsModel.isEmpty) {
             return Stack(children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Column(mainAxisSize: MainAxisSize.max, children: [
+                child: Column(children: [
                   Underline(
                     onTap: viewModel.setOnBoard,
                     child: Text(
@@ -346,7 +344,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 width: 10,
                                               ),
                                               ButtonV5(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    viewModel.move(NavID.buy);
+                                                  },
                                                   elevation: 0.0,
                                                   backgroundColor: ProtonColors
                                                       .backgroundBlack,
@@ -616,7 +616,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   /// temperay
                   final context = Coordinator.rootNavigatorKey.currentContext;
                   if (context != null) {
-                    if (state.walletsModel.isEmpty) {
+                    if (state.initialized && state.walletsModel.isEmpty) {
                       viewModel.setOnBoard();
                       return;
                     }

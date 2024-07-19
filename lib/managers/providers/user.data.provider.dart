@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
-
-// import 'package:wallet/models/drift/user.keys.queries.dart';
-// import 'package:wallet/models/drift/users.queries.dart';
-// import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/models/drift/user.keys.queries.dart';
+import 'package:wallet/models/drift/users.queries.dart';
+import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 
 class TwoFaUpdated extends DataUpdated<bool> {
   TwoFaUpdated({required bool updatedData}) : super(updatedData);
@@ -23,7 +24,7 @@ class ProtonWalletUser {
   bool enabled2FA;
   bool enabledRecovery;
 
-  ProtonUser? protonUser;
+  DriftProtonUser? protonUser;
 
   ProtonWalletUser({
     this.enabled2FA = false,
@@ -32,28 +33,21 @@ class ProtonWalletUser {
 }
 
 class UserDataProvider extends DataProvider {
-  final AppDatabase appDatabase;
-  // late List<WalletUser> users;
   late ProtonWalletUser user;
 
-  /// didn't support multi user yet
+  final ProtonUsersClient protonUsersClient;
+  final UserQueries userQueries;
+  final UserKeysQueries userKeysQueries;
 
-  // late ProtonUsersClient _protonUsersClient;
-  // late UserQueries _userQueries;
-  // late UserKeysQueries _userKeysQueries;
-
-  UserDataProvider({
-    required this.appDatabase,
-  }) {
-    // _userQueries = UserQueries(appDatabase);
-    // _userKeysQueries = UserKeysQueries(appDatabase);
-    // users = [
-    //   WalletUser(),
-    // ];
+  UserDataProvider(
+    this.protonUsersClient,
+    this.userQueries,
+    this.userKeysQueries,
+  ) {
     user = ProtonWalletUser();
   }
 
-  StreamController<DataUpdated> dataUpdateController =
+  final StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 
   void enabled2FA(enable) {
@@ -70,8 +64,65 @@ class UserDataProvider extends DataProvider {
     emitState(ShowWalletRecoveryUpdated(updatedData: enable));
   }
 
-  Future<ProtonUser> getUser() async {
+  Future<List<DriftUserKey>> getUserKeys(String userID) async {
+    var userKeys = await userKeysQueries.getUseKeys(userID);
+    if (userKeys.isNotEmpty) {
+      return userKeys;
+    }
+    await fetchFromServer(userID);
+    userKeys = await userKeysQueries.getUseKeys(userID);
+    if (userKeys.isNotEmpty) {
+      return userKeys;
+    }
+    return [];
+  }
+
+  Future<DriftProtonUser> getUser() async {
     throw UnimplementedError('getUserData is not implemented');
+  }
+
+  Future<void> fetchFromServer(String userID) async {
+    final userinfo = await protonUsersClient.getUserInfo();
+
+    if (userinfo.id != userID) {
+      logger.e('User ID does not match');
+      const Assert('User ID does not match');
+    }
+
+    userQueries.insertOrUpdateItem(DriftProtonUser(
+        id: 0,
+        userId: userinfo.id,
+        name: userinfo.name,
+        usedSpace: userinfo.usedSpace,
+        currency: userinfo.currency,
+        credit: userinfo.credit,
+        createTime: userinfo.createTime,
+        maxSpace: userinfo.maxSpace,
+        maxUpload: userinfo.maxUpload,
+        role: userinfo.role,
+        private: userinfo.private,
+        subscribed: userinfo.subscribed,
+        services: userinfo.services,
+        delinquent: userinfo.delinquent,
+        organizationPrivateKey: userinfo.organizationPrivateKey,
+        email: userinfo.email,
+        displayName: userinfo.displayName));
+    final keys = userinfo.keys;
+    if (keys != null) {
+      for (var key in keys) {
+        userKeysQueries.insertOrUpdateItem(DriftUserKey(
+          keyId: key.id,
+          userId: userID,
+          version: key.version,
+          privateKey: key.privateKey,
+          token: key.token,
+          fingerprint: key.fingerprint,
+          recoverySecret: key.recoverySecret,
+          recoverySecretSignature: key.recoverySecretSignature,
+          primary: key.primary,
+        ));
+      }
+    }
   }
 
   @override

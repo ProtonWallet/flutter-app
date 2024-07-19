@@ -418,11 +418,10 @@ class ProtonUserSettings {
   final int earlyAccess;
   final FlagsSettings? flags;
   final ReferralSettings? referral;
-  final int deviceRecovery;
   final int telemetry;
   final int crashReports;
   final int hideSidePanel;
-  final HighSecuritySettings highSecurity;
+  final HighSecuritySettings? highSecurity;
   final int sessionAccountRecovery;
 
   const ProtonUserSettings({
@@ -443,11 +442,10 @@ class ProtonUserSettings {
     required this.earlyAccess,
     this.flags,
     this.referral,
-    required this.deviceRecovery,
     required this.telemetry,
     required this.crashReports,
     required this.hideSidePanel,
-    required this.highSecurity,
+    this.highSecurity,
     required this.sessionAccountRecovery,
   });
 
@@ -470,7 +468,6 @@ class ProtonUserSettings {
       earlyAccess.hashCode ^
       flags.hashCode ^
       referral.hashCode ^
-      deviceRecovery.hashCode ^
       telemetry.hashCode ^
       crashReports.hashCode ^
       hideSidePanel.hashCode ^
@@ -499,7 +496,6 @@ class ProtonUserSettings {
           earlyAccess == other.earlyAccess &&
           flags == other.flags &&
           referral == other.referral &&
-          deviceRecovery == other.deviceRecovery &&
           telemetry == other.telemetry &&
           crashReports == other.crashReports &&
           hideSidePanel == other.hideSidePanel &&
