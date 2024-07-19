@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -21,6 +22,7 @@ class TextFieldSendBTCV2 extends StatefulWidget {
   final Color? backgroundColor;
   final BitcoinUnit bitcoinUnit;
   final ProtonExchangeRate exchangeRate;
+  final bool bitcoinBase;
 
   const TextFieldSendBTCV2({
     required this.textController,
@@ -28,6 +30,7 @@ class TextFieldSendBTCV2 extends StatefulWidget {
     required this.validation,
     required this.bitcoinUnit,
     required this.exchangeRate,
+    required this.bitcoinBase,
     super.key,
     this.labelText = "",
     this.onFinish,
@@ -48,6 +51,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   bool isError = false;
   String errorString = "";
   int estimatedSATS = 0;
+  double estimatedFiatAmount = 0.0;
 
   Color getBorderColor(isFocus) {
     return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
@@ -57,20 +61,21 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   void didUpdateWidget(covariant TextFieldSendBTCV2 oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.exchangeRate.id != widget.exchangeRate.id ||
-        oldWidget.bitcoinUnit.name != widget.bitcoinUnit.name) {
-      setState(updateEstimateSATS);
+        oldWidget.bitcoinUnit.name != widget.bitcoinUnit.name ||
+        oldWidget.bitcoinBase != widget.bitcoinBase) {
+      setState(updateEstimateValue);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    widget.textController.addListener(updateEstimateSATS);
+    widget.textController.addListener(updateEstimateValue);
   }
 
   @override
   void dispose() {
-    widget.textController.removeListener(updateEstimateSATS);
+    widget.textController.removeListener(updateEstimateValue);
     super.dispose();
   }
 
@@ -106,106 +111,110 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                   }
                 });
               },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                decoration: BoxDecoration(
-                    color: widget.backgroundColor ?? ProtonColors.white,
-                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
-                    border: Border.all(
-                      color: isError
-                          ? ProtonColors.signalError
-                          : getBorderColor(widget.myFocusNode.hasFocus),
-                    )),
-                child: TextFormField(
-                    scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom + 60),
-                    focusNode: widget.myFocusNode,
-                    controller: widget.textController,
-                    style: FontManager.body1Median(ProtonColors.textNorm),
-                    autofocus: widget.autofocus,
-                    keyboardType: widget.keyboardType,
-                    textInputAction: widget.textInputAction,
-                    inputFormatters: widget.inputFormatters,
-                    validator: (string) {
-                      if (widget
-                          .validation(widget.textController.text)
-                          .toString()
-                          .isNotEmpty) {
-                        setState(() {
-                          isError = true;
-                          errorString =
-                              widget.validation(widget.textController.text);
-                        });
-                        return "";
-                      } else {
-                        setState(() {
-                          isError = false;
-                          errorString =
-                              widget.validation(widget.textController.text);
-                        });
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: widget.labelText,
-                      hintText: widget.hintText,
-                      hintStyle: FontManager.textFieldLabelStyle(
-                          ProtonColors.textHint),
-                      labelStyle: isError
-                          ? FontManager.textFieldLabelStyle(
-                              ProtonColors.signalError)
-                          : FontManager.textFieldLabelStyle(
-                              ProtonColors.textWeak),
-                      contentPadding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 4, bottom: 16),
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      border: InputBorder.none,
-                      errorStyle: const TextStyle(height: 0),
-                      focusedErrorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      suffixIcon: widget.myFocusNode.hasFocus
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  widget.myFocusNode.unfocus();
-                                });
-                              },
-                              icon: Icon(Icons.check_circle_outline_rounded,
-                                  size: 20, color: ProtonColors.textWeak))
-                          : null,
-                    )),
-              ),
+              child: TextFormField(
+                  scrollPadding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 60),
+                  focusNode: widget.myFocusNode,
+                  controller: widget.textController,
+                  style: FontManager.sendAmount(ProtonColors.textNorm),
+                  autofocus: widget.autofocus,
+                  keyboardType: widget.keyboardType,
+                  textInputAction: widget.textInputAction,
+                  inputFormatters: widget.inputFormatters,
+                  validator: (string) {
+                    if (widget
+                        .validation(widget.textController.text)
+                        .toString()
+                        .isNotEmpty) {
+                      setState(() {
+                        isError = true;
+                        errorString =
+                            widget.validation(widget.textController.text);
+                      });
+                      return "";
+                    } else {
+                      setState(() {
+                        isError = false;
+                        errorString =
+                            widget.validation(widget.textController.text);
+                      });
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: widget.hintText,
+                    prefixIcon: Text(
+                      widget.bitcoinBase
+                          ? "₿"
+                          : CommonHelper.getFiatCurrencySign(
+                              widget.exchangeRate.fiatCurrency),
+                      style: FontManager.sendAmountSign(ProtonColors.textWeak),
+                    ),
+                    prefixIconConstraints: const BoxConstraints(),
+                    hintStyle: FontManager.sendAmount(ProtonColors.textHint),
+                    // contentPadding: const EdgeInsets.only(
+                    //     left: 10, right: 10, top: 4, bottom: 16),
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    errorStyle: const TextStyle(height: 0),
+                    focusedErrorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: widget.myFocusNode.hasFocus
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                widget.myFocusNode.unfocus();
+                              });
+                            },
+                            icon: Icon(Icons.check_circle_outline_rounded,
+                                size: 20, color: ProtonColors.textWeak))
+                        : null,
+                  )),
             ),
           ),
           const SizedBox(
             height: 5,
           ),
-          Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                  ExchangeCalculator.getBitcoinUnitLabel(
+          Text(
+              widget.bitcoinBase
+                  ? "${CommonHelper.getFiatCurrencySymbol(widget.exchangeRate.fiatCurrency)} ${estimatedFiatAmount.toStringAsFixed(ExchangeCalculator.getDisplayDigit(widget.exchangeRate))}"
+                  : ExchangeCalculator.getBitcoinUnitLabel(
                       widget.bitcoinUnit, estimatedSATS),
-                  textAlign: TextAlign.start,
-                  style: FontManager.captionRegular(ProtonColors.textWeak))),
+              textAlign: TextAlign.start,
+              style: FontManager.captionRegular(ProtonColors.textWeak)),
         ],
       ),
     );
   }
 
-  void updateEstimateSATS() {
+  void updateEstimateValue() {
     double amount = 0.0;
-    try {
-      amount = double.parse(widget.textController.text);
-    } catch (e) {
-      amount = 0.0;
+    if (widget.bitcoinBase) {
+      try {
+        amount = double.parse(widget.textController.text);
+      } catch (e) {
+        amount = 0.0;
+      }
+      final amountInSatoshi = (amount * 100000000).ceil();
+      final double fiatAmount = ExchangeCalculator.getNotionalInFiatCurrency(
+          widget.exchangeRate, amountInSatoshi);
+      setState(() {
+        estimatedFiatAmount = fiatAmount;
+      });
+    } else {
+      try {
+        amount = double.parse(widget.textController.text);
+      } catch (e) {
+        amount = 0.0;
+      }
+      final double btcAmount =
+          ExchangeCalculator.getNotionalInBTC(widget.exchangeRate, amount);
+      setState(() {
+        estimatedSATS = (btcAmount * 100000000).ceil();
+      });
     }
-    final double btcAmount =
-        ExchangeCalculator.getNotionalInBTC(widget.exchangeRate, amount);
-    setState(() {
-      estimatedSATS = (btcAmount * 100000000).ceil();
-    });
   }
 }

@@ -13,6 +13,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -110,6 +111,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   double feeRateMedianPriority = 15.0;
   double feeRateLowPriority = 10.0;
   double feeRateSatPerVByte = 15.0;
+  bool bitcoinBase = false;
   int estimatedFeeInSAT = 0;
   int estimatedFeeInSATHighPriority = 0;
   int estimatedFeeInSATMedianPriority = 0;
@@ -131,8 +133,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   BuildContext? context;
   late FocusNode addressFocusNode;
   late FocusNode amountFocusNode;
-  ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-      ValueNotifier(defaultFiatCurrency);
+  ValueNotifier<FiatCurrencyWrapper> fiatCurrencyNotifier =
+      ValueNotifier(bitcoinCurrencyWrapper);
 
   bool isEditingEmailBody = false;
   bool isEditingMemo = false;
@@ -282,9 +284,17 @@ class SendViewModelImpl extends SendViewModel {
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
       startExchangeRateUpdateService();
-      fiatCurrencyNotifier.value = userSettingsDataProvider.fiatCurrency;
+      fiatCurrencyNotifier.value = FiatCurrencyHelper.getFiatCurrencyWrapper(
+          userSettingsDataProvider.fiatCurrency);
       fiatCurrencyNotifier.addListener(() async {
-        updateExchangeRate(fiatCurrencyNotifier.value);
+        if (fiatCurrencyNotifier.value.bitcoinCurrency != null) {
+          bitcoinBase = true;
+          updateExchangeRate(defaultFiatCurrency);
+        } else {
+          bitcoinBase = false;
+          updateExchangeRate(
+              fiatCurrencyNotifier.value.fiatCurrency ?? defaultFiatCurrency);
+        }
       });
       amountFocusNode.addListener(splitAmountToRecipients);
 
@@ -759,9 +769,10 @@ class SendViewModelImpl extends SendViewModel {
           } catch (e) {
             amount = 0.0;
           }
-          final double btcAmount =
-              ExchangeCalculator.getNotionalInBTC(exchangeRate, amount);
-          amountInSATS = (btcAmount * 100000000).ceil();
+          final double btcAmount = bitcoinBase
+              ? amount
+              : ExchangeCalculator.getNotionalInBTC(exchangeRate, amount);
+          amountInSATS = bitcoinBase ? (btcAmount * 100000000).floor() : (btcAmount * 100000000).ceil();
           final String email = protonRecipient.email;
           String bitcoinAddress = "";
           if (email.contains("@")) {
@@ -1042,8 +1053,12 @@ class SendViewModelImpl extends SendViewModel {
     if (recipientCount > 0) {
       final double amount = totalAmount / recipientCount;
       for (ProtonRecipient recipient in recipients) {
-        recipient.amountController.text = amount
-            .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
+        if (bitcoinBase) {
+          recipient.amountController.text = amount.toStringAsFixed(8);
+        } else {
+          recipient.amountController.text = amount.toStringAsFixed(
+              ExchangeCalculator.getDisplayDigit(exchangeRate));
+        }
       }
     }
     sinkAddSafe();

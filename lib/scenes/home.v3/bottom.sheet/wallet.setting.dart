@@ -21,6 +21,7 @@ import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
@@ -313,7 +314,7 @@ class WalletSettingSheet {
                                           thickness: 0.2,
                                           height: 1,
                                         ),
-                                        DropdownButtonV2(
+                                        DropdownCurrencyV1(
                                             labelText: S
                                                 .of(context)
                                                 .setting_fiat_currency_label,
@@ -322,7 +323,6 @@ class WalletSettingSheet {
                                                     .width -
                                                 defaultPadding * 2,
                                             items: fiatCurrencies,
-                                            canSearch: true,
                                             itemsText: fiatCurrencies
                                                 .map(FiatCurrencyHelper
                                                     .getFullName)
