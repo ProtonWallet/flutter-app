@@ -5,6 +5,7 @@ import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/onboarding/content.dart';
 import 'package:wallet/scenes/components/textfield.2fa.dart';
 import 'package:wallet/scenes/components/textfield.password.dart';
@@ -89,7 +90,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                     width: MediaQuery.of(context).size.width,
                     controller: viewModel.passwordController),
                 SizedBoxes.box18,
-                ButtonV5(
+                ButtonV6(
                     onPressed: () async {
                       final bool result = await viewModel.disable2FA();
                       if (context.mounted) {

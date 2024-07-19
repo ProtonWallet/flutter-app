@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/two_factor_auth_helper.dart';
-import 'package:wallet/managers/providers/proton.user.data.provider.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
@@ -35,14 +35,14 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     this.userManager,
     this.protonUsersApi,
     this.protonSettingsApi,
-    this.protonUserData,
+    this.userDataProvider,
   );
 
   final UserManager userManager;
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
   // final
-  final ProtonUserDataProvider protonUserData;
+  final UserDataProvider userDataProvider;
 
   @override
   Future<bool> setup2FA() async {
@@ -86,7 +86,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       final lockCode = await protonUsersApi.lockSensitiveSettings();
       logger.i("enable2FaTotp lockSensitiveSettings: $lockCode");
       backupPhrases = response.twoFactorRecoveryCodes;
-      protonUserData.enabled2FA(response.code == 1000);
+      userDataProvider.enabled2FA(response.code == 1000);
       return true;
     } on BridgeError catch (exception) {
       error = parseSampleDisplayError(exception);

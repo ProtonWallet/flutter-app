@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/managers/providers/proton.user.data.provider.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
@@ -24,13 +24,13 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
     super.coordinator,
     this.protonUsersApi,
     this.protonSettingsApi,
-    this.protonUserData,
+    this.userDataProvider,
   );
 
   ///
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
-  final ProtonUserDataProvider protonUserData;
+  final UserDataProvider userDataProvider;
 
   @override
   Future<bool> disable2FA() async {
@@ -57,7 +57,7 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
       );
       final response = await protonSettingsApi.disable2FaTotp(req: proofs);
       logger.i("enable2FaTotp response code: $response");
-      protonUserData.enabled2FA(false);
+      userDataProvider.enabled2FA(false);
       return true;
     } on BridgeError catch (exception) {
       error = parseSampleDisplayError(exception);

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
-import 'package:wallet/managers/providers/proton.user.data.provider.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/common/errors.dart';
@@ -27,7 +27,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
     this.appStateManager,
     this.localAuthManager,
     this.protonUserApi,
-    this.protonUserDataProvider,
+    this.userDataProvider,
   );
 
   ///
@@ -35,7 +35,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
   final LocalAuthManager localAuthManager;
 
   final ProtonUsersClient protonUserApi;
-  final ProtonUserDataProvider protonUserDataProvider;
+  final UserDataProvider userDataProvider;
 
   StreamSubscription? protonUserDataSubscription;
   @override
@@ -46,7 +46,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
   @override
   Future<void> loadData() async {
-    protonUserDataSubscription = protonUserDataProvider.stream.listen((state) {
+    protonUserDataSubscription = userDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
         hadSetup2FA = state.updatedData;
         sinkAddSafe();
