@@ -30,22 +30,27 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class WalletSettingSheet {
-  static void show(BuildContext context, HomeViewModel viewModel,
-      WalletMenuModel walletMenuModel) {
+  static void show(
+    BuildContext context,
+    HomeViewModel viewModel,
+    WalletMenuModel walletMenuModel,
+  ) {
     final ScrollController scrollController = ScrollController();
-    bool hasEmailIntegration = false;
+
+    /// Create a map to check if each account has email integration enabled
     final Map<String, bool> emailIntegrationEnables = {
-      for (var accountMenuModel in walletMenuModel.accounts)
+      for (final accountMenuModel in walletMenuModel.accounts)
         accountMenuModel.accountModel.accountID:
-            accountMenuModel.emailIds.isNotEmpty
+            accountMenuModel.emailIds.isNotEmpty,
     };
-    for (var accountMenuModel in walletMenuModel.accounts) {
-      if (emailIntegrationEnables[accountMenuModel.accountModel.accountID] ??
-          false) {
-        hasEmailIntegration = true;
-        break;
-      }
-    }
+
+    /// Check if any account has email integration enabled
+    bool hasEmailIntegration = walletMenuModel.accounts.any(
+      (accountMenuModel) =>
+          emailIntegrationEnables[accountMenuModel.accountModel.accountID] ??
+          false,
+    );
+
     HomeModalBottomSheet.show(context,
         scrollController: scrollController,
         header: CustomHeader(
@@ -55,24 +60,26 @@ class WalletSettingSheet {
             builder: (BuildContext context, StateSetter setState) {
       return BlocBuilder<WalletListBloc, WalletListState>(
           bloc: viewModel.walletListBloc,
-          builder: (context, state) {
+          builder: (context, wlState) {
             // TODO(fix): change to walletMenuModel
-            for (WalletMenuModel walletMenuModel2 in state.walletsModel) {
+            var foundWalletMenuModel = walletMenuModel;
+            for (final item in wlState.walletsModel) {
               if (walletMenuModel.walletModel.walletID ==
-                  walletMenuModel2.walletModel.walletID) {
-                walletMenuModel =
-                    walletMenuModel2; // TODO(fix): fix this workaround, or the value is old one
+                  item.walletModel.walletID) {
+                foundWalletMenuModel = item;
                 break;
               }
             }
             final TextEditingController walletNameController =
-                TextEditingController(text: walletMenuModel.walletName);
+                TextEditingController(text: foundWalletMenuModel.walletName);
             final FocusNode walletNameFocusNode = FocusNode();
-            final WalletModel userWallet = walletMenuModel.walletModel;
-            final List<AccountModel> userAccounts =
-                walletMenuModel.accounts.map((e) => e.accountModel).toList();
+            final WalletModel userWallet = foundWalletMenuModel.walletModel;
+            final List<AccountModel> userAccounts = foundWalletMenuModel
+                .accounts
+                .map((e) => e.accountModel)
+                .toList();
             final Map<String, TextEditingController> accountNameControllers = {
-              for (var accountMenuModel in walletMenuModel.accounts)
+              for (var accountMenuModel in foundWalletMenuModel.accounts)
                 accountMenuModel.accountModel.accountID:
                     TextEditingController(text: accountMenuModel.label)
             };
@@ -94,7 +101,7 @@ class WalletSettingSheet {
                 item.accountID:
                     ValueNotifier(viewModel.protonAddresses.firstOrNull)
             };
-            final int indexOfWallet = walletMenuModel.currentIndex;
+            final int indexOfWallet = foundWalletMenuModel.currentIndex;
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,11 +223,10 @@ class WalletSettingSheet {
                             }
                           }
                           return Column(children: [
-                            for (WalletMenuModel walletMenuModel2
-                                in state.walletsModel)
+                            for (final walletMenuModel2 in state.walletsModel)
                               if (walletMenuModel2.walletModel.walletID ==
-                                  walletMenuModel.walletModel.walletID)
-                                for (AccountMenuModel accountMenuModel
+                                  foundWalletMenuModel.walletModel.walletID)
+                                for (final accountMenuModel
                                     in walletMenuModel2.accounts)
                                   Container(
                                       width: MediaQuery.of(context).size.width,
@@ -322,7 +328,8 @@ class WalletSettingSheet {
                                                     .getFullName)
                                                 .toList(),
                                             itemsLeadingIcons: fiatCurrencies
-                                                .map(CommonHelper.getCountryIcon)
+                                                .map(
+                                                    CommonHelper.getCountryIcon)
                                                 .toList(),
                                             valueNotifier:
                                                 accountFiatCurrencyNotifier[
@@ -358,67 +365,66 @@ class WalletSettingSheet {
                                                         false,
                                                     activeColor:
                                                         ProtonColors.protonBlue,
-                                                    onChanged: (bool newValue) {
-                                                      setState(() async {
-                                                        if (newValue) {
-                                                          EmailIntegrationDropdownV2Sheet
-                                                              .show(
-                                                                  context,
-                                                                  viewModel,
-                                                                  userWallet,
-                                                                  accountMenuModel,
-                                                                  usedEmailIDs,
-                                                                  callback: () {
-                                                            setState(() {
-                                                              emailIntegrationEnables[
-                                                                  accountMenuModel
-                                                                      .accountModel
-                                                                      .accountID] = true;
-                                                              hasEmailIntegration =
-                                                                  true;
-                                                            });
-                                                          });
-                                                        } else if (!viewModel
-                                                            .isRemovingBvE) {
-                                                          setState(() {
-                                                            viewModel
-                                                                    .isRemovingBvE =
-                                                                true;
-                                                          });
-                                                          await viewModel
-                                                              .removeEmailAddressFromWalletAccount(
-                                                                  userWallet,
-                                                                  accountMenuModel
-                                                                      .accountModel,
-                                                                  accountMenuModel
-                                                                      .emailIds
-                                                                      .first);
+                                                    onChanged:
+                                                        (bool newValue) async {
+                                                      if (newValue) {
+                                                        EmailIntegrationDropdownV2Sheet
+                                                            .show(
+                                                                context,
+                                                                viewModel,
+                                                                userWallet,
+                                                                accountMenuModel,
+                                                                usedEmailIDs,
+                                                                callback: () {
                                                           setState(() {
                                                             emailIntegrationEnables[
                                                                 accountMenuModel
                                                                     .accountModel
-                                                                    .accountID] = false;
+                                                                    .accountID] = true;
                                                             hasEmailIntegration =
-                                                                false;
-                                                            for (var accountMenuModel
-                                                                in walletMenuModel
-                                                                    .accounts) {
-                                                              if (emailIntegrationEnables[
-                                                                      accountMenuModel
-                                                                          .accountModel
-                                                                          .accountID] ??
-                                                                  false) {
-                                                                hasEmailIntegration =
-                                                                    true;
-                                                                break;
-                                                              }
-                                                            }
-                                                            viewModel
-                                                                    .isRemovingBvE =
-                                                                false;
+                                                                true;
                                                           });
-                                                        }
-                                                      });
+                                                        });
+                                                      } else if (!viewModel
+                                                          .isRemovingBvE) {
+                                                        setState(() {
+                                                          viewModel
+                                                                  .isRemovingBvE =
+                                                              true;
+                                                        });
+                                                        await viewModel
+                                                            .removeEmailAddressFromWalletAccount(
+                                                                userWallet,
+                                                                accountMenuModel
+                                                                    .accountModel,
+                                                                accountMenuModel
+                                                                    .emailIds
+                                                                    .first);
+                                                        setState(() {
+                                                          emailIntegrationEnables[
+                                                              accountMenuModel
+                                                                  .accountModel
+                                                                  .accountID] = false;
+                                                          hasEmailIntegration =
+                                                              false;
+                                                          for (final accountMenuModel
+                                                              in foundWalletMenuModel
+                                                                  .accounts) {
+                                                            if (emailIntegrationEnables[
+                                                                    accountMenuModel
+                                                                        .accountModel
+                                                                        .accountID] ??
+                                                                false) {
+                                                              hasEmailIntegration =
+                                                                  true;
+                                                              break;
+                                                            }
+                                                          }
+                                                          viewModel
+                                                                  .isRemovingBvE =
+                                                              false;
+                                                        });
+                                                      }
                                                     },
                                                   )
                                                 ])),
@@ -468,8 +474,8 @@ class WalletSettingSheet {
                                                                     .accountID] = false;
                                                             hasEmailIntegration =
                                                                 false;
-                                                            for (var accountMenuModel
-                                                                in walletMenuModel
+                                                            for (final accountMenuModel
+                                                                in foundWalletMenuModel
                                                                     .accounts) {
                                                               if (emailIntegrationEnables[
                                                                       accountMenuModel
@@ -538,8 +544,8 @@ class WalletSettingSheet {
                                 DeleteWalletSheet.show(
                                   context,
                                   viewModel,
-                                  walletMenuModel,
-                                  hasBalance: walletMenuModel.accounts
+                                  foundWalletMenuModel,
+                                  hasBalance: foundWalletMenuModel.accounts
                                           .map((v) => v.balance)
                                           .sum >
                                       0,

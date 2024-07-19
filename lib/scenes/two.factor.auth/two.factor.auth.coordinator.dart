@@ -25,7 +25,7 @@ class TwoFactorAuthCoordinator extends Coordinator {
     final viewModel = TwoFactorAuthViewModelImpl(
       this,
       userManager,
-      apiServices.getUsersApiClient(),
+      apiServices.getProtonUsersApiClient(),
       apiServices.getSettingsApiClient(),
       dataProvider.protonUserDataProvider,
     );

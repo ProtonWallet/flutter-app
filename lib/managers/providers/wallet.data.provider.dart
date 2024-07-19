@@ -319,8 +319,10 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
-  Future<void> deleteWalletAccount(
-      {required AccountModel accountModel, bool addToStream = true}) async {
+  Future<void> deleteWalletAccount({
+    required AccountModel accountModel,
+    bool addToStream = true,
+  }) async {
     await accountDao.deleteByServerID(accountModel.accountID);
     await addressDao.deleteByServerAccountID(accountModel.accountID);
     if (selectedServerWalletAccountID == accountModel.accountID) {

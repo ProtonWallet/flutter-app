@@ -7,6 +7,7 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
@@ -210,10 +211,15 @@ class HomeCoordinator extends Coordinator {
 
     final ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
       userManager,
-      apiServiceManager.getUsersApiClient(),
+      apiServiceManager.getProtonUsersApiClient(),
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
     );
+
+    final deleteWalletBloc = DeleteWalletBloc(
+        dataProviderManager.walletDataProvider,
+        apiServiceManager.getWalletClient(),
+        apiServiceManager.getProtonUsersApiClient());
 
     /// build locker overlay view
     final overlayView = LockCoordinator().start();
@@ -225,6 +231,7 @@ class HomeCoordinator extends Coordinator {
       walletBalanceBloc,
       dataProviderManager,
       createWalletBloc,
+      deleteWalletBloc,
       protonRecoveryBloc,
       userManager,
       event,

@@ -21,7 +21,7 @@ class RecoveryCoordinator extends Coordinator {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
       userManager,
-      apiServiceManager.getUsersApiClient(),
+      apiServiceManager.getProtonUsersApiClient(),
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
     );
@@ -29,7 +29,7 @@ class RecoveryCoordinator extends Coordinator {
     final viewModel = RecoveryViewModelImpl(
       this,
       protonRecoveryBloc,
-      apiServiceManager.getUsersApiClient(),
+      apiServiceManager.getProtonUsersApiClient(),
     );
     widget = RecoveryView(
       viewModel,
