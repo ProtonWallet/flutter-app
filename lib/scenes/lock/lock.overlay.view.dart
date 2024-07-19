@@ -17,7 +17,7 @@ class LockOverlayView extends ViewBase<LockViewModel> {
             : child;
       },
       child: viewModel.isLocked
-          ? Container(
+          ? ColoredBox(
               /// Key is necessary to identify the widget uniquely
               key: const ValueKey(
                 'locked',

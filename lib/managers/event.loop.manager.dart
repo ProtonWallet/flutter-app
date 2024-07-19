@@ -27,6 +27,7 @@ import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/rust/proton_api/wallet_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
+// TODO(fix): handle user and settings event.
 class EventLoop implements Manager {
   final UserManager userManager;
   final ProtonWalletManager protonWalletManager;
@@ -97,7 +98,6 @@ class EventLoop implements Manager {
             }
             final ApiWallet? walletData = walletEvent.wallet;
 
-            final firstUserKey = await userManager.getFirstKey();
             if (walletData != null) {
               SecretKey? secretKey;
               final String walletID = walletData.id;
@@ -111,16 +111,18 @@ class EventLoop implements Manager {
                     final WalletKey walletKey = WalletKey.fromApiWalletKey(
                       apiWalletKey,
                     );
+                    final userKey =
+                        await userManager.getUserKey(walletKey.userKeyId);
 
                     secretKey = WalletKeyHelper.decryptWalletKey(
-                      firstUserKey,
+                      userKey,
                       walletKey,
                     );
 
                     // TODO(fix): fix me use it
                     final bool isValidWalletKeySignature =
                         await WalletKeyHelper.verifySecretKeySignature(
-                      firstUserKey,
+                      userKey,
                       walletKey,
                       secretKey,
                     );

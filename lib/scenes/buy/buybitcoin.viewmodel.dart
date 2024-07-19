@@ -37,6 +37,7 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
 
   bool isloading = false;
   bool isBuying = true;
+  bool hideSell = true;
   int index = 0;
   void toggleButtons();
 
@@ -295,6 +296,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     final amount = selected.amount;
     final check = bloc.toNumberAmount(controller.text);
     if (amount != check) {
+      if (check == "0") {
+        return bloc.add(CheckoutFinishedEvnet());
+      }
       selectAmount(check);
     }
     if (selected.provider == GatewayProvider.ramp) {

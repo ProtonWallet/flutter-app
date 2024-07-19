@@ -1,71 +1,43 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/env.dart';
-import 'package:wallet/helper/extension/data.dart';
-import 'package:wallet/helper/extension/strings.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.event.dart';
 import 'package:wallet/managers/users/user.manager.state.dart';
+import 'package:wallet/models/drift/db/app.database.dart';
+import 'package:wallet/models/drift/user.keys.queries.dart';
+import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/auth_credential.dart';
 
-class UserKey {
-  final String keyID;
-  final String privateKey;
-  final String passphrase;
-
-  UserKey(
-      {required this.keyID,
-      required this.privateKey,
-      required this.passphrase});
-
-  String decryptBinary(String? binaryEncryptedString) {
-    if (binaryEncryptedString != null) {
-      final Uint8List bytes = proton_crypto.decryptBinary(
-          privateKey, passphrase, binaryEncryptedString.base64decode());
-      final String decryptedMessage = utf8.decode(bytes);
-      if (decryptedMessage != "null") {
-        return decryptedMessage;
-      }
-    }
-    return "";
-  }
-
-  String decrypt(String encryptedArmor) {
-    return proton_crypto.decrypt(privateKey, passphrase, encryptedArmor);
-  }
-
-  String encrypt(String plainText) {
-    return proton_crypto.encrypt(privateKey, plainText);
-  }
-
-  String encryptBinary(Uint8List data) {
-    return proton_crypto.encryptBinary(privateKey, data).base64encode();
-  }
-}
+import 'user.key.dart';
 
 class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     implements Manager {
   final SecureStorageManager storage;
   final PreferencesManager shared;
-  late UserInfo userInfo;
+  final AppDatabase dbConnection;
   final ApiEnv apiEnv;
 
-  // api service here
+  ///
+  late UserInfo userInfo;
+
+  /// api service here
   final ProtonApiServiceManager apiServiceManager;
+
+  /// provider
+  late UserDataProvider userDataProvider;
 
   UserManager(
     this.storage,
     this.shared,
     this.apiEnv,
     this.apiServiceManager,
+    this.dbConnection,
   ) : super(UserManagerInitial());
 
   /// Login and session management
@@ -80,8 +52,6 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     await shared.isFirstTimeEntry(() async {
       await storage.deleteAll();
     });
-    // shared.checkAndRunLogic()
-    // add more
   }
 
   Future<FlutterSession> getChildSession() async {
@@ -141,10 +111,24 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     await storage.set("userPassphrase", userInfo.userPassphrase);
   }
 
-  Future<UserKey> getFirstKey() async {
+  Future<UserKey> getPrimaryKey() async {
+    // default key if can't found any keys
     final userKeyID = userInfo.userKeyID;
     final privateKey = userInfo.userPrivateKey;
     final passphrase = userInfo.userPassphrase;
+    final userID = userInfo.userId;
+    final keys = await userDataProvider.getUserKeys(userID);
+
+    final found = keys.where((item) => item.primary == 0);
+    if (found.isNotEmpty) {
+      final key = found.first;
+      return UserKey(
+        keyID: key.keyId,
+        privateKey: key.privateKey,
+        passphrase: passphrase,
+      );
+    }
+
     if (userKeyID == "" || privateKey == "" || passphrase == "") {
       throw Exception(
           "First key is null, cannot decrypt wallet key. relogin  or debug.");
@@ -154,6 +138,51 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
       privateKey: privateKey,
       passphrase: passphrase,
     );
+  }
+
+  Future<UserKey> getUserKey(String keyID) async {
+    final userKeyID = userInfo.userKeyID;
+    final privateKey = userInfo.userPrivateKey;
+    final passphrase = userInfo.userPassphrase;
+    final keys = await userDataProvider.getUserKeys(userID);
+    final found = keys.where((item) => item.keyId == keyID);
+    if (found.isNotEmpty) {
+      final key = found.first;
+      return UserKey(
+        keyID: key.keyId,
+        privateKey: key.privateKey,
+        passphrase: passphrase,
+      );
+    }
+    if (userKeyID == "" || privateKey == "" || passphrase == "") {
+      throw Exception(
+          "First key is null, cannot decrypt wallet key. relogin  or debug.");
+    }
+    return UserKey(
+      keyID: userKeyID,
+      privateKey: privateKey,
+      passphrase: passphrase,
+    );
+  }
+
+  Future<List<UserKey>> getUserKeys() async {
+    final passphrase = userInfo.userPassphrase;
+    final keys = await userDataProvider.getUserKeys(userID);
+    if (keys.isEmpty) {
+      throw Exception(
+        "Can't find any user keys",
+      );
+    }
+    final found = keys
+        .map(
+          (item) => UserKey(
+            keyID: item.keyId,
+            privateKey: item.privateKey,
+            passphrase: passphrase,
+          ),
+        )
+        .toList();
+    return found;
   }
 
   /// wallet operation
@@ -171,8 +200,11 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   @override
-  Future<void> login(String userID) {
-    // TODO(fix): implement login
-    throw UnimplementedError();
+  Future<void> login(String userID) async {
+    userDataProvider = UserDataProvider(
+      apiServiceManager.getProtonUsersApiClient(),
+      UserQueries(dbConnection),
+      UserKeysQueries(dbConnection),
+    );
   }
 }

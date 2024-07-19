@@ -16,7 +16,6 @@ import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
-import 'package:wallet/managers/providers/proton.user.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
@@ -28,6 +27,8 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
+import 'package:wallet/models/drift/user.keys.queries.dart';
+import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 
@@ -153,7 +154,11 @@ class DataProviderManager extends Manager {
   @override
   Future<void> login(String userID) async {
     //
-    userDataProvider = UserDataProvider(appDatabase: dbConnection);
+    userDataProvider = UserDataProvider(
+      apiService.getProtonUserClient(),
+      UserQueries(dbConnection),
+      UserKeysQueries(dbConnection),
+    );
     //
     walletPassphraseProvider = WalletPassphraseProvider(storage);
     // wallets and accounts

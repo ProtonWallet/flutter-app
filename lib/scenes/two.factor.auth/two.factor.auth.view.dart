@@ -113,7 +113,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                           ProtonColors.interactionNorm)),
                 ),
                 SizedBoxes.box12,
-                Container(
+                ColoredBox(
                   color: ProtonColors.white,
                   child: QrImageView(
                     size: min(400, 200),

@@ -93,7 +93,7 @@ class SplashView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: ProtonColors.launchBackground,
       child: const Center(child: CircularProgressIndicator()),
     );

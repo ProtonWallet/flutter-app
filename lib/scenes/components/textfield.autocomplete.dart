@@ -38,7 +38,7 @@ class TextFieldAutoComplete extends StatelessWidget {
             TextEditingController textEditingController,
             FocusNode focusNode,
             VoidCallback onFieldSubmitted) {
-          return Container(
+          return DecoratedBox(
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.circular(8.0),

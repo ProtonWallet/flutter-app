@@ -83,8 +83,8 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       );
       final response = await protonSettingsApi.enable2FaTotp(req: req);
       logger.i("enable2FaTotp response code: $response");
-      final lockCode = await protonUsersApi.lockSensitiveSettings();
-      logger.i("enable2FaTotp lockSensitiveSettings: $lockCode");
+      // final lockCode = await protonUsersApi.lockSensitiveSettings();
+      // logger.i("enable2FaTotp lockSensitiveSettings: $lockCode");
       backupPhrases = response.twoFactorRecoveryCodes;
       userDataProvider.enabled2FA(response.code == 1000);
       return true;

@@ -71,26 +71,27 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        S.of(context).sell,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFF9294A3),
-                          fontSize: 16,
-                          fontFamily: 'SF Pro Text',
-                          fontWeight: FontWeight.w600,
-                          height: 0.08,
+                if (!viewModel.hideSell)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          S.of(context).sell,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF9294A3),
+                            fontSize: 16,
+                            fontFamily: 'SF Pro Text',
+                            fontWeight: FontWeight.w600,
+                            height: 0.08,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
             SizedBoxes.box18,
@@ -275,7 +276,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           if (state.isCurrencyLoaded)
                                             TextFormField(
                                               decoration: const InputDecoration(
-                                                hintText: 'Enter text',
+                                                hintText: '0.00',
                                                 // Remove the underline
                                                 border: InputBorder.none,
                                                 // Remove the underline when the field is enabled
@@ -298,7 +299,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                   decimalDigits: 0,
                                                   symbol: "",
                                                   enableNegative: false,
-                                                  minValue: 1,
+                                                  minValue: 0,
                                                 ),
                                               ],
                                               onChanged: (value) {},

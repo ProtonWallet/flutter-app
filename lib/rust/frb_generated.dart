@@ -11345,6 +11345,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HighSecuritySettings dco_decode_box_autoadd_high_security_settings(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_high_security_settings(raw);
+  }
+
+  @protected
   OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -11386,6 +11393,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_proton_srp_client_proofs(raw);
+  }
+
+  @protected
+  ProtonUser dco_decode_box_autoadd_proton_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_proton_user(raw);
+  }
+
+  @protected
+  ProtonUserSettings dco_decode_box_autoadd_proton_user_settings(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_proton_user_settings(raw);
   }
 
   @protected
@@ -12191,6 +12210,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HighSecuritySettings? dco_decode_opt_box_autoadd_high_security_settings(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_high_security_settings(raw);
+  }
+
+  @protected
   Pagination? dco_decode_opt_box_autoadd_pagination(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_pagination(raw);
@@ -12221,6 +12249,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return raw == null
         ? null
         : dco_decode_box_autoadd_proton_exchange_rate(raw);
+  }
+
+  @protected
+  ProtonUser? dco_decode_opt_box_autoadd_proton_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_proton_user(raw);
+  }
+
+  @protected
+  ProtonUserSettings? dco_decode_opt_box_autoadd_proton_user_settings(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_proton_user_settings(raw);
   }
 
   @protected
@@ -12414,8 +12457,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonEvent dco_decode_proton_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 11)
-      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    if (arr.length != 13)
+      throw Exception('unexpected arr length: expect 13 but see ${arr.length}');
     return ProtonEvent(
       code: dco_decode_u_16(arr[0]),
       eventId: dco_decode_String(arr[1]),
@@ -12430,6 +12473,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_opt_list_wallet_transaction_event(arr[9]),
       walletUserSettings:
           dco_decode_opt_box_autoadd_api_wallet_user_settings(arr[10]),
+      protonUser: dco_decode_opt_box_autoadd_proton_user(arr[11]),
+      protonUserSettings:
+          dco_decode_opt_box_autoadd_proton_user_settings(arr[12]),
     );
   }
 
@@ -12514,8 +12560,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonUserSettings dco_decode_proton_user_settings(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 23)
-      throw Exception('unexpected arr length: expect 23 but see ${arr.length}');
+    if (arr.length != 22)
+      throw Exception('unexpected arr length: expect 22 but see ${arr.length}');
     return ProtonUserSettings(
       email: dco_decode_email_settings(arr[0]),
       password: dco_decode_opt_box_autoadd_password_settings(arr[1]),
@@ -12534,12 +12580,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       earlyAccess: dco_decode_u_32(arr[14]),
       flags: dco_decode_opt_box_autoadd_flags_settings(arr[15]),
       referral: dco_decode_opt_box_autoadd_referral_settings(arr[16]),
-      deviceRecovery: dco_decode_u_32(arr[17]),
-      telemetry: dco_decode_u_32(arr[18]),
-      crashReports: dco_decode_u_32(arr[19]),
-      hideSidePanel: dco_decode_u_32(arr[20]),
-      highSecurity: dco_decode_high_security_settings(arr[21]),
-      sessionAccountRecovery: dco_decode_u_32(arr[22]),
+      telemetry: dco_decode_u_32(arr[17]),
+      crashReports: dco_decode_u_32(arr[18]),
+      hideSidePanel: dco_decode_u_32(arr[19]),
+      highSecurity: dco_decode_opt_box_autoadd_high_security_settings(arr[20]),
+      sessionAccountRecovery: dco_decode_u_32(arr[21]),
     );
   }
 
@@ -14460,6 +14505,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HighSecuritySettings sse_decode_box_autoadd_high_security_settings(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_high_security_settings(deserializer));
+  }
+
+  @protected
   OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -14505,6 +14557,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_proton_srp_client_proofs(deserializer));
+  }
+
+  @protected
+  ProtonUser sse_decode_box_autoadd_proton_user(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_proton_user(deserializer));
+  }
+
+  @protected
+  ProtonUserSettings sse_decode_box_autoadd_proton_user_settings(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_proton_user_settings(deserializer));
   }
 
   @protected
@@ -15588,6 +15653,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HighSecuritySettings? sse_decode_opt_box_autoadd_high_security_settings(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_high_security_settings(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   Pagination? sse_decode_opt_box_autoadd_pagination(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -15642,6 +15719,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_proton_exchange_rate(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  ProtonUser? sse_decode_opt_box_autoadd_proton_user(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_proton_user(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  ProtonUserSettings? sse_decode_opt_box_autoadd_proton_user_settings(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_proton_user_settings(deserializer));
     } else {
       return null;
     }
@@ -15953,6 +16054,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_decode_opt_list_wallet_transaction_event(deserializer);
     var var_walletUserSettings =
         sse_decode_opt_box_autoadd_api_wallet_user_settings(deserializer);
+    var var_protonUser = sse_decode_opt_box_autoadd_proton_user(deserializer);
+    var var_protonUserSettings =
+        sse_decode_opt_box_autoadd_proton_user_settings(deserializer);
     return ProtonEvent(
         code: var_code,
         eventId: var_eventId,
@@ -15964,7 +16068,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         walletKeyEvents: var_walletKeyEvents,
         walletSettingEvents: var_walletSettingEvents,
         walletTransactionEvents: var_walletTransactionEvents,
-        walletUserSettings: var_walletUserSettings);
+        walletUserSettings: var_walletUserSettings,
+        protonUser: var_protonUser,
+        protonUserSettings: var_protonUserSettings);
   }
 
   @protected
@@ -16090,11 +16196,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_flags = sse_decode_opt_box_autoadd_flags_settings(deserializer);
     var var_referral =
         sse_decode_opt_box_autoadd_referral_settings(deserializer);
-    var var_deviceRecovery = sse_decode_u_32(deserializer);
     var var_telemetry = sse_decode_u_32(deserializer);
     var var_crashReports = sse_decode_u_32(deserializer);
     var var_hideSidePanel = sse_decode_u_32(deserializer);
-    var var_highSecurity = sse_decode_high_security_settings(deserializer);
+    var var_highSecurity =
+        sse_decode_opt_box_autoadd_high_security_settings(deserializer);
     var var_sessionAccountRecovery = sse_decode_u_32(deserializer);
     return ProtonUserSettings(
         email: var_email,
@@ -16114,7 +16220,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         earlyAccess: var_earlyAccess,
         flags: var_flags,
         referral: var_referral,
-        deviceRecovery: var_deviceRecovery,
         telemetry: var_telemetry,
         crashReports: var_crashReports,
         hideSidePanel: var_hideSidePanel,
@@ -18022,6 +18127,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_high_security_settings(
+      HighSecuritySettings self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_high_security_settings(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_onchain_store_factory(
       OnchainStoreFactory self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -18068,6 +18180,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ProtonSrpClientProofs self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_proton_srp_client_proofs(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_proton_user(
+      ProtonUser self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_proton_user(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_proton_user_settings(
+      ProtonUserSettings self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_proton_user_settings(self, serializer);
   }
 
   @protected
@@ -18960,6 +19086,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_high_security_settings(
+      HighSecuritySettings? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_high_security_settings(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_pagination(
       Pagination? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -19011,6 +19148,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_proton_exchange_rate(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_user(
+      ProtonUser? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_proton_user(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_user_settings(
+      ProtonUserSettings? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_proton_user_settings(self, serializer);
     }
   }
 
@@ -19281,6 +19440,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         self.walletTransactionEvents, serializer);
     sse_encode_opt_box_autoadd_api_wallet_user_settings(
         self.walletUserSettings, serializer);
+    sse_encode_opt_box_autoadd_proton_user(self.protonUser, serializer);
+    sse_encode_opt_box_autoadd_proton_user_settings(
+        self.protonUserSettings, serializer);
   }
 
   @protected
@@ -19364,11 +19526,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_u_32(self.earlyAccess, serializer);
     sse_encode_opt_box_autoadd_flags_settings(self.flags, serializer);
     sse_encode_opt_box_autoadd_referral_settings(self.referral, serializer);
-    sse_encode_u_32(self.deviceRecovery, serializer);
     sse_encode_u_32(self.telemetry, serializer);
     sse_encode_u_32(self.crashReports, serializer);
     sse_encode_u_32(self.hideSidePanel, serializer);
-    sse_encode_high_security_settings(self.highSecurity, serializer);
+    sse_encode_opt_box_autoadd_high_security_settings(
+        self.highSecurity, serializer);
     sse_encode_u_32(self.sessionAccountRecovery, serializer);
   }
 
