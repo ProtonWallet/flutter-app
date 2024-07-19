@@ -276,6 +276,7 @@ class EventLoop implements Manager {
         final FrbAccount? account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
+          serverScriptType: accountModel.scriptType,
         );
 
         final List<String> accountAddressIDs =

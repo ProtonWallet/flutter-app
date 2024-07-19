@@ -84,6 +84,7 @@ class BDKTransactionDataProvider extends DataProvider {
     final FrbAccount? account = await WalletManager.loadWalletWithID(
       walletModel.walletID,
       accountModel.accountID,
+      serverScriptType: accountModel.scriptType,
     );
     List<FrbTransactionDetails> transactions = [];
     if (account != null) {
@@ -143,6 +144,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final FrbAccount? account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
+          serverScriptType: accountModel.scriptType,
         );
         if (account != null) {
           final bool isSynced = await shared.read(syncCheckID) ?? false;
