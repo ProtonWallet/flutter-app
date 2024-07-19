@@ -23,6 +23,7 @@ class SetupBackupCoordinator extends Coordinator {
       this,
       walletID,
       dataProviderManager.walletDataProvider,
+      dataProviderManager.userDataProvider,
       userManager.userID,
     );
     widget = SetupBackupView(

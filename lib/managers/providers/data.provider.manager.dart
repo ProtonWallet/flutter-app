@@ -140,7 +140,6 @@ class DataProviderManager extends Manager {
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
   late UnleashDataProvider unleashDataProvider;
-  late ProtonUserDataProvider protonUserDataProvider;
 
   DataProviderManager(
     this.apiEnv,
@@ -234,8 +233,6 @@ class DataProviderManager extends Manager {
       apiService.getBlockClient(),
     );
 
-    protonUserDataProvider = ProtonUserDataProvider();
-
     final userAgent = UserAgent();
     final uid = userManager.userInfo.sessionId;
     final accessToken = userManager.userInfo.accessToken;
@@ -272,6 +269,5 @@ class DataProviderManager extends Manager {
     await walletKeysProvider.clear();
     await contactsDataProvider.clear();
     await unleashDataProvider.clear();
-    await protonUserDataProvider.clear();
   }
 }

@@ -52,6 +52,17 @@ class CommonHelper {
     return str.substring(0, n);
   }
 
+  static Widget getBitcoinIcon() {
+    return SizedBox(
+      width: 20,
+      height: 20,
+      child: ClipOval(
+        child: SvgPicture.asset("assets/images/icon/bitcoin.svg",
+            fit: BoxFit.cover, width: 20, height: 20),
+      ),
+    );
+  }
+
   static Widget getCountryIcon(FiatCurrency fiatCurrency) {
     return fiatCurrency == FiatCurrency.eur
         ? SizedBox(
@@ -105,6 +116,10 @@ class CommonHelper {
   static String getFiatCurrencySign(FiatCurrency fiatCurrency) {
     final FiatCurrencyInfo? fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency];
     return fiatCurrencyInfo != null ? fiatCurrencyInfo.sign : "\$";
+  }
+  static String getFiatCurrencySymbol(FiatCurrency fiatCurrency) {
+    final FiatCurrencyInfo? fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency];
+    return fiatCurrencyInfo != null ? fiatCurrencyInfo.symbol.toUpperCase() : "USD";
   }
 
   static String formatDouble(

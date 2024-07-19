@@ -13,6 +13,16 @@ class FontManager {
         color: color);
   }
 
+  static TextStyle sendAmountSign(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 36,
+        height: 1.2,
+        // lineHeight = 34
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
+
   static TextStyle balanceInFiatCurrency(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

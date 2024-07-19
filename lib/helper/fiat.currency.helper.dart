@@ -1,5 +1,17 @@
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
+class BitcoinCurrency {}
+
+class FiatCurrencyWrapper {
+  FiatCurrency? fiatCurrency;
+  BitcoinCurrency? bitcoinCurrency;
+
+  FiatCurrencyWrapper({
+    this.fiatCurrency,
+    this.bitcoinCurrency,
+  });
+}
+
 class FiatCurrencyInfo {
   String name;
   String symbol;
@@ -43,6 +55,15 @@ class FiatCurrencyHelper {
 
   static String toCountryCode(FiatCurrency fiatCurrency) {
     return fiatCurrencyToCountryCode[fiatCurrency] ?? "";
+  }
+
+  static FiatCurrencyWrapper getFiatCurrencyWrapper(FiatCurrency fiatCurrency) {
+    for (FiatCurrencyWrapper fiatCurrencyWrapper in fiatCurrenciesWithBitcoin) {
+      if (fiatCurrencyWrapper.fiatCurrency == fiatCurrency) {
+        return fiatCurrencyWrapper;
+      }
+    }
+    return bitcoinCurrencyWrapper;
   }
 }
 
@@ -92,6 +113,12 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.vnd,
   FiatCurrency.zar,
 ];
+
+final FiatCurrencyWrapper bitcoinCurrencyWrapper =
+    FiatCurrencyWrapper(bitcoinCurrency: BitcoinCurrency());
+
+List<FiatCurrencyWrapper> fiatCurrenciesWithBitcoin = [bitcoinCurrencyWrapper] +
+    fiatCurrencies.map((v) => FiatCurrencyWrapper(fiatCurrency: v)).toList();
 
 const Map<FiatCurrency, String> fiatCurrencyToCountryCode = {
   FiatCurrency.usd: 'US',

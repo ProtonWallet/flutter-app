@@ -12,7 +12,7 @@ import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart'
 import 'package:wallet/scenes/components/bottom.sheets/seed.phrase.tutorial.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -73,11 +73,10 @@ class ImportView extends ViewBase<ImportViewModel> {
                         },
                       ),
                       SizedBoxes.box12,
-                      DropdownButtonV2(
+                      DropdownCurrencyV1(
                           labelText: S.of(context).setting_fiat_currency_label,
                           width: MediaQuery.of(context).size.width,
                           items: fiatCurrencies,
-                          canSearch: true,
                           itemsText: fiatCurrencies
                               .map(FiatCurrencyHelper.getFullName)
                               .toList(),

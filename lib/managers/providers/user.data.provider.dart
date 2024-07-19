@@ -7,13 +7,25 @@ import 'package:wallet/models/drift/db/app.database.dart';
 // import 'package:wallet/models/drift/users.queries.dart';
 // import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 
-class WalletUser {
+class TwoFaUpdated extends DataUpdated<bool> {
+  TwoFaUpdated({required bool updatedData}) : super(updatedData);
+}
+
+class RecoveryUpdated extends DataUpdated<bool> {
+  RecoveryUpdated({required bool updatedData}) : super(updatedData);
+}
+
+class ShowWalletRecoveryUpdated extends DataUpdated<bool> {
+  ShowWalletRecoveryUpdated({required bool updatedData}) : super(updatedData);
+}
+
+class ProtonWalletUser {
   bool enabled2FA;
   bool enabledRecovery;
 
   ProtonUser? protonUser;
 
-  WalletUser({
+  ProtonWalletUser({
     this.enabled2FA = false,
     this.enabledRecovery = false,
   });
@@ -22,7 +34,7 @@ class WalletUser {
 class UserDataProvider extends DataProvider {
   final AppDatabase appDatabase;
   // late List<WalletUser> users;
-  late WalletUser user;
+  late ProtonWalletUser user;
 
   /// didn't support multi user yet
 
@@ -38,7 +50,7 @@ class UserDataProvider extends DataProvider {
     // users = [
     //   WalletUser(),
     // ];
-    user = WalletUser();
+    user = ProtonWalletUser();
   }
 
   StreamController<DataUpdated> dataUpdateController =
@@ -46,12 +58,16 @@ class UserDataProvider extends DataProvider {
 
   void enabled2FA(enable) {
     user.enabled2FA = enable;
-    dataUpdateController.add(DataUpdated("user update enabled2FA"));
+    emitState(TwoFaUpdated(updatedData: enable));
   }
 
   void enabledRecovery(enable) {
     user.enabledRecovery = enable;
-    dataUpdateController.add(DataUpdated("user update enabledRecovery"));
+    emitState(RecoveryUpdated(updatedData: enable));
+  }
+
+  void enabledShowWalletRecovery(enable) {
+    emitState(ShowWalletRecoveryUpdated(updatedData: enable));
   }
 
   Future<ProtonUser> getUser() async {

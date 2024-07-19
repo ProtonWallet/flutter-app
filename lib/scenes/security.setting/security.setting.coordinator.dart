@@ -39,7 +39,7 @@ class SecuritySettingCoordinator extends Coordinator {
       appState,
       localAuth,
       apiService.getProtonUsersApiClient(),
-      dataProvider.protonUserDataProvider,
+      dataProvider.userDataProvider,
     );
     widget = SecuritySettingView(
       viewModel,
