@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -68,8 +69,9 @@ class WalletManager implements Manager {
   // TODO(fix): return Wallet? to avoid issue, add try-catch here
   static Future<FrbAccount?> loadWalletWithID(
     String walletID,
-    String accountID,
-  ) async {
+    String accountID, {
+    int? serverScriptType,
+  }) async {
     final WalletModel? walletModel =
         await DBHelper.walletDao!.findByServerID(walletID);
     if (walletModel == null) return null;
@@ -102,13 +104,33 @@ class WalletManager implements Manager {
 
     final dbPath = await _getDatabaseFolderPath();
     final storage = OnchainStoreFactory(folderPath: dbPath);
+    ScriptTypeInfo? scriptTypeInfo;
+    for (ScriptTypeInfo info in ScriptTypeInfo.scripts) {
+      if (derivationPath.startsWith("m/${info.bipVersion}'/")) {
+        scriptTypeInfo = info;
+        break;
+      }
 
-    final account = frbWallet.addAccount(
-        scriptType: appConfig.scriptTypeInfo.type,
-        derivationPath: derivationPath,
-        storageFactory: storage);
+      /// wallet create from web didn't have m/ prefix
+      if (derivationPath.startsWith("${info.bipVersion}'/")) {
+        scriptTypeInfo = info;
+        break;
+      }
+    }
+    if (scriptTypeInfo != null) {
+      if (serverScriptType != null &&
+          serverScriptType != scriptTypeInfo.index) {
+        logger.e(
+            "serverScriptType ($serverScriptType) != scriptTypeInfo.index (${scriptTypeInfo.index})");
+      }
+      final account = frbWallet.addAccount(
+          scriptType: scriptTypeInfo.type,
+          derivationPath: derivationPath,
+          storageFactory: storage);
 
-    return account;
+      return account;
+    }
+    return null;
   }
 
   // TODO(fix): fix me .temp move to better place

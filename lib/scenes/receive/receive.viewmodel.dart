@@ -149,6 +149,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,
           accountModel!.accountID,
+          serverScriptType: accountModel!.scriptType,
         ))!;
         emailIntegrationAddresses = await WalletManager.getAccountAddressIDs(
           accountModel?.accountID ?? "",
