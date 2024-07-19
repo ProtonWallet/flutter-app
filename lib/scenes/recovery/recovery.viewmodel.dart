@@ -14,6 +14,8 @@ abstract class RecoveryViewModel extends ViewModel<RecoveryCoordinator> {
 
   ///
   bool recoveryEnabled = false;
+  bool showRecoveryEmail = false;
+  bool showRecoverySeed = false;
 
   void disableRecovery() {
     protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));

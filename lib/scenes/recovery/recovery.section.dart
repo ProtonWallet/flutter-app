@@ -70,9 +70,7 @@ class RecoverySection extends StatelessWidget {
                       width: 40,
                       padding: const EdgeInsets.only(
                           top: 9, bottom: 10, right: 15, left: 5),
-                      child: const CustomLoading(
-                        size: 20,
-                      ))
+                      child: const CustomLoading(size: 20))
                 else
                   CupertinoSwitch(
                     value: isSwitched ?? false,

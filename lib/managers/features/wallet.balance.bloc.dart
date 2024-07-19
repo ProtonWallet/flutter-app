@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -97,7 +97,8 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
           await walletsDataProvider.getWalletByServerWalletID(
               walletsDataProvider.selectedServerWalletID);
       if (walletData != null) {
-        final WalletMenuModel walletMenuModel = WalletMenuModel(walletData.wallet);
+        final WalletMenuModel walletMenuModel =
+            WalletMenuModel(walletData.wallet);
         walletMenuModel.accounts =
             walletData.accounts.map(AccountMenuModel.new).toList();
         if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {

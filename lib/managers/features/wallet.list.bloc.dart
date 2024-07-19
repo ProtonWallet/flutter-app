@@ -11,9 +11,9 @@ import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.event.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -107,7 +107,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         bool hasSelected = false;
 
         /// get user key
-        final firstUserKey = await userManager.getFirstKey();
         final List<WalletMenuModel> walletsModel = [];
         int index = 0;
         for (WalletData wallet in wallets) {
@@ -130,14 +129,15 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           );
           SecretKey? secretKey;
           if (walletKey != null) {
+            final userKey = await userManager.getUserKey(walletKey.userKeyId);
             secretKey = WalletKeyHelper.decryptWalletKey(
-              firstUserKey,
+              userKey,
               walletKey,
             );
 
             final isValidWalletKeySignature =
                 await WalletKeyHelper.verifySecretKeySignature(
-              firstUserKey,
+              userKey,
               walletKey,
               secretKey,
             );

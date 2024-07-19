@@ -74,10 +74,10 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
         Uint8List.fromList(await secretKey.extractBytes());
 
     /// get first user key (primary user key)
-    final firstUserKey = await userManager.getFirstKey();
-    final String userPrivateKey = firstUserKey.privateKey;
-    final String userKeyID = firstUserKey.keyID;
-    final String passphrase = firstUserKey.passphrase;
+    final primaryUserKey = await userManager.getPrimaryKey();
+    final String userPrivateKey = primaryUserKey.privateKey;
+    final String userKeyID = primaryUserKey.keyID;
+    final String passphrase = primaryUserKey.passphrase;
 
     /// encrypt mnemonic with wallet key
     final String encryptedMnemonic = await WalletKeyHelper.encrypt(
@@ -156,13 +156,13 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
   ) async {
     final String serverWalletID = walletID;
 
-    final firstUserKey = await userManager.getFirstKey();
     final walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
-    final secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
-    // var signature = walletKey.walletKeySignature;
+
+    final userKey = await userManager.getUserKey(walletKey.userKeyId);
+    final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
 
     /// get new derivation path
     final String derivationPath =

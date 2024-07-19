@@ -7,7 +7,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
-import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/users/user.key.dart';
 
 class WalletKeyHelper {
   static SecretKey generateSecretKey() {

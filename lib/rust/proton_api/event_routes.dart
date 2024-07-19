@@ -7,6 +7,7 @@ import '../frb_generated.dart';
 import 'contacts.dart';
 import 'exchange_rate.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'proton_users.dart';
 import 'user_settings.dart';
 import 'wallet.dart';
 import 'wallet_account.dart';
@@ -48,6 +49,8 @@ class ProtonEvent {
   final List<WalletSettingsEvent>? walletSettingEvents;
   final List<WalletTransactionEvent>? walletTransactionEvents;
   final ApiWalletUserSettings? walletUserSettings;
+  final ProtonUser? protonUser;
+  final ProtonUserSettings? protonUserSettings;
 
   const ProtonEvent({
     required this.code,
@@ -61,6 +64,8 @@ class ProtonEvent {
     this.walletSettingEvents,
     this.walletTransactionEvents,
     this.walletUserSettings,
+    this.protonUser,
+    this.protonUserSettings,
   });
 
   @override
@@ -75,7 +80,9 @@ class ProtonEvent {
       walletKeyEvents.hashCode ^
       walletSettingEvents.hashCode ^
       walletTransactionEvents.hashCode ^
-      walletUserSettings.hashCode;
+      walletUserSettings.hashCode ^
+      protonUser.hashCode ^
+      protonUserSettings.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -92,7 +99,9 @@ class ProtonEvent {
           walletKeyEvents == other.walletKeyEvents &&
           walletSettingEvents == other.walletSettingEvents &&
           walletTransactionEvents == other.walletTransactionEvents &&
-          walletUserSettings == other.walletUserSettings;
+          walletUserSettings == other.walletUserSettings &&
+          protonUser == other.protonUser &&
+          protonUserSettings == other.protonUserSettings;
 }
 
 class WalletAccountEvent {

@@ -4,7 +4,7 @@ import 'package:wallet/scenes/logs/logs.viewmodel.dart';
 
 class LogsView extends ViewBase<LogsViewModel> {
   const LogsView(LogsViewModel viewModel)
-      : super(viewModel, const Key("SettingsView"));
+      : super(viewModel, const Key("LogsView"));
 
   @override
   Widget build(BuildContext context) {

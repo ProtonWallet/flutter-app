@@ -13,7 +13,7 @@ import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -269,10 +269,13 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      for (AccountMenuModel accountMenuModel in event.walletMenuModel.accounts) {
+      final int currentTimestamp =
+          DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      for (AccountMenuModel accountMenuModel
+          in event.walletMenuModel.accounts) {
         final int lastSyncTime =
-            accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ?? 0;
+            accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ??
+                0;
         final int timeDiffSeconds = currentTimestamp - lastSyncTime;
         if (timeDiffSeconds > reSyncTime) {
           accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
@@ -374,9 +377,11 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
-      final int currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      final int lastSyncTime =
-          accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] ?? 0;
+      final int currentTimestamp =
+          DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final int lastSyncTime = accountID2lastSyncTime[
+              event.accountMenuModel.accountModel.accountID] ??
+          0;
       final int timeDiffSeconds = currentTimestamp - lastSyncTime;
 
       if (timeDiffSeconds > reSyncTime) {
@@ -548,29 +553,28 @@ class WalletTransactionBloc
     return newHistoryTransactions;
   }
 
-  String tryDecryptWithAddressKeys(
-      List<AddressKey> addressKeys, String encryptedString) {
+  String tryDecryptWithKeys(List<dynamic> keys, String encryptedString) {
     String result = "";
-    for (AddressKey addressKey in addressKeys) {
+    for (final key in keys) {
       try {
         if (encryptedString.isNotEmpty) {
-          result = addressKey.decrypt(encryptedString);
+          result = key.decrypt(encryptedString);
         }
       } catch (e) {
-        // logger.e(e.toString());
+        logger.e(e.toString());
       }
       if (result.isNotEmpty) {
         break;
       }
     }
     if (result.isEmpty) {
-      for (AddressKey addressKey in addressKeys) {
+      for (final key in keys) {
         try {
           if (encryptedString.isNotEmpty) {
-            result = addressKey.decryptBinary(encryptedString);
+            result = key.decryptBinary(encryptedString);
           }
         } catch (e) {
-          // logger.e(e.toString());
+          logger.e(e.toString());
         }
         if (result.isNotEmpty) {
           break;
@@ -624,20 +628,23 @@ class WalletTransactionBloc
       maxAddressIndex: accountModel.lastUsedIndex + appConfig.stopGap,
     );
 
-    final firstUserkey = await userManager.getFirstKey();
-    final userPrivateKey = firstUserkey.privateKey;
-    final userPassphrase = firstUserkey.passphrase;
+    final userKeys = await userManager.getUserKeys();
 
-    for (TransactionModel transactionModel
-        in serverTransactionData.transactions) {
+    for (final transactionModel in serverTransactionData.transactions) {
       String txid = "";
-      try {
-        txid = proton_crypto.decrypt(
-            userPrivateKey, userPassphrase, transactionModel.transactionID);
-      } catch (e, stacktrace) {
-        logger.i(
-          "getHistoryTransactions error: $e stacktrace: $stacktrace",
-        );
+      for (final uKey in userKeys) {
+        try {
+          txid = proton_crypto.decrypt(
+            uKey.privateKey,
+            uKey.passphrase,
+            transactionModel.transactionID,
+          );
+          break;
+        } catch (e, stacktrace) {
+          logger.i(
+            "getHistoryTransactions error: $e stacktrace: $stacktrace",
+          );
+        }
       }
       if (txid.isEmpty) {
         for (AddressKey addressKey in addressKeys) {
@@ -716,9 +723,18 @@ class WalletTransactionBloc
         final String encryptedSender = transactionModel.sender ?? "";
         final String encryptedBody = transactionModel.body ?? "";
 
-        toList = tryDecryptWithAddressKeys(addressKeys, encryptedToList);
-        sender = tryDecryptWithAddressKeys(addressKeys, encryptedSender);
-        body = tryDecryptWithAddressKeys(addressKeys, encryptedBody);
+        toList = tryDecryptWithKeys(addressKeys, encryptedToList);
+        sender = tryDecryptWithKeys(addressKeys, encryptedSender);
+        body = tryDecryptWithKeys(addressKeys, encryptedBody);
+        if (toList.isEmpty) {
+          toList = tryDecryptWithKeys(userKeys, encryptedToList);
+        }
+        if (sender.isEmpty) {
+          sender = tryDecryptWithKeys(userKeys, encryptedSender);
+        }
+        if (body.isEmpty) {
+          body = tryDecryptWithKeys(userKeys, encryptedBody);
+        }
       }
 
       int amountInSATS =
@@ -792,10 +808,18 @@ class WalletTransactionBloc
       final String encryptedSender = transactionModel.sender ?? "";
       final String encryptedBody = transactionModel.body ?? "";
 
-      toList = tryDecryptWithAddressKeys(addressKeys, encryptedToList);
-      sender = tryDecryptWithAddressKeys(addressKeys, encryptedSender);
-      body = tryDecryptWithAddressKeys(addressKeys, encryptedBody);
-
+      toList = tryDecryptWithKeys(addressKeys, encryptedToList);
+      sender = tryDecryptWithKeys(addressKeys, encryptedSender);
+      body = tryDecryptWithKeys(addressKeys, encryptedBody);
+      if (toList.isEmpty) {
+        toList = tryDecryptWithKeys(userKeys, encryptedToList);
+      }
+      if (sender.isEmpty) {
+        sender = tryDecryptWithKeys(userKeys, encryptedSender);
+      }
+      if (body.isEmpty) {
+        body = tryDecryptWithKeys(userKeys, encryptedBody);
+      }
       final List<TransactionInfoModel> transactionInfoModels =
           getLocalTransactionsByTXID(localTransactionData.transactions, txID);
       if (transactionInfoModels.isNotEmpty) {
@@ -999,16 +1023,14 @@ class WalletTransactionBloc
   // }
 
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
-    /// get user key
-    final firstUserKey = await userManager.getFirstKey();
-
     /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
     final walletKey = await walletKeysProvider.getWalletKey(
       walletModel.walletID,
     );
     SecretKey? secretKey;
     if (walletKey != null) {
-      secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
+      final userKey = await userManager.getUserKey(walletKey.userKeyId);
+      secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
     }
     return secretKey;
   }

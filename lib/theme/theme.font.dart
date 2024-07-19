@@ -118,7 +118,7 @@ class FontManager {
   static TextStyle actionButtonText(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,
-        fontSize: 15,
+        fontSize: 14,
         height: 1.5,
         // lineHeight = 24
         fontWeight: FontWeight.w500,

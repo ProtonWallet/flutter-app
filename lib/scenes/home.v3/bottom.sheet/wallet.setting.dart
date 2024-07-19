@@ -9,9 +9,9 @@ import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
@@ -526,18 +526,19 @@ class WalletSettingSheet {
                         children: [
                           const SizedBox(height: 4),
                           ButtonV5(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pop(); // pop wallet setting sheet or it will hide setupBackup view
-                                viewModel.move(NavID.setupBackup);
-                              },
-                              text:
-                                  S.of(context).backup_wallet_view_seed_phrase,
-                              width: MediaQuery.of(context).size.width,
-                              backgroundColor: ProtonColors.protonBlue,
-                              textStyle:
-                                  FontManager.body1Median(ProtonColors.white),
-                              height: 48),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                              /// pop wallet setting sheet or it will hide setupBackup view
+                              viewModel.move(NavID.setupBackup);
+                            },
+                            text: S.of(context).backup_wallet_view_seed_phrase,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: ProtonColors.protonBlue,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.white),
+                            height: 48,
+                          ),
                           const SizedBox(height: 8),
                           ButtonV5(
                               onPressed: () {

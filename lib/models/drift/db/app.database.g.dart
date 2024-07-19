@@ -4,7 +4,7 @@ part of 'app.database.dart';
 
 // ignore_for_file: type=lint
 class $UsersTableTable extends UsersTable
-    with TableInfo<$UsersTableTable, ProtonUser> {
+    with TableInfo<$UsersTableTable, DriftProtonUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -34,9 +34,9 @@ class $UsersTableTable extends UsersTable
   static const VerificationMeta _usedSpaceMeta =
       const VerificationMeta('usedSpace');
   @override
-  late final GeneratedColumn<int> usedSpace = GeneratedColumn<int>(
+  late final GeneratedColumn<BigInt> usedSpace = GeneratedColumn<BigInt>(
       'used_space', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.bigInt, requiredDuringInsert: true);
   static const VerificationMeta _currencyMeta =
       const VerificationMeta('currency');
   @override
@@ -54,21 +54,21 @@ class $UsersTableTable extends UsersTable
   static const VerificationMeta _createTimeMeta =
       const VerificationMeta('createTime');
   @override
-  late final GeneratedColumn<int> createTime = GeneratedColumn<int>(
+  late final GeneratedColumn<BigInt> createTime = GeneratedColumn<BigInt>(
       'create_time', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.bigInt, requiredDuringInsert: true);
   static const VerificationMeta _maxSpaceMeta =
       const VerificationMeta('maxSpace');
   @override
-  late final GeneratedColumn<int> maxSpace = GeneratedColumn<int>(
+  late final GeneratedColumn<BigInt> maxSpace = GeneratedColumn<BigInt>(
       'max_space', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.bigInt, requiredDuringInsert: true);
   static const VerificationMeta _maxUploadMeta =
       const VerificationMeta('maxUpload');
   @override
-  late final GeneratedColumn<int> maxUpload = GeneratedColumn<int>(
+  late final GeneratedColumn<BigInt> maxUpload = GeneratedColumn<BigInt>(
       'max_upload', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.bigInt, requiredDuringInsert: true);
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
   @override
   late final GeneratedColumn<int> role = GeneratedColumn<int>(
@@ -77,39 +77,27 @@ class $UsersTableTable extends UsersTable
   static const VerificationMeta _privateMeta =
       const VerificationMeta('private');
   @override
-  late final GeneratedColumn<bool> private = GeneratedColumn<bool>(
+  late final GeneratedColumn<int> private = GeneratedColumn<int>(
       'private', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("private" IN (0, 1))'));
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _subscribedMeta =
       const VerificationMeta('subscribed');
   @override
-  late final GeneratedColumn<bool> subscribed = GeneratedColumn<bool>(
+  late final GeneratedColumn<int> subscribed = GeneratedColumn<int>(
       'subscribed', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("subscribed" IN (0, 1))'));
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _servicesMeta =
       const VerificationMeta('services');
   @override
-  late final GeneratedColumn<bool> services = GeneratedColumn<bool>(
+  late final GeneratedColumn<int> services = GeneratedColumn<int>(
       'services', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("services" IN (0, 1))'));
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _delinquentMeta =
       const VerificationMeta('delinquent');
   @override
-  late final GeneratedColumn<bool> delinquent = GeneratedColumn<bool>(
+  late final GeneratedColumn<int> delinquent = GeneratedColumn<int>(
       'delinquent', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("delinquent" IN (0, 1))'));
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _organizationPrivateKeyMeta =
       const VerificationMeta('organizationPrivateKey');
   @override
@@ -153,7 +141,7 @@ class $UsersTableTable extends UsersTable
   String get actualTableName => $name;
   static const String $name = 'users_table';
   @override
-  VerificationContext validateIntegrity(Insertable<ProtonUser> instance,
+  VerificationContext validateIntegrity(Insertable<DriftProtonUser> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -266,9 +254,9 @@ class $UsersTableTable extends UsersTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ProtonUser map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DriftProtonUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ProtonUser(
+    return DriftProtonUser(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       userId: attachedDatabase.typeMapping
@@ -276,27 +264,27 @@ class $UsersTableTable extends UsersTable
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       usedSpace: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}used_space'])!,
+          .read(DriftSqlType.bigInt, data['${effectivePrefix}used_space'])!,
       currency: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
       credit: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}credit'])!,
       createTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}create_time'])!,
+          .read(DriftSqlType.bigInt, data['${effectivePrefix}create_time'])!,
       maxSpace: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}max_space'])!,
+          .read(DriftSqlType.bigInt, data['${effectivePrefix}max_space'])!,
       maxUpload: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}max_upload'])!,
+          .read(DriftSqlType.bigInt, data['${effectivePrefix}max_upload'])!,
       role: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}role'])!,
       private: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}private'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}private'])!,
       subscribed: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}subscribed'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}subscribed'])!,
       services: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}services'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}services'])!,
       delinquent: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}delinquent'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}delinquent'])!,
       organizationPrivateKey: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}organization_private_key']),
@@ -313,25 +301,25 @@ class $UsersTableTable extends UsersTable
   }
 }
 
-class ProtonUser extends DataClass implements Insertable<ProtonUser> {
+class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
   final int id;
   final String userId;
   final String name;
-  final int usedSpace;
+  final BigInt usedSpace;
   final String currency;
   final int credit;
-  final int createTime;
-  final int maxSpace;
-  final int maxUpload;
+  final BigInt createTime;
+  final BigInt maxSpace;
+  final BigInt maxUpload;
   final int role;
-  final bool private;
-  final bool subscribed;
-  final bool services;
-  final bool delinquent;
+  final int private;
+  final int subscribed;
+  final int services;
+  final int delinquent;
   final String? organizationPrivateKey;
   final String? email;
   final String? displayName;
-  const ProtonUser(
+  const DriftProtonUser(
       {required this.id,
       required this.userId,
       required this.name,
@@ -355,17 +343,17 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
     map['id'] = Variable<int>(id);
     map['user_id'] = Variable<String>(userId);
     map['name'] = Variable<String>(name);
-    map['used_space'] = Variable<int>(usedSpace);
+    map['used_space'] = Variable<BigInt>(usedSpace);
     map['currency'] = Variable<String>(currency);
     map['credit'] = Variable<int>(credit);
-    map['create_time'] = Variable<int>(createTime);
-    map['max_space'] = Variable<int>(maxSpace);
-    map['max_upload'] = Variable<int>(maxUpload);
+    map['create_time'] = Variable<BigInt>(createTime);
+    map['max_space'] = Variable<BigInt>(maxSpace);
+    map['max_upload'] = Variable<BigInt>(maxUpload);
     map['role'] = Variable<int>(role);
-    map['private'] = Variable<bool>(private);
-    map['subscribed'] = Variable<bool>(subscribed);
-    map['services'] = Variable<bool>(services);
-    map['delinquent'] = Variable<bool>(delinquent);
+    map['private'] = Variable<int>(private);
+    map['subscribed'] = Variable<int>(subscribed);
+    map['services'] = Variable<int>(services);
+    map['delinquent'] = Variable<int>(delinquent);
     if (!nullToAbsent || organizationPrivateKey != null) {
       map['organization_private_key'] =
           Variable<String>(organizationPrivateKey);
@@ -406,24 +394,24 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
     );
   }
 
-  factory ProtonUser.fromJson(Map<String, dynamic> json,
+  factory DriftProtonUser.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ProtonUser(
+    return DriftProtonUser(
       id: serializer.fromJson<int>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
-      usedSpace: serializer.fromJson<int>(json['usedSpace']),
+      usedSpace: serializer.fromJson<BigInt>(json['usedSpace']),
       currency: serializer.fromJson<String>(json['currency']),
       credit: serializer.fromJson<int>(json['credit']),
-      createTime: serializer.fromJson<int>(json['createTime']),
-      maxSpace: serializer.fromJson<int>(json['maxSpace']),
-      maxUpload: serializer.fromJson<int>(json['maxUpload']),
+      createTime: serializer.fromJson<BigInt>(json['createTime']),
+      maxSpace: serializer.fromJson<BigInt>(json['maxSpace']),
+      maxUpload: serializer.fromJson<BigInt>(json['maxUpload']),
       role: serializer.fromJson<int>(json['role']),
-      private: serializer.fromJson<bool>(json['private']),
-      subscribed: serializer.fromJson<bool>(json['subscribed']),
-      services: serializer.fromJson<bool>(json['services']),
-      delinquent: serializer.fromJson<bool>(json['delinquent']),
+      private: serializer.fromJson<int>(json['private']),
+      subscribed: serializer.fromJson<int>(json['subscribed']),
+      services: serializer.fromJson<int>(json['services']),
+      delinquent: serializer.fromJson<int>(json['delinquent']),
       organizationPrivateKey:
           serializer.fromJson<String?>(json['organizationPrivateKey']),
       email: serializer.fromJson<String?>(json['email']),
@@ -437,17 +425,17 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
       'id': serializer.toJson<int>(id),
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
-      'usedSpace': serializer.toJson<int>(usedSpace),
+      'usedSpace': serializer.toJson<BigInt>(usedSpace),
       'currency': serializer.toJson<String>(currency),
       'credit': serializer.toJson<int>(credit),
-      'createTime': serializer.toJson<int>(createTime),
-      'maxSpace': serializer.toJson<int>(maxSpace),
-      'maxUpload': serializer.toJson<int>(maxUpload),
+      'createTime': serializer.toJson<BigInt>(createTime),
+      'maxSpace': serializer.toJson<BigInt>(maxSpace),
+      'maxUpload': serializer.toJson<BigInt>(maxUpload),
       'role': serializer.toJson<int>(role),
-      'private': serializer.toJson<bool>(private),
-      'subscribed': serializer.toJson<bool>(subscribed),
-      'services': serializer.toJson<bool>(services),
-      'delinquent': serializer.toJson<bool>(delinquent),
+      'private': serializer.toJson<int>(private),
+      'subscribed': serializer.toJson<int>(subscribed),
+      'services': serializer.toJson<int>(services),
+      'delinquent': serializer.toJson<int>(delinquent),
       'organizationPrivateKey':
           serializer.toJson<String?>(organizationPrivateKey),
       'email': serializer.toJson<String?>(email),
@@ -455,25 +443,25 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
     };
   }
 
-  ProtonUser copyWith(
+  DriftProtonUser copyWith(
           {int? id,
           String? userId,
           String? name,
-          int? usedSpace,
+          BigInt? usedSpace,
           String? currency,
           int? credit,
-          int? createTime,
-          int? maxSpace,
-          int? maxUpload,
+          BigInt? createTime,
+          BigInt? maxSpace,
+          BigInt? maxUpload,
           int? role,
-          bool? private,
-          bool? subscribed,
-          bool? services,
-          bool? delinquent,
+          int? private,
+          int? subscribed,
+          int? services,
+          int? delinquent,
           Value<String?> organizationPrivateKey = const Value.absent(),
           Value<String?> email = const Value.absent(),
           Value<String?> displayName = const Value.absent()}) =>
-      ProtonUser(
+      DriftProtonUser(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         name: name ?? this.name,
@@ -496,7 +484,7 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
       );
   @override
   String toString() {
-    return (StringBuffer('ProtonUser(')
+    return (StringBuffer('DriftProtonUser(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('name: $name, ')
@@ -540,7 +528,7 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ProtonUser &&
+      (other is DriftProtonUser &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.name == this.name &&
@@ -560,21 +548,21 @@ class ProtonUser extends DataClass implements Insertable<ProtonUser> {
           other.displayName == this.displayName);
 }
 
-class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
+class UsersTableCompanion extends UpdateCompanion<DriftProtonUser> {
   final Value<int> id;
   final Value<String> userId;
   final Value<String> name;
-  final Value<int> usedSpace;
+  final Value<BigInt> usedSpace;
   final Value<String> currency;
   final Value<int> credit;
-  final Value<int> createTime;
-  final Value<int> maxSpace;
-  final Value<int> maxUpload;
+  final Value<BigInt> createTime;
+  final Value<BigInt> maxSpace;
+  final Value<BigInt> maxUpload;
   final Value<int> role;
-  final Value<bool> private;
-  final Value<bool> subscribed;
-  final Value<bool> services;
-  final Value<bool> delinquent;
+  final Value<int> private;
+  final Value<int> subscribed;
+  final Value<int> services;
+  final Value<int> delinquent;
   final Value<String?> organizationPrivateKey;
   final Value<String?> email;
   final Value<String?> displayName;
@@ -601,17 +589,17 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
     this.id = const Value.absent(),
     required String userId,
     required String name,
-    required int usedSpace,
+    required BigInt usedSpace,
     required String currency,
     required int credit,
-    required int createTime,
-    required int maxSpace,
-    required int maxUpload,
+    required BigInt createTime,
+    required BigInt maxSpace,
+    required BigInt maxUpload,
     required int role,
-    required bool private,
-    required bool subscribed,
-    required bool services,
-    required bool delinquent,
+    required int private,
+    required int subscribed,
+    required int services,
+    required int delinquent,
     this.organizationPrivateKey = const Value.absent(),
     this.email = const Value.absent(),
     this.displayName = const Value.absent(),
@@ -628,21 +616,21 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
         subscribed = Value(subscribed),
         services = Value(services),
         delinquent = Value(delinquent);
-  static Insertable<ProtonUser> custom({
+  static Insertable<DriftProtonUser> custom({
     Expression<int>? id,
     Expression<String>? userId,
     Expression<String>? name,
-    Expression<int>? usedSpace,
+    Expression<BigInt>? usedSpace,
     Expression<String>? currency,
     Expression<int>? credit,
-    Expression<int>? createTime,
-    Expression<int>? maxSpace,
-    Expression<int>? maxUpload,
+    Expression<BigInt>? createTime,
+    Expression<BigInt>? maxSpace,
+    Expression<BigInt>? maxUpload,
     Expression<int>? role,
-    Expression<bool>? private,
-    Expression<bool>? subscribed,
-    Expression<bool>? services,
-    Expression<bool>? delinquent,
+    Expression<int>? private,
+    Expression<int>? subscribed,
+    Expression<int>? services,
+    Expression<int>? delinquent,
     Expression<String>? organizationPrivateKey,
     Expression<String>? email,
     Expression<String>? displayName,
@@ -673,17 +661,17 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
       {Value<int>? id,
       Value<String>? userId,
       Value<String>? name,
-      Value<int>? usedSpace,
+      Value<BigInt>? usedSpace,
       Value<String>? currency,
       Value<int>? credit,
-      Value<int>? createTime,
-      Value<int>? maxSpace,
-      Value<int>? maxUpload,
+      Value<BigInt>? createTime,
+      Value<BigInt>? maxSpace,
+      Value<BigInt>? maxUpload,
       Value<int>? role,
-      Value<bool>? private,
-      Value<bool>? subscribed,
-      Value<bool>? services,
-      Value<bool>? delinquent,
+      Value<int>? private,
+      Value<int>? subscribed,
+      Value<int>? services,
+      Value<int>? delinquent,
       Value<String?>? organizationPrivateKey,
       Value<String?>? email,
       Value<String?>? displayName}) {
@@ -722,7 +710,7 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
       map['name'] = Variable<String>(name.value);
     }
     if (usedSpace.present) {
-      map['used_space'] = Variable<int>(usedSpace.value);
+      map['used_space'] = Variable<BigInt>(usedSpace.value);
     }
     if (currency.present) {
       map['currency'] = Variable<String>(currency.value);
@@ -731,28 +719,28 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
       map['credit'] = Variable<int>(credit.value);
     }
     if (createTime.present) {
-      map['create_time'] = Variable<int>(createTime.value);
+      map['create_time'] = Variable<BigInt>(createTime.value);
     }
     if (maxSpace.present) {
-      map['max_space'] = Variable<int>(maxSpace.value);
+      map['max_space'] = Variable<BigInt>(maxSpace.value);
     }
     if (maxUpload.present) {
-      map['max_upload'] = Variable<int>(maxUpload.value);
+      map['max_upload'] = Variable<BigInt>(maxUpload.value);
     }
     if (role.present) {
       map['role'] = Variable<int>(role.value);
     }
     if (private.present) {
-      map['private'] = Variable<bool>(private.value);
+      map['private'] = Variable<int>(private.value);
     }
     if (subscribed.present) {
-      map['subscribed'] = Variable<bool>(subscribed.value);
+      map['subscribed'] = Variable<int>(subscribed.value);
     }
     if (services.present) {
-      map['services'] = Variable<bool>(services.value);
+      map['services'] = Variable<int>(services.value);
     }
     if (delinquent.present) {
-      map['delinquent'] = Variable<bool>(delinquent.value);
+      map['delinquent'] = Variable<int>(delinquent.value);
     }
     if (organizationPrivateKey.present) {
       map['organization_private_key'] =
@@ -793,7 +781,7 @@ class UsersTableCompanion extends UpdateCompanion<ProtonUser> {
 }
 
 class $UserKeysTableTable extends UserKeysTable
-    with TableInfo<$UserKeysTableTable, UserKey> {
+    with TableInfo<$UserKeysTableTable, DriftUserKey> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -831,25 +819,43 @@ class $UserKeysTableTable extends UserKeysTable
   late final GeneratedColumn<String> fingerprint = GeneratedColumn<String>(
       'fingerprint', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _recoverySecretMeta =
+      const VerificationMeta('recoverySecret');
+  @override
+  late final GeneratedColumn<String> recoverySecret = GeneratedColumn<String>(
+      'recovery_secret', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _recoverySecretSignatureMeta =
+      const VerificationMeta('recoverySecretSignature');
+  @override
+  late final GeneratedColumn<String> recoverySecretSignature =
+      GeneratedColumn<String>('recovery_secret_signature', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _primaryMeta =
       const VerificationMeta('primary');
   @override
-  late final GeneratedColumn<bool> primary = GeneratedColumn<bool>(
+  late final GeneratedColumn<int> primary = GeneratedColumn<int>(
       'primary', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("primary" IN (0, 1))'));
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [keyId, userId, version, privateKey, token, fingerprint, primary];
+  List<GeneratedColumn> get $columns => [
+        keyId,
+        userId,
+        version,
+        privateKey,
+        token,
+        fingerprint,
+        recoverySecret,
+        recoverySecretSignature,
+        primary
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'user_keys_table';
   @override
-  VerificationContext validateIntegrity(Insertable<UserKey> instance,
+  VerificationContext validateIntegrity(Insertable<DriftUserKey> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -889,6 +895,19 @@ class $UserKeysTableTable extends UserKeysTable
           fingerprint.isAcceptableOrUnknown(
               data['fingerprint']!, _fingerprintMeta));
     }
+    if (data.containsKey('recovery_secret')) {
+      context.handle(
+          _recoverySecretMeta,
+          recoverySecret.isAcceptableOrUnknown(
+              data['recovery_secret']!, _recoverySecretMeta));
+    }
+    if (data.containsKey('recovery_secret_signature')) {
+      context.handle(
+          _recoverySecretSignatureMeta,
+          recoverySecretSignature.isAcceptableOrUnknown(
+              data['recovery_secret_signature']!,
+              _recoverySecretSignatureMeta));
+    }
     if (data.containsKey('primary')) {
       context.handle(_primaryMeta,
           primary.isAcceptableOrUnknown(data['primary']!, _primaryMeta));
@@ -901,9 +920,9 @@ class $UserKeysTableTable extends UserKeysTable
   @override
   Set<GeneratedColumn> get $primaryKey => {keyId, userId};
   @override
-  UserKey map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DriftUserKey map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return UserKey(
+    return DriftUserKey(
       keyId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}key_id'])!,
       userId: attachedDatabase.typeMapping
@@ -916,8 +935,13 @@ class $UserKeysTableTable extends UserKeysTable
           .read(DriftSqlType.string, data['${effectivePrefix}token']),
       fingerprint: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}fingerprint']),
+      recoverySecret: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}recovery_secret']),
+      recoverySecretSignature: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}recovery_secret_signature']),
       primary: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}primary'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}primary'])!,
     );
   }
 
@@ -927,21 +951,25 @@ class $UserKeysTableTable extends UserKeysTable
   }
 }
 
-class UserKey extends DataClass implements Insertable<UserKey> {
+class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
   final String keyId;
   final String userId;
   final int version;
   final String privateKey;
   final String? token;
   final String? fingerprint;
-  final bool primary;
-  const UserKey(
+  final String? recoverySecret;
+  final String? recoverySecretSignature;
+  final int primary;
+  const DriftUserKey(
       {required this.keyId,
       required this.userId,
       required this.version,
       required this.privateKey,
       this.token,
       this.fingerprint,
+      this.recoverySecret,
+      this.recoverySecretSignature,
       required this.primary});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -956,7 +984,14 @@ class UserKey extends DataClass implements Insertable<UserKey> {
     if (!nullToAbsent || fingerprint != null) {
       map['fingerprint'] = Variable<String>(fingerprint);
     }
-    map['primary'] = Variable<bool>(primary);
+    if (!nullToAbsent || recoverySecret != null) {
+      map['recovery_secret'] = Variable<String>(recoverySecret);
+    }
+    if (!nullToAbsent || recoverySecretSignature != null) {
+      map['recovery_secret_signature'] =
+          Variable<String>(recoverySecretSignature);
+    }
+    map['primary'] = Variable<int>(primary);
     return map;
   }
 
@@ -971,21 +1006,30 @@ class UserKey extends DataClass implements Insertable<UserKey> {
       fingerprint: fingerprint == null && nullToAbsent
           ? const Value.absent()
           : Value(fingerprint),
+      recoverySecret: recoverySecret == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recoverySecret),
+      recoverySecretSignature: recoverySecretSignature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recoverySecretSignature),
       primary: Value(primary),
     );
   }
 
-  factory UserKey.fromJson(Map<String, dynamic> json,
+  factory DriftUserKey.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserKey(
+    return DriftUserKey(
       keyId: serializer.fromJson<String>(json['keyId']),
       userId: serializer.fromJson<String>(json['userId']),
       version: serializer.fromJson<int>(json['version']),
       privateKey: serializer.fromJson<String>(json['privateKey']),
       token: serializer.fromJson<String?>(json['token']),
       fingerprint: serializer.fromJson<String?>(json['fingerprint']),
-      primary: serializer.fromJson<bool>(json['primary']),
+      recoverySecret: serializer.fromJson<String?>(json['recoverySecret']),
+      recoverySecretSignature:
+          serializer.fromJson<String?>(json['recoverySecretSignature']),
+      primary: serializer.fromJson<int>(json['primary']),
     );
   }
   @override
@@ -998,65 +1042,81 @@ class UserKey extends DataClass implements Insertable<UserKey> {
       'privateKey': serializer.toJson<String>(privateKey),
       'token': serializer.toJson<String?>(token),
       'fingerprint': serializer.toJson<String?>(fingerprint),
-      'primary': serializer.toJson<bool>(primary),
+      'recoverySecret': serializer.toJson<String?>(recoverySecret),
+      'recoverySecretSignature':
+          serializer.toJson<String?>(recoverySecretSignature),
+      'primary': serializer.toJson<int>(primary),
     };
   }
 
-  UserKey copyWith(
+  DriftUserKey copyWith(
           {String? keyId,
           String? userId,
           int? version,
           String? privateKey,
           Value<String?> token = const Value.absent(),
           Value<String?> fingerprint = const Value.absent(),
-          bool? primary}) =>
-      UserKey(
+          Value<String?> recoverySecret = const Value.absent(),
+          Value<String?> recoverySecretSignature = const Value.absent(),
+          int? primary}) =>
+      DriftUserKey(
         keyId: keyId ?? this.keyId,
         userId: userId ?? this.userId,
         version: version ?? this.version,
         privateKey: privateKey ?? this.privateKey,
         token: token.present ? token.value : this.token,
         fingerprint: fingerprint.present ? fingerprint.value : this.fingerprint,
+        recoverySecret:
+            recoverySecret.present ? recoverySecret.value : this.recoverySecret,
+        recoverySecretSignature: recoverySecretSignature.present
+            ? recoverySecretSignature.value
+            : this.recoverySecretSignature,
         primary: primary ?? this.primary,
       );
   @override
   String toString() {
-    return (StringBuffer('UserKey(')
+    return (StringBuffer('DriftUserKey(')
           ..write('keyId: $keyId, ')
           ..write('userId: $userId, ')
           ..write('version: $version, ')
           ..write('privateKey: $privateKey, ')
           ..write('token: $token, ')
           ..write('fingerprint: $fingerprint, ')
+          ..write('recoverySecret: $recoverySecret, ')
+          ..write('recoverySecretSignature: $recoverySecretSignature, ')
           ..write('primary: $primary')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      keyId, userId, version, privateKey, token, fingerprint, primary);
+  int get hashCode => Object.hash(keyId, userId, version, privateKey, token,
+      fingerprint, recoverySecret, recoverySecretSignature, primary);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is UserKey &&
+      (other is DriftUserKey &&
           other.keyId == this.keyId &&
           other.userId == this.userId &&
           other.version == this.version &&
           other.privateKey == this.privateKey &&
           other.token == this.token &&
           other.fingerprint == this.fingerprint &&
+          other.recoverySecret == this.recoverySecret &&
+          other.recoverySecretSignature == this.recoverySecretSignature &&
           other.primary == this.primary);
 }
 
-class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
+class UserKeysTableCompanion extends UpdateCompanion<DriftUserKey> {
   final Value<String> keyId;
   final Value<String> userId;
   final Value<int> version;
   final Value<String> privateKey;
   final Value<String?> token;
   final Value<String?> fingerprint;
-  final Value<bool> primary;
+  final Value<String?> recoverySecret;
+  final Value<String?> recoverySecretSignature;
+  final Value<int> primary;
   final Value<int> rowid;
   const UserKeysTableCompanion({
     this.keyId = const Value.absent(),
@@ -1065,6 +1125,8 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
     this.privateKey = const Value.absent(),
     this.token = const Value.absent(),
     this.fingerprint = const Value.absent(),
+    this.recoverySecret = const Value.absent(),
+    this.recoverySecretSignature = const Value.absent(),
     this.primary = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1075,21 +1137,25 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
     required String privateKey,
     this.token = const Value.absent(),
     this.fingerprint = const Value.absent(),
-    required bool primary,
+    this.recoverySecret = const Value.absent(),
+    this.recoverySecretSignature = const Value.absent(),
+    required int primary,
     this.rowid = const Value.absent(),
   })  : keyId = Value(keyId),
         userId = Value(userId),
         version = Value(version),
         privateKey = Value(privateKey),
         primary = Value(primary);
-  static Insertable<UserKey> custom({
+  static Insertable<DriftUserKey> custom({
     Expression<String>? keyId,
     Expression<String>? userId,
     Expression<int>? version,
     Expression<String>? privateKey,
     Expression<String>? token,
     Expression<String>? fingerprint,
-    Expression<bool>? primary,
+    Expression<String>? recoverySecret,
+    Expression<String>? recoverySecretSignature,
+    Expression<int>? primary,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1099,6 +1165,9 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
       if (privateKey != null) 'private_key': privateKey,
       if (token != null) 'token': token,
       if (fingerprint != null) 'fingerprint': fingerprint,
+      if (recoverySecret != null) 'recovery_secret': recoverySecret,
+      if (recoverySecretSignature != null)
+        'recovery_secret_signature': recoverySecretSignature,
       if (primary != null) 'primary': primary,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1111,7 +1180,9 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
       Value<String>? privateKey,
       Value<String?>? token,
       Value<String?>? fingerprint,
-      Value<bool>? primary,
+      Value<String?>? recoverySecret,
+      Value<String?>? recoverySecretSignature,
+      Value<int>? primary,
       Value<int>? rowid}) {
     return UserKeysTableCompanion(
       keyId: keyId ?? this.keyId,
@@ -1120,6 +1191,9 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
       privateKey: privateKey ?? this.privateKey,
       token: token ?? this.token,
       fingerprint: fingerprint ?? this.fingerprint,
+      recoverySecret: recoverySecret ?? this.recoverySecret,
+      recoverySecretSignature:
+          recoverySecretSignature ?? this.recoverySecretSignature,
       primary: primary ?? this.primary,
       rowid: rowid ?? this.rowid,
     );
@@ -1146,8 +1220,15 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
     if (fingerprint.present) {
       map['fingerprint'] = Variable<String>(fingerprint.value);
     }
+    if (recoverySecret.present) {
+      map['recovery_secret'] = Variable<String>(recoverySecret.value);
+    }
+    if (recoverySecretSignature.present) {
+      map['recovery_secret_signature'] =
+          Variable<String>(recoverySecretSignature.value);
+    }
     if (primary.present) {
-      map['primary'] = Variable<bool>(primary.value);
+      map['primary'] = Variable<int>(primary.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1164,6 +1245,8 @@ class UserKeysTableCompanion extends UpdateCompanion<UserKey> {
           ..write('privateKey: $privateKey, ')
           ..write('token: $token, ')
           ..write('fingerprint: $fingerprint, ')
+          ..write('recoverySecret: $recoverySecret, ')
+          ..write('recoverySecretSignature: $recoverySecretSignature, ')
           ..write('primary: $primary, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1789,17 +1872,17 @@ typedef $$UsersTableTableInsertCompanionBuilder = UsersTableCompanion Function({
   Value<int> id,
   required String userId,
   required String name,
-  required int usedSpace,
+  required BigInt usedSpace,
   required String currency,
   required int credit,
-  required int createTime,
-  required int maxSpace,
-  required int maxUpload,
+  required BigInt createTime,
+  required BigInt maxSpace,
+  required BigInt maxUpload,
   required int role,
-  required bool private,
-  required bool subscribed,
-  required bool services,
-  required bool delinquent,
+  required int private,
+  required int subscribed,
+  required int services,
+  required int delinquent,
   Value<String?> organizationPrivateKey,
   Value<String?> email,
   Value<String?> displayName,
@@ -1808,17 +1891,17 @@ typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
   Value<int> id,
   Value<String> userId,
   Value<String> name,
-  Value<int> usedSpace,
+  Value<BigInt> usedSpace,
   Value<String> currency,
   Value<int> credit,
-  Value<int> createTime,
-  Value<int> maxSpace,
-  Value<int> maxUpload,
+  Value<BigInt> createTime,
+  Value<BigInt> maxSpace,
+  Value<BigInt> maxUpload,
   Value<int> role,
-  Value<bool> private,
-  Value<bool> subscribed,
-  Value<bool> services,
-  Value<bool> delinquent,
+  Value<int> private,
+  Value<int> subscribed,
+  Value<int> services,
+  Value<int> delinquent,
   Value<String?> organizationPrivateKey,
   Value<String?> email,
   Value<String?> displayName,
@@ -1827,7 +1910,7 @@ typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
 class $$UsersTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UsersTableTable,
-    ProtonUser,
+    DriftProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
     $$UsersTableTableProcessedTableManager,
@@ -1847,17 +1930,17 @@ class $$UsersTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> userId = const Value.absent(),
             Value<String> name = const Value.absent(),
-            Value<int> usedSpace = const Value.absent(),
+            Value<BigInt> usedSpace = const Value.absent(),
             Value<String> currency = const Value.absent(),
             Value<int> credit = const Value.absent(),
-            Value<int> createTime = const Value.absent(),
-            Value<int> maxSpace = const Value.absent(),
-            Value<int> maxUpload = const Value.absent(),
+            Value<BigInt> createTime = const Value.absent(),
+            Value<BigInt> maxSpace = const Value.absent(),
+            Value<BigInt> maxUpload = const Value.absent(),
             Value<int> role = const Value.absent(),
-            Value<bool> private = const Value.absent(),
-            Value<bool> subscribed = const Value.absent(),
-            Value<bool> services = const Value.absent(),
-            Value<bool> delinquent = const Value.absent(),
+            Value<int> private = const Value.absent(),
+            Value<int> subscribed = const Value.absent(),
+            Value<int> services = const Value.absent(),
+            Value<int> delinquent = const Value.absent(),
             Value<String?> organizationPrivateKey = const Value.absent(),
             Value<String?> email = const Value.absent(),
             Value<String?> displayName = const Value.absent(),
@@ -1885,17 +1968,17 @@ class $$UsersTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             required String userId,
             required String name,
-            required int usedSpace,
+            required BigInt usedSpace,
             required String currency,
             required int credit,
-            required int createTime,
-            required int maxSpace,
-            required int maxUpload,
+            required BigInt createTime,
+            required BigInt maxSpace,
+            required BigInt maxUpload,
             required int role,
-            required bool private,
-            required bool subscribed,
-            required bool services,
-            required bool delinquent,
+            required int private,
+            required int subscribed,
+            required int services,
+            required int delinquent,
             Value<String?> organizationPrivateKey = const Value.absent(),
             Value<String?> email = const Value.absent(),
             Value<String?> displayName = const Value.absent(),
@@ -1925,7 +2008,7 @@ class $$UsersTableTableTableManager extends RootTableManager<
 class $$UsersTableTableProcessedTableManager extends ProcessedTableManager<
     _$AppDatabase,
     $UsersTableTable,
-    ProtonUser,
+    DriftProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
     $$UsersTableTableProcessedTableManager,
@@ -1952,7 +2035,7 @@ class $$UsersTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get usedSpace => $state.composableBuilder(
+  ColumnFilters<BigInt> get usedSpace => $state.composableBuilder(
       column: $state.table.usedSpace,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
@@ -1967,17 +2050,17 @@ class $$UsersTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get createTime => $state.composableBuilder(
+  ColumnFilters<BigInt> get createTime => $state.composableBuilder(
       column: $state.table.createTime,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get maxSpace => $state.composableBuilder(
+  ColumnFilters<BigInt> get maxSpace => $state.composableBuilder(
       column: $state.table.maxSpace,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get maxUpload => $state.composableBuilder(
+  ColumnFilters<BigInt> get maxUpload => $state.composableBuilder(
       column: $state.table.maxUpload,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
@@ -1987,22 +2070,22 @@ class $$UsersTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get private => $state.composableBuilder(
+  ColumnFilters<int> get private => $state.composableBuilder(
       column: $state.table.private,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get subscribed => $state.composableBuilder(
+  ColumnFilters<int> get subscribed => $state.composableBuilder(
       column: $state.table.subscribed,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get services => $state.composableBuilder(
+  ColumnFilters<int> get services => $state.composableBuilder(
       column: $state.table.services,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get delinquent => $state.composableBuilder(
+  ColumnFilters<int> get delinquent => $state.composableBuilder(
       column: $state.table.delinquent,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
@@ -2041,7 +2124,7 @@ class $$UsersTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get usedSpace => $state.composableBuilder(
+  ColumnOrderings<BigInt> get usedSpace => $state.composableBuilder(
       column: $state.table.usedSpace,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
@@ -2056,17 +2139,17 @@ class $$UsersTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get createTime => $state.composableBuilder(
+  ColumnOrderings<BigInt> get createTime => $state.composableBuilder(
       column: $state.table.createTime,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get maxSpace => $state.composableBuilder(
+  ColumnOrderings<BigInt> get maxSpace => $state.composableBuilder(
       column: $state.table.maxSpace,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get maxUpload => $state.composableBuilder(
+  ColumnOrderings<BigInt> get maxUpload => $state.composableBuilder(
       column: $state.table.maxUpload,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
@@ -2076,22 +2159,22 @@ class $$UsersTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get private => $state.composableBuilder(
+  ColumnOrderings<int> get private => $state.composableBuilder(
       column: $state.table.private,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get subscribed => $state.composableBuilder(
+  ColumnOrderings<int> get subscribed => $state.composableBuilder(
       column: $state.table.subscribed,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get services => $state.composableBuilder(
+  ColumnOrderings<int> get services => $state.composableBuilder(
       column: $state.table.services,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get delinquent => $state.composableBuilder(
+  ColumnOrderings<int> get delinquent => $state.composableBuilder(
       column: $state.table.delinquent,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
@@ -2121,7 +2204,9 @@ typedef $$UserKeysTableTableInsertCompanionBuilder = UserKeysTableCompanion
   required String privateKey,
   Value<String?> token,
   Value<String?> fingerprint,
-  required bool primary,
+  Value<String?> recoverySecret,
+  Value<String?> recoverySecretSignature,
+  required int primary,
   Value<int> rowid,
 });
 typedef $$UserKeysTableTableUpdateCompanionBuilder = UserKeysTableCompanion
@@ -2132,14 +2217,16 @@ typedef $$UserKeysTableTableUpdateCompanionBuilder = UserKeysTableCompanion
   Value<String> privateKey,
   Value<String?> token,
   Value<String?> fingerprint,
-  Value<bool> primary,
+  Value<String?> recoverySecret,
+  Value<String?> recoverySecretSignature,
+  Value<int> primary,
   Value<int> rowid,
 });
 
 class $$UserKeysTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UserKeysTableTable,
-    UserKey,
+    DriftUserKey,
     $$UserKeysTableTableFilterComposer,
     $$UserKeysTableTableOrderingComposer,
     $$UserKeysTableTableProcessedTableManager,
@@ -2162,7 +2249,9 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             Value<String> privateKey = const Value.absent(),
             Value<String?> token = const Value.absent(),
             Value<String?> fingerprint = const Value.absent(),
-            Value<bool> primary = const Value.absent(),
+            Value<String?> recoverySecret = const Value.absent(),
+            Value<String?> recoverySecretSignature = const Value.absent(),
+            Value<int> primary = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UserKeysTableCompanion(
@@ -2172,6 +2261,8 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             privateKey: privateKey,
             token: token,
             fingerprint: fingerprint,
+            recoverySecret: recoverySecret,
+            recoverySecretSignature: recoverySecretSignature,
             primary: primary,
             rowid: rowid,
           ),
@@ -2182,7 +2273,9 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             required String privateKey,
             Value<String?> token = const Value.absent(),
             Value<String?> fingerprint = const Value.absent(),
-            required bool primary,
+            Value<String?> recoverySecret = const Value.absent(),
+            Value<String?> recoverySecretSignature = const Value.absent(),
+            required int primary,
             Value<int> rowid = const Value.absent(),
           }) =>
               UserKeysTableCompanion.insert(
@@ -2192,6 +2285,8 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             privateKey: privateKey,
             token: token,
             fingerprint: fingerprint,
+            recoverySecret: recoverySecret,
+            recoverySecretSignature: recoverySecretSignature,
             primary: primary,
             rowid: rowid,
           ),
@@ -2201,7 +2296,7 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
 class $$UserKeysTableTableProcessedTableManager extends ProcessedTableManager<
     _$AppDatabase,
     $UserKeysTableTable,
-    UserKey,
+    DriftUserKey,
     $$UserKeysTableTableFilterComposer,
     $$UserKeysTableTableOrderingComposer,
     $$UserKeysTableTableProcessedTableManager,
@@ -2243,7 +2338,17 @@ class $$UserKeysTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<bool> get primary => $state.composableBuilder(
+  ColumnFilters<String> get recoverySecret => $state.composableBuilder(
+      column: $state.table.recoverySecret,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get recoverySecretSignature => $state.composableBuilder(
+      column: $state.table.recoverySecretSignature,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get primary => $state.composableBuilder(
       column: $state.table.primary,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
@@ -2282,7 +2387,18 @@ class $$UserKeysTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<bool> get primary => $state.composableBuilder(
+  ColumnOrderings<String> get recoverySecret => $state.composableBuilder(
+      column: $state.table.recoverySecret,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get recoverySecretSignature =>
+      $state.composableBuilder(
+          column: $state.table.recoverySecretSignature,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get primary => $state.composableBuilder(
       column: $state.table.primary,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
