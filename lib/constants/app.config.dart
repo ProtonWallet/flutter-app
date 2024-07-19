@@ -32,9 +32,25 @@ class AppConfig {
     logger.i('App environment: $environment');
     if (environment == 'payment') {
       appConfig = appConfigForPayments;
+    } else if (environment == 'prod') {
+      appConfig = appConfigForProduction;
     } else if (environment == 'atlas') {
-      appConfig = appConfigForTestNet;
+      appConfig = appConfigForTestNet.copyWith(
+        apiEnv: ApiEnv.atlas(environment),
+      );
     }
+  }
+
+  AppConfig copyWith({required ApiEnv apiEnv}) {
+    return AppConfig(
+      coinType: coinType,
+      scriptTypeInfo: scriptTypeInfo,
+      apiEnv: apiEnv,
+      esploraWebpageUrl: esploraWebpageUrl,
+      esploraApiUrl: esploraApiUrl,
+      testMode: testMode,
+      stopGap: stopGap,
+    );
   }
 }
 

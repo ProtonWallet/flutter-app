@@ -19,7 +19,7 @@ class TwoFactorAuthDisableCoordinator extends Coordinator {
     final dataProvider = serviceManager.get<DataProviderManager>();
     final viewModel = TwoFactorAuthDisableViewModelImpl(
       this,
-      apiServices.getUsersApiClient(),
+      apiServices.getProtonUsersApiClient(),
       apiServices.getSettingsApiClient(),
       dataProvider.protonUserDataProvider,
     );
