@@ -40,7 +40,7 @@ class SendView extends ViewBase<SendViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
           color: ProtonColors.white,

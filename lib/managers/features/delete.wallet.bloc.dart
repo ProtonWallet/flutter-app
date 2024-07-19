@@ -183,8 +183,8 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
               deleted: true,
               requireAuthModel: const DeleteWalletAuthModel()));
 
-          final lockCode = await protonUsersApi.lockSensitiveSettings();
-          logger.i("Delete wallet password lockSensitiveSettings: $lockCode");
+          // final lockCode = await protonUsersApi.lockSensitiveSettings();
+          // logger.i("Delete wallet password lockSensitiveSettings: $lockCode");
         } on BridgeError catch (e, stacktrace) {
           final errorMessage = parseSampleDisplayError(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");

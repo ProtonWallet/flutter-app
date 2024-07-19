@@ -10,13 +10,21 @@ class UserKeysQueries extends DatabaseAccessor<AppDatabase>
     with _$UserKeysQueriesMixin {
   UserKeysQueries(super.attachedDatabase);
 
-  Future<List<UserKey>> getUseKeys(String userId) {
+  Future<List<DriftUserKey>> getUseKeys(String userId) {
     return (select(userKeysTable)..where((tbl) => tbl.userId.equals(userId)))
         .get();
   }
 
-  Stream<List<UserKey>> watchUserKeys(String userId) {
+  Stream<List<DriftUserKey>> watchUserKeys(String userId) {
     return (select(userKeysTable)..where((tbl) => tbl.userId.equals(userId)))
         .watch();
+  }
+
+  Future<void> insertOrUpdateItem(DriftUserKey item) async {
+    await into(userKeysTable).insertOnConflictUpdate(item);
+  }
+
+  Future<void> clearTable() async {
+    await delete(userKeysTable).go();
   }
 }

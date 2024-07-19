@@ -9,8 +9,6 @@ abstract class ProtonTwoFaEvent extends Equatable {
 
 class LoadingTwoFa extends ProtonTwoFaEvent {}
 
-class TestRecovery extends ProtonTwoFaEvent {}
-
 class EnableTwoFa extends ProtonTwoFaEvent {
   final RecoverySteps step;
   final String password;

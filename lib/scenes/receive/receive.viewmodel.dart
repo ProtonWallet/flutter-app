@@ -183,13 +183,13 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   Future<String> decryptAccountName(String encryptedName) async {
     if (secretKey == null) {
-      final firstUserKey = await userManager.getFirstKey();
       final walletKey = await walletKeysProvider.getWalletKey(
         serverWalletID,
       );
       if (walletKey != null) {
+        final userKey = await userManager.getUserKey(walletKey.userKeyId);
         secretKey = WalletKeyHelper.decryptWalletKey(
-          firstUserKey,
+          userKey,
           walletKey,
         );
       }

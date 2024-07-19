@@ -5,6 +5,7 @@ use andromeda_api::{
         ApiContactsEmailEvent, ApiWalletAccountEvent, ApiWalletEvent, ApiWalletKeyEvent,
         ApiWalletSettingsEvent, ApiWalletTransactionsEvent,
     },
+    proton_users::{ProtonUser, ProtonUserSettings},
     settings::UserSettings as ApiWalletUserSettings,
     wallet::{ApiWallet, ApiWalletAccount, ApiWalletKey, ApiWalletSettings},
 };
@@ -22,6 +23,8 @@ pub struct ProtonEvent {
     pub wallet_setting_events: Option<Vec<WalletSettingsEvent>>,
     pub wallet_transaction_events: Option<Vec<WalletTransactionEvent>>,
     pub wallet_user_settings: Option<ApiWalletUserSettings>,
+    pub proton_user: Option<ProtonUser>,
+    pub proton_user_settings: Option<ProtonUserSettings>,
 }
 
 impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
@@ -50,6 +53,8 @@ impl From<andromeda_api::event::ApiProtonEvent> for ProtonEvent {
                 .WalletSettings
                 .map(|v| v.into_iter().map(|x| x.into()).collect()),
             wallet_user_settings: event.WalletUserSettings,
+            proton_user: event.User,
+            proton_user_settings: event.UserSettings,
         }
     }
 }

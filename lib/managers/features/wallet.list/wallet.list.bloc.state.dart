@@ -1,6 +1,5 @@
-// Define the state
 import 'package:equatable/equatable.dart';
-import 'package:wallet/managers/features/models/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 
 class WalletListState extends Equatable {
   final bool initialized;

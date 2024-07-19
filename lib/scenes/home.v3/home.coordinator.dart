@@ -17,7 +17,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/backup.v2/backup.coordinator.dart';
+import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';

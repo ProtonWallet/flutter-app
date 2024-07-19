@@ -979,6 +979,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GatewayProvider dco_decode_box_autoadd_gateway_provider(dynamic raw);
 
   @protected
+  HighSecuritySettings dco_decode_box_autoadd_high_security_settings(
+      dynamic raw);
+
+  @protected
   OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
 
   @protected
@@ -999,6 +1003,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ProtonSrpClientProofs dco_decode_box_autoadd_proton_srp_client_proofs(
       dynamic raw);
+
+  @protected
+  ProtonUser dco_decode_box_autoadd_proton_user(dynamic raw);
+
+  @protected
+  ProtonUserSettings dco_decode_box_autoadd_proton_user_settings(dynamic raw);
 
   @protected
   ReferralSettings dco_decode_box_autoadd_referral_settings(dynamic raw);
@@ -1307,6 +1317,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   GatewayProvider? dco_decode_opt_box_autoadd_gateway_provider(dynamic raw);
 
   @protected
+  HighSecuritySettings? dco_decode_opt_box_autoadd_high_security_settings(
+      dynamic raw);
+
+  @protected
   Pagination? dco_decode_opt_box_autoadd_pagination(dynamic raw);
 
   @protected
@@ -1320,6 +1334,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonExchangeRate? dco_decode_opt_box_autoadd_proton_exchange_rate(
+      dynamic raw);
+
+  @protected
+  ProtonUser? dco_decode_opt_box_autoadd_proton_user(dynamic raw);
+
+  @protected
+  ProtonUserSettings? dco_decode_opt_box_autoadd_proton_user_settings(
       dynamic raw);
 
   @protected
@@ -2281,6 +2302,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  HighSecuritySettings sse_decode_box_autoadd_high_security_settings(
+      SseDeserializer deserializer);
+
+  @protected
   OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
       SseDeserializer deserializer);
 
@@ -2305,6 +2330,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonSrpClientProofs sse_decode_box_autoadd_proton_srp_client_proofs(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonUser sse_decode_box_autoadd_proton_user(SseDeserializer deserializer);
+
+  @protected
+  ProtonUserSettings sse_decode_box_autoadd_proton_user_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -2656,6 +2688,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  HighSecuritySettings? sse_decode_opt_box_autoadd_high_security_settings(
+      SseDeserializer deserializer);
+
+  @protected
   Pagination? sse_decode_opt_box_autoadd_pagination(
       SseDeserializer deserializer);
 
@@ -2673,6 +2709,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtonExchangeRate? sse_decode_opt_box_autoadd_proton_exchange_rate(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonUser? sse_decode_opt_box_autoadd_proton_user(
+      SseDeserializer deserializer);
+
+  @protected
+  ProtonUserSettings? sse_decode_opt_box_autoadd_proton_user_settings(
       SseDeserializer deserializer);
 
   @protected
@@ -3666,6 +3710,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       GatewayProvider self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_high_security_settings(
+      HighSecuritySettings self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_onchain_store_factory(
       OnchainStoreFactory self, SseSerializer serializer);
 
@@ -3692,6 +3740,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_proton_srp_client_proofs(
       ProtonSrpClientProofs self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_proton_user(
+      ProtonUser self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_proton_user_settings(
+      ProtonUserSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_referral_settings(
@@ -4051,6 +4107,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       GatewayProvider? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_high_security_settings(
+      HighSecuritySettings? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_pagination(
       Pagination? self, SseSerializer serializer);
 
@@ -4069,6 +4129,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_proton_exchange_rate(
       ProtonExchangeRate? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_user(
+      ProtonUser? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_proton_user_settings(
+      ProtonUserSettings? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_referral_settings(

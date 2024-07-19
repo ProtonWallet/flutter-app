@@ -157,14 +157,20 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   Future<void> updateReceiveEmailIntegrationNotification(isEnable) async {
-    await settingsClient.receiveNotificationEmail(emailType: UserReceiveNotificationEmailTypes.emailIntegration, isEnable: isEnable);
+    await settingsClient.receiveNotificationEmail(
+        emailType: UserReceiveNotificationEmailTypes.emailIntegration,
+        isEnable: isEnable);
+
     /// reload local db and cache
     await loadFromServer();
     settingsData = await _getFromDB();
   }
 
   Future<void> updateReceiveInviterNotification(isEnable) async {
-    await settingsClient.receiveNotificationEmail(emailType: UserReceiveNotificationEmailTypes.notificationToInviter, isEnable: isEnable);
+    await settingsClient.receiveNotificationEmail(
+        emailType: UserReceiveNotificationEmailTypes.notificationToInviter,
+        isEnable: isEnable);
+
     /// reload local db and cache
     await loadFromServer();
     settingsData = await _getFromDB();

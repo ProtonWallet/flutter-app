@@ -10789,11 +10789,10 @@ const _: fn() = || {
         let _: Option<crate::proton_api::proton_users::FlagsSettings> = ProtonUserSettings.Flags;
         let _: Option<crate::proton_api::proton_users::ReferralSettings> =
             ProtonUserSettings.Referral;
-        let _: u32 = ProtonUserSettings.DeviceRecovery;
         let _: u32 = ProtonUserSettings.Telemetry;
         let _: u32 = ProtonUserSettings.CrashReports;
         let _: u32 = ProtonUserSettings.HideSidePanel;
-        let _: crate::proton_api::proton_users::HighSecuritySettings =
+        let _: Option<crate::proton_api::proton_users::HighSecuritySettings> =
             ProtonUserSettings.HighSecurity;
         let _: u32 = ProtonUserSettings.SessionAccountRecovery;
     }
@@ -13473,6 +13472,19 @@ impl SseDecode for Option<crate::proton_api::payment_gateway::GatewayProvider> {
     }
 }
 
+impl SseDecode for Option<crate::proton_api::proton_users::HighSecuritySettings> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::proton_api::proton_users::HighSecuritySettings>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<crate::common::pagination::Pagination> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -13531,6 +13543,32 @@ impl SseDecode for Option<crate::proton_api::exchange_rate::ProtonExchangeRate> 
         if (<bool>::sse_decode(deserializer)) {
             return Some(
                 <crate::proton_api::exchange_rate::ProtonExchangeRate>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::proton_api::proton_users::ProtonUser> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::proton_api::proton_users::ProtonUser>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::proton_api::proton_users::ProtonUserSettings> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::proton_api::proton_users::ProtonUserSettings>::sse_decode(deserializer),
             );
         } else {
             return None;
@@ -13895,6 +13933,10 @@ impl SseDecode for crate::proton_api::event_routes::ProtonEvent {
         let mut var_walletUserSettings = <Option<
             crate::proton_api::user_settings::ApiWalletUserSettings,
         >>::sse_decode(deserializer);
+        let mut var_protonUser =
+            <Option<crate::proton_api::proton_users::ProtonUser>>::sse_decode(deserializer);
+        let mut var_protonUserSettings =
+            <Option<crate::proton_api::proton_users::ProtonUserSettings>>::sse_decode(deserializer);
         return crate::proton_api::event_routes::ProtonEvent {
             code: var_code,
             event_id: var_eventId,
@@ -13907,6 +13949,8 @@ impl SseDecode for crate::proton_api::event_routes::ProtonEvent {
             wallet_setting_events: var_walletSettingEvents,
             wallet_transaction_events: var_walletTransactionEvents,
             wallet_user_settings: var_walletUserSettings,
+            proton_user: var_protonUser,
+            proton_user_settings: var_protonUserSettings,
         };
     }
 }
@@ -14046,12 +14090,13 @@ impl SseDecode for crate::proton_api::proton_users::ProtonUserSettings {
             <Option<crate::proton_api::proton_users::FlagsSettings>>::sse_decode(deserializer);
         let mut var_referral =
             <Option<crate::proton_api::proton_users::ReferralSettings>>::sse_decode(deserializer);
-        let mut var_deviceRecovery = <u32>::sse_decode(deserializer);
         let mut var_telemetry = <u32>::sse_decode(deserializer);
         let mut var_crashReports = <u32>::sse_decode(deserializer);
         let mut var_hideSidePanel = <u32>::sse_decode(deserializer);
         let mut var_highSecurity =
-            <crate::proton_api::proton_users::HighSecuritySettings>::sse_decode(deserializer);
+            <Option<crate::proton_api::proton_users::HighSecuritySettings>>::sse_decode(
+                deserializer,
+            );
         let mut var_sessionAccountRecovery = <u32>::sse_decode(deserializer);
         return crate::proton_api::proton_users::ProtonUserSettings {
             Email: var_email,
@@ -14071,7 +14116,6 @@ impl SseDecode for crate::proton_api::proton_users::ProtonUserSettings {
             EarlyAccess: var_earlyAccess,
             Flags: var_flags,
             Referral: var_referral,
-            DeviceRecovery: var_deviceRecovery,
             Telemetry: var_telemetry,
             CrashReports: var_crashReports,
             HideSidePanel: var_hideSidePanel,
@@ -16839,6 +16883,8 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::event_routes::ProtonEv
             self.wallet_setting_events.into_into_dart().into_dart(),
             self.wallet_transaction_events.into_into_dart().into_dart(),
             self.wallet_user_settings.into_into_dart().into_dart(),
+            self.proton_user.into_into_dart().into_dart(),
+            self.proton_user_settings.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -16994,7 +17040,6 @@ impl flutter_rust_bridge::IntoDart
             self.0.EarlyAccess.into_into_dart().into_dart(),
             self.0.Flags.into_into_dart().into_dart(),
             self.0.Referral.into_into_dart().into_dart(),
-            self.0.DeviceRecovery.into_into_dart().into_dart(),
             self.0.Telemetry.into_into_dart().into_dart(),
             self.0.CrashReports.into_into_dart().into_dart(),
             self.0.HideSidePanel.into_into_dart().into_dart(),
@@ -19654,6 +19699,16 @@ impl SseEncode for Option<crate::proton_api::payment_gateway::GatewayProvider> {
     }
 }
 
+impl SseEncode for Option<crate::proton_api::proton_users::HighSecuritySettings> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::proton_users::HighSecuritySettings>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<crate::common::pagination::Pagination> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -19700,6 +19755,26 @@ impl SseEncode for Option<crate::proton_api::exchange_rate::ProtonExchangeRate> 
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <crate::proton_api::exchange_rate::ProtonExchangeRate>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::proton_api::proton_users::ProtonUser> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::proton_users::ProtonUser>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::proton_api::proton_users::ProtonUserSettings> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::proton_api::proton_users::ProtonUserSettings>::sse_encode(value, serializer);
         }
     }
 }
@@ -19999,6 +20074,14 @@ impl SseEncode for crate::proton_api::event_routes::ProtonEvent {
             self.wallet_user_settings,
             serializer,
         );
+        <Option<crate::proton_api::proton_users::ProtonUser>>::sse_encode(
+            self.proton_user,
+            serializer,
+        );
+        <Option<crate::proton_api::proton_users::ProtonUserSettings>>::sse_encode(
+            self.proton_user_settings,
+            serializer,
+        );
     }
 }
 
@@ -20101,11 +20184,10 @@ impl SseEncode for crate::proton_api::proton_users::ProtonUserSettings {
             self.Referral,
             serializer,
         );
-        <u32>::sse_encode(self.DeviceRecovery, serializer);
         <u32>::sse_encode(self.Telemetry, serializer);
         <u32>::sse_encode(self.CrashReports, serializer);
         <u32>::sse_encode(self.HideSidePanel, serializer);
-        <crate::proton_api::proton_users::HighSecuritySettings>::sse_encode(
+        <Option<crate::proton_api::proton_users::HighSecuritySettings>>::sse_encode(
             self.HighSecurity,
             serializer,
         );

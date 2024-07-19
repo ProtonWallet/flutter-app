@@ -56,12 +56,13 @@ class _WebViewExampleState extends State<WebViewExample> {
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Permissions-Policy" content="camera=(self)">
   <style>
     .iframe-container {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
-      height: 400px;
+      aspect-ratio: 16 / 9;
+      height: 800px;
       overflow: hidden;
     }
     .iframe-container iframe {
@@ -87,10 +88,8 @@ class _WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Banxa')),
-      body: SafeArea(
-        child: WebViewWidget(
-          controller: controller,
-        ),
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

@@ -21,6 +21,7 @@ import 'package:wallet/managers/providers/server.transaction.data.provider.dart'
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
+import 'package:wallet/managers/users/user.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -144,16 +145,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     );
 
     /// get user key
-    final firstUserKey = await userManager.getFirstKey();
     final WalletKey? walletKey = await walletKeysProvider.getWalletKey(
       walletID,
     );
     if (walletKey != null) {
-      secretKey = WalletKeyHelper.decryptWalletKey(firstUserKey, walletKey);
+      final userKey = await userManager.getUserKey(walletKey.userKeyId);
+      secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
     }
 
     transactionModel = await findServerTransactionByTxID(
-      firstUserKey,
       serverTrans,
       txID,
     );
@@ -315,10 +315,16 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       );
 
       /// default label
-      final String encryptedLabel =
-          await WalletKeyHelper.encrypt(secretKey!, "");
-      final String userPrivateKey = firstUserKey.privateKey;
-      final String transactionId = proton_crypto.encrypt(userPrivateKey, txID);
+      final String encryptedLabel = await WalletKeyHelper.encrypt(
+        secretKey!,
+        "",
+      );
+
+      final primaryUserKey = await userManager.getPrimaryKey();
+      final String transactionId = proton_crypto.encrypt(
+        primaryUserKey.privateKey,
+        txID,
+      );
       final DateTime now = DateTime.now();
       try {
         // TODO(fix): move this to provider
@@ -380,7 +386,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 accountID,
               );
               transactionModel = await findServerTransactionByTxID(
-                firstUserKey,
                 serverTrans,
                 txID,
               );
@@ -444,6 +449,40 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       }
     }
+
+    final userKeys = await userManager.getUserKeys();
+    for (final userKey in userKeys) {
+      try {
+        /// Decrypt 'to' email if needed
+        if (toEmail.isEmpty) {
+          final encToList = transactionModel?.tolist;
+          if (encToList != null) {
+            toEmail = userKey.decrypt(encToList);
+          }
+        }
+
+        /// Decrypt 'from' email if needed
+        if (fromEmail.isEmpty) {
+          final encSender = transactionModel?.sender;
+          if (encSender != null) {
+            fromEmail = userKey.decrypt(encSender);
+          }
+        }
+
+        /// Decrypt body if needed
+        if (body.isEmpty) {
+          final encBody = transactionModel?.body;
+          if (encBody != null) {
+            body = userKey.decrypt(encBody);
+          }
+        }
+      } catch (e, stacktrace) {
+        logger.e(
+          "details.viewmodel error: $e stacktrace: $stacktrace",
+        );
+      }
+    }
+
     if (toEmail == "null") {
       toEmail = "";
     }
@@ -531,23 +570,26 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   }
 
   Future<TransactionModel?> findServerTransactionByTxID(
-    UserKey userKey,
     List<TransactionModel> transactions,
     String lookupTxID,
   ) async {
+    final userKeys = await userManager.getUserKeys();
     for (var tranMode in transactions) {
       final String encryptedTxID = tranMode.transactionID;
       String clearTxID = "";
-      try {
-        clearTxID = proton_crypto.decrypt(
-          userKey.privateKey,
-          userKey.passphrase,
-          encryptedTxID,
-        );
-      } catch (e, stacktrace) {
-        logger.i(
-          "details.viewmodel error: $e stacktrace: $stacktrace",
-        );
+      for (final userKey in userKeys) {
+        try {
+          clearTxID = proton_crypto.decrypt(
+            userKey.privateKey,
+            userKey.passphrase,
+            encryptedTxID,
+          );
+          break;
+        } catch (e, stacktrace) {
+          logger.i(
+            "details.viewmodel error: $e stacktrace: $stacktrace",
+          );
+        }
       }
       if (clearTxID.isEmpty) {
         for (AddressKey addressKey in addressKeys) {
@@ -622,13 +664,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String senderName,
     String senderEmail,
   ) async {
-    final UserKey userkey = await userManager.getFirstKey();
+    final UserKey primaryUserkey = await userManager.getPrimaryKey();
     final Map<String, dynamic> jsonMap = {
       "name": senderName,
       "email": senderEmail,
     };
     final String jsonString = jsonEncode(jsonMap);
-    final String encryptedName = userkey.encrypt(jsonString);
+    final String encryptedName = primaryUserkey.encrypt(jsonString);
     transactionModel!.sender = encryptedName;
     final WalletTransaction _ =
         await walletClient.updateExternalWalletTransactionSender(

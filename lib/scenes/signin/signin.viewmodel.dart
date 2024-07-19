@@ -61,6 +61,7 @@ class SigninViewModelImpl extends SigninViewModel {
       );
       userManager.flutterLogin(authCredential);
       await dataProviderManager.login(authCredential.userId);
+      await userManager.login(authCredential.userId);
       coordinator.showHome(env);
     } catch (e) {
       errorMessage = e.toString();
