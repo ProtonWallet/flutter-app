@@ -152,7 +152,9 @@ core-notification = { module = "me.proton.core:notification", version.ref = "cor
 core-observability = { module = "me.proton.core:observability", version.ref = "core" }
 core-payment = { module = "me.proton.core:payment", version.ref = "core" }
 core-paymentIap = { module = "me.proton.core:payment-iap", version.ref = "core" }
-core-plan = { module = "me.proton.core:plan", version.ref = "core" }
+core-plan-data = { module = "me.proton.core:plan-data", version.ref = "core" }
+core-plan-domain = { module = "me.proton.core:plan-domain", version.ref = "core" }
+core-plan-presentation = { module = "me.proton.core:plan-presentation", version.ref = "core" }
 core-presentation-base = { module = "me.proton.core:presentation", version.ref = "core" }
 core-presentation-compose = { module = "me.proton.core:presentation-compose", version.ref = "core" }
 core-proguard-rules = { module = "me.proton.core:proguard-rules", version.ref = "core" }
