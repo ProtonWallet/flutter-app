@@ -231,6 +231,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
+          serverScriptType: accountModel.scriptType,
         );
       }
 

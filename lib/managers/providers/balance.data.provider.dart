@@ -44,6 +44,7 @@ class BalanceDataProvider extends DataProvider {
     final FrbAccount? account = await WalletManager.loadWalletWithID(
       walletModel.walletID,
       accountModel.accountID,
+      serverScriptType: accountModel.scriptType,
     );
     return BDKBalanceData(
       walletModel: walletModel,

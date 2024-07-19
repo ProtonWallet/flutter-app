@@ -366,6 +366,7 @@ class SendViewModelImpl extends SendViewModel {
     _frbAccount = await WalletManager.loadWalletWithID(
       walletID,
       accountModel?.accountID ?? "",
+      serverScriptType: accountModel?.scriptType ?? -1,
     );
     accountAddressIDs =
         await WalletManager.getAccountAddressIDs(accountModel?.accountID ?? "");
