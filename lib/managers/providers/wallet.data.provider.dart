@@ -153,27 +153,6 @@ class WalletsDataProvider extends DataProvider {
     return walletData;
   }
 
-  Future<String> getNewDerivationPath(
-    String walletID,
-    ScriptTypeInfo scriptType,
-    CoinType coinType, {
-    int internal = 0,
-  }) async {
-    int accountIndex = 0;
-    while (true) {
-      final String newDerivationPath =
-          "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
-      final result = await accountDao.findByDerivationPath(
-        walletID,
-        "$newDerivationPath/$internal",
-      );
-      if (result == null) {
-        return newDerivationPath;
-      }
-      accountIndex++;
-    }
-  }
-
   Future<int> getNewDerivationAccountIndex(
       String walletID, ScriptTypeInfo scriptType, CoinType coinType) async {
     String derivationPath = "";
@@ -188,7 +167,9 @@ class WalletsDataProvider extends DataProvider {
         coinType,
         newAccountIndex,
       );
-      if (_isDerivationPathExist(wallet.accounts, derivationPath)) {
+      if (_isDerivationPathExist(wallet.accounts, derivationPath) ||
+          _isDerivationPathExist(
+              wallet.accounts, derivationPath.replaceFirst("m/", ""))) {
         newAccountIndex++;
       } else {
         return newAccountIndex;
@@ -221,7 +202,7 @@ class WalletsDataProvider extends DataProvider {
   String formatDerivationPath(
       ScriptTypeInfo scriptType, CoinType coinType, int accountIndex) {
     final String derivationPath =
-        "m/${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
+        "${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
     return derivationPath;
   }
 

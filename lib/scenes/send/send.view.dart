@@ -9,15 +9,17 @@ import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/back.button.v1.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
-import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
@@ -128,79 +130,92 @@ class SendView extends ViewBase<SendViewModel> {
                         Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(width: defaultPadding),
                               Text(
-                                "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
+                                viewModel.bitcoinBase
+                                    ? ExchangeCalculator.getBitcoinUnitLabel(
+                                        BitcoinUnit.btc, viewModel.balance)
+                                    : "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textWeak),
                               ),
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: () {
-                                  // TODO(fix): fix logic to use more specific amount
-                                  viewModel.amountTextController.text =
-                                      ExchangeCalculator
-                                          .getNotionalInFiatCurrency(
-                                    viewModel.exchangeRate,
-                                    viewModel.maxBalanceToSend - 10,
+                                  if (viewModel.bitcoinBase) {
+                                    // TODO(fix): fix logic to use more specific amount
+                                    viewModel.amountTextController.text =
+                                        ((viewModel.maxBalanceToSend - 10) /
+                                                100000000)
+                                            .toStringAsFixed(8);
+                                    viewModel.splitAmountToRecipients();
+                                  } else {
+                                    // TODO(fix): fix logic to use more specific amount
+                                    viewModel.amountTextController.text =
+                                        ExchangeCalculator
+                                            .getNotionalInFiatCurrency(
+                                      viewModel.exchangeRate,
+                                      viewModel.maxBalanceToSend - 10,
 
-                                    // TODO(fix): fix me, some low value issue
-                                  ).toStringAsFixed(
-                                          ExchangeCalculator.getDisplayDigit(
-                                              viewModel.exchangeRate));
-                                  viewModel.splitAmountToRecipients();
+                                      // TODO(fix): fix me, some low value issue
+                                    ).toStringAsFixed(
+                                            ExchangeCalculator.getDisplayDigit(
+                                                viewModel.exchangeRate));
+                                    viewModel.splitAmountToRecipients();
+                                  }
                                 },
                                 child: Text(S.of(context).send_all,
                                     style: FontManager.captionMedian(
                                         ProtonColors.protonBlue)),
                               )
                             ]),
-                        const SizedBox(height: 4),
                         Row(children: [
                           Expanded(
-                              child: TextFieldSendBTCV2(
-                            backgroundColor: ProtonColors.backgroundProton,
-                            labelText: S.of(context).amount,
-                            hintText: "0.00",
-                            textController: viewModel.amountTextController,
-                            myFocusNode: viewModel.amountFocusNode,
-                            exchangeRate: viewModel.exchangeRate,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*\.?\d*$'))
-                            ],
-                            bitcoinUnit:
-                                viewModel.userSettingsDataProvider.bitcoinUnit,
-                            validation: (String value) {
-                              return "";
-                            },
-                          )),
+                            child: TextFieldSendBTCV2(
+                              bitcoinBase: viewModel.bitcoinBase,
+                              backgroundColor: ProtonColors.white,
+                              labelText: S.of(context).amount,
+                              hintText: "0.00",
+                              textController: viewModel.amountTextController,
+                              myFocusNode: viewModel.amountFocusNode,
+                              exchangeRate: viewModel.exchangeRate,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d*$'))
+                              ],
+                              bitcoinUnit: viewModel
+                                  .userSettingsDataProvider.bitcoinUnit,
+                              validation: (String value) {
+                                return "";
+                              },
+                            ),
+                          ),
                           const SizedBox(
                             width: 10,
                           ),
                           Container(
                               padding: const EdgeInsets.only(bottom: 20),
-                              child: DropdownButtonV2(
+                              child: DropdownCurrencyV1(
                                   width: 80,
                                   padding: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 4, bottom: 2),
-                                  maxSuffixIconWidth: 20,
+                                    left: 10,
+                                    right: 10,
+                                  ),
                                   textStyle: FontManager.captionMedian(
                                       ProtonColors.textNorm),
                                   backgroundColor:
                                       ProtonColors.backgroundProton,
-                                  items: fiatCurrencies,
-                                  canSearch: true,
-                                  itemsText: fiatCurrencies
-                                      .map(FiatCurrencyHelper.getFullName)
+                                  items: fiatCurrenciesWithBitcoin,
+                                  itemsText: fiatCurrenciesWithBitcoin
+                                      .map((v) => v.toFullName())
                                       .toList(),
-                                  itemsTextForDisplay: fiatCurrencies
-                                      .map(FiatCurrencyHelper.getDisplayName)
+                                  itemsTextForDisplay: fiatCurrenciesWithBitcoin
+                                      .map((v) => v.toShortName())
                                       .toList(),
-                                  itemsLeadingIcons: fiatCurrencies
-                                      .map(CommonHelper.getCountryIcon)
+                                  itemsLeadingIcons: fiatCurrenciesWithBitcoin
+                                      .map((v) => v.getIcon())
                                       .toList(),
                                   valueNotifier:
                                       viewModel.fiatCurrencyNotifier)),
@@ -657,7 +672,10 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget getTransactionValueWidget(BuildContext context) {
     final int amountInSATS = getTotalAmountInSATS();
-    final double amountInFiatCurrency = getTotalAmountInFiatCurrency();
+    final double amountInFiatCurrency = viewModel.bitcoinBase
+        ? ExchangeCalculator.getNotionalInFiatCurrency(
+            viewModel.exchangeRate, amountInSATS)
+        : getTotalAmountInFiatCurrency();
     final int displayDigit =
         ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

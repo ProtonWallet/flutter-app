@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
@@ -109,5 +112,31 @@ extension PaymentMethodImageExtension on PaymentMethod {
     return Assets.images.icon.creditCard.svg(
       fit: BoxFit.fill,
     );
+  }
+}
+
+extension FiatCurrencyWrapperFullNameExtension on FiatCurrencyWrapper {
+  String toFullName() {
+    if (bitcoinCurrency != null) {
+      return "BTC (₿) - Bitcoin";
+    }
+    return FiatCurrencyHelper.getFullName(fiatCurrency ?? defaultFiatCurrency);
+  }
+}
+
+extension FiatCurrencyWrapperShortNameExtension on FiatCurrencyWrapper {
+  String toShortName() {
+    if (bitcoinCurrency != null) {
+      return "BTC";
+    }
+    return FiatCurrencyHelper.getDisplayName(fiatCurrency ?? defaultFiatCurrency);
+  }
+}
+extension FiatCurrencyWrapperImageExtension on FiatCurrencyWrapper {
+  Widget getIcon() {
+    if (bitcoinCurrency != null) {
+      return CommonHelper.getBitcoinIcon();
+    }
+    return CommonHelper.getCountryIcon(fiatCurrency ?? defaultFiatCurrency);
   }
 }

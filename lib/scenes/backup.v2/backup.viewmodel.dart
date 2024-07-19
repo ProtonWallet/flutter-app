@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/data.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -26,12 +27,14 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
   final WalletsDataProvider walletsDataProvider;
+  final UserDataProvider userDataProvider;
   final String userID;
 
   SetupBackupViewModelImpl(
     super.coordinator,
     super.walletID,
     this.walletsDataProvider,
+    this.userDataProvider,
     this.userID,
   );
 
@@ -67,6 +70,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       fingerprint: walletModel.fingerprint ?? "",
       showWalletRecovery: walletModel.showWalletRecovery,
     );
+    userDataProvider.enabledShowWalletRecovery(false);
   }
 
   @override

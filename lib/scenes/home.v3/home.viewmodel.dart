@@ -35,6 +35,7 @@ import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -162,6 +163,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool hideEmptyUsedAddresses = false;
   bool showWalletRecovery = true;
   bool hadSetup2FA = false;
+  bool hadSetupRecovery = false;
   bool showSearchHistoryTextField = false;
   bool showSearchAddressTextField = false;
 
@@ -171,7 +173,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void selectWallet(WalletMenuModel walletMenuModel);
 
-  void updateHadSetup2FA();
+  void loadProton2FAState();
 
   void loadProtonRecoveryState();
 
@@ -189,8 +191,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     String label,
     int accountIndex,
   );
-
-  void checkPreference();
 
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
 
@@ -312,7 +312,11 @@ class HomeViewModelImpl extends HomeViewModel {
 
   /// app state
   final AppStateManager appStateManager;
-  StreamSubscription? appStateSubscription;
+  StreamSubscription? _appStateSubscription;
+  StreamSubscription? _protonRecoveryStateSubscription;
+  StreamSubscription? _protonUserDataSubscription;
+  StreamSubscription? _subscription;
+  StreamSubscription? _blockInfoDataSubscription;
 
   ///
   final datasourceChangedStreamController =
@@ -321,8 +325,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   CryptoPriceDataService cryptoPriceDataService =
       CryptoPriceDataService(duration: const Duration(seconds: 10));
-  late StreamSubscription _subscription;
-  late StreamSubscription _blockInfoDataSubscription;
 
   @override
   void dispose() {
@@ -330,7 +332,11 @@ class HomeViewModelImpl extends HomeViewModel {
     selectedSectionChangedController.close();
     //clean up wallet ....
     disposeServices();
-    appStateSubscription?.cancel();
+    _appStateSubscription?.cancel();
+    _protonUserDataSubscription?.cancel();
+    _subscription?.cancel();
+    _blockInfoDataSubscription?.cancel();
+    _protonRecoveryStateSubscription?.cancel();
     super.dispose();
   }
 
@@ -338,29 +344,72 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceChangedStreamController.sinkAddSafe(this);
   }
 
-  Future<void> initServices() async {
-    // crypto price listener
+  Future<void> initSubscription() async {
+    // app state
+    _appStateSubscription = appStateManager.stream.listen((state) {
+      if (state is AppSessionFailed) {
+        showLogoutErrorDialog(errorMessage, logout);
+      } else if (state is AppPermissionState) {
+        showPermissionErrorDialog(state.message);
+      } else if (state is AppUnlockFailedState) {
+        LocalAuthManager.auth.stopAuthentication();
+        logout();
+      }
+      // else if (state is AppUnlockLogoutState) {
+      //   logout();
+      // }
+    }, onError: (e) {
+      logger.e(e.toString());
+    }, onDone: () {
+      logger.d("app state done");
+    });
+
+    // recovery state
+    _protonRecoveryStateSubscription =
+        protonRecoveryBloc.stream.listen((state) {
+      hadSetupRecovery = state.isRecoveryEnabled;
+    });
+
+    // crypto price
     _subscription =
         cryptoPriceDataService.dataStream.listen((CryptoPriceInfo event) {
       btcPriceInfo = event;
       datasourceStreamSinkAdd();
     });
 
+    // block info
     _blockInfoDataSubscription = dataProviderManager
         .blockInfoDataProvider.dataUpdateController.stream
         .listen((onData) {
       walletTransactionBloc.syncWallet(forceSync: false);
     });
+
+    // user data
+    _protonUserDataSubscription =
+        dataProviderManager.userDataProvider.stream.listen((state) {
+      if (state is TwoFaUpdated) {
+        hadSetup2FA = state.updatedData;
+        checkPreference();
+      } else if (state is RecoveryUpdated) {
+        hadSetupRecovery = state.updatedData;
+        checkPreference();
+      } else if (state is ShowWalletRecoveryUpdated) {
+        showWalletRecovery = state.updatedData;
+        checkPreference();
+      }
+    });
+  }
+
+  Future<void> initServices() async {
+    cryptoPriceDataService.start(); //start service
   }
 
   void disposeServices() {
-    _subscription.cancel();
-    _blockInfoDataSubscription.cancel();
     cryptoPriceDataService.dispose();
   }
 
   @override
-  Future<void> updateHadSetup2FA() async {
+  Future<void> loadProton2FAState() async {
     try {
       protonUserSettings =
           await apiServiceManager.getProtonUsersApiClient().getUserSettings();
@@ -406,42 +455,24 @@ class HomeViewModelImpl extends HomeViewModel {
 
     // user
     final userInfo = userManager.userInfo;
-    updateHadSetup2FA();
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);
-
-    // app state
-    appStateSubscription = appStateManager.stream.listen((state) {
-      if (state is AppSessionFailed) {
-        showLogoutErrorDialog(errorMessage, logout);
-      } else if (state is AppPermissionState) {
-        showPermissionErrorDialog(state.message);
-      } else if (state is AppUnlockFailedState) {
-        LocalAuthManager.auth.stopAuthentication();
-        logout();
-      }
-      // else if (state is AppUnlockLogoutState) {
-      //   logout();
-      // }
-    }, onError: (e) {
-      logger.e(e.toString());
-    }, onDone: () {
-      logger.d("app state done");
-    });
 
     // ----------------
     // settings
 
     // transactions
-
-    /// init services
-    initServices();
-
-    /// init controllers
-    initControllers();
-
     try {
+      /// init services
+      initServices();
+
+      /// init subscriptions
+      initSubscription();
+
+      /// init controllers
+      initControllers();
+
       userSettingProvider = Provider.of<UserSettingProvider>(
           Coordinator.rootNavigatorKey.currentContext!,
           listen: false);
@@ -452,10 +483,7 @@ class HomeViewModelImpl extends HomeViewModel {
       );
 
       loadProtonRecoveryState();
-      dataProviderManager.userDataProvider.dataUpdateController.stream
-          .listen((data) {
-        loadProtonRecoveryState();
-      });
+      loadProton2FAState();
 
       // async
       dataProviderManager.contactsDataProvider.preLoad();
@@ -473,8 +501,6 @@ class HomeViewModelImpl extends HomeViewModel {
         bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
         datasourceStreamSinkAdd();
       });
-
-      cryptoPriceDataService.start(); //start service
       // checkNetwork();
       loadDiscoverContents();
       checkProtonAddresses();
@@ -488,8 +514,6 @@ class HomeViewModelImpl extends HomeViewModel {
       addressSearchController.addListener(datasourceStreamSinkAdd);
 
       eventLoop.start();
-
-      checkPreference();
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
@@ -512,9 +536,12 @@ class HomeViewModelImpl extends HomeViewModel {
           walletMenuModel.walletModel.walletID,
           null,
         );
+        showWalletRecovery =
+            walletMenuModel.walletModel.showWalletRecovery == 1;
         break;
       }
     }
+    checkPreference();
   }
 
   @override
@@ -565,6 +592,8 @@ class HomeViewModelImpl extends HomeViewModel {
     );
     currentHistoryPage = 0;
     currentAddressPage = 0;
+    showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
+    checkPreference();
     updateBodyListStatus(BodyListStatus.transactionList);
   }
 
@@ -577,6 +606,8 @@ class HomeViewModelImpl extends HomeViewModel {
     );
     currentHistoryPage = 0;
     currentAddressPage = 0;
+    showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
+    checkPreference();
     updateBodyListStatus(BodyListStatus.transactionList);
   }
 
@@ -701,26 +732,13 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  @override
   Future<void> checkPreference() async {
     int newTodoStep = 0;
-
-    for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
-      if (walletMenuModel.walletModel.walletID ==
-          dataProviderManager.walletDataProvider.selectedServerWalletID) {
-        showWalletRecovery =
-            walletMenuModel.walletModel.showWalletRecovery == 1;
-      }
-    }
     newTodoStep += showWalletRecovery ? 0 : 1;
     newTodoStep += hadSetup2FA ? 1 : 0;
+    newTodoStep += hadSetupRecovery ? 1 : 0;
     currentTodoStep = newTodoStep;
     datasourceStreamSinkAdd();
-
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (!isLogout) {
-      checkPreference();
-    }
   }
 
   @override
