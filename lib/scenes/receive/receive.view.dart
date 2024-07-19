@@ -201,7 +201,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                 viewModel.address,
                                                 style: FontManager.body2Regular(
                                                     ProtonColors.textWeak),
-                                                maxLines: 2,
+                                                maxLines: 5,
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
                                               )),

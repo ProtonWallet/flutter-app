@@ -613,6 +613,7 @@ class WalletTransactionBloc
     final FrbAccount? account = await WalletManager.loadWalletWithID(
       walletModel.walletID,
       accountMenuModel.accountModel.accountID,
+      serverScriptType: accountMenuModel.accountModel.scriptType,
     );
 
     final Map<String, FrbAddressInfo> selfBitcoinAddressInfo =

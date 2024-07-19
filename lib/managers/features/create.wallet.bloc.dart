@@ -176,7 +176,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     final CreateWalletAccountReq request = CreateWalletAccountReq(
       label: await WalletKeyHelper.encrypt(secretKey, label),
       derivationPath: derivationPath,
-      scriptType: appConfig.scriptTypeInfo.index,
+      scriptType: scriptType.index,
     );
 
     final apiWalletAccount = await walletsDataProvider.createWalletAccount(

@@ -98,6 +98,7 @@ class AccountDaoImpl extends AccountDao {
       tableName,
       where: 'walletID = ?',
       whereArgs: [walletID],
+      orderBy: 'priority asc',
     );
     final List<AccountModel> accounts = List.generate(
       maps.length,
