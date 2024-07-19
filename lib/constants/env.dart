@@ -27,7 +27,7 @@ class ApiEnv {
       case ApiEnvType.prod:
         return "https://wallet.proton.me/api";
       case ApiEnvType.atlas:
-        return "https://${custom != null ? '-$custom' : ''}.proton.black/api";
+        return "https://${custom != null ? '$custom' : ''}.proton.black/api";
     }
   }
 }

@@ -129,7 +129,7 @@ class ProtonApiServiceManager implements Manager {
     return getApiService().getProtonEmailAddrClient();
   }
 
-  ProtonUsersClient getUsersApiClient() {
+  ProtonUsersClient getProtonUsersApiClient() {
     return getApiService().getProtonUserClient();
   }
 

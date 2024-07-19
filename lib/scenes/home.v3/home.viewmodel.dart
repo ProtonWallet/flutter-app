@@ -26,6 +26,7 @@ import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/models/wallet.list.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
@@ -78,6 +79,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.walletBalanceBloc,
     this.dataProviderManager,
     this.createWalletBloc,
+    this.deleteWalletBloc,
     this.protonRecoveryBloc,
   );
 
@@ -137,7 +139,21 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> createWallet();
 
-  Future<void> deleteWallet(WalletModel walletModel);
+  void deleteWallet(WalletModel walletModel) {
+    deleteWalletBloc.add(DeleteWalletEvent(
+      walletModel,
+      DeleteWalletSteps.start,
+    ));
+  }
+
+  void deleteWalletAuth(WalletModel walletModel, String pwd, String twofa) {
+    deleteWalletBloc.add(DeleteWalletEvent(
+      walletModel,
+      DeleteWalletSteps.auth,
+      password: pwd,
+      twofa: twofa,
+    ));
+  }
 
   // ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
@@ -246,6 +262,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final WalletBalanceBloc walletBalanceBloc;
   final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
+  final DeleteWalletBloc deleteWalletBloc;
   final ProtonRecoveryBloc protonRecoveryBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = ProtonExchangeRate(
@@ -268,6 +285,7 @@ class HomeViewModelImpl extends HomeViewModel {
     super.walletBalanceBloc,
     super.dataProviderManager,
     super.createWalletBloc,
+    super.deleteWalletBloc,
     super.protonRecoveryBloc,
     this.userManager,
     this.eventLoop,
@@ -345,7 +363,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> updateHadSetup2FA() async {
     try {
       protonUserSettings =
-          await apiServiceManager.getUsersApiClient().getUserSettings();
+          await apiServiceManager.getProtonUsersApiClient().getUserSettings();
     } catch (e) {
       logger.e(e
           .toString()); // only need to load once. keep it simple so maintain it in VM
@@ -790,20 +808,6 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     channel.nativeLogout();
     coordinator.logout();
-  }
-
-  @override
-  Future<void> deleteWallet(WalletModel walletModel) async {
-    try {
-      await proton_api.deleteWallet(walletId: walletModel.walletID);
-      await dataProviderManager.walletDataProvider
-          .deleteWallet(wallet: walletModel);
-    } on BridgeError catch (e, stacktrace) {
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
   }
 
   @override
