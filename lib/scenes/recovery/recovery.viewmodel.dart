@@ -14,12 +14,34 @@ abstract class RecoveryViewModel extends ViewModel<RecoveryCoordinator> {
 
   ///
   bool recoveryEnabled = false;
-  void disableRecovery();
-  void enableRecovery();
-  void stateReset();
 
-  void disableRecoverAuth(String pwd, String twofa);
-  void enableRecoverAuth(String pwd, String twofa);
+  void disableRecovery() {
+    protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));
+  }
+
+  void enableRecovery() {
+    protonRecoveryBloc.add(EnableRecovery(RecoverySteps.start));
+  }
+
+  void stateReset() {
+    protonRecoveryBloc.add(LoadingRecovery());
+  }
+
+  void disableRecoverAuth(String pwd, String twofa) {
+    protonRecoveryBloc.add(DisableRecovery(
+      RecoverySteps.auth,
+      password: pwd,
+      twofa: twofa,
+    ));
+  }
+
+  void enableRecoverAuth(String pwd, String twofa) {
+    protonRecoveryBloc.add(EnableRecovery(
+      RecoverySteps.auth,
+      password: pwd,
+      twofa: twofa,
+    ));
+  }
 }
 
 class RecoveryViewModelImpl extends RecoveryViewModel {
@@ -34,7 +56,6 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
   Future<void> loadData() async {
     // get user recovery phrase
     stateReset();
-
     sinkAddSafe();
   }
 
@@ -44,38 +65,5 @@ class RecoveryViewModelImpl extends RecoveryViewModel {
       default:
         break;
     }
-  }
-
-  @override
-  void disableRecovery() {
-    protonRecoveryBloc.add(DisableRecovery(RecoverySteps.start));
-  }
-
-  @override
-  void enableRecovery() {
-    protonRecoveryBloc.add(EnableRecovery(RecoverySteps.start));
-  }
-
-  @override
-  void stateReset() {
-    protonRecoveryBloc.add(LoadingRecovery());
-  }
-
-  @override
-  void disableRecoverAuth(String pwd, String twofa) {
-    protonRecoveryBloc.add(DisableRecovery(
-      RecoverySteps.auth,
-      password: pwd,
-      twofa: twofa,
-    ));
-  }
-
-  @override
-  void enableRecoverAuth(String pwd, String twofa) {
-    protonRecoveryBloc.add(EnableRecovery(
-      RecoverySteps.auth,
-      password: pwd,
-      twofa: twofa,
-    ));
   }
 }

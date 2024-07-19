@@ -187,7 +187,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             accMenuModel.balance = balance;
             double estimateValue = 0.0;
             final settings = await userSettingsDataProvider.getSettings();
-            // Tempary need to use providers
+            // TODO(fix): Tempary need to use providers
             final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
             final ProtonExchangeRate exchangeRate =
                 await ExchangeRateService.getExchangeRate(fiatCurrency);
