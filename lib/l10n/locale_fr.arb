@@ -319,7 +319,7 @@
   "sun_short": "Dim.",
   "in_progress": "En cours",
   "in_progress_broadcasted": "En cours : diffusé",
-  "in_progress_waiting_for_confirm": "In progress: waiting for confirmation",
+  "in_progress_waiting_for_confirm": "En cours : en attente de confirmation",
   "not_a_valid_mnemonic": "Ce n\\'est malheureusement pas une phrase de récupération valide pour le portefeuille.",
   "confirmed": "Confirmé",
   "completed": "Terminé",
