@@ -28,7 +28,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
   }
 
   void dispose() {
-    logger.d("dispose is called");
+    logger.d("$key dispose is called");
   }
 
   /// Helper build large/small screen drawer and content switcher.

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 
 class ManagerFactory {
@@ -10,7 +10,7 @@ class ManagerFactory {
 
   void register<T extends Manager>(T manager) {
     if (_managers.containsKey(T)) {
-      debugPrint('Manager of type $T is already registered.');
+      logger.d('Manager of type $T is already registered.');
       return;
     }
     _managers[T] = manager;
@@ -26,7 +26,7 @@ class ManagerFactory {
 
   void unregister<T extends Manager>() {
     if (!_managers.containsKey(T)) {
-      debugPrint('Manager of type $T is not registered.');
+      logger.d('Manager of type $T is not registered.');
       return;
     }
     _managers.remove(T);

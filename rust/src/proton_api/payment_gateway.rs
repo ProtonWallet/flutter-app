@@ -2,8 +2,7 @@ use flutter_rust_bridge::frb;
 
 //
 pub use andromeda_api::payment_gateway::{
-    ApiCountry, ApiSimpleFiatCurrency as ApiCountryFiatCurrency, CountriesByProvider,
-    GatewayProvider, PaymentMethod, Quote,
+    ApiCountry, ApiSimpleFiatCurrency, CountriesByProvider, GatewayProvider, PaymentMethod, Quote,
 };
 
 #[frb(mirror(GatewayProvider))]
@@ -31,11 +30,12 @@ pub struct _ApiCountry {
     pub Name: String,
 }
 
-#[frb(mirror(ApiCountryFiatCurrency))]
+#[frb(mirror(ApiSimpleFiatCurrency))]
 #[allow(non_snake_case)]
-pub struct _ApiCountryFiatCurrency {
+pub struct _ApiSimpleFiatCurrency {
     pub Name: String,
     pub Symbol: String,
+    pub MinimumAmount: Option<String>,
 }
 
 #[frb(mirror(Quote))]

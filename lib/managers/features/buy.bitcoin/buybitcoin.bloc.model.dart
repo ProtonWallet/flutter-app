@@ -3,7 +3,7 @@ import 'package:wallet/rust/proton_api/payment_gateway.dart';
 class SelectedInfoModel {
   final GatewayProvider provider;
   final ApiCountry country;
-  final ApiCountryFiatCurrency fiatCurrency;
+  final ApiSimpleFiatCurrency fiatCurrency;
   final PaymentMethod paymentMethod;
   final String amount;
   final Quote selectedQuote;
@@ -19,7 +19,7 @@ class SelectedInfoModel {
       fiatCurrency: "USD",
       name: "United States",
     ),
-    this.fiatCurrency = const ApiCountryFiatCurrency(
+    this.fiatCurrency = const ApiSimpleFiatCurrency(
       name: 'United States',
       symbol: "USD",
     ),
@@ -42,7 +42,7 @@ class SelectedInfoModel {
   SelectedInfoModel copyWith({
     GatewayProvider? provider,
     ApiCountry? country,
-    ApiCountryFiatCurrency? fiatCurrency,
+    ApiSimpleFiatCurrency? fiatCurrency,
     PaymentMethod? paymentMethod,
     String? amount,
     Quote? quote,

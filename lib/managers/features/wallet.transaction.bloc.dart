@@ -855,7 +855,7 @@ class WalletTransactionBloc
     //   } else {
     //     /// no transactionInfoModels found, means it's recipient side
     //     /// going to get transaction info from proton esplora server
-    //     // TODO(fix): fix me since it take too long time
+    //     // `TODO`(fix): fix me since it take too long time
     //     try {
     //       TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
     //       transactionDetailFromBlockChain =

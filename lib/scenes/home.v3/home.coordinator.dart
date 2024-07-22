@@ -58,7 +58,7 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showNativeReportBugs() {
-    nativeViewChannel.nativeReportBugs();
+    // nativeViewChannel.nativeReportBugs();
   }
 
   void showRecovery() {
@@ -112,7 +112,6 @@ class HomeCoordinator extends Coordinator {
     final view = BuyBitcoinCoordinator(walletID, accountID).start();
     showInBottomSheet(
       view,
-      fullScreen: true,
     );
   }
 
@@ -153,7 +152,7 @@ class HomeCoordinator extends Coordinator {
     serviceManager.logout();
     final view =
         WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
-    pushReplacement(view);
+    pushReplacementRemoveAll(view);
   }
 
   void showImportWallet(String preInputName) {

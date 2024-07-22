@@ -5,7 +5,6 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';

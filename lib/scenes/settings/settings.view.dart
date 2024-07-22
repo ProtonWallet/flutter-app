@@ -153,7 +153,6 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 onTap: () {
                   viewModel.move(NavID.natvieReportBugs);
                 },
-                hidden: TargetPlatform.iOS == defaultTargetPlatform,
               ),
               SettingsItem(
                 title: 'Privacy policy',

@@ -41,11 +41,13 @@ abstract class Coordinator implements ViewNavigator {
     Widget view, {
     Color? backgroundColor,
     bool fullScreen = false,
+    bool enableDrag = true,
   }) {
     Future.delayed(Duration.zero, () {
       if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
         _showMobileBottomSheet(
           view,
+          enableDrag,
           backgroundColor: backgroundColor,
           fullScreen: fullScreen,
         );
@@ -53,6 +55,7 @@ abstract class Coordinator implements ViewNavigator {
         // desktop and tablet
         _showDesktopBottomSheet(
           view,
+          enableDrag,
           backgroundColor: backgroundColor,
         );
       }
@@ -60,13 +63,15 @@ abstract class Coordinator implements ViewNavigator {
   }
 
   void _showMobileBottomSheet(
-    Widget view, {
+    Widget view,
+    bool enableDrag, {
     Color? backgroundColor,
     bool fullScreen = false,
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
+        enableDrag: enableDrag,
         backgroundColor: Colors.transparent,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,
@@ -81,12 +86,14 @@ abstract class Coordinator implements ViewNavigator {
   }
 
   void _showDesktopBottomSheet(
-    Widget view, {
+    Widget view,
+    bool enableDrag, {
     Color? backgroundColor,
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
+        enableDrag: enableDrag,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         constraints: BoxConstraints(
@@ -119,6 +126,21 @@ abstract class Coordinator implements ViewNavigator {
             fullscreenDialog: fullscreenDialog),
       );
     });
+  }
+
+  /// use it carefully. this will remove all Widgets only keep the input view.
+  ///  this used only login to clean up all unreleased views.
+  void pushReplacementRemoveAll(Widget view, {bool fullscreenDialog = false}) {
+    rootNavigatorKey.currentState?.pushAndRemoveUntil(
+      MaterialPageRoute(
+        settings: RouteSettings(name: view.key.toString()),
+        builder: (context) {
+          return view;
+        },
+        fullscreenDialog: fullscreenDialog,
+      ),
+      (Route<dynamic> route) => false, // Keep only the current route
+    );
   }
 
   void push(Widget view, {bool fullscreenDialog = false}) {
