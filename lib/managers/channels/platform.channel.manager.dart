@@ -120,12 +120,15 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   }
 
   @override
-  Future<void> nativeReportBugs() async {
+  Future<void> nativeReportBugs(String userName, String email) async {
     if (PlatformExtension.desktop) {
       return logger.i("initalNativeApiEnv is mobile only feature");
     }
     try {
-      await toNativeChannel.invokeMethod('native.navigation.report');
+      await toNativeChannel.invokeMethod('native.navigation.report', {
+        "username": userName,
+        "email": email,
+      });
     } on Exception catch (e) {
       logger.e("Failed to native report bugs: '$e'.");
     }

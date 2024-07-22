@@ -828,8 +828,9 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await WalletManager.cleanSharedPreference();
       await DBHelper.reset();
-      await Future.delayed(const Duration(
-          seconds: 3)); // TODO(fix): fix await for DBHelper.reset();
+      await Future.delayed(
+        const Duration(seconds: 3),
+      ); // TODO(fix): fix await for DBHelper.reset();
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");

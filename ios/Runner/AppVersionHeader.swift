@@ -46,9 +46,6 @@ class AppVersionHeader {
         } else {
             flutterUserAgent = "ProtonWallet/" + getDefaultVersion() + " (Flutter 3.22; iPhone8,1)"
         }
-        
-        print("appVersionKey" + flutterAppVersion)
-        print("userAgentKey" + flutterUserAgent)
     }
     
 }

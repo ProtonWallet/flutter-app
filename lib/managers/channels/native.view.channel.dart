@@ -19,7 +19,7 @@ abstract class NativeViewChannel {
   Future<void> nativeLogout();
 
   /// reports
-  Future<void> nativeReportBugs();
+  Future<void> nativeReportBugs(String username, String email);
 
   // event stream for native response
   Stream<NativeLoginState> get stream;

@@ -11,7 +11,6 @@ import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.bitcoinaddress.switch.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -54,9 +53,9 @@ class TransactionList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onLongPress: (){
-                              viewModel
-                                  .updateBodyListStatus(BodyListStatus.bitcoinAddressList);
+                            onLongPress: () {
+                              viewModel.updateBodyListStatus(
+                                  BodyListStatus.bitcoinAddressList);
                             },
                             // onTap: () {
                             //   TransactionBitcoinAddressSwitchSheet.show(

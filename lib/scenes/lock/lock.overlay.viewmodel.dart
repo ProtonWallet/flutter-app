@@ -54,6 +54,18 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
 
   @override
   Future<void> unlock() async {
+    final type = await appStateManager.getUnlockType();
+    if (type.type == UnlockType.none) {
+      // lock the app
+      isLocked = false;
+      sinkAddSafe();
+
+      return;
+    }
+    // lock the app
+    isLocked = true;
+    sinkAddSafe();
+
     final count = await appStateManager.getErrorCount();
     if (count.count != 0) {
       error = "You will be locked out after ${5 - count.count} failed attempts";
@@ -87,10 +99,6 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         logger.i("App is in foreground");
         if (isLocked) {
-          // lock the app
-          isLocked = true;
-          sinkAddSafe();
-
           unlock();
         }
       // App comes to foreground
@@ -99,11 +107,6 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
       // App is inactive
       case AppLifecycleState.paused:
         logger.i("App is in background");
-        if (!isLocked) {
-          // lock the app
-          isLocked = true;
-          sinkAddSafe();
-        }
       // App goes to background
       case AppLifecycleState.detached:
         logger.i("App is detached");

@@ -23,8 +23,6 @@ Future setupLogger() async {
       case Level.trace:
         logger.t("${msg.lbl.padRight(8)}: ${msg.msg}");
     }
-    // This should use a logging framework in real applications
-    // print("${msg.logLevel} ${msg.lbl.padRight(8)}: ${msg.msg}");
   });
 }
 

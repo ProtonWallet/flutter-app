@@ -43,8 +43,6 @@ class FontManager {
         color: color);
   }
 
-
-
   static TextStyle transactionHistoryAmountTitle(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,
@@ -113,7 +111,6 @@ class FontManager {
         fontWeight: FontWeight.w500,
         color: color);
   }
-
 
   static TextStyle actionButtonText(Color color) {
     return TextStyle(
