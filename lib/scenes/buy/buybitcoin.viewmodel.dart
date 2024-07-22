@@ -22,6 +22,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
+import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
@@ -77,6 +78,22 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   FocusNode get focusNode;
   TextEditingController get controller;
   OverlayEntry? overlayEntry;
+
+  OnRampTCSheetModel get rampTCModel => OnRampTCSheetModel(
+        GatewayProvider.ramp,
+        "https://ramp.network",
+        "https://ramp.network/terms-of-service",
+        "https://ramp.network/cookie-policy",
+        "support@ramp.network",
+      );
+
+  OnRampTCSheetModel get banxaTCModel => OnRampTCSheetModel(
+        GatewayProvider.banxa,
+        "https://banxa.com",
+        "https://banxa.com/terms-of-use",
+        "https://banxa.com/privacy-and-cookies-policy",
+        "support@banxa.com",
+      );
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {

@@ -658,8 +658,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_Map_gateway_provider_list_api_country(dynamic raw);
 
   @protected
-  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
-      dco_decode_Map_gateway_provider_list_api_country_fiat_currency(
+  Map<GatewayProvider, List<ApiSimpleFiatCurrency>>
+      dco_decode_Map_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw);
 
   @protected
@@ -889,13 +889,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiCountry dco_decode_api_country(dynamic raw);
 
   @protected
-  ApiCountryFiatCurrency dco_decode_api_country_fiat_currency(dynamic raw);
-
-  @protected
   ApiEmailAddress dco_decode_api_email_address(dynamic raw);
 
   @protected
   ApiMnemonicUserKey dco_decode_api_mnemonic_user_key(dynamic raw);
+
+  @protected
+  ApiSimpleFiatCurrency dco_decode_api_simple_fiat_currency(dynamic raw);
 
   @protected
   ApiWallet dco_decode_api_wallet(dynamic raw);
@@ -1162,14 +1162,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ApiCountry> dco_decode_list_api_country(dynamic raw);
 
   @protected
-  List<ApiCountryFiatCurrency> dco_decode_list_api_country_fiat_currency(
-      dynamic raw);
-
-  @protected
   List<ApiEmailAddress> dco_decode_list_api_email_address(dynamic raw);
 
   @protected
   List<ApiMnemonicUserKey> dco_decode_list_api_mnemonic_user_key(dynamic raw);
+
+  @protected
+  List<ApiSimpleFiatCurrency> dco_decode_list_api_simple_fiat_currency(
+      dynamic raw);
 
   @protected
   List<ApiWalletAccount> dco_decode_list_api_wallet_account(dynamic raw);
@@ -1225,8 +1225,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_list_record_gateway_provider_list_api_country(dynamic raw);
 
   @protected
-  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
-      dco_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+  List<(GatewayProvider, List<ApiSimpleFiatCurrency>)>
+      dco_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw);
 
   @protected
@@ -1444,8 +1444,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_record_gateway_provider_list_api_country(dynamic raw);
 
   @protected
-  (GatewayProvider, List<ApiCountryFiatCurrency>)
-      dco_decode_record_gateway_provider_list_api_country_fiat_currency(
+  (GatewayProvider, List<ApiSimpleFiatCurrency>)
+      dco_decode_record_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw);
 
   @protected
@@ -1966,8 +1966,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
-      sse_decode_Map_gateway_provider_list_api_country_fiat_currency(
+  Map<GatewayProvider, List<ApiSimpleFiatCurrency>>
+      sse_decode_Map_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer);
 
   @protected
@@ -2199,14 +2199,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ApiCountry sse_decode_api_country(SseDeserializer deserializer);
 
   @protected
-  ApiCountryFiatCurrency sse_decode_api_country_fiat_currency(
-      SseDeserializer deserializer);
-
-  @protected
   ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer);
 
   @protected
   ApiMnemonicUserKey sse_decode_api_mnemonic_user_key(
+      SseDeserializer deserializer);
+
+  @protected
+  ApiSimpleFiatCurrency sse_decode_api_simple_fiat_currency(
       SseDeserializer deserializer);
 
   @protected
@@ -2506,15 +2506,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ApiCountry> sse_decode_list_api_country(SseDeserializer deserializer);
 
   @protected
-  List<ApiCountryFiatCurrency> sse_decode_list_api_country_fiat_currency(
-      SseDeserializer deserializer);
-
-  @protected
   List<ApiEmailAddress> sse_decode_list_api_email_address(
       SseDeserializer deserializer);
 
   @protected
   List<ApiMnemonicUserKey> sse_decode_list_api_mnemonic_user_key(
+      SseDeserializer deserializer);
+
+  @protected
+  List<ApiSimpleFiatCurrency> sse_decode_list_api_simple_fiat_currency(
       SseDeserializer deserializer);
 
   @protected
@@ -2582,8 +2582,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
-      sse_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+  List<(GatewayProvider, List<ApiSimpleFiatCurrency>)>
+      sse_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer);
 
   @protected
@@ -2834,8 +2834,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  (GatewayProvider, List<ApiCountryFiatCurrency>)
-      sse_decode_record_gateway_provider_list_api_country_fiat_currency(
+  (GatewayProvider, List<ApiSimpleFiatCurrency>)
+      sse_decode_record_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer);
 
   @protected
@@ -3368,8 +3368,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Map<GatewayProvider, List<ApiCountry>> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_Map_gateway_provider_list_api_country_fiat_currency(
-      Map<GatewayProvider, List<ApiCountryFiatCurrency>> self,
+  void sse_encode_Map_gateway_provider_list_api_simple_fiat_currency(
+      Map<GatewayProvider, List<ApiSimpleFiatCurrency>> self,
       SseSerializer serializer);
 
   @protected
@@ -3602,16 +3602,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_api_country(ApiCountry self, SseSerializer serializer);
 
   @protected
-  void sse_encode_api_country_fiat_currency(
-      ApiCountryFiatCurrency self, SseSerializer serializer);
-
-  @protected
   void sse_encode_api_email_address(
       ApiEmailAddress self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_mnemonic_user_key(
       ApiMnemonicUserKey self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_api_simple_fiat_currency(
+      ApiSimpleFiatCurrency self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_wallet(ApiWallet self, SseSerializer serializer);
@@ -3922,16 +3922,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ApiCountry> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_api_country_fiat_currency(
-      List<ApiCountryFiatCurrency> self, SseSerializer serializer);
-
-  @protected
   void sse_encode_list_api_email_address(
       List<ApiEmailAddress> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_api_mnemonic_user_key(
       List<ApiMnemonicUserKey> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_api_simple_fiat_currency(
+      List<ApiSimpleFiatCurrency> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_api_wallet_account(
@@ -4000,8 +4000,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(GatewayProvider, List<ApiCountry>)> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_record_gateway_provider_list_api_country_fiat_currency(
-      List<(GatewayProvider, List<ApiCountryFiatCurrency>)> self,
+  void sse_encode_list_record_gateway_provider_list_api_simple_fiat_currency(
+      List<(GatewayProvider, List<ApiSimpleFiatCurrency>)> self,
       SseSerializer serializer);
 
   @protected
@@ -4254,8 +4254,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       (GatewayProvider, List<ApiCountry>) self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_gateway_provider_list_api_country_fiat_currency(
-      (GatewayProvider, List<ApiCountryFiatCurrency>) self,
+  void sse_encode_record_gateway_provider_list_api_simple_fiat_currency(
+      (GatewayProvider, List<ApiSimpleFiatCurrency>) self,
       SseSerializer serializer);
 
   @protected

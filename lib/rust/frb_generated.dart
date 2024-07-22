@@ -264,7 +264,7 @@ abstract class RustLibApi extends BaseApi {
       crateApiApiServiceOnrampGatewayClientOnRampGatewayClientGetCountries(
           {required OnRampGatewayClient that});
 
-  Future<Map<GatewayProvider, List<ApiCountryFiatCurrency>>>
+  Future<Map<GatewayProvider, List<ApiSimpleFiatCurrency>>>
       crateApiApiServiceOnrampGatewayClientOnRampGatewayClientGetFiatCurrencies(
           {required OnRampGatewayClient that});
 
@@ -2493,7 +2493,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
-  Future<Map<GatewayProvider, List<ApiCountryFiatCurrency>>>
+  Future<Map<GatewayProvider, List<ApiSimpleFiatCurrency>>>
       crateApiApiServiceOnrampGatewayClientOnRampGatewayClientGetFiatCurrencies(
           {required OnRampGatewayClient that}) {
     return handler.executeNormal(NormalTask(
@@ -2506,7 +2506,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       },
       codec: SseCodec(
         decodeSuccessData:
-            sse_decode_Map_gateway_provider_list_api_country_fiat_currency,
+            sse_decode_Map_gateway_provider_list_api_simple_fiat_currency,
         decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta:
@@ -10671,12 +10671,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
-      dco_decode_Map_gateway_provider_list_api_country_fiat_currency(
+  Map<GatewayProvider, List<ApiSimpleFiatCurrency>>
+      dco_decode_Map_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Map.fromEntries(
-        dco_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+        dco_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
                 raw)
             .map((e) => MapEntry(e.$1, e.$2)));
   }
@@ -11084,18 +11084,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ApiCountryFiatCurrency dco_decode_api_country_fiat_currency(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return ApiCountryFiatCurrency(
-      name: dco_decode_String(arr[0]),
-      symbol: dco_decode_String(arr[1]),
-    );
-  }
-
-  @protected
   ApiEmailAddress dco_decode_api_email_address(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -11117,6 +11105,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       id: dco_decode_String(arr[0]),
       privateKey: dco_decode_String(arr[1]),
       salt: dco_decode_String(arr[2]),
+    );
+  }
+
+  @protected
+  ApiSimpleFiatCurrency dco_decode_api_simple_fiat_currency(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return ApiSimpleFiatCurrency(
+      name: dco_decode_String(arr[0]),
+      symbol: dco_decode_String(arr[1]),
+      minimumAmount: dco_decode_opt_String(arr[2]),
     );
   }
 
@@ -11895,15 +11896,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<ApiCountryFiatCurrency> dco_decode_list_api_country_fiat_currency(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(dco_decode_api_country_fiat_currency)
-        .toList();
-  }
-
-  @protected
   List<ApiEmailAddress> dco_decode_list_api_email_address(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_api_email_address).toList();
@@ -11914,6 +11906,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>)
         .map(dco_decode_api_mnemonic_user_key)
+        .toList();
+  }
+
+  @protected
+  List<ApiSimpleFiatCurrency> dco_decode_list_api_simple_fiat_currency(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_api_simple_fiat_currency)
         .toList();
   }
 
@@ -12026,12 +12027,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
-      dco_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+  List<(GatewayProvider, List<ApiSimpleFiatCurrency>)>
+      dco_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>)
-        .map(dco_decode_record_gateway_provider_list_api_country_fiat_currency)
+        .map(dco_decode_record_gateway_provider_list_api_simple_fiat_currency)
         .toList();
   }
 
@@ -12653,8 +12654,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (GatewayProvider, List<ApiCountryFiatCurrency>)
-      dco_decode_record_gateway_provider_list_api_country_fiat_currency(
+  (GatewayProvider, List<ApiSimpleFiatCurrency>)
+      dco_decode_record_gateway_provider_list_api_simple_fiat_currency(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -12663,7 +12664,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     }
     return (
       dco_decode_gateway_provider(arr[0]),
-      dco_decode_list_api_country_fiat_currency(arr[1]),
+      dco_decode_list_api_simple_fiat_currency(arr[1]),
     );
   }
 
@@ -13763,12 +13764,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Map<GatewayProvider, List<ApiCountryFiatCurrency>>
-      sse_decode_Map_gateway_provider_list_api_country_fiat_currency(
+  Map<GatewayProvider, List<ApiSimpleFiatCurrency>>
+      sse_decode_Map_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner =
-        sse_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+        sse_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
             deserializer);
     return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2)));
   }
@@ -14210,15 +14211,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ApiCountryFiatCurrency sse_decode_api_country_fiat_currency(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_name = sse_decode_String(deserializer);
-    var var_symbol = sse_decode_String(deserializer);
-    return ApiCountryFiatCurrency(name: var_name, symbol: var_symbol);
-  }
-
-  @protected
   ApiEmailAddress sse_decode_api_email_address(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
@@ -14235,6 +14227,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_salt = sse_decode_String(deserializer);
     return ApiMnemonicUserKey(
         id: var_id, privateKey: var_privateKey, salt: var_salt);
+  }
+
+  @protected
+  ApiSimpleFiatCurrency sse_decode_api_simple_fiat_currency(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_symbol = sse_decode_String(deserializer);
+    var var_minimumAmount = sse_decode_opt_String(deserializer);
+    return ApiSimpleFiatCurrency(
+        name: var_name, symbol: var_symbol, minimumAmount: var_minimumAmount);
   }
 
   @protected
@@ -15107,19 +15110,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<ApiCountryFiatCurrency> sse_decode_list_api_country_fiat_currency(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <ApiCountryFiatCurrency>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_api_country_fiat_currency(deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
   List<ApiEmailAddress> sse_decode_list_api_email_address(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -15141,6 +15131,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <ApiMnemonicUserKey>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_api_mnemonic_user_key(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<ApiSimpleFiatCurrency> sse_decode_list_api_simple_fiat_currency(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <ApiSimpleFiatCurrency>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_api_simple_fiat_currency(deserializer));
     }
     return ans_;
   }
@@ -15355,17 +15358,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<(GatewayProvider, List<ApiCountryFiatCurrency>)>
-      sse_decode_list_record_gateway_provider_list_api_country_fiat_currency(
+  List<(GatewayProvider, List<ApiSimpleFiatCurrency>)>
+      sse_decode_list_record_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <(GatewayProvider, List<ApiCountryFiatCurrency>)>[];
+    var ans_ = <(GatewayProvider, List<ApiSimpleFiatCurrency>)>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(
-          sse_decode_record_gateway_provider_list_api_country_fiat_currency(
-              deserializer));
+      ans_.add(sse_decode_record_gateway_provider_list_api_simple_fiat_currency(
+          deserializer));
     }
     return ans_;
   }
@@ -16290,12 +16292,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (GatewayProvider, List<ApiCountryFiatCurrency>)
-      sse_decode_record_gateway_provider_list_api_country_fiat_currency(
+  (GatewayProvider, List<ApiSimpleFiatCurrency>)
+      sse_decode_record_gateway_provider_list_api_simple_fiat_currency(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_gateway_provider(deserializer);
-    var var_field1 = sse_decode_list_api_country_fiat_currency(deserializer);
+    var var_field1 = sse_decode_list_api_simple_fiat_currency(deserializer);
     return (var_field0, var_field1);
   }
 
@@ -17441,11 +17443,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_Map_gateway_provider_list_api_country_fiat_currency(
-      Map<GatewayProvider, List<ApiCountryFiatCurrency>> self,
+  void sse_encode_Map_gateway_provider_list_api_simple_fiat_currency(
+      Map<GatewayProvider, List<ApiSimpleFiatCurrency>> self,
       SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_list_record_gateway_provider_list_api_country_fiat_currency(
+    sse_encode_list_record_gateway_provider_list_api_simple_fiat_currency(
         self.entries.map((e) => (e.key, e.value)).toList(), serializer);
   }
 
@@ -17907,14 +17909,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_api_country_fiat_currency(
-      ApiCountryFiatCurrency self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.name, serializer);
-    sse_encode_String(self.symbol, serializer);
-  }
-
-  @protected
   void sse_encode_api_email_address(
       ApiEmailAddress self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -17929,6 +17923,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.id, serializer);
     sse_encode_String(self.privateKey, serializer);
     sse_encode_String(self.salt, serializer);
+  }
+
+  @protected
+  void sse_encode_api_simple_fiat_currency(
+      ApiSimpleFiatCurrency self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.symbol, serializer);
+    sse_encode_opt_String(self.minimumAmount, serializer);
   }
 
   @protected
@@ -18647,16 +18650,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_list_api_country_fiat_currency(
-      List<ApiCountryFiatCurrency> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_api_country_fiat_currency(item, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_list_api_email_address(
       List<ApiEmailAddress> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -18673,6 +18666,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_api_mnemonic_user_key(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_api_simple_fiat_currency(
+      List<ApiSimpleFiatCurrency> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_api_simple_fiat_currency(item, serializer);
     }
   }
 
@@ -18844,13 +18847,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_list_record_gateway_provider_list_api_country_fiat_currency(
-      List<(GatewayProvider, List<ApiCountryFiatCurrency>)> self,
+  void sse_encode_list_record_gateway_provider_list_api_simple_fiat_currency(
+      List<(GatewayProvider, List<ApiSimpleFiatCurrency>)> self,
       SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
-      sse_encode_record_gateway_provider_list_api_country_fiat_currency(
+      sse_encode_record_gateway_provider_list_api_simple_fiat_currency(
           item, serializer);
     }
   }
@@ -19588,12 +19591,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_record_gateway_provider_list_api_country_fiat_currency(
-      (GatewayProvider, List<ApiCountryFiatCurrency>) self,
+  void sse_encode_record_gateway_provider_list_api_simple_fiat_currency(
+      (GatewayProvider, List<ApiSimpleFiatCurrency>) self,
       SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_gateway_provider(self.$1, serializer);
-    sse_encode_list_api_country_fiat_currency(self.$2, serializer);
+    sse_encode_list_api_simple_fiat_currency(self.$2, serializer);
   }
 
   @protected
@@ -21142,7 +21145,7 @@ class OnRampGatewayClientImpl extends RustOpaque
 
   Future<
       Map<GatewayProvider,
-          List<ApiCountryFiatCurrency>>> getFiatCurrencies() =>
+          List<ApiSimpleFiatCurrency>>> getFiatCurrencies() =>
       RustLib.instance.api
           .crateApiApiServiceOnrampGatewayClientOnRampGatewayClientGetFiatCurrencies(
         that: this,

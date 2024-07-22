@@ -20,8 +20,7 @@ abstract class OnRampGatewayClient implements RustOpaqueInterface {
 
   Future<Map<GatewayProvider, List<ApiCountry>>> getCountries();
 
-  Future<Map<GatewayProvider, List<ApiCountryFiatCurrency>>>
-      getFiatCurrencies();
+  Future<Map<GatewayProvider, List<ApiSimpleFiatCurrency>>> getFiatCurrencies();
 
   Future<Map<GatewayProvider, List<PaymentMethod>>> getPaymentMethods(
       {required String fiatSymbol});

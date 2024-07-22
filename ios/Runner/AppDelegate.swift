@@ -60,7 +60,7 @@ import UIKit
                     self.switchToSignUp()
                 }
             case "native.navigation.plan.upgrade":
-                print("native.navigation.plan.upgrade:", call.arguments ?? "")
+                print("native.navigation.plan.upgrade")
                 guard let arguments = call.arguments as? [Any] else {
                     PMLog.error("Call to native.navigation.plan.upgrade includes unknown arguments")
                     return
@@ -91,7 +91,7 @@ import UIKit
                                         message: "Can't parse arguments. \"native.initialize.core.environment\" missing environment parameter.",
                                         details: nil))
                 }
-            case "native.nagivation.report":
+            case "native.navigation.report":
                 print("native.navigation.report triggered", call.arguments ?? "")
                 if let arguments = call.arguments as? [String: Any],
                    let username = arguments["username"] as? String,
@@ -158,6 +158,7 @@ import UIKit
             return
         }
         FeatureFlagsRepository.shared.setApiService(apiService)
+        FeatureFlagsRepository.shared.setFlagOverride(CoreFeatureFlagType.dynamicPlan, true)
 
         Task {
             do {

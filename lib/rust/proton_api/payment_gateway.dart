@@ -30,25 +30,28 @@ class ApiCountry {
           name == other.name;
 }
 
-class ApiCountryFiatCurrency {
+class ApiSimpleFiatCurrency {
   final String name;
   final String symbol;
+  final String? minimumAmount;
 
-  const ApiCountryFiatCurrency({
+  const ApiSimpleFiatCurrency({
     required this.name,
     required this.symbol,
+    this.minimumAmount,
   });
 
   @override
-  int get hashCode => name.hashCode ^ symbol.hashCode;
+  int get hashCode => name.hashCode ^ symbol.hashCode ^ minimumAmount.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ApiCountryFiatCurrency &&
+      other is ApiSimpleFiatCurrency &&
           runtimeType == other.runtimeType &&
           name == other.name &&
-          symbol == other.symbol;
+          symbol == other.symbol &&
+          minimumAmount == other.minimumAmount;
 }
 
 enum GatewayProvider {
