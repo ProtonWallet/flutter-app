@@ -78,7 +78,7 @@ class AppViewModelImpl extends AppViewModel {
     await DBHelper.init();
 
     // TODO(fix): temp move to a cache managerment
-    shared.checkif("app_database_force_version", 2, () async {
+    shared.checkif("app_database_force_version", 3, () async {
       await rebuildDatabase();
     });
     final AppDatabase dbConnection = AppDatabase(shared);

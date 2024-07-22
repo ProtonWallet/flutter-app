@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewExample extends StatefulWidget {
@@ -56,7 +58,7 @@ class _WebViewExampleState extends State<WebViewExample> {
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Permissions-Policy" content="camera=(self)">
+  <meta http-equiv="Permissions-Policy" content="camera=(); microphone=()">
   <style>
     .iframe-container {
       position: relative;
@@ -77,20 +79,53 @@ class _WebViewExampleState extends State<WebViewExample> {
 </head>
 <body>
   <div class="iframe-container">
-    <iframe src="${widget.checkoutUrl}""></iframe>
+    <iframe allow="camera; microphone" src="${widget.checkoutUrl}"></iframe>
   </div>
 </body>
 </html>
 """);
   }
 
+  // Future<void> _enableCameraAccess() async {
+  //   // final permissions = await Permission.camera.request();
+  //   // if (permissions.isGranted) {
+  //   //   // print("Camera permission granted");
+  //   // } else {
+  //   //   // print("Camera permission denied");
+  //   // }
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Banxa')),
-      body: WebViewWidget(
-        controller: controller,
-      ),
+    return DraggableScrollableSheet(
+      initialChildSize: 1,
+      expand: false,
+      builder: (context, scrollController) {
+        return Scaffold(
+          body: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24.0)),
+              color: ProtonColors.backgroundProton,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  const CustomHeader(
+                    title: "Banxa",
+                    buttonDirection: AxisDirection.left,
+                  ),
+                  Expanded(
+                    child: WebViewWidget(
+                      controller: controller,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

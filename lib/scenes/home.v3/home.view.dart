@@ -45,6 +45,7 @@ import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
+import 'package:wallet/scenes/home.v3/home.menu.list.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.dart';
 import 'package:wallet/scenes/home.v3/transaction.list.dart';
@@ -772,20 +773,19 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               const SizedBox(
                                 height: 10,
                               ),
-                              // wallet
+
+                              /// wallet list
                               SidebarWalletItems(
                                 walletListBloc: viewModel.walletListBloc,
                                 // select wallet
                                 selectAccount: (wallet, account) {
-                                  if (viewModel.currentSize ==
-                                      ViewSize.mobile) {
+                                  if (viewModel.isMobileSize) {
                                     Navigator.of(context).pop();
                                   }
                                   viewModel.selectAccount(wallet, account);
                                 },
                                 selectWallet: (wallet) {
-                                  if (viewModel.currentSize ==
-                                      ViewSize.mobile) {
+                                  if (viewModel.isMobileSize) {
                                     Navigator.of(context).pop();
                                   }
                                   viewModel.selectWallet(wallet);
@@ -822,146 +822,37 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 },
                                 viewModel: viewModel,
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Divider(thickness: 0.2),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: defaultPadding),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(S.of(context).more,
-                                            style: FontManager.body2Regular(
-                                                ProtonColors.textHint)),
-                                      ])),
-                              ListTile(
-                                  onTap: () {
-                                    if (viewModel.currentSize ==
-                                        ViewSize.mobile) {
-                                      // Navigator.of(context).pop();
-                                    }
-                                    viewModel.move(NavID.discover);
-                                  },
-                                  leading: SvgPicture.asset(
-                                      "assets/images/icon/ic-squares-in-squarediscover.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
-                                  title: Transform.translate(
-                                      offset: const Offset(-8, 0),
-                                      child: Text(S.of(context).discover,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)))),
-                              ListTile(
-                                  onTap: () async {
-                                    UpgradeIntroSheet.show(context, viewModel);
-                                  },
-                                  leading: SvgPicture.asset(
-                                      "assets/images/icon/ic-diamondwallet_plus.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
-                                  title: Transform.translate(
-                                      offset: const Offset(-8, 0),
-                                      child: Text(S.of(context).wallet_plus,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)))),
-                                  ListTile(
-                                      onTap: () {
-                                        if (viewModel.currentSize ==
-                                            ViewSize.mobile) {
-                                          // Navigator.of(context).pop();
-                                        }
-                                        viewModel.move(NavID.recovery);
-                                      },
-                                      leading: SvgPicture.asset(
-                                          "assets/images/icon/ic-arrow-rotate-right.svg",
-                                          fit: BoxFit.fill,
-                                          width: 20,
-                                          height: 20),
-                                      title: Transform.translate(
-                                          offset: const Offset(-8, 0),
-                                          child: Text(S.of(context).recovery,
-                                              style: FontManager.body2Median(
-                                                  ProtonColors.textHint)))),
-                                  ListTile(
-                                      onTap: () {
-                                        if (viewModel.currentSize ==
-                                            ViewSize.mobile) {
-                                          // Navigator.of(context).pop();
-                                        }
-                                        viewModel.move(NavID.securitySetting);
-                                      },
-                                      leading: SvgPicture.asset(
-                                          "assets/images/icon/ic-shield.svg",
-                                          fit: BoxFit.fill,
-                                          width: 20,
-                                          height: 20),
-                                      title: Transform.translate(
-                                          offset: const Offset(-8, 0),
-                                          child: Text(S.of(context).security,
-                                              style: FontManager.body2Median(
-                                                  ProtonColors.textHint)))),
-                              ListTile(
-                                  onTap: () {
-                                    if (viewModel.currentSize ==
-                                        ViewSize.mobile) {
-                                      // Navigator.of(context).pop();
-                                    }
-                                    viewModel.move(NavID.settings);
-                                  },
-                                  leading: SvgPicture.asset(
-                                      "assets/images/icon/ic-cog-wheel.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
-                                  title: Transform.translate(
-                                      offset: const Offset(-8, 0),
-                                      child: Text(S.of(context).settings_title,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)))),
-                              ListTile(
-                                  onTap: () {
-                                    viewModel.move(NavID.natvieReportBugs);
-                                  },
-                                  leading: SvgPicture.asset(
-                                      "assets/images/icon/ic-bugreport.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
-                                  title: Transform.translate(
-                                      offset: const Offset(-8, 0),
-                                      child: Text(S.of(context).contact_support,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)))),
-                              ListTile(
-                                  onTap: () async {
-                                    await viewModel.logout();
-                                  },
-                                  leading: SvgPicture.asset(
-                                      "assets/images/icon/ic-arrow-out-from-rectanglesignout.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
-                                  title: Transform.translate(
-                                      offset: const Offset(-8, 0),
-                                      child: Text(S.of(context).logout,
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)))),
-                              const SizedBox(height: 10),
-                              const Expanded(
-                                child: SizedBox(height: 20),
+
+                              /// home more settings
+                              HomeMoreSettings(
+                                onUpgrade: () {
+                                  UpgradeIntroSheet.show(context, viewModel);
+                                },
+                                onDiscover: () {
+                                  viewModel.move(NavID.discover);
+                                },
+                                onSettings: () {
+                                  viewModel.move(NavID.settings);
+                                },
+                                onSecurity: () {
+                                  viewModel.move(NavID.securitySetting);
+                                },
+                                onRecovery: () {
+                                  viewModel.move(NavID.recovery);
+                                },
+                                onReportBug: () {
+                                  viewModel.move(NavID.natvieReportBugs);
+                                },
+                                onLogout: () async {
+                                  await viewModel.logout();
+                                },
                               ),
 
-                              Center(
-                                child: Container(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                              const SizedBox(height: 10),
+
+                              /// app version
+                              Expanded(
+                                child: Center(
                                   child: Text(
                                     viewModel.appVersion,
                                     style: FontManager.captionRegular(

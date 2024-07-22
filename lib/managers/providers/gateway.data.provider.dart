@@ -10,7 +10,7 @@ class GatewayDataProvider extends DataProvider {
 
   // memory cache
   Map<GatewayProvider, List<ApiCountry>> countries = {};
-  Map<GatewayProvider, List<ApiCountryFiatCurrency>> fiatCurrencies = {};
+  Map<GatewayProvider, List<ApiSimpleFiatCurrency>> fiatCurrencies = {};
   Map<GatewayProvider, List<PaymentMethod>> paymentMethods = {};
 
   /// find the list of available providers
@@ -88,11 +88,11 @@ class GatewayDataProvider extends DataProvider {
     return uniqueCodesSet.toList();
   }
 
-  ApiCountryFiatCurrency getApiCountryFiatCurrency(
+  ApiSimpleFiatCurrency getApiCountryFiatCurrency(
     GatewayProvider provider,
     String fiatCurrency,
   ) {
-    ApiCountryFiatCurrency? apiCountry;
+    ApiSimpleFiatCurrency? apiCountry;
 
     final countryFiatCurrencies = fiatCurrencies[provider];
     if (countryFiatCurrencies != null) {
@@ -104,7 +104,7 @@ class GatewayDataProvider extends DataProvider {
     }
 
     return apiCountry ??
-        ApiCountryFiatCurrency(
+        ApiSimpleFiatCurrency(
           name: fiatCurrency,
           symbol: fiatCurrency,
         );

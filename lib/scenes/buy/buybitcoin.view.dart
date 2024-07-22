@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
@@ -14,8 +15,10 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
+import 'package:wallet/rust/proton_api/payment_gateway.dart';
+import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -40,15 +43,37 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
       }
     });
 
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          color: ProtonColors.backgroundProton,
+        ),
+        child: SafeArea(
+          child: Column(children: [
+            CustomHeader(
+              title: S.of(context).buy,
+              buttonDirection: AxisDirection.left,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: buildMainView(context),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  BlocProvider<BuyBitcoinBloc> buildMainView(BuildContext context) {
     return BlocProvider(
       create: (context) => viewModel.bloc,
-      child: PageLayoutV1(
-        title: S.of(context).buy_bitcoin,
-        borderRadius: 0, // full screen style
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBoxes.box32,
-
             /// switch button [buy / sell]
             Row(
               children: [
@@ -844,10 +869,17 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                     builder: (context, state) {
                       return ButtonV5(
                           onPressed: state.isQuoteLoaded
-                              ? () => {
-                                    viewModel.focusNode.unfocus(),
-                                    viewModel.pay(state.selectedModel),
-                                  }
+                              ? () {
+                                  viewModel.focusNode.unfocus();
+                                  final model = state.selectedModel.provider ==
+                                          GatewayProvider.ramp
+                                      ? viewModel.rampTCModel
+                                      : viewModel.banxaTCModel;
+                                  OnRampTCSheet.show(context, model,
+                                      onConfirm: () {
+                                    viewModel.pay(state.selectedModel);
+                                  }, onCancel: () {});
+                                }
                               : null,
                           text:
                               "Buy with ${state.selectedModel.provider.enumToString()}",

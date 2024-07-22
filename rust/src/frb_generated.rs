@@ -10581,12 +10581,6 @@ const _: fn() = || {
         let _: String = ApiCountry.Name;
     }
     {
-        let ApiCountryFiatCurrency =
-            None::<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>.unwrap();
-        let _: String = ApiCountryFiatCurrency.Name;
-        let _: String = ApiCountryFiatCurrency.Symbol;
-    }
-    {
         let ApiEmailAddress = None::<crate::proton_api::wallet_account::ApiEmailAddress>.unwrap();
         let _: String = ApiEmailAddress.ID;
         let _: String = ApiEmailAddress.Email;
@@ -10597,6 +10591,13 @@ const _: fn() = || {
         let _: String = ApiMnemonicUserKey.ID;
         let _: String = ApiMnemonicUserKey.PrivateKey;
         let _: String = ApiMnemonicUserKey.Salt;
+    }
+    {
+        let ApiSimpleFiatCurrency =
+            None::<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>.unwrap();
+        let _: String = ApiSimpleFiatCurrency.Name;
+        let _: String = ApiSimpleFiatCurrency.Symbol;
+        let _: Option<String> = ApiSimpleFiatCurrency.MinimumAmount;
     }
     {
         let ApiWallet = None::<crate::proton_api::wallet::ApiWallet>.unwrap();
@@ -11490,14 +11491,14 @@ impl SseDecode
 impl SseDecode
     for std::collections::HashMap<
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<(
             crate::proton_api::payment_gateway::GatewayProvider,
-            Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+            Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
         )>>::sse_decode(deserializer);
         return inner.into_iter().collect();
     }
@@ -12015,18 +12016,6 @@ impl SseDecode for crate::proton_api::payment_gateway::ApiCountry {
     }
 }
 
-impl SseDecode for crate::proton_api::payment_gateway::ApiCountryFiatCurrency {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_name = <String>::sse_decode(deserializer);
-        let mut var_symbol = <String>::sse_decode(deserializer);
-        return crate::proton_api::payment_gateway::ApiCountryFiatCurrency {
-            Name: var_name,
-            Symbol: var_symbol,
-        };
-    }
-}
-
 impl SseDecode for crate::proton_api::wallet_account::ApiEmailAddress {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -12049,6 +12038,20 @@ impl SseDecode for crate::proton_api::proton_users::ApiMnemonicUserKey {
             ID: var_id,
             PrivateKey: var_privateKey,
             Salt: var_salt,
+        };
+    }
+}
+
+impl SseDecode for crate::proton_api::payment_gateway::ApiSimpleFiatCurrency {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_symbol = <String>::sse_decode(deserializer);
+        let mut var_minimumAmount = <Option<String>>::sse_decode(deserializer);
+        return crate::proton_api::payment_gateway::ApiSimpleFiatCurrency {
+            Name: var_name,
+            Symbol: var_symbol,
+            MinimumAmount: var_minimumAmount,
         };
     }
 }
@@ -12862,22 +12865,6 @@ impl SseDecode for Vec<crate::proton_api::payment_gateway::ApiCountry> {
     }
 }
 
-impl SseDecode for Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut len_ = <i32>::sse_decode(deserializer);
-        let mut ans_ = vec![];
-        for idx_ in 0..len_ {
-            ans_.push(
-                <crate::proton_api::payment_gateway::ApiCountryFiatCurrency>::sse_decode(
-                    deserializer,
-                ),
-            );
-        }
-        return ans_;
-    }
-}
-
 impl SseDecode for Vec<crate::proton_api::wallet_account::ApiEmailAddress> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -12900,6 +12887,22 @@ impl SseDecode for Vec<crate::proton_api::proton_users::ApiMnemonicUserKey> {
         for idx_ in 0..len_ {
             ans_.push(
                 <crate::proton_api::proton_users::ApiMnemonicUserKey>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>::sse_decode(
+                    deserializer,
+                ),
             );
         }
         return ans_;
@@ -13129,7 +13132,7 @@ impl SseDecode
 impl SseDecode
     for Vec<(
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     )>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -13139,7 +13142,7 @@ impl SseDecode
         for idx_ in 0..len_ {
             ans_.push(<(
                 crate::proton_api::payment_gateway::GatewayProvider,
-                Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+                Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
             )>::sse_decode(deserializer));
         }
         return ans_;
@@ -14189,7 +14192,7 @@ impl SseDecode
 impl SseDecode
     for (
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     )
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -14197,7 +14200,7 @@ impl SseDecode
         let mut var_field0 =
             <crate::proton_api::payment_gateway::GatewayProvider>::sse_decode(deserializer);
         let mut var_field1 =
-            <Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>>::sse_decode(
+            <Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>>::sse_decode(
                 deserializer,
             );
         return (var_field0, var_field1);
@@ -15638,33 +15641,6 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::proton_api::payment_gat
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for FrbWrapper<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>
-{
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.0.Name.into_into_dart().into_dart(),
-            self.0.Symbol.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>
-{
-}
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        FrbWrapper<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
-    > for crate::proton_api::payment_gateway::ApiCountryFiatCurrency
-{
-    fn into_into_dart(
-        self,
-    ) -> FrbWrapper<crate::proton_api::payment_gateway::ApiCountryFiatCurrency> {
-        self.into()
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
     for FrbWrapper<crate::proton_api::wallet_account::ApiEmailAddress>
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
@@ -15711,6 +15687,34 @@ impl
     > for crate::proton_api::proton_users::ApiMnemonicUserKey
 {
     fn into_into_dart(self) -> FrbWrapper<crate::proton_api::proton_users::ApiMnemonicUserKey> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for FrbWrapper<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.Name.into_into_dart().into_dart(),
+            self.0.Symbol.into_into_dart().into_dart(),
+            self.0.MinimumAmount.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        FrbWrapper<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
+    > for crate::proton_api::payment_gateway::ApiSimpleFiatCurrency
+{
+    fn into_into_dart(
+        self,
+    ) -> FrbWrapper<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency> {
         self.into()
     }
 }
@@ -17996,14 +18000,14 @@ impl SseEncode
 impl SseEncode
     for std::collections::HashMap<
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<(
             crate::proton_api::payment_gateway::GatewayProvider,
-            Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+            Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
         )>>::sse_encode(self.into_iter().collect(), serializer);
     }
 }
@@ -18537,14 +18541,6 @@ impl SseEncode for crate::proton_api::payment_gateway::ApiCountry {
     }
 }
 
-impl SseEncode for crate::proton_api::payment_gateway::ApiCountryFiatCurrency {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.Name, serializer);
-        <String>::sse_encode(self.Symbol, serializer);
-    }
-}
-
 impl SseEncode for crate::proton_api::wallet_account::ApiEmailAddress {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -18559,6 +18555,15 @@ impl SseEncode for crate::proton_api::proton_users::ApiMnemonicUserKey {
         <String>::sse_encode(self.ID, serializer);
         <String>::sse_encode(self.PrivateKey, serializer);
         <String>::sse_encode(self.Salt, serializer);
+    }
+}
+
+impl SseEncode for crate::proton_api::payment_gateway::ApiSimpleFiatCurrency {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.Name, serializer);
+        <String>::sse_encode(self.Symbol, serializer);
+        <Option<String>>::sse_encode(self.MinimumAmount, serializer);
     }
 }
 
@@ -19225,18 +19230,6 @@ impl SseEncode for Vec<crate::proton_api::payment_gateway::ApiCountry> {
     }
 }
 
-impl SseEncode for Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.len() as _, serializer);
-        for item in self {
-            <crate::proton_api::payment_gateway::ApiCountryFiatCurrency>::sse_encode(
-                item, serializer,
-            );
-        }
-    }
-}
-
 impl SseEncode for Vec<crate::proton_api::wallet_account::ApiEmailAddress> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -19253,6 +19246,18 @@ impl SseEncode for Vec<crate::proton_api::proton_users::ApiMnemonicUserKey> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::proton_api::proton_users::ApiMnemonicUserKey>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>::sse_encode(
+                item, serializer,
+            );
         }
     }
 }
@@ -19428,7 +19433,7 @@ impl SseEncode
 impl SseEncode
     for Vec<(
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     )>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -19437,7 +19442,7 @@ impl SseEncode
         for item in self {
             <(
                 crate::proton_api::payment_gateway::GatewayProvider,
-                Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+                Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
             )>::sse_encode(item, serializer);
         }
     }
@@ -20251,13 +20256,13 @@ impl SseEncode
 impl SseEncode
     for (
         crate::proton_api::payment_gateway::GatewayProvider,
-        Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>,
+        Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>,
     )
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <crate::proton_api::payment_gateway::GatewayProvider>::sse_encode(self.0, serializer);
-        <Vec<crate::proton_api::payment_gateway::ApiCountryFiatCurrency>>::sse_encode(
+        <Vec<crate::proton_api::payment_gateway::ApiSimpleFiatCurrency>>::sse_encode(
             self.1, serializer,
         );
     }

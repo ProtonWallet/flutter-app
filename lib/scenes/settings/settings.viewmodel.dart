@@ -15,6 +15,7 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
 
   String displayName = "";
   String displayEmail = "";
+  String userName = "";
   late WalletUserSettings? walletUserSettings;
   bool loadedWalletUserSettings = false;
   bool receiveInviterNotification = false;
@@ -43,6 +44,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
   Future<void> loadData() async {
     displayName = userManager.userInfo.userDisplayName;
     displayEmail = userManager.userInfo.userMail;
+    userName = userManager.userInfo.userName;
     loadSettings();
 
     sinkAddSafe();
@@ -64,7 +66,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
   Future<void> move(NavID to) async {
     switch (to) {
       case NavID.natvieReportBugs:
-        nativeViewChannel.nativeReportBugs();
+        nativeViewChannel.nativeReportBugs(userName, displayEmail);
       case NavID.logs:
         coordinator.showLogs();
       default:

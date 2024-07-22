@@ -2,8 +2,7 @@ use std::{collections::HashMap, sync::Arc};
 
 pub use andromeda_api::core::ApiClient;
 use andromeda_api::payment_gateway::{
-    ApiCountry, ApiSimpleFiatCurrency as ApiCountryFiatCurrency, GatewayProvider, PaymentMethod,
-    Quote,
+    ApiCountry, ApiSimpleFiatCurrency, GatewayProvider, PaymentMethod, Quote,
 };
 
 use crate::BridgeError;
@@ -31,7 +30,7 @@ impl OnRampGatewayClient {
 
     pub async fn get_fiat_currencies(
         &self,
-    ) -> Result<HashMap<GatewayProvider, Vec<ApiCountryFiatCurrency>>, BridgeError> {
+    ) -> Result<HashMap<GatewayProvider, Vec<ApiSimpleFiatCurrency>>, BridgeError> {
         Ok(self.inner.get_fiat_currencies().await?)
     }
 

@@ -40,6 +40,8 @@ abstract class ViewModel<T extends Coordinator>
   ///
   ViewSize? currentSize;
 
+  bool get isMobileSize => currentSize == ViewSize.mobile;
+
   bool get keepAlive => false;
   bool get mobile => PlatformExtension.mobile;
   bool get desktop => PlatformExtension.desktop;

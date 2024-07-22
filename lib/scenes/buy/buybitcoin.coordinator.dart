@@ -44,8 +44,10 @@ class BuyBitcoinCoordinator extends Coordinator {
   }
 
   void pushWebview(String url) {
-    push(WebViewExample(
-      checkoutUrl: url,
-    ));
+    showInBottomSheet(
+        WebViewExample(
+          checkoutUrl: url,
+        ),
+        enableDrag: false);
   }
 }

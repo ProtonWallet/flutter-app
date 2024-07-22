@@ -148,6 +148,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                             if (!viewModel.isImporting) {
                               viewModel.isImporting = true;
                               await viewModel.importWallet();
+                              // TODO(check): why call end here
                               viewModel.coordinator.end();
                               if (context.mounted) {
                                 Navigator.of(context).pop();

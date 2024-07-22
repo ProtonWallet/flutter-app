@@ -19,7 +19,10 @@ class SendCoordinator extends Coordinator {
   SendCoordinator(this.nativeViewChannel, this.walletID, this.accountID);
 
   void showNativeReportBugs() {
-    nativeViewChannel.nativeReportBugs();
+    final userManager = serviceManager.get<UserManager>();
+    final userName = userManager.userInfo.userName;
+    final userEmail = userManager.userInfo.userMail;
+    nativeViewChannel.nativeReportBugs(userName, userEmail);
   }
 
   @override
