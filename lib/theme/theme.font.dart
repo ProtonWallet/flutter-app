@@ -186,6 +186,18 @@ class FontManager {
         color: color);
   }
 
+  static TextStyle linkUnderline(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 12,
+        height: 1.33,
+        // lineHeight = 16
+        fontWeight: FontWeight.w500,
+        decoration: TextDecoration.underline,
+        decorationColor: color,
+        color: color);
+  }
+
   static TextStyle captionRegular(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

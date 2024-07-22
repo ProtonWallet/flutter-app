@@ -38,7 +38,7 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   int twofaStatus = 0;
   String error = "";
 
-  void viewSeed(String loginPassword, String twofa);
+  Future<void> viewSeed(String loginPassword, String twofa);
 
   void setBackup();
 

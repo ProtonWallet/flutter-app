@@ -21,7 +21,10 @@ import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
@@ -85,6 +88,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
     this.accountID,
     this.userSettingsDataProvider,
     this.localTransactionDataProvider,
+    this.walletDataProvider,
     this.inviteClient,
   );
 
@@ -176,6 +180,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late FrbPsbt frbDraftPsbt;
 
   int maxBalanceToSend = 0;
+  int accountsCount = 0;
 
   // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
@@ -195,7 +200,10 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   // local transaction data provider
   final LocalTransactionDataProvider localTransactionDataProvider;
 
+  final WalletsDataProvider walletDataProvider;
+
   final InviteClient inviteClient;
+  WalletData? walletData;
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -205,25 +213,33 @@ class SendViewModelImpl extends SendViewModel {
     super.accountID,
     this.eventLoop,
     this.walletManger,
+    this.userManager,
     this.contactsDataProvider,
+    this.walletKeysProvider,
     super.userSettingsDataProvider,
     super.localTransactionDataProvider,
+    super.walletDataProvider,
     super.inviteClient,
   );
 
   // event loop
   final EventLoop eventLoop;
 
+  final UserManager userManager;
+
   // wallet manger
   final ProtonWalletManager walletManger;
 
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
+  final WalletKeysProvider walletKeysProvider;
 
   late FrbAccount? _frbAccount;
   FrbBlockchainClient? blockClient;
   Timer? _timer;
   bool isValid = false;
+
+  SecretKey? secretKey;
 
   void startExchangeRateUpdateService() {
     isValid = true;
@@ -292,8 +308,8 @@ class SendViewModelImpl extends SendViewModel {
           updateExchangeRate(userSettingsDataProvider.fiatCurrency);
         } else {
           bitcoinBase = false;
-          updateExchangeRate(
-              fiatCurrencyNotifier.value.fiatCurrency ?? userSettingsDataProvider.fiatCurrency);
+          updateExchangeRate(fiatCurrencyNotifier.value.fiatCurrency ??
+              userSettingsDataProvider.fiatCurrency);
         }
       });
       amountFocusNode.addListener(splitAmountToRecipients);
@@ -302,13 +318,30 @@ class SendViewModelImpl extends SendViewModel {
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
       contactsEmail = await contactsDataProvider.getContacts() ?? [];
+
+      // for account switcher
+
       walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-      if (accountID.isEmpty) {
-        accountModel =
-            await DBHelper.accountDao!.findDefaultAccountByWalletID(walletID);
-      } else {
-        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+
+      walletData = await walletDataProvider.getWalletByServerWalletID(walletID);
+      for (AccountModel accModel in walletData?.accounts ?? []) {
+        accModel.labelDecrypt =
+            await decryptAccountName(base64Encode(accModel.label));
+        final balance = await WalletManager.getWalletAccountBalance(
+          walletModel?.walletID ?? "",
+          accModel.accountID,
+        );
+        accModel.balance = balance.toDouble();
+        if (accModel.accountID == accountID) {
+          accountModel = accModel;
+        }
       }
+      accountsCount = walletData?.accounts.length ?? 0;
+
+      accountModel ??= walletData?.accounts.firstOrNull;
+      accountModel ??=
+          await DBHelper.accountDao!.findDefaultAccountByWalletID(walletID);
+
       accountValueNotifier = ValueNotifier(accountModel);
       accountValueNotifier.addListener(() async {
         accountModel = accountValueNotifier.value;
@@ -772,7 +805,9 @@ class SendViewModelImpl extends SendViewModel {
           final double btcAmount = bitcoinBase
               ? amount
               : ExchangeCalculator.getNotionalInBTC(exchangeRate, amount);
-          amountInSATS = bitcoinBase ? (btcAmount * 100000000).floor() : (btcAmount * 100000000).ceil();
+          amountInSATS = bitcoinBase
+              ? (btcAmount * 100000000).round()
+              : (btcAmount * 100000000).ceil();
           final String email = protonRecipient.email;
           String bitcoinAddress = "";
           if (email.contains("@")) {
@@ -1083,8 +1118,7 @@ class SendViewModelImpl extends SendViewModel {
     final msg = parseSampleDisplayError(error);
     if (msg.isNotEmpty) {
       // TODO(fix): improve logic here
-      final BuildContext? context =
-          Coordinator.rootNavigatorKey.currentContext;
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (msg.toLowerCase().contains("outputbelowdustlimit")) {
         if (context != null) {
           CommonHelper.showSnackbar(
@@ -1102,8 +1136,7 @@ class SendViewModelImpl extends SendViewModel {
             },
           );
         }
-      }
-      else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
+      } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
         if (context != null) {
           CommonHelper.showSnackbar(
             context,
@@ -1132,5 +1165,32 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return false;
+  }
+
+  Future<String> decryptAccountName(String encryptedName) async {
+    if (secretKey == null) {
+      final walletKey = await walletKeysProvider.getWalletKey(
+        walletID,
+      );
+      if (walletKey != null) {
+        final userKey = await userManager.getUserKey(walletKey.userKeyId);
+        secretKey = WalletKeyHelper.decryptWalletKey(
+          userKey,
+          walletKey,
+        );
+      }
+    }
+    String decryptedName = "Default Wallet Account";
+    if (secretKey != null) {
+      try {
+        decryptedName = await WalletKeyHelper.decrypt(
+          secretKey!,
+          encryptedName,
+        );
+      } catch (e) {
+        logger.e(e.toString());
+      }
+    }
+    return decryptedName;
   }
 }

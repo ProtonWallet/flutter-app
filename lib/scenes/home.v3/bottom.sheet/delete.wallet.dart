@@ -51,7 +51,7 @@ class DeleteWalletSheet {
               showAuthDialog(context, state.requireAuthModel.twofaStatus, (
                 password,
                 twofa,
-              ) {
+              ) async {
                 viewModel.deleteWalletAuth(
                   walletMenuModel.walletModel,
                   password,
