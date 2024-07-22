@@ -235,4 +235,14 @@ class FontManager {
         fontWeight: FontWeight.w400,
         color: color);
   }
+
+  static TextStyle twoFACode(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 24,
+        height: 1.6,
+        // lineHeight = 20
+        fontWeight: FontWeight.w400,
+        color: color);
+  }
 }

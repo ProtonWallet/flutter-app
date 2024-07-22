@@ -95,7 +95,7 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: ProtonColors.launchBackground,
-      child: const Center(child: CircularProgressIndicator()),
+      child: const Center(child: CircularProgressIndicator(color: Colors.white,)),
     );
   }
 }

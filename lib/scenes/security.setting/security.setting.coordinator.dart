@@ -16,12 +16,12 @@ class SecuritySettingCoordinator extends Coordinator {
 
   void showTwoFactorAuthSetup() {
     final view = TwoFactorAuthCoordinator().start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   void showTwoFactorAuthDisable() {
     final view = TwoFactorAuthDisableCoordinator().start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   @override

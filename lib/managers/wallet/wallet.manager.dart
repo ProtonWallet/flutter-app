@@ -95,7 +95,11 @@ class WalletManager implements Manager {
       frbWallets[walletModel.walletID] = frbWallet;
     }
 
-    final String derivationPath = await getDerivationPathWithID(accountID);
+    final String? derivationPath = await getDerivationPathWithID(accountID);
+    if (derivationPath == null){
+      logger.e("can not load derivationPath");
+      return null;
+    }
     final found = frbWallet.getAccount(derivationPath: derivationPath);
     if (found != null) {
       return found;
@@ -240,9 +244,12 @@ class WalletManager implements Manager {
     return await DBHelper.walletDao!.counts(userID) > 0;
   }
 
-  static Future<String> getDerivationPathWithID(String accountID) async {
-    final AccountModel accountModel =
+  static Future<String?> getDerivationPathWithID(String accountID) async {
+    final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(accountID);
+    if (accountModel == null){
+      return null;
+    }
     logger.w("$accountID: ${accountModel.derivationPath}");
     return accountModel.derivationPath;
   }

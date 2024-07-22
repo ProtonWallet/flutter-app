@@ -185,42 +185,48 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                     const SizedBox(
                                       height: 6,
                                     ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                              width: min(
-                                                  MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      defaultPadding * 2 -
-                                                      50,
-                                                  200),
-                                              child: Text(
-                                                viewModel.address,
-                                                style: FontManager.body2Regular(
-                                                    ProtonColors.textWeak),
-                                                maxLines: 5,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.center,
-                                              )),
-                                          GestureDetector(
-                                              onTap: () {
-                                                Clipboard.setData(ClipboardData(
-                                                    text: viewModel.address));
-                                                CommonHelper.showSnackbar(
-                                                    context,
-                                                    S
-                                                        .of(context)
-                                                        .copied_address);
-                                              },
-                                              child: Icon(
-                                                Icons.copy_rounded,
-                                                size: 20,
-                                                color: ProtonColors.textWeak,
-                                              ))
-                                        ]),
+                                    if (viewModel.initialized)
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                                width: min(
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width -
+                                                        defaultPadding * 2 -
+                                                        50,
+                                                    200),
+                                                child: Text(
+                                                  viewModel.address,
+                                                  style:
+                                                      FontManager.body2Regular(
+                                                          ProtonColors
+                                                              .textWeak),
+                                                  maxLines: 5,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.center,
+                                                )),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: viewModel
+                                                              .address));
+                                                  CommonHelper.showSnackbar(
+                                                      context,
+                                                      S
+                                                          .of(context)
+                                                          .copied_address);
+                                                },
+                                                child: Icon(
+                                                  Icons.copy_rounded,
+                                                  size: 20,
+                                                  color: ProtonColors.textWeak,
+                                                ))
+                                          ]),
                                     const SizedBox(height: 10),
                                     Text(
                                       "(Debug) AddressIndex: ${viewModel.addressIndex}",

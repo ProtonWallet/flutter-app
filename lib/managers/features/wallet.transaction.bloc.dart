@@ -9,7 +9,6 @@ import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
-import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -629,7 +628,6 @@ class WalletTransactionBloc
     );
 
     final userKeys = await userManager.getUserKeys();
-
     for (final transactionModel in serverTransactionData.transactions) {
       String txid = "";
       for (final uKey in userKeys) {
@@ -723,17 +721,17 @@ class WalletTransactionBloc
         final String encryptedSender = transactionModel.sender ?? "";
         final String encryptedBody = transactionModel.body ?? "";
 
-        toList = tryDecryptWithKeys(addressKeys, encryptedToList);
-        sender = tryDecryptWithKeys(addressKeys, encryptedSender);
-        body = tryDecryptWithKeys(addressKeys, encryptedBody);
+        toList = tryDecryptWithKeys(userKeys, encryptedToList);
+        sender = tryDecryptWithKeys(userKeys, encryptedSender);
+        body = tryDecryptWithKeys(userKeys, encryptedBody);
         if (toList.isEmpty) {
-          toList = tryDecryptWithKeys(userKeys, encryptedToList);
+          toList = tryDecryptWithKeys(addressKeys, encryptedToList);
         }
         if (sender.isEmpty) {
-          sender = tryDecryptWithKeys(userKeys, encryptedSender);
+          sender = tryDecryptWithKeys(addressKeys, encryptedSender);
         }
         if (body.isEmpty) {
-          body = tryDecryptWithKeys(userKeys, encryptedBody);
+          body = tryDecryptWithKeys(addressKeys, encryptedBody);
         }
       }
 
@@ -785,163 +783,163 @@ class WalletTransactionBloc
     /// check server transactions with local transaction data
     /// since user will have server transactions after broadcast (server will create for sender, recipients if use email integration)
     /// these data is used only when bdk not finish synced after broadcast
-    for (TransactionModel transactionModel
-        in serverTransactionData.transactions) {
-      String userLabel = "";
-      if (secretKey != null) {
-        userLabel = await WalletKeyHelper.decrypt(
-            secretKey, utf8.decode(transactionModel.label));
-      }
-      final String txID = utf8.decode(transactionModel.externalTransactionID);
-      final String key = "$txID-${accountModel.accountID}";
-      if (txID.isEmpty) {
-        continue;
-      }
-      if (newHistoryTransactionsMap.containsKey(key)) {
-        // skip if we already has this info (i.e. bdk had synced for this record)
-        continue;
-      }
-      String toList = "";
-      String sender = "";
-      String body = "";
-      final String encryptedToList = transactionModel.tolist ?? "";
-      final String encryptedSender = transactionModel.sender ?? "";
-      final String encryptedBody = transactionModel.body ?? "";
-
-      toList = tryDecryptWithKeys(addressKeys, encryptedToList);
-      sender = tryDecryptWithKeys(addressKeys, encryptedSender);
-      body = tryDecryptWithKeys(addressKeys, encryptedBody);
-      if (toList.isEmpty) {
-        toList = tryDecryptWithKeys(userKeys, encryptedToList);
-      }
-      if (sender.isEmpty) {
-        sender = tryDecryptWithKeys(userKeys, encryptedSender);
-      }
-      if (body.isEmpty) {
-        body = tryDecryptWithKeys(userKeys, encryptedBody);
-      }
-      final List<TransactionInfoModel> transactionInfoModels =
-          getLocalTransactionsByTXID(localTransactionData.transactions, txID);
-      if (transactionInfoModels.isNotEmpty) {
-        /// if we have transactionInfoModels found, it means it's sender side
-        /// we will fill transaction info with local transaction data
-        /// (recipients cannot have local transaction data since they didn't broadcast transaction)
-        int amountInSATS = 0;
-        int feeInSATS = 0;
-        for (TransactionInfoModel transactionInfoModel
-            in transactionInfoModels) {
-          amountInSATS += transactionInfoModel.isSend == 1
-              ? -transactionInfoModel.amountInSATS
-              : transactionInfoModel.amountInSATS;
-          feeInSATS = transactionInfoModel
-              .feeInSATS; // all recipients have same fee since its same transaction
-        }
-
-        final ProtonExchangeRate exchangeRate =
-            await getExchangeRateFromTransactionModel(transactionModel);
-
-        newHistoryTransactionsMap[key] = HistoryTransaction(
-          txID: txID,
-          updateTimestamp: transactionInfoModels.first.transactionTime,
-          amountInSATS: amountInSATS,
-          sender: sender.isNotEmpty ? sender : "Unknown",
-          toList: toList.isNotEmpty ? toList : "Unknown",
-          feeInSATS: feeInSATS,
-          label: userLabel,
-          inProgress: true,
-          accountModel: accountModel,
-          body: body.isNotEmpty ? body : null,
-          exchangeRate: exchangeRate,
-          bitcoinAddresses: [],
-        );
-      } else {
-        /// no transactionInfoModels found, means it's recipient side
-        /// going to get transaction info from proton esplora server
-        // TODO(fix): fix me since it take too long time
-        try {
-          TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-          transactionDetailFromBlockChain =
-              await WalletManager.getTransactionDetailsFromBlockStream(txID);
-          try {
-            if (transactionDetailFromBlockChain != null) {
-              break;
-            }
-          } catch (e) {
-            logger.e(e.toString());
-          }
-          if (transactionDetailFromBlockChain != null) {
-            Recipient? me;
-            final List<String> bitcoinAddressesInTransaction = [];
-            for (Recipient recipient
-                in transactionDetailFromBlockChain.recipients) {
-              final String bitcoinAddress = recipient.bitcoinAddress;
-              bitcoinAddressesInTransaction.add(bitcoinAddress);
-              BitcoinAddressModel? bitcoinAddressModel =
-                  await localBitcoinAddressDataProvider
-                      .findBitcoinAddressInAccount(
-                bitcoinAddress,
-                accountModel.accountID,
-              );
-              if (bitcoinAddressModel != null) {
-                bitcoinAddressModel.used = 1;
-                await localBitcoinAddressDataProvider.insertOrUpdate(
-                  bitcoinAddressModel,
-                );
-                me = recipient;
-                localBitcoinAddressDataProvider
-                    .updateBitcoinAddress2TransactionDataMap(
-                  bitcoinAddressModel.bitcoinAddress,
-                  txID,
-                );
-                break;
-              } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
-                bitcoinAddressModel = BitcoinAddressModel(
-                  id: null,
-                  walletID: 0,
-                  // deprecated
-                  accountID: 0,
-                  // deprecated
-                  serverWalletID: walletModel.walletID,
-                  serverAccountID: accountModel.accountID,
-                  bitcoinAddress: recipient.bitcoinAddress,
-                  bitcoinAddressIndex:
-                      selfBitcoinAddressInfo[bitcoinAddress]!.index,
-                  inEmailIntegrationPool: 0,
-                  used: 1,
-                );
-                await localBitcoinAddressDataProvider
-                    .insertOrUpdate(bitcoinAddressModel);
-                localBitcoinAddressDataProvider
-                    .updateBitcoinAddress2TransactionDataMap(
-                        bitcoinAddress, txID);
-              }
-            }
-            if (me != null) {
-              final ProtonExchangeRate exchangeRate =
-                  await getExchangeRateFromTransactionModel(transactionModel);
-              newHistoryTransactionsMap[key] = HistoryTransaction(
-                txID: txID,
-                updateTimestamp: transactionDetailFromBlockChain.timestamp,
-                amountInSATS: me.amountInSATS,
-                sender: sender.isNotEmpty ? sender : "Unknown",
-                toList: toList.isNotEmpty ? toList : "Unknown",
-                feeInSATS: transactionDetailFromBlockChain.feeInSATS,
-                label: userLabel,
-                inProgress: true,
-                accountModel: accountModel,
-                body: body.isNotEmpty ? body : null,
-                exchangeRate: exchangeRate,
-                bitcoinAddresses: bitcoinAddressesInTransaction,
-              );
-            } else {
-              // logger.i("Cannot find this tx, $txID");
-            }
-          }
-        } catch (e) {
-          logger.e(e.toString());
-        }
-      }
-    }
+    // for (TransactionModel transactionModel
+    //     in serverTransactionData.transactions) {
+    //   final String txID = utf8.decode(transactionModel.externalTransactionID);
+    //   final String key = "$txID-${accountModel.accountID}";
+    //   if (txID.isEmpty) {
+    //     continue;
+    //   }
+    //   if (newHistoryTransactionsMap.containsKey(key)) {
+    //     // skip if we already has this info (i.e. bdk had synced for this record)
+    //     continue;
+    //   }
+    //   String userLabel = "";
+    //   if (secretKey != null) {
+    //     userLabel = await WalletKeyHelper.decrypt(
+    //         secretKey, utf8.decode(transactionModel.label));
+    //   }
+    //   String toList = "";
+    //   String sender = "";
+    //   String body = "";
+    //   final String encryptedToList = transactionModel.tolist ?? "";
+    //   final String encryptedSender = transactionModel.sender ?? "";
+    //   final String encryptedBody = transactionModel.body ?? "";
+    //
+    //   toList = tryDecryptWithKeys(userKeys, encryptedToList);
+    //   sender = tryDecryptWithKeys(userKeys, encryptedSender);
+    //   body = tryDecryptWithKeys(userKeys, encryptedBody);
+    //   if (toList.isEmpty) {
+    //     toList = tryDecryptWithKeys(addressKeys, encryptedToList);
+    //   }
+    //   if (sender.isEmpty) {
+    //     sender = tryDecryptWithKeys(addressKeys, encryptedSender);
+    //   }
+    //   if (body.isEmpty) {
+    //     body = tryDecryptWithKeys(addressKeys, encryptedBody);
+    //   }
+    //   final List<TransactionInfoModel> transactionInfoModels =
+    //       getLocalTransactionsByTXID(localTransactionData.transactions, txID);
+    //   if (transactionInfoModels.isNotEmpty) {
+    //     /// if we have transactionInfoModels found, it means it's sender side
+    //     /// we will fill transaction info with local transaction data
+    //     /// (recipients cannot have local transaction data since they didn't broadcast transaction)
+    //     int amountInSATS = 0;
+    //     int feeInSATS = 0;
+    //     for (TransactionInfoModel transactionInfoModel
+    //         in transactionInfoModels) {
+    //       amountInSATS += transactionInfoModel.isSend == 1
+    //           ? -transactionInfoModel.amountInSATS
+    //           : transactionInfoModel.amountInSATS;
+    //       feeInSATS = transactionInfoModel
+    //           .feeInSATS; // all recipients have same fee since its same transaction
+    //     }
+    //
+    //     final ProtonExchangeRate exchangeRate =
+    //         await getExchangeRateFromTransactionModel(transactionModel);
+    //
+    //     newHistoryTransactionsMap[key] = HistoryTransaction(
+    //       txID: txID,
+    //       updateTimestamp: transactionInfoModels.first.transactionTime,
+    //       amountInSATS: amountInSATS,
+    //       sender: sender.isNotEmpty ? sender : "Unknown",
+    //       toList: toList.isNotEmpty ? toList : "Unknown",
+    //       feeInSATS: feeInSATS,
+    //       label: userLabel,
+    //       inProgress: true,
+    //       accountModel: accountModel,
+    //       body: body.isNotEmpty ? body : null,
+    //       exchangeRate: exchangeRate,
+    //       bitcoinAddresses: [],
+    //     );
+    //   } else {
+    //     /// no transactionInfoModels found, means it's recipient side
+    //     /// going to get transaction info from proton esplora server
+    //     // TODO(fix): fix me since it take too long time
+    //     try {
+    //       TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
+    //       transactionDetailFromBlockChain =
+    //           await WalletManager.getTransactionDetailsFromBlockStream(txID);
+    //       try {
+    //         if (transactionDetailFromBlockChain != null) {
+    //           break;
+    //         }
+    //       } catch (e) {
+    //         logger.e(e.toString());
+    //       }
+    //       if (transactionDetailFromBlockChain != null) {
+    //         Recipient? me;
+    //         final List<String> bitcoinAddressesInTransaction = [];
+    //         for (Recipient recipient
+    //             in transactionDetailFromBlockChain.recipients) {
+    //           final String bitcoinAddress = recipient.bitcoinAddress;
+    //           bitcoinAddressesInTransaction.add(bitcoinAddress);
+    //           BitcoinAddressModel? bitcoinAddressModel =
+    //               await localBitcoinAddressDataProvider
+    //                   .findBitcoinAddressInAccount(
+    //             bitcoinAddress,
+    //             accountModel.accountID,
+    //           );
+    //           if (bitcoinAddressModel != null) {
+    //             bitcoinAddressModel.used = 1;
+    //             await localBitcoinAddressDataProvider.insertOrUpdate(
+    //               bitcoinAddressModel,
+    //             );
+    //             me = recipient;
+    //             localBitcoinAddressDataProvider
+    //                 .updateBitcoinAddress2TransactionDataMap(
+    //               bitcoinAddressModel.bitcoinAddress,
+    //               txID,
+    //             );
+    //             break;
+    //           } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
+    //             bitcoinAddressModel = BitcoinAddressModel(
+    //               id: null,
+    //               walletID: 0,
+    //               // deprecated
+    //               accountID: 0,
+    //               // deprecated
+    //               serverWalletID: walletModel.walletID,
+    //               serverAccountID: accountModel.accountID,
+    //               bitcoinAddress: recipient.bitcoinAddress,
+    //               bitcoinAddressIndex:
+    //                   selfBitcoinAddressInfo[bitcoinAddress]!.index,
+    //               inEmailIntegrationPool: 0,
+    //               used: 1,
+    //             );
+    //             await localBitcoinAddressDataProvider
+    //                 .insertOrUpdate(bitcoinAddressModel);
+    //             localBitcoinAddressDataProvider
+    //                 .updateBitcoinAddress2TransactionDataMap(
+    //                     bitcoinAddress, txID);
+    //           }
+    //         }
+    //         if (me != null) {
+    //           final ProtonExchangeRate exchangeRate =
+    //               await getExchangeRateFromTransactionModel(transactionModel);
+    //           newHistoryTransactionsMap[key] = HistoryTransaction(
+    //             txID: txID,
+    //             updateTimestamp: transactionDetailFromBlockChain.timestamp,
+    //             amountInSATS: me.amountInSATS,
+    //             sender: sender.isNotEmpty ? sender : "Unknown",
+    //             toList: toList.isNotEmpty ? toList : "Unknown",
+    //             feeInSATS: transactionDetailFromBlockChain.feeInSATS,
+    //             label: userLabel,
+    //             inProgress: true,
+    //             accountModel: accountModel,
+    //             body: body.isNotEmpty ? body : null,
+    //             exchangeRate: exchangeRate,
+    //             bitcoinAddresses: bitcoinAddressesInTransaction,
+    //           );
+    //         } else {
+    //           // logger.i("Cannot find this tx, $txID");
+    //         }
+    //       }
+    //     } catch (e) {
+    //       logger.e(e.toString());
+    //     }
+    //   }
+    // }
     return newHistoryTransactionsMap.values.toList();
   }
 

@@ -12,9 +12,10 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/onboarding/content.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.2fa.dart';
-import 'package:wallet/scenes/components/textfield.password.dart';
+import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -27,370 +28,531 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
   @override
   Widget build(BuildContext context) {
     if (viewModel.page == 0) {
-      return SafeArea(child: Scaffold(body: buildMain(context)));
+      return buildMain(context);
     } else if (viewModel.page == 1) {
-      return SafeArea(child: Scaffold(body: buildQRcodeForSecret(context)));
+      return buildQRcodeForSecret(context);
     } else if (viewModel.page == 2) {
-      return SafeArea(child: Scaffold(body: buildTextViewForSecret(context)));
+      return buildTextViewForSecret(context);
     } else if (viewModel.page == 3) {
-      return SafeArea(child: Scaffold(body: build2FAConfirm(context)));
+      return build2FAConfirm(context);
     } else if (viewModel.page == 4) {
-      return SafeArea(child: Scaffold(body: buildBackupPage(context)));
+      return buildBackupPage(context);
     }
-    return SafeArea(child: Scaffold(body: buildMain(context)));
+    return buildMain(context);
   }
 
   Widget buildMain(BuildContext context) {
+    return PageLayoutV1(
+      backgroundColor: ProtonColors.white,
+      headerWidget: Align(
+        alignment: Alignment.centerRight,
+        child: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      bottomWidget: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(children: [
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(1);
+            },
+            text: S.of(context).next,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonBlue,
+            borderColor: ProtonColors.protonBlue,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
+          ),
+          SizedBoxes.box12,
+          ButtonV5(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            text: S.of(context).cancel,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonShades20,
+            borderColor: ProtonColors.protonShades20,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            height: 48,
+          ),
+        ]),
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, -20),
+        child: Column(
+          children: [
+            buildHeader(
+              context,
+              S.of(context).setting_2fa_guide_step1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildHeader(BuildContext context, String body) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 200,
-          color: ProtonColors.backgroundSecondary,
-          child: Assets.images.walletCreation.passphraseIcon.svg(),
+          height: 135,
+          child: Assets.images.icon.twoFa.svg(),
         ),
-        Expanded(
-          child: OnboardingContent(
-              totalPages: 4,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4 * 3,
-              title: S.of(context).setting_2fa_setup,
-              content: S.of(context).setting_2fa_guide_step1),
+        const SizedBox(
+          height: defaultPadding,
         ),
-        Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(children: [
-            ButtonV5(
-                onPressed: () {
-                  viewModel.updatePage(1);
-                },
-                text: S.of(context).next,
-                width: MediaQuery.of(context).size.width,
-                textStyle: FontManager.body1Median(ProtonColors.white),
-                height: 48),
-            SizedBoxes.box12,
-            ButtonV5(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                text: S.of(context).cancel,
-                width: MediaQuery.of(context).size.width,
-                backgroundColor: ProtonColors.white,
-                borderColor: ProtonColors.interactionNorm,
-                textStyle:
-                    FontManager.body1Median(ProtonColors.interactionNorm),
-                height: 48),
-          ]),
+        Text(
+          S.of(context).setting_2fa_setup,
+          style: FontManager.titleHeadline(ProtonColors.textNorm),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        Text(
+          body,
+          style: FontManager.body2Regular(ProtonColors.textWeak),
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
   Widget buildQRcodeForSecret(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          color: ProtonColors.backgroundSecondary,
-          child: Assets.images.walletCreation.passphraseIcon.svg(),
-        ),
-        Expanded(
-          child: OnboardingContent(
-              totalPages: 4,
-              currentPage: 2,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 3 * 2,
-              title: S.of(context).setting_2fa_setup,
-              content: S.of(context).setting_2fa_guide_step2,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    viewModel.updatePage(2);
-                  },
-                  child: Text(S.of(context).setting_2fa_enter_key_manual,
-                      style: FontManager.body1Median(
-                          ProtonColors.interactionNorm)),
+    return PageLayoutV1(
+      backgroundColor: ProtonColors.white,
+      headerWidget: Align(
+        alignment: Alignment.centerRight,
+        child: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      bottomWidget: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(children: [
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(3);
+            },
+            text: S.of(context).next,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonBlue,
+            borderColor: ProtonColors.protonBlue,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
+          ),
+          SizedBoxes.box12,
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(0);
+            },
+            text: S.of(context).cancel,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonShades20,
+            borderColor: ProtonColors.protonShades20,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            height: 48,
+          ),
+        ]),
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, -20),
+        child: Column(
+          children: [
+            buildHeader(
+              context,
+              S.of(context).setting_2fa_guide_step2,
+            ),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            ColoredBox(
+              color: ProtonColors.white,
+              child: QrImageView(
+                size: min(400, 200),
+                data: viewModel.otpAuthString,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                viewModel.updatePage(2);
+              },
+              child: Text(
+                S.of(context).setting_2fa_enter_key_manual,
+                style: FontManager.body1Median(
+                  ProtonColors.protonBlue,
                 ),
-                SizedBoxes.box12,
-                ColoredBox(
-                  color: ProtonColors.white,
-                  child: QrImageView(
-                    size: min(400, 200),
-                    data: viewModel.otpAuthString,
-                  ),
-                ),
-                SizedBoxes.box20,
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updatePage(3);
-                    },
-                    text: S.of(context).next,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    text: S.of(context).cancel,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.interactionNorm,
-                    textStyle:
-                        FontManager.body1Median(ProtonColors.interactionNorm),
-                    height: 48),
-              ]),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget buildTextViewForSecret(BuildContext context) {
-    return Column(
-      children: [
-        Container(
+    return PageLayoutV1(
+      backgroundColor: ProtonColors.white,
+      headerWidget: Align(
+        alignment: Alignment.centerRight,
+        child: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      bottomWidget: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(children: [
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(3);
+            },
+            text: S.of(context).next,
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            color: ProtonColors.backgroundSecondary,
-            child: Assets.images.walletCreation.passphraseIcon.svg()),
-        Expanded(
-          child: OnboardingContent(
-              totalPages: 4,
-              currentPage: 2,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4 * 3,
-              title: S.of(context).setting_2fa_setup,
-              content: S.of(context).setting_2fa_guide_step2,
-              children: [
-                Column(children: [
-                  GestureDetector(
-                      onTap: () {
-                        viewModel.updatePage(1);
-                      },
-                      child: Text(S.of(context).setting_2fa_scan_qrcode,
-                          style: FontManager.body1Median(
-                              ProtonColors.interactionNorm))),
-                  SizedBoxes.box18,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                          width: 60,
-                          child: Text("Key",
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textNorm))),
-                      SizedBox(
-                          width: 340,
-                          child: Text(viewModel.secret,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textNorm))),
-                    ],
+            backgroundColor: ProtonColors.protonBlue,
+            borderColor: ProtonColors.protonBlue,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
+          ),
+          SizedBoxes.box12,
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(0);
+            },
+            text: S.of(context).cancel,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonShades20,
+            borderColor: ProtonColors.protonShades20,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            height: 48,
+          ),
+        ]),
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, -20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildHeader(
+              context,
+              S.of(context).setting_2fa_guide_step2,
+            ),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Text("Key", style: FontManager.body2Regular(ProtonColors.textNorm)),
+            const SizedBox(
+              height: 6,
+            ),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                viewModel.secret,
+                style: FontManager.body2Median(ProtonColors.textNorm),
+                maxLines: 4,
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              Icon(Icons.copy_rounded, size: 16, color: ProtonColors.textHint),
+            ]),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              thickness: 0.2,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text("Interval",
+                style: FontManager.body2Regular(ProtonColors.textNorm)),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(
+              "30",
+              style: FontManager.body2Median(ProtonColors.textNorm),
+              maxLines: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              thickness: 0.2,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text("Digits",
+                style: FontManager.body2Regular(ProtonColors.textNorm)),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(
+              "6",
+              style: FontManager.body2Median(ProtonColors.textNorm),
+              maxLines: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              thickness: 0.2,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  viewModel.updatePage(1);
+                },
+                child: Text(
+                  S.of(context).setting_2fa_scan_qrcode,
+                  style: FontManager.body1Median(
+                    ProtonColors.protonBlue,
                   ),
-                  SizedBoxes.box8,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                          width: 60,
-                          child: Text("Interval",
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textNorm))),
-                      SizedBox(
-                          width: 340,
-                          child: Text("30",
-                              style: FontManager.body2Median(
-                                  ProtonColors.textNorm))),
-                    ],
-                  ),
-                  SizedBoxes.box8,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                          width: 60,
-                          child: Text("Digits",
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textNorm))),
-                      SizedBox(
-                          width: 340,
-                          child: Text("6",
-                              style: FontManager.body2Median(
-                                  ProtonColors.textNorm))),
-                    ],
-                  ),
-                ]),
-                SizedBoxes.box41,
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updatePage(3);
-                    },
-                    text: S.of(context).next,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    text: S.of(context).cancel,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.interactionNorm,
-                    textStyle:
-                        FontManager.body1Median(ProtonColors.interactionNorm),
-                    height: 48),
-              ]),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget build2FAConfirm(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          color: ProtonColors.backgroundSecondary,
-          child: Assets.images.walletCreation.passphraseIcon.svg(),
-        ),
-        Expanded(
-          child: OnboardingContent(
-              totalPages: 4,
-              currentPage: 3,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4 * 3,
-              title: S.of(context).setting_2fa_setup,
-              content: S.of(context).setting_2fa_code_hint,
-              children: [
-                SizedBoxes.box12,
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (int i = 0; i < 6; i++)
-                        TextField2FA(
-                            width: 50,
-                            height: 50,
-                            suffixIcon: const Icon(Icons.close),
-                            showSuffixIcon: false,
-                            centerHorizontal: true,
-                            maxLength: 1,
-                            controller: viewModel.digitControllers[i],
-                            onChanged: (text) {
-                              if (text.isNotEmpty) {
-                                if (i < 5) {
-                                  FocusScope.of(context).nextFocus();
-                                }
-                              } else {
-                                if (i > 0) {
-                                  FocusScope.of(context).previousFocus();
-                                }
-                              }
-                            },
-                            textInputAction: i == 5
-                                ? TextInputAction.done
-                                : TextInputAction.next,
-                            digitOnly: true),
-                    ]),
-                SizedBoxes.box18,
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Password",
-                      style: FontManager.body1Median(ProtonColors.textHint)),
-                ),
-                TextFieldPassword(
-                    width: MediaQuery.of(context).size.width,
-                    controller: viewModel.passwordController),
-                SizedBoxes.box41,
-                ButtonV6(
-                    onPressed: () async {
-                      final bool result = await viewModel.setup2FA();
-                      if (context.mounted) {
-                        if (result) {
-                          viewModel.updatePage(4);
-                        } else {
-                          LocalToast.showErrorToast(
-                              context, "Something error!");
+    return PageLayoutV1(
+      backgroundColor: ProtonColors.white,
+      headerWidget: Align(
+        alignment: Alignment.centerRight,
+        child: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      bottomWidget: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(children: [
+          ButtonV6(
+            onPressed: () async {
+              final bool result = await viewModel.setup2FA();
+              if (context.mounted) {
+                if (result) {
+                  viewModel.updatePage(4);
+                } else {
+                  LocalToast.showErrorToast(context, "Something error!");
+                }
+              }
+            },
+            text: S.of(context).next,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonBlue,
+            borderColor: ProtonColors.protonBlue,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
+          ),
+          SizedBoxes.box12,
+          ButtonV5(
+            onPressed: () {
+              viewModel.updatePage(1);
+            },
+            text: S.of(context).cancel,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonShades20,
+            borderColor: ProtonColors.protonShades20,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            height: 48,
+          ),
+        ]),
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, -20),
+        child: Column(
+          children: [
+            buildHeader(
+              context,
+              S.of(context).setting_2fa_code_hint,
+            ),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              for (int i = 0; i < 6; i++)
+                TextField2FA(
+                    width: 48,
+                    controller: viewModel.digitControllers[i],
+                    onChanged: (text) {
+                      if (text.isNotEmpty) {
+                        if (i < 5) {
+                          FocusScope.of(context).nextFocus();
+                        }
+                      } else {
+                        if (i > 0) {
+                          FocusScope.of(context).previousFocus();
                         }
                       }
                     },
-                    text: S.of(context).next,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    height: 48),
-                SizedBoxes.box12,
-                ButtonV5(
-                    onPressed: () {
-                      viewModel.updatePage(1);
-                    },
-                    text: S.of(context).cancel,
-                    width: MediaQuery.of(context).size.width,
-                    backgroundColor: ProtonColors.white,
-                    borderColor: ProtonColors.interactionNorm,
-                    textStyle:
-                        FontManager.body1Median(ProtonColors.interactionNorm),
-                    height: 48),
-              ]),
+                    textInputAction:
+                        i == 5 ? TextInputAction.done : TextInputAction.next,
+                    digitOnly: true),
+            ]),
+            SizedBoxes.box18,
+            TextFieldTextV2(
+              borderColor: ProtonColors.textHint,
+              labelText: S.of(context).password,
+              hintText: S.of(context).password_hint,
+              alwaysShowHint: true,
+              textController: viewModel.passwordController,
+              myFocusNode: viewModel.passphraseFocusNode,
+              validation: (String _) {
+                return "";
+              },
+              isPassword: true,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget buildBackupPage(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 4,
-          color: ProtonColors.backgroundSecondary,
-          child: Assets.images.walletCreation.passphraseIcon.svg(),
-        ),
-        Expanded(
-          child: OnboardingContent(
-            totalPages: 4,
-            currentPage: 4,
+    return PageLayoutV1(
+      backgroundColor: ProtonColors.white,
+      headerWidget: Align(
+        alignment: Alignment.centerRight,
+        child: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      bottomWidget: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(children: [
+          ButtonV5(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(
+                      text: "[${viewModel.backupPhrases.join(" ")}]"))
+                  .then((_) {
+                if (context.mounted) {
+                  CommonHelper.showSnackbar(
+                      context, "Recovery codes copied to clipboard");
+                }
+              });
+            },
+            text: S.of(context).copy_button,
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4 * 3,
-            title: S.of(context).setting_2fa_backup_alert_title,
-            content: S.of(context).setting_2fa_backup_alert_content,
-            children: [
-              Text(
-                viewModel.backupPhrases.join("   "),
-                style: FontManager.body2Regular(ProtonColors.textNorm),
-                textAlign: TextAlign.justify,
-              ),
-              SizedBoxes.box18,
-              ButtonV5(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(
-                            text: "[${viewModel.backupPhrases.join(" ")}]"))
-                        .then((_) {
-                      if (context.mounted) {
-                        CommonHelper.showSnackbar(
-                            context, "Recovery codes copied to clipboard");
-                      }
-                    });
-                  },
-                  text: S.of(context).copy_button,
-                  width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
-                  height: 48),
-              SizedBoxes.box8,
-              ButtonV5(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  text: S.of(context).done,
-                  width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
-                  height: 48),
-            ],
+            backgroundColor: ProtonColors.protonBlue,
+            borderColor: ProtonColors.protonBlue,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.white),
+            height: 48,
           ),
+          SizedBoxes.box12,
+          ButtonV5(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            text: S.of(context).done,
+            width: MediaQuery.of(context).size.width,
+            backgroundColor: ProtonColors.protonShades20,
+            borderColor: ProtonColors.protonShades20,
+            elevation: 0.0,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            height: 48,
+          ),
+        ]),
+      ),
+      child: Transform.translate(
+        offset: const Offset(0, -20),
+        child: Column(
+          children: [
+            Text(
+              S.of(context).setting_2fa_setup,
+              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              S.of(context).setting_2fa_backup_alert_title,
+              style: FontManager.body2Median(ProtonColors.textNorm),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Text(
+              S.of(context).setting_2fa_backup_alert_content,
+              style: FontManager.body2Regular(ProtonColors.textWeak),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            for (int i = 0; i < viewModel.backupPhrases.length; i += 2)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          viewModel.backupPhrases[i],
+                          style:
+                              FontManager.body2Median(ProtonColors.textNorm),
+                          textAlign: TextAlign.justify,
+                        ),
+                        (i + 1 < viewModel.backupPhrases.length)
+                            ? Text(
+                                viewModel.backupPhrases[i],
+                                style: FontManager.body2Median(
+                                    ProtonColors.textNorm),
+                                textAlign: TextAlign.justify,
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  ),
+
+                  const Divider(
+                    thickness: 0.2,
+                    height: 1,
+                  ),
+                ],
+              ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
