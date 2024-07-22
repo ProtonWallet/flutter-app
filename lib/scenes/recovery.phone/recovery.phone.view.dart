@@ -30,7 +30,7 @@ class RecoveryPhoneView extends ViewBase<RecoveryPhoneViewModel> {
               showAuthDialog(context, state.requireAuthModel.twofaStatus, (
                 password,
                 twofa,
-              ) {
+              ) async {
                 if (state.requireAuthModel.isDisable) {
                   viewModel.disableRecoverAuth(password, twofa);
                 } else {

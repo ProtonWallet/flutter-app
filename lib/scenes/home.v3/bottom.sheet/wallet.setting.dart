@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
@@ -16,7 +18,6 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
@@ -170,7 +171,7 @@ class WalletSettingSheet {
                             content: S.of(context).bitcoin_via_email_desc,
                             learnMore: GestureDetector(
                                 onTap: () {
-                                  CustomPlaceholder.show(context);
+                                  launchUrl(Uri.parse(bveAcitvedLink));
                                 },
                                 child: Text(S.of(context).learn_more,
                                     style: FontManager.body2Regular(
@@ -192,7 +193,7 @@ class WalletSettingSheet {
                                 S.of(context).bitcoin_via_email_not_active_desc,
                             learnMore: GestureDetector(
                                 onTap: () {
-                                  CustomPlaceholder.show(context);
+                                  launchUrl(Uri.parse(bveInAcitvedLink));
                                 },
                                 child: Text(S.of(context).learn_more,
                                     style: FontManager.body2Regular(

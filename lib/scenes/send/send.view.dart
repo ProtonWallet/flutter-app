@@ -3,8 +3,10 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -28,6 +30,7 @@ import 'package:wallet/scenes/components/textfield.send.btc.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
+import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -116,7 +119,7 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget buildEditAmount(BuildContext context) {
-    return Container(
+    return ColoredBox(
         color: ProtonColors.white,
         child: Column(children: [
           Expanded(
@@ -343,7 +346,7 @@ class SendView extends ViewBase<SendViewModel> {
       case TransactionFeeMode.lowPriority:
         estimatedFee = viewModel.estimatedFeeInSATLowPriority;
     }
-    return Container(
+    return ColoredBox(
         color: ProtonColors.white,
         child: Column(children: [
           Expanded(
@@ -731,7 +734,7 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget buildAddRecipient(BuildContext context) {
-    return Container(
+    return ColoredBox(
         color: ProtonColors.white,
         child: !viewModel.initialized
             ? const Column(children: [
@@ -775,6 +778,25 @@ class SendView extends ViewBase<SendViewModel> {
                                 child: Column(children: [
                               const SizedBox(height: 20),
                               Column(children: [
+                                if (viewModel.accountsCount > 1)
+                                  Column(children: [
+                                    WalletAccountDropdown(
+                                        labelText:
+                                            S.of(context).send_from_account,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                defaultPadding * 2,
+                                        accounts:
+                                            viewModel.walletData?.accounts ??
+                                                [],
+                                        valueNotifier:
+                                            viewModel.accountValueNotifier),
+                                    const Divider(
+                                      thickness: 0.2,
+                                      height: 1,
+                                    ),
+                                  ]),
+                                const SizedBox(height: 8),
                                 ProtonMailAutoComplete(
                                     labelText:
                                         S.of(context).send_to_recipient_s,
@@ -786,37 +808,6 @@ class SendView extends ViewBase<SendViewModel> {
                                     callback:
                                         viewModel.addressAutoCompleteCallback),
                                 const SizedBox(height: 5),
-
-                                // TODO(fix): add account selector or use default one for wallet view
-                                // if (Provider.of<ProtonWalletProvider>(context)
-                                //             .protonWallet
-                                //             .currentAccount ==
-                                //         null &&
-                                //     Provider.of<ProtonWalletProvider>(context)
-                                //             .protonWallet
-                                //             .currentAccounts
-                                //             .length >
-                                //         1)
-                                //   WalletAccountDropdown(
-                                //       labelText: S.of(context).trans_from,
-                                //       backgroundColor: ProtonColors.white,
-                                //       width: MediaQuery.of(context).size.width -
-                                //           defaultPadding * 2,
-                                //       accounts: Provider.of<ProtonWalletProvider>(
-                                //               context)
-                                //           .protonWallet
-                                //           .currentAccounts,
-                                //       valueNotifier: viewModel.initialized
-                                //           ? viewModel.accountValueNotifier
-                                //           : ValueNotifier(
-                                //               Provider.of<ProtonWalletProvider>(
-                                //                       context)
-                                //                   .protonWallet
-                                //                   .currentAccounts
-                                //                   .first)),
-                                const SizedBox(
-                                  height: 4,
-                                ),
                                 Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -906,7 +897,7 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget buildBroadcastingContent(BuildContext context) {
-    return Container(
+    return ColoredBox(
         color: ProtonColors.white,
         child: Column(children: [
           Expanded(
@@ -1053,10 +1044,7 @@ class SendView extends ViewBase<SendViewModel> {
                   height: 8,
                 ),
                 ButtonV5(
-                    onPressed: () async {
-                      // TODO(fix): add invite friend dialog and api call here
-                      LocalToast.showToast(context, "TODO");
-                    },
+                    onPressed: () async {},
                     enable: false,
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,
@@ -1070,7 +1058,7 @@ class SendView extends ViewBase<SendViewModel> {
   }
 
   Widget buildSuccessContent(BuildContext context) {
-    return Container(
+    return ColoredBox(
         color: ProtonColors.white,
         child: Column(children: [
           Expanded(
@@ -1116,8 +1104,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      // TODO(fix): add invite friend dialog and api call here
-                      LocalToast.showToast(context, "TODO");
+                      launchUrl(Uri.parse(inviteFriendLink));
                     },
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,

@@ -70,7 +70,7 @@ class WelcomeDialogSheet {
                         ),
                         TextSpan(
                           text: S.of(context).welcome_to_term_and_condition,
-                          style: FontManager.captionMedian(
+                          style: FontManager.linkUnderline(
                             ProtonColors.protonBlue,
                           ),
                           recognizer: TapGestureRecognizer()

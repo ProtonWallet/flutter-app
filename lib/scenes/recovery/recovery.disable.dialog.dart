@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 Future<void> showDisableDialog(
   BuildContext context,
@@ -10,52 +13,64 @@ Future<void> showDisableDialog(
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Disable recovery phrase?'),
-        content: const SingleChildScrollView(
+        title: Center(
+          child: Text(
+            S.of(context).disable_recovery_phrase_title,
+            style: FontManager.body1Median(ProtonColors.textNorm),
+          ),
+        ),
+        content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
               SizedBox(
                 width: 300,
                 child: Text(
-                  "This will disable your current recovery phrase. You won't be able to use it to access your account or decrypt your data.",
+                  S.of(context).disable_recovery_phrase_content,
+                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 12),
               SizedBox(
                 width: 300,
                 child: Text(
-                  "Enabling recovery by phrase again will generate a new recovery phrase.",
+                  S.of(context).disable_recovery_phrase_content2,
+                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  textAlign: TextAlign.center,
                 ),
-              )
+              ),
             ],
           ),
         ),
         actions: <Widget>[
           Column(
             children: [
-              SizedBox(
-                height: 50,
-                child: ButtonV5(
-                  onPressed: () {
-                    onDisable();
-                    Navigator.of(context).pop();
-                  },
-                  text: 'Disable recovery phrase',
-                  backgroundColor: Colors.red,
-                  width: 300,
-                  height: 44,
-                ),
+              ButtonV5(
+                onPressed: () {
+                  onDisable();
+                  Navigator.of(context).pop();
+                },
+                text: S.of(context).disable_recovery_phrase_button,
+                backgroundColor: ProtonColors.signalError,
+                textStyle: FontManager.body1Median(ProtonColors.white),
+                width: 300,
+                height: 44,
+                elevation: 0.0,
               ),
-              SizedBox(
-                height: 50,
-                child: ButtonV5(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  text: 'Cancel',
-                  width: 300,
-                  height: 44,
-                ),
+              const SizedBox(
+                height: 8,
+              ),
+              ButtonV5(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                text: S.of(context).cancel,
+                borderColor: ProtonColors.protonShades20,
+                backgroundColor: ProtonColors.protonShades20,
+                textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                width: 300,
+                height: 44,
+                elevation: 0.0,
               ),
             ],
           ),
