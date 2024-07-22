@@ -129,24 +129,27 @@ class HomeModalBottomSheet {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
         builder: (BuildContext context) {
-          return GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: SafeArea(
-              child: (useIntrinsicHeight ?? true)
-                  ? IntrinsicHeight(
-                      child: _buildContent(
+          return PopScope(
+            canPop: isDismissible ?? true,
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: SafeArea(
+                child: (useIntrinsicHeight ?? true)
+                    ? IntrinsicHeight(
+                        child: _buildContent(
+                          context,
+                          child: child,
+                          header: header,
+                          scrollController: scrollController,
+                        ),
+                      )
+                    : _buildContent(
                         context,
                         child: child,
                         header: header,
                         scrollController: scrollController,
                       ),
-                    )
-                  : _buildContent(
-                      context,
-                      child: child,
-                      header: header,
-                      scrollController: scrollController,
-                    ),
+              ),
             ),
           );
         });

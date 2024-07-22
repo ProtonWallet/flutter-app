@@ -70,12 +70,16 @@ class BitcoinAddressList extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
-                                  onTap: () {
-                                    TransactionBitcoinAddressSwitchSheet.show(
-                                      context,
-                                      viewModel,
-                                    );
+                                  onLongPress: (){
+                                    viewModel
+                                        .updateBodyListStatus(BodyListStatus.transactionList);
                                   },
+                                  // onTap: () {
+                                  //   TransactionBitcoinAddressSwitchSheet.show(
+                                  //     context,
+                                  //     viewModel,
+                                  //   );
+                                  // },
                                   child: Row(children: [
                                     Text(
                                       S.of(context).addresses,
@@ -83,11 +87,11 @@ class BitcoinAddressList extends StatelessWidget {
                                           ProtonColors.textNorm),
                                       textAlign: TextAlign.left,
                                     ),
-                                    Icon(
-                                      Icons.keyboard_arrow_down_outlined,
-                                      size: 18,
-                                      color: ProtonColors.textWeak,
-                                    ),
+                                    // Icon(
+                                    //   Icons.keyboard_arrow_down_outlined,
+                                    //   size: 18,
+                                    //   color: ProtonColors.textWeak,
+                                    // ),
                                   ]),
                                 ),
                                 Row(children: [
