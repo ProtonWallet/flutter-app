@@ -289,11 +289,11 @@ class SendViewModelImpl extends SendViewModel {
       fiatCurrencyNotifier.addListener(() async {
         if (fiatCurrencyNotifier.value.bitcoinCurrency != null) {
           bitcoinBase = true;
-          updateExchangeRate(defaultFiatCurrency);
+          updateExchangeRate(userSettingsDataProvider.fiatCurrency);
         } else {
           bitcoinBase = false;
           updateExchangeRate(
-              fiatCurrencyNotifier.value.fiatCurrency ?? defaultFiatCurrency);
+              fiatCurrencyNotifier.value.fiatCurrency ?? userSettingsDataProvider.fiatCurrency);
         }
       });
       amountFocusNode.addListener(splitAmountToRecipients);
@@ -1083,9 +1083,27 @@ class SendViewModelImpl extends SendViewModel {
     final msg = parseSampleDisplayError(error);
     if (msg.isNotEmpty) {
       // TODO(fix): improve logic here
-      if (msg.toLowerCase().contains("incorrectchecksumerror")) {
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
+      final BuildContext? context =
+          Coordinator.rootNavigatorKey.currentContext;
+      if (msg.toLowerCase().contains("outputbelowdustlimit")) {
+        if (context != null) {
+          CommonHelper.showSnackbar(
+            context,
+            S.of(context).error_you_dont_have_sufficient_balance,
+            isError: true,
+          );
+        } else {
+          CommonHelper.showErrorDialog(
+            msg,
+            callback: () {
+              if (Platform.isAndroid || Platform.isIOS) {
+                coordinator.showNativeReportBugs();
+              }
+            },
+          );
+        }
+      }
+      else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
         if (context != null) {
           CommonHelper.showSnackbar(
             context,

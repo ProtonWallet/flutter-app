@@ -58,6 +58,7 @@ import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/early.access.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
@@ -449,7 +450,6 @@ class HomeViewModelImpl extends HomeViewModel {
     // await LocalAuth.authenticate('hint');
     // init network
     await apiServiceManager.initalOldApiService();
-
     // read app version
     appVersion = await UserAgent().display;
 
@@ -459,6 +459,19 @@ class HomeViewModelImpl extends HomeViewModel {
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);
 
+    // check if user is eligible
+    final int eligible = await apiServiceManager
+        .getApiService()
+        .getSettingsClient()
+        .getUserWalletEligibility();
+    if (eligible == 0) {
+      EarlyAccessSheet.show(
+        Coordinator.rootNavigatorKey.currentContext!,
+        userEmail,
+        logout,
+      );
+      return;
+    }
     // ----------------
     // settings
 
@@ -807,8 +820,12 @@ class HomeViewModelImpl extends HomeViewModel {
       await protonWalletManager.logout();
       await userManager.logout();
       await WalletManager.cleanBDKCache();
-      userSettingProvider.destroy();
-      protonWalletManager.destroy();
+      try {
+        userSettingProvider.destroy();
+        protonWalletManager.destroy();
+      } catch(e){
+        // no provider init for non eligible user
+      }
       await WalletManager.cleanSharedPreference();
       await DBHelper.reset();
       await Future.delayed(const Duration(

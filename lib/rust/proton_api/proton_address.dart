@@ -32,7 +32,7 @@ class AllKeyAddressKey {
 
 class ProtonAddress {
   final String id;
-  final String domainId;
+  final String? domainId;
   final String email;
   final int status;
   final int type;
@@ -43,7 +43,7 @@ class ProtonAddress {
 
   const ProtonAddress({
     required this.id,
-    required this.domainId,
+    this.domainId,
     required this.email,
     required this.status,
     required this.type,

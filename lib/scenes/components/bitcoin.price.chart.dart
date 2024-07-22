@@ -130,7 +130,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         setState(() {
           dataPoints = spots;
           isLoading = false;
-          priceChange = (values.last - values.first) / values.last * 100;
+          priceChange = (values.last - values.first) / values.first * 100;
           if (values.isNotEmpty) {
             values.sort();
             percentile25 = values[(values.length * 0.25).floor()];

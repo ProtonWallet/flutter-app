@@ -15,6 +15,7 @@ abstract class TwoFactorAuthDisableViewModel extends ViewModel {
   TwoFactorAuthDisableViewModel(super.coordinator);
   List<TextEditingController> digitControllers = [];
   late TextEditingController passwordController;
+  late FocusNode passphraseFocusNode;
   Future<bool> disable2FA();
   String error = "";
 }
@@ -73,6 +74,7 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
   Future<void> loadData() async {
     digitControllers = List.generate(6, (index) => TextEditingController());
     passwordController = TextEditingController();
+    passphraseFocusNode = FocusNode();
   }
 
   @override

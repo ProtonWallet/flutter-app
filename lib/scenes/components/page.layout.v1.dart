@@ -6,10 +6,21 @@ import 'package:wallet/theme/theme.font.dart';
 
 class PageLayoutV1 extends StatelessWidget {
   final Widget? child;
+  final Widget? headerWidget;
   final Widget? bottomWidget;
   final String? title;
+  final double? borderRadius;
+  final Color? backgroundColor;
 
-  const PageLayoutV1({super.key, this.child, this.bottomWidget, this.title});
+  const PageLayoutV1({
+    super.key,
+    this.child,
+    this.headerWidget,
+    this.bottomWidget,
+    this.title,
+    this.borderRadius,
+    this.backgroundColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +28,9 @@ class PageLayoutV1 extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          color: ProtonColors.backgroundProton,
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(borderRadius ?? 24.0)),
+          color: backgroundColor ?? ProtonColors.backgroundProton,
         ),
         child: SafeArea(
           child: Padding(
@@ -26,23 +38,26 @@ class PageLayoutV1 extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BackButtonV1(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                headerWidget ??
+                    BackButtonV1(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
                 Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                      const SizedBox(height: defaultPadding),
-                      if (title != null)
-                        Text(title!,
-                            style: FontManager.titleSubHero(
-                                ProtonColors.textNorm)),
-                      if (child != null) child!,
-                    ]))),
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: defaultPadding),
+                          if (title != null)
+                            Text(title!,
+                                style: FontManager.titleSubHero(
+                                    ProtonColors.textNorm)),
+                          if (child != null) child!,
+                        ]),
+                  ),
+                ),
                 if (bottomWidget != null) bottomWidget!,
               ],
             ),

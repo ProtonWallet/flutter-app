@@ -129,7 +129,8 @@ class UserSettingsDataProvider extends DataProvider {
     settingsData = await _getFromDB();
   }
 
-  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency) async {
+  Future<void> updateFiatCurrency(FiatCurrency fiatCurrency,
+      {notify = true}) async {
     if (this.fiatCurrency != fiatCurrency) {
       this.fiatCurrency = fiatCurrency;
 
@@ -152,7 +153,9 @@ class UserSettingsDataProvider extends DataProvider {
             await ExchangeRateService.getExchangeRate(fiatCurrency);
         updateExchangeRate(exchangeRate);
       }
-      fiatCurrencyUpdateController.add(FiatCurrencyDataUpdated());
+      if (notify) {
+        fiatCurrencyUpdateController.add(FiatCurrencyDataUpdated());
+      }
     }
   }
 

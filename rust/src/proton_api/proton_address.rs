@@ -22,7 +22,7 @@ impl From<ApiAllKeyAddressKey> for AllKeyAddressKey {
 #[derive(Debug)]
 pub struct ProtonAddress {
     pub id: String,
-    pub domain_id: String,
+    pub domain_id: Option<String>,
     pub email: String,
     pub status: u32,
     pub r#type: u32,

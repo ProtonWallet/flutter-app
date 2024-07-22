@@ -168,8 +168,7 @@ class WalletsDataProvider extends DataProvider {
         newAccountIndex,
       );
       if (_isDerivationPathExist(wallet.accounts, derivationPath) ||
-          _isDerivationPathExist(
-              wallet.accounts, derivationPath.replaceFirst("m/", ""))) {
+          _isDerivationPathExist(wallet.accounts, "m/$derivationPath")) {
         newAccountIndex++;
       } else {
         return newAccountIndex;

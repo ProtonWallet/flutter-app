@@ -264,7 +264,7 @@ class ProtonSrpClientProofs {
 
 class ProtonUser {
   final String id;
-  final String name;
+  final String? name;
   final BigInt usedSpace;
   final String currency;
   final int credit;
@@ -278,13 +278,13 @@ class ProtonUser {
   final int delinquent;
   final String? organizationPrivateKey;
   final String email;
-  final String displayName;
+  final String? displayName;
   final List<ProtonUserKey>? keys;
   final int mnemonicStatus;
 
   const ProtonUser({
     required this.id,
-    required this.name,
+    this.name,
     required this.usedSpace,
     required this.currency,
     required this.credit,
@@ -298,7 +298,7 @@ class ProtonUser {
     required this.delinquent,
     this.organizationPrivateKey,
     required this.email,
-    required this.displayName,
+    this.displayName,
     this.keys,
     required this.mnemonicStatus,
   });
