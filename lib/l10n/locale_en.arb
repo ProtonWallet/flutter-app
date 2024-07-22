@@ -3,7 +3,7 @@
   "@@last_modified": "2024-02-12T00:10:57.227125",
   "app_name": "Proton Wallet",
   "login": "Login",
-  "settings_title": "Settings",
+  "settings_title": "User Settings",
   "setting_language": "Language",
   "auto_by_system": "Auto",
   "theme_mode": "Theme Mode",
@@ -21,6 +21,10 @@
   "@welcome_to": {
     "description": "The welcome message"
   },
+  "early_access_title": "Early Access Waitlist",
+  "early_access_content": "You have been added to the first come, first serve waiting list. We will notify you at {email} once we have more server capacity.\n\nInvites from active users of Proton Wallet will allow you to skip this waiting list.\n\nYou can also support us and get immediate access by upgrading to Proton Visionary, our most premium plan with paid features in all Proton products.",
+  "upgrade_to_visionary": "Upgrade to Visionary",
+  "explore_other_proton_products": "Explore other Proton products",
   "create_new_wallet": "Create a new wallet",
   "import_existing_wallet": "Import an existing wallet",
   "no_data": "No data",
@@ -434,6 +438,8 @@
   "wallet_account_script_type_desc_bip84": "Lowest fees, improved efficiency, modern format.",
   "wallet_account_script_type_desc_bip86": "Latest upgrade, enhanced privacy, complex transactions.",
   "wallet_recover_with_old_password": "Decrypt with your old password",
+  "password": "Password",
+  "password_hint": "Enter your password",
   "wallet_recover_with_mnemonic": "Recover with your mnemonic",
   "wallet_decryption_error_message": "Decryption error\nDecryption of this wallet's encrypted content failed.",
   "end_line_ingore_translation": "",

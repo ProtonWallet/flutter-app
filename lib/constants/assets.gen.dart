@@ -313,6 +313,9 @@ class $AssetsImagesIconGen {
   SvgGenImage get transfer =>
       const SvgGenImage('assets/images/icon/transfer.svg');
 
+  /// File path: assets/images/icon/two_fa.svg
+  SvgGenImage get twoFa => const SvgGenImage('assets/images/icon/two_fa.svg');
+
   /// File path: assets/images/icon/upgrade_intro.svg
   SvgGenImage get upgradeIntro =>
       const SvgGenImage('assets/images/icon/upgrade_intro.svg');
@@ -420,6 +423,7 @@ class $AssetsImagesIconGen {
         setupPreference,
         star,
         transfer,
+        twoFa,
         upgradeIntro,
         wallet0,
         wallet1,

@@ -39,16 +39,14 @@ class UserDataProvider extends DataProvider {
   final UserQueries userQueries;
   final UserKeysQueries userKeysQueries;
 
-  UserDataProvider(
-    this.protonUsersClient,
-    this.userQueries,
-    this.userKeysQueries,
-  ) {
+  UserDataProvider(this.protonUsersClient,
+      this.userQueries,
+      this.userKeysQueries,) {
     user = ProtonWalletUser();
   }
 
   final StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>();
+  StreamController<DataUpdated>();
 
   void enabled2FA(enable) {
     user.enabled2FA = enable;
@@ -92,7 +90,7 @@ class UserDataProvider extends DataProvider {
     userQueries.insertOrUpdateItem(DriftProtonUser(
         id: 0,
         userId: userinfo.id,
-        name: userinfo.name,
+        name: userinfo.name ?? "",
         usedSpace: userinfo.usedSpace,
         currency: userinfo.currency,
         credit: userinfo.credit,

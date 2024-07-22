@@ -250,7 +250,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           account.isSelected = false;
           if (isSelectedWallet && !hasUpdateUserSetting) {
             userSettingsDataProvider.updateFiatCurrency(
-                account.accountModel.fiatCurrency.toFiatCurrency());
+                account.accountModel.fiatCurrency.toFiatCurrency(), notify: false);
             hasUpdateUserSetting = true;
           }
         }
@@ -269,7 +269,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             account.isSelected = account.accountModel.accountID == accountID;
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
-                  account.accountModel.fiatCurrency.toFiatCurrency());
+                  account.accountModel.fiatCurrency.toFiatCurrency(), notify: false);
             }
           }
         } else {

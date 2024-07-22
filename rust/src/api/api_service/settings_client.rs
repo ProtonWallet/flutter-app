@@ -100,4 +100,12 @@ impl SettingsClient {
             Err(err) => Err(err.into()),
         }
     }
+
+    pub async fn get_user_wallet_eligibility(&self) -> Result<u8, BridgeError> {
+        let result = self.inner.get_user_wallet_eligibility().await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
 }

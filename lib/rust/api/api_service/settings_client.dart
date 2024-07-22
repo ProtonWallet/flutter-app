@@ -19,6 +19,8 @@ abstract class SettingsClient implements RustOpaqueInterface {
 
   Future<ApiWalletUserSettings> getUserSettings();
 
+  Future<int> getUserWalletEligibility();
+
   Future<ApiWalletUserSettings> hideEmptyUsedAddresses(
       {required bool hideEmptyUsedAddresses});
 

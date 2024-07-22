@@ -95,7 +95,8 @@ class HomeView extends ViewBase<HomeViewModel> {
               }
             }
           }
-          if (walletListState.initialized && walletListState.walletsModel.isEmpty) {
+          if (walletListState.initialized &&
+              walletListState.walletsModel.isEmpty) {
             return Stack(children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -160,13 +161,18 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             ),
                                           ],
                                         )),
-                                    BtcTitleActionsView(onSend: () {
-                                      viewModel.move(NavID.send);
-                                    }, onBuy: () {
-                                      viewModel.move(NavID.buy);
-                                    }, onReceive: () {
-                                      move(context, NavID.receive);
-                                    }),
+                                    BtcTitleActionsView(
+                                        initialized:
+                                            walletListState.initialized,
+                                        onSend: () {
+                                          viewModel.move(NavID.send);
+                                        },
+                                        onBuy: () {
+                                          viewModel.move(NavID.buy);
+                                        },
+                                        onReceive: () {
+                                          move(context, NavID.receive);
+                                        }),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -852,7 +858,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   onTap: () {
                                     if (viewModel.currentSize ==
                                         ViewSize.mobile) {
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     }
                                     viewModel.move(NavID.discover);
                                   },
@@ -870,7 +876,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   onTap: () {
                                     if (viewModel.currentSize ==
                                         ViewSize.mobile) {
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     }
                                     viewModel.move(NavID.settings);
                                   },
@@ -888,7 +894,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   onTap: () {
                                     if (viewModel.currentSize ==
                                         ViewSize.mobile) {
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     }
                                     viewModel.move(NavID.securitySetting);
                                   },
@@ -906,7 +912,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   onTap: () {
                                     if (viewModel.currentSize ==
                                         ViewSize.mobile) {
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     }
                                     viewModel.move(NavID.recovery);
                                   },
