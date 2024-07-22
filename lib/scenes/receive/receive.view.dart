@@ -5,13 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/bottom.sheets/placeholder.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
@@ -67,7 +68,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                               viewModel.bitcoinViaEmailAddress),
                                       learnMore: GestureDetector(
                                           onTap: () {
-                                            CustomPlaceholder.show(context);
+                                            launchUrl(
+                                                Uri.parse(bveAcitvedLink));
                                           },
                                           child: Text(S.of(context).learn_more,
                                               style: FontManager.body2Regular(
@@ -90,7 +92,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                           .bitcoin_via_email_not_active_desc,
                                       learnMore: GestureDetector(
                                           onTap: () {
-                                            CustomPlaceholder.show(context);
+                                            launchUrl(
+                                                Uri.parse(bveInAcitvedLink));
                                           },
                                           child: Text(S.of(context).learn_more,
                                               style: FontManager.body2Regular(

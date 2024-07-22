@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/theme/theme.font.dart';
 
 Future<void> showMnemonicDialog(
   BuildContext context,
@@ -15,44 +18,49 @@ Future<void> showMnemonicDialog(
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Your recovery phrase'),
+        backgroundColor: ProtonColors.backgroundProton,
+        title: Center(
+          child: Text(
+            S.of(context).enable_recovery_title,
+            style: FontManager.body1Median(ProtonColors.textNorm),
+          ),
+        ),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              const SizedBox(
+              SizedBox(
                 width: 360,
                 child: Text(
-                  "Your recovery phrase is a series of 12 words in a specific order.",
+                  S.of(context).enable_recovery_content,
+                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: 360,
+                child: Text(
+                  S.of(context).enable_recovery_remind,
+                  style: FontManager.body2Regular(ProtonColors.signalError),
+                  textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 24),
-              const SizedBox(
-                width: 360,
-                child: Text(
-                  "Please keep it safe. You'll need it to access your account and decrypt your data in case of a password reset.",
-                  style: TextStyle(
-                    color: Color(0xFFFFC483),
-                    fontSize: 15,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                "Recovery phrase",
-                style: TextStyle(
+              Text(
+                S.of(context).recovery_phrase,
+                style: const TextStyle(
                   fontSize: 18,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.all(16).copyWith(bottom: 8),
-                decoration: const BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                decoration: BoxDecoration(
+                  color: ProtonColors.white,
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
@@ -91,18 +99,9 @@ Future<void> showMnemonicDialog(
           ),
         ),
         actions: <Widget>[
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ButtonV5(
-                onPressed: () {
-                  onClick();
-                  Navigator.of(context).pop();
-                },
-                text: 'Done',
-                width: 100,
-                height: 44,
-              ),
               ButtonV5(
                 onPressed: () {
                   Share.share(
@@ -110,9 +109,28 @@ Future<void> showMnemonicDialog(
                     subject: "Recovery phrase",
                   );
                 },
-                text: 'Share',
-                width: 100,
+                text: S.of(context).share_button,
+                backgroundColor: ProtonColors.protonBlue,
+                textStyle: FontManager.body1Median(ProtonColors.white),
+                width: 300,
                 height: 44,
+                elevation: 0.0,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              ButtonV5(
+                onPressed: () {
+                  onClick();
+                  Navigator.of(context).pop();
+                },
+                text: S.of(context).done,
+                borderColor: ProtonColors.protonShades20,
+                backgroundColor: ProtonColors.protonShades20,
+                textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                width: 300,
+                height: 44,
+                elevation: 0.0,
               ),
             ],
           ),

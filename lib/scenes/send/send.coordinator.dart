@@ -2,6 +2,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -26,6 +27,7 @@ class SendCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
+    final userManager = serviceManager.get<UserManager>();
     final eventLoop = serviceManager.get<EventLoop>();
     final walletManager = serviceManager.get<ProtonWalletManager>();
     final dataProvider = serviceManager.get<DataProviderManager>();
@@ -37,9 +39,12 @@ class SendCoordinator extends Coordinator {
       accountID,
       eventLoop,
       walletManager,
+      userManager,
       dataProvider.contactsDataProvider,
+      dataProvider.walletKeysProvider,
       dataProvider.userSettingsDataProvider,
       dataProvider.localTransactionDataProvider,
+      dataProvider.walletDataProvider,
       apiServiceManager.getApiService().getInviteClient(),
     );
     widget = SendView(
