@@ -32,6 +32,9 @@ class OnboardingGuideSheet {
   }) {
     bool passphraseConfirmed = true;
     bool isCreatingWallet = false;
+    if (firstWallet) {
+      viewModel.nameTextController.text = "My Wallet";
+    }
     HomeModalBottomSheet.show(context,
         header: CustomHeader(
           title: S.of(context).wallet_setup,

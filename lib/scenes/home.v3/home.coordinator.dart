@@ -68,8 +68,7 @@ class HomeCoordinator extends Coordinator {
 
   void showSettings() {
     final view = SettingsCoordinator().start();
-    // showInBottomSheet(view);
-    push(view);
+    showInBottomSheet(view);
   }
 
   void showSend(String walletID, String accountID) {
@@ -106,17 +105,20 @@ class HomeCoordinator extends Coordinator {
 
   void showDiscover() {
     final view = DiscoverCoordinator().start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   void showBuy(String walletID, String accountID) {
     final view = BuyBitcoinCoordinator(walletID, accountID).start();
-    push(view);
+    showInBottomSheet(
+      view,
+      fullScreen: true,
+    );
   }
 
   void showSecuritySetting() {
     final view = SecuritySettingCoordinator().start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   void showHistoryDetails(

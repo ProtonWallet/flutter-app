@@ -15,13 +15,17 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class TwoFactorAuthViewModel extends ViewModel {
   TwoFactorAuthViewModel(super.coordinator);
+
   int page = 0;
   String otpAuthString = "";
   String secret = "";
   List<String> backupPhrases = [];
   List<TextEditingController> digitControllers = [];
   late TextEditingController passwordController;
+  late FocusNode passphraseFocusNode;
+
   void updatePage(int newPage);
+
   Future<bool> setup2FA();
 
   bool isLoading = false;
@@ -41,6 +45,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   final UserManager userManager;
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
+
   // final
   final UserDataProvider userDataProvider;
 
@@ -108,6 +113,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   Future<void> loadData() async {
     digitControllers = List.generate(6, (index) => TextEditingController());
     passwordController = TextEditingController();
+    passphraseFocusNode = FocusNode();
     secret = TwoFactorAuthHelper.generateSecret();
     final userEmail = userManager.userInfo.userMail;
     otpAuthString =

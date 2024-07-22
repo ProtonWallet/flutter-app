@@ -11,9 +11,10 @@ class BtcTitleActionsView extends StatelessWidget {
   final GestureTapCallback? onSend;
   final GestureTapCallback? onBuy;
   final GestureTapCallback? onReceive;
+  final bool initialized;
 
   const BtcTitleActionsView({
-    super.key,
+    required this.initialized, super.key,
     this.onSend,
     this.onBuy,
     this.onReceive,
@@ -41,6 +42,7 @@ class BtcTitleActionsView extends StatelessWidget {
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
         elevation: 0,
+        enable: initialized,
       ),
       ButtonV5(
         onPressed: onReceive,
@@ -51,6 +53,7 @@ class BtcTitleActionsView extends StatelessWidget {
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
         elevation: 0,
+        enable: initialized,
       ),
       ButtonV5(
         onPressed: onSend,
@@ -61,6 +64,7 @@ class BtcTitleActionsView extends StatelessWidget {
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
         elevation: 0,
+        enable: initialized,
       ),
     ];
   }

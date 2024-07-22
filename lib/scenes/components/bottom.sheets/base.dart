@@ -12,6 +12,8 @@ class HomeModalBottomSheet {
     Color? backgroundColor,
     bool? useIntrinsicHeight,
     double? maxHeight,
+    bool? isDismissible,
+    bool? enableDrag,
   }) {
     if (Responsive.isMobile(context)) {
       _showMobile(
@@ -22,6 +24,8 @@ class HomeModalBottomSheet {
         backgroundColor: backgroundColor,
         useIntrinsicHeight: useIntrinsicHeight,
         maxHeight: maxHeight,
+        isDismissible: isDismissible,
+        enableDrag: enableDrag,
       );
     } else {
       // desktop and tablet
@@ -33,6 +37,8 @@ class HomeModalBottomSheet {
         backgroundColor: backgroundColor,
         useIntrinsicHeight: useIntrinsicHeight,
         maxHeight: maxHeight,
+        isDismissible: isDismissible,
+        enableDrag: enableDrag,
       );
     }
   }
@@ -45,11 +51,15 @@ class HomeModalBottomSheet {
     Color? backgroundColor,
     bool? useIntrinsicHeight,
     double? maxHeight,
+    bool? isDismissible,
+    bool? enableDrag,
   }) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
+        isDismissible: isDismissible ?? true,
+        enableDrag: enableDrag ?? true,
         constraints: BoxConstraints(
           maxWidth: maxDeskTopSheetWidth,
           maxHeight: maxHeight ?? MediaQuery.of(context).size.height,
@@ -59,36 +69,38 @@ class HomeModalBottomSheet {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
         builder: (BuildContext context) {
-          return Align(
-            child: Container(
-              decoration: BoxDecoration(
-                color: backgroundColor ?? ProtonColors.backgroundProton,
-                borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-              ),
-              margin: const EdgeInsets.symmetric(vertical: 30),
-              padding: const EdgeInsets.all(4),
-              child: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: SafeArea(
-                  child: (useIntrinsicHeight ?? true)
-                      ? IntrinsicHeight(
-                          child: _buildContent(
-                            context,
-                            child: child,
-                            header: header,
-                            scrollController: scrollController,
-                          ),
-                        )
-                      : _buildContent(
-                          context,
-                          child: child,
-                          header: header,
-                          scrollController: scrollController,
-                        ),
+          return PopScope(
+              canPop: isDismissible ?? true,
+              child: Align(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: backgroundColor ?? ProtonColors.backgroundProton,
+                    borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 30),
+                  padding: const EdgeInsets.all(4),
+                  child: GestureDetector(
+                    onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                    child: SafeArea(
+                      child: (useIntrinsicHeight ?? true)
+                          ? IntrinsicHeight(
+                              child: _buildContent(
+                                context,
+                                child: child,
+                                header: header,
+                                scrollController: scrollController,
+                              ),
+                            )
+                          : _buildContent(
+                              context,
+                              child: child,
+                              header: header,
+                              scrollController: scrollController,
+                            ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
+              ));
         });
   }
 
@@ -100,11 +112,15 @@ class HomeModalBottomSheet {
     Color? backgroundColor,
     bool? useIntrinsicHeight,
     double? maxHeight,
+    bool? isDismissible,
+    bool? enableDrag,
   }) {
     showModalBottomSheet(
         context: context,
         backgroundColor: backgroundColor ?? ProtonColors.backgroundProton,
         isScrollControlled: true,
+        isDismissible: isDismissible ?? true,
+        enableDrag: enableDrag ?? true,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,
           maxHeight: maxHeight ?? MediaQuery.of(context).size.height - 60,

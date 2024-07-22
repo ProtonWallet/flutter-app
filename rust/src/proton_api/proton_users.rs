@@ -39,7 +39,7 @@ pub struct _ProtonUserKey {
 #[allow(non_snake_case)]
 pub struct _ProtonUser {
     pub ID: String,
-    pub Name: String,
+    pub Name: Option<String>,
     pub UsedSpace: u64,
     pub Currency: String,
     pub Credit: u32,
@@ -53,7 +53,7 @@ pub struct _ProtonUser {
     pub Delinquent: u32,
     pub OrganizationPrivateKey: Option<String>,
     pub Email: String,
-    pub DisplayName: String,
+    pub DisplayName: Option<String>,
     pub Keys: Option<Vec<ProtonUserKey>>,
     pub MnemonicStatus: u32,
 }

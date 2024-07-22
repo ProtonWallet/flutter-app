@@ -44,6 +44,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
       create: (context) => viewModel.bloc,
       child: PageLayoutV1(
         title: S.of(context).buy_bitcoin,
+        borderRadius: 0, // full screen style
         child: Column(
           children: [
             SizedBoxes.box32,

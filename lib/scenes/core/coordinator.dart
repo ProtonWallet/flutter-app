@@ -40,12 +40,14 @@ abstract class Coordinator implements ViewNavigator {
   void showInBottomSheet(
     Widget view, {
     Color? backgroundColor,
+    bool fullScreen = false,
   }) {
     Future.delayed(Duration.zero, () {
       if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
         _showMobileBottomSheet(
           view,
           backgroundColor: backgroundColor,
+          fullScreen: fullScreen,
         );
       } else {
         // desktop and tablet
@@ -60,6 +62,7 @@ abstract class Coordinator implements ViewNavigator {
   void _showMobileBottomSheet(
     Widget view, {
     Color? backgroundColor,
+    bool fullScreen = false,
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
@@ -67,10 +70,9 @@ abstract class Coordinator implements ViewNavigator {
         backgroundColor: Colors.transparent,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,
-          maxHeight: MediaQuery.of(context).size.height - 60,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+          maxHeight: fullScreen
+              ? MediaQuery.of(context).size.height
+              : MediaQuery.of(context).size.height - 60,
         ),
         isScrollControlled: true,
         builder: (context) {
@@ -92,9 +94,6 @@ abstract class Coordinator implements ViewNavigator {
               max(maxDeskTopSheetWidth, MediaQuery.of(context).size.width / 3),
           maxHeight: MediaQuery.of(context).size.height,
           minHeight: MediaQuery.of(context).size.height,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
         ),
         builder: (BuildContext context) {
           return Align(
