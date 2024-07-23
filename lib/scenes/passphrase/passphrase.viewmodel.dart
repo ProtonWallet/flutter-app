@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/passphrase/passphrase.coordinator.dart';
@@ -162,9 +166,16 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
 
       await WalletManager.autoBindEmailAddresses(userID);
       await Future.delayed(
-          const Duration(seconds: 1)); // wait for account show on sidebar
-    } catch (e) {
+        const Duration(seconds: 1),
+      ); // wait for account show on sidebar
+    } on BridgeError catch (e, stacktrace) {
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+    } catch (e, stacktrace) {
       errorMessage = e.toString();
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
   }
 

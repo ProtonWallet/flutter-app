@@ -9,8 +9,10 @@ import 'package:wallet/theme/theme.font.dart';
 class BackupMnemonicView extends StatelessWidget {
   final List<Item> itemList;
   final VoidCallback? onPressed;
+  final String walletName;
   const BackupMnemonicView({
     required this.itemList,
+    required this.walletName,
     super.key,
     this.onPressed,
   });
@@ -28,6 +30,11 @@ class BackupMnemonicView extends StatelessWidget {
           ),
           Text(S.of(context).mnemonic_backup_content_title,
               style: FontManager.titleHero(ProtonColors.textNorm)),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(walletName,
+              style: FontManager.titleSubHero(ProtonColors.textWeak)),
           const SizedBox(
             height: 10,
           ),

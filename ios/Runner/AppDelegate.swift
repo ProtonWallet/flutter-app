@@ -21,7 +21,7 @@ import ProtonCoreUIFoundations
 import UIKit
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, SimpleViewDelegate {
+@objc class AppDelegate: FlutterAppDelegate {
 
     /// native code and this need to be refactored later
     private var apiService: PMAPIService?
@@ -209,37 +209,6 @@ import UIKit
         }
     }
 
-    private var getHelpDecorator: ([[HelpItem]]) -> [[HelpItem]] {
-        // guard veryStrangeHelpScreenSwitch.isOn else { return { $0 } }
-        return { [weak self] _ in
-            [
-                [
-                    HelpItem.staticText(text: "🍌🍌🍌 Bananas 🍌🍌🍌"),
-                    HelpItem.custom(icon: IconProvider.eyeSlash,
-                                    title: "Look ma, I'm a pirate! 🏴‍☠️",
-                                    behaviour: { _ in
-                                        UIApplication.openURLIfPossible(URL(string: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Treasure-Island-map.jpg")!) }),
-                    HelpItem.otherIssues
-                ],
-                [
-                    HelpItem.support,
-                    HelpItem.staticText(text: "Have you ever seen a living dinosaur? I have"),
-                    HelpItem.custom(icon: IconProvider.mobile,
-                                    title: "Hello?",
-                                    behaviour: { [weak self] vc in
-                                        self?.showAlert(title: "Hello?",
-                                                       message: "Is it me you're looking for?",
-                                                       actionTitle: "Nope",
-                                                       actionBlock: {
-                                            UIApplication.openURLIfPossible(URL(string: "https://www.youtube.com/watch?v=bfBu2rV-aYs")!)
-                                        },
-                                                       over: vc)
-                                    })
-                ]
-            ]
-        }
-    }
-
     func showAlert(
         title: String,
         message: String,
@@ -298,7 +267,6 @@ import UIKit
         login?.presentLoginFlow(over: rootViewController,
                                 customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
-                                    // helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
                                 ), updateBlock: processLoginResult)
     }
@@ -314,7 +282,6 @@ import UIKit
         login?.presentSignupFlow(over: rootViewController,
                                  customization: LoginCustomizationOptions(
                                     performBeforeFlow: getAdditionalWork,
-                                    // helpDecorator: getHelpDecorator,
                                     inAppTheme: getInAppTheme
                                  ), updateBlock: processLoginResult)
     }
@@ -375,4 +342,6 @@ import UIKit
         )
         rootViewController.present(viewController, animated: true)
     }
+    
+    
 }

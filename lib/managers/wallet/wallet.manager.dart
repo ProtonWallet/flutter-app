@@ -321,6 +321,25 @@ class WalletManager implements Manager {
     return mnemonic;
   }
 
+  // TODO(fix): this function shouldnt be here and need to find better way handle walletName.
+  static Future<String> getWalletName(String walletID) async {
+    final walletModel = await DBHelper.walletDao!.findByServerID(
+      walletID,
+    );
+    final walletKey = await walletKeysProvider.getWalletKey(walletID);
+    if (walletKey == null) {
+      throw Exception("Wallet key not found");
+    }
+    final userKey = await userManager.getUserKey(walletKey.userKeyId);
+
+    final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
+    final String mnemonic = await WalletKeyHelper.decrypt(
+      secretKey,
+      walletModel.name,
+    );
+    return mnemonic;
+  }
+
   static Future<ProtonExchangeRate> getExchangeRate(
     FiatCurrency fiatCurrency, {
     int? time,
@@ -757,7 +776,6 @@ class WalletManager implements Manager {
     return signatures.isNotEmpty
         ? signatures[0]
         : "-----BEGIN PGP SIGNATURE-----*-----END PGP SIGNATURE-----";
-    // return signatures.join("\n"); // `TODO`:: add back after check with backend
   }
 
   static Future<bool> verifySignature(String publicAddressKey, String message,

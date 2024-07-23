@@ -22,6 +22,7 @@ class ErrorBottomSheet {
             Align(
                 alignment: Alignment.centerRight,
                 child: CloseButtonV1(onPressed: () {
+                  callback?.call();
                   Navigator.of(context).pop();
                 })),
             Transform.translate(

@@ -480,5 +480,8 @@
   "setting_2fa_enter_key_manual": "Enter key manually instead.",
   "setting_2fa_scan_qrcode": "Scan QR code instead.",
   "setting_2fa_backup_alert_title": "Important: Please make sure you save the recovery codes. Otherwise you can permanently lose access to your account if you lose your two-factor authentication device.",
-  "setting_2fa_backup_alert_content": "If you lose your two-factor-enabled device, these codes can be used instead of the 6-digit two-factor authentication code to sign in to your account. Each code can only be used once."
+  "setting_2fa_backup_alert_content": "If you lose your two-factor-enabled device, these codes can be used instead of the 6-digit two-factor authentication code to sign in to your account. Each code can only be used once.",
+  "buybitcoin_instruction_body_part_one": "Proton Wallet has partnered with Ramp and Banxa, two registered crypto asset services, to facilitate the purchase of BTC. Please enter your region to see the available partners and payment methods.",
+  "buybitcoin_instruction_body_part_two": "Finally, you will complete the Buy process on the partner's site and any purchased BTC will be sent to a BTC address generated from your wallet account.",
+  "buybitcoin_instruction_body_part_three": "You can also buy BTC on exchanges like Binance, Coinbase, or Kraken and then send the BTC to your Receive address."
 }

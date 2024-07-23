@@ -5,13 +5,13 @@ import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class CustomHeader extends StatelessWidget {
-  final String title;
+  final String? title;
   final AxisDirection buttonDirection;
   final Widget? button;
 
   const CustomHeader({
-    required this.title,
     required this.buttonDirection,
+    this.title,
     this.button,
     super.key,
   });
@@ -42,7 +42,7 @@ class CustomHeader extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Text(
-                title,
+                title ?? "",
                 style: FontManager.body1Median(ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),

@@ -7,6 +7,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -58,7 +59,6 @@ import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
-import 'package:wallet/scenes/components/alerts/permission.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -361,8 +361,6 @@ class HomeViewModelImpl extends HomeViewModel {
     _appStateSubscription = appStateManager.stream.listen((state) {
       if (state is AppSessionFailed) {
         showLogoutErrorDialog(errorMessage, logout);
-      } else if (state is AppPermissionState) {
-        showPermissionErrorDialog(state.message);
       } else if (state is AppUnlockFailedState) {
         LocalAuthManager.auth.stopAuthentication();
         logout();
@@ -879,9 +877,7 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> logout() async {
     isLogout = true;
-    EasyLoading.show(
-        status: "log out, cleaning cache..",
-        maskType: EasyLoadingMaskType.black);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
       eventLoop.stop();
       await protonWalletManager.logout();
@@ -1009,9 +1005,6 @@ class HomeViewModelImpl extends HomeViewModel {
         fiatCurrencyNotifier.value,
         accountIndex,
       );
-
-      // await dataProviderManager.walletDataProvider.createWalletAccount(
-      //     walletID, scriptType, label, fiatCurrencyNotifier.value);
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
@@ -1019,10 +1012,7 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showSnackbar(context, errorMessage, isError: true);
-      }
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
       return false;
     }
@@ -1201,17 +1191,11 @@ class HomeViewModelImpl extends HomeViewModel {
     } on BridgeError catch (e, stacktrace) {
       final msg = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      CommonHelper.showSnackbar(
-        Coordinator.rootNavigatorKey.currentContext!,
-        msg,
-        isError: true,
-      );
-    } catch (e) {
-      CommonHelper.showSnackbar(
-        Coordinator.rootNavigatorKey.currentContext!,
-        e.toString(),
-        isError: true,
-      );
+      Sentry.captureException(e, stackTrace: stacktrace);
+      CommonHelper.showErrorDialog(msg);
+    } catch (e, stacktrace) {
+      CommonHelper.showErrorDialog(e.toString());
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
     // no need to sync since it's brand new walllet
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -149,8 +150,10 @@ class ImportViewModelImpl extends ImportViewModel {
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
     if (walletModel != null && accountModel != null) {
       dataProviderManager.bdkTransactionDataProvider.syncWallet(

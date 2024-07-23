@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 
 class InputDoneView extends StatelessWidget {
   final VoidCallback? onTap;
@@ -20,7 +21,7 @@ class InputDoneView extends StatelessWidget {
               onTap?.call();
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: Text("Done",
+            child: Text(S.of(context).done,
                 style: TextStyle(
                     color: ProtonColors.blue1Text,
                     fontWeight: FontWeight.bold)),

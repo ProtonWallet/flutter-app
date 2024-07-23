@@ -1,3 +1,4 @@
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/database/base.database.dart';
 
 class AccountDatabase extends BaseDatabase {
@@ -27,6 +28,11 @@ class AccountDatabase extends BaseDatabase {
 
   Future<void> migration_1() async {
     // Add column `poolSize`
-    await addColumn("poolSize", "INTEGER");
+    try {
+      await dropColumn("poolSize");
+    } catch (e) {
+      logger.e(e);
+    }
+    await addColumn("poolSize", "INTEGER DEFAULT 10");
   }
 }
