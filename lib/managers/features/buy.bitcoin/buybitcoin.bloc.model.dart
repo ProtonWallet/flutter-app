@@ -24,10 +24,10 @@ class SelectedInfoModel {
       symbol: "USD",
     ),
     this.paymentMethod = PaymentMethod.card,
-    this.amount = "100",
+    this.amount = "200",
     this.selectedQuote = const Quote(
       bitcoinAmount: "0.001",
-      fiatAmount: "100",
+      fiatAmount: "200",
       fiatCurrencySymbol: "USD",
       networkFee: "10",
       paymentGatewayFee: "20",

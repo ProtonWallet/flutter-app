@@ -4,6 +4,12 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// Import for Android features.
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+
+/// Import for iOS features.
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
 class WebViewExample extends StatefulWidget {
   final String checkoutUrl;
   const WebViewExample({required this.checkoutUrl, super.key});
@@ -21,8 +27,30 @@ class _WebViewExampleState extends State<WebViewExample> {
     EasyLoading.show(
         status: "Loading Banxa..", maskType: EasyLoadingMaskType.black);
 
-    // #docregion webview_controller
-    controller = WebViewController()
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    controller = WebViewController.fromPlatformCreationParams(
+      params,
+      onPermissionRequest: (request) {
+        request.grant();
+      },
+    );
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(false);
+      (controller.platform as AndroidWebViewController)
+          .setMediaPlaybackRequiresUserGesture(false);
+    }
+
+    ///
+    controller
       ..clearCache()
       ..clearLocalStorage()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -85,15 +113,6 @@ class _WebViewExampleState extends State<WebViewExample> {
 </html>
 """);
   }
-
-  // Future<void> _enableCameraAccess() async {
-  //   // final permissions = await Permission.camera.request();
-  //   // if (permissions.isGranted) {
-  //   //   // print("Camera permission granted");
-  //   // } else {
-  //   //   // print("Camera permission denied");
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {

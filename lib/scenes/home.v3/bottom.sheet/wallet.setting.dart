@@ -551,6 +551,10 @@ class WalletSettingSheet {
                                           .map((v) => v.balance)
                                           .sum >
                                       0,
+                                  onBackup: () {
+                                    Navigator.of(context).pop();
+                                    viewModel.move(NavID.setupBackup);
+                                  },
                                 );
                               },
                               text: S.of(context).delete_wallet,

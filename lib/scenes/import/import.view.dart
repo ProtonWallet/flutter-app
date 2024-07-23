@@ -168,9 +168,9 @@ class ImportView extends ViewBase<ImportViewModel> {
                                   CommonHelper.showSnackbar(
                                       context, S.of(context).wallet_imported);
                                 } else {
-                                  CommonHelper.showSnackbar(
-                                      context, viewModel.errorMessage,
-                                      isError: true);
+                                  CommonHelper.showErrorDialog(
+                                    viewModel.errorMessage,
+                                  );
                                 }
                               }
                               viewModel.isImporting = false;

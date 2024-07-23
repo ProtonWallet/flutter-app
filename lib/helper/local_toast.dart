@@ -53,17 +53,5 @@ class LocalToast {
       gravity: ToastGravity.BOTTOM,
       toastDuration: Duration(seconds: duration),
     );
-
-    // // Custom Toast Position
-    // fToast.showToast(
-    //     child: toast,
-    //     toastDuration: Duration(seconds: 2),
-    //     positionedToastBuilder: (context, child) {
-    //       return Positioned(
-    //         child: child,
-    //         top: 16.0,
-    //         left: 16.0,
-    //       );
-    //     });
   }
 }

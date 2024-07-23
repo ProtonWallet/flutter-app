@@ -63,7 +63,7 @@ final class PaymentsManager {
     }
 
     func manageSubscription(completion: @escaping (PaymentsResult) -> Void) {
-//        guard !Bundle.main.isBetaBuild else { return }
+        guard !Bundle.main.isFromTestFlight else { return }
 
         self.paymentsUI = createPaymentsUI()
         paymentsUI?.showCurrentPlan(presentationType: .modal, backendFetch: true) { [weak self] result in
@@ -73,7 +73,7 @@ final class PaymentsManager {
     }
 
     func upgradeSubscription(completion: @escaping (PaymentsResult) -> Void) {
-//        guard !Bundle.main.isBetaBuild else { return }
+        guard !Bundle.main.isFromTestFlight else { return }
 
         self.paymentsUI = createPaymentsUI()
         paymentsUI?.showUpgradePlan(presentationType: .modal, backendFetch: true) { [weak self] reason in

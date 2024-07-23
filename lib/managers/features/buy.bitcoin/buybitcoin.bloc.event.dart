@@ -91,3 +91,11 @@ class CheckoutFinishedEvnet extends BuyBitcoinEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ResetError extends BuyBitcoinEvent {
+  final String error;
+
+  const ResetError(this.error);
+  @override
+  List<Object?> get props => [error];
+}
