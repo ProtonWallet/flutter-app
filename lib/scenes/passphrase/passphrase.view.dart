@@ -123,9 +123,9 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                         CommonHelper.showSnackbar(
                             context, S.of(context).wallet_created);
                       } else {
-                        CommonHelper.showSnackbar(
-                            context, viewModel.errorMessage,
-                            isError: true);
+                        CommonHelper.showErrorDialog(
+                          viewModel.errorMessage,
+                        );
                       }
                     }
                   } else {

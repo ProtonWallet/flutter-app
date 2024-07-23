@@ -37,6 +37,7 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   SetupBackupState flowState = SetupBackupState.start;
   int twofaStatus = 0;
   String error = "";
+  String walletName = "";
 
   Future<void> viewSeed(String loginPassword, String twofa);
 
@@ -108,6 +109,13 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
           index: index,
         ));
       });
+
+      try {
+        walletName = strMnemonic = await WalletManager.getWalletName(walletID);
+      } catch (e, stacktrace) {
+        walletName = "Unknown";
+        logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");
+      }
 
       /// check if the server proofs are valid
       final check = clientProofs.expectedServerProof == serverProofs;

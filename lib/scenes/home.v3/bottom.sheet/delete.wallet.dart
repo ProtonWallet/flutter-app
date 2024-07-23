@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/local_toast.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -21,9 +17,14 @@ import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class DeleteWalletSheet {
-  static void show(BuildContext context, HomeViewModel viewModel,
-      WalletMenuModel walletMenuModel,
-      {required bool hasBalance, bool isInvalidWallet = false}) {
+  static void show(
+    BuildContext context,
+    HomeViewModel viewModel,
+    WalletMenuModel walletMenuModel, {
+    required bool hasBalance,
+    bool isInvalidWallet = false,
+    VoidCallback? onBackup,
+  }) {
     bool isDeleting = false;
     HomeModalBottomSheet.show(
       context,
@@ -119,18 +120,10 @@ class DeleteWalletSheet {
                         const SizedBox(height: 40),
                         ButtonV5(
                           onPressed: () async {
-                            Clipboard.setData(ClipboardData(
-                              text: await WalletManager.getMnemonicWithID(
-                                  walletMenuModel.walletModel.walletID),
-                            )).then((_) {
-                              if (context.mounted) {
-                                logger.i(S.of(context).copied_mnemonic);
-                                LocalToast.showToast(
-                                    context, S.of(context).copied_mnemonic);
-                              }
-                            });
+                            Navigator.of(context).pop();
+                            onBackup?.call();
                           },
-                          text: S.of(context).save_mnemonic,
+                          text: S.of(context).backup_wallet,
                           width: MediaQuery.of(context).size.width,
                           textStyle:
                               FontManager.body1Median(ProtonColors.textNorm),

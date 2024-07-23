@@ -31,15 +31,15 @@ class RotateChildState extends State<FlyingAnimation>
 
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(milliseconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           if (!isDisposed) {
             controller.reverse();
           }
         });
       } else if (status == AnimationStatus.dismissed) {
-        Future.delayed(const Duration(milliseconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           if (!isDisposed) {
-            controller.reverse();
+            controller.forward();
           }
         });
       }

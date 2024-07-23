@@ -40,6 +40,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
           ? BackupIntroduceView(onPressed: viewModel.tryLoadMnemonic)
           : BackupMnemonicView(
               itemList: viewModel.itemList,
+              walletName: viewModel.walletName,
               onPressed: viewModel.setBackup,
             ),
     );

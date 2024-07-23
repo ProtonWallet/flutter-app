@@ -97,8 +97,8 @@ class TransactionListTitle extends StatelessWidget {
                           isSend
                               ? "${S.of(context).trans_to} $address"
                               : "${S.of(context).trans_from} $address",
-                          style:
-                              FontManager.actionButtonText(ProtonColors.textNorm),
+                          style: FontManager.actionButtonText(
+                              ProtonColors.textNorm),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),
@@ -160,13 +160,6 @@ class TransactionListTitle extends StatelessWidget {
                     : Text("+${bitcoinAmount.toFiatCurrencySignString()}",
                         style: FontManager.captionRegular(
                             ProtonColors.signalSuccess)),
-                // isSend
-                //     ? Text(bitcoinAmount.toString(),
-                //         style: FontManager.captionRegular(
-                //             ProtonColors.signalError))
-                //     : Text("+${bitcoinAmount.toString()}",
-                //         style: FontManager.captionRegular(
-                //             ProtonColors.signalSuccess)),
               ],
             ),
           ]),

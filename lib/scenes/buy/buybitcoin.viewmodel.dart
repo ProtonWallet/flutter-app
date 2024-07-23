@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ramp_flutter/configuration.dart';
 import 'package:ramp_flutter/offramp_sale.dart';
 import 'package:ramp_flutter/onramp_purchase.dart';
@@ -307,17 +308,26 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     }
   }
 
+  Future<void> _requestPermissions() async {
+    var status = await Permission.camera.request();
+    if (status.isGranted) {}
+
+    status = await Permission.microphone.request();
+    if (status.isGranted) {}
+  }
+
   @override
   Future<void> pay(SelectedInfoModel selected) async {
     bloc.add(CheckoutLoadingEvnet());
-    final amount = selected.amount;
     final check = bloc.toNumberAmount(controller.text);
-    if (amount != check) {
-      if (check == "0") {
-        return bloc.add(CheckoutFinishedEvnet());
-      }
-      selectAmount(check);
+    // if (amount != check) {
+    if (check == "0") {
+      return bloc.add(CheckoutFinishedEvnet());
     }
+    selectAmount(check);
+
+    await _requestPermissions();
+
     if (selected.provider == GatewayProvider.ramp) {
       configuration.hostLogoUrl =
           "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
@@ -335,9 +345,13 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
       move(NavID.rampExternal);
     } else if (selected.provider == GatewayProvider.banxa) {
-      final checkOutUrl = await bloc.checkout(receiveAddress);
-      if (checkOutUrl.isNotEmpty) {
-        coordinator.pushWebview(checkOutUrl);
+      try {
+        final checkOutUrl = await bloc.checkout(receiveAddress);
+        if (checkOutUrl.isNotEmpty) {
+          coordinator.pushWebview(checkOutUrl);
+        }
+      } catch (e) {
+        logger.e(e.toString());
       }
     }
     bloc.add(CheckoutFinishedEvnet());

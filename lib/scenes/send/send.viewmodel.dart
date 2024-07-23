@@ -1140,9 +1140,10 @@ class SendViewModelImpl extends SendViewModel {
           CommonHelper.showErrorDialog(
             msg,
             callback: () {
-              if (Platform.isAndroid || Platform.isIOS) {
-                coordinator.showNativeReportBugs();
-              }
+              // TODO(fix): change me back
+              // if (Platform.isAndroid || Platform.isIOS) {
+              //   coordinator.showNativeReportBugs();
+              // }
             },
           );
         }
@@ -1157,9 +1158,10 @@ class SendViewModelImpl extends SendViewModel {
           CommonHelper.showErrorDialog(
             msg,
             callback: () {
-              if (Platform.isAndroid || Platform.isIOS) {
-                coordinator.showNativeReportBugs();
-              }
+              // TODO(fix): change me back
+              // if (Platform.isAndroid || Platform.isIOS) {
+              //   coordinator.showNativeReportBugs();
+              // }
             },
           );
         }
@@ -1167,9 +1169,10 @@ class SendViewModelImpl extends SendViewModel {
         CommonHelper.showErrorDialog(
           msg,
           callback: () {
-            if (Platform.isAndroid || Platform.isIOS) {
-              coordinator.showNativeReportBugs();
-            }
+            // TODO(fix): change me back
+            // if (Platform.isAndroid || Platform.isIOS) {
+            //   coordinator.showNativeReportBugs();
+            // }
           },
         );
       }
