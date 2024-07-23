@@ -88,9 +88,13 @@ class CommonHelper {
               bitcoinAddress.toLowerCase().startsWith("1") ||
               bitcoinAddress.toLowerCase().startsWith("3")) &&
           bitcoinAddress.length > 24;
-    } else {
+    } else if (appConfig.coinType == bitcoinTestnet) {
       /// testnet
       return bitcoinAddress.toLowerCase().startsWith("tb") &&
+          bitcoinAddress.length > 24;
+    } else {
+      /// regtest
+      return bitcoinAddress.toLowerCase().startsWith("bcrt") &&
           bitcoinAddress.length > 24;
     }
   }
