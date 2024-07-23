@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 
 class WelcomBackground extends StatelessWidget {
   final Widget child;
@@ -13,6 +14,7 @@ class WelcomBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ProtonColors.white,
       resizeToAvoidBottomInset: false,
       body: SizedBox(
         width: double.infinity,

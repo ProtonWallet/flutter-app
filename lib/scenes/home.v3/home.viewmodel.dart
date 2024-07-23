@@ -17,6 +17,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -42,12 +43,16 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/api_service/price_graph_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/invite.dart';
+import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -101,8 +106,11 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
+  List<ContactsModel> contactsEmails = [];
   AccountModel? historyAccountModel;
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
+  bool canInvite = false;
+  RemainingMonthlyInvitations? remainingMonthlyInvitations;
 
   Map<String, ValueNotifier> accountFiatCurrencyNotifiers = {};
 
@@ -138,8 +146,11 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setSearchAddressTextField({required bool show});
 
   void setDisplayBalance({required bool display});
+  PriceGraphClient getPriceGraphClient();
 
   Future<void> createWallet();
+
+  Future<bool> sendInviteForNewComer(String email);
 
   void deleteWallet(WalletModel walletModel) {
     deleteWalletBloc.add(DeleteWalletEvent(
@@ -409,6 +420,61 @@ class HomeViewModelImpl extends HomeViewModel {
     cryptoPriceDataService.dispose();
   }
 
+  Future<void> loadContacts() async {
+    await dataProviderManager.contactsDataProvider.preLoad();
+    contactsEmails =
+        await dataProviderManager.contactsDataProvider.getContacts() ?? [];
+  }
+
+  // fix me
+  @override
+  PriceGraphClient getPriceGraphClient(){
+    return apiServiceManager.getApiService().getPriceGraphClient();
+  }
+
+  Future<void> loadInviteState() async {
+    remainingMonthlyInvitations = await apiServiceManager
+        .getApiService()
+        .getInviteClient()
+        .getRemainingMonthlyInvitation();
+    if (remainingMonthlyInvitations == null) {
+      canInvite = false;
+    } else {
+      canInvite = remainingMonthlyInvitations!.available > 0;
+    }
+    datasourceStreamSinkAdd();
+  }
+
+  @override
+  Future<bool> sendInviteForNewComer(String email) async {
+    String? emailAddressID;
+    if (protonAddresses.isNotEmpty) {
+      emailAddressID = protonAddresses.first.id;
+    }
+    try {
+      await apiServiceManager
+          .getApiService()
+          .getInviteClient()
+          .sendNewcomerInvite(
+              inviteeEmail: email.trim(),
+              inviterAddressId: emailAddressID ?? "");
+    } on BridgeError catch (error, stacktrace) {
+      final errMsg = parseSampleDisplayError(error);
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        LocalToast.showErrorToast(context, errMsg);
+      }
+      return false;
+    } catch (e) {
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        LocalToast.showErrorToast(context, e.toString());
+      }
+      return false;
+    }
+    return true;
+  }
+
   @override
   Future<void> loadProton2FAState() async {
     try {
@@ -497,9 +563,10 @@ class HomeViewModelImpl extends HomeViewModel {
 
       loadProtonRecoveryState();
       loadProton2FAState();
+      loadInviteState();
 
       // async
-      dataProviderManager.contactsDataProvider.preLoad();
+      loadContacts();
       dataProviderManager
           .userSettingsDataProvider.exchangeRateUpdateController.stream
           .listen((onData) {
@@ -823,7 +890,7 @@ class HomeViewModelImpl extends HomeViewModel {
       try {
         userSettingProvider.destroy();
         protonWalletManager.destroy();
-      } catch(e){
+      } catch (e) {
         // no provider init for non eligible user
       }
       await WalletManager.cleanSharedPreference();

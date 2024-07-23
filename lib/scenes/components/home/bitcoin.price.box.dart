@@ -6,6 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
+import 'package:wallet/rust/api/api_service/price_graph_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
 import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
@@ -15,10 +16,14 @@ class BitcoinPriceBox extends StatelessWidget {
   final String title;
   final double price;
   final double priceChange;
+  final PriceGraphClient priceClient;
   final ProtonExchangeRate exchangeRate;
 
   const BitcoinPriceBox({
-    required this.title, required this.exchangeRate, super.key,
+    required this.title,
+    required this.exchangeRate,
+    required this.priceClient,
+    super.key,
     this.price = 0,
     this.priceChange = 0,
   });
@@ -49,6 +54,7 @@ class BitcoinPriceBox extends StatelessWidget {
                       BitcoinPriceDetailSheet.show(
                         context,
                         exchangeRate,
+                        priceClient,
                         priceChange,
                       );
                     },
@@ -88,7 +94,7 @@ class BitcoinPriceBox extends StatelessWidget {
                                             .getNotionalInFiatCurrency(
                                                 exchangeRate, 100000000),
                                         // value: price,
-                                        fractionDigits: defaultDisplayDigits,
+                                        fractionDigits: ExchangeCalculator.getDisplayDigit(exchangeRate),
                                         textStyle: FontManager.body2Median(
                                             ProtonColors.textNorm)),
                                     const SizedBox(
@@ -121,7 +127,7 @@ class BitcoinPriceBox extends StatelessWidget {
                         Expanded(
                           child: BitcoinPriceHomepageChart(
                             exchangeRate: exchangeRate,
-                            width: MediaQuery.of(context).size.width - 260,
+                            priceClient: priceClient,
                             priceChange: priceChange,
                           ),
                         ),

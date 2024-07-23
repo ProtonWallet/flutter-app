@@ -289,6 +289,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/icon/search.svg');
 
+  /// File path: assets/images/icon/send-invite.svg
+  SvgGenImage get sendInvite =>
+      const SvgGenImage('assets/images/icon/send-invite.svg');
+
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
 
@@ -416,6 +420,7 @@ class $AssetsImagesIconGen {
         ramp,
         receive,
         search,
+        sendInvite,
         send,
         send1,
         send2,
@@ -504,6 +509,10 @@ class $AssetsImagesWelcomeGen {
   SvgGenImage get protonPrivacyByDefaultFooter => const SvgGenImage(
       'assets/images/welcome/proton_privacy_by_default_footer.svg');
 
+  /// File path: assets/images/welcome/wallet_welcome_head.jpg
+  AssetGenImage get walletWelcomeHeadJpg =>
+      const AssetGenImage('assets/images/welcome/wallet_welcome_head.jpg');
+
   /// File path: assets/images/welcome/wallet_welcome_head.png
   AssetGenImage get walletWelcomeHeadPng =>
       const AssetGenImage('assets/images/welcome/wallet_welcome_head.png');
@@ -519,6 +528,7 @@ class $AssetsImagesWelcomeGen {
   /// List of all assets
   List<dynamic> get values => [
         protonPrivacyByDefaultFooter,
+        walletWelcomeHeadJpg,
         walletWelcomeHeadPng,
         walletWelcomeHeadSvg,
         walletWelcomeHeadCover

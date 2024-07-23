@@ -12,3 +12,24 @@ enum InviteNotificationType {
   unsupported,
   ;
 }
+
+class RemainingMonthlyInvitations {
+  final int used;
+  final int available;
+
+  const RemainingMonthlyInvitations({
+    required this.used,
+    required this.available,
+  });
+
+  @override
+  int get hashCode => used.hashCode ^ available.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RemainingMonthlyInvitations &&
+          runtimeType == other.runtimeType &&
+          used == other.used &&
+          available == other.available;
+}

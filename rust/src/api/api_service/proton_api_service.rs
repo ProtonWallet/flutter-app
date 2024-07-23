@@ -2,6 +2,7 @@
 use super::address_client::AddressClient;
 use super::invite_client::InviteClient;
 use super::onramp_gateway_client::OnRampGatewayClient;
+use super::price_graph_client::PriceGraphClient;
 use super::proton_settings_client::ProtonSettingsClient;
 use super::proton_users_client::ProtonUsersClient;
 use super::wallet_auth_store::ProtonWalletAuthStore;
@@ -202,6 +203,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_invite_client(&self) -> InviteClient {
         InviteClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_price_graph_client(&self) -> PriceGraphClient {
+        PriceGraphClient::new(&self)
     }
 
     #[frb(sync)]

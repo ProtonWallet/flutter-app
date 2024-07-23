@@ -12,6 +12,7 @@ import 'api/api_service/event_client.dart';
 import 'api/api_service/exchange_rate_client.dart';
 import 'api/api_service/invite_client.dart';
 import 'api/api_service/onramp_gateway_client.dart';
+import 'api/api_service/price_graph_client.dart';
 import 'api/api_service/proton_api_service.dart';
 import 'api/api_service/proton_contacts_client.dart';
 import 'api/api_service/proton_email_addr_client.dart';
@@ -66,6 +67,7 @@ import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
 import 'proton_api/invite.dart';
 import 'proton_api/payment_gateway.dart';
+import 'proton_api/price_graph.dart';
 import 'proton_api/proton_address.dart';
 import 'proton_api/proton_users.dart';
 import 'proton_api/user_settings.dart';
@@ -197,6 +199,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_OnRampGatewayClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClientPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_PriceGraphClientPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ProtonApiServicePtr => wire
@@ -390,6 +396,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   OnRampGatewayClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic raw);
+
+  @protected
+  PriceGraphClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           dynamic raw);
 
   @protected
@@ -600,6 +611,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   OnRampGatewayClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          dynamic raw);
+
+  @protected
+  PriceGraphClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           dynamic raw);
 
   @protected
@@ -826,6 +842,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  PriceGraphClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          dynamic raw);
+
+  @protected
   ProtonApiService
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           dynamic raw);
@@ -963,6 +984,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BitcoinAddress dco_decode_box_autoadd_bitcoin_address(dynamic raw);
 
   @protected
+  BitcoinUnit dco_decode_box_autoadd_bitcoin_unit(dynamic raw);
+
+  @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
@@ -971,6 +995,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw);
+
+  @protected
+  FiatCurrency dco_decode_box_autoadd_fiat_currency(dynamic raw);
 
   @protected
   FlagsSettings dco_decode_box_autoadd_flags_settings(dynamic raw);
@@ -1071,6 +1098,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq dco_decode_create_wallet_req(dynamic raw);
+
+  @protected
+  DataPoint dco_decode_data_point(dynamic raw);
 
   @protected
   EmailIntegrationBitcoinAddress dco_decode_email_integration_bitcoin_address(
@@ -1186,6 +1216,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ContactEmailEvent> dco_decode_list_contact_email_event(dynamic raw);
+
+  @protected
+  List<DataPoint> dco_decode_list_data_point(dynamic raw);
 
   @protected
   List<FrbOutPoint> dco_decode_list_frb_out_point(dynamic raw);
@@ -1308,7 +1341,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  BitcoinUnit? dco_decode_opt_box_autoadd_bitcoin_unit(dynamic raw);
+
+  @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  FiatCurrency? dco_decode_opt_box_autoadd_fiat_currency(dynamic raw);
 
   @protected
   FlagsSettings? dco_decode_opt_box_autoadd_flags_settings(dynamic raw);
@@ -1413,6 +1452,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PhoneSettings dco_decode_phone_settings(dynamic raw);
 
   @protected
+  PriceGraph dco_decode_price_graph(dynamic raw);
+
+  @protected
   ProtonAddress dco_decode_proton_address(dynamic raw);
 
   @protected
@@ -1463,6 +1505,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ReferralSettings dco_decode_referral_settings(dynamic raw);
 
   @protected
+  RemainingMonthlyInvitations dco_decode_remaining_monthly_invitations(
+      dynamic raw);
+
+  @protected
   ResponseError dco_decode_response_error(dynamic raw);
 
   @protected
@@ -1486,6 +1532,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SRPVerifierB64 dco_decode_srp_verifier_b_64(dynamic raw);
+
+  @protected
+  Timeframe dco_decode_timeframe(dynamic raw);
 
   @protected
   TransactionTime dco_decode_transaction_time(dynamic raw);
@@ -1705,6 +1754,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  PriceGraphClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonApiService
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           SseDeserializer deserializer);
@@ -1912,6 +1966,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   OnRampGatewayClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
+          SseDeserializer deserializer);
+
+  @protected
+  PriceGraphClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           SseDeserializer deserializer);
 
   @protected
@@ -2135,6 +2194,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  PriceGraphClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          SseDeserializer deserializer);
+
+  @protected
   ProtonApiService
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           SseDeserializer deserializer);
@@ -2283,6 +2347,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  BitcoinUnit sse_decode_box_autoadd_bitcoin_unit(SseDeserializer deserializer);
+
+  @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
@@ -2291,6 +2358,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq sse_decode_box_autoadd_create_wallet_req(
+      SseDeserializer deserializer);
+
+  @protected
+  FiatCurrency sse_decode_box_autoadd_fiat_currency(
       SseDeserializer deserializer);
 
   @protected
@@ -2409,6 +2480,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq sse_decode_create_wallet_req(SseDeserializer deserializer);
+
+  @protected
+  DataPoint sse_decode_data_point(SseDeserializer deserializer);
 
   @protected
   EmailIntegrationBitcoinAddress sse_decode_email_integration_bitcoin_address(
@@ -2536,6 +2610,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<ContactEmailEvent> sse_decode_list_contact_email_event(
       SseDeserializer deserializer);
+
+  @protected
+  List<DataPoint> sse_decode_list_data_point(SseDeserializer deserializer);
 
   @protected
   List<FrbOutPoint> sse_decode_list_frb_out_point(SseDeserializer deserializer);
@@ -2677,7 +2754,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  BitcoinUnit? sse_decode_opt_box_autoadd_bitcoin_unit(
+      SseDeserializer deserializer);
+
+  @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  FiatCurrency? sse_decode_opt_box_autoadd_fiat_currency(
+      SseDeserializer deserializer);
 
   @protected
   FlagsSettings? sse_decode_opt_box_autoadd_flags_settings(
@@ -2799,6 +2884,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PhoneSettings sse_decode_phone_settings(SseDeserializer deserializer);
 
   @protected
+  PriceGraph sse_decode_price_graph(SseDeserializer deserializer);
+
+  @protected
   ProtonAddress sse_decode_proton_address(SseDeserializer deserializer);
 
   @protected
@@ -2854,6 +2942,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ReferralSettings sse_decode_referral_settings(SseDeserializer deserializer);
 
   @protected
+  RemainingMonthlyInvitations sse_decode_remaining_monthly_invitations(
+      SseDeserializer deserializer);
+
+  @protected
   ResponseError sse_decode_response_error(SseDeserializer deserializer);
 
   @protected
@@ -2878,6 +2970,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SRPVerifierB64 sse_decode_srp_verifier_b_64(SseDeserializer deserializer);
+
+  @protected
+  Timeframe sse_decode_timeframe(SseDeserializer deserializer);
 
   @protected
   TransactionTime sse_decode_transaction_time(SseDeserializer deserializer);
@@ -3104,6 +3199,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          PriceGraphClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           ProtonApiService self, SseSerializer serializer);
 
@@ -3311,6 +3411,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
           OnRampGatewayClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          PriceGraphClient self, SseSerializer serializer);
 
   @protected
   void
@@ -3537,6 +3642,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+          PriceGraphClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           ProtonApiService self, SseSerializer serializer);
 
@@ -3691,6 +3801,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BitcoinAddress self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_bitcoin_unit(
+      BitcoinUnit self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
@@ -3700,6 +3814,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_create_wallet_req(
       CreateWalletReq self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_fiat_currency(
+      FiatCurrency self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_flags_settings(
@@ -3821,6 +3939,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_create_wallet_req(
       CreateWalletReq self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_data_point(DataPoint self, SseSerializer serializer);
 
   @protected
   void sse_encode_email_integration_bitcoin_address(
@@ -3952,6 +4073,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_contact_email_event(
       List<ContactEmailEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_data_point(
+      List<DataPoint> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_frb_out_point(
@@ -4096,7 +4221,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiWalletUserSettings? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_bitcoin_unit(
+      BitcoinUnit? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_fiat_currency(
+      FiatCurrency? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_flags_settings(
@@ -4219,6 +4352,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_phone_settings(PhoneSettings self, SseSerializer serializer);
 
   @protected
+  void sse_encode_price_graph(PriceGraph self, SseSerializer serializer);
+
+  @protected
   void sse_encode_proton_address(ProtonAddress self, SseSerializer serializer);
 
   @protected
@@ -4275,6 +4411,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ReferralSettings self, SseSerializer serializer);
 
   @protected
+  void sse_encode_remaining_monthly_invitations(
+      RemainingMonthlyInvitations self, SseSerializer serializer);
+
+  @protected
   void sse_encode_response_error(ResponseError self, SseSerializer serializer);
 
   @protected
@@ -4300,6 +4440,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_srp_verifier_b_64(
       SRPVerifierB64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_timeframe(Timeframe self, SseSerializer serializer);
 
   @protected
   void sse_encode_transaction_time(
@@ -5372,6 +5515,38 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

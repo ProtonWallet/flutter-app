@@ -67,7 +67,7 @@ class EditSenderSheet {
                 ProtonMailAutoComplete(
                     labelText: S.of(context).sender_name,
                     hintText: S.of(context).sender_name_hint,
-                    emails: viewModel.contactsEmail,
+                    emails: viewModel.contactsEmails,
                     color: ProtonColors.white,
                     focusNode: nameFocusNode,
                     textEditingController: nameController,
@@ -78,7 +78,7 @@ class EditSenderSheet {
                     callback: () {
                       final String email = nameController.text;
                       for (ContactsModel contactsModel
-                          in viewModel.contactsEmail) {
+                          in viewModel.contactsEmails) {
                         if (email == contactsModel.email) {
                           if (contactsModel.name.isNotEmpty) {
                             nameController.text = contactsModel.name;

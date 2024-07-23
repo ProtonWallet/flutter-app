@@ -17,6 +17,7 @@ import 'exchange_rate_client.dart';
 import 'invite_client.dart';
 import 'onramp_gateway_client.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'price_graph_client.dart';
 import 'proton_contacts_client.dart';
 import 'proton_email_addr_client.dart';
 import 'proton_settings_client.dart';
@@ -45,6 +46,8 @@ abstract class ProtonApiService implements RustOpaqueInterface {
   InviteClient getInviteClient();
 
   OnRampGatewayClient getOnRampGatewayClient();
+
+  PriceGraphClient getPriceGraphClient();
 
   ContactsClient getProtonContactsClient();
 
