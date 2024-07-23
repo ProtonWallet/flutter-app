@@ -7,7 +7,6 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -260,17 +259,28 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             const SizedBox(
               height: 6,
             ),
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              Text(
-                viewModel.secret,
-                style: FontManager.body2Median(ProtonColors.textNorm),
-                maxLines: 4,
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Icon(Icons.copy_rounded, size: 16, color: ProtonColors.textHint),
-            ]),
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: viewModel.secret))
+                    .then((_) {
+                  if (context.mounted) {
+                    LocalToast.showToast(context, S.of(context).copied);
+                  }
+                });
+              },
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(
+                  viewModel.secret,
+                  style: FontManager.body2Median(ProtonColors.textNorm),
+                  maxLines: 4,
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Icon(Icons.copy_rounded,
+                    size: 16, color: ProtonColors.textHint),
+              ]),
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -460,7 +470,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                       text: "[${viewModel.backupPhrases.join(" ")}]"))
                   .then((_) {
                 if (context.mounted) {
-                  CommonHelper.showSnackbar(
+                  LocalToast.showToast(
                       context, "Recovery codes copied to clipboard");
                 }
               });
@@ -528,8 +538,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                       children: [
                         Text(
                           viewModel.backupPhrases[i],
-                          style:
-                              FontManager.body2Median(ProtonColors.textNorm),
+                          style: FontManager.body2Median(ProtonColors.textNorm),
                           textAlign: TextAlign.justify,
                         ),
                         (i + 1 < viewModel.backupPhrases.length)
@@ -543,7 +552,6 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                       ],
                     ),
                   ),
-
                   const Divider(
                     thickness: 0.2,
                     height: 1,

@@ -16,6 +16,8 @@ abstract class InviteClient implements RustOpaqueInterface {
       required InviteNotificationType inviteNotificationType,
       required String inviterAddressId});
 
+  Future<RemainingMonthlyInvitations> getRemainingMonthlyInvitation();
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<InviteClient> newInstance(
           {required ProtonApiService service}) =>

@@ -96,7 +96,7 @@ class WalletManager implements Manager {
     }
 
     final String? derivationPath = await getDerivationPathWithID(accountID);
-    if (derivationPath == null){
+    if (derivationPath == null) {
       logger.e("can not load derivationPath");
       return null;
     }
@@ -247,7 +247,7 @@ class WalletManager implements Manager {
   static Future<String?> getDerivationPathWithID(String accountID) async {
     final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(accountID);
-    if (accountModel == null){
+    if (accountModel == null) {
       return null;
     }
     logger.w("$accountID: ${accountModel.derivationPath}");
@@ -594,6 +594,7 @@ class WalletManager implements Manager {
       accountModel.derivationPath,
       accountModel.accountID,
       accountModel.fiatCurrency.toFiatCurrency(),
+      accountModel.poolSize,
       accountModel.priority,
       accountModel.lastUsedIndex,
       notify: false,
@@ -655,8 +656,15 @@ class WalletManager implements Manager {
       }
       logger.i("bitcoinAddressSignature valid is $isValidSignature");
     }
-    final int addingCount = max(0,
-        defaultBitcoinAddressCountForOneEmail - unFetchedBitcoinAddressCount);
+    AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerID(serverAccountID);
+    int poolSize = defaultBitcoinAddressCountForOneEmail;
+    if (accountModel != null) {
+      if (accountModel.poolSize > 0) {
+        poolSize = accountModel.poolSize;
+      }
+    }
+    final int addingCount = max(0, poolSize - unFetchedBitcoinAddressCount);
     if (walletBitcoinAddresses.isEmpty) {
       final int _ = await DBHelper.bitcoinAddressDao!.getUnusedPoolCount(
         serverWalletID,
@@ -672,8 +680,6 @@ class WalletManager implements Manager {
     if (addingCount > 0) {
       final WalletModel? walletModel =
           await DBHelper.walletDao!.findByServerID(serverWalletID);
-      AccountModel? accountModel =
-          await DBHelper.accountDao!.findByServerID(serverAccountID);
       if (walletModel != null && accountModel != null) {
         await syncBitcoinAddressIndex(
           walletModel,

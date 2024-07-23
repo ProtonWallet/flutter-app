@@ -20,6 +20,7 @@ class WalletAccountDropdown extends StatefulWidget {
   final String? labelText;
   final Color? backgroundColor;
   final BitcoinUnit? bitcoinUnit;
+  final EdgeInsetsGeometry? padding;
 
   const WalletAccountDropdown({
     required this.width,
@@ -28,6 +29,7 @@ class WalletAccountDropdown extends StatefulWidget {
     this.labelText,
     this.valueNotifier,
     this.backgroundColor,
+    this.padding,
     this.bitcoinUnit = BitcoinUnit.btc,
   });
 
@@ -69,8 +71,9 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
   Widget buildWithList(BuildContext buildContext) {
     return Container(
         width: widget.width,
-        padding: const EdgeInsets.only(
-            left: defaultPadding, right: 8, top: 12, bottom: 12),
+        padding: widget.padding ??
+            const EdgeInsets.only(
+                left: defaultPadding, right: 8, top: 12, bottom: 12),
         decoration: BoxDecoration(
           color: widget.backgroundColor ?? ProtonColors.white,
           borderRadius: BorderRadius.circular(18.0),

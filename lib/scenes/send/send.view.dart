@@ -776,7 +776,6 @@ class SendView extends ViewBase<SendViewModel> {
                                 horizontal: defaultPadding),
                             child: Center(
                                 child: Column(children: [
-                              const SizedBox(height: 20),
                               Column(children: [
                                 if (viewModel.accountsCount > 1)
                                   Column(children: [
@@ -789,6 +788,10 @@ class SendView extends ViewBase<SendViewModel> {
                                         accounts:
                                             viewModel.walletData?.accounts ??
                                                 [],
+                                        padding: const EdgeInsets.only(
+                                          left: defaultPadding,
+                                          right: 8,
+                                        ),
                                         valueNotifier:
                                             viewModel.accountValueNotifier),
                                     const Divider(
@@ -1025,36 +1028,36 @@ class SendView extends ViewBase<SendViewModel> {
                           textAlign: TextAlign.center,
                         ),
                       ]))))),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Column(children: [
-                ButtonV5(
-                    onPressed: () async {
-                      // TODO(check): why call end here
-                      viewModel.coordinator.end();
-                      Navigator.of(context).pop();
-                    },
-                    enable: false,
-                    text: S.of(context).done,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
-                    backgroundColor: ProtonColors.protonBlue,
-                    borderColor: ProtonColors.protonBlue,
-                    height: 48),
-                const SizedBox(
-                  height: 8,
-                ),
-                ButtonV5(
-                    onPressed: () async {},
-                    enable: false,
-                    text: S.of(context).invite_a_friend,
-                    width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
-                    backgroundColor: ProtonColors.textWeakPressed,
-                    borderColor: ProtonColors.textWeakPressed,
-                    height: 48),
-                const SizedBox(height: 20),
-              ])),
+          // Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+          //     child: Column(children: [
+          //       ButtonV5(
+          //           onPressed: () async {
+          //             // TODO(check): why call end here
+          //             viewModel.coordinator.end();
+          //             Navigator.of(context).pop();
+          //           },
+          //           enable: false,
+          //           text: S.of(context).done,
+          //           width: MediaQuery.of(context).size.width,
+          //           textStyle: FontManager.body1Median(ProtonColors.white),
+          //           backgroundColor: ProtonColors.protonBlue,
+          //           borderColor: ProtonColors.protonBlue,
+          //           height: 48),
+          //       const SizedBox(
+          //         height: 8,
+          //       ),
+          //       ButtonV5(
+          //           onPressed: () async {},
+          //           enable: false,
+          //           text: S.of(context).invite_a_friend,
+          //           width: MediaQuery.of(context).size.width,
+          //           textStyle: FontManager.body1Median(ProtonColors.textNorm),
+          //           backgroundColor: ProtonColors.textWeakPressed,
+          //           borderColor: ProtonColors.textWeakPressed,
+          //           height: 48),
+          //       const SizedBox(height: 20),
+          //     ])),
         ]));
   }
 

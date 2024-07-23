@@ -134,7 +134,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
                           width: 1.6,
                           color: focusNode.hasFocus
                               ? ProtonColors.interactionNorm
-                              : ProtonColors.textHint,
+                              : ProtonColors.protonShades20,
                         )
                       : null,
                 ),
@@ -215,24 +215,31 @@ void showQRScanBottomSheet(BuildContext context,
                 const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
             child: Stack(children: [
               Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10),
+                child: Center(
                   child: Text(
                     S.of(context).scan_btc_address,
                     style: FontManager.body2Regular(ProtonColors.textNorm),
                     textAlign: TextAlign.center,
-                  )),
+                  ),
+                ),
+              ),
               Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: MobileScanner(
                     onDetect: (capture) {
-                      final List<Barcode> barcodes = capture.barcodes;
-                      for (final barcode in barcodes) {
-                        textEditingController.text = barcode.rawValue ?? "";
-                        if (callback != null) {
-                          Navigator.of(context).pop();
-                          callback();
+                      try {
+                        final List<Barcode> barcodes = capture.barcodes;
+                        for (final barcode in barcodes) {
+                          textEditingController.text = barcode.rawValue ?? "";
+                          if (callback != null) {
+                            Navigator.of(context).pop();
+                            callback();
+                          }
+                          break;
                         }
-                        break;
+                      } catch (e) {
+                        CommonHelper.showErrorDialog(e.toString());
                       }
                     },
                   )),
