@@ -43,6 +43,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   int accountsCount = 0;
   int localLastUsedIndex = -1;
   bool initialized = false;
+  bool tooManyUnusedAddress = false;
 
   WalletData? walletData;
   WalletModel? walletModel;
@@ -131,8 +132,14 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> generateNewAddress() async {
     if (accountModel != null) {
-      accountModel!.lastUsedIndex = accountModel!.lastUsedIndex + 1;
-      await WalletManager.updateLastUsedIndex(accountModel!);
+      if (localLastUsedIndex + accountModel!.poolSize + 10 >= accountModel!.lastUsedIndex){
+        // avoid user has too many unused address that will hit stop gap
+        accountModel!.lastUsedIndex = accountModel!.lastUsedIndex + 1;
+        // TODO(fix): wait until web use it
+        // await WalletManager.updateLastUsedIndex(accountModel!);
+      } else {
+        tooManyUnusedAddress = true;
+      }
       getAddress();
     }
   }
@@ -214,6 +221,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> changeAccount(AccountModel newAccountModel) async {
     try {
+      tooManyUnusedAddress = false;
       accountModel = newAccountModel;
       accountModel?.labelDecrypt =
           await decryptAccountName(base64Encode(accountModel!.label));

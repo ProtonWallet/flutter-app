@@ -29,6 +29,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: "",
         priority: 1,
+        poolSize: 10,
         lastUsedIndex: 10,
       ));
       expect(id, 1);
@@ -43,6 +44,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: "",
         priority: 2,
+        poolSize: 20,
         lastUsedIndex: 20,
       ));
       expect(id, 2);
@@ -58,6 +60,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: "",
         priority: 3,
+        poolSize: 30,
         lastUsedIndex: 30,
       ));
       expect(id, 3);
@@ -73,6 +76,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: "",
         priority: 4,
+        poolSize: 40,
         lastUsedIndex: 40,
       ));
       expect(id, 4);
@@ -89,6 +93,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: "",
         priority: 5,
+        poolSize: 50,
         lastUsedIndex: 50,
       ));
       expect(id, 5);
@@ -113,6 +118,7 @@ Future<void> main() async {
       expect(results[0].id, 2);
       expect(results[0].priority, 2);
       expect(results[0].lastUsedIndex, 20);
+      expect(results[0].poolSize, 20);
       expect(results[0].walletID, walletID);
       expect(results[0].derivationPath, "m/84'/1'/0'/0");
       expect(results[0].fiatCurrency, "USD");
@@ -123,6 +129,7 @@ Future<void> main() async {
       expect(results[1].id, 3);
       expect(results[1].priority, 3);
       expect(results[1].lastUsedIndex, 30);
+      expect(results[1].poolSize, 30);
       expect(results[1].walletID, walletID);
       expect(results[1].derivationPath, "m/84'/1'/168'/0");
       expect(results[1].fiatCurrency, "CHF");
@@ -133,6 +140,7 @@ Future<void> main() async {
       expect(results[2].id, 5);
       expect(results[2].priority, 5);
       expect(results[2].lastUsedIndex, 50);
+      expect(results[2].poolSize, 50);
       expect(results[2].walletID, walletID);
       expect(results[2].derivationPath, "m/84'/1'/168'/2");
       expect(results[2].label, Uint8List(3));
@@ -147,6 +155,7 @@ Future<void> main() async {
       expect(results[0].id, 1);
       expect(results[0].priority, 1);
       expect(results[0].lastUsedIndex, 10);
+      expect(results[0].poolSize, 10);
       expect(results[0].walletID, "server_walletid_1");
       expect(results[0].label, Uint8List(0));
       expect(results[0].derivationPath, "m/84'/1'/0'/0");
@@ -163,6 +172,7 @@ Future<void> main() async {
       expect(accountModel.id, 3);
       expect(accountModel.priority, 3);
       expect(accountModel.lastUsedIndex, 30);
+      expect(accountModel.poolSize, 30);
       expect(accountModel.walletID, "server_walletid_12");
       expect(accountModel.derivationPath, "m/84'/1'/168'/0");
       expect(accountModel.fiatCurrency, "CHF");
@@ -198,6 +208,7 @@ Future<void> main() async {
       expect(results[0].id, 3);
       expect(results[0].priority, 3);
       expect(results[0].lastUsedIndex, 30);
+      expect(results[0].poolSize, 30);
       expect(results[0].walletID, walletID);
       expect(results[0].derivationPath, "m/84'/1'/168'/0");
       expect(results[0].fiatCurrency, "CHF");
@@ -208,6 +219,7 @@ Future<void> main() async {
       expect(results[1].id, 5);
       expect(results[1].priority, 5);
       expect(results[1].lastUsedIndex, 50);
+      expect(results[1].poolSize, 50);
       expect(results[1].walletID, walletID);
       expect(results[1].derivationPath, "m/84'/1'/168'/2");
       expect(results[1].label, Uint8List(3));
@@ -229,6 +241,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000 + 55688,
         accountID: "",
         priority: 12,
+        poolSize: 13,
         lastUsedIndex: 13,
       ));
       final AccountModel accountModel =
@@ -243,6 +256,7 @@ Future<void> main() async {
           accountModel.modifyTime, now.millisecondsSinceEpoch ~/ 1000 + 55688);
       expect(accountModel.priority, 12);
       expect(accountModel.lastUsedIndex, 13);
+      expect(accountModel.poolSize, 13);
     });
   });
 }

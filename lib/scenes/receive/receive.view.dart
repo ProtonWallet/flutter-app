@@ -231,14 +231,26 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                 ))
                                           ]),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      "(Debug) AddressIndex: ${viewModel.addressIndex}",
-                                      style: FontManager.body2Regular(
-                                          ProtonColors.textWeak),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
+                                    if (viewModel.tooManyUnusedAddress)
+                                      Text(
+                                        S
+                                            .of(context)
+                                            .you_can_not_create_too_many_unused_address,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.signalError),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    // const SizedBox(height: 10),
+                                    // Text(
+                                    //   "(Debug) AddressIndex: ${viewModel.addressIndex}",
+                                    //   style: FontManager.body2Regular(
+                                    //       ProtonColors.textWeak),
+                                    //   maxLines: 2,
+                                    //   overflow: TextOverflow.ellipsis,
+                                    //   textAlign: TextAlign.center,
+                                    // ),
                                     const SizedBox(height: 20),
                                   ])),
                           SizedBoxes.box24,

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 pub use andromeda_api::core::ApiClient;
-use andromeda_api::invite::InviteNotificationType;
+use andromeda_api::invite::{InviteNotificationType, RemainingMonthlyInvitations};
 
 use crate::BridgeError;
 
@@ -52,5 +52,11 @@ impl InviteClient {
             .inner
             .check_invite_status(invitee_email, invite_notification_type, inviter_address_id)
             .await?)
+    }
+
+    pub async fn get_remaining_monthly_invitation(
+        &self,
+    ) -> Result<RemainingMonthlyInvitations, BridgeError> {
+        Ok(self.inner.get_remaining_monthly_invitation().await?)
     }
 }

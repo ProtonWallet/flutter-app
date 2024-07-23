@@ -362,6 +362,7 @@ class WalletsDataProvider extends DataProvider {
       apiWalletAcct.derivationPath,
       apiWalletAcct.id,
       apiWalletAcct.fiatCurrency,
+      apiWalletAcct.poolSize,
       apiWalletAcct.priority,
       apiWalletAcct.lastUsedIndex,
       initialize: true,
@@ -458,6 +459,7 @@ class WalletsDataProvider extends DataProvider {
     String derivationPath,
     String accountID,
     FiatCurrency fiatCurrency,
+    int poolSize,
     int priority,
     int lastUsedIndex, {
     bool initialize = false,
@@ -473,6 +475,7 @@ class WalletsDataProvider extends DataProvider {
       account.scriptType = scriptType;
       account.fiatCurrency = fiatCurrency.name.toUpperCase();
       account.priority = priority;
+      account.poolSize = poolSize;
       account.lastUsedIndex = lastUsedIndex;
       await accountDao.update(account);
     } else {
@@ -487,6 +490,7 @@ class WalletsDataProvider extends DataProvider {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         accountID: accountID,
         priority: priority,
+        poolSize: poolSize,
         lastUsedIndex: lastUsedIndex,
       );
       tmpID = await accountDao.insert(account);

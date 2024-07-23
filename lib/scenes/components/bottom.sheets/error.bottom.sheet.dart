@@ -62,7 +62,9 @@ class ErrorBottomSheet {
                                   Navigator.of(context).pop();
                                 },
                                 backgroundColor: ProtonColors.signalError,
-                                text: S.of(context).report_a_problem,
+                                text: callback != null
+                                    ? S.of(context).report_a_problem
+                                    : S.of(context).close,
                                 width: MediaQuery.of(context).size.width,
                                 textStyle: FontManager.body1Median(
                                     ProtonColors.backgroundSecondary),

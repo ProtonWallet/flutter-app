@@ -63,7 +63,7 @@ abstract class HistoryDetailViewModel
   String strWallet = "";
   String strAccount = "";
   List<String> addresses = [];
-  List<ContactsModel> contactsEmail = [];
+  List<ContactsModel> contactsEmails = [];
   List<TransactionInfoModel> recipients = [];
   int? transactionTime;
   double amount = 0.0;
@@ -133,7 +133,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode.addListener(userFinishMemo);
     scrollController = ScrollController();
 
-    contactsEmail = await contactsDataProvider.getContacts() ?? [];
+    contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
     if (addressKeys.isEmpty) {
       addressKeys = await WalletManager.getAddressKeys();
