@@ -26,6 +26,8 @@ class BuyBitcoinState extends Equatable {
   /// quote
   final Map<GatewayProvider, String> received;
 
+  final String error;
+
   const BuyBitcoinState({
     this.selectedModel = const SelectedInfoModel(),
     this.countryCodes = const [],
@@ -37,6 +39,7 @@ class BuyBitcoinState extends Equatable {
     this.quotes = const [],
     this.received = const {},
     this.supportedProviders = const [GatewayProvider.ramp],
+    this.error = "",
   });
 
   BuyBitcoinState copyWith({
@@ -50,6 +53,7 @@ class BuyBitcoinState extends Equatable {
     Map<GatewayProvider, String>? received,
     bool? isQuoteFailed,
     bool? isQuoteLoaded,
+    String? error,
   }) {
     return BuyBitcoinState(
       selectedModel: selectedModel ?? this.selectedModel,
@@ -62,6 +66,7 @@ class BuyBitcoinState extends Equatable {
       isQuoteLoaded: isQuoteLoaded ?? this.isQuoteLoaded,
       isQuoteFailed: isQuoteFailed ?? this.isQuoteFailed,
       received: received ?? this.received,
+      error: error ?? this.error,
     );
   }
 
@@ -77,5 +82,6 @@ class BuyBitcoinState extends Equatable {
         quotes,
         supportedProviders,
         received,
+        error,
       ];
 }

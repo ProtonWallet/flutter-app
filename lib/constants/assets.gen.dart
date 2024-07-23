@@ -107,6 +107,14 @@ class $AssetsImagesIconGen {
   SvgGenImage get bitcoin =>
       const SvgGenImage('assets/images/icon/bitcoin.svg');
 
+  /// File path: assets/images/icon/bitcoin_big_icon.png
+  AssetGenImage get bitcoinBigIconPng =>
+      const AssetGenImage('assets/images/icon/bitcoin_big_icon.png');
+
+  /// File path: assets/images/icon/bitcoin_big_icon.svg
+  SvgGenImage get bitcoinBigIconSvg =>
+      const SvgGenImage('assets/images/icon/bitcoin_big_icon.svg');
+
   /// File path: assets/images/icon/btc.svg
   SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
 
@@ -373,6 +381,8 @@ class $AssetsImagesIconGen {
         bankTransfer,
         banxa,
         bitcoin,
+        bitcoinBigIconPng,
+        bitcoinBigIconSvg,
         btc,
         bveDisable,
         bveEnable,

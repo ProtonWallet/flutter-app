@@ -12,7 +12,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
   BuyBitcoinBloc(this.gatewayDataProvider) : super(const BuyBitcoinState()) {
     /// load country
     on<LoadCountryEvent>((event, emit) async {
-      emit(state.copyWith(isCountryLoaded: false));
+      emit(state.copyWith(isCountryLoaded: false, error: ""));
 
       /// get country without provider
       final defaultProvider = state.selectedModel.provider;
@@ -47,7 +47,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// load currency
     on<LoadCurrencyEvent>((event, emit) async {
-      emit(state.copyWith(isCurrencyLoaded: false));
+      emit(state.copyWith(isCurrencyLoaded: false, error: ""));
       //
 
       final selectedProvider = state.selectedModel.provider;
@@ -94,6 +94,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           provider: selectedProvider,
         ),
         supportedProviders: supportedProviders,
+        error: "",
       ));
 
       /// load currency
@@ -111,8 +112,8 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
       final apiCountry = gatewayDataProvider.getApiCountryFiatCurrency(
           selectedProvider, fiatCurrency);
       emit(state.copyWith(
-          selectedModel:
-              state.selectedModel.copyWith(fiatCurrency: apiCountry)));
+          selectedModel: state.selectedModel.copyWith(fiatCurrency: apiCountry),
+          error: ""));
     });
 
     /// select amount
@@ -123,6 +124,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
         selectedModel: state.selectedModel.copyWith(
           amount: numericAmountg,
         ),
+        error: "",
       ));
       if (!isClosed) {
         add(const GetQuoteEvent());
@@ -131,63 +133,106 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     /// get quote event
     on<GetQuoteEvent>((event, emit) async {
-      emit(state.copyWith(isQuoteLoaded: false, isQuoteFailed: false));
+      emit(state.copyWith(
+        isQuoteLoaded: false,
+        isQuoteFailed: false,
+        error: "",
+      ));
       final amount = state.selectedModel.amount;
       final fiatCurrency = state.selectedModel.fiatCurrency.symbol;
 
       var provider = state.selectedModel.provider;
-      final quotes = await gatewayDataProvider.getQuotes(
-        fiatCurrency,
-        amount,
-        state.supportedProviders,
-      );
+      try {
+        final quotes = await gatewayDataProvider.getQuotes(
+          fiatCurrency,
+          amount,
+          state.supportedProviders,
+        );
 
-      final quote = quotes[provider];
-      if (quote == null || quote.isEmpty) {
-        emit(const BuyBitcoinState().copyWith(
-          isCountryLoaded: true,
-        ));
-        if (!isClosed) {
-          add(const LoadCountryEvent());
+        final quote = quotes[provider];
+        if (quote == null || quote.isEmpty) {
+          final limitString = state.selectedModel.fiatCurrency.minimumAmount;
+          final double max = double.tryParse(amount) ?? 0;
+          final double limit = double.tryParse(limitString ?? "") ?? 0;
+
+          final limitError = limitString != null
+              ? " ${state.selectedModel.fiatCurrency.minimumAmount} ${state.selectedModel.fiatCurrency.symbol}"
+              : "";
+          if (limit > max) {
+            emit(state.copyWith(
+              isQuoteLoaded: true,
+              isQuoteFailed: true,
+              quotes: quote,
+              selectedModel: state.selectedModel.copyWith(
+                supportedPayments: [],
+                provider: provider,
+              ),
+              received: {},
+              error: "Amount is below the minimum limit: $limitError",
+            ));
+          }
+          return;
         }
-        return;
-      }
 
-      final Map<GatewayProvider, String> received = {};
-      for (var entry in quotes.entries) {
-        String maxReceived = "";
-        for (var item in entry.value) {
-          final double max = double.tryParse(maxReceived) ?? 0;
-          final double current = double.tryParse(item.bitcoinAmount) ?? 0;
-          if (current > max) {
-            maxReceived = item.bitcoinAmount;
+        final Map<GatewayProvider, String> received = {};
+        for (var entry in quotes.entries) {
+          String maxReceived = "";
+          for (var item in entry.value) {
+            final double max = double.tryParse(maxReceived) ?? 0;
+            final double current = double.tryParse(item.bitcoinAmount) ?? 0;
+            if (current > max) {
+              maxReceived = item.bitcoinAmount;
+              provider = entry.key;
+            }
+          }
+          received[entry.key] = maxReceived;
+        }
+
+        String findMaxAmount = "";
+        for (var entry in received.entries) {
+          final double currentMax = double.tryParse(findMaxAmount) ?? 0;
+          final double check = double.tryParse(entry.value) ?? 0;
+          if (check > currentMax) {
+            findMaxAmount = entry.value;
             provider = entry.key;
           }
         }
-        received[entry.key] = maxReceived;
-      }
 
-      var defaultQuote = quote.first;
-      var selectedPayment = defaultQuote.paymentMethod;
-      final List<PaymentMethod> supportedPayments = [];
-      for (var item in quote) {
-        if (item.paymentMethod == state.selectedModel.paymentMethod) {
-          defaultQuote = item;
-          selectedPayment = item.paymentMethod;
+        var defaultQuote = quote.first;
+        var selectedPayment = defaultQuote.paymentMethod;
+        final List<PaymentMethod> supportedPayments = [];
+        for (var item in quote) {
+          if (item.paymentMethod == state.selectedModel.paymentMethod) {
+            defaultQuote = item;
+            selectedPayment = item.paymentMethod;
+          }
+          supportedPayments.add(item.paymentMethod);
         }
-        supportedPayments.add(item.paymentMethod);
+        emit(state.copyWith(
+          isQuoteLoaded: true,
+          isQuoteFailed: false,
+          quotes: quote,
+          selectedModel: state.selectedModel.copyWith(
+            paymentMethod: selectedPayment,
+            quote: defaultQuote,
+            supportedPayments: supportedPayments,
+            provider: provider,
+          ),
+          received: received,
+        ));
+      } catch (e) {
+        emit(state.copyWith(
+          isQuoteLoaded: true,
+          isQuoteFailed: true,
+          quotes: [],
+          selectedModel: state.selectedModel.copyWith(
+            supportedPayments: [],
+            provider: provider,
+          ),
+          received: {},
+          error: e.toString(),
+        ));
       }
-      emit(state.copyWith(
-        isQuoteLoaded: true,
-        quotes: quote,
-        selectedModel: state.selectedModel.copyWith(
-          paymentMethod: selectedPayment,
-          quote: defaultQuote,
-          supportedPayments: supportedPayments,
-          provider: provider,
-        ),
-        received: received,
-      ));
     });
 
     /// select provider
@@ -266,6 +311,9 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
 
     on<CheckoutFinishedEvnet>((event, emit) async {
       emit(state.copyWith(isQuoteLoaded: true));
+    });
+    on<ResetError>((event, emit) async {
+      emit(state.copyWith(error: event.error));
     });
   }
 

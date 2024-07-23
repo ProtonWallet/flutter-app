@@ -887,6 +887,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     wallet,
                                     hasBalance: false,
                                     isInvalidWallet: true,
+                                    onBackup: () {
+                                      viewModel.move(NavID.setupBackup);
+                                    },
                                   );
                                 },
 

@@ -95,18 +95,22 @@ class BitcoinAddressList extends StatelessWidget {
                                 ),
                                 Row(children: [
                                   state.isSyncing
-                                      ? CustomLoadingWithChild(
-                                          durationInMilliSeconds: 800,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 6, vertical: 3),
-                                            child: Icon(
-                                              Icons.refresh_rounded,
-                                              size: 20,
-                                              color: ProtonColors.textWeak,
-                                            ),
-                                          ),
-                                        )
+                                      ? state.bitcoinAddresses.isEmpty
+                                          ? const SizedBox()
+                                          : CustomLoadingWithChild(
+                                              durationInMilliSeconds: 800,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 3),
+                                                child: Icon(
+                                                  Icons.refresh_rounded,
+                                                  size: 20,
+                                                  color: ProtonColors.textWeak,
+                                                ),
+                                              ),
+                                            )
                                       : GestureDetector(
                                           onTap: () {
                                             viewModel.walletTransactionBloc

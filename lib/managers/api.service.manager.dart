@@ -28,7 +28,7 @@ class ProtonApiServiceManager implements Manager {
   }
 
   Future<String> callback(ChildSession session) async {
-    logger.w("Received message from Rust: $session");
+    logger.i("Received message from Rust: $session");
     await saveSession(session);
     return "Reply from Dart";
   }

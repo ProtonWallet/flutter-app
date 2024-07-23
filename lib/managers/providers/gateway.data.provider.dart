@@ -171,8 +171,13 @@ class GatewayDataProvider extends DataProvider {
     return quotes;
   }
 
-  Future<String> checkout(String amount, String btcAddress, String fiatCurrency,
-      PaymentMethod payMethod, GatewayProvider provider) async {
+  Future<String> checkout(
+    String amount,
+    String btcAddress,
+    String fiatCurrency,
+    PaymentMethod payMethod,
+    GatewayProvider provider,
+  ) async {
     final url = await onRampGatewayClient.createOnRampCheckout(
       amount: amount,
       btcAddress: btcAddress,

@@ -138,9 +138,9 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     switch (call.method) {
       case 'flutter.navigation.to.home':
         final String data = call.arguments;
-        logger.d("Data received from Swift: $data");
         final Map<String, dynamic> map = json.decode(data);
         final UserInfo userInfo = UserInfo.fromJson(map);
+        logger.d("Data received from Native: ${userInfo.userId}");
 
         directEmitExample(NativeLoginSucess(userInfo));
     }
@@ -154,8 +154,5 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   Future<void> logout() async {}
 
   @override
-  Future<void> login(String userID) async {
-    // TODO(fix): implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 }
