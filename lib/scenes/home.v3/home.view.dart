@@ -43,6 +43,7 @@ import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/send.invite.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.menu.list.dart';
@@ -120,6 +121,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   child: BitcoinPriceBox(
                     title: S.of(context).btc_price,
                     price: viewModel.btcPriceInfo.price,
+                    priceClient: viewModel.getPriceGraphClient(),
                     priceChange: viewModel.btcPriceInfo.priceChange24h,
                     exchangeRate: viewModel.currentExchangeRate,
                   ),
@@ -175,7 +177,88 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           move(context, NavID.receive);
                                         }),
                                     const SizedBox(
-                                      height: 20,
+                                      height: 16,
+                                    ),
+                                    if (viewModel.canInvite)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: defaultPadding),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            SendInviteSheet.show(
+                                              context,
+                                              viewModel.contactsEmails,
+                                              viewModel.sendInviteForNewComer,
+                                            );
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: defaultPadding,
+                                                bottom: defaultPadding),
+                                            decoration: BoxDecoration(
+                                                color: ProtonColors.protonBlue,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        24.0)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          S
+                                                              .of(context)
+                                                              .invite_friends,
+                                                          style: FontManager
+                                                              .body2Median(
+                                                                  ProtonColors
+                                                                      .white),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  right: 8),
+                                                          child: Text(
+                                                            S.of(context).n_left(
+                                                                viewModel
+                                                                        .remainingMonthlyInvitations
+                                                                        ?.available ??
+                                                                    0),
+                                                            style: FontManager
+                                                                .body2Median(
+                                                                    ProtonColors
+                                                                        .white),
+                                                          ),
+                                                        ),
+                                                      ]),
+                                                ),
+                                                Transform.translate(
+                                                  offset: const Offset(6, 0),
+                                                  child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: ProtonColors.white,
+                                                      size: 14),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(
+                                      height: 6,
                                     ),
                                     if (viewModel.currentTodoStep <
                                             viewModel.totalTodoSteps &&
@@ -430,6 +513,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                             child: BitcoinPriceBox(
                               title: S.of(context).btc_price,
                               price: viewModel.btcPriceInfo.price,
+                              priceClient: viewModel.getPriceGraphClient(),
                               priceChange:
                                   viewModel.btcPriceInfo.priceChange24h,
                               exchangeRate: viewModel.currentExchangeRate,
@@ -849,10 +933,14 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               ),
 
                               const SizedBox(height: 10),
+                              const Expanded(
+                                child: SizedBox(height: 20),
+                              ),
 
-                              /// app version
-                              Expanded(
-                                child: Center(
+                              /// app version fixed at bottom
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.only(bottom: 10),
                                   child: Text(
                                     viewModel.appVersion,
                                     style: FontManager.captionRegular(

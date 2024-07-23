@@ -21,6 +21,7 @@ class AccountModel {
   String fiatCurrency;
   int priority;
   int lastUsedIndex;
+  int poolSize;
 
   // TODO(fix): move to other place
   String labelDecrypt = "Default Account";
@@ -33,6 +34,7 @@ class AccountModel {
     required this.walletID,
     required this.derivationPath,
     required this.label,
+    required this.poolSize,
     required this.priority,
     required this.scriptType,
     required this.createTime,
@@ -47,6 +49,7 @@ class AccountModel {
       'walletID': walletID,
       'derivationPath': derivationPath,
       'label': label,
+      'poolSize': poolSize,
       'priority': priority,
       'scriptType': scriptType,
       'createTime': createTime,
@@ -79,6 +82,7 @@ class AccountModel {
       walletID: map['walletID'],
       derivationPath: map['derivationPath'],
       label: map['label'],
+      poolSize: map['poolSize'],
       priority: map['priority'],
       scriptType: map['scriptType'],
       createTime: map['createTime'],

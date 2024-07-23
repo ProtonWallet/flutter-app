@@ -1100,15 +1100,25 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<void> _sendInviteForEmailIntegration(String email) async {
-    // TODO(fix): fix inviterAddressId
+    String? emailAddressID;
+    if (accountAddressIDs.isNotEmpty) {
+      emailAddressID = accountAddressIDs.first;
+    } else {
+      emailAddressID = addressKeys.firstOrNull?.id;
+    }
     await inviteClient.sendEmailIntegrationInvite(
-        inviteeEmail: email, inviterAddressId: "");
+        inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
   }
 
   Future<void> _sendInviteForNewComer(String email) async {
-    // TODO(fix): fix inviterAddressId
+    String? emailAddressID;
+    if (accountAddressIDs.isNotEmpty) {
+      emailAddressID = accountAddressIDs.first;
+    } else {
+      emailAddressID = addressKeys.firstOrNull?.id;
+    }
     await inviteClient.sendNewcomerInvite(
-        inviteeEmail: email, inviterAddressId: "");
+        inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
   }
 
   bool _processError(BridgeError error, Object stacktrace) {
