@@ -159,7 +159,7 @@ class AppDatabase {
         dbPath,
       );
     }
-    logger.i("dbPath: $dbPath");
+    logger.d("dbPath: $dbPath");
     return database;
   }
 

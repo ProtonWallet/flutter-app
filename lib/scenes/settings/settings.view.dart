@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/url.external.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -112,31 +112,31 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
             ],
           ),
 
-          // Section: Logs
-          const SizedBox(height: 12),
-          const SectionHeader(title: 'Logs'),
-          SettingsGroup(
-            children: [
-              SettingsItem(
-                title: 'Application logs',
-                subtitle: 'View logs',
-                onTap: () {
-                  viewModel.move(NavID.logs);
-                },
-              ),
-              SettingsItem(
-                title: 'Force reload the application',
-                subtitle: 'Wipe cache and reload',
-                onTap: () {},
-                hidden: true,
-              ),
-              SettingsItem(
-                title: 'Clear all logs',
-                onTap: () {},
-                hidden: true,
-              ),
-            ],
-          ),
+          /// Section: Logs
+          // const SizedBox(height: 12),
+          // const SectionHeader(title: 'Logs'),
+          // SettingsGroup(
+          //   children: [
+          //     SettingsItem(
+          //       title: 'Application logs',
+          //       subtitle: 'View logs',
+          //       onTap: () {
+          //         viewModel.move(NavID.logs);
+          //       },
+          //     ),
+          //     SettingsItem(
+          //       title: 'Force reload the application',
+          //       subtitle: 'Wipe cache and reload',
+          //       onTap: () {},
+          //       hidden: true,
+          //     ),
+          //     SettingsItem(
+          //       title: 'Clear all logs',
+          //       onTap: () {},
+          //       hidden: true,
+          //     ),
+          //   ],
+          // ),
 
           // Section: Help Center
           const SizedBox(height: 12),

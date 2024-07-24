@@ -19,9 +19,11 @@ class UpgradeIntroSheet {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Align(
             alignment: Alignment.centerRight,
-            child: CloseButtonV1(backgroundColor: ProtonColors.backgroundProton, onPressed: () {
-              Navigator.of(context).pop();
-            })),
+            child: CloseButtonV1(
+                backgroundColor: ProtonColors.backgroundProton,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })),
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
@@ -50,9 +52,7 @@ class UpgradeIntroSheet {
                     ButtonV5(
                         onPressed: () async {
                           Navigator.of(context).pop();
-                          EasyLoading.show(
-                              status: "child session..",
-                              maskType: EasyLoadingMaskType.black);
+                          EasyLoading.show(maskType: EasyLoadingMaskType.black);
                           await viewModel.move(NavID.nativeUpgrade);
                           EasyLoading.dismiss();
                         },

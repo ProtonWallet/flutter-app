@@ -8,8 +8,13 @@ abstract class Env {
     varName: 'RAMP_API_KEY',
     optional: true,
   )
-  // ignore: unnecessary_nullable_for_final_variable_declarations
-  static const String? rampApiKey = _Env.rampApiKey;
+  static const String rampApiKey = _Env.rampApiKey;
+
+  @EnviedField(
+    varName: 'SENTRY_API_KEY',
+    optional: true,
+  )
+  static const String sentryApiKey = _Env.sentryApiKey;
 }
 
 // class _Env {

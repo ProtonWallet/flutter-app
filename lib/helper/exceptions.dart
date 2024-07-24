@@ -21,6 +21,13 @@ String parseSampleDisplayError(BridgeError exception) {
   );
 }
 
+bool ifMuonClientError(BridgeError exception) {
+  return exception.maybeMap(
+    muonClient: (e) => true,
+    orElse: () => false,
+  );
+}
+
 String? parseSessionExpireError(BridgeError exception) {
   return exception.maybeMap(
     muonAuthSession: (e) => e.field0,

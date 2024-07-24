@@ -12,13 +12,26 @@ class ExternalUrl {
 
   // Final variable for account URL
   final String accountUrl = "https://account.proton.me";
+  final String mainSiteUrl = "https://proton.me/";
   final String supportCenterUrl = "https://proton.me/support";
-  final String terms = "https://proton.me/legal/terms";
-  final String privacy = "https://proton.me/legal/privacy";
+  final String terms = "https://proton.me/wallet/legal/terms";
+  final String privacy = "https://proton.me/wallet/privacy-policy";
+
+  /// android app store url
+  final String googlePlayUrl =
+      "https://play.google.com/store/apps/dev?id=7672479706558526647";
+
+  /// ios app store url
+  final String appStoreUrl =
+      "https://apps.apple.com/developer/proton-ag/id979659484";
 
   // Method to launch a URL
   void launchString(String strUrl) {
     launchUrl(Uri.parse(strUrl));
+  }
+
+  void lanuchMainSite() {
+    launchString(mainSiteUrl);
   }
 
   // Method to launch the Proton account URL
@@ -36,5 +49,13 @@ class ExternalUrl {
 
   void lanuchPrivacy() {
     launchString(privacy);
+  }
+
+  void lanuchGooglePlay() {
+    launchString(googlePlayUrl);
+  }
+
+  void lanuchAppStore() {
+    launchString(appStoreUrl);
   }
 }

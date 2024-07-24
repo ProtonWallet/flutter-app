@@ -131,7 +131,8 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
 
     if (userKeyID == "" || privateKey == "" || passphrase == "") {
       throw Exception(
-          "First key is null, cannot decrypt wallet key. relogin  or debug.");
+        "First key is null, cannot decrypt wallet key. relogin  or debug.",
+      );
     }
     return UserKey(
       keyID: userKeyID,

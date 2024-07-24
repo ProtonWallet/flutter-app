@@ -129,7 +129,6 @@ class ProtonRecoveryBloc
             final FrbMnemonic mnemonic =
                 FrbMnemonic.newWith(entropy: randomEntropy);
             final mnemonicWords = mnemonic.asWords();
-            logger.d("Recovery Mnemonic: $mnemonicWords");
             final recoveryPassword = randomEntropy.base64encode();
 
             final hashedPassword = await SrpClient.computeKeyPassword(
@@ -181,8 +180,9 @@ class ProtonRecoveryBloc
               mnemonicSalt: salt.base64encode(),
               mnemonicAuth: auth,
             );
-            final recoveryCode =
-                await protonSettingsApi.setMnemonicSettings(req: req);
+            final recoveryCode = await protonSettingsApi.setMnemonicSettings(
+              req: req,
+            );
             logger.i("EnableRecovery response code: $recoveryCode");
             final lockCode = await protonUsersApi.lockSensitiveSettings();
             if (recoveryCode != 1000) {
@@ -235,7 +235,6 @@ class ProtonRecoveryBloc
         final FrbMnemonic mnemonic =
             FrbMnemonic.newWith(entropy: randomEntropy);
         final mnemonicWords = mnemonic.asWords();
-        logger.d("Recovery Mnemonic: $mnemonicWords");
         final recoveryPassword = randomEntropy.base64encode();
 
         final hashedPassword = await SrpClient.computeKeyPassword(
@@ -289,8 +288,9 @@ class ProtonRecoveryBloc
             mnemonicAuth: auth,
           );
 
-          final code =
-              await protonSettingsApi.reactiveMnemonicSettings(req: req);
+          final code = await protonSettingsApi.reactiveMnemonicSettings(
+            req: req,
+          );
           logger.i("EnableRecovery response code: $code");
           if (code != 1000) {
             emit(state.copyWith(

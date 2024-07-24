@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/url.external.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';

@@ -5,9 +5,11 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Import for Android features.
+// ignore: depend_on_referenced_packages
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 /// Import for iOS features.
+// ignore: depend_on_referenced_packages
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class WebViewExample extends StatefulWidget {
@@ -24,8 +26,7 @@ class _WebViewExampleState extends State<WebViewExample> {
   void initState() {
     super.initState();
 
-    EasyLoading.show(
-        status: "Loading Banxa..", maskType: EasyLoadingMaskType.black);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
 
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
