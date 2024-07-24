@@ -66,6 +66,7 @@ import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/early.access.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 enum WalletDrawerStatus {
@@ -147,9 +148,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setSearchAddressTextField({required bool show});
 
   void setDisplayBalance({required bool display});
+
   PriceGraphClient getPriceGraphClient();
 
-  Future<void> createWallet();
+  Future<bool> createWallet();
 
   Future<bool> sendInviteForNewComer(String email);
 
@@ -427,7 +429,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // fix me
   @override
-  PriceGraphClient getPriceGraphClient(){
+  PriceGraphClient getPriceGraphClient() {
     return apiServiceManager.getApiService().getPriceGraphClient();
   }
 
@@ -628,7 +630,8 @@ class HomeViewModelImpl extends HomeViewModel {
       datasourceChangedStreamController.stream;
 
   Future<void> loadDiscoverContents() async {
-    protonFeedItems = await ProtonFeedItem.loadFromApi(apiServiceManager.getApiService().getDiscoveryContentClient());
+    protonFeedItems = await ProtonFeedItem.loadFromApi(
+        apiServiceManager.getApiService().getDiscoveryContentClient());
   }
 
   @override
@@ -1013,6 +1016,17 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
+      if (errorMessage.toLowerCase() ==
+          "You have reached the creation limit for this type of wallet account"
+              .toLowerCase()) {
+        errorMessage = "";
+        final BuildContext? context =
+            Coordinator.rootNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          UpgradeIntroSheet.show(context, this);
+        }
+        return false;
+      }
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
       return false;
@@ -1136,7 +1150,7 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> updatePassphrase(String key, String passphrase) async {}
 
   @override
-  Future<void> createWallet() async {
+  Future<bool> createWallet() async {
     WalletModel? walletModel;
     AccountModel? accountModel;
     try {
@@ -1166,7 +1180,7 @@ class HomeViewModelImpl extends HomeViewModel {
         apiWallet.wallet.id,
         appConfig.scriptTypeInfo,
         "Primary Account",
-        defaultFiatCurrency,
+        fiatCurrencyNotifier.value,
         0, // default wallet account index
       );
 
@@ -1191,13 +1205,26 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     } on BridgeError catch (e, stacktrace) {
       final msg = parseSampleDisplayError(e);
+      if (msg.toLowerCase() ==
+          "You have reached the creation limit for this type of wallet"
+              .toLowerCase()) {
+        final BuildContext? context =
+            Coordinator.rootNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          UpgradeIntroSheet.show(context, this);
+        }
+        return false;
+      }
+      CommonHelper.showErrorDialog(msg);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
-      CommonHelper.showErrorDialog(msg);
+      return false;
     } catch (e, stacktrace) {
       CommonHelper.showErrorDialog(e.toString());
       Sentry.captureException(e, stackTrace: stacktrace);
+      return false;
     }
+    return true;
     // no need to sync since it's brand new walllet
   }
 
