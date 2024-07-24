@@ -1,6 +1,7 @@
 pub mod address_client;
 pub mod bitcoin_address_client;
 pub mod block_client;
+pub mod discovery_content_client;
 pub mod email_integration_client;
 pub mod event_client;
 pub mod exchange_rate_client;

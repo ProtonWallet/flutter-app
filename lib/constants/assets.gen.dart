@@ -134,6 +134,18 @@ class $AssetsImagesIconGen {
   SvgGenImage get deleteWarning =>
       const SvgGenImage('assets/images/icon/delete_warning.svg');
 
+  /// File path: assets/images/icon/discover_bitcoin_guide.png
+  AssetGenImage get discoverBitcoinGuide =>
+      const AssetGenImage('assets/images/icon/discover_bitcoin_guide.png');
+
+  /// File path: assets/images/icon/discover_bve.png
+  AssetGenImage get discoverBve =>
+      const AssetGenImage('assets/images/icon/discover_bve.png');
+
+  /// File path: assets/images/icon/discover_how_to_protect.png
+  AssetGenImage get discoverHowToProtect =>
+      const AssetGenImage('assets/images/icon/discover_how_to_protect.png');
+
   /// File path: assets/images/icon/discover_placeholder_0.svg
   SvgGenImage get discoverPlaceholder0 =>
       const SvgGenImage('assets/images/icon/discover_placeholder_0.svg');
@@ -153,6 +165,18 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/discover_placeholder_4.svg
   SvgGenImage get discoverPlaceholder4 =>
       const SvgGenImage('assets/images/icon/discover_placeholder_4.svg');
+
+  /// File path: assets/images/icon/discover_proton_wallet_launch.png
+  AssetGenImage get discoverProtonWalletLaunch => const AssetGenImage(
+      'assets/images/icon/discover_proton_wallet_launch.png');
+
+  /// File path: assets/images/icon/discover_proton_wallet_security.png
+  AssetGenImage get discoverProtonWalletSecurity => const AssetGenImage(
+      'assets/images/icon/discover_proton_wallet_security.png');
+
+  /// File path: assets/images/icon/discover_what_is_bitcoin.png
+  AssetGenImage get discoverWhatIsBitcoin =>
+      const AssetGenImage('assets/images/icon/discover_what_is_bitcoin.png');
 
   /// File path: assets/images/icon/do_transactions.svg
   SvgGenImage get doTransactions =>
@@ -260,9 +284,15 @@ class $AssetsImagesIconGen {
   SvgGenImage get inviteSuccess =>
       const SvgGenImage('assets/images/icon/invite_success.svg');
 
+  /// File path: assets/images/icon/key.png
+  AssetGenImage get key => const AssetGenImage('assets/images/icon/key.png');
+
   /// File path: assets/images/icon/launch_icon.png
   AssetGenImage get launchIcon =>
       const AssetGenImage('assets/images/icon/launch_icon.png');
+
+  /// File path: assets/images/icon/lock.png
+  AssetGenImage get lock => const AssetGenImage('assets/images/icon/lock.png');
 
   /// File path: assets/images/icon/logo_text.svg
   SvgGenImage get logoText =>
@@ -278,6 +308,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/no_wallet_found.svg
   SvgGenImage get noWalletFound =>
       const SvgGenImage('assets/images/icon/no_wallet_found.svg');
+
+  /// File path: assets/images/icon/paper_plane.png
+  AssetGenImage get paperPlane =>
+      const AssetGenImage('assets/images/icon/paper_plane.png');
 
   /// File path: assets/images/icon/passphrase_lock.svg
   SvgGenImage get passphraseLock =>
@@ -321,6 +355,9 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/star.svg
   SvgGenImage get star => const SvgGenImage('assets/images/icon/star.svg');
 
+  /// File path: assets/images/icon/time.png
+  AssetGenImage get time => const AssetGenImage('assets/images/icon/time.png');
+
   /// File path: assets/images/icon/transfer.svg
   SvgGenImage get transfer =>
       const SvgGenImage('assets/images/icon/transfer.svg');
@@ -331,6 +368,9 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/upgrade_intro.svg
   SvgGenImage get upgradeIntro =>
       const SvgGenImage('assets/images/icon/upgrade_intro.svg');
+
+  /// File path: assets/images/icon/user.png
+  AssetGenImage get user => const AssetGenImage('assets/images/icon/user.png');
 
   /// File path: assets/images/icon/wallet-0.svg
   SvgGenImage get wallet0 =>
@@ -388,11 +428,17 @@ class $AssetsImagesIconGen {
         bveEnable,
         creditCard,
         deleteWarning,
+        discoverBitcoinGuide,
+        discoverBve,
+        discoverHowToProtect,
         discoverPlaceholder0,
         discoverPlaceholder1,
         discoverPlaceholder2,
         discoverPlaceholder3,
         discoverPlaceholder4,
+        discoverProtonWalletLaunch,
+        discoverProtonWalletSecurity,
+        discoverWhatIsBitcoin,
         doTransactions,
         drawerMenu,
         editUnknown,
@@ -420,11 +466,14 @@ class $AssetsImagesIconGen {
         icMessage,
         icNote,
         inviteSuccess,
+        key,
         launchIcon,
+        lock,
         logoText,
         mobile,
         moonpay,
         noWalletFound,
+        paperPlane,
         passphraseLock,
         protect,
         ramp,
@@ -437,9 +486,11 @@ class $AssetsImagesIconGen {
         sendSuccess,
         setupPreference,
         star,
+        time,
         transfer,
         twoFa,
         upgradeIntro,
+        user,
         wallet0,
         wallet1,
         wallet2,

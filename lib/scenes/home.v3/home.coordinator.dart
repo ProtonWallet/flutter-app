@@ -83,7 +83,10 @@ class HomeCoordinator extends Coordinator {
 
   void showSetupBackup(String walletID) {
     final view = SetupBackupCoordinator(walletID).start();
-    push(view);
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void showReceive(

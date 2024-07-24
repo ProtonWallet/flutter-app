@@ -97,38 +97,6 @@ class HomeView extends ViewBase<HomeViewModel> {
               }
             }
           }
-          if (walletListState.initialized &&
-              walletListState.walletsModel.isEmpty) {
-            return Stack(children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Column(children: [
-                  Underline(
-                    onTap: viewModel.setOnBoard,
-                    child: Text(
-                      S.of(context).wallet_setup,
-                      style: FontManager.titleHeadline(ProtonColors.protonBlue),
-                    ),
-                  ),
-                ]),
-              ),
-              Positioned(
-                left: 0,
-                bottom: 0,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: BitcoinPriceBox(
-                    title: S.of(context).btc_price,
-                    price: viewModel.btcPriceInfo.price,
-                    priceClient: viewModel.getPriceGraphClient(),
-                    priceChange: viewModel.btcPriceInfo.priceChange24h,
-                    exchangeRate: viewModel.currentExchangeRate,
-                  ),
-                ),
-              )
-            ]);
-          }
           return BlocBuilder<WalletTransactionBloc, WalletTransactionState>(
               bloc: viewModel.walletTransactionBloc,
               builder: (context, walletTransactionState) {
@@ -158,6 +126,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               accountName,
                                               walletBalanceState,
                                               walletTransactionState,
+                                              walletListState,
                                             ),
                                             const SizedBox(
                                               height: 20,
@@ -532,7 +501,20 @@ class HomeView extends ViewBase<HomeViewModel> {
     String accountName,
     WalletBalanceState walletBalanceState,
     WalletTransactionState walletTransactionState,
+    WalletListState walletListState,
   ) {
+    if (walletListState.initialized && walletListState.walletsModel.isEmpty) {
+      // show onboarding
+      return Center(
+        child: Underline(
+          onTap: viewModel.setOnBoard,
+          child: Text(
+            S.of(context).wallet_setup,
+            style: FontManager.titleHeadline(ProtonColors.protonBlue),
+          ),
+        ),
+      );
+    }
     if (walletTransactionState.isSyncing || accountName.isEmpty) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         accountName.isNotEmpty

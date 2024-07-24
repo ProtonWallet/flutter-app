@@ -1,3 +1,4 @@
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -12,7 +13,11 @@ class DiscoverCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    final viewModel = DiscoverViewModelImpl(this);
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final viewModel = DiscoverViewModelImpl(
+      apiServiceManager.getApiService().getDiscoveryContentClient(),
+      this,
+    );
     widget = DiscoverView(
       viewModel,
     );

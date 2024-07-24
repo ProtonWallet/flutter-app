@@ -21,6 +21,8 @@ Future<void> showAuthDialog(
   final passwordController = TextEditingController();
   final twofaController = TextEditingController();
   final passwordFocusNode = FocusNode();
+  Future.delayed(
+      const Duration(milliseconds: 200), passwordFocusNode.requestFocus);
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
