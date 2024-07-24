@@ -53,16 +53,16 @@ class AppView extends ViewBase<AppViewModel> {
             Locale('en', ''),
             ...S.supportedLocales,
           ],
-          localeResolutionCallback: (locale, supportLocales) {
-            if (locale?.languageCode == 'zh') {
-              if (locale?.scriptCode == 'Hant') {
-                return const Locale('zh', 'HK'); //tranditional
-              } else {
-                return const Locale('zh', 'CN'); //simplified
-              }
-            }
-            return null;
-          },
+          // localeResolutionCallback: (locale, supportLocales) {
+          //   if (locale?.languageCode == 'zh') {
+          //     if (locale?.scriptCode == 'Hant') {
+          //       return const Locale('zh', 'HK'); //tranditional
+          //     } else {
+          //       return const Locale('zh', 'CN'); //simplified
+          //     }
+          //   }
+          //   return null;
+          // },
           locale: Provider.of<LocaleProvider>(context, listen: false).locale,
           theme: ThemeData(
             colorScheme:
