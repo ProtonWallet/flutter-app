@@ -112,9 +112,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
             ButtonV5(
                 onPressed: () async {
                   if (viewModel.checkPassphrase()) {
-                    EasyLoading.show(
-                        status: "creating wallet..",
-                        maskType: EasyLoadingMaskType.black);
+                    EasyLoading.show(maskType: EasyLoadingMaskType.black);
                     await viewModel.updateDB();
                     EasyLoading.dismiss();
                     if (context.mounted) {
@@ -194,9 +192,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
             child: Column(children: [
               ButtonV5(
                   onPressed: () async {
-                    EasyLoading.show(
-                        status: "creating wallet..",
-                        maskType: EasyLoadingMaskType.black);
+                    EasyLoading.show(maskType: EasyLoadingMaskType.black);
                     await viewModel.updateDB();
                     EasyLoading.dismiss();
                     if (context.mounted) {

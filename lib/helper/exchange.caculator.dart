@@ -16,7 +16,8 @@ class ExchangeCalculator {
   ) {
     final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      final FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      final FiatCurrencyInfo fiatCurrencyInfo =
+          fiatCurrency2Info[fiatCurrency]!;
       final outValue = exchangeRate.exchangeRate *
           BigInt.from(amountInSatoshi) /
           BigInt.from(fiatCurrencyInfo.cents) /
@@ -98,7 +99,8 @@ class ExchangeCalculator {
   ) {
     final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      final FiatCurrencyInfo fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
+      final FiatCurrencyInfo fiatCurrencyInfo =
+          fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
           (exchangeRate.exchangeRate / BigInt.from(fiatCurrencyInfo.cents));
     }

@@ -2,8 +2,6 @@ import 'package:http/http.dart' as http;
 import 'package:wallet/helper/logger.dart';
 
 /// Flutter can't dirrectly capture rust network triffic. This function is a workaround to simulate network traffic
-/// var logs = "Request: https://test.url, Response: { Code: 200, Message: 'Success'}";
-/// simulateNetworkTraffic(logs);
 Future<void> simulateNetworkTraffic(String log) async {
   final requestPattern = RegExp('Request: (.*), Response: (.*)');
   final match = requestPattern.firstMatch(log);

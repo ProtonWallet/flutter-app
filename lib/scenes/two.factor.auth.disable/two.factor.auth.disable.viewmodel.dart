@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
@@ -60,8 +61,9 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
       logger.i("enable2FaTotp response code: $response");
       userDataProvider.enabled2FA(false);
       return true;
-    } on BridgeError catch (exception) {
+    } on BridgeError catch (exception, stracktrace) {
       error = parseSampleDisplayError(exception);
+      Sentry.captureException(exception, stackTrace: stracktrace);
       logger.e(exception.toString());
       return false;
     } catch (e) {

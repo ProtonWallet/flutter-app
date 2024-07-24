@@ -5,8 +5,10 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class UserAgent {
   static final UserAgent _instance = UserAgent._internal();
-  factory UserAgent(
-      {DeviceInfoPlugin? deviceInfo, Future<PackageInfo>? packageInfo}) {
+  factory UserAgent({
+    DeviceInfoPlugin? deviceInfo,
+    Future<PackageInfo>? packageInfo,
+  }) {
     _instance.deviceInfo = deviceInfo ?? DeviceInfoPlugin();
     _instance.packageInfo = packageInfo ?? PackageInfo.fromPlatform();
     return _instance;

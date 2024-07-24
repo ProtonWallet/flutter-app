@@ -371,7 +371,12 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                 if (result) {
                   viewModel.updatePage(4);
                 } else {
-                  LocalToast.showErrorToast(context, "Something error!");
+                  LocalToast.showErrorToast(
+                    context,
+                    viewModel.error.isNotEmpty
+                        ? viewModel.error
+                        : "Unknown error",
+                  );
                 }
               }
             },
@@ -466,12 +471,14 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
         child: Column(children: [
           ButtonV5(
             onPressed: () {
-              Clipboard.setData(ClipboardData(
-                      text: "[${viewModel.backupPhrases.join(" ")}]"))
-                  .then((_) {
+              Clipboard.setData(
+                ClipboardData(text: "[${viewModel.backupPhrases.join(" ")}]"),
+              ).then((_) {
                 if (context.mounted) {
                   LocalToast.showToast(
-                      context, "Recovery codes copied to clipboard");
+                    context,
+                    "Recovery codes copied to clipboard",
+                  );
                 }
               });
             },

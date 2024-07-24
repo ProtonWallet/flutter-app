@@ -556,50 +556,6 @@ pub async fn fork() -> Result<ChildSession, BridgeError> {
     }
 }
 
-// enable it after 2fa mr ready for andromeda
-
-// pub async fn get_2fa_enabled() -> Result<u32, BridgeError> {
-//     let proton_api = retrieve_proton_api()?;
-//     let result = proton_api.two_factor_auth.get_2fa_enabled().await;
-//     match result {
-//         Ok(response) => Ok(response.into()),
-//         Err(err) => Err(err.into()),
-//     }
-// }
-
-// pub async fn set_2fa_totp(
-//     username: String,
-//     password: String,
-//     totp_shared_secret: String,
-//     totp_confirmation: String,
-// ) -> Result<Vec<String>, BridgeError> {
-//     let proton_api = retrieve_proton_api()?;
-//     let result = proton_api
-//         .two_factor_auth
-//         .set_2fa_totp(username, password, totp_shared_secret, totp_confirmation)
-//         .await;
-//     match result {
-//         Ok(response) => Ok(response.into()),
-//         Err(err) => Err(err.into()),
-//     }
-// }
-
-// pub async fn disable_2fa_totp(
-//     username: String,
-//     password: String,
-//     two_factor_code: String,
-// ) -> Result<u32, BridgeError> {
-//     let proton_api = retrieve_proton_api()?;
-//     let result = proton_api
-//         .two_factor_auth
-//         .disable_2fa_totp(username, password, two_factor_code)
-//         .await;
-//     match result {
-//         Ok(response) => Ok(response.into()),
-//         Err(err) => Err(err.into()),
-//     }
-// }
-
 #[cfg(test)]
 mod test {
     use crate::api::{
@@ -651,8 +607,8 @@ mod test {
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let env = "atlas";
 
-        let user = "feng100".to_string();
-        let pass = "12345678".to_string();
+        let user = "test".to_string();
+        let pass = "0000".to_string();
 
         let store = ProtonWalletAuthStore::new(env).unwrap();
         let mut client =

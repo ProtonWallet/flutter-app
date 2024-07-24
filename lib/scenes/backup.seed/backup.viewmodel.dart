@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
@@ -129,6 +130,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
     } on BridgeError catch (e, stacktrace) {
       error = parseSampleDisplayError(e);
       logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {
       logger.e("viewSeed error: $e, stacktrace: $stacktrace");
       error = e.toString();

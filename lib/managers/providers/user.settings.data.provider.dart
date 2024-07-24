@@ -181,7 +181,7 @@ class UserSettingsDataProvider extends DataProvider {
 
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
     this.exchangeRate = exchangeRate;
-    logger.i(
+    logger.d(
       "Updating exchangeRate in new user setting provider (${exchangeRate.fiatCurrency.name}) = ${exchangeRate.exchangeRate}",
     );
     exchangeRateUpdateController.add(ExchangeRateDataUpdated());

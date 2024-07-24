@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/backup.seed/backup.introduce.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.mnemonic.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.viewmodel.dart';
@@ -9,7 +8,6 @@ import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SetupBackupView extends ViewBase<SetupBackupViewModel> {
   const SetupBackupView(SetupBackupViewModel viewModel)

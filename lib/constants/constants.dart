@@ -10,9 +10,8 @@ const int eventLoopRefreshThreshold = 30;
 const int defaultBitcoinAddressCountForOneEmail = 10;
 const int defaultTransactionPerPage = 5;
 const int defaultDisplayDigits = 2;
-const int freeUserWalletLimit = 2; // TODO(fix): get from api to avoid abuse
-const int freeUserWalletAccountLimit =
-    2; // TODO(fix): get from api to avoid abuse
+// const int freeUserWalletLimit = 2;
+const int freeUserWalletAccountLimit = 2;
 const int maxMemoTextCharSize = 256;
 const int maxWalletNameSize = 32;
 const int maxAccountNameSize = 32;
@@ -33,17 +32,3 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.mbtc,
   BitcoinUnit.sats,
 ];
-
-const String srpModulusKey = """
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEXAHLgxYJKwYBBAHaRw8BAQdAFurWXXwjTemqjD7CXjXVyKf0of7n9Ctm
-L8v9enkzggHNEnByb3RvbkBzcnAubW9kdWx1c8J3BBAWCgApBQJcAcuDBgsJ
-BwgDAgkQNQWFxOlRjyYEFQgKAgMWAgECGQECGwMCHgEAAPGRAP9sauJsW12U
-MnTQUZpsbJb53d0Wv55mZIIiJL2XulpWPQD/V6NglBd96lZKBmInSXX/kXat
-Sv+y0io+LR8i2+jV+AbOOARcAcuDEgorBgEEAZdVAQUBAQdAeJHUz1c9+KfE
-kSIgcBRE3WuXC4oj5a2/U3oASExGDW4DAQgHwmEEGBYIABMFAlwBy4MJEDUF
-hcTpUY8mAhsMAAD/XQD8DxNI6E78meodQI+wLsrKLeHn32iLvUqJbVDhfWSU
-WO4BAMcm1u02t4VKw++ttECPt+HUgPUq5pqQWe5Q2cW4TMsE
-=Y4Mw
------END PGP PUBLIC KEY BLOCK-----""";

@@ -61,11 +61,8 @@ final appConfigForTestNet = AppConfig(
   coinType: bitcoinTestnet,
   scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
   apiEnv: ApiEnv.atlas(null),
-  esploraWebpageUrl: "https://proton.me/wallet/explorer/testnet/",
-
-  /// use https://blockstream.info as api service since our own esplora service is not public yet
-  // TODO(fix): change to our own esplora client once it's public
-  esploraApiUrl: "https://blockstream.info/testnet/",
+  esploraWebpageUrl: esploraTestnet,
+  esploraApiUrl: esploraTestnetApi,
   testMode: true,
   stopGap: 50,
 );
@@ -75,11 +72,8 @@ final appConfigForPayments = AppConfig(
   coinType: bitcoinTestnet,
   scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
   apiEnv: payments,
-  esploraWebpageUrl: "https://payments.proton.me/wallet/explorer/testnet/",
-
-  /// use https://blockstream.info as api service since our own esplora service is not public yet
-  // TODO(fix): change to our own esplora client once it's public
-  esploraApiUrl: "https://blockstream.info/testnet/",
+  esploraWebpageUrl: esploraTestnet,
+  esploraApiUrl: esploraTestnetApi,
   testMode: true,
   stopGap: 30,
 );
@@ -89,11 +83,16 @@ final appConfigForProduction = AppConfig(
   coinType: bitcoin,
   scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
   apiEnv: const ApiEnv.prod(),
-  esploraWebpageUrl: "https://proton.me/wallet/explorer/",
-
-  /// use https://blockstream.info as api service since our own esplora service is not public yet
-  // TODO(fix): change to our own esplora client once it's public
-  esploraApiUrl: "https://proton.me/wallet/explorer/api/tx/",
+  esploraWebpageUrl: esploraMainnet,
+  esploraApiUrl: esploraMainnetApi,
   testMode: false,
   stopGap: 50,
 );
+
+/// test net
+const String esploraTestnet = "https://blockstream.info/testnet/";
+const String esploraTestnetApi = "https://blockstream.info/testnet/";
+
+/// main net
+const String esploraMainnet = "https://proton.me/wallet/explorer/";
+const String esploraMainnetApi = "https://proton.me/wallet/explorer/";

@@ -948,9 +948,7 @@ Widget showUpdateWalletPassphraseDialog(
       ),
       TextButton(
         onPressed: () async {
-          EasyLoading.show(
-              status: "saving passphrase..",
-              maskType: EasyLoadingMaskType.black);
+          EasyLoading.show(maskType: EasyLoadingMaskType.black);
           try {
             await viewModel.updatePassphrase(
                 walletModel.walletID, textEditingController.text);

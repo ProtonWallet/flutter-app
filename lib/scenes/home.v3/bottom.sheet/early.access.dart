@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -49,13 +49,11 @@ class EarlyAccessSheet {
                     ButtonV5(
                         onPressed: () async {
                           if (Platform.isAndroid) {
-                            launchUrl(Uri.parse(
-                                "https://play.google.com/store/apps/dev?id=7672479706558526647"));
+                            ExternalUrl.shared.lanuchGooglePlay();
                           } else if (Platform.isIOS) {
-                            launchUrl(Uri.parse(
-                                "https://apps.apple.com/developer/proton-ag/id979659484"));
+                            ExternalUrl.shared.lanuchAppStore();
                           } else {
-                            launchUrl(Uri.parse("https://proton.me/"));
+                            ExternalUrl.shared.lanuchMainSite();
                           }
                         },
                         text: S.of(context).explore_other_proton_products,
@@ -96,9 +94,7 @@ class EarlyAccessSheet {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // TODO(improve): to use $[ExternalUrl];
-                              launchUrl(Uri.parse(
-                                  "https://proton.me/wallet/legal/terms"));
+                              ExternalUrl.shared.lanuchTerms();
                             },
                         ),
                       ]),

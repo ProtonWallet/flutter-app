@@ -97,22 +97,22 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        logger.i("App is in foreground");
+        logger.d("App is in foreground");
         if (isLocked) {
           unlock();
         }
       // App comes to foreground
       case AppLifecycleState.inactive:
-        logger.i("App is inactive");
+        logger.d("App is inactive");
       // App is inactive
       case AppLifecycleState.paused:
-        logger.i("App is in background");
+        logger.d("App is in background");
       // App goes to background
       case AppLifecycleState.detached:
-        logger.i("App is detached");
+        logger.d("App is detached");
       // App is detached
       case AppLifecycleState.hidden:
-        logger.i("App is hidden");
+        logger.d("App is hidden");
     }
   }
 

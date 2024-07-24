@@ -1,7 +1,10 @@
 //app.state.data.provider.dart
 
+import 'dart:math';
+
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
@@ -51,17 +54,22 @@ class AppStateManager extends DataProvider implements Manager {
   final unlockKey = "proton_wallet_app_k_unlock_type";
   final unlockErrorKey = "proton_wallet_app_k_unlock_error_count";
 
+  /// none key chain
+  final eventloopErrorCountKey = "proton_wallet_app_k_event_loop_error_count";
+  final syncErrorCountKey = "proton_wallet_app_k_sync_error_count";
+
   /// Secure storage key for the app state
   final SecureStorageManager secureStore;
 
   /// Shared preferences key for the app state
+  final PreferencesManager shared;
 
   /// app level configs
 
   /// session level configs
 
   /// constructor
-  AppStateManager(this.secureStore);
+  AppStateManager(this.secureStore, this.shared);
 
   Future<void> handleError(BridgeError exception) async {
     final message = parseSessionExpireError(exception);
@@ -111,6 +119,64 @@ class AppStateManager extends DataProvider implements Manager {
 
   void logoutFromLock() {
     // emitState(AppUnlockLogoutState(message: "Logout from lock"));
+  }
+
+  Future<int> getSyncErrorCoount() async {
+    final count = await shared.read(syncErrorCountKey);
+    await shared.write(eventloopErrorCountKey, count + 1);
+    return _getNextBackoffDuration(
+      count,
+      minSeconds: 120,
+    );
+  }
+
+  Future<void> resetSyncErrorCoount() async {
+    await shared.write(syncErrorCountKey, 0);
+  }
+
+  ///
+  Future<int> getEventloopDuration() async {
+    final count = await shared.read(eventloopErrorCountKey);
+    await shared.write(eventloopErrorCountKey, count + 1);
+    return _getNextBackoffDuration(
+      count,
+      maxSeconds: 300,
+    );
+  }
+
+  Future<void> resetEventloopDuration() async {
+    await shared.write(eventloopErrorCountKey, 0);
+  }
+
+  ///
+  Future<int> getSyncDuration() async {
+    final count = await shared.read(eventloopErrorCountKey);
+
+    return _getNextBackoffDuration(
+      count,
+      maxSeconds: 120,
+    );
+  }
+
+  Future<void> resetSyncDuration() async {
+    await shared.write(eventloopErrorCountKey, 0);
+  }
+
+  int _getNextBackoffDuration(
+    int attempt, {
+    int minSeconds = 30,
+    int maxSeconds = 600,
+  }) {
+    // Calculate the exponential backoff duration
+    final int exponentialBackoff = pow(2, attempt).toInt();
+
+    // Generate a random value within the exponential backoff range
+    final int randomBackoff = Random().nextInt(exponentialBackoff + 1);
+
+    // Ensure the random backoff is within the specified range
+    final int duration = min(max(minSeconds, randomBackoff), maxSeconds);
+
+    return duration;
   }
 
   @override

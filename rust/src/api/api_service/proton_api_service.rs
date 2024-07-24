@@ -266,9 +266,10 @@ mod test {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_wallet() -> Result<(), BridgeError> {
-        let user = "feng100";
-        let pass = "12345678";
+        let user = "test";
+        let pass = "0000";
         let app_version = "android-wallet@1.0.0".to_string();
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let env = "atlas";

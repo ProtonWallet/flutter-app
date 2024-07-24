@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -350,11 +350,11 @@ class SendViewModelImpl extends SendViewModel {
 
       /// await for balance to be loaded
       await updateWallet();
-      logger.i(DateTime.now().toString());
+      logger.d(DateTime.now().toString());
     } on BridgeError catch (e, stacktrace) {
       _processError(e, stacktrace);
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = "Init sending error $e";
     }
     initialized = true;
     addressFocusNode.requestFocus();
@@ -378,7 +378,8 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
       logger.i(
-          "updateExchangeRateJob result: ${exchangeRate.fiatCurrency.name} = ${exchangeRate.exchangeRate}");
+        "updateExchangeRateJob result: ${exchangeRate.fiatCurrency.name} = ${exchangeRate.exchangeRate}",
+      );
       sinkAddSafe();
     }
   }
@@ -681,7 +682,7 @@ class SendViewModelImpl extends SendViewModel {
     } on BridgeError catch (e, stacktrace) {
       _processError(e, stacktrace);
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = "Add recipient error: $e";
     }
     isLoadingBvE = false;
     sinkAddSafe(); // inform UI to refresh
@@ -778,7 +779,6 @@ class SendViewModelImpl extends SendViewModel {
             "buildTransactionScript error: $errorMessage");
         errorMessage = "";
       }
-      // }
       return false;
     }
     sinkAddSafe();
@@ -898,7 +898,8 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog(
-            "buildTransactionScript error: $errorMessage");
+          "buildTransactionScript error: $errorMessage",
+        );
         errorMessage = "";
       }
       return false;
@@ -1136,7 +1137,7 @@ class SendViewModelImpl extends SendViewModel {
     logger.e(
       "Send sendCoin() error: $error stacktrace: $stacktrace",
     );
-    final msg = parseSampleDisplayError(error);
+    final msg = "Send error process: ${parseSampleDisplayError(error)}";
     if (msg.isNotEmpty) {
       // TODO(fix): improve logic here
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
@@ -1177,6 +1178,7 @@ class SendViewModelImpl extends SendViewModel {
           );
         }
       } else {
+        Sentry.captureException(error, stackTrace: stacktrace);
         CommonHelper.showErrorDialog(
           msg,
           callback: () {
