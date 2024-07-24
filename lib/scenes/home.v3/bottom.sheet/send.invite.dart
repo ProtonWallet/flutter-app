@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/contacts.model.dart';
@@ -16,7 +17,7 @@ class SendInviteSheet {
   static void show(
     BuildContext context,
     List<ContactsModel> contactsEmails,
-      SendInviteCallback sendInvite,
+    SendInviteCallback sendInvite,
   ) {
     final TextEditingController emailController =
         TextEditingController(text: "");
@@ -34,8 +35,11 @@ class SendInviteSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              SvgPicture.asset("assets/images/icon/send-invite.svg",
-                  fit: BoxFit.fill, width: 240, height: 167),
+              Assets.images.icon.user.image(
+                fit: BoxFit.fill,
+                width: 240,
+                height: 167,
+              ),
               const SizedBox(height: 20),
               Text(
                 S.of(context).exclusive_invites,
@@ -105,8 +109,8 @@ class SendInviteSheet {
                       final bool success = await sendInvite.call(email);
                       if (context.mounted && success) {
                         Navigator.of(context).pop();
-                        SendInviteSuccessSheet.show(
-                            context, contactsEmails, emailController.text, sendInvite);
+                        SendInviteSuccessSheet.show(context, contactsEmails,
+                            emailController.text, sendInvite);
                       }
                     }
                   },

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -16,20 +16,25 @@ class WelcomeDialogSheet {
     String email,
     VoidCallback acceptTermsCallback,
   ) {
-    HomeModalBottomSheet.show(context, child:
-        StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
+        child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Align(
             alignment: Alignment.centerRight,
-            child: CloseButtonV1(onPressed: () {
-              Navigator.of(context).pop();
-            })),
+            child: CloseButtonV1(
+                backgroundColor: ProtonColors.backgroundProton,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })),
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              SvgPicture.asset("assets/images/icon/send_success.svg",
-                  fit: BoxFit.fill, width: 240, height: 240),
-              const SizedBox(height: 20),
+              Assets.images.icon.bitcoinBigIconPng.image(
+                fit: BoxFit.fill,
+                width: 240,
+                height: 167,
+              ),
               Text(
                 S.of(context).welcome_to,
                 style: FontManager.titleHeadline(ProtonColors.textNorm),

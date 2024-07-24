@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/proton.links.dart';
@@ -1072,8 +1073,11 @@ class SendView extends ViewBase<SendViewModel> {
                           horizontal: defaultPadding),
                       child: Center(
                           child: Column(children: [
-                        SvgPicture.asset("assets/images/icon/send_success.svg",
-                            fit: BoxFit.fill, width: 240, height: 240),
+                        Assets.images.icon.bitcoinBigIconPng.image(
+                          fit: BoxFit.fill,
+                          width: 240,
+                          height: 167,
+                        ),
                         Text(
                           S.of(context).send_success_title,
                           style:

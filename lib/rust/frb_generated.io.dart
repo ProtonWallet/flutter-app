@@ -7,6 +7,7 @@ import 'api/api2.dart';
 import 'api/api_service/address_client.dart';
 import 'api/api_service/bitcoin_address_client.dart';
 import 'api/api_service/block_client.dart';
+import 'api/api_service/discovery_content_client.dart';
 import 'api/api_service/email_integration_client.dart';
 import 'api/api_service/event_client.dart';
 import 'api/api_service/exchange_rate_client.dart';
@@ -63,6 +64,7 @@ import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 import 'proton_api/auth_credential.dart';
 import 'proton_api/contacts.dart';
+import 'proton_api/discovery_content.dart';
 import 'proton_api/event_routes.dart';
 import 'proton_api/exchange_rate.dart';
 import 'proton_api/invite.dart';
@@ -110,6 +112,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ContactsClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClientPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_DiscoveryContentClientPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClientPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_EmailIntegrationClientPtr => wire
@@ -276,6 +282,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ContactsClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient(
+          dynamic raw);
+
+  @protected
+  DiscoveryContentClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
           dynamic raw);
 
   @protected
@@ -499,6 +510,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  DiscoveryContentClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          dynamic raw);
+
+  @protected
   EmailIntegrationClient
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEmailIntegrationClient(
           dynamic raw);
@@ -719,6 +735,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ContactsClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient(
+          dynamic raw);
+
+  @protected
+  DiscoveryContentClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
           dynamic raw);
 
   @protected
@@ -1094,6 +1115,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ContactEmailEvent dco_decode_contact_email_event(dynamic raw);
 
   @protected
+  Content dco_decode_content(dynamic raw);
+
+  @protected
   CreateWalletAccountReq dco_decode_create_wallet_account_req(dynamic raw);
 
   @protected
@@ -1216,6 +1240,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ContactEmailEvent> dco_decode_list_contact_email_event(dynamic raw);
+
+  @protected
+  List<Content> dco_decode_list_content(dynamic raw);
 
   @protected
   List<DataPoint> dco_decode_list_data_point(dynamic raw);
@@ -1634,6 +1661,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  DiscoveryContentClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          SseDeserializer deserializer);
+
+  @protected
   EmailIntegrationClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEmailIntegrationClient(
           SseDeserializer deserializer);
@@ -1854,6 +1886,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  DiscoveryContentClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          SseDeserializer deserializer);
+
+  @protected
   EmailIntegrationClient
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEmailIntegrationClient(
           SseDeserializer deserializer);
@@ -2071,6 +2108,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ContactsClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient(
+          SseDeserializer deserializer);
+
+  @protected
+  DiscoveryContentClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
           SseDeserializer deserializer);
 
   @protected
@@ -2475,6 +2517,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  Content sse_decode_content(SseDeserializer deserializer);
+
+  @protected
   CreateWalletAccountReq sse_decode_create_wallet_account_req(
       SseDeserializer deserializer);
 
@@ -2610,6 +2655,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   List<ContactEmailEvent> sse_decode_list_contact_email_event(
       SseDeserializer deserializer);
+
+  @protected
+  List<Content> sse_decode_list_content(SseDeserializer deserializer);
 
   @protected
   List<DataPoint> sse_decode_list_data_point(SseDeserializer deserializer);
@@ -3079,6 +3127,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          DiscoveryContentClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEmailIntegrationClient(
           EmailIntegrationClient self, SseSerializer serializer);
 
@@ -3296,6 +3349,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient(
           ContactsClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          DiscoveryContentClient self, SseSerializer serializer);
 
   @protected
   void
@@ -3519,6 +3577,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient(
           ContactsClient self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+          DiscoveryContentClient self, SseSerializer serializer);
 
   @protected
   void
@@ -3933,6 +3996,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ContactEmailEvent self, SseSerializer serializer);
 
   @protected
+  void sse_encode_content(Content self, SseSerializer serializer);
+
+  @protected
   void sse_encode_create_wallet_account_req(
       CreateWalletAccountReq self, SseSerializer serializer);
 
@@ -4073,6 +4139,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_contact_email_event(
       List<ContactEmailEvent> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_content(List<Content> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_data_point(
@@ -4747,6 +4816,38 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClient =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContactsClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClient =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveryContentClientPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

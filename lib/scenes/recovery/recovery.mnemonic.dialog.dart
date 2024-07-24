@@ -104,30 +104,13 @@ Future<void> showMnemonicDialog(
             children: [
               ButtonV5(
                 onPressed: () {
-                  Share.share(
-                    mnemonic,
-                    subject: "Recovery phrase",
-                  );
-                },
-                text: S.of(context).share_button,
-                backgroundColor: ProtonColors.protonBlue,
-                textStyle: FontManager.body1Median(ProtonColors.white),
-                width: 300,
-                height: 44,
-                elevation: 0.0,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              ButtonV5(
-                onPressed: () {
                   onClick();
                   Navigator.of(context).pop();
                 },
                 text: S.of(context).done,
-                borderColor: ProtonColors.protonShades20,
-                backgroundColor: ProtonColors.protonShades20,
-                textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                borderColor: ProtonColors.protonBlue,
+                backgroundColor: ProtonColors.protonBlue,
+                textStyle: FontManager.body1Median(ProtonColors.white),
                 width: 300,
                 height: 44,
                 elevation: 0.0,

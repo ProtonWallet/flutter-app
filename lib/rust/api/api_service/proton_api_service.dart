@@ -11,6 +11,7 @@ import '../../proton_api/wallet_settings.dart';
 import 'address_client.dart';
 import 'bitcoin_address_client.dart';
 import 'block_client.dart';
+import 'discovery_content_client.dart';
 import 'email_integration_client.dart';
 import 'event_client.dart';
 import 'exchange_rate_client.dart';
@@ -36,6 +37,8 @@ abstract class ProtonApiService implements RustOpaqueInterface {
   BitcoinAddressClient getBitcoinAddrClient();
 
   BlockClient getBlockClient();
+
+  DiscoveryContentClient getDiscoveryContentClient();
 
   EmailIntegrationClient getEmailIntegrationClient();
 

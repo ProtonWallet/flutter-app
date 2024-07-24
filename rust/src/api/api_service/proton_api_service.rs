@@ -1,5 +1,6 @@
 //proton_api_service.rs
 use super::address_client::AddressClient;
+use super::discovery_content_client::DiscoveryContentClient;
 use super::invite_client::InviteClient;
 use super::onramp_gateway_client::OnRampGatewayClient;
 use super::price_graph_client::PriceGraphClient;
@@ -208,6 +209,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_price_graph_client(&self) -> PriceGraphClient {
         PriceGraphClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_discovery_content_client(&self) -> DiscoveryContentClient {
+        DiscoveryContentClient::new(&self)
     }
 
     #[frb(sync)]

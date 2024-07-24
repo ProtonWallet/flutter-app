@@ -20,7 +20,7 @@ class DiscoverFeedsView extends StatelessWidget {
               onTap!(item.link);
             }
           },
-          avatar: _CoverImages.getCoverImage(protonFeedItems.indexOf(item)),
+          avatar: _CoverImages.getCoverImage(item.title, protonFeedItems.indexOf(item)),
         );
       }).toList(),
     );
@@ -63,7 +63,25 @@ class _CoverImages {
     Assets.images.icon.discoverPlaceholder4
   ];
 
-  static Widget getCoverImage(int index) {
-    return _imagePaths[index % _imagePaths.length].svg(fit: BoxFit.fitHeight);
+  static Widget getCoverImage(String title, int index) {
+    if (title.toLowerCase().contains("guide for newcomers")){
+      return Assets.images.icon.discoverBitcoinGuide.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    if (title.toLowerCase().contains("what is bitcoin")){
+      return Assets.images.icon.discoverWhatIsBitcoin.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    if (title.toLowerCase().contains("proton wallet launch")){
+      return Assets.images.icon.discoverProtonWalletLaunch.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    if (title.toLowerCase().contains("proton wallet security")){
+      return Assets.images.icon.discoverProtonWalletSecurity.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    if (title.toLowerCase().contains("bitcoin via email")){
+      return Assets.images.icon.discoverBve.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    if (title.toLowerCase().contains("protect your proton wallet")){
+      return Assets.images.icon.discoverHowToProtect.image(fit: BoxFit.fill, width: 104, height: 104,);
+    }
+    return _imagePaths[index % _imagePaths.length].svg(fit: BoxFit.fill, width: 104, height: 104,);
   }
 }

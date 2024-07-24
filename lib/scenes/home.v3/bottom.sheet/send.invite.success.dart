@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/contacts.model.dart';
@@ -14,7 +15,7 @@ class SendInviteSuccessSheet {
     BuildContext context,
     List<ContactsModel> contactsEmails,
     String email,
-      SendInviteCallback sendInvite,
+    SendInviteCallback sendInvite,
   ) {
     HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
         child: StatefulBuilder(
@@ -30,8 +31,11 @@ class SendInviteSuccessSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              SvgPicture.asset("assets/images/icon/send-invite.svg",
-                  fit: BoxFit.fill, width: 240, height: 167),
+              Assets.images.icon.paperPlane.image(
+                fit: BoxFit.fill,
+                width: 240,
+                height: 167,
+              ),
               const SizedBox(height: 20),
               Text(
                 S.of(context).invitation_sent_to(email),

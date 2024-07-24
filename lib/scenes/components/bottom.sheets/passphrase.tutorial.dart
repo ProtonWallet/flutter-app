@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -10,19 +10,25 @@ import 'package:wallet/theme/theme.font.dart';
 class PassphraseTutorialSheet {
   static void show(BuildContext context) {
     HomeModalBottomSheet.show(context,
+        backgroundColor: ProtonColors.white,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Align(
                 alignment: Alignment.centerRight,
-                child: CloseButtonV1(onPressed: () {
-                  Navigator.of(context).pop();
-                })),
+                child: CloseButtonV1(
+                    backgroundColor: ProtonColors.backgroundProton,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })),
             Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  SvgPicture.asset("assets/images/icon/passphrase_lock.svg",
-                      fit: BoxFit.fill, width: 60, height: 60),
+                  Assets.images.icon.lock.image(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 167,
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     S.of(context).what_is_wallet_passphrase,
@@ -35,6 +41,7 @@ class PassphraseTutorialSheet {
                           horizontal: defaultPadding),
                       child: Text(
                           S.of(context).what_is_wallet_passphrase_content,
+                          textAlign: TextAlign.center,
                           style:
                               FontManager.body2Regular(ProtonColors.textWeak))),
                 ])),

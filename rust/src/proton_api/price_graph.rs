@@ -13,7 +13,7 @@ pub enum _Timeframe {
 
 #[frb(mirror(DataPoint))]
 pub struct _DataPoint {
-    pub ExchangeRate: u32,
+    pub ExchangeRate: u64,
     pub Cents: Option<u8>,
     pub Timestamp: u64,
 }

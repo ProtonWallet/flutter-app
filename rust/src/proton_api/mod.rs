@@ -1,4 +1,5 @@
 pub mod contacts;
+pub mod discovery_content;
 pub mod event_routes;
 pub mod exchange_rate;
 pub mod payment_gateway;

@@ -820,6 +820,17 @@ class SendViewModelImpl extends SendViewModel {
             logger.i("Target addr: $bitcoinAddress\nAmount: $amountInSATS");
             if (amountInSATS >= 546) {
               hasValidRecipient = true;
+            } else {
+              final BuildContext? context =
+                  Coordinator.rootNavigatorKey.currentContext;
+              if (context != null && context.mounted) {
+                CommonHelper.showSnackbar(
+                  context,
+                  S.of(context).error_you_can_not_send_amount_below_dust,
+                  isError: true,
+                );
+              }
+              return false;
             }
             txBuilder = txBuilder.addRecipient(
               addressStr: bitcoinAddress,

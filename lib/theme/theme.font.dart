@@ -92,6 +92,16 @@ class FontManager {
         color: color);
   }
 
+  static TextStyle discoveryTitle(Color color) {
+    return TextStyle(
+        fontFamily: primaryFontFamily,
+        fontSize: 18,
+        height: 1.2,
+        // lineHeight = 24
+        fontWeight: FontWeight.w500,
+        color: color);
+  }
+
   static TextStyle body1Bold(Color color) {
     return TextStyle(
         fontFamily: primaryFontFamily,

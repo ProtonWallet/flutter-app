@@ -93,7 +93,7 @@ final appConfigForProduction = AppConfig(
 
   /// use https://blockstream.info as api service since our own esplora service is not public yet
   // TODO(fix): change to our own esplora client once it's public
-  esploraApiUrl: "https://blockstream.info/",
+  esploraApiUrl: "https://proton.me/wallet/explorer/api/tx/",
   testMode: false,
   stopGap: 50,
 );
