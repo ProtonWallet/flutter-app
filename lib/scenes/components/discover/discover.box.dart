@@ -45,6 +45,7 @@ class DiscoverBox extends StatelessWidget {
               pubDate: pubDate,
               category: category,
               author: author,
+              description: description,
             ),
           ),
         ],
@@ -56,7 +57,9 @@ class DiscoverBox extends StatelessWidget {
 /// Discover box Avatar part
 class _Avatar extends StatelessWidget {
   final Widget avatar;
+
   const _Avatar({required this.avatar});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -73,12 +76,14 @@ class _Details extends StatelessWidget {
   final String pubDate;
   final String category;
   final String author;
+  final String description;
 
   const _Details({
     required this.title,
     required this.pubDate,
     required this.category,
     required this.author,
+    required this.description,
   });
 
   @override
@@ -87,14 +92,13 @@ class _Details extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: FontManager.body2Median(ProtonColors.textNorm)),
-        const SizedBox(height: 2),
-        Text(pubDate, style: FontManager.captionRegular(ProtonColors.textWeak)),
-        Wrap(
-          children: [
-            TagProtonDiscover(text: category),
-            TagProtonDiscover(text: author),
-          ],
+        Text(title, style: FontManager.discoveryTitle(ProtonColors.textNorm)),
+        const SizedBox(height: 4),
+        Text(
+          description,
+          style: FontManager.body2Regular(ProtonColors.textWeak),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

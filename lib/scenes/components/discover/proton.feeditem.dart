@@ -1,7 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/rust/api/api_service/discovery_content_client.dart';
+import 'package:wallet/rust/proton_api/discovery_content.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 
 part 'proton.feeditem.g.dart';
 
@@ -49,5 +55,36 @@ class ProtonFeedItem {
         await rootBundle.loadString('assets/json/custom_discovers.json');
     final decodedJsonList = json.decode(jsonString) as List<dynamic>;
     return fromJsonList(decodedJsonList);
+  }
+
+  static Future<List<ProtonFeedItem>> loadFromApi(
+      DiscoveryContentClient apiClient) async {
+    final List<ProtonFeedItem> items = [];
+    try {
+      final List<Content> contents = await apiClient.getDiscoveryContents();
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      for (Content content in contents) {
+        String localeTime = "";
+        if (context != null && context.mounted) {
+          localeTime = CommonHelper.formatLocaleTime(context, content.pubDate);
+        } else {
+          final DateTime date =
+              DateTime.fromMillisecondsSinceEpoch(content.pubDate * 1000);
+          localeTime = DateFormat('yyyy-MM-dd').format(date);
+        }
+        items.add(ProtonFeedItem(
+          title: content.title,
+          pubDate: localeTime,
+          link: content.link,
+          description: content.description,
+          category: content.category,
+          author: content.author,
+        ));
+      }
+    } catch (e) {
+      e.toString();
+    }
+
+    return items;
   }
 }

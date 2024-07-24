@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/rust/api/api_service/discovery_content_client.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -11,19 +12,20 @@ import 'package:xml/xml.dart' as xml;
 
 abstract class DiscoverViewModel extends ViewModel<DiscoverCoordinator> {
   DiscoverViewModel(super.coordinator);
+
+  bool initialized = false;
   late List<ProtonFeedItem> protonFeedItems = [];
 }
 
 class DiscoverViewModelImpl extends DiscoverViewModel {
-  DiscoverViewModelImpl(super.coordinator);
+  final DiscoveryContentClient discoveryContentClient;
+
+  DiscoverViewModelImpl(this.discoveryContentClient, super.coordinator);
 
   @override
   Future<void> loadData() async {
-    EasyLoading.show(
-        status: "loading content..", maskType: EasyLoadingMaskType.black);
-    protonFeedItems = await ProtonFeedItem.loadJsonFromAsset();
-
-    EasyLoading.dismiss();
+    protonFeedItems = await ProtonFeedItem.loadFromApi(discoveryContentClient);
+    initialized = true;
     sinkAddSafe();
   }
 

@@ -28,13 +28,10 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
   Widget buildHeader(BuildContext context, String body) {
     return Column(
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 135,
-          child: Assets.images.icon.twoFa.svg(),
-        ),
-        const SizedBox(
-          height: defaultPadding,
+        Assets.images.icon.lock.image(
+          fit: BoxFit.fill,
+          width: 240,
+          height: 167,
         ),
         Text(
           S.of(context).setting_2fa_disable,
@@ -42,7 +39,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(
-          height: 12,
+          height: 6,
         ),
         Text(
           body,
@@ -101,16 +98,32 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
         ]),
       ),
       child: Transform.translate(
-        offset: const Offset(0, -20),
+        offset: const Offset(0, -30),
         child: Column(
           children: [
             buildHeader(
               context,
+              "",
+            ),
+            TextFieldTextV2(
+              borderColor: ProtonColors.textHint,
+              labelText: S.of(context).password,
+              hintText: S.of(context).password_hint,
+              alwaysShowHint: true,
+              textController: viewModel.passwordController,
+              myFocusNode: viewModel.passphraseFocusNode,
+              validation: (String _) {
+                return "";
+              },
+              isPassword: true,
+            ),
+            SizedBoxes.box24,
+            Text(
               S.of(context).setting_2fa_code_hint,
+              style: FontManager.body2Regular(ProtonColors.textWeak),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(
-              height: defaultPadding,
-            ),
+            SizedBoxes.box8,
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               for (int i = 0; i < 6; i++)
                 TextField2FA(
@@ -128,22 +141,9 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                       }
                     },
                     textInputAction:
-                    i == 5 ? TextInputAction.done : TextInputAction.next,
+                        i == 5 ? TextInputAction.done : TextInputAction.next,
                     digitOnly: true),
             ]),
-            SizedBoxes.box18,
-            TextFieldTextV2(
-              borderColor: ProtonColors.textHint,
-              labelText: S.of(context).password,
-              hintText: S.of(context).password_hint,
-              alwaysShowHint: true,
-              textController: viewModel.passwordController,
-              myFocusNode: viewModel.passphraseFocusNode,
-              validation: (String _) {
-                return "";
-              },
-              isPassword: true,
-            ),
           ],
         ),
       ),

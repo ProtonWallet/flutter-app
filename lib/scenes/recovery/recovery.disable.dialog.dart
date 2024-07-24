@@ -13,6 +13,7 @@ Future<void> showDisableDialog(
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: ProtonColors.white,
         title: Center(
           child: Text(
             S.of(context).disable_recovery_phrase_title,
