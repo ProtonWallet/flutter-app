@@ -79,7 +79,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
     int index = 0;
     if (priceGraph != null) {
       for (DataPoint dataPoint in priceGraph.graphData) {
-        final double price =  BigInt.from(dataPoint.exchangeRate) / widget.exchangeRate.cents;
+        final double price =  dataPoint.exchangeRate / widget.exchangeRate.cents;
         prices.add(price);
         spots.add(FlSpot(
           index.toDouble(),

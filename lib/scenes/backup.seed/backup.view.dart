@@ -5,6 +5,8 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/backup.seed/backup.introduce.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.mnemonic.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.viewmodel.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -20,29 +22,34 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
     });
 
     return Scaffold(
-      backgroundColor: ProtonColors.backgroundProton,
-      appBar: AppBar(
-        surfaceTintColor: ProtonColors.backgroundProton,
-        backgroundColor: ProtonColors.backgroundProton,
-        title: Text(
-          S.of(context).mnemonic_backup_page_title,
-          style: FontManager.body2Median(ProtonColors.textNorm),
+      backgroundColor: Colors.transparent,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          color: ProtonColors.white,
         ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: ProtonColors.textNorm),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        child: SafeArea(
+          child: Column(children: [
+            CustomHeader(
+              button: CloseButtonV1(
+                  backgroundColor: ProtonColors.backgroundProton,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              buttonDirection: AxisDirection.left,
+            ),
+            Expanded(
+              child: viewModel.inIntroduce
+                  ? BackupIntroduceView(onPressed: viewModel.tryLoadMnemonic)
+                  : BackupMnemonicView(
+                      itemList: viewModel.itemList,
+                      walletName: viewModel.walletName,
+                      onPressed: viewModel.setBackup,
+                    ),
+            ),
+          ]),
         ),
       ),
-      body: viewModel.inIntroduce
-          ? BackupIntroduceView(onPressed: viewModel.tryLoadMnemonic)
-          : BackupMnemonicView(
-              itemList: viewModel.itemList,
-              walletName: viewModel.walletName,
-              onPressed: viewModel.setBackup,
-            ),
     );
   }
 

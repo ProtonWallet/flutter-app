@@ -23,42 +23,44 @@ class BackupIntroduceView extends StatelessWidget {
       child: Column(children: [
         Expanded(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(defaultPadding * 2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Assets.images.icon.accessKey.svg(
-                    fit: BoxFit.fill,
-                    width: 60,
-                    height: 60,
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    S.of(context).backup_introduce_title,
-                    style: FontManager.titleSubHero(ProtonColors.textNorm),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    S.of(context).backup_introduce_content,
-                    style: FontManager.body2Regular(ProtonColors.textWeak),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Underline(
-                    onTap: () {
-                      launchUrl(Uri.parse(seedPhraseLink));
-                    },
-                    color: ProtonColors.brandLighten20,
-                    child: Text(
-                      S.of(context).learn_more,
-                      style: FontManager.body2Median(
-                        ProtonColors.brandLighten20,
+            child: Transform.translate(
+              offset: const Offset(0, -30),
+              child: Padding(
+                padding: const EdgeInsets.all(defaultPadding * 2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Assets.images.icon.key.image(
+                      fit: BoxFit.fill,
+                      width: 240,
+                      height: 167,
+                    ),
+                    Text(
+                      S.of(context).backup_introduce_title,
+                      style: FontManager.titleHeadline(ProtonColors.textNorm),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      S.of(context).backup_introduce_content,
+                      style: FontManager.body2Regular(ProtonColors.textWeak),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Underline(
+                      onTap: () {
+                        launchUrl(Uri.parse(seedPhraseLink));
+                      },
+                      color: ProtonColors.brandLighten20,
+                      child: Text(
+                        S.of(context).learn_more,
+                        style: FontManager.body2Median(
+                          ProtonColors.brandLighten20,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -25,23 +26,17 @@ class BackupMnemonicView extends StatelessWidget {
           child: SingleChildScrollView(
               child: Column(
         children: [
-          const SizedBox(
-            height: 30,
+          Assets.images.icon.key.image(
+            fit: BoxFit.fill,
+            width: 240,
+            height: 167,
           ),
           Text(S.of(context).mnemonic_backup_content_title,
-              style: FontManager.titleHero(ProtonColors.textNorm)),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(walletName,
-              style: FontManager.titleSubHero(ProtonColors.textWeak)),
-          const SizedBox(
-            height: 10,
-          ),
+              style: FontManager.titleHeadline(ProtonColors.textNorm)),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Text(S.of(context).mnemonic_backup_content_subtitle,
-                style: FontManager.body1Regular(ProtonColors.textWeak),
+            padding: const EdgeInsets.symmetric(horizontal: 20, ).copyWith(top: 10,),
+            child: Text(S.of(context).mnemonic_backup_content_subtitle(walletName),
+                style: FontManager.body2Regular(ProtonColors.textWeak),
                 textAlign: TextAlign.center),
           ),
           const SizedBox(

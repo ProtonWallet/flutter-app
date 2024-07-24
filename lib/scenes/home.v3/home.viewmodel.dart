@@ -51,6 +51,7 @@ import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
+import 'package:wallet/rust/proton_api/discovery_content.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
@@ -627,7 +628,7 @@ class HomeViewModelImpl extends HomeViewModel {
       datasourceChangedStreamController.stream;
 
   Future<void> loadDiscoverContents() async {
-    protonFeedItems = await ProtonFeedItem.loadJsonFromAsset();
+    protonFeedItems = await ProtonFeedItem.loadFromApi(apiServiceManager.getApiService().getDiscoveryContentClient());
   }
 
   @override
