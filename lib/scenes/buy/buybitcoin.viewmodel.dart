@@ -331,7 +331,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       configuration.fiatCurrency = selected.fiatCurrency.symbol;
       configuration.selectedCountryCode = selected.country.code;
       configuration.userAddress = receiveAddress;
-      configuration.userEmailAddress = userEmail;
+      // configuration.userEmailAddress = userEmail;
 
       configuration.variant = "auto";
 

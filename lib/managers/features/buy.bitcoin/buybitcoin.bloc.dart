@@ -324,7 +324,12 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     final payMethod = state.selectedModel.paymentMethod;
     final provider = state.selectedModel.provider;
     return gatewayDataProvider.checkout(
-        amount, btcAddress, fiat, payMethod, provider);
+      amount,
+      btcAddress,
+      fiat,
+      payMethod,
+      provider,
+    );
   }
 
   String toNumberAmount(String textAmount) {
