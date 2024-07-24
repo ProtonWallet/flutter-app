@@ -209,21 +209,23 @@ class OnboardingGuideSheet {
                                   onPressed: () async {
                                     if (!isCreatingWallet) {
                                       isCreatingWallet = true;
+                                      bool success = false;
                                       if (viewModel
                                               .passphraseTextController.text ==
                                           viewModel
                                               .passphraseConfirmTextController
                                               .text) {
-                                        await viewModel.createWallet();
-                                        if (context.mounted) {
+                                        success =
+                                            await viewModel.createWallet();
+                                        if (context.mounted && success) {
                                           Navigator.of(context).pop();
                                           if (viewModel.errorMessage.isEmpty) {
                                             CommonHelper.showSnackbar(context,
                                                 S.of(context).wallet_created);
                                           } else {
-                                            CommonHelper.showSnackbar(
-                                                context, viewModel.errorMessage,
-                                                isError: true);
+                                            CommonHelper.showErrorDialog(
+                                              viewModel.errorMessage,
+                                            );
                                           }
                                         }
                                       } else {
@@ -236,7 +238,8 @@ class OnboardingGuideSheet {
                                       isCreatingWallet = false;
                                       if (context.mounted &&
                                           firstWallet &&
-                                          !viewModel.acceptTermsAndConditions) {
+                                          !viewModel.acceptTermsAndConditions &&
+                                          success) {
                                         WelcomeDialogSheet.show(
                                           context,
                                           viewModel.userEmail,

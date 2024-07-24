@@ -809,26 +809,15 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                         ),
                                         GestureDetector(
                                             onTap: () {
-                                              if (state.walletsModel.length <
-                                                  freeUserWalletLimit) {
-                                                if (viewModel.currentSize ==
-                                                    ViewSize.mobile) {
-                                                  Navigator.of(context).pop();
-                                                }
-                                                viewModel.nameTextController
-                                                    .text = "";
-                                                viewModel
-                                                    .passphraseTextController
-                                                    .text = "";
-                                                viewModel
-                                                    .passphraseConfirmTextController
-                                                    .text = "";
-                                                OnboardingGuideSheet.show(
-                                                    context, viewModel);
-                                              } else {
-                                                UpgradeIntroSheet.show(
-                                                    context, viewModel);
-                                              }
+                                              viewModel
+                                                  .nameTextController.text = "";
+                                              viewModel.passphraseTextController
+                                                  .text = "";
+                                              viewModel
+                                                  .passphraseConfirmTextController
+                                                  .text = "";
+                                              OnboardingGuideSheet.show(
+                                                  context, viewModel);
                                             },
                                             child: SvgPicture.asset(
                                                 "assets/images/icon/ic-plus-circle.svg",

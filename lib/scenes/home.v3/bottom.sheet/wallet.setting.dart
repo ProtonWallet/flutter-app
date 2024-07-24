@@ -53,6 +53,35 @@ class WalletSettingSheet {
           false,
     );
 
+    final TextEditingController walletNameController =
+        TextEditingController(text: walletMenuModel.walletName);
+    final FocusNode walletNameFocusNode = FocusNode();
+
+    final List<AccountModel> userAccounts =
+        walletMenuModel.accounts.map((e) => e.accountModel).toList();
+    final Map<String, ValueNotifier> accountFiatCurrencyNotifier =
+        viewModel.getAccountFiatCurrencyNotifiers(userAccounts);
+    final Map<String, ValueNotifier> _ = {
+      for (var item in userAccounts)
+        item.accountID: ValueNotifier(viewModel.protonAddresses.firstOrNull)
+    };
+    final Map<String, TextEditingController> accountNameControllers = {
+      for (var accountMenuModel in walletMenuModel.accounts)
+        accountMenuModel.accountModel.accountID:
+            TextEditingController(text: accountMenuModel.label)
+    };
+    final Map<String, FocusNode> accountNameFocusNodes = {
+      for (var item in userAccounts) item.accountID: FocusNode()
+    };
+    for (AccountModel item in userAccounts) {
+      accountNameFocusNodes[item.accountID]!.addListener(() {
+        if (accountNameFocusNodes[item.accountID]!.hasFocus) {
+          scrollController.jumpTo(scrollController.offset +
+              MediaQuery.of(context).viewInsets.bottom);
+        }
+      });
+    }
+
     HomeModalBottomSheet.show(context,
         scrollController: scrollController,
         header: CustomHeader(
@@ -72,37 +101,8 @@ class WalletSettingSheet {
                 break;
               }
             }
-            final TextEditingController walletNameController =
-                TextEditingController(text: foundWalletMenuModel.walletName);
-            final FocusNode walletNameFocusNode = FocusNode();
             final WalletModel userWallet = foundWalletMenuModel.walletModel;
-            final List<AccountModel> userAccounts = foundWalletMenuModel
-                .accounts
-                .map((e) => e.accountModel)
-                .toList();
-            final Map<String, TextEditingController> accountNameControllers = {
-              for (var accountMenuModel in foundWalletMenuModel.accounts)
-                accountMenuModel.accountModel.accountID:
-                    TextEditingController(text: accountMenuModel.label)
-            };
-            final Map<String, ValueNotifier> accountFiatCurrencyNotifier =
-                viewModel.getAccountFiatCurrencyNotifiers(userAccounts);
-            final Map<String, FocusNode> accountNameFocusNodes = {
-              for (var item in userAccounts) item.accountID: FocusNode()
-            };
-            for (AccountModel item in userAccounts) {
-              accountNameFocusNodes[item.accountID]!.addListener(() {
-                if (accountNameFocusNodes[item.accountID]!.hasFocus) {
-                  scrollController.jumpTo(scrollController.offset +
-                      MediaQuery.of(context).viewInsets.bottom);
-                }
-              });
-            }
-            final Map<String, ValueNotifier> _ = {
-              for (var item in userAccounts)
-                item.accountID:
-                    ValueNotifier(viewModel.protonAddresses.firstOrNull)
-            };
+
             final int indexOfWallet = foundWalletMenuModel.currentIndex;
             return Column(
               mainAxisSize: MainAxisSize.min,
