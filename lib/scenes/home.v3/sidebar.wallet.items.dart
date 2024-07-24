@@ -298,19 +298,19 @@ class SidebarWalletItems extends StatelessWidget {
           color: ProtonColors.drawerBackground,
           child: ListTile(
             onTap: () {
-              if (wlModel.accounts.length < freeUserWalletAccountLimit) {
-                addAccount?.call(wlModel);
-              } else {
-                if (viewModel == null) {
-                  CommonHelper.showSnackbar(
-                    context,
-                    S.of(context).freeuser_wallet_account_limit(
-                        freeUserWalletAccountLimit),
-                  );
-                } else {
-                  UpgradeIntroSheet.show(context, viewModel!);
-                }
-              }
+              // if (wlModel.accounts.length < freeUserWalletAccountLimit) {
+              addAccount?.call(wlModel);
+              // } else {
+              //   if (viewModel == null) {
+              //     CommonHelper.showSnackbar(
+              //       context,
+              //       S.of(context).freeuser_wallet_account_limit(
+              //           freeUserWalletAccountLimit),
+              //     );
+              //   } else {
+              //     UpgradeIntroSheet.show(context, viewModel!);
+              //   }
+              // }
             },
             tileColor: ProtonColors.drawerBackground,
             leading: Container(
