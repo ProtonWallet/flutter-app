@@ -1,5 +1,6 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
+import 'dart:math';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -147,6 +148,13 @@ class BDKTransactionDataProvider extends DataProvider {
           serverScriptType: accountModel.scriptType,
         );
         if (account != null) {
+          /// check can i run
+          final lastOk =
+              await shared.read("proton_wallet_app_k_sync_error_timmer") ?? 0;
+          if (!forceSync && DateTime.now().second - lastOk < 0) {
+            return;
+          }
+
           final bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
             logger.i("Bdk wallet full sync Started");
@@ -159,7 +167,6 @@ class BDKTransactionDataProvider extends DataProvider {
             success = true;
           } else {
             logger.i("Bdk wallet partial sync check");
-
             // TODO(fix): check if it's needed
             // if (await blockchain!.shouldSync(account: account)) {
             logger.i("Bdk wallet partial sync Started");
@@ -169,19 +176,23 @@ class BDKTransactionDataProvider extends DataProvider {
             lastSyncedTime[accountModel.accountID] =
                 DateTime.now().microsecondsSinceEpoch;
           }
+          await resetErrorCount();
         }
       } on BridgeError catch (e, stacktrace) {
+        await updateErrorCount();
         final errorMessage = parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
         CommonHelper.showErrorDialog(
           errorMessage,
         );
       } catch (e, stacktrace) {
+        final count =
+            await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
+        await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
+
         final String errorMessage =
             "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
         logger.e(errorMessage);
-
-        // TODO(fix): remove this debug message
         CommonHelper.showErrorDialog(
           errorMessage,
         );
@@ -197,5 +208,36 @@ class BDKTransactionDataProvider extends DataProvider {
   @override
   Future<void> clear() async {
     dataUpdateController.close();
+  }
+
+  int _getNextBackoffDuration(
+    int attempt, {
+    int minSeconds = 30,
+    int maxSeconds = 600,
+  }) {
+    // Calculate the exponential backoff duration
+    final int exponentialBackoff = pow(2, attempt).toInt();
+
+    // Generate a random value within the exponential backoff range
+    final int randomBackoff = Random().nextInt(exponentialBackoff + 1);
+
+    // Ensure the random backoff is within the specified range
+    final int duration = min(max(minSeconds, randomBackoff), maxSeconds);
+
+    return duration;
+  }
+
+  Future<void> updateErrorCount() async {
+    final count =
+        await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
+    await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
+    final newTimeer = DateTime.now().second +
+        _getNextBackoffDuration(count, minSeconds: 120, maxSeconds: 300);
+    await shared.write("proton_wallet_app_k_sync_error_timmer", newTimeer);
+  }
+
+  Future<void> resetErrorCount() async {
+    await shared.write("proton_wallet_app_k_sync_error_count", 0);
+    await shared.write("proton_wallet_app_k_sync_error_timmer", 0);
   }
 }

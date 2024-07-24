@@ -155,7 +155,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           final double max = double.tryParse(amount) ?? 0;
           final double limit = double.tryParse(limitString ?? "") ?? 0;
 
-          final limitError = limitString != null
+          final limitAmount = limitString != null
               ? " ${state.selectedModel.fiatCurrency.minimumAmount} ${state.selectedModel.fiatCurrency.symbol}"
               : "";
           if (limit > max) {
@@ -168,7 +168,8 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
                 provider: provider,
               ),
               received: {},
-              error: "Amount is below the minimum limit: $limitError",
+              error:
+                  "The entered amount is below the required minimum limit: $limitAmount",
             ));
           }
           return;

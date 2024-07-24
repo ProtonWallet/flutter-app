@@ -6,7 +6,8 @@ class SettingsGroup extends StatelessWidget {
   final List<SettingsItem> children;
 
   const SettingsGroup({
-    required this.children, super.key,
+    required this.children,
+    super.key,
   });
 
   @override

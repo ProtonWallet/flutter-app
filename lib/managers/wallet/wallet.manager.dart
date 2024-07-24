@@ -124,7 +124,8 @@ class WalletManager implements Manager {
       if (serverScriptType != null &&
           serverScriptType != scriptTypeInfo.index) {
         logger.e(
-            "serverScriptType ($serverScriptType) != scriptTypeInfo.index (${scriptTypeInfo.index})");
+          "serverScriptType ($serverScriptType) != scriptTypeInfo.index (${scriptTypeInfo.index})",
+        );
       }
       final account = frbWallet.addAccount(
           scriptType: scriptTypeInfo.type,
@@ -207,7 +208,6 @@ class WalletManager implements Manager {
         bip39Mnemonic: strMnemonic,
         bip38Passphrase: passphrase);
     final String fingerprint = wallet.getFingerprint();
-    logger.i("fingerprint = $fingerprint");
     return fingerprint;
   }
 
@@ -250,7 +250,6 @@ class WalletManager implements Manager {
     if (accountModel == null) {
       return null;
     }
-    logger.w("$accountID: ${accountModel.derivationPath}");
     return accountModel.derivationPath;
   }
 
@@ -544,11 +543,13 @@ class WalletManager implements Manager {
             );
           }
         }
-        accountModel =
-            await DBHelper.accountDao!.findByServerID(serverAccountID);
+        accountModel = await DBHelper.accountDao!.findByServerID(
+          serverAccountID,
+        );
         if (accountModel == null) {
           logger.e(
-              "handleBitcoinAddressRequests: accountModel is null after syncBitcoinAddressIndex()");
+            "handleBitcoinAddressRequests: accountModel is null after syncBitcoinAddressIndex()",
+          );
           continue;
         }
         // need plus 2 since the lastUsedIndex + 1 is used for manual receive
@@ -692,10 +693,12 @@ class WalletManager implements Manager {
       // addingCount = min(addingCount,
       //     defaultBitcoinAddressCountForOneEmail - localUnusedPoolCount);
       logger.i(
-          "update with local pool count\nwalletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount");
+        "update with local pool count\nwalletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
+      );
     }
     logger.i(
-        "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount");
+      "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
+    );
     if (addingCount > 0) {
       final WalletModel? walletModel =
           await DBHelper.walletDao!.findByServerID(serverWalletID);
@@ -715,8 +718,9 @@ class WalletManager implements Manager {
         final int addressIndex = accountModel.lastUsedIndex +
             offset +
             2; // need plus 2 since the lastUsedIndex + 1 is used for manual receive
-        logger.i(
-            "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID");
+        logger.d(
+          "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID",
+        );
 
         final addressInfo = await account.getAddress(index: addressIndex);
         final String address = addressInfo.address;

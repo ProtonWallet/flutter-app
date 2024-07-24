@@ -51,10 +51,8 @@ import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
-import 'package:wallet/rust/proton_api/discovery_content.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
-import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -459,7 +457,7 @@ class HomeViewModelImpl extends HomeViewModel {
           .sendNewcomerInvite(
               inviteeEmail: email.trim(),
               inviterAddressId: emailAddressID ?? "");
-    } on BridgeError catch (error, stacktrace) {
+    } on BridgeError catch (error) {
       final errMsg = parseSampleDisplayError(error);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
@@ -598,6 +596,7 @@ class HomeViewModelImpl extends HomeViewModel {
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -781,6 +780,7 @@ class HomeViewModelImpl extends HomeViewModel {
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -901,6 +901,7 @@ class HomeViewModelImpl extends HomeViewModel {
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -1130,9 +1131,7 @@ class HomeViewModelImpl extends HomeViewModel {
     if (connectivityResult.contains(ConnectivityResult.none)) {
       if (!isShowingNoInternet) {
         isShowingNoInternet = true;
-        EasyLoading.show(
-            status: "waiting for connection..",
-            maskType: EasyLoadingMaskType.black);
+        EasyLoading.show(maskType: EasyLoadingMaskType.black);
       }
     } else {
       if (isShowingNoInternet) {

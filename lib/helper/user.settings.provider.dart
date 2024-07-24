@@ -48,8 +48,9 @@ class UserSettingProvider with ChangeNotifier {
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
     walletUserSetting.exchangeRate = exchangeRate;
     notifyListeners();
-    logger.i(
-        "Updating exchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}");
+    logger.d(
+      "updateExchangeRate (${walletUserSetting.exchangeRate.fiatCurrency.name}) = ${walletUserSetting.exchangeRate.exchangeRate}",
+    );
   }
 
   double getNotionalInBTC(double amountInFiatCurrency) {

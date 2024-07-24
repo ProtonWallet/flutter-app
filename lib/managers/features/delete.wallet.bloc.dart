@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -124,6 +125,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
         } on BridgeError catch (e, stacktrace) {
           final errorMessage = parseSampleDisplayError(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
+          Sentry.captureException(e, stackTrace: stacktrace);
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const DeleteWalletAuthModel(),
@@ -185,6 +187,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
         } on BridgeError catch (e, stacktrace) {
           final errorMessage = parseSampleDisplayError(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
+          Sentry.captureException(e, stackTrace: stacktrace);
           emit(state.copyWith(
               isLoading: false,
               requireAuthModel: const DeleteWalletAuthModel(),

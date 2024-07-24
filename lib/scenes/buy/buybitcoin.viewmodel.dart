@@ -138,7 +138,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   Future<void> loadData() async {
-    apiKey = Env.rampApiKey ?? "";
+    apiKey = Env.rampApiKey;
 
     configuration = Configuration()
       ..hostApiKey = apiKey
@@ -183,30 +183,22 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> move(NavID to) async {
     if (to == NavID.rampExternal) {
       ramp.showRamp(configuration);
-    } else if (to == NavID.banaxExternal) {
-      coordinator.pushWebview("https://banxa.com/");
-    }
+    } else if (to == NavID.banaxExternal) {}
   }
 
   void onOnrampPurchaseCreated(
     OnrampPurchase purchase,
     String purchaseViewToken,
     String apiUrl,
-  ) {
-    logger.d("purchase created: $purchase");
-  }
+  ) {}
 
-  void onSendCryptoRequested(SendCryptoPayload payload) {
-    logger.d("message received: $payload");
-  }
+  void onSendCryptoRequested(SendCryptoPayload payload) {}
 
   void onOfframpSaleCreated(
     OfframpSale sale,
     String saleViewToken,
     String apiUrl,
-  ) {
-    logger.d("sale created: $sale");
-  }
+  ) {}
 
   void onRampClosed() {
     logger.d("ramp closed");

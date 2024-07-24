@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/api_service/discovery_content_client.dart';

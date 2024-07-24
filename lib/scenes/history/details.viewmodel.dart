@@ -615,7 +615,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   }
 
   Future<void> userFinishMemo() async {
-    EasyLoading.show(status: "updating..", maskType: EasyLoadingMaskType.black);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
       final WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
       if (!memoFocusNode.hasFocus) {

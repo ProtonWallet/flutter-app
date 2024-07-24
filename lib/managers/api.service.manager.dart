@@ -28,7 +28,7 @@ class ProtonApiServiceManager implements Manager {
   }
 
   Future<String> callback(ChildSession session) async {
-    logger.i("Received message from Rust: $session");
+    logger.i("Received message from Rust: ${session.sessionId}");
     await saveSession(session);
     return "Reply from Dart";
   }
@@ -49,8 +49,6 @@ class ProtonApiServiceManager implements Manager {
     final String accessToken = await storage.get("accessToken");
     final String refreshToken = await storage.get("refreshToken");
     logger.i("sessionId = '$uid';");
-    logger.i("accessToken = '$accessToken';");
-    logger.i("refreshToken = '$refreshToken';");
 
     final apiService = _apiService;
     if (apiService != null) {
@@ -117,10 +115,7 @@ class ProtonApiServiceManager implements Manager {
   }
 
   @override
-  Future<void> login(String userID) {
-    // TODO(fix): implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 
   /// # get clients
 

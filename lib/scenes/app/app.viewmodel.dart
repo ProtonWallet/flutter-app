@@ -89,7 +89,7 @@ class AppViewModelImpl extends AppViewModel {
     serviceManager.register(apiServiceManager);
 
     /// app state manager
-    final appStateManger = AppStateManager(storage);
+    final appStateManger = AppStateManager(storage, shared);
     await appStateManger.init();
     serviceManager.register(appStateManger);
 
