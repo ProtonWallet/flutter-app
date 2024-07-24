@@ -126,7 +126,7 @@ class ImportViewModelImpl extends ImportViewModel {
         apiWallet.wallet.id,
         scriptTypeInfo,
         "Primary Account",
-        defaultFiatCurrency,
+        fiatCurrencyNotifier.value,
         0, // default wallet account index
       );
       final String walletID = apiWallet.wallet.id;
