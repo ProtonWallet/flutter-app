@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
@@ -13,17 +14,15 @@ void showLogoutErrorDialog(
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Session expired!'),
-          content: const SingleChildScrollView(
+          title: Text(S.of(context).session_expired_title),
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 SizedBox(
                   width: 300,
-                  child: Text(
-                    "Your session has expired. Please log in again.",
-                  ),
+                  child: Text(S.of(context).session_expired_content),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
               ],
             ),
           ),

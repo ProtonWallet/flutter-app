@@ -28,7 +28,7 @@ class AddressKey {
         }
       } catch (e, stacktrace) {
         logger.i(
-          "getHistoryTransactions error: $e stacktrace: $stacktrace",
+          "AddressKey decryptBinary error: $e stacktrace: $stacktrace",
         );
         return "";
       }
@@ -41,7 +41,7 @@ class AddressKey {
       return proton_crypto.decrypt(privateKey, passphrase, encryptedArmor);
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: $e stacktrace: $stacktrace",
+        "AddressKey decrypt error: $e stacktrace: $stacktrace",
       );
       return "";
     }
@@ -52,7 +52,7 @@ class AddressKey {
       return proton_crypto.encrypt(privateKey, plainText);
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: $e stacktrace: $stacktrace",
+        "AddressKey encrypt error: $e stacktrace: $stacktrace",
       );
       rethrow;
     }
@@ -63,7 +63,7 @@ class AddressKey {
       return proton_crypto.encryptBinary(privateKey, data).base64encode();
     } catch (e, stacktrace) {
       logger.i(
-        "getHistoryTransactions error: $e stacktrace: $stacktrace",
+        "AddressKey encryptBinary error: $e stacktrace: $stacktrace",
       );
       rethrow;
     }

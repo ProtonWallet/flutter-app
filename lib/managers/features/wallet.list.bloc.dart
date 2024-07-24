@@ -143,7 +143,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             );
 
             walletModel.isSignatureValid = isValidWalletKeySignature;
-            logger.i("isValidWalletKeySignature = $isValidWalletKeySignature");
+            logger.i(
+              "WalletListBloc isValidWalletKeySignature = $isValidWalletKeySignature",
+            );
           }
           walletModel.accountSize = wallet.accounts.length;
           walletModel.walletName = wallet.wallet.name;
@@ -229,7 +231,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           startLoadingCallback?.call();
         }
       } on BridgeError catch (e, stacktrace) {
-        logger.e("wallet list bloc error: $e, stacktrace: $stacktrace");
+        logger.e("WalletListBloc error: $e, stacktrace: $stacktrace");
         appStateManager.handleWalletListError(e);
       } catch (e) {
         logger.e(e.toString());
@@ -250,7 +252,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           account.isSelected = false;
           if (isSelectedWallet && !hasUpdateUserSetting) {
             userSettingsDataProvider.updateFiatCurrency(
-                account.accountModel.fiatCurrency.toFiatCurrency(), notify: false);
+                account.accountModel.fiatCurrency.toFiatCurrency(),
+                notify: false);
             hasUpdateUserSetting = true;
           }
         }
@@ -269,7 +272,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             account.isSelected = account.accountModel.accountID == accountID;
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
-                  account.accountModel.fiatCurrency.toFiatCurrency(), notify: false);
+                  account.accountModel.fiatCurrency.toFiatCurrency(),
+                  notify: false);
             }
           }
         } else {

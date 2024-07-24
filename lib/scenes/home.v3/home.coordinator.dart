@@ -55,7 +55,8 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showNativeUpgrade(FlutterSession session) {
-    nativeViewChannel.switchToUpgrade(session);
+    // TODO(fix): uncomment this later
+    // nativeViewChannel.switchToUpgrade(session);
   }
 
   void showNativeReportBugs() {

@@ -107,8 +107,6 @@ class ImportViewModelImpl extends ImportViewModel {
     AccountModel? accountModel;
     try {
       final String walletName = nameTextController.text;
-      // Validation for walletName if empty
-      // if (walletName.isEmpty) throw Exception("Wallet name cannot be empty");
       final String strMnemonic = mnemonicTextController.text;
       final String strPassphrase = passphraseTextController.text;
       final Network network = appConfig.coinType.network;

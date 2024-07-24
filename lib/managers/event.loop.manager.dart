@@ -1,6 +1,5 @@
 import 'package:cryptography/cryptography.dart';
 import 'package:provider/provider.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -60,7 +59,8 @@ class EventLoop implements Manager {
   Future<void> _run() async {
     while (_isRunning) {
       await runOnce();
-      await Future.delayed(const Duration(seconds: eventLoopRefreshThreshold));
+      final nextWaiting = await appStateManager.getEventloopDuration();
+      await Future.delayed(Duration(seconds: nextWaiting));
     }
   }
 
@@ -233,6 +233,7 @@ class EventLoop implements Manager {
           }
         }
       }
+      await appStateManager.resetEventloopDuration();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.handleError(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");

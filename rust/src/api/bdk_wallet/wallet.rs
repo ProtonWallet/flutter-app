@@ -260,7 +260,7 @@ mod test {
             ProtonAPIService::new("prod".to_string(), app_version, user_agent, store).unwrap(),
         );
         let _ = api_service
-            .login("feng200".to_string(), "12345678".to_string())
+            .login("username".to_string(), "password".to_string())
             .await;
 
         let balance = frb_account.get_balance().await.total();

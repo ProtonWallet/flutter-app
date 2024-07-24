@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
-import 'package:wallet/helper/url.external.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -45,7 +45,7 @@ class OnRampTCSheet {
             child: Column(children: [
               const SizedBox(height: 40),
               Text(
-                "Disclaimer",
+                S.of(context).disclaimer,
                 style: FontManager.titleHeadline(ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),

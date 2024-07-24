@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/api/flutter_logger.dart';
 import 'package:wallet/rust/frb_generated.dart';
@@ -59,12 +60,11 @@ void main() async {
   /// sentry init
   await Sentry.init(
       (options) => options
-        ..dsn =
-            'https://f430ab6a50234e50ab7fc57174de1cbc@sentry-new.protontech.ch/69'
+        ..dsn = Env.sentryApiKey
         ..environment = appConfig.apiEnv.toString(), appRunner: () async {
     /// init everything in zone
     WidgetsFlutterBinding.ensureInitialized();
-    LoggerService.initLogFile();
+    // LoggerService.initLogFile();
     AppConfig.initAppEnv();
     await RustLib.init();
     setupLogger();

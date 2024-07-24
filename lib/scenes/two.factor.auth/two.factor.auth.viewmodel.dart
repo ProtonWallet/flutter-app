@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/two_factor_auth_helper.dart';
@@ -93,11 +94,13 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       backupPhrases = response.twoFactorRecoveryCodes;
       userDataProvider.enabled2FA(response.code == 1000);
       return true;
-    } on BridgeError catch (exception) {
+    } on BridgeError catch (exception, stracktrace) {
       error = parseSampleDisplayError(exception);
+      Sentry.captureException(exception, stackTrace: stracktrace);
       logger.e(exception.toString());
       return false;
     } catch (e) {
+      error = e.toString();
       logger.e(e.toString());
       return false;
     }
