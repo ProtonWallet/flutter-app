@@ -123,8 +123,8 @@ class ProtonRecoveryBloc
             }
 
             /// generate new entropy and mnemonic
-            final salt = WalletKeyHelper.getRandomValues(16);
-            final randomEntropy = WalletKeyHelper.getRandomValues(16);
+            final salt = WalletKeyHelper.getSecureRandom(16);
+            final randomEntropy = WalletKeyHelper.getSecureRandom(16);
 
             final FrbMnemonic mnemonic =
                 FrbMnemonic.newWith(entropy: randomEntropy);
@@ -229,8 +229,8 @@ class ProtonRecoveryBloc
       } else if (status == 2 || status == 4) {
         /// reactive flow
         /// generate new entropy and mnemonic
-        final salt = WalletKeyHelper.getRandomValues(16);
-        final randomEntropy = WalletKeyHelper.getRandomValues(16);
+        final salt = WalletKeyHelper.getSecureRandom(16);
+        final randomEntropy = WalletKeyHelper.getSecureRandom(16);
 
         final FrbMnemonic mnemonic =
             FrbMnemonic.newWith(entropy: randomEntropy);
