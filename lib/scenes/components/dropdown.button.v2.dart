@@ -28,6 +28,7 @@ class DropdownButtonV2 extends StatefulWidget {
   final TextStyle? textStyle;
   final bool canSearch;
   final Border? border;
+  final String? title;
 
   const DropdownButtonV2({
     required this.width,
@@ -46,6 +47,7 @@ class DropdownButtonV2 extends StatefulWidget {
     this.canSearch = false,
     this.itemsLeadingIcons,
     this.border,
+    this.title,
   });
 
   @override
@@ -188,7 +190,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),
-                  title: widget.labelText,
+                  title: widget.title ?? widget.labelText,
                   padding: const EdgeInsets.symmetric(
                     vertical: 6,
                   ),

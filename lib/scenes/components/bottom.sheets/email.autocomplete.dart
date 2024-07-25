@@ -61,7 +61,6 @@ class EmailAutoCompleteSheet {
                   showQRcodeScanner: false,
                   maxHeight: max(MediaQuery.of(context).size.height - 460, 190),
                   keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
                   callback: () {
                     final String email = emailController.text;
                     emailSelectedCallback.call(email);
