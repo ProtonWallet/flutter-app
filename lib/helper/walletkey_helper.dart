@@ -11,14 +11,22 @@ import 'package:wallet/managers/users/user.key.dart';
 
 class WalletKeyHelper {
   static SecretKey generateSecretKey() {
-    final SecretKey secretKey = SecretKey(getRandomValues(32));
+    final SecretKey secretKey = SecretKey(getSecureRandom(32));
     return secretKey;
   }
 
+  /// generate random values
   static Uint8List getRandomValues(int length) {
     final Random random = Random();
     final List<int> bytes =
         List<int>.generate(length, (_) => random.nextInt(256));
+    return Uint8List.fromList(bytes);
+  }
+
+  /// cryptographically secure pseudo-random number generation (CSPRNG)
+  static Uint8List getSecureRandom(int length) {
+    final Random secureRandom = Random.secure();
+    final bytes = List.generate(length, (_) => secureRandom.nextInt(256));
     return Uint8List.fromList(bytes);
   }
 
