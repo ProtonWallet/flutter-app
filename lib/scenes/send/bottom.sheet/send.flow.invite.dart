@@ -57,6 +57,7 @@ class SendFlowInviteSheet {
               DropdownButtonV2(
                 width: MediaQuery.of(context).size.width,
                 labelText: S.of(context).send_from_email,
+                title: S.of(context).choose_your_email,
                 items: userAddresses,
                 itemsText: userAddresses.map((e) => e.email).toList(),
                 valueNotifier: userAddressValueNotifier,
