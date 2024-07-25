@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExternalUrl {
@@ -39,6 +40,8 @@ class ExternalUrl {
   /// ios app store url
   final String appStoreUrl =
       "https://apps.apple.com/developer/proton-ag/id979659484";
+
+  final String upgradeRequired = "https://proton.me/support/update-required";
 
   // Method to launch a URL
   void launchString(String strUrl) {
@@ -96,5 +99,21 @@ class ExternalUrl {
 
   void lanuchAppStore() {
     launchString(appStoreUrl);
+  }
+
+  void lanuchStore() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      lanuchGooglePlay();
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      lanuchAppStore();
+    } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+      lanuchAppStore();
+    } else {
+      lanuchMainSite();
+    }
+  }
+
+  void lanuchForceUpgradeLearnMore() {
+    launchString(upgradeRequired);
   }
 }

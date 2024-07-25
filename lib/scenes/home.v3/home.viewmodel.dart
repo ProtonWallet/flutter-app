@@ -57,6 +57,7 @@ import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/components/alerts/force.upgrade.dialog.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -333,8 +334,6 @@ class HomeViewModelImpl extends HomeViewModel {
   StreamSubscription? _exclusiveInviteDataSubscription;
 
   ///
-  final datasourceChangedStreamController =
-      StreamController<HomeViewModel>.broadcast();
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
   CryptoPriceDataService cryptoPriceDataService =
@@ -342,7 +341,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   void dispose() {
-    datasourceChangedStreamController.close();
     selectedSectionChangedController.close();
     //clean up wallet ....
     disposeServices();
@@ -356,10 +354,10 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   void datasourceStreamSinkAdd() {
-    datasourceChangedStreamController.sinkAddSafe(this);
+    sinkAddSafe();
   }
 
-  Future<void> initSubscription() async {
+  Future<void> initAppStateSubscription() async {
     // app state
     _appStateSubscription = appStateManager.stream.listen((state) {
       if (state is AppSessionFailed) {
@@ -367,16 +365,18 @@ class HomeViewModelImpl extends HomeViewModel {
       } else if (state is AppUnlockFailedState) {
         LocalAuthManager.auth.stopAuthentication();
         logout();
+      } else if (state is AppForceUpgradeState) {
+        showUpgradeErrorDialog(state.message, logout);
       }
-      // else if (state is AppUnlockLogoutState) {
-      //   logout();
-      // }
-    }, onError: (e) {
+    }, onError: (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
       logger.e(e.toString());
     }, onDone: () {
       logger.d("app state done");
     });
+  }
 
+  Future<void> initSubscription() async {
     // recovery state
     _protonRecoveryStateSubscription =
         protonRecoveryBloc.stream.listen((state) {
@@ -519,7 +519,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
-    // await LocalAuth.authenticate('hint');
+    await initAppStateSubscription();
     // init network
     await apiServiceManager.initalOldApiService();
     // read app version
@@ -531,19 +531,30 @@ class HomeViewModelImpl extends HomeViewModel {
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);
 
-    // check if user is eligible
-    final int eligible = await apiServiceManager
-        .getApiService()
-        .getSettingsClient()
-        .getUserWalletEligibility();
-    if (eligible == 0) {
-      EarlyAccessSheet.show(
-        Coordinator.rootNavigatorKey.currentContext!,
-        userEmail,
-        logout,
-      );
+    try {
+      // check if user is eligible
+      final int eligible = await apiServiceManager
+          .getApiService()
+          .getSettingsClient()
+          .getUserWalletEligibility();
+      if (eligible == 0) {
+        EarlyAccessSheet.show(
+          Coordinator.rootNavigatorKey.currentContext!,
+          userEmail,
+          logout,
+        );
+        return;
+      }
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.handleForceUpgrade(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+      return;
+    } catch (e, stacktrace) {
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
       return;
     }
+
     // ----------------
     // settings
 
@@ -601,6 +612,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
       eventLoop.start();
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.handleForceUpgrade(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -630,10 +642,6 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     checkPreference();
   }
-
-  @override
-  Stream<ViewModel> get datasourceChanged =>
-      datasourceChangedStreamController.stream;
 
   Future<void> loadDiscoverContents() async {
     protonFeedItems = await ProtonFeedItem.loadFromApi(

@@ -301,10 +301,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   }
 
   Future<void> _requestPermissions() async {
-    var status = await Permission.camera.request();
-    if (status.isGranted) {}
-
-    status = await Permission.microphone.request();
+    final status = await Permission.camera.request();
     if (status.isGranted) {}
   }
 

@@ -490,5 +490,7 @@
   "entered_amount_is_below": "The entered amount is below the required minimum limit: {limit}",
   "disclaimer": "Disclaimer",
   "session_expired_content": "Your session has expired. Please log in to continue.",
-  "session_expired_title": "Session expired!"
+  "session_expired_title": "Session expired!",
+  "force_upgrade": "Force Upgrade",
+  "upgrade": "Upgrade"
 }
