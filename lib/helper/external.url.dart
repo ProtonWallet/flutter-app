@@ -13,9 +13,24 @@ class ExternalUrl {
   // Final variable for account URL
   final String accountUrl = "https://account.proton.me";
   final String mainSiteUrl = "https://proton.me/";
-  final String supportCenterUrl = "https://proton.me/support";
+  final String supportCenterUrl = "https://proton.me/support/wallet";
   final String terms = "https://proton.me/wallet/legal/terms";
   final String privacy = "https://proton.me/wallet/privacy-policy";
+
+  final String seedPhraseLink =
+      "https://proton.me/support/wallet-protection#seed-phrase";
+  final String bveAcitvedLink =
+      "https://proton.me/support/wallet-bitcoin-via-email";
+  final String bveInAcitvedLink =
+      "https://proton.me/support/wallet-bitcoin-via-email#how-to-enable-bitcoin-via-email";
+
+  // final String inviteFriendLink = "https://proton.me/support/wallet-how-to-invite-people";
+  final String optionalPassphraseLink =
+      "https://proton.me/support/wallet-protection#optional-passphrase";
+  final String addressTypeLink =
+      "https://proton.me/support/wallet-create-btc-account#bitcoin-address-type";
+  final String accountIndexLink =
+      "https://proton.me/support/wallet-create-btc-account#bitcoin-account-index-type";
 
   /// android app store url
   final String googlePlayUrl =
@@ -37,6 +52,30 @@ class ExternalUrl {
   // Method to launch the Proton account URL
   void launchProtonAccount() {
     launchString(accountUrl);
+  }
+
+  void launchBlogSeedPhrase() {
+    launchString(seedPhraseLink);
+  }
+
+  void launchBlogBvEActivated() {
+    launchString(bveAcitvedLink);
+  }
+
+  void launchBlogBvEInActivated() {
+    launchString(bveInAcitvedLink);
+  }
+
+  void launchBlogPassphrase() {
+    launchString(optionalPassphraseLink);
+  }
+
+  void launchBlogAddressType() {
+    launchString(addressTypeLink);
+  }
+
+  void launchBlogAccountIndex() {
+    launchString(accountIndexLink);
   }
 
   void launchProtonHelpCenter() {

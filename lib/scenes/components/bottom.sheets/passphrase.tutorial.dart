@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class PassphraseTutorialSheet {
@@ -44,6 +46,17 @@ class PassphraseTutorialSheet {
                           textAlign: TextAlign.center,
                           style:
                               FontManager.body2Regular(ProtonColors.textWeak))),
+                  const SizedBox(height: 10),
+                  Underline(
+                    onTap: () {
+                      ExternalUrl.shared.launchBlogPassphrase();
+                    },
+                    child: Text(
+                      S.of(context).learn_more,
+                      style: FontManager.body2Regular(ProtonColors.purple1Text),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                 ])),
           ],
         ));

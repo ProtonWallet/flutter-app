@@ -8,11 +8,13 @@ class CustomHeader extends StatelessWidget {
   final String? title;
   final AxisDirection buttonDirection;
   final Widget? button;
+  final EdgeInsets? padding;
 
   const CustomHeader({
     required this.buttonDirection,
     this.title,
     this.button,
+    this.padding,
     super.key,
   });
 
@@ -21,10 +23,11 @@ class CustomHeader extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: defaultPadding,
-          vertical: defaultPadding,
-        ),
+        padding: padding ??
+            const EdgeInsets.symmetric(
+              horizontal: defaultPadding,
+              vertical: defaultPadding,
+            ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

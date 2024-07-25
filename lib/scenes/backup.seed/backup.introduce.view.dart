@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/proton.links.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/underline.dart';
@@ -49,7 +48,8 @@ class BackupIntroduceView extends StatelessWidget {
                     const SizedBox(height: 20),
                     Underline(
                       onTap: () {
-                        launchUrl(Uri.parse(seedPhraseLink));
+                        ExternalUrl.shared
+                            .launchBlogSeedPhrase();
                       },
                       color: ProtonColors.brandLighten20,
                       child: Text(

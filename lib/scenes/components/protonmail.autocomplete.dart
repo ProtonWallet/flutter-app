@@ -153,6 +153,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
                         ? IconButton(
                             onPressed: () {
                               if (Platform.isAndroid || Platform.isIOS) {
+                                focusNode.unfocus();
                                 showQRScanBottomSheet(
                                     context, textEditingController, callback);
                               }
