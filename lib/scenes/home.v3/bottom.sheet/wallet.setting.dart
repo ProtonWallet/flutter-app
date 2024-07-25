@@ -3,12 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
@@ -171,7 +170,7 @@ class WalletSettingSheet {
                             content: S.of(context).bitcoin_via_email_desc,
                             learnMore: GestureDetector(
                                 onTap: () {
-                                  launchUrl(Uri.parse(bveAcitvedLink));
+                                  ExternalUrl.shared.launchBlogBvEActivated();
                                 },
                                 child: Text(S.of(context).learn_more,
                                     style: FontManager.body2Regular(
@@ -193,7 +192,7 @@ class WalletSettingSheet {
                                 S.of(context).bitcoin_via_email_not_active_desc,
                             learnMore: GestureDetector(
                                 onTap: () {
-                                  launchUrl(Uri.parse(bveInAcitvedLink));
+                                  ExternalUrl.shared.launchBlogBvEInActivated();
                                 },
                                 child: Text(S.of(context).learn_more,
                                     style: FontManager.body2Regular(

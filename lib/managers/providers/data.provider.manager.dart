@@ -12,10 +12,12 @@ import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
+import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
+import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
@@ -141,6 +143,8 @@ class DataProviderManager extends Manager {
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
   late UnleashDataProvider unleashDataProvider;
+  late ExclusiveInviteDataProvider exclusiveInviteDataProvider;
+  late ProtonEmailAddressProvider protonEmailAddressProvider;
 
   DataProviderManager(
     this.apiEnv,
@@ -237,6 +241,12 @@ class DataProviderManager extends Manager {
     blockInfoDataProvider = BlockInfoDataProvider(
       apiService.getBlockClient(),
     );
+
+    exclusiveInviteDataProvider = ExclusiveInviteDataProvider(
+      apiService.getInviteClient(),
+    );
+
+    protonEmailAddressProvider = ProtonEmailAddressProvider();
 
     final userAgent = UserAgent();
     final uid = userManager.userInfo.sessionId;

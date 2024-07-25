@@ -18,7 +18,6 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/extension/stream.controller.dart';
-import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -37,6 +36,7 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/services/crypto.price.service.dart';
@@ -151,7 +151,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<bool> createWallet();
 
-  Future<bool> sendInviteForNewComer(String email);
+  Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
 
   void deleteWallet(WalletModel walletModel) {
     deleteWalletBloc.add(DeleteWalletEvent(
@@ -330,6 +330,7 @@ class HomeViewModelImpl extends HomeViewModel {
   StreamSubscription? _protonUserDataSubscription;
   StreamSubscription? _subscription;
   StreamSubscription? _blockInfoDataSubscription;
+  StreamSubscription? _exclusiveInviteDataSubscription;
 
   ///
   final datasourceChangedStreamController =
@@ -350,6 +351,7 @@ class HomeViewModelImpl extends HomeViewModel {
     _subscription?.cancel();
     _blockInfoDataSubscription?.cancel();
     _protonRecoveryStateSubscription?.cancel();
+    _exclusiveInviteDataSubscription?.cancel();
     super.dispose();
   }
 
@@ -409,6 +411,15 @@ class HomeViewModelImpl extends HomeViewModel {
         checkPreference();
       }
     });
+
+    // exclusive invite
+    _exclusiveInviteDataSubscription =
+        dataProviderManager.exclusiveInviteDataProvider.stream.listen((state) {
+      if (state is AvailableUpdated) {
+        remainingMonthlyInvitations = state.updatedData;
+        loadInviteState();
+      }
+    });
   }
 
   Future<void> initServices() async {
@@ -432,10 +443,6 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> loadInviteState() async {
-    remainingMonthlyInvitations = await apiServiceManager
-        .getApiService()
-        .getInviteClient()
-        .getRemainingMonthlyInvitation();
     if (remainingMonthlyInvitations == null) {
       canInvite = false;
     } else {
@@ -445,29 +452,29 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<bool> sendInviteForNewComer(String email) async {
-    String? emailAddressID;
-    if (protonAddresses.isNotEmpty) {
-      emailAddressID = protonAddresses.first.id;
-    }
+  Future<bool> sendExclusiveInvite(
+      ProtonAddress protonAddress, String email) async {
+    final String emailAddressID = protonAddress.id;
     try {
       await apiServiceManager
           .getApiService()
           .getInviteClient()
           .sendNewcomerInvite(
-              inviteeEmail: email.trim(),
-              inviterAddressId: emailAddressID ?? "");
+            inviteeEmail: email.trim(),
+            inviterAddressId: emailAddressID,
+          );
+      dataProviderManager.exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (error) {
       final errMsg = parseSampleDisplayError(error);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
-        LocalToast.showErrorToast(context, errMsg);
+        CommonHelper.showErrorDialog(errMsg);
       }
       return false;
     } catch (e) {
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
-        LocalToast.showErrorToast(context, e.toString());
+        CommonHelper.showErrorDialog(e.toString());
       }
       return false;
     }
@@ -486,7 +493,7 @@ class HomeViewModelImpl extends HomeViewModel {
     if (protonUserSettings != null) {
       if (protonUserSettings!.twoFa != null) {
         hadSetup2FA = protonUserSettings!.twoFa!.enabled != 0;
-        datasourceStreamSinkAdd();
+        checkPreference();
       }
     }
   }
@@ -562,7 +569,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
       loadProtonRecoveryState();
       loadProton2FAState();
-      loadInviteState();
+      dataProviderManager.exclusiveInviteDataProvider.preLoad();
 
       // async
       loadContacts();
@@ -636,9 +643,9 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> checkProtonAddresses() async {
     try {
-      final List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-      protonAddresses =
-          addresses.where((element) => element.status == 1).toList();
+      await dataProviderManager.protonEmailAddressProvider.preLoad();
+      protonAddresses = await dataProviderManager.protonEmailAddressProvider
+          .getProtonEmailAddresses();
       emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
       datasourceStreamSinkAdd();
     } catch (e) {

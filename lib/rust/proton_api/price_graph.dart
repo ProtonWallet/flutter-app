@@ -9,12 +9,12 @@ import 'user_settings.dart';
 
 class DataPoint {
   final BigInt exchangeRate;
-  final int? cents;
+  final int cents;
   final BigInt timestamp;
 
   const DataPoint({
     required this.exchangeRate,
-    this.cents,
+    required this.cents,
     required this.timestamp,
   });
 
@@ -33,35 +33,25 @@ class DataPoint {
 }
 
 class PriceGraph {
-  final FiatCurrency? fiatCurrencySymbol;
-  final BitcoinUnit? bitcoinUnitSymbol;
-  final FiatCurrency? fiatCurrency;
-  final BitcoinUnit? bitcoinUnit;
+  final FiatCurrency fiatCurrency;
+  final BitcoinUnit bitcoinUnit;
   final List<DataPoint> graphData;
 
   const PriceGraph({
-    this.fiatCurrencySymbol,
-    this.bitcoinUnitSymbol,
-    this.fiatCurrency,
-    this.bitcoinUnit,
+    required this.fiatCurrency,
+    required this.bitcoinUnit,
     required this.graphData,
   });
 
   @override
   int get hashCode =>
-      fiatCurrencySymbol.hashCode ^
-      bitcoinUnitSymbol.hashCode ^
-      fiatCurrency.hashCode ^
-      bitcoinUnit.hashCode ^
-      graphData.hashCode;
+      fiatCurrency.hashCode ^ bitcoinUnit.hashCode ^ graphData.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PriceGraph &&
           runtimeType == other.runtimeType &&
-          fiatCurrencySymbol == other.fiatCurrencySymbol &&
-          bitcoinUnitSymbol == other.bitcoinUnitSymbol &&
           fiatCurrency == other.fiatCurrency &&
           bitcoinUnit == other.bitcoinUnit &&
           graphData == other.graphData;

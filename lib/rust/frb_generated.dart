@@ -11685,12 +11685,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BitcoinUnit dco_decode_box_autoadd_bitcoin_unit(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_bitcoin_unit(raw);
-  }
-
-  @protected
   bool dco_decode_box_autoadd_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as bool;
@@ -11707,12 +11701,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_create_wallet_req(raw);
-  }
-
-  @protected
-  FiatCurrency dco_decode_box_autoadd_fiat_currency(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_fiat_currency(raw);
   }
 
   @protected
@@ -12025,7 +12013,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return DataPoint(
       exchangeRate: dco_decode_u_64(arr[0]),
-      cents: dco_decode_opt_box_autoadd_u_8(arr[1]),
+      cents: dco_decode_u_8(arr[1]),
       timestamp: dco_decode_u_64(arr[2]),
     );
   }
@@ -12616,21 +12604,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BitcoinUnit? dco_decode_opt_box_autoadd_bitcoin_unit(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_box_autoadd_bitcoin_unit(raw);
-  }
-
-  @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_bool(raw);
-  }
-
-  @protected
-  FiatCurrency? dco_decode_opt_box_autoadd_fiat_currency(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_box_autoadd_fiat_currency(raw);
   }
 
   @protected
@@ -12855,14 +12831,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   PriceGraph dco_decode_price_graph(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 5)
-      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return PriceGraph(
-      fiatCurrencySymbol: dco_decode_opt_box_autoadd_fiat_currency(arr[0]),
-      bitcoinUnitSymbol: dco_decode_opt_box_autoadd_bitcoin_unit(arr[1]),
-      fiatCurrency: dco_decode_opt_box_autoadd_fiat_currency(arr[2]),
-      bitcoinUnit: dco_decode_opt_box_autoadd_bitcoin_unit(arr[3]),
-      graphData: dco_decode_list_data_point(arr[4]),
+      fiatCurrency: dco_decode_fiat_currency(arr[0]),
+      bitcoinUnit: dco_decode_bitcoin_unit(arr[1]),
+      graphData: dco_decode_list_data_point(arr[2]),
     );
   }
 
@@ -14999,13 +14973,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BitcoinUnit sse_decode_box_autoadd_bitcoin_unit(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_bitcoin_unit(deserializer));
-  }
-
-  @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_bool(deserializer));
@@ -15023,13 +14990,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_create_wallet_req(deserializer));
-  }
-
-  @protected
-  FiatCurrency sse_decode_box_autoadd_fiat_currency(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_fiat_currency(deserializer));
   }
 
   @protected
@@ -15354,7 +15314,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   DataPoint sse_decode_data_point(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_exchangeRate = sse_decode_u_64(deserializer);
-    var var_cents = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_cents = sse_decode_u_8(deserializer);
     var var_timestamp = sse_decode_u_64(deserializer);
     return DataPoint(
         exchangeRate: var_exchangeRate,
@@ -16213,35 +16173,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BitcoinUnit? sse_decode_opt_box_autoadd_bitcoin_unit(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_bitcoin_unit(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_bool(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
-  FiatCurrency? sse_decode_opt_box_autoadd_fiat_currency(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_fiat_currency(deserializer));
     } else {
       return null;
     }
@@ -16608,17 +16544,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   PriceGraph sse_decode_price_graph(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_fiatCurrencySymbol =
-        sse_decode_opt_box_autoadd_fiat_currency(deserializer);
-    var var_bitcoinUnitSymbol =
-        sse_decode_opt_box_autoadd_bitcoin_unit(deserializer);
-    var var_fiatCurrency =
-        sse_decode_opt_box_autoadd_fiat_currency(deserializer);
-    var var_bitcoinUnit = sse_decode_opt_box_autoadd_bitcoin_unit(deserializer);
+    var var_fiatCurrency = sse_decode_fiat_currency(deserializer);
+    var var_bitcoinUnit = sse_decode_bitcoin_unit(deserializer);
     var var_graphData = sse_decode_list_data_point(deserializer);
     return PriceGraph(
-        fiatCurrencySymbol: var_fiatCurrencySymbol,
-        bitcoinUnitSymbol: var_bitcoinUnitSymbol,
         fiatCurrency: var_fiatCurrency,
         bitcoinUnit: var_bitcoinUnit,
         graphData: var_graphData);
@@ -18810,13 +18739,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_box_autoadd_bitcoin_unit(
-      BitcoinUnit self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_bitcoin_unit(self, serializer);
-  }
-
-  @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_bool(self, serializer);
@@ -18834,13 +18756,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       CreateWalletReq self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_create_wallet_req(self, serializer);
-  }
-
-  @protected
-  void sse_encode_box_autoadd_fiat_currency(
-      FiatCurrency self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_fiat_currency(self, serializer);
   }
 
   @protected
@@ -19133,7 +19048,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_data_point(DataPoint self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_64(self.exchangeRate, serializer);
-    sse_encode_opt_box_autoadd_u_8(self.cents, serializer);
+    sse_encode_u_8(self.cents, serializer);
     sse_encode_u_64(self.timestamp, serializer);
   }
 
@@ -19823,34 +19738,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_opt_box_autoadd_bitcoin_unit(
-      BitcoinUnit? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_box_autoadd_bitcoin_unit(self, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_bool(self, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_opt_box_autoadd_fiat_currency(
-      FiatCurrency? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_box_autoadd_fiat_currency(self, serializer);
     }
   }
 
@@ -20186,11 +20079,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_price_graph(PriceGraph self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_opt_box_autoadd_fiat_currency(
-        self.fiatCurrencySymbol, serializer);
-    sse_encode_opt_box_autoadd_bitcoin_unit(self.bitcoinUnitSymbol, serializer);
-    sse_encode_opt_box_autoadd_fiat_currency(self.fiatCurrency, serializer);
-    sse_encode_opt_box_autoadd_bitcoin_unit(self.bitcoinUnit, serializer);
+    sse_encode_fiat_currency(self.fiatCurrency, serializer);
+    sse_encode_bitcoin_unit(self.bitcoinUnit, serializer);
     sse_encode_list_data_point(self.graphData, serializer);
   }
 
