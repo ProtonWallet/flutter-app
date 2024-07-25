@@ -235,6 +235,7 @@ class EventLoop implements Manager {
       }
       await appStateManager.resetEventloopDuration();
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.handleForceUpgrade(e);
       appStateManager.handleError(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
     } catch (e, stacktrace) {

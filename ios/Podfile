@@ -55,7 +55,7 @@ post_install do |installer|
           # dart: PermissionGroup. photos
           'PERMISSION_PHOTOS=1',
           ## dart: PermissionGroup.microphone
-          'PERMISSION_MICROPHONE=1',
+          'PERMISSION_MICROPHONE=0',
         ]
       end
     end
