@@ -39,6 +39,15 @@ class AppUnlockFailedState extends AppState {
   List<Object?> get props => [message];
 }
 
+class AppForceUpgradeState extends AppState {
+  final String message;
+
+  AppForceUpgradeState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
 // class AppUnlockLogoutState extends AppState {
 //   final String message;
 //   AppUnlockLogoutState({required this.message});
@@ -75,6 +84,14 @@ class AppStateManager extends DataProvider implements Manager {
     final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
+      return;
+    }
+  }
+
+  Future<void> handleForceUpgrade(BridgeError exception) async {
+    final error = parseResponseError(exception);
+    if (error != null && (error.code == 5003 || error.code == 5005)) {
+      emitState(AppForceUpgradeState(message: error.error));
       return;
     }
   }
