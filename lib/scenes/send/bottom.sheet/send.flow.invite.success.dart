@@ -2,21 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/models/contacts.model.dart';
-import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/send.invite.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class SendInviteSuccessSheet {
+class SendFlowInviteSuccessSheet {
   static void show(
     BuildContext context,
-    List<ProtonAddress> userAddresses,
-    List<ContactsModel> contactsEmails,
     String email,
-    SendInviteCallback sendInvite,
   ) {
     HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
         child: StatefulBuilder(
@@ -50,23 +44,6 @@ class SendInviteSuccessSheet {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 60),
-              ButtonV5(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    SendInviteSheet.show(
-                      context,
-                      userAddresses,
-                      contactsEmails,
-                      sendInvite,
-                    );
-                  },
-                  text: S.of(context).invite_another_friend,
-                  width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
-                  backgroundColor: ProtonColors.protonBlue,
-                  borderColor: ProtonColors.protonBlue,
-                  height: 48),
-              const SizedBox(height: 8),
               ButtonV5(
                   onPressed: () async {
                     Navigator.of(context).pop();

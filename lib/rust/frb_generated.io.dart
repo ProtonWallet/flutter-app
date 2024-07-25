@@ -1005,9 +1005,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BitcoinAddress dco_decode_box_autoadd_bitcoin_address(dynamic raw);
 
   @protected
-  BitcoinUnit dco_decode_box_autoadd_bitcoin_unit(dynamic raw);
-
-  @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
@@ -1016,9 +1013,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq dco_decode_box_autoadd_create_wallet_req(dynamic raw);
-
-  @protected
-  FiatCurrency dco_decode_box_autoadd_fiat_currency(dynamic raw);
 
   @protected
   FlagsSettings dco_decode_box_autoadd_flags_settings(dynamic raw);
@@ -1368,13 +1362,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  BitcoinUnit? dco_decode_opt_box_autoadd_bitcoin_unit(dynamic raw);
-
-  @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
-
-  @protected
-  FiatCurrency? dco_decode_opt_box_autoadd_fiat_currency(dynamic raw);
 
   @protected
   FlagsSettings? dco_decode_opt_box_autoadd_flags_settings(dynamic raw);
@@ -2389,9 +2377,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  BitcoinUnit sse_decode_box_autoadd_bitcoin_unit(SseDeserializer deserializer);
-
-  @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
@@ -2400,10 +2385,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CreateWalletReq sse_decode_box_autoadd_create_wallet_req(
-      SseDeserializer deserializer);
-
-  @protected
-  FiatCurrency sse_decode_box_autoadd_fiat_currency(
       SseDeserializer deserializer);
 
   @protected
@@ -2802,15 +2783,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  BitcoinUnit? sse_decode_opt_box_autoadd_bitcoin_unit(
-      SseDeserializer deserializer);
-
-  @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
-
-  @protected
-  FiatCurrency? sse_decode_opt_box_autoadd_fiat_currency(
-      SseDeserializer deserializer);
 
   @protected
   FlagsSettings? sse_decode_opt_box_autoadd_flags_settings(
@@ -3864,10 +3837,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BitcoinAddress self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_bitcoin_unit(
-      BitcoinUnit self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
@@ -3877,10 +3846,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_create_wallet_req(
       CreateWalletReq self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_fiat_currency(
-      FiatCurrency self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_flags_settings(
@@ -4290,15 +4255,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ApiWalletUserSettings? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_box_autoadd_bitcoin_unit(
-      BitcoinUnit? self, SseSerializer serializer);
-
-  @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_fiat_currency(
-      FiatCurrency? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_flags_settings(

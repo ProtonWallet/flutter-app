@@ -7,6 +7,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -26,6 +27,7 @@ class DropdownButtonV2 extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final TextStyle? textStyle;
   final bool canSearch;
+  final Border? border;
 
   const DropdownButtonV2({
     required this.width,
@@ -43,6 +45,7 @@ class DropdownButtonV2 extends StatefulWidget {
     this.valueNotifier,
     this.canSearch = false,
     this.itemsLeadingIcons,
+    this.border,
   });
 
   @override
@@ -96,7 +99,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                     left: defaultPadding, right: 8, top: 4, bottom: 4),
             decoration: BoxDecoration(
               color: widget.backgroundColor ?? ProtonColors.white,
-              // border: Border.all(color: Colors.black, width: 1.0),
+              border: widget.border,
               borderRadius: BorderRadius.circular(18.0),
             ),
             child: TextField(
@@ -178,13 +181,17 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
               ),
               child: IntrinsicHeight(
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CloseButtonV1(
+                CustomHeader(
+                  buttonDirection: AxisDirection.right,
+                  button: CloseButtonV1(
                       backgroundColor: ProtonColors.backgroundProton,
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),
+                  title: widget.labelText,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 6,
+                  ),
                 ),
                 const SizedBox(
                   height: 6,

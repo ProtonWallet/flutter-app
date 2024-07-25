@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -161,7 +160,7 @@ class AddWalletAccountSheet {
                   const SizedBox(height: 4),
                   Underline(
                       onTap: () {
-                        launchUrl(Uri.parse(addressTypeLink));
+                        ExternalUrl.shared.launchBlogAddressType();
                       },
                       color: ProtonColors.protonBlue,
                       child: Text(S.of(context).learn_more,
@@ -205,7 +204,7 @@ class AddWalletAccountSheet {
                   ),
                   Underline(
                       onTap: () {
-                        launchUrl(Uri.parse(accountIndexLink));
+                        ExternalUrl.shared.launchBlogAccountIndex();
                       },
                       color: ProtonColors.protonBlue,
                       child: Text(S.of(context).learn_more,

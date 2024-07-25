@@ -14,15 +14,13 @@ pub enum _Timeframe {
 #[frb(mirror(DataPoint))]
 pub struct _DataPoint {
     pub ExchangeRate: u64,
-    pub Cents: Option<u8>,
+    pub Cents: u8,
     pub Timestamp: u64,
 }
 
 #[frb(mirror(PriceGraph))]
 pub struct _PriceGraph {
-    pub FiatCurrencySymbol: Option<FiatCurrency>,
-    pub BitcoinUnitSymbol: Option<BitcoinUnit>,
-    pub FiatCurrency: Option<FiatCurrency>,
-    pub BitcoinUnit: Option<BitcoinUnit>,
+    pub FiatCurrency: FiatCurrency,
+    pub BitcoinUnit: BitcoinUnit,
     pub GraphData: Vec<DataPoint>,
 }
