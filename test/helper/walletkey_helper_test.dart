@@ -86,5 +86,16 @@ void main() {
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plaintext));
     });
+
+    test('compare Random and Random secure', () async {
+      final left = WalletKeyHelper.getRandomValues(32);
+      final right = WalletKeyHelper.getSecureRandom(32);
+      expect(left.length, right.length);
+      const plaintext = "WalletKeyHelper.getSecureRandom(32);";
+      final secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(right);
+      final encrypted = await WalletKeyHelper.encrypt(secretKey, plaintext);
+      final clearText = await WalletKeyHelper.decrypt(secretKey, encrypted);
+      expect(plaintext, clearText);
+    });
   });
 }
