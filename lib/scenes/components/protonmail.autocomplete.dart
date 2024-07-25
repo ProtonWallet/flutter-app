@@ -22,6 +22,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
   final bool updateTextController;
   final bool showQRcodeScanner;
   final double maxHeight;
+  final TextInputType? keyboardType;
+  final bool autocorrect;
 
   const ProtonMailAutoComplete({
     required this.emails,
@@ -37,6 +39,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
     this.itemBackgroundColor,
     this.updateTextController = true,
     this.showQRcodeScanner = true,
+    this.autocorrect = true,
+    this.keyboardType,
   });
 
   @override
@@ -142,6 +146,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
                   focusNode: focusNode,
                   controller: textEditingController,
                   style: FontManager.body1Median(ProtonColors.textNorm),
+                  keyboardType: keyboardType,
+                  autocorrect: autocorrect,
                   onFieldSubmitted: (value) {
                     if (callback != null) {
                       callback!();

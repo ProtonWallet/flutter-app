@@ -17,7 +17,8 @@ class EmailAutoCompleteSheet {
     final TextEditingController emailController =
         TextEditingController(text: "");
     final FocusNode emailFocusNode = FocusNode();
-    Future.delayed(const Duration(milliseconds: 200), emailFocusNode.requestFocus);
+    Future.delayed(
+        const Duration(milliseconds: 200), emailFocusNode.requestFocus);
     HomeModalBottomSheet.show(context,
         backgroundColor: ProtonColors.white,
         useIntrinsicHeight: false,
@@ -59,6 +60,8 @@ class EmailAutoCompleteSheet {
                   textEditingController: emailController,
                   showQRcodeScanner: false,
                   maxHeight: max(MediaQuery.of(context).size.height - 460, 190),
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
                   callback: () {
                     final String email = emailController.text;
                     emailSelectedCallback.call(email);
