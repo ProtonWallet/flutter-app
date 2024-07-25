@@ -10899,7 +10899,7 @@ const _: fn() = || {
     {
         let DataPoint = None::<crate::proton_api::price_graph::DataPoint>.unwrap();
         let _: u64 = DataPoint.ExchangeRate;
-        let _: Option<u8> = DataPoint.Cents;
+        let _: u8 = DataPoint.Cents;
         let _: u64 = DataPoint.Timestamp;
     }
     {
@@ -10968,11 +10968,8 @@ const _: fn() = || {
     }
     {
         let PriceGraph = None::<crate::proton_api::price_graph::PriceGraph>.unwrap();
-        let _: Option<crate::proton_api::user_settings::FiatCurrency> =
-            PriceGraph.FiatCurrencySymbol;
-        let _: Option<crate::proton_api::user_settings::BitcoinUnit> = PriceGraph.BitcoinUnitSymbol;
-        let _: Option<crate::proton_api::user_settings::FiatCurrency> = PriceGraph.FiatCurrency;
-        let _: Option<crate::proton_api::user_settings::BitcoinUnit> = PriceGraph.BitcoinUnit;
+        let _: crate::proton_api::user_settings::FiatCurrency = PriceGraph.FiatCurrency;
+        let _: crate::proton_api::user_settings::BitcoinUnit = PriceGraph.BitcoinUnit;
         let _: Vec<crate::proton_api::price_graph::DataPoint> = PriceGraph.GraphData;
     }
     {
@@ -12760,7 +12757,7 @@ impl SseDecode for crate::proton_api::price_graph::DataPoint {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_exchangeRate = <u64>::sse_decode(deserializer);
-        let mut var_cents = <Option<u8>>::sse_decode(deserializer);
+        let mut var_cents = <u8>::sse_decode(deserializer);
         let mut var_timestamp = <u64>::sse_decode(deserializer);
         return crate::proton_api::price_graph::DataPoint {
             ExchangeRate: var_exchangeRate,
@@ -13804,37 +13801,11 @@ impl SseDecode for Option<crate::proton_api::user_settings::ApiWalletUserSetting
     }
 }
 
-impl SseDecode for Option<crate::proton_api::user_settings::BitcoinUnit> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::proton_api::user_settings::BitcoinUnit>::sse_decode(
-                deserializer,
-            ));
-        } else {
-            return None;
-        }
-    }
-}
-
 impl SseDecode for Option<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<bool>::sse_decode(deserializer));
-        } else {
-            return None;
-        }
-    }
-}
-
-impl SseDecode for Option<crate::proton_api::user_settings::FiatCurrency> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        if (<bool>::sse_decode(deserializer)) {
-            return Some(
-                <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer),
-            );
         } else {
             return None;
         }
@@ -14248,19 +14219,13 @@ impl SseDecode for crate::proton_api::proton_users::PhoneSettings {
 impl SseDecode for crate::proton_api::price_graph::PriceGraph {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_fiatCurrencySymbol =
-            <Option<crate::proton_api::user_settings::FiatCurrency>>::sse_decode(deserializer);
-        let mut var_bitcoinUnitSymbol =
-            <Option<crate::proton_api::user_settings::BitcoinUnit>>::sse_decode(deserializer);
         let mut var_fiatCurrency =
-            <Option<crate::proton_api::user_settings::FiatCurrency>>::sse_decode(deserializer);
+            <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer);
         let mut var_bitcoinUnit =
-            <Option<crate::proton_api::user_settings::BitcoinUnit>>::sse_decode(deserializer);
+            <crate::proton_api::user_settings::BitcoinUnit>::sse_decode(deserializer);
         let mut var_graphData =
             <Vec<crate::proton_api::price_graph::DataPoint>>::sse_decode(deserializer);
         return crate::proton_api::price_graph::PriceGraph {
-            FiatCurrencySymbol: var_fiatCurrencySymbol,
-            BitcoinUnitSymbol: var_bitcoinUnitSymbol,
             FiatCurrency: var_fiatCurrency,
             BitcoinUnit: var_bitcoinUnit,
             GraphData: var_graphData,
@@ -17352,8 +17317,6 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::proton_api::proton_user
 impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::proton_api::price_graph::PriceGraph> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.0.FiatCurrencySymbol.into_into_dart().into_dart(),
-            self.0.BitcoinUnitSymbol.into_into_dart().into_dart(),
             self.0.FiatCurrency.into_into_dart().into_dart(),
             self.0.BitcoinUnit.into_into_dart().into_dart(),
             self.0.GraphData.into_into_dart().into_dart(),
@@ -19503,7 +19466,7 @@ impl SseEncode for crate::proton_api::price_graph::DataPoint {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <u64>::sse_encode(self.ExchangeRate, serializer);
-        <Option<u8>>::sse_encode(self.Cents, serializer);
+        <u8>::sse_encode(self.Cents, serializer);
         <u64>::sse_encode(self.Timestamp, serializer);
     }
 }
@@ -20363,32 +20326,12 @@ impl SseEncode for Option<crate::proton_api::user_settings::ApiWalletUserSetting
     }
 }
 
-impl SseEncode for Option<crate::proton_api::user_settings::BitcoinUnit> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <bool>::sse_encode(self.is_some(), serializer);
-        if let Some(value) = self {
-            <crate::proton_api::user_settings::BitcoinUnit>::sse_encode(value, serializer);
-        }
-    }
-}
-
 impl SseEncode for Option<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <bool>::sse_encode(value, serializer);
-        }
-    }
-}
-
-impl SseEncode for Option<crate::proton_api::user_settings::FiatCurrency> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <bool>::sse_encode(self.is_some(), serializer);
-        if let Some(value) = self {
-            <crate::proton_api::user_settings::FiatCurrency>::sse_encode(value, serializer);
         }
     }
 }
@@ -20724,22 +20667,8 @@ impl SseEncode for crate::proton_api::proton_users::PhoneSettings {
 impl SseEncode for crate::proton_api::price_graph::PriceGraph {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <Option<crate::proton_api::user_settings::FiatCurrency>>::sse_encode(
-            self.FiatCurrencySymbol,
-            serializer,
-        );
-        <Option<crate::proton_api::user_settings::BitcoinUnit>>::sse_encode(
-            self.BitcoinUnitSymbol,
-            serializer,
-        );
-        <Option<crate::proton_api::user_settings::FiatCurrency>>::sse_encode(
-            self.FiatCurrency,
-            serializer,
-        );
-        <Option<crate::proton_api::user_settings::BitcoinUnit>>::sse_encode(
-            self.BitcoinUnit,
-            serializer,
-        );
+        <crate::proton_api::user_settings::FiatCurrency>::sse_encode(self.FiatCurrency, serializer);
+        <crate::proton_api::user_settings::BitcoinUnit>::sse_encode(self.BitcoinUnit, serializer);
         <Vec<crate::proton_api::price_graph::DataPoint>>::sse_encode(self.GraphData, serializer);
     }
 }

@@ -270,6 +270,8 @@
   "send_success_title": "Your Bitcoin is on its way!",
   "send_success_content": "Your transaction has been broadcasted to the Bitcoin network. It may take around one hour for the network to confirm the transaction.\n\nWhile you are waiting, invite your family and friends to Proton Wallet so you can all send Bitcoin via Email.",
   "advanced_settings": "Advanced settings",
+  "send_from_email": "Your Email address",
+  "your_friend_email": "Your friend Email address",
   "send_from_wallet": "Send from Wallet",
   "send_from_account": "Send from Account",
   "current_balance_sats": "{balance} SATs",

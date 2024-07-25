@@ -19,7 +19,9 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
+import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -47,7 +49,7 @@ import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/send/bottom.sheet/invite.dart';
+import 'package:wallet/scenes/send/bottom.sheet/send.flow.invite.dart';
 import 'package:wallet/scenes/send/send.coordinator.dart';
 
 enum TransactionFeeMode {
@@ -105,6 +107,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   Map<String, AddressPublicKey> email2AddressKey = {};
   List<AddressPublicKey> addressPublicKeys = [];
+  List<ProtonAddress> protonEmailAddresses = [];
 
   List<ProtonRecipient> recipients = [];
   List<String> selfBitcoinAddresses = [];
@@ -173,7 +176,9 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   Future<bool> buildTransactionScript();
 
-  List<ContactsModel> contactsEmail = [];
+  Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
+
+  List<ContactsModel> contactsEmails = [];
 
   late FrbTxBuilder txBuilder;
   late FrbPsbt frbPsbt;
@@ -216,6 +221,8 @@ class SendViewModelImpl extends SendViewModel {
     this.userManager,
     this.contactsDataProvider,
     this.walletKeysProvider,
+    this.protonEmailAddressProvider,
+    this.exclusiveInviteDataProvider,
     super.userSettingsDataProvider,
     super.localTransactionDataProvider,
     super.walletDataProvider,
@@ -233,6 +240,8 @@ class SendViewModelImpl extends SendViewModel {
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
   final WalletKeysProvider walletKeysProvider;
+  final ProtonEmailAddressProvider protonEmailAddressProvider;
+  final ExclusiveInviteDataProvider exclusiveInviteDataProvider;
 
   late FrbAccount? _frbAccount;
   FrbBlockchainClient? blockClient;
@@ -296,6 +305,9 @@ class SendViewModelImpl extends SendViewModel {
         }
       });
 
+      protonEmailAddresses =
+          await protonEmailAddressProvider.getProtonEmailAddresses();
+
       addressKeys = await WalletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
@@ -317,7 +329,7 @@ class SendViewModelImpl extends SendViewModel {
       sinkAddSafe();
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
-      contactsEmail = await contactsDataProvider.getContacts() ?? [];
+      contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
       // for account switcher
 
@@ -695,17 +707,15 @@ class SendViewModelImpl extends SendViewModel {
       removeRecipientByEmail(email);
       final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        InviteSheet.show(context, email, () {
-          _sendInviteForNewComer(email);
-        });
+        SendFlowInviteSheet.show(
+            context, protonEmailAddresses, email, _sendInviteForNewComer);
       }
     } else if (showInviteBvE) {
       removeRecipientByEmail(email);
       final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        InviteSheet.show(context, email, () {
-          _sendInviteForEmailIntegration(email);
-        });
+        SendFlowInviteSheet.show(context, protonEmailAddresses, email,
+            _sendInviteForEmailIntegration);
       }
     }
     if (!isRecipientExists(email) && recipients.isEmpty) {
@@ -1111,26 +1121,60 @@ class SendViewModelImpl extends SendViewModel {
     sinkAddSafe();
   }
 
-  Future<void> _sendInviteForEmailIntegration(String email) async {
+  Future<bool> _sendInviteForEmailIntegration(String email) async {
     String? emailAddressID;
     if (accountAddressIDs.isNotEmpty) {
       emailAddressID = accountAddressIDs.first;
     } else {
       emailAddressID = addressKeys.firstOrNull?.id;
     }
-    await inviteClient.sendEmailIntegrationInvite(
-        inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
+    try {
+      await inviteClient.sendEmailIntegrationInvite(
+          inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
+      exclusiveInviteDataProvider.updateData();
+    } on BridgeError catch (error) {
+      final errMsg = parseSampleDisplayError(error);
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(errMsg);
+      }
+      return false;
+    } catch (e) {
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(e.toString());
+      }
+      return false;
+    }
+    return true;
   }
 
-  Future<void> _sendInviteForNewComer(String email) async {
+  Future<bool> _sendInviteForNewComer(String email) async {
     String? emailAddressID;
     if (accountAddressIDs.isNotEmpty) {
       emailAddressID = accountAddressIDs.first;
     } else {
       emailAddressID = addressKeys.firstOrNull?.id;
     }
-    await inviteClient.sendNewcomerInvite(
-        inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
+    try {
+      await inviteClient.sendNewcomerInvite(
+          inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
+      exclusiveInviteDataProvider.updateData();
+    } on BridgeError catch (error) {
+      final errMsg = parseSampleDisplayError(error);
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(errMsg);
+      }
+      return false;
+    } catch (e) {
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(e.toString());
+      }
+      return false;
+    }
+    return true;
   }
 
   bool _processError(BridgeError error, Object stacktrace) {
@@ -1218,5 +1262,32 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return decryptedName;
+  }
+
+  @override
+  Future<bool> sendExclusiveInvite(
+      ProtonAddress protonAddress, String email) async {
+    final String emailAddressID = protonAddress.id;
+    try {
+      await inviteClient.sendNewcomerInvite(
+        inviteeEmail: email.trim(),
+        inviterAddressId: emailAddressID,
+      );
+      exclusiveInviteDataProvider.updateData();
+    } on BridgeError catch (error) {
+      final errMsg = parseSampleDisplayError(error);
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(errMsg);
+      }
+      return false;
+    } catch (e) {
+      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        CommonHelper.showErrorDialog(e.toString());
+      }
+      return false;
+    }
+    return true;
   }
 }

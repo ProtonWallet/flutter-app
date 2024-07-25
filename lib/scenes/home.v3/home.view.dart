@@ -84,12 +84,14 @@ class HomeView extends ViewBase<HomeViewModel> {
           String accountName = "";
           if (walletListState.initialized) {
             for (WalletMenuModel walletMenuModel
-                in walletListState.walletsModel) {
+            in walletListState.walletsModel) {
               if (walletMenuModel.isSelected) {
-                accountName = S.of(context).total_accounts;
+                accountName = S
+                    .of(context)
+                    .total_accounts;
               }
               for (AccountMenuModel accountMenuModel
-                  in walletMenuModel.accounts) {
+              in walletMenuModel.accounts) {
                 if (accountMenuModel.isSelected) {
                   accountName = accountMenuModel.label;
                   break;
@@ -135,7 +137,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         )),
                                     BtcTitleActionsView(
                                         initialized:
-                                            walletListState.initialized,
+                                        walletListState.initialized,
                                         onSend: () {
                                           viewModel.move(NavID.send);
                                         },
@@ -148,7 +150,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     const SizedBox(
                                       height: 16,
                                     ),
-                                    if (viewModel.canInvite)
+                                    if (viewModel.canInvite &&
+                                        viewModel.protonAddresses.isNotEmpty)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: defaultPadding),
@@ -156,12 +159,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           onTap: () {
                                             SendInviteSheet.show(
                                               context,
+                                              viewModel.protonAddresses,
                                               viewModel.contactsEmails,
-                                              viewModel.sendInviteForNewComer,
+                                              viewModel.sendExclusiveInvite,
                                             );
                                           },
                                           child: Container(
-                                            width: MediaQuery.of(context)
+                                            width: MediaQuery
+                                                .of(context)
                                                 .size
                                                 .width,
                                             padding: const EdgeInsets.only(
@@ -172,18 +177,18 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             decoration: BoxDecoration(
                                                 color: ProtonColors.protonBlue,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        24.0)),
+                                                BorderRadius.circular(
+                                                    24.0)),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           S
@@ -191,24 +196,26 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                               .invite_friends,
                                                           style: FontManager
                                                               .body2Median(
-                                                                  ProtonColors
-                                                                      .white),
+                                                              ProtonColors
+                                                                  .white),
                                                         ),
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  right: 8),
+                                                          const EdgeInsets
+                                                              .only(
+                                                              right: 8),
                                                           child: Text(
-                                                            S.of(context).n_left(
+                                                            S
+                                                                .of(context)
+                                                                .n_left(
                                                                 viewModel
-                                                                        .remainingMonthlyInvitations
-                                                                        ?.available ??
+                                                                    .remainingMonthlyInvitations
+                                                                    ?.available ??
                                                                     0),
                                                             style: FontManager
                                                                 .body2Median(
-                                                                    ProtonColors
-                                                                        .white),
+                                                                ProtonColors
+                                                                    .white),
                                                           ),
                                                         ),
                                                       ]),
@@ -230,7 +237,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                       height: 6,
                                     ),
                                     if (viewModel.currentTodoStep <
-                                            viewModel.totalTodoSteps &&
+                                        viewModel.totalTodoSteps &&
                                         walletTransactionState
                                             .historyTransaction.isEmpty &&
                                         !walletTransactionState.isSyncing)
@@ -243,7 +250,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 context, viewModel);
                                           },
                                           child: Container(
-                                            width: MediaQuery.of(context)
+                                            width: MediaQuery
+                                                .of(context)
                                                 .size
                                                 .width,
                                             padding: const EdgeInsets.only(
@@ -254,21 +262,21 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             decoration: BoxDecoration(
                                                 color: ProtonColors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        24.0)),
+                                                BorderRadius.circular(
+                                                    24.0)),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 Text(
                                                   S
                                                       .of(context)
                                                       .secure_your_wallet,
                                                   style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
-                                                              .protonBlue),
+                                                  FontManager.body2Median(
+                                                      ProtonColors
+                                                          .protonBlue),
                                                 ),
                                                 Transform.translate(
                                                   offset: const Offset(6, 0),
@@ -285,58 +293,58 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         ),
                                       ),
                                     (viewModel.currentTodoStep <
-                                                viewModel.totalTodoSteps &&
-                                            walletTransactionState
-                                                .historyTransaction.isNotEmpty)
+                                        viewModel.totalTodoSteps &&
+                                        walletTransactionState
+                                            .historyTransaction.isNotEmpty)
                                         ? CustomExpansion(
-                                            totalSteps:
-                                                viewModel.totalTodoSteps,
-                                            currentStep:
-                                                viewModel.currentTodoStep,
-                                            children: [
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_proton_account,
-                                                    checked: viewModel
-                                                        .hadSetupRecovery,
-                                                    callback: () {
-                                                      viewModel
-                                                          .move(NavID.recovery);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_wallet_mnemonic,
-                                                    checked: !viewModel
-                                                        .showWalletRecovery,
-                                                    callback: () {
-                                                      move(context,
-                                                          NavID.setupBackup);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_setup_2fa,
-                                                    checked:
-                                                        viewModel.hadSetup2FA,
-                                                    callback: () {
-                                                      viewModel.move(NavID
-                                                          .securitySetting);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                              ])
+                                        totalSteps:
+                                        viewModel.totalTodoSteps,
+                                        currentStep:
+                                        viewModel.currentTodoStep,
+                                        children: [
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomTodos(
+                                              title: S
+                                                  .of(context)
+                                                  .todos_backup_proton_account,
+                                              checked: viewModel
+                                                  .hadSetupRecovery,
+                                              callback: () {
+                                                viewModel
+                                                    .move(NavID.recovery);
+                                              }),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomTodos(
+                                              title: S
+                                                  .of(context)
+                                                  .todos_backup_wallet_mnemonic,
+                                              checked: !viewModel
+                                                  .showWalletRecovery,
+                                              callback: () {
+                                                move(context,
+                                                    NavID.setupBackup);
+                                              }),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          CustomTodos(
+                                              title: S
+                                                  .of(context)
+                                                  .todos_setup_2fa,
+                                              checked:
+                                              viewModel.hadSetup2FA,
+                                              callback: () {
+                                                viewModel.move(NavID
+                                                    .securitySetting);
+                                              }),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                        ])
                                         : const SizedBox(),
                                     const SizedBox(
                                       height: 20,
@@ -344,9 +352,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     Container(
                                         decoration: BoxDecoration(
                                           color:
-                                              getTransactionAndAddressesBackground(
-                                                  walletTransactionState,
-                                                  viewModel.bodyListStatus),
+                                          getTransactionAndAddressesBackground(
+                                              walletTransactionState,
+                                              viewModel.bodyListStatus),
                                           borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(24.0),
                                             topRight: Radius.circular(24.0),
@@ -358,14 +366,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             bottom: 20, top: 10),
                                         child: Column(children: [
                                           viewModel.bodyListStatus ==
-                                                  BodyListStatus.transactionList
+                                              BodyListStatus.transactionList
                                               ? TransactionList(
-                                                  viewModel: viewModel)
+                                              viewModel: viewModel)
                                               : BitcoinAddressList(
-                                                  viewModel: viewModel),
+                                              viewModel: viewModel),
                                         ])),
                                     if (walletTransactionState
-                                            .historyTransaction.isEmpty &&
+                                        .historyTransaction.isEmpty &&
                                         !walletTransactionState.isSyncing)
                                       Column(children: [
                                         const SizedBox(
@@ -373,7 +381,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         ),
                                         Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                             children: [
                                               ButtonV5(
                                                   onPressed: () {
@@ -382,22 +390,26 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   },
                                                   elevation: 0.0,
                                                   backgroundColor:
-                                                      ProtonColors.white,
-                                                  text: S.of(context).receive,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width >
-                                                          424
+                                                  ProtonColors.white,
+                                                  text: S
+                                                      .of(context)
+                                                      .receive,
+                                                  width: MediaQuery
+                                                      .of(context)
+                                                      .size
+                                                      .width >
+                                                      424
                                                       ? 180
-                                                      : MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2 -
-                                                          defaultPadding * 2,
+                                                      : MediaQuery
+                                                      .of(context)
+                                                      .size
+                                                      .width /
+                                                      2 -
+                                                      defaultPadding * 2,
                                                   textStyle:
-                                                      FontManager.body1Median(
-                                                          ProtonColors
-                                                              .protonBlue),
+                                                  FontManager.body1Median(
+                                                      ProtonColors
+                                                          .protonBlue),
                                                   height: 48),
                                               const SizedBox(
                                                 width: 10,
@@ -409,20 +421,24 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   elevation: 0.0,
                                                   backgroundColor: ProtonColors
                                                       .backgroundBlack,
-                                                  text: S.of(context).buy,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width >
-                                                          424
+                                                  text: S
+                                                      .of(context)
+                                                      .buy,
+                                                  width: MediaQuery
+                                                      .of(context)
+                                                      .size
+                                                      .width >
+                                                      424
                                                       ? 180
-                                                      : MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2 -
-                                                          defaultPadding * 2,
+                                                      : MediaQuery
+                                                      .of(context)
+                                                      .size
+                                                      .width /
+                                                      2 -
+                                                      defaultPadding * 2,
                                                   textStyle: FontManager
                                                       .body1Median(ProtonColors
-                                                          .backgroundSecondary),
+                                                      .backgroundSecondary),
                                                   height: 48),
                                             ]),
                                         const SizedBox(
@@ -436,24 +452,26 @@ class HomeView extends ViewBase<HomeViewModel> {
                                       ),
                                       child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             if (viewModel.protonFeedItems
-                                                    .isNotEmpty &&
+                                                .isNotEmpty &&
                                                 walletTransactionState
                                                     .historyTransaction
                                                     .isEmpty &&
                                                 !walletTransactionState
                                                     .isSyncing)
-                                              Text(S.of(context).explore_wallet,
+                                              Text(S
+                                                  .of(context)
+                                                  .explore_wallet,
                                                   style:
-                                                      FontManager.body1Median(
-                                                          ProtonColors
-                                                              .textNorm)),
+                                                  FontManager.body1Median(
+                                                      ProtonColors
+                                                          .textNorm)),
                                             const SizedBox(height: 10),
                                             if (walletTransactionState
-                                                    .historyTransaction
-                                                    .isEmpty &&
+                                                .historyTransaction
+                                                .isEmpty &&
                                                 !walletTransactionState
                                                     .isSyncing)
                                               Column(children: [
@@ -462,7 +480,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     launchUrl(Uri.parse(link));
                                                   },
                                                   protonFeedItems:
-                                                      viewModel.protonFeedItems,
+                                                  viewModel.protonFeedItems,
                                                 ),
                                                 const SizedBox(
                                                   height: 40,
@@ -478,13 +496,18 @@ class HomeView extends ViewBase<HomeViewModel> {
                           left: 0,
                           bottom: 0,
                           child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             child: BitcoinPriceBox(
-                              title: S.of(context).btc_price,
+                              title: S
+                                  .of(context)
+                                  .btc_price,
                               price: viewModel.btcPriceInfo.price,
                               priceClient: viewModel.getPriceGraphClient(),
                               priceChange:
-                                  viewModel.btcPriceInfo.priceChange24h,
+                              viewModel.btcPriceInfo.priceChange24h,
                               exchangeRate: viewModel.currentExchangeRate,
                             ),
                           ),
@@ -495,21 +518,21 @@ class HomeView extends ViewBase<HomeViewModel> {
         });
   }
 
-  Widget getMainBalanceWidget(
-    BuildContext context,
-    HomeViewModel viewModel,
-    String accountName,
-    WalletBalanceState walletBalanceState,
-    WalletTransactionState walletTransactionState,
-    WalletListState walletListState,
-  ) {
+  Widget getMainBalanceWidget(BuildContext context,
+      HomeViewModel viewModel,
+      String accountName,
+      WalletBalanceState walletBalanceState,
+      WalletTransactionState walletTransactionState,
+      WalletListState walletListState,) {
     if (walletListState.initialized && walletListState.walletsModel.isEmpty) {
       // show onboarding
       return Center(
         child: Underline(
           onTap: viewModel.setOnBoard,
           child: Text(
-            S.of(context).wallet_setup,
+            S
+                .of(context)
+                .wallet_setup,
             style: FontManager.titleHeadline(ProtonColors.protonBlue),
           ),
         ),
@@ -519,13 +542,13 @@ class HomeView extends ViewBase<HomeViewModel> {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         accountName.isNotEmpty
             ? Text(accountName,
-                style: FontManager.body1Regular(ProtonColors.textHint))
+            style: FontManager.body1Regular(ProtonColors.textHint))
             : const CardLoading(
-                width: 200,
-                height: 16,
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                margin: EdgeInsets.only(top: 4),
-              ),
+          width: 200,
+          height: 16,
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          margin: EdgeInsets.only(top: 4),
+        ),
         const SizedBox(
           height: 2,
         ),
@@ -559,59 +582,63 @@ class HomeView extends ViewBase<HomeViewModel> {
         Row(children: [
           viewModel.displayBalance
               ? AnimatedFlipCounter(
-                  prefix: viewModel.dataProviderManager.userSettingsDataProvider
-                      .getFiatCurrencySign(
-                          fiatCurrency:
-                              viewModel.currentExchangeRate.fiatCurrency),
-                  thousandSeparator: ",",
-                  value: ExchangeCalculator.getNotionalInFiatCurrency(
-                    viewModel.currentExchangeRate,
-                    walletBalanceState.balanceInSatoshi,
-                  ),
+              prefix: viewModel.dataProviderManager.userSettingsDataProvider
+                  .getFiatCurrencySign(
+                  fiatCurrency:
+                  viewModel.currentExchangeRate.fiatCurrency),
+              thousandSeparator: ",",
+              value: ExchangeCalculator.getNotionalInFiatCurrency(
+                viewModel.currentExchangeRate,
+                walletBalanceState.balanceInSatoshi,
+              ),
 
-                  // TODO(fix): use actual balance
-                  fractionDigits: defaultDisplayDigits,
-                  textStyle:
-                      FontManager.balanceInFiatCurrency(ProtonColors.textNorm))
+              // TODO(fix): use actual balance
+              fractionDigits: defaultDisplayDigits,
+              textStyle:
+              FontManager.balanceInFiatCurrency(ProtonColors.textNorm))
               : Text(
-                  "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}****",
-                  style:
-                      FontManager.balanceInFiatCurrency(ProtonColors.textNorm)),
+              "${viewModel.dataProviderManager.userSettingsDataProvider
+                  .getFiatCurrencySign(
+                  fiatCurrency: viewModel.currentExchangeRate
+                      .fiatCurrency)}****",
+              style:
+              FontManager.balanceInFiatCurrency(ProtonColors.textNorm)),
           const SizedBox(width: 10),
           viewModel.displayBalance
               ? GestureDetector(
-                  onTap: () {
-                    viewModel.setDisplayBalance(display: false);
-                  },
-                  child: Icon(
-                    Icons.visibility_off_outlined,
-                    size: 24,
-                    color: ProtonColors.textWeak,
-                  ))
+              onTap: () {
+                viewModel.setDisplayBalance(display: false);
+              },
+              child: Icon(
+                Icons.visibility_off_outlined,
+                size: 24,
+                color: ProtonColors.textWeak,
+              ))
               : GestureDetector(
-                  onTap: () {
-                    viewModel.setDisplayBalance(display: true);
-                  },
-                  child: Icon(
-                    Icons.visibility_outlined,
-                    size: 24,
-                    color: ProtonColors.textWeak,
-                  )),
+              onTap: () {
+                viewModel.setDisplayBalance(display: true);
+              },
+              child: Icon(
+                Icons.visibility_outlined,
+                size: 24,
+                color: ProtonColors.textWeak,
+              )),
         ]),
         const SizedBox(
           height: 8,
         ),
         viewModel.displayBalance
             ? Text(
-                ExchangeCalculator.getBitcoinUnitLabel(
-                  viewModel.bitcoinUnit,
-                  walletBalanceState.balanceInSatoshi,
-                ),
-                style: FontManager.balanceInBTC(ProtonColors.textHint))
+            ExchangeCalculator.getBitcoinUnitLabel(
+              viewModel.bitcoinUnit,
+              walletBalanceState.balanceInSatoshi,
+            ),
+            style: FontManager.balanceInBTC(ProtonColors.textHint))
             : Text(
-                "**** ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
-                style: FontManager.balanceInBTC(ProtonColors.textHint),
-              ),
+          "**** ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel
+              .bitcoinUnit.name.toUpperCase() : "mBTC"}",
+          style: FontManager.balanceInBTC(ProtonColors.textHint),
+        ),
       ],
     );
   }
@@ -634,7 +661,10 @@ class HomeView extends ViewBase<HomeViewModel> {
     return Drawer(
         shape: const RoundedRectangleBorder(),
         backgroundColor: ProtonColors.drawerBackground,
-        width: min(MediaQuery.of(context).size.width - 70, drawerMaxWidth),
+        width: min(MediaQuery
+            .of(context)
+            .size
+            .width - 70, drawerMaxWidth),
         child: buildSidebar(context, viewModel));
   }
 
@@ -643,14 +673,14 @@ class HomeView extends ViewBase<HomeViewModel> {
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness:
-            viewModel.walletDrawerStatus == WalletDrawerStatus.close
-                ? Brightness.dark
-                : Brightness.light,
+        viewModel.walletDrawerStatus == WalletDrawerStatus.close
+            ? Brightness.dark
+            : Brightness.light,
         // For Android (dark icons)
         statusBarBrightness:
-            viewModel.walletDrawerStatus == WalletDrawerStatus.close
-                ? Brightness.light
-                : Brightness.dark,
+        viewModel.walletDrawerStatus == WalletDrawerStatus.close
+            ? Brightness.light
+            : Brightness.dark,
       ),
       backgroundColor: ProtonColors.backgroundProton,
       title: BlocBuilder<WalletListBloc, WalletListState>(
@@ -663,7 +693,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                   walletName = walletMenuModel.walletName;
                 }
                 for (AccountMenuModel accountMenuModel
-                    in walletMenuModel.accounts) {
+                in walletMenuModel.accounts) {
                   if (accountMenuModel.isSelected) {
                     walletName = walletMenuModel.walletName;
                     break;
@@ -672,7 +702,9 @@ class HomeView extends ViewBase<HomeViewModel> {
               }
             }
             return Text(
-              walletName.isNotEmpty ? walletName : S.of(context).proton_wallet,
+              walletName.isNotEmpty ? walletName : S
+                  .of(context)
+                  .proton_wallet,
               style: FontManager.body2Median(ProtonColors.textNorm),
             );
           }),
@@ -694,7 +726,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                       return;
                     }
                     for (WalletMenuModel walletMenuModel
-                        in state.walletsModel) {
+                    in state.walletsModel) {
                       if (walletMenuModel.isSelected) {
                         WalletSettingSheet.show(
                             context, viewModel, walletMenuModel);
@@ -704,7 +736,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                       /// check if it's wallet account view
                       bool inAccount = false;
                       for (AccountMenuModel accountMenuModel
-                          in walletMenuModel.accounts) {
+                      in walletMenuModel.accounts) {
                         if (accountMenuModel.isSelected) {
                           WalletSettingSheet.show(
                               context, viewModel, walletMenuModel);
@@ -737,7 +769,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         },
       ),
       scrolledUnderElevation:
-          0.0, // don't change background color when scroll down
+      0.0, // don't change background color when scroll down
     );
   }
 
@@ -756,184 +788,197 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
         return SafeArea(
             child: SingleChildScrollView(
                 child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height,
+                          minHeight: MediaQuery
+                              .of(context)
+                              .size
+                              .height,
                         ),
                         child: IntrinsicHeight(
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                              const SizedBox(height: 30),
-                              // logo section
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: defaultPadding),
-                                child: Column(
-                                    crossAxisAlignment:
+                                  const SizedBox(height: 30),
+                                  // logo section
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: defaultPadding),
+                                    child: Column(
+                                        crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                          "assets/images/icon/logo_text.svg",
-                                          fit: BoxFit.fill,
-                                          width: 146.41,
-                                          height: 18),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                    ]),
-                              ),
-                              //account info section
-                              AccountInfoV2(
-                                  displayName: viewModel.displayName,
-                                  userEmail: viewModel.userEmail),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Divider(thickness: 0.2),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: defaultPadding),
-                                  child: Row(
-                                      mainAxisAlignment:
+                                        children: [
+                                          SvgPicture.asset(
+                                              "assets/images/icon/logo_text.svg",
+                                              fit: BoxFit.fill,
+                                              width: 146.41,
+                                              height: 18),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                        ]),
+                                  ),
+                                  //account info section
+                                  AccountInfoV2(
+                                      displayName: viewModel.displayName,
+                                      userEmail: viewModel.userEmail),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Divider(thickness: 0.2),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: defaultPadding),
+                                      child: Row(
+                                          mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          S.of(context).wallets,
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textHint),
-                                        ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              viewModel
-                                                  .nameTextController.text = "";
-                                              viewModel.passphraseTextController
-                                                  .text = "";
-                                              viewModel
-                                                  .passphraseConfirmTextController
-                                                  .text = "";
-                                              OnboardingGuideSheet.show(
-                                                  context, viewModel);
-                                            },
-                                            child: SvgPicture.asset(
-                                                "assets/images/icon/ic-plus-circle.svg",
-                                                fit: BoxFit.fill,
-                                                width: 20,
-                                                height: 20)),
-                                      ])),
-                              const SizedBox(
-                                height: 10,
-                              ),
+                                          children: [
+                                            Text(
+                                              S
+                                                  .of(context)
+                                                  .wallets,
+                                              style: FontManager.body2Regular(
+                                                  ProtonColors.textHint),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  viewModel
+                                                      .nameTextController.text =
+                                                  "";
+                                                  viewModel
+                                                      .passphraseTextController
+                                                      .text = "";
+                                                  viewModel
+                                                      .passphraseConfirmTextController
+                                                      .text = "";
+                                                  OnboardingGuideSheet.show(
+                                                      context, viewModel);
+                                                },
+                                                child: SvgPicture.asset(
+                                                    "assets/images/icon/ic-plus-circle.svg",
+                                                    fit: BoxFit.fill,
+                                                    width: 20,
+                                                    height: 20)),
+                                          ])),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
 
-                              /// wallet list
-                              SidebarWalletItems(
-                                walletListBloc: viewModel.walletListBloc,
-                                // select wallet
-                                selectAccount: (wallet, account) {
-                                  if (viewModel.isMobileSize) {
-                                    Navigator.of(context).pop();
-                                  }
-                                  viewModel.selectAccount(wallet, account);
-                                },
-                                selectWallet: (wallet) {
-                                  if (viewModel.isMobileSize) {
-                                    Navigator.of(context).pop();
-                                  }
-                                  viewModel.selectWallet(wallet);
-                                },
-
-                                /// delete wallet when un valid
-                                onDelete: (
-                                  wallet, {
-                                  required hasBalance,
-                                  required isInvalidWallet,
-                                }) {
-                                  DeleteWalletSheet.show(
-                                    context,
-                                    viewModel,
-                                    wallet,
-                                    hasBalance: false,
-                                    isInvalidWallet: true,
-                                    onBackup: () {
-                                      viewModel.move(NavID.setupBackup);
+                                  /// wallet list
+                                  SidebarWalletItems(
+                                    walletListBloc: viewModel.walletListBloc,
+                                    // select wallet
+                                    selectAccount: (wallet, account) {
+                                      if (viewModel.isMobileSize) {
+                                        Navigator.of(context).pop();
+                                      }
+                                      viewModel.selectAccount(wallet, account);
                                     },
-                                  );
-                                },
+                                    selectWallet: (wallet) {
+                                      if (viewModel.isMobileSize) {
+                                        Navigator.of(context).pop();
+                                      }
+                                      viewModel.selectWallet(wallet);
+                                    },
 
-                                /// update passphrase
-                                updatePassphrase: (wallet) {
-                                  PassphraseSheet.show(
-                                    context,
-                                    viewModel,
-                                    wallet,
-                                  );
-                                },
+                                    /// delete wallet when un valid
+                                    onDelete: (wallet, {
+                                      required hasBalance,
+                                      required isInvalidWallet,
+                                    }) {
+                                      DeleteWalletSheet.show(
+                                        context,
+                                        viewModel,
+                                        wallet,
+                                        hasBalance: false,
+                                        isInvalidWallet: true,
+                                        onBackup: () {
+                                          viewModel.move(NavID.setupBackup);
+                                        },
+                                      );
+                                    },
 
-                                /// add new account into wallet
-                                addAccount: (wallet) {
-                                  AddWalletAccountSheet.show(
-                                      context, viewModel, wallet);
-                                },
-                                viewModel: viewModel,
-                              ),
+                                    /// update passphrase
+                                    updatePassphrase: (wallet) {
+                                      PassphraseSheet.show(
+                                        context,
+                                        viewModel,
+                                        wallet,
+                                      );
+                                    },
 
-                              /// home more settings
-                              HomeMoreSettings(
-                                onUpgrade: () {
-                                  UpgradeIntroSheet.show(context, viewModel);
-                                },
-                                onDiscover: () {
-                                  viewModel.move(NavID.discover);
-                                },
-                                onSettings: () {
-                                  viewModel.move(NavID.settings);
-                                },
-                                onSecurity: () {
-                                  viewModel.move(NavID.securitySetting);
-                                },
-                                onRecovery: () {
-                                  viewModel.move(NavID.recovery);
-                                },
-                                onReportBug: () {
-                                  viewModel.move(NavID.natvieReportBugs);
-                                },
-                                onLogout: () async {
-                                  await viewModel.logout();
-                                },
-                              ),
+                                    /// add new account into wallet
+                                    addAccount: (wallet) {
+                                      AddWalletAccountSheet.show(
+                                          context, viewModel, wallet);
+                                    },
+                                    viewModel: viewModel,
+                                  ),
 
-                              const SizedBox(height: 10),
-                              const Expanded(
-                                child: SizedBox(height: 20),
-                              ),
+                                  /// home more settings
+                                  HomeMoreSettings(
+                                    onUpgrade: () {
+                                      UpgradeIntroSheet.show(context,
+                                          viewModel);
+                                    },
+                                    onDiscover: () {
+                                      viewModel.move(NavID.discover);
+                                    },
+                                    onSettings: () {
+                                      viewModel.move(NavID.settings);
+                                    },
+                                    onSecurity: () {
+                                      viewModel.move(NavID.securitySetting);
+                                    },
+                                    onRecovery: () {
+                                      viewModel.move(NavID.recovery);
+                                    },
+                                    onReportBug: () {
+                                      viewModel.move(NavID.natvieReportBugs);
+                                    },
+                                    onLogout: () async {
+                                      await viewModel.logout();
+                                    },
+                                  ),
 
-                              /// app version fixed at bottom
-                              Center(
-                                child: Container(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    viewModel.appVersion,
-                                    style: FontManager.captionRegular(
-                                      ProtonColors.textHint,
+                                  const SizedBox(height: 10),
+                                  const Expanded(
+                                    child: SizedBox(height: 20),
+                                  ),
+
+                                  /// app version fixed at bottom
+                                  Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 10),
+                                      child: Text(
+                                        viewModel.appVersion,
+                                        style: FontManager.captionRegular(
+                                          ProtonColors.textHint,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                            ]))))));
+                                  const SizedBox(height: 10),
+                                ]))))));
       });
 }
 
-Widget showUpdateWalletPassphraseDialog(
-    BuildContext context, HomeViewModel viewModel, WalletModel walletModel) {
+Widget showUpdateWalletPassphraseDialog(BuildContext context,
+    HomeViewModel viewModel, WalletModel walletModel) {
   final TextEditingController textEditingController = TextEditingController();
   textEditingController.text = "";
   return AlertDialog(
-    title: Text(S.of(context).set_passphrase),
+    title: Text(S
+        .of(context)
+        .set_passphrase),
     content: TextField(
       controller: textEditingController,
     ),
@@ -944,7 +989,9 @@ Widget showUpdateWalletPassphraseDialog(
             Navigator.of(context).pop();
           }
         },
-        child: Text(S.of(context).cancel),
+        child: Text(S
+            .of(context)
+            .cancel),
       ),
       TextButton(
         onPressed: () async {
@@ -967,22 +1014,22 @@ Widget showUpdateWalletPassphraseDialog(
             } // pop current dialog
           }
         },
-        child: Text(S.of(context).submit),
+        child: Text(S
+            .of(context)
+            .submit),
       ),
     ],
   );
 }
 
-Widget getWalletAccountBalanceWidget(
-  BuildContext context,
-  HomeViewModel viewModel,
-  AccountModel accountModel,
-  Color textColor,
-) {
+Widget getWalletAccountBalanceWidget(BuildContext context,
+    HomeViewModel viewModel,
+    AccountModel accountModel,
+    Color textColor,) {
   FiatCurrency? fiatCurrency =
-      WalletManager.getAccountFiatCurrency(accountModel);
+  WalletManager.getAccountFiatCurrency(accountModel);
   final ProtonExchangeRate? exchangeRate =
-      ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
+  ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
   final double estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
       exchangeRate ?? viewModel.currentExchangeRate,
       accountModel.balance.toInt());
@@ -991,7 +1038,9 @@ Widget getWalletAccountBalanceWidget(
   }
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
+        "${viewModel.dataProviderManager.userSettingsDataProvider
+            .getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue
+            .toStringAsFixed(defaultDisplayDigits)}",
         style: FontManager.captionSemiBold(textColor)),
     Text(
         ExchangeCalculator.getBitcoinUnitLabel(

@@ -3,11 +3,9 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/proton.links.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -33,6 +31,7 @@ import 'package:wallet/scenes/components/transaction.history.item.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/send.invite.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -804,7 +803,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 ProtonMailAutoComplete(
                                     labelText:
                                         S.of(context).send_to_recipient_s,
-                                    emails: viewModel.contactsEmail,
+                                    emails: viewModel.contactsEmails,
                                     color: ProtonColors.white,
                                     focusNode: viewModel.addressFocusNode,
                                     textEditingController:
@@ -1098,8 +1097,6 @@ class SendView extends ViewBase<SendViewModel> {
               child: Column(children: [
                 ButtonV5(
                     onPressed: () async {
-                      // TODO(check): why call end here
-                      viewModel.coordinator.end();
                       Navigator.of(context).pop();
                     },
                     text: S.of(context).done,
@@ -1113,7 +1110,12 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      launchUrl(Uri.parse(inviteFriendLink));
+                      SendInviteSheet.show(
+                        context,
+                        viewModel.protonEmailAddresses,
+                        viewModel.contactsEmails,
+                        viewModel.sendExclusiveInvite,
+                      );
                     },
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,
