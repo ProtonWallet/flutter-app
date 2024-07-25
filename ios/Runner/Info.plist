@@ -28,8 +28,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>We need access to your microphone for video recording.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs photos access to get QR code from photo library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

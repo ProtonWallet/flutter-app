@@ -36,6 +36,10 @@ class AppConfig {
       appConfig = appConfigForProduction;
     } else if (environment == 'atlas') {
       appConfig = appConfigForTestNet.copyWith(
+        apiEnv: ApiEnv.atlas(null),
+      );
+    } else if (environment.isNotEmpty) {
+      appConfig = appConfigForTestNet.copyWith(
         apiEnv: ApiEnv.atlas(environment),
       );
     }
