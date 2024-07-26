@@ -119,7 +119,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     final userID = userInfo.userId;
     final keys = await userDataProvider.getUserKeys(userID);
 
-    final found = keys.where((item) => item.primary == 0);
+    final found = keys.where((item) => item.primary == 1);
     if (found.isNotEmpty) {
       final key = found.first;
       return UserKey(
