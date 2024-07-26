@@ -20,7 +20,6 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
-import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -32,7 +31,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
-import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/invite_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
@@ -89,7 +87,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
     this.walletID,
     this.accountID,
     this.userSettingsDataProvider,
-    this.localTransactionDataProvider,
     this.walletDataProvider,
     this.inviteClient,
   );
@@ -202,9 +199,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   // user-setting data provider
   final UserSettingsDataProvider userSettingsDataProvider;
 
-  // local transaction data provider
-  final LocalTransactionDataProvider localTransactionDataProvider;
-
   final WalletsDataProvider walletDataProvider;
 
   final InviteClient inviteClient;
@@ -224,7 +218,6 @@ class SendViewModelImpl extends SendViewModel {
     this.protonEmailAddressProvider,
     this.exclusiveInviteDataProvider,
     super.userSettingsDataProvider,
-    super.localTransactionDataProvider,
     super.walletDataProvider,
     super.inviteClient,
   );
@@ -993,33 +986,6 @@ class SendViewModelImpl extends SendViewModel {
         if (txid.isNotEmpty) {
           logger.i("txid = $txid");
           _frbAccount?.insertUnconfirmedTx(psbt: frbPsbt);
-
-          // for multi-recipients
-          for (ProtonRecipient protonRecipient in recipients) {
-            final String email = protonRecipient.email;
-            String bitcoinAddress = "";
-            if (email.contains("@")) {
-              bitcoinAddress = bitcoinAddresses[email] ?? email;
-            } else {
-              bitcoinAddress = email;
-            }
-            if (!selfBitcoinAddresses.contains(bitcoinAddress)) {
-              await localTransactionDataProvider.insert(TransactionInfoModel(
-                  id: null,
-                  externalTransactionID: utf8.encode(txid),
-                  amountInSATS: protonRecipient.amountInSATS ?? 0,
-                  feeInSATS: frbPsbt.fee().toSat().toInt(),
-                  // all recipients have same fee since its same transaction
-                  isSend: 1,
-                  transactionTime:
-                      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                  feeMode: userTransactionFeeMode.index,
-                  serverWalletID: walletModel!.walletID,
-                  serverAccountID: accountModel!.accountID,
-                  toEmail: email.contains("@") ? email : "",
-                  toBitcoinAddress: bitcoinAddress));
-            }
-          }
         }
       } catch (e) {
         logger.e(e.toString());

@@ -17,7 +17,6 @@ import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
-import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -28,7 +27,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/exchangerate.model.dart';
-import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
@@ -93,8 +91,7 @@ class WalletTransactionState extends Equatable {
   ///
   /// The historyTransaction is build from
   /// 1. ServerTransactionDataProvider, this is used to add additional information, i.e. message to recipients, label of transaction, email name.. etc
-  /// 2. LocalTransactionDataProvider, this is used to show sender side's info, how much to which recipient..etc, only used when bdk didn't synced for the transaction yet
-  /// 3. BKDTransactionDataProvider, this is main transactionProvider, 1 and 2 are used when bdk not synced (bdk didn't know the transaction yet)
+  /// 2. BKDTransactionDataProvider, this is main transactionProvider, 1 and 2 are used when bdk not synced (bdk didn't know the transaction yet)
   final List<HistoryTransaction> historyTransaction;
   final List<BitcoinAddressDetail> bitcoinAddresses;
   final bool isSyncing;
@@ -131,7 +128,6 @@ extension WalletTransactionStateCopyWith on WalletTransactionState {
 class WalletTransactionBloc
     extends Bloc<WalletTransactionEvent, WalletTransactionState> {
   final UserManager userManager;
-  final LocalTransactionDataProvider localTransactionDataProvider;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final AddressKeyProvider addressKeyProvider;
@@ -141,7 +137,6 @@ class WalletTransactionBloc
   final UserSettingsDataProvider userSettingsDataProvider;
 
   StreamSubscription? serverTransactionDataSubscription;
-  StreamSubscription? localTransactionDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? fiatCurrencySettingSubscription;
@@ -154,7 +149,6 @@ class WalletTransactionBloc
 
   WalletTransactionBloc(
     this.userManager,
-    this.localTransactionDataProvider,
     this.bdkTransactionDataProvider,
     this.serverTransactionDataProvider,
     this.addressKeyProvider,
@@ -249,12 +243,6 @@ class WalletTransactionBloc
       /// syncWallet so that balance can get update
     });
 
-    localTransactionDataSubscription = localTransactionDataProvider
-        .dataUpdateController.stream
-        .listen((onData) {
-      // handleTransactionDataProviderUpdate();
-      // syncWallet(true);
-    });
     on<StartLoading>((event, emit) async {
       emit(state.copyWith(historyTransaction: []));
     });
@@ -599,12 +587,7 @@ class WalletTransactionBloc
       walletModel,
       accountModel,
     );
-    final LocalTransactionData localTransactionData =
-        await localTransactionDataProvider
-            .getLocalTransactionDataByWalletAccount(
-      walletModel,
-      accountModel,
-    );
+
     final ServerTransactionData serverTransactionData =
         await serverTransactionDataProvider
             .getServerTransactionDataByWalletAccount(
@@ -751,12 +734,10 @@ class WalletTransactionBloc
       int? lastSeenTime;
       transactionTime.when(
         confirmed: (confirmationTime) {
-          logger.d('Confirmed transaction time: $confirmationTime');
           time = confirmationTime.toInt();
           lastSeenTime = confirmationTime.toInt();
         },
         unconfirmed: (lastSeen) {
-          logger.d('Unconfirmed transaction last seen: $lastSeen');
           lastSeenTime = lastSeen.toInt();
         },
       );
@@ -779,175 +760,7 @@ class WalletTransactionBloc
         bitcoinAddresses: bitcoinAddressesInTransaction,
       );
     }
-
-    /// check server transactions with local transaction data
-    /// since user will have server transactions after broadcast (server will create for sender, recipients if use email integration)
-    /// these data is used only when bdk not finish synced after broadcast
-    // for (TransactionModel transactionModel
-    //     in serverTransactionData.transactions) {
-    //   final String txID = utf8.decode(transactionModel.externalTransactionID);
-    //   final String key = "$txID-${accountModel.accountID}";
-    //   if (txID.isEmpty) {
-    //     continue;
-    //   }
-    //   if (newHistoryTransactionsMap.containsKey(key)) {
-    //     // skip if we already has this info (i.e. bdk had synced for this record)
-    //     continue;
-    //   }
-    //   String userLabel = "";
-    //   if (secretKey != null) {
-    //     userLabel = await WalletKeyHelper.decrypt(
-    //         secretKey, utf8.decode(transactionModel.label));
-    //   }
-    //   String toList = "";
-    //   String sender = "";
-    //   String body = "";
-    //   final String encryptedToList = transactionModel.tolist ?? "";
-    //   final String encryptedSender = transactionModel.sender ?? "";
-    //   final String encryptedBody = transactionModel.body ?? "";
-    //
-    //   toList = tryDecryptWithKeys(userKeys, encryptedToList);
-    //   sender = tryDecryptWithKeys(userKeys, encryptedSender);
-    //   body = tryDecryptWithKeys(userKeys, encryptedBody);
-    //   if (toList.isEmpty) {
-    //     toList = tryDecryptWithKeys(addressKeys, encryptedToList);
-    //   }
-    //   if (sender.isEmpty) {
-    //     sender = tryDecryptWithKeys(addressKeys, encryptedSender);
-    //   }
-    //   if (body.isEmpty) {
-    //     body = tryDecryptWithKeys(addressKeys, encryptedBody);
-    //   }
-    //   final List<TransactionInfoModel> transactionInfoModels =
-    //       getLocalTransactionsByTXID(localTransactionData.transactions, txID);
-    //   if (transactionInfoModels.isNotEmpty) {
-    //     /// if we have transactionInfoModels found, it means it's sender side
-    //     /// we will fill transaction info with local transaction data
-    //     /// (recipients cannot have local transaction data since they didn't broadcast transaction)
-    //     int amountInSATS = 0;
-    //     int feeInSATS = 0;
-    //     for (TransactionInfoModel transactionInfoModel
-    //         in transactionInfoModels) {
-    //       amountInSATS += transactionInfoModel.isSend == 1
-    //           ? -transactionInfoModel.amountInSATS
-    //           : transactionInfoModel.amountInSATS;
-    //       feeInSATS = transactionInfoModel
-    //           .feeInSATS; // all recipients have same fee since its same transaction
-    //     }
-    //
-    //     final ProtonExchangeRate exchangeRate =
-    //         await getExchangeRateFromTransactionModel(transactionModel);
-    //
-    //     newHistoryTransactionsMap[key] = HistoryTransaction(
-    //       txID: txID,
-    //       updateTimestamp: transactionInfoModels.first.transactionTime,
-    //       amountInSATS: amountInSATS,
-    //       sender: sender.isNotEmpty ? sender : "Unknown",
-    //       toList: toList.isNotEmpty ? toList : "Unknown",
-    //       feeInSATS: feeInSATS,
-    //       label: userLabel,
-    //       inProgress: true,
-    //       accountModel: accountModel,
-    //       body: body.isNotEmpty ? body : null,
-    //       exchangeRate: exchangeRate,
-    //       bitcoinAddresses: [],
-    //     );
-    //   } else {
-    //     /// no transactionInfoModels found, means it's recipient side
-    //     /// going to get transaction info from proton esplora server
-    //     // `TODO`(fix): fix me since it take too long time
-    //     try {
-    //       TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-    //       transactionDetailFromBlockChain =
-    //           await WalletManager.getTransactionDetailsFromBlockStream(txID);
-    //       try {
-    //         if (transactionDetailFromBlockChain != null) {
-    //           break;
-    //         }
-    //       } catch (e) {
-    //         logger.e(e.toString());
-    //       }
-    //       if (transactionDetailFromBlockChain != null) {
-    //         Recipient? me;
-    //         final List<String> bitcoinAddressesInTransaction = [];
-    //         for (Recipient recipient
-    //             in transactionDetailFromBlockChain.recipients) {
-    //           final String bitcoinAddress = recipient.bitcoinAddress;
-    //           bitcoinAddressesInTransaction.add(bitcoinAddress);
-    //           BitcoinAddressModel? bitcoinAddressModel =
-    //               await localBitcoinAddressDataProvider
-    //                   .findBitcoinAddressInAccount(
-    //             bitcoinAddress,
-    //             accountModel.accountID,
-    //           );
-    //           if (bitcoinAddressModel != null) {
-    //             bitcoinAddressModel.used = 1;
-    //             await localBitcoinAddressDataProvider.insertOrUpdate(
-    //               bitcoinAddressModel,
-    //             );
-    //             me = recipient;
-    //             localBitcoinAddressDataProvider
-    //                 .updateBitcoinAddress2TransactionDataMap(
-    //               bitcoinAddressModel.bitcoinAddress,
-    //               txID,
-    //             );
-    //             break;
-    //           } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
-    //             bitcoinAddressModel = BitcoinAddressModel(
-    //               id: null,
-    //               walletID: 0,
-    //               // deprecated
-    //               accountID: 0,
-    //               // deprecated
-    //               serverWalletID: walletModel.walletID,
-    //               serverAccountID: accountModel.accountID,
-    //               bitcoinAddress: recipient.bitcoinAddress,
-    //               bitcoinAddressIndex:
-    //                   selfBitcoinAddressInfo[bitcoinAddress]!.index,
-    //               inEmailIntegrationPool: 0,
-    //               used: 1,
-    //             );
-    //             await localBitcoinAddressDataProvider
-    //                 .insertOrUpdate(bitcoinAddressModel);
-    //             localBitcoinAddressDataProvider
-    //                 .updateBitcoinAddress2TransactionDataMap(
-    //                     bitcoinAddress, txID);
-    //           }
-    //         }
-    //         if (me != null) {
-    //           final ProtonExchangeRate exchangeRate =
-    //               await getExchangeRateFromTransactionModel(transactionModel);
-    //           newHistoryTransactionsMap[key] = HistoryTransaction(
-    //             txID: txID,
-    //             updateTimestamp: transactionDetailFromBlockChain.timestamp,
-    //             amountInSATS: me.amountInSATS,
-    //             sender: sender.isNotEmpty ? sender : "Unknown",
-    //             toList: toList.isNotEmpty ? toList : "Unknown",
-    //             feeInSATS: transactionDetailFromBlockChain.feeInSATS,
-    //             label: userLabel,
-    //             inProgress: true,
-    //             accountModel: accountModel,
-    //             body: body.isNotEmpty ? body : null,
-    //             exchangeRate: exchangeRate,
-    //             bitcoinAddresses: bitcoinAddressesInTransaction,
-    //           );
-    //         } else {
-    //           // logger.i("Cannot find this tx, $txID");
-    //         }
-    //       }
-    //     } catch (e) {
-    //       logger.e(e.toString());
-    //     }
-    //   }
-    // }
     return newHistoryTransactionsMap.values.toList();
-  }
-
-  List<TransactionInfoModel> getLocalTransactionsByTXID(
-      List<TransactionInfoModel> localTransactions, String txid) {
-    return localTransactions
-        .where((e) => utf8.decode(e.externalTransactionID) == txid)
-        .toList();
   }
 
   Future<ProtonExchangeRate> getExchangeRateFromTransactionModel(
@@ -1107,7 +920,6 @@ class WalletTransactionBloc
   @override
   Future<void> close() {
     serverTransactionDataSubscription?.cancel();
-    localTransactionDataSubscription?.cancel();
     bdkTransactionDataSubscription?.cancel();
     walletsDataSubscription?.cancel();
     fiatCurrencySettingSubscription?.cancel();

@@ -13,7 +13,6 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/crypto.price.info.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
@@ -38,7 +37,6 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/managers/services/crypto.price.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -90,8 +88,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.protonRecoveryBloc,
   );
 
-  CryptoPriceInfo btcPriceInfo = CryptoPriceInfo();
-
   int selectedPage = 0;
 
   late UserSettingProvider userSettingProvider;
@@ -111,6 +107,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
+  PriceGraphClient? priceGraphClient;
 
   Map<String, ValueNotifier> accountFiatCurrencyNotifiers = {};
 
@@ -146,8 +143,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setSearchAddressTextField({required bool show});
 
   void setDisplayBalance({required bool display});
-
-  PriceGraphClient getPriceGraphClient();
 
   Future<bool> createWallet();
 
@@ -332,17 +327,12 @@ class HomeViewModelImpl extends HomeViewModel {
   StreamSubscription? _blockInfoDataSubscription;
   StreamSubscription? _exclusiveInviteDataSubscription;
 
-  ///
   final selectedSectionChangedController = StreamController<int>.broadcast();
-
-  CryptoPriceDataService cryptoPriceDataService =
-      CryptoPriceDataService(duration: const Duration(seconds: 10));
 
   @override
   void dispose() {
     selectedSectionChangedController.close();
     //clean up wallet ....
-    disposeServices();
     _appStateSubscription?.cancel();
     _protonUserDataSubscription?.cancel();
     _subscription?.cancel();
@@ -380,13 +370,7 @@ class HomeViewModelImpl extends HomeViewModel {
     _protonRecoveryStateSubscription =
         protonRecoveryBloc.stream.listen((state) {
       hadSetupRecovery = state.isRecoveryEnabled;
-    });
-
-    // crypto price
-    _subscription =
-        cryptoPriceDataService.dataStream.listen((CryptoPriceInfo event) {
-      btcPriceInfo = event;
-      datasourceStreamSinkAdd();
+      checkPreference();
     });
 
     // block info
@@ -421,24 +405,10 @@ class HomeViewModelImpl extends HomeViewModel {
     });
   }
 
-  Future<void> initServices() async {
-    cryptoPriceDataService.start(); //start service
-  }
-
-  void disposeServices() {
-    cryptoPriceDataService.dispose();
-  }
-
   Future<void> loadContacts() async {
     await dataProviderManager.contactsDataProvider.preLoad();
     contactsEmails =
         await dataProviderManager.contactsDataProvider.getContacts() ?? [];
-  }
-
-  // fix me
-  @override
-  PriceGraphClient getPriceGraphClient() {
-    return apiServiceManager.getApiService().getPriceGraphClient();
   }
 
   Future<void> loadInviteState() async {
@@ -559,9 +529,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
     // transactions
     try {
-      /// init services
-      initServices();
-
       /// init subscriptions
       initSubscription();
 
@@ -576,7 +543,8 @@ class HomeViewModelImpl extends HomeViewModel {
         startLoadingCallback: selectDefaultWallet,
         onboardingCallback: setOnBoard,
       );
-
+      priceGraphClient =
+          apiServiceManager.getApiService().getPriceGraphClient();
       loadProtonRecoveryState();
       loadProton2FAState();
       dataProviderManager.exclusiveInviteDataProvider.preLoad();
