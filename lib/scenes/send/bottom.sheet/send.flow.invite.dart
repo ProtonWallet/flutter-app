@@ -41,19 +41,18 @@ class SendFlowInviteSheet {
                 width: 240,
                 height: 167,
               ),
-              const SizedBox(height: 20),
               Text(
                 S.of(context).send_invite_to(email),
                 style: FontManager.titleHeadline(ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               Text(
                 S.of(context).no_wallet_found_desc,
                 style: FontManager.body2Regular(ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               DropdownButtonV2(
                 width: MediaQuery.of(context).size.width,
                 labelText: S.of(context).send_from_email,
@@ -65,7 +64,7 @@ class SendFlowInviteSheet {
                 padding: const EdgeInsets.only(
                     left: defaultPadding, right: 8, top: 12, bottom: 12),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
               ButtonV6(
                   onPressed: () async {
                       final bool success = await sendInvite.call(

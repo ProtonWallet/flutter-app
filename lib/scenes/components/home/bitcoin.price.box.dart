@@ -8,14 +8,13 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/rust/api/api_service/price_graph_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
 import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class BitcoinPriceBox extends StatelessWidget {
+class BitcoinPriceBox extends StatefulWidget {
   final String title;
-  final double price;
-  final double priceChange;
   final PriceGraphClient priceClient;
   final ProtonExchangeRate exchangeRate;
 
@@ -24,9 +23,62 @@ class BitcoinPriceBox extends StatelessWidget {
     required this.exchangeRate,
     required this.priceClient,
     super.key,
-    this.price = 0,
-    this.priceChange = 0,
   });
+
+  @override
+  BitcoinPriceBoxState createState() => BitcoinPriceBoxState();
+}
+
+class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
+  bool isLoading = false;
+
+  double priceChange = 0.0;
+  Timeframe timeFrame = Timeframe.oneDay;
+
+  @override
+  void didUpdateWidget(BitcoinPriceBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.exchangeRate.fiatCurrency !=
+        widget.exchangeRate.fiatCurrency) {
+      fetchData();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+    PriceGraph? priceGraph;
+
+    try {
+      priceGraph = await widget.priceClient.getGraphData(
+          fiatCurrency: widget.exchangeRate.fiatCurrency, timeframe: timeFrame);
+    } catch (e) {
+      e.toString();
+    }
+    final List<double> prices = [];
+    if (priceGraph != null) {
+      for (DataPoint dataPoint in priceGraph.graphData) {
+        final double price = dataPoint.exchangeRate / widget.exchangeRate.cents;
+        prices.add(price);
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+        if (prices.isNotEmpty) {
+          priceChange = (prices.last - prices.first) / prices.first * 100;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +105,8 @@ class BitcoinPriceBox extends StatelessWidget {
                     onTap: () {
                       BitcoinPriceDetailSheet.show(
                         context,
-                        exchangeRate,
-                        priceClient,
+                        widget.exchangeRate,
+                        widget.priceClient,
                         priceChange,
                       );
                     },
@@ -62,13 +114,13 @@ class BitcoinPriceBox extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(title,
+                          Text(widget.title,
                               style: TextStyle(
                                 color: ProtonColors.textWeak,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               )),
-                          exchangeRate.id == "default"
+                          (widget.exchangeRate.id == "default" || isLoading)
                               ? const SizedBox(
                                   width: 160,
                                   child: CardLoading(
@@ -84,17 +136,21 @@ class BitcoinPriceBox extends StatelessWidget {
                                     AnimatedFlipCounter(
                                         duration:
                                             const Duration(milliseconds: 500),
-                                        prefix: Provider.of<
-                                                UserSettingProvider>(context)
-                                            .getFiatCurrencySign(
-                                                fiatCurrency:
-                                                    exchangeRate.fiatCurrency),
+                                        prefix:
+                                            Provider.of<UserSettingProvider>(
+                                                    context)
+                                                .getFiatCurrencySign(
+                                                    fiatCurrency: widget
+                                                        .exchangeRate
+                                                        .fiatCurrency),
                                         thousandSeparator: ",",
                                         value: ExchangeCalculator
                                             .getNotionalInFiatCurrency(
-                                                exchangeRate, 100000000),
+                                                widget.exchangeRate, 100000000),
                                         // value: price,
-                                        fractionDigits: ExchangeCalculator.getDisplayDigit(exchangeRate),
+                                        fractionDigits:
+                                            ExchangeCalculator.getDisplayDigit(
+                                                widget.exchangeRate),
                                         textStyle: FontManager.body2Median(
                                             ProtonColors.textNorm)),
                                     const SizedBox(
@@ -123,11 +179,11 @@ class BitcoinPriceBox extends StatelessWidget {
                                 )
                         ],
                       ),
-                      if (exchangeRate.id != "default")
+                      if (widget.exchangeRate.id != "default" || isLoading)
                         Expanded(
                           child: BitcoinPriceHomepageChart(
-                            exchangeRate: exchangeRate,
-                            priceClient: priceClient,
+                            exchangeRate: widget.exchangeRate,
+                            priceClient: widget.priceClient,
                             priceChange: priceChange,
                           ),
                         ),
