@@ -15,7 +15,6 @@ import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
-import 'package:wallet/managers/providers/local.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -136,7 +135,6 @@ class DataProviderManager extends Manager {
   late AddressKeyProvider addressKeyProvider;
   late ServerTransactionDataProvider serverTransactionDataProvider;
   late BDKTransactionDataProvider bdkTransactionDataProvider;
-  late LocalTransactionDataProvider localTransactionDataProvider;
   late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   late BalanceDataProvider balanceDataProvider;
   late GatewayDataProvider gatewayDataProvider;
@@ -214,13 +212,6 @@ class DataProviderManager extends Manager {
       DBHelper.accountDao!,
       apiService,
       shared,
-    );
-    localTransactionDataProvider = LocalTransactionDataProvider(
-      apiService.getWalletClient(),
-      DBHelper.walletDao!,
-      DBHelper.accountDao!,
-      DBHelper.transactionInfoDao!,
-      userID,
     );
 
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(

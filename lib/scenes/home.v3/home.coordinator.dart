@@ -194,7 +194,6 @@ class HomeCoordinator extends Coordinator {
     /// build wallet transaction feature bloc
     final walletTransactionBloc = WalletTransactionBloc(
       userManager,
-      dataProviderManager.localTransactionDataProvider,
       dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.serverTransactionDataProvider,
       dataProviderManager.addressKeyProvider,
