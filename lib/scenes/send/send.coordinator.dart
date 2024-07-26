@@ -48,7 +48,6 @@ class SendCoordinator extends Coordinator {
       dataProvider.protonEmailAddressProvider,
       dataProvider.exclusiveInviteDataProvider,
       dataProvider.userSettingsDataProvider,
-      dataProvider.localTransactionDataProvider,
       dataProvider.walletDataProvider,
       apiServiceManager.getApiService().getInviteClient(),
     );

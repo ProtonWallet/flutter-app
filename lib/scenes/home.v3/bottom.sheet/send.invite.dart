@@ -46,19 +46,18 @@ class SendInviteSheet {
                 width: 240,
                 height: 167,
               ),
-              const SizedBox(height: 20),
               Text(
                 S.of(context).exclusive_invites,
                 style: FontManager.titleHeadline(ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               Text(
                 S.of(context).exclusive_invites_content,
                 style: FontManager.body2Regular(ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               DropdownButtonV2(
                 width: MediaQuery.of(context).size.width,
                 labelText: S.of(context).send_from_email,
@@ -117,7 +116,7 @@ class SendInviteSheet {
                   ),
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
               ButtonV6(
                   onPressed: () async {
                     final email = emailController.text;
