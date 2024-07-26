@@ -319,7 +319,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
     if (selected.provider == GatewayProvider.ramp) {
       configuration.hostLogoUrl =
-          "https://th.bing.com/th/id/R.984dd7865d06ed7186f77236ae88c3ad?rik=gVkHMUQFXNwzJQ&pid=ImgRaw&r=0";
+          "https://res.cloudinary.com/dbulfrlrz/image/upload/v1703162849/static/logos/texts/proton-purple_lf83vr.svg";
       configuration.enabledFlows =
           supportOffRamp ? ["ONRAMP", "OFFRAMP"] : ["ONRAMP"];
       configuration.swapAsset = "BTC_BTC";
