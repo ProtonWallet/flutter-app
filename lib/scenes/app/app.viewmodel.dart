@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/local_notification.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
@@ -40,7 +39,7 @@ class AppViewModelImpl extends AppViewModel {
     final apiEnv = config.apiEnv;
 
     /// setup local services
-    LocalNotification.init();
+    // LocalNotification.init();
 
     /// local auth manager
     final localAuth = LocalAuthManager();

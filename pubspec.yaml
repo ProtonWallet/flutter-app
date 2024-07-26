@@ -86,7 +86,6 @@ dependencies:
   flutter_easyloading: ^3.0.5
   connectivity_plus: ^6.0.1
   toggle_switch: ^2.3.0
-  mobile_scanner: ^5.1.0
   xml: ^6.5.0
   # https://docs.ramp.network/mobile/flutter-sdk
   # issues: https://developers.google.com/ml-kit/known-issues#ios_issues
@@ -130,6 +129,11 @@ dependencies:
   # sentry_flutter: ^8.3.0
   sentry: ^8.3.0
   permission_handler: ^11.3.1
+  # workaround for java complier error. ref repo only changed gradle file
+  qr_code_scanner:
+    git:
+      url: https://github.com/dola99/qr_code_scanner
+      ref: update
 
 dependency_overrides:
   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
