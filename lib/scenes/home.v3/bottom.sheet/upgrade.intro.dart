@@ -7,12 +7,10 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class UpgradeIntroSheet {
-  static void show(BuildContext context, HomeViewModel viewModel) {
+  static void show(BuildContext context, VoidCallback? onPressed) {
     HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -53,7 +51,7 @@ class UpgradeIntroSheet {
                         onPressed: () async {
                           Navigator.of(context).pop();
                           EasyLoading.show(maskType: EasyLoadingMaskType.black);
-                          await viewModel.move(NavID.nativeUpgrade);
+                          onPressed?.call();
                           EasyLoading.dismiss();
                         },
                         text: S.of(context).upgrade_now,

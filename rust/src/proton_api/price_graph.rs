@@ -12,6 +12,7 @@ pub enum _Timeframe {
 }
 
 #[frb(mirror(DataPoint))]
+#[allow(non_snake_case)]
 pub struct _DataPoint {
     pub ExchangeRate: u64,
     pub Cents: u8,
@@ -19,6 +20,7 @@ pub struct _DataPoint {
 }
 
 #[frb(mirror(PriceGraph))]
+#[allow(non_snake_case)]
 pub struct _PriceGraph {
     pub FiatCurrency: FiatCurrency,
     pub BitcoinUnit: BitcoinUnit,

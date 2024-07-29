@@ -10,24 +10,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These types are ignored because they are not used by any `pub` functions: `OnchainStore`, `STATIC_CHANGESET`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `build`, `clear`, `clone`, `clone`, `deref`, `fmt`, `initialize`, `read`, `write`
 
-class OnchainStoreFactory {
-  final String folderPath;
-
-  const OnchainStoreFactory.raw({
-    required this.folderPath,
-  });
-
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>
+abstract class OnchainStoreFactory implements RustOpaqueInterface {
   factory OnchainStoreFactory({required String folderPath}) => RustLib
       .instance.api
       .crateApiBdkWalletStorageOnchainStoreFactoryNew(folderPath: folderPath);
-
-  @override
-  int get hashCode => folderPath.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OnchainStoreFactory &&
-          runtimeType == other.runtimeType &&
-          folderPath == other.folderPath;
 }

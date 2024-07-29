@@ -8,6 +8,7 @@ import '../../common/network.dart';
 import '../../common/pagination.dart';
 import '../../common/script_type.dart';
 import '../../frb_generated.dart';
+import '../api_service/proton_api_service.dart';
 import 'account.dart';
 import 'balance.dart';
 import 'derivation_path.dart';
@@ -18,12 +19,33 @@ import 'transaction_details.dart';
 // These functions are ignored because they are not marked as `pub`: `get_inner`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DiscoveredAccount>>
+abstract class DiscoveredAccount implements RustOpaqueInterface {
+  FrbDerivationPath get derivationPath;
+
+  int get index;
+
+  ScriptType get scriptType;
+
+  set derivationPath(FrbDerivationPath derivationPath);
+
+  set index(int index);
+
+  set scriptType(ScriptType scriptType);
+}
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>>
 abstract class FrbWallet implements RustOpaqueInterface {
   FrbAccount addAccount(
       {required ScriptType scriptType,
       required String derivationPath,
       required OnchainStoreFactory storageFactory});
+
+  Future<List<DiscoveredAccount>> discoverAccount(
+      {required ProtonApiService apiService,
+      required OnchainStoreFactory storageFactory,
+      required int accountStopGap,
+      required BigInt addressStopGap});
 
   FrbAccount? getAccount({required String derivationPath});
 
