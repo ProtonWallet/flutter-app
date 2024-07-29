@@ -154,7 +154,10 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<int> getNewDerivationAccountIndex(
-      String walletID, ScriptTypeInfo scriptType, CoinType coinType) async {
+    String walletID,
+    ScriptTypeInfo scriptType,
+    CoinType coinType,
+  ) async {
     String derivationPath = "";
     int newAccountIndex = 0;
     final wallet = await getWallet(walletID);
@@ -177,8 +180,11 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<String> getNewDerivationPathBy(
-      String walletID, ScriptTypeInfo scriptType, CoinType coinType,
-      {int? accountIndex}) async {
+    String walletID,
+    ScriptTypeInfo scriptType,
+    CoinType coinType, {
+    int? accountIndex,
+  }) async {
     String derivationPath = "";
     int newAccountIndex = 0;
     if (accountIndex != null) {
@@ -199,7 +205,10 @@ class WalletsDataProvider extends DataProvider {
   }
 
   String formatDerivationPath(
-      ScriptTypeInfo scriptType, CoinType coinType, int accountIndex) {
+    ScriptTypeInfo scriptType,
+    CoinType coinType,
+    int accountIndex,
+  ) {
     final String derivationPath =
         "${scriptType.bipVersion}'/${coinType.type}'/$accountIndex'";
     return derivationPath;

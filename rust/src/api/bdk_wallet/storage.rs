@@ -12,15 +12,19 @@ use log::info;
 
 use bdk_sqlite::{rusqlite::Connection, Store};
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct OnchainStoreFactory {
-    pub folder_path: String,
+    pub folder_path: &'static str,
 }
 
 impl OnchainStoreFactory {
     #[frb(sync)]
     pub fn new(folder_path: String) -> Self {
-        Self { folder_path }
+        // Leak the memory of the String to get a &'static str will change to clone
+        let folder_path_static: &'static str = Box::leak(folder_path.into_boxed_str());
+        Self {
+            folder_path: folder_path_static,
+        }
     }
 }
 

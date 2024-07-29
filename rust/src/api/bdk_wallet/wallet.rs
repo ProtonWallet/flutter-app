@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 // wallet.rs
 use flutter_rust_bridge::frb;
 
@@ -11,7 +13,13 @@ use super::{
     storage::{OnchainStore, OnchainStoreFactory},
     transaction_details::FrbTransactionDetails,
 };
-use crate::BridgeError;
+use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
+
+pub struct DiscoveredAccount {
+    pub script_type: ScriptType,
+    pub index: u32,
+    pub derivation_path: FrbDerivationPath,
+}
 
 #[derive(Debug)]
 pub struct FrbWallet {
@@ -34,6 +42,35 @@ impl FrbWallet {
         let wallet =
             andromeda_bitcoin::wallet::Wallet::new(network, bip39_mnemonic, bip38_passphrase)?;
         Ok(FrbWallet { inner: wallet })
+    }
+
+    pub async fn discover_account(
+        &self,
+        api_service: ProtonAPIService,
+        storage_factory: OnchainStoreFactory,
+        account_stop_gap: u32,
+        address_stop_gap: usize,
+    ) -> Result<Vec<DiscoveredAccount>, BridgeError> {
+        let found = self
+            .inner
+            .discover_accounts(
+                api_service.inner.deref().clone(),
+                storage_factory,
+                Some(account_stop_gap),
+                Some(address_stop_gap),
+            )
+            .await?;
+
+        let out_vec = found
+            .into_iter()
+            .map(|(script_type, index, derivation_path)| DiscoveredAccount {
+                script_type,
+                index,
+                derivation_path: derivation_path.into(),
+            })
+            .collect();
+
+        Ok(out_vec)
     }
 
     #[frb(sync)]
@@ -127,9 +164,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory {
-            folder_path: ".".to_string(),
-        };
+        let storage_factory = OnchainStoreFactory { folder_path: "." };
         let network = Network::Testnet;
         let bip39_mnemonic =
                 // "deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough"
@@ -228,9 +263,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory {
-            folder_path: ".".to_string(),
-        };
+        let storage_factory = OnchainStoreFactory { folder_path: "." };
         let network = Network::Bitcoin;
         let bip39_mnemonic =
             "shoe foot noise erode merit good gesture wolf boring build trim zero".to_string();
