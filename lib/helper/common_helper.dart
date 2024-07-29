@@ -193,4 +193,9 @@ class CommonHelper {
           : S.of(context).received_time_ago(timeAgo);
     }
   }
+
+  static bool isPrimaryAccount(String derivationPath){
+    final String cleanPath = derivationPath.replaceAll("m/", "");
+    return cleanPath == "84'/0'/0'";
+  }
 }

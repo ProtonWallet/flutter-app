@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -10,7 +9,10 @@ import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class BvEPrivacyLearnMoreSheet {
-  static void show(BuildContext context) {
+  static void show(
+    BuildContext context, {
+    bool isPrimaryAccount = false,
+  }) {
     HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -25,7 +27,9 @@ class BvEPrivacyLearnMoreSheet {
         const SizedBox(height: 20),
         Column(children: [
           Text(
-            S.of(context).bve_privacy_learn_more,
+            isPrimaryAccount
+                ? S.of(context).bve_privacy_primary_account_learn_more
+                : S.of(context).bve_privacy_learn_more,
             style: FontManager.body2Regular(ProtonColors.textWeak),
             textAlign: TextAlign.center,
           ),
