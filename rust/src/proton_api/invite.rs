@@ -9,6 +9,7 @@ pub enum _InviteNotificationType {
 }
 
 #[frb(mirror(RemainingMonthlyInvitations))]
+#[allow(non_snake_case)]
 pub struct _RemainingMonthlyInvitations {
     pub Used: u8,
     pub Available: u8,

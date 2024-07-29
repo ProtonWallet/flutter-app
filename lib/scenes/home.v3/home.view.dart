@@ -884,7 +884,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               /// home more settings
                               HomeMoreSettings(
                                 onUpgrade: () {
-                                  UpgradeIntroSheet.show(context, viewModel);
+                                  UpgradeIntroSheet.show(context, () {
+                                    viewModel.move(NavID.nativeUpgrade);
+                                  });
                                 },
                                 onDiscover: () {
                                   viewModel.move(NavID.discover);

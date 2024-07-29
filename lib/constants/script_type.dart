@@ -41,4 +41,14 @@ class ScriptTypeInfo {
       type: ScriptType.taproot);
 
   static List scripts = [legacy, nestedSegWit, nativeSegWit, taproot];
+
+  // Function to look up ScriptTypeInfo by type
+  static ScriptTypeInfo? lookupByType(ScriptType type) {
+    for (final info in scripts) {
+      if (info.type == type) {
+        return info;
+      }
+    }
+    return null;
+  }
 }
