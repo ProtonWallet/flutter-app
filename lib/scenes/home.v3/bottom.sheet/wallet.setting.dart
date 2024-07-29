@@ -436,10 +436,11 @@ class WalletSettingSheet {
                                                         .accountModel
                                                         .accountID] ??
                                                 false) &&
-                                            accountMenuModel
-                                                    .accountModel.derivationPath
-                                                    .replaceAll("m/", "") ==
-                                                "84'/0'/0'")
+                                            (CommonHelper.isPrimaryAccount(
+                                                    accountMenuModel
+                                                        .accountModel
+                                                        .derivationPath) ||
+                                                accountMenuModel.balance > 0))
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Padding(
@@ -478,8 +479,13 @@ class WalletSettingSheet {
                                                           recognizer:
                                                               TapGestureRecognizer()
                                                                 ..onTap = () {
-                                                                  Navigator.of(context).pop();
-                                                                  AddWalletAccountSheet.show(context, viewModel, walletMenuModel2);
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  AddWalletAccountSheet.show(
+                                                                      context,
+                                                                      viewModel,
+                                                                      walletMenuModel2);
                                                                 },
                                                         ),
                                                         TextSpan(
@@ -498,7 +504,14 @@ class WalletSettingSheet {
                                                     GestureDetector(
                                                         onTap: () {
                                                           BvEPrivacyLearnMoreSheet
-                                                              .show(context);
+                                                              .show(
+                                                            context,
+                                                            isPrimaryAccount: CommonHelper
+                                                                .isPrimaryAccount(
+                                                                    accountMenuModel
+                                                                        .accountModel
+                                                                        .derivationPath),
+                                                          );
                                                         },
                                                         child: Text(
                                                             S
