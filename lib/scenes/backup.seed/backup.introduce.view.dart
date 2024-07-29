@@ -4,16 +4,16 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class BackupIntroduceView extends StatelessWidget {
-  final VoidCallback? onPressed;
+  final FutureCallback onPressed;
 
   const BackupIntroduceView({
+    required this.onPressed,
     super.key,
-    this.onPressed,
   });
 
   @override
@@ -48,8 +48,7 @@ class BackupIntroduceView extends StatelessWidget {
                     const SizedBox(height: 20),
                     Underline(
                       onTap: () {
-                        ExternalUrl.shared
-                            .launchBlogSeedPhrase();
+                        ExternalUrl.shared.launchBlogSeedPhrase();
                       },
                       color: ProtonColors.brandLighten20,
                       child: Text(
@@ -67,7 +66,7 @@ class BackupIntroduceView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-          child: ButtonV5(
+          child: ButtonV6(
             onPressed: onPressed,
             backgroundColor: ProtonColors.protonBlue,
             text: S.of(context).view_wallet_mnemonic,

@@ -7,8 +7,10 @@ import 'proton.feeditem.dart';
 class DiscoverFeedsView extends StatelessWidget {
   final List<ProtonFeedItem> protonFeedItems;
   final void Function(String)? onTap;
+
   const DiscoverFeedsView(
       {required this.protonFeedItems, super.key, this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +22,8 @@ class DiscoverFeedsView extends StatelessWidget {
               onTap!(item.link);
             }
           },
-          avatar: _CoverImages.getCoverImage(item.title, protonFeedItems.indexOf(item)),
+          avatar: _CoverImages.getCoverImage(
+              item.title, protonFeedItems.indexOf(item)),
         );
       }).toList(),
     );
@@ -31,6 +34,7 @@ class _DiscoverFeedView extends StatelessWidget {
   final ProtonFeedItem protonFeedItem;
   final GestureTapCallback? onTap;
   final Widget avatar;
+
   // final
 
   const _DiscoverFeedView(
@@ -55,33 +59,57 @@ class _DiscoverFeedView extends StatelessWidget {
 }
 
 class _CoverImages {
-  static final List<SvgGenImage> _imagePaths = [
-    Assets.images.icon.discoverPlaceholder0,
-    Assets.images.icon.discoverPlaceholder1,
-    Assets.images.icon.discoverPlaceholder2,
-    Assets.images.icon.discoverPlaceholder3,
-    Assets.images.icon.discoverPlaceholder4
+  static final List<AssetGenImage> _imagePaths = [
+    Assets.images.icon.discoverWhatIsBitcoin,
   ];
 
   static Widget getCoverImage(String title, int index) {
-    if (title.toLowerCase().contains("guide for newcomers")){
-      return Assets.images.icon.discoverBitcoinGuide.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("guide for newcomers")) {
+      return Assets.images.icon.discoverBitcoinGuide.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    if (title.toLowerCase().contains("what is bitcoin")){
-      return Assets.images.icon.discoverWhatIsBitcoin.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("what is bitcoin")) {
+      return Assets.images.icon.discoverWhatIsBitcoin.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    if (title.toLowerCase().contains("proton wallet launch")){
-      return Assets.images.icon.discoverProtonWalletLaunch.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("proton wallet launch")) {
+      return Assets.images.icon.discoverProtonWalletLaunch.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    if (title.toLowerCase().contains("proton wallet security")){
-      return Assets.images.icon.discoverProtonWalletSecurity.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("proton wallet security")) {
+      return Assets.images.icon.discoverProtonWalletSecurity.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    if (title.toLowerCase().contains("bitcoin via email")){
-      return Assets.images.icon.discoverBve.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("bitcoin via email")) {
+      return Assets.images.icon.discoverBve.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    if (title.toLowerCase().contains("protect your proton wallet")){
-      return Assets.images.icon.discoverHowToProtect.image(fit: BoxFit.fill, width: 104, height: 104,);
+    if (title.toLowerCase().contains("protect your proton wallet")) {
+      return Assets.images.icon.discoverHowToProtect.image(
+        fit: BoxFit.fill,
+        width: 104,
+        height: 104,
+      );
     }
-    return _imagePaths[index % _imagePaths.length].svg(fit: BoxFit.fill, width: 104, height: 104,);
+    return _imagePaths[0].image(
+      fit: BoxFit.fill,
+      width: 104,
+      height: 104,
+    );
   }
 }

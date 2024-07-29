@@ -147,6 +147,8 @@ class DeleteWalletSheet {
                                   isDeleting = false;
                                 }
                               },
+                              isLoading: loading,
+                              enable: !loading,
                               text: S.of(context).delete_wallet_now,
                               width: MediaQuery.of(context).size.width,
                               backgroundColor: ProtonColors.signalError,

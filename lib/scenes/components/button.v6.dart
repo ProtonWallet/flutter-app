@@ -14,6 +14,7 @@ class ButtonV6 extends StatefulWidget {
   final TextStyle textStyle;
   final FutureCallback? onPressed;
   final bool enable;
+  final bool? isLoading;
   final Size? maximumSize;
 
   const ButtonV6({
@@ -32,6 +33,7 @@ class ButtonV6 extends StatefulWidget {
       fontWeight: FontWeight.w400,
     ),
     this.enable = true,
+    this.isLoading,
     this.maximumSize = Size.infinite,
   });
 
@@ -48,6 +50,7 @@ class ButtonV6State extends State<ButtonV6>
   void initState() {
     // TODO(fix): implement initState
     super.initState();
+    isLoading = widget.isLoading ?? false;
     enable = widget.enable;
   }
 
@@ -56,6 +59,7 @@ class ButtonV6State extends State<ButtonV6>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.enable != widget.enable) {
       setState(() {
+        isLoading = widget.isLoading ?? false;
         enable = widget.enable;
       });
     }

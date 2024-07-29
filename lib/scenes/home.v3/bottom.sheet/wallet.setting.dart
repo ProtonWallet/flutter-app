@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,7 +25,9 @@ import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/bve.privacy.learn.more.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.v2.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -352,7 +355,7 @@ class WalletSettingSheet {
                                                   Text(
                                                       S
                                                           .of(context)
-                                                          .email_integration,
+                                                          .receive_bitcoin_via_email,
                                                       style: FontManager
                                                           .body2Regular(
                                                               ProtonColors
@@ -428,6 +431,88 @@ class WalletSettingSheet {
                                                     },
                                                   )
                                                 ])),
+                                        if (!(emailIntegrationEnables[
+                                                    accountMenuModel
+                                                        .accountModel
+                                                        .accountID] ??
+                                                false) &&
+                                            accountMenuModel
+                                                    .accountModel.derivationPath
+                                                    .replaceAll("m/", "") ==
+                                                "84'/0'/0'")
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 6,
+                                                left: defaultPadding,
+                                                right: defaultPadding,
+                                              ),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text.rich(
+                                                      textAlign: TextAlign.left,
+                                                      TextSpan(children: [
+                                                        TextSpan(
+                                                          text: S
+                                                              .of(context)
+                                                              .bve_warning_1,
+                                                          style: FontManager
+                                                              .body2Regular(
+                                                            ProtonColors
+                                                                .textNorm,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: S
+                                                              .of(context)
+                                                              .bve_warning_create_new_account,
+                                                          style: FontManager
+                                                              .linkUnderline(
+                                                            ProtonColors
+                                                                .textNorm,
+                                                          ).copyWith(
+                                                              fontSize: 14),
+                                                          recognizer:
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  Navigator.of(context).pop();
+                                                                  AddWalletAccountSheet.show(context, viewModel, walletMenuModel2);
+                                                                },
+                                                        ),
+                                                        TextSpan(
+                                                          text: S
+                                                              .of(context)
+                                                              .bve_warning_2,
+                                                          style: FontManager
+                                                              .body2Regular(
+                                                            ProtonColors
+                                                                .textNorm,
+                                                          ),
+                                                        ),
+                                                      ]),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    GestureDetector(
+                                                        onTap: () {
+                                                          BvEPrivacyLearnMoreSheet
+                                                              .show(context);
+                                                        },
+                                                        child: Text(
+                                                            S
+                                                                .of(context)
+                                                                .learn_more,
+                                                            style: FontManager
+                                                                .linkUnderline(
+                                                              ProtonColors
+                                                                  .textNorm,
+                                                            ).copyWith(
+                                                                fontSize: 14))),
+                                                  ]),
+                                            ),
+                                          ),
                                         const SizedBox(height: 10),
                                         for (String addressID
                                             in accountMenuModel.emailIds)

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,6 +44,36 @@ class ExternalUrl {
       "https://apps.apple.com/developer/proton-ag/id979659484";
 
   final String upgradeRequired = "https://proton.me/support/update-required";
+
+  final String protonMailGooglePlayUrl =
+      "https://play.google.com/store/apps/details?id=ch.protonmail.android";
+
+  final String protonCalendarGooglePlayUrl =
+      "https://play.google.com/store/apps/details?id=me.proton.android.calendar";
+
+  final String protonDriveGooglePlayUrl =
+      "https://play.google.com/store/apps/details?id=me.proton.android.drive";
+
+  final String protonPassGooglePlayUrl =
+      "https://play.google.com/store/apps/details?id=proton.android.pass";
+
+  final String protonMailAppStoreUrl =
+      "https://apps.apple.com/us/app/proton-mail-encrypted-email/id979659905";
+
+  final String protonCalendarAppStoreUrl =
+      "https://apps.apple.com/us/app/proton-calendar-secure-events/id1514709943";
+
+  final String protonDriveAppStoreUrl =
+      "https://apps.apple.com/us/app/proton-drive-photo-backup/id1509667851";
+
+  final String protonPassAppStoreUrl =
+      "https://apps.apple.com/us/app/proton-pass-password-manager/id6443490629";
+
+  final String protonMailUrl = "https://proton.me/mail";
+  final String protonCalendarUrl = "https://proton.me/calendar";
+  final String protonDriveUrl = "https://proton.me/drive";
+  final String protonPassUrl = "https://proton.me/pass";
+  final String protonForBusinessUrl = "https://proton.me/business";
 
   // Method to launch a URL
   void launchString(String strUrl) {
@@ -99,6 +131,50 @@ class ExternalUrl {
 
   void lanuchAppStore() {
     launchString(appStoreUrl);
+  }
+
+  void launchProtonMail() {
+    if (Platform.isAndroid) {
+      launchString(protonMailGooglePlayUrl);
+    } else if (Platform.isIOS) {
+      launchString(protonMailAppStoreUrl);
+    } else {
+      launchString(protonMailUrl);
+    }
+  }
+
+  void launchProtonCalendar() {
+    if (Platform.isAndroid) {
+      launchString(protonCalendarGooglePlayUrl);
+    } else if (Platform.isIOS) {
+      launchString(protonCalendarAppStoreUrl);
+    } else {
+      launchString(protonCalendarUrl);
+    }
+  }
+
+  void launchProtonDrive() {
+    if (Platform.isAndroid) {
+      launchString(protonDriveGooglePlayUrl);
+    } else if (Platform.isIOS) {
+      launchString(protonDriveAppStoreUrl);
+    } else {
+      launchString(protonDriveUrl);
+    }
+  }
+
+  void launchProtonPass() {
+    if (Platform.isAndroid) {
+      launchString(protonPassGooglePlayUrl);
+    } else if (Platform.isIOS) {
+      launchString(protonPassAppStoreUrl);
+    } else {
+      launchString(protonPassUrl);
+    }
+  }
+
+  void launchProtonForBusiness() {
+    launchString(protonForBusinessUrl);
   }
 
   void lanuchStore() {
