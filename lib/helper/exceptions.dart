@@ -35,3 +35,18 @@ String? parseSessionExpireError(BridgeError exception) {
     orElse: () => null,
   );
 }
+
+String? parseUserLimitationError(BridgeError exception) {
+  final error = exception.maybeMap(
+    apiResponse: (e) => e.field0,
+    orElse: () => null,
+  );
+  if (error != null) {
+    if (error.error.toLowerCase() ==
+        "You have reached the creation limit for this type of wallet account"
+            .toLowerCase()) {
+      return error.error;
+    }
+  }
+  return null;
+}

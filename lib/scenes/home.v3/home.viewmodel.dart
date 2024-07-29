@@ -1006,7 +1006,9 @@ class HomeViewModelImpl extends HomeViewModel {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
-          UpgradeIntroSheet.show(context, this);
+          UpgradeIntroSheet.show(context, () async {
+            await move(NavID.nativeUpgrade);
+          });
         }
         return false;
       }
@@ -1202,7 +1204,9 @@ class HomeViewModelImpl extends HomeViewModel {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
-          UpgradeIntroSheet.show(context, this);
+          UpgradeIntroSheet.show(context, () async {
+            await move(NavID.nativeUpgrade);
+          });
         }
         return false;
       }

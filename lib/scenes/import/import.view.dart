@@ -147,11 +147,14 @@ class ImportView extends ViewBase<ImportViewModel> {
                           onPressed: () async {
                             if (!viewModel.isImporting) {
                               viewModel.isImporting = true;
-                              await viewModel.importWallet();
-                              // TODO(check): why call end here
-                              viewModel.coordinator.end();
+                              final bool isSuccess =
+                                  await viewModel.importWallet();
                               if (context.mounted) {
-                                Navigator.of(context).pop();
+                                if (isSuccess) {
+                                  Navigator.of(context).pop();
+                                  CommonHelper.showSnackbar(
+                                      context, S.of(context).wallet_imported);
+                                }
                                 if (viewModel.errorMessage.isEmpty) {
                                   // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
                                   // !viewModel.acceptTermsAndConditions
@@ -163,8 +166,6 @@ class ImportView extends ViewBase<ImportViewModel> {
                                             .userSettingsDataProvider
                                             .acceptTermsAndConditions);
                                   }
-                                  CommonHelper.showSnackbar(
-                                      context, S.of(context).wallet_imported);
                                 } else {
                                   CommonHelper.showErrorDialog(
                                     viewModel.errorMessage,

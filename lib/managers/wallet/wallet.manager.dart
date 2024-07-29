@@ -105,7 +105,7 @@ class WalletManager implements Manager {
       return found;
     }
 
-    final dbPath = await _getDatabaseFolderPath();
+    final dbPath = await getDatabaseFolderPath();
     final storage = OnchainStoreFactory(folderPath: dbPath);
     ScriptTypeInfo? scriptTypeInfo;
     for (ScriptTypeInfo info in ScriptTypeInfo.scripts) {
@@ -150,7 +150,7 @@ class WalletManager implements Manager {
   }
 
   // TODO(fix): fix me .temp move to better place
-  static Future<String> _getDatabaseFolderPath() async {
+  static Future<String> getDatabaseFolderPath() async {
     final folder = await _getDatabaseFolder();
     return folder.path;
   }

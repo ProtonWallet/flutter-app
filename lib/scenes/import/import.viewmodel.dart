@@ -16,14 +16,19 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
+import 'package:wallet/rust/api/bdk_wallet/storage.dart';
+import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/network.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
@@ -57,11 +62,12 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
 
   (bool, String) mnemonicValidation(String strMnemonic);
 
-  Future<void> importWallet();
+  Future<bool> importWallet();
 }
 
 class ImportViewModelImpl extends ImportViewModel {
   final String preInputWalletName;
+  final ProtonApiService apiService;
 
   final CreateWalletBloc createWalletBloc;
 
@@ -70,6 +76,7 @@ class ImportViewModelImpl extends ImportViewModel {
     super.dataProviderManager,
     this.preInputWalletName,
     this.createWalletBloc,
+    this.apiService,
   );
 
   @override
@@ -102,7 +109,7 @@ class ImportViewModelImpl extends ImportViewModel {
   }
 
   @override
-  Future<void> importWallet() async {
+  Future<bool> importWallet() async {
     WalletModel? walletModel;
     AccountModel? accountModel;
     try {
@@ -120,38 +127,84 @@ class ImportViewModelImpl extends ImportViewModel {
         strPassphrase,
       );
 
-      final apiWalletAccount = await createWalletBloc.createWalletAccount(
-        apiWallet.wallet.id,
-        scriptTypeInfo,
-        "Primary Account",
-        fiatCurrencyNotifier.value,
-        0, // default wallet account index
+      /// get fingerprint from mnemonic
+      final frbWallet = FrbWallet(
+        network: network,
+        bip39Mnemonic: strMnemonic,
+        bip38Passphrase: strPassphrase.isNotEmpty ? strPassphrase : null,
       );
-      final String walletID = apiWallet.wallet.id;
-      final String accountID = apiWalletAccount.id;
-      walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-      accountModel = await DBHelper.accountDao!.findByServerID(accountID);
-      if (isFirstWallet) {
-        /// Auto bind email address if it's first wallet
-        if (walletModel != null && accountModel != null) {
-          final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
-          if (protonAddress != null) {
-            await addEmailAddressToWalletAccount(
-              walletID,
-              walletModel,
-              accountModel,
-              protonAddress.id,
-            );
+
+      final dbPath = await WalletManager.getDatabaseFolderPath();
+      final storage = OnchainStoreFactory(folderPath: dbPath);
+      final foundAccounts = await frbWallet.discoverAccount(
+          apiService: apiService,
+          storageFactory: storage,
+          accountStopGap: 1,
+          addressStopGap: BigInt.from(10));
+
+      if (foundAccounts.isNotEmpty) {
+        var count = 1;
+        for (var element in foundAccounts) {
+          final sTypeInfo = ScriptTypeInfo.lookupByType(element.scriptType);
+          if (sTypeInfo == null) continue;
+          final apiWalletAccount = await createWalletBloc.createWalletAccount(
+            apiWallet.wallet.id,
+            sTypeInfo,
+            "Account $count",
+            fiatCurrencyNotifier.value,
+            element.index,
+          );
+          count += 1;
+          logger.d("new account: ${apiWalletAccount.label}");
+        }
+      } else {
+        final apiWalletAccount = await createWalletBloc.createWalletAccount(
+          apiWallet.wallet.id,
+          scriptTypeInfo,
+          "Primary Account",
+          fiatCurrencyNotifier.value,
+          0, // default wallet account index
+        );
+        final String walletID = apiWallet.wallet.id;
+        final String accountID = apiWalletAccount.id;
+        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+        if (isFirstWallet) {
+          /// Auto bind email address if it's first wallet
+          if (walletModel != null && accountModel != null) {
+            final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
+            if (protonAddress != null) {
+              await addEmailAddressToWalletAccount(
+                walletID,
+                walletModel,
+                accountModel,
+                protonAddress.id,
+              );
+            }
           }
         }
       }
     } on BridgeError catch (e, stacktrace) {
-      errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+
+      final limitError = parseUserLimitationError(e);
+      if (limitError != null) {
+        final BuildContext? context =
+            Coordinator.rootNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          UpgradeIntroSheet.show(context, () async {
+            await move(NavID.nativeUpgrade);
+          });
+        }
+      } else {
+        errorMessage = parseSampleDisplayError(e);
+      }
+      return false;
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+      errorMessage = e.toString();
     }
     if (walletModel != null && accountModel != null) {
       dataProviderManager.bdkTransactionDataProvider.syncWallet(
@@ -160,10 +213,20 @@ class ImportViewModelImpl extends ImportViewModel {
         forceSync: true,
       );
     }
+    if (errorMessage.isNotEmpty) {
+      return false;
+    }
+    return true;
   }
 
   @override
-  Future<void> move(NavID to) async {}
+  Future<void> move(NavID to) async {
+    switch (to) {
+      case NavID.nativeUpgrade:
+      default:
+        break;
+    }
+  }
 
   Future<void> addEmailAddressToWalletAccount(
     String serverWalletID,

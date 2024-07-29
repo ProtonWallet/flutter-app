@@ -23,13 +23,14 @@ class UnleashDataProvider extends DataProvider {
     // live example: 'https://wallet.proton.me/api/feature/v2/frontend'
     final hostApiPath = apiEnv.apiPath;
     const appName = 'ProtonWallet';
-    final duration = const Duration(minutes: 10).inSeconds;
+    final duration = const Duration(minutes: 3).inSeconds;
     unleashClient = UnleashClient(
         url: Uri.parse('$hostApiPath/feature/v2/frontend'),
         clientKey: '-',
         appName: appName,
         refreshInterval: duration,
         disableRefresh: true,
+        disableMetrics: true,
         customHeaders: {
           "User-Agent": userAgent,
           "X-Pm-Appversion": appVersion,

@@ -51,10 +51,10 @@ class QRScannerWidget extends StatefulWidget {
       {required this.textEditingController, super.key, this.callback});
 
   @override
-  _QRScannerWidgetState createState() => _QRScannerWidgetState();
+  QRScannerWidgetState createState() => QRScannerWidgetState();
 }
 
-class _QRScannerWidgetState extends State<QRScannerWidget> {
+class QRScannerWidgetState extends State<QRScannerWidget> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   bool _isProcessing = false;
