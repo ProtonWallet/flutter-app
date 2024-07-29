@@ -114,20 +114,23 @@ class EmailIntegrationDropdownV2Sheet {
                         LocalToast.showErrorToast(context,
                             S.of(context).email_already_linked_to_wallet);
                       } else {
-                        await viewModel.addEmailAddressToWalletAccount(
+                        final success =
+                            await viewModel.addEmailAddressToWalletAccount(
                           userWallet.walletID,
                           userWallet,
                           accountMenuModel.accountModel,
                           selectedEmailID!,
                         );
-                        setState(() {
-                          if (callback != null) {
-                            callback.call();
-                          }
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        });
+                        if (success) {
+                          setState(() {
+                            if (callback != null) {
+                              callback.call();
+                            }
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          });
+                        }
                       }
                     },
                     enable: selectedEmailID != null,

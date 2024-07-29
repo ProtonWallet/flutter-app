@@ -531,7 +531,11 @@ class WalletManager implements Manager {
         logger.e("handleBitcoinAddressRequests: accountModel is null");
         continue;
       }
-      if (walletBitcoinAddress.bitcoinAddress == null) {
+      if (walletBitcoinAddress.bitcoinAddress == null &&
+          walletBitcoinAddress.bitcoinAddressIndex != null) {
+        await refillBitcoinAddress(account, walletBitcoinAddress);
+      } else if (walletBitcoinAddress.bitcoinAddress == null &&
+          walletBitcoinAddress.bitcoinAddressIndex == null) {
         final WalletModel? walletModel =
             await DBHelper.walletDao!.findByServerID(serverWalletID);
         if (!hasSyncedBitcoinAddressIndex) {
@@ -552,8 +556,7 @@ class WalletManager implements Manager {
           );
           continue;
         }
-        // need plus 2 since the lastUsedIndex + 1 is used for manual receive
-        final int addressIndex = accountModel.lastUsedIndex + 2;
+        final int addressIndex = accountModel.lastUsedIndex + 1;
         final addressInfo = await account.getAddress(index: addressIndex);
         final String address = addressInfo.address;
         final String signature = await getSignature(
@@ -582,7 +585,7 @@ class WalletManager implements Manager {
         } catch (e) {
           logger.e(e.toString());
         }
-        accountModel.lastUsedIndex = accountModel.lastUsedIndex + 2;
+        accountModel.lastUsedIndex = accountModel.lastUsedIndex + 1;
         await updateLastUsedIndex(accountModel);
       }
     }
@@ -621,6 +624,40 @@ class WalletManager implements Manager {
     );
   }
 
+  static Future<ApiWalletBitcoinAddress?> refillBitcoinAddress(
+    FrbAccount account,
+    ApiWalletBitcoinAddress walletBitcoinAddress,
+  ) async {
+    try {
+      if (walletBitcoinAddress.bitcoinAddressIndex == null) {
+        return null;
+      }
+      final addressInfo = await account.getAddress(
+          index: walletBitcoinAddress.bitcoinAddressIndex!.toInt());
+      final String address = addressInfo.address;
+      final String signature = await getSignature(
+        walletBitcoinAddress.walletAccountId,
+        address,
+        gpgContextWalletBitcoinAddress,
+      );
+      final BitcoinAddress bitcoinAddress = BitcoinAddress(
+          bitcoinAddress: address,
+          bitcoinAddressSignature: signature,
+          bitcoinAddressIndex: BigInt.from(addressInfo.index));
+
+      final updatedWalletBitcoinAddress = await proton_api.updateBitcoinAddress(
+        walletId: walletBitcoinAddress.walletId,
+        walletAccountId: walletBitcoinAddress.walletAccountId,
+        walletAccountBitcoinAddressId: walletBitcoinAddress.id,
+        bitcoinAddress: bitcoinAddress,
+      );
+      return updatedWalletBitcoinAddress;
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    return null;
+  }
+
   static Future<void> bitcoinAddressPoolHealthCheck(
     FrbAccount account,
     String serverWalletID,
@@ -641,6 +678,18 @@ class WalletManager implements Manager {
     for (var walletBitcoinAddress in walletBitcoinAddresses) {
       try {
         final String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
+        if (bitcoinAddress.isEmpty) {
+          /// the address will be wiped by BE when BvE is off
+          /// need to refill it when user turn BvE on again
+          final ApiWalletBitcoinAddress? updatedWalletBitcoinAddress =
+              await refillBitcoinAddress(account, walletBitcoinAddress);
+          if (updatedWalletBitcoinAddress != null) {
+            walletBitcoinAddress = updatedWalletBitcoinAddress;
+          } else {
+            continue; //skip since some error occur
+          }
+        }
+
         final int addressIndex =
             walletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? -1;
         if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
@@ -715,9 +764,7 @@ class WalletManager implements Manager {
         return;
       }
       for (int offset = 0; offset < addingCount; offset++) {
-        final int addressIndex = accountModel.lastUsedIndex +
-            offset +
-            2; // need plus 2 since the lastUsedIndex + 1 is used for manual receive
+        final int addressIndex = accountModel.lastUsedIndex + offset + 1;
         logger.d(
           "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID",
         );

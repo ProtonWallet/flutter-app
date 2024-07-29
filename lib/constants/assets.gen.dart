@@ -321,6 +321,26 @@ class $AssetsImagesIconGen {
   SvgGenImage get protect =>
       const SvgGenImage('assets/images/icon/protect.svg');
 
+  /// File path: assets/images/icon/proton_calendar.svg
+  SvgGenImage get protonCalendar =>
+      const SvgGenImage('assets/images/icon/proton_calendar.svg');
+
+  /// File path: assets/images/icon/proton_drive.svg
+  SvgGenImage get protonDrive =>
+      const SvgGenImage('assets/images/icon/proton_drive.svg');
+
+  /// File path: assets/images/icon/proton_for_business.svg
+  SvgGenImage get protonForBusiness =>
+      const SvgGenImage('assets/images/icon/proton_for_business.svg');
+
+  /// File path: assets/images/icon/proton_mail.svg
+  SvgGenImage get protonMail =>
+      const SvgGenImage('assets/images/icon/proton_mail.svg');
+
+  /// File path: assets/images/icon/proton_pass.svg
+  SvgGenImage get protonPass =>
+      const SvgGenImage('assets/images/icon/proton_pass.svg');
+
   /// File path: assets/images/icon/ramp.svg
   SvgGenImage get ramp => const SvgGenImage('assets/images/icon/ramp.svg');
 
@@ -476,6 +496,11 @@ class $AssetsImagesIconGen {
         paperPlane,
         passphraseLock,
         protect,
+        protonCalendar,
+        protonDrive,
+        protonForBusiness,
+        protonMail,
+        protonPass,
         ramp,
         receive,
         search,

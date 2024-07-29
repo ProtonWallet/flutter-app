@@ -41,10 +41,29 @@ class WelcomeDialogSheet {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              Text(
-                S.of(context).welcome_to_content(email),
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+              Text.rich(
                 textAlign: TextAlign.center,
+                TextSpan(children: [
+                  TextSpan(
+                    text: S.of(context).welcome_to_content_1,
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                  TextSpan(
+                    text: email,
+                    style: FontManager.body2Median(
+                      ProtonColors.textNorm,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = () {},
+                  ),
+                  TextSpan(
+                    text: S.of(context).welcome_to_content_2,
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                ]),
               ),
               const SizedBox(height: 30),
               Padding(

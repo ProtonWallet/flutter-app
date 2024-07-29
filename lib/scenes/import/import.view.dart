@@ -16,7 +16,7 @@ import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/import.success.dialog.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -153,13 +153,11 @@ class ImportView extends ViewBase<ImportViewModel> {
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                                 if (viewModel.errorMessage.isEmpty) {
-                                  if (viewModel.isFirstWallet &&
-                                      !viewModel.acceptTermsAndConditions) {
-                                    WelcomeDialogSheet.show(
+                                  // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
+                                  // !viewModel.acceptTermsAndConditions
+                                  if (viewModel.isFirstWallet) {
+                                    ImportSuccessDialogSheet.show(
                                         context,
-                                        viewModel.protonAddresses.firstOrNull
-                                                ?.email ??
-                                            "",
                                         viewModel
                                             .dataProviderManager
                                             .userSettingsDataProvider
