@@ -236,9 +236,10 @@ class OnboardingGuideSheet {
                                                 .passphrase_are_not_match);
                                       }
                                       isCreatingWallet = false;
+                                      // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
+                                      // !viewModel.acceptTermsAndConditions
                                       if (context.mounted &&
                                           firstWallet &&
-                                          !viewModel.acceptTermsAndConditions &&
                                           success) {
                                         WelcomeDialogSheet.show(
                                           context,
