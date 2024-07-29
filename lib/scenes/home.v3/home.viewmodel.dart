@@ -212,7 +212,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   Future<void> deleteAccount(
       WalletModel walletModel, AccountModel accountModel);
 
-  Future<void> addEmailAddressToWalletAccount(
+  Future<bool> addEmailAddressToWalletAccount(
       String serverWalletID,
       WalletModel walletModel,
       AccountModel accountModel,
@@ -1018,7 +1018,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> addEmailAddressToWalletAccount(
+  Future<bool> addEmailAddressToWalletAccount(
     String serverWalletID,
     WalletModel walletModel,
     AccountModel accountModel,
@@ -1044,7 +1044,9 @@ class HomeViewModelImpl extends HomeViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
+      return false;
     }
+    return true;
     datasourceStreamSinkAdd();
   }
 
@@ -1157,7 +1159,8 @@ class HomeViewModelImpl extends HomeViewModel {
         strPassphrase,
       );
 
-      final apiWalletAccount = await createWalletBloc.createWalletAccount(
+      // default Primary Account (without BvE)
+      final _ = await createWalletBloc.createWalletAccount(
         apiWallet.wallet.id,
         appConfig.scriptTypeInfo,
         "Primary Account",
@@ -1165,13 +1168,20 @@ class HomeViewModelImpl extends HomeViewModel {
         0, // default wallet account index
       );
 
-      final String walletID = apiWallet.wallet.id;
-      final String accountID = apiWalletAccount.id;
-      walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-      accountModel = await DBHelper.accountDao!.findByServerID(accountID);
-
-      /// Auto bind email address if it's first wallet
+      // Auto create Bitcoin via Email account at 84'/0'/1'
       if (isFirstWallet) {
+        final apiWalletAccountBvE = await createWalletBloc.createWalletAccount(
+          apiWallet.wallet.id,
+          appConfig.scriptTypeInfo,
+          "Bitcoin via Email",
+          fiatCurrencyNotifier.value,
+          1, // default wallet account index
+        );
+        final String walletID = apiWallet.wallet.id;
+        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+
+        final String accountID = apiWalletAccountBvE.id;
+        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
         if (walletModel != null && accountModel != null) {
           final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
           if (protonAddress != null) {

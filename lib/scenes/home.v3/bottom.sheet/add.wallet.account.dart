@@ -242,7 +242,7 @@ class AddWalletAccountSheet {
                                     : S.of(context).default_account,
                                 newAccountIndex,
                               );
-                              if (context.mounted) {
+                              if (context.mounted && isSuccess) {
                                 Navigator.of(context).pop();
                                 if (isSuccess) {
                                   CommonHelper.showSnackbar(

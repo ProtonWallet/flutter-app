@@ -44,7 +44,7 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
 
   void setBackup();
 
-  void tryLoadMnemonic();
+  Future<void> tryLoadMnemonic();
 
   void reset();
 
