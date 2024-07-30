@@ -1,8 +1,5 @@
 //
 //  UserDefaultsServicePlanDataStorage.swift
-//  Runner
-//
-//  Created by Erik Ackermann on 17.05.2024.
 //
 
 import Foundation
