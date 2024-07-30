@@ -21,9 +21,9 @@ class TagV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: width,
-        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         padding: padding ?? const EdgeInsets.only(
-            left: 20.0, right: 20.0, top: 12.0, bottom: 12.0),
+            left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
         decoration: BoxDecoration(
             color: ProtonColors.white,
             borderRadius: BorderRadius.circular(40.0)),
