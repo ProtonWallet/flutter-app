@@ -186,6 +186,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get drawerMenu =>
       const SvgGenImage('assets/images/icon/drawer_menu.svg');
 
+  /// File path: assets/images/icon/early_access.png
+  AssetGenImage get earlyAccess =>
+      const AssetGenImage('assets/images/icon/early_access.png');
+
   /// File path: assets/images/icon/edit_unknown.svg
   SvgGenImage get editUnknown =>
       const SvgGenImage('assets/images/icon/edit_unknown.svg');
@@ -461,6 +465,7 @@ class $AssetsImagesIconGen {
         discoverWhatIsBitcoin,
         doTransactions,
         drawerMenu,
+        earlyAccess,
         editUnknown,
         euro,
         icArrowOutFromRectanglesignout,

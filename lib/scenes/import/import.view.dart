@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/constants.dart';
@@ -5,6 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -183,6 +185,31 @@ class ImportView extends ViewBase<ImportViewModel> {
                           backgroundColor: ProtonColors.protonBlue,
                           height: 48),
                       const SizedBox(height: 20),
+                      if (viewModel.isFirstWallet)
+                        Column(children: [
+                          const SizedBox(height: 4),
+                          Text.rich(
+                            TextSpan(children: [
+                              TextSpan(
+                                text: S.of(context).welcome_to_confirm_content,
+                                style: FontManager.captionRegular(
+                                  ProtonColors.textHint,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    S.of(context).welcome_to_term_and_condition,
+                                style: FontManager.captionMedian(
+                                  ProtonColors.protonBlue,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    ExternalUrl.shared.lanuchTerms();
+                                  },
+                              ),
+                            ]),
+                          ),
+                        ]),
                     ]))),
               ),
             ],
