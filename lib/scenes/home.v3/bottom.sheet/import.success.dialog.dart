@@ -61,29 +61,6 @@ class ImportSuccessDialogSheet {
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
                         height: 48),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
-                          text: S.of(context).welcome_to_confirm_content,
-                          style: FontManager.captionRegular(
-                            ProtonColors.textHint,
-                          ),
-                        ),
-                        TextSpan(
-                          text: S.of(context).welcome_to_term_and_condition,
-                          style: FontManager.linkUnderline(
-                            ProtonColors.protonBlue,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              ExternalUrl.shared.lanuchTerms();
-                            },
-                        ),
-                      ]),
-                    ),
                   ])),
             ]))
       ]);

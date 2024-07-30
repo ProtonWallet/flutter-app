@@ -45,7 +45,7 @@ class CustomLoadingState extends State<CustomLoading>
       child: AnimatedBuilder(
         animation: _controller!,
         builder: (context, child) {
-          return CircularProgressIndicator.adaptive(
+          return CircularProgressIndicator(
             value: _controller!.value,
             valueColor: AlwaysStoppedAnimation<Color>(
                 widget.color ?? ProtonColors.protonBlue),
@@ -53,6 +53,15 @@ class CustomLoadingState extends State<CustomLoading>
                 widget.backgroundColor ?? ProtonColors.protonBlueAlpha20,
             strokeWidth: widget.strokeWidth,
           );
+          // don't use this since it can not show correctly on iOS
+          // return CircularProgressIndicator.adaptive(
+          //   value: _controller!.value,
+          //   valueColor: AlwaysStoppedAnimation<Color>(
+          //       widget.color ?? ProtonColors.protonBlue),
+          //   backgroundColor:
+          //       widget.backgroundColor ?? ProtonColors.protonBlueAlpha20,
+          //   strokeWidth: widget.strokeWidth,
+          // );
         },
       ),
     );
