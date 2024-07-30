@@ -13,4 +13,4 @@ final CoinType bitcoin =
 final CoinType bitcoinTestnet =
     CoinType(name: "Bitcoin Testnet", type: 1, network: Network.testnet);
 final CoinType bitcoinRegtest =
-    CoinType(name: "Bitcoin", type: 0, network: Network.regtest);
+    CoinType(name: "Bitcoin Regtest", type: 1, network: Network.regtest);
