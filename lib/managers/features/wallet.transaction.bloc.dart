@@ -59,31 +59,30 @@ class SyncWallet extends WalletTransactionEvent {
 
 class SelectWallet extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
-  final bool triggerByDataProviderUpdate;
+  final bool skipSyncWallet;
 
   SelectWallet(
     this.walletMenuModel, {
-    // TODO(fix): change to a shorter name
-    required this.triggerByDataProviderUpdate,
+    required this.skipSyncWallet,
   });
 
   @override
-  List<Object> get props => [walletMenuModel];
+  List<Object> get props => [walletMenuModel, skipSyncWallet];
 }
 
 class SelectAccount extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
   final AccountMenuModel accountMenuModel;
-  final bool triggerByDataProviderUpdate;
+  final bool skipSyncWallet;
 
   SelectAccount(
     this.walletMenuModel,
     this.accountMenuModel, {
-    required this.triggerByDataProviderUpdate,
+    required this.skipSyncWallet,
   });
 
   @override
-  List<Object> get props => [walletMenuModel, accountMenuModel];
+  List<Object> get props => [walletMenuModel, accountMenuModel, skipSyncWallet];
 }
 
 // Define the state
@@ -143,8 +142,6 @@ class WalletTransactionBloc
 
   Map<String, int> accountID2lastSyncTime = {};
 
-  // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-
   WalletTransactionEvent? lastEvent;
 
   WalletTransactionBloc(
@@ -187,7 +184,7 @@ class WalletTransactionBloc
                   walletsDataProvider.selectedServerWalletAccountID) {
             add(SelectWallet(
               walletMenuModel,
-              triggerByDataProviderUpdate: false, // need to sync wallet
+              skipSyncWallet: false, // need to sync wallet
             ));
           }
         } else {
@@ -203,7 +200,7 @@ class WalletTransactionBloc
                 add(SelectAccount(
                   walletMenuModel,
                   accountMenuModel,
-                  triggerByDataProviderUpdate: false, // need to sync wallet
+                  skipSyncWallet: false, // need to sync wallet
                 ));
                 break;
               }
@@ -264,7 +261,7 @@ class WalletTransactionBloc
             accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ??
                 0;
         final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-        if (timeDiffSeconds > reSyncTime) {
+        if (timeDiffSeconds > reSyncTime && !event.skipSyncWallet) {
           accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
               currentTimestamp;
           bdkTransactionDataProvider.syncWallet(
@@ -286,14 +283,12 @@ class WalletTransactionBloc
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = null;
       lastEvent = event;
-      if (!event.triggerByDataProviderUpdate) {
-        // syncWallet(forceSync: false);
-      }
 
       List<BitcoinAddressDetail> bitcoinAddresses = [];
       final WalletModel walletModel = event.walletMenuModel.walletModel;
-      final SecretKey? secretKey =
-          await getSecretKey(event.walletMenuModel.walletModel);
+      final SecretKey? secretKey = await getSecretKey(
+        event.walletMenuModel.walletModel,
+      );
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
@@ -371,7 +366,7 @@ class WalletTransactionBloc
           0;
       final int timeDiffSeconds = currentTimestamp - lastSyncTime;
 
-      if (timeDiffSeconds > reSyncTime) {
+      if (timeDiffSeconds > reSyncTime && !event.skipSyncWallet) {
         accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] =
             currentTimestamp;
         bdkTransactionDataProvider.syncWallet(
@@ -393,9 +388,6 @@ class WalletTransactionBloc
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = event.accountMenuModel.accountModel;
       lastEvent = event;
-      if (!event.triggerByDataProviderUpdate) {
-        // syncWallet(forceSync: false);
-      }
 
       final WalletModel walletModel = event.walletMenuModel.walletModel;
       final SecretKey? secretKey =
@@ -464,14 +456,14 @@ class WalletTransactionBloc
         final SelectWallet selectWallet = (lastEvent! as SelectWallet);
         add(SelectWallet(
           selectWallet.walletMenuModel,
-          triggerByDataProviderUpdate: true,
+          skipSyncWallet: true,
         ));
       } else if (lastEvent is SelectAccount) {
         final SelectAccount selectAccount = (lastEvent! as SelectAccount);
         add(SelectAccount(
           selectAccount.walletMenuModel,
           selectAccount.accountMenuModel,
-          triggerByDataProviderUpdate: true,
+          skipSyncWallet: true,
         ));
       }
     }
@@ -802,37 +794,6 @@ class WalletTransactionBloc
     return exchangeRate;
   }
 
-  /// Don't need this since bdk can extract outputs to get recipients' bitcoinAddresses
-  // Future<void> updateBitcoinAddressUsed(
-  //     String txID, AccountModel accountModel) async {
-  //   TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-  //   for (int i = 0; i < 5; i++) {
-  //     transactionDetailFromBlockChain =
-  //         await WalletManager.getTransactionDetailsFromBlockStream(txID);
-  //     try {
-  //       if (transactionDetailFromBlockChain != null) {
-  //         break;
-  //       }
-  //     } catch (e) {
-  //       logger.e(e.toString());
-  //     }
-  //     await Future.delayed(const Duration(seconds: 1));
-  //   }
-  //   if (transactionDetailFromBlockChain != null) {
-  //     for (Recipient recipient in transactionDetailFromBlockChain.recipients) {
-  //       BitcoinAddressModel? bitcoinAddressModel =
-  //           await DBHelper.bitcoinAddressDao!.findBitcoinAddressInAccount(
-  //               recipient.bitcoinAddress, accountModel.serverAccountID);
-  //       if (bitcoinAddressModel != null) {
-  //         bitcoinAddressModel.used = 1;
-  //         await localBitcoinAddressDataProvider.insertOrUpdate(bitcoinAddressModel);
-  //         localBitcoinAddressDataProvider.updateBitcoinAddress2TransactionDataMap(bitcoinAddressModel.bitcoinAddress, txID);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
     /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
     final walletKey = await walletKeysProvider.getWalletKey(
@@ -853,7 +814,7 @@ class WalletTransactionBloc
   void selectWallet(WalletMenuModel walletMenuModel) {
     add(SelectWallet(
       walletMenuModel,
-      triggerByDataProviderUpdate: false,
+      skipSyncWallet: false,
     ));
   }
 
@@ -865,7 +826,7 @@ class WalletTransactionBloc
     add(SelectAccount(
       walletMenuModel,
       accountMenuModel,
-      triggerByDataProviderUpdate: false,
+      skipSyncWallet: false,
     ));
   }
 
