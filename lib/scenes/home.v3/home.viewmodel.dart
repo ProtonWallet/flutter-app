@@ -516,6 +516,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     } on BridgeError catch (e, stacktrace) {
       appStateManager.handleForceUpgrade(e);
+      appStateManager.handleError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
       return;
