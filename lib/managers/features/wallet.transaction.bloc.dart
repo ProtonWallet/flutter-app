@@ -251,8 +251,10 @@ class WalletTransactionBloc
     bdkTransactionDataSubscription =
         bdkTransactionDataProvider.stream.listen((state) {
       if (state is BDKSyncUpdated) {
-        add(UpdateWalletDone());
         handleTransactionDataProviderUpdate();
+        if (this.state.errorMessage.isNotEmpty) {
+          add(UpdateWalletDone());
+        }
       } else if (state is BDKSyncError) {
         add(UpdateWalletError(state.updatedData));
         handleTransactionDataProviderUpdate();
