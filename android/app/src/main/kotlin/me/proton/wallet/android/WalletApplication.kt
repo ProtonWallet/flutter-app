@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2024 Proton AG
- * This file is part of Proton AG and Proton Wallet.
+ * Copyright (c) 2024 Proton Financial AG
+ * This file is part of Proton Financial AG and Proton Wallet.
  *
  * Proton Wallet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
