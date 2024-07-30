@@ -1,6 +1,7 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
 import 'dart:math';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -185,6 +186,12 @@ class BDKTransactionDataProvider extends DataProvider {
         CommonHelper.showErrorDialog(
           errorMessage,
         );
+        if (!ifMuonClientError(e)) {
+          Sentry.captureException(
+            e,
+            stackTrace: stacktrace,
+          );
+        }
       } catch (e, stacktrace) {
         final count =
             await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
