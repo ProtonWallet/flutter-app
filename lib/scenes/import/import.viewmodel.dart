@@ -106,6 +106,7 @@ class ImportViewModelImpl extends ImportViewModel {
     } else if (wallets.isEmpty) {
       isFirstWallet = true;
     }
+    sinkAddSafe();
   }
 
   @override

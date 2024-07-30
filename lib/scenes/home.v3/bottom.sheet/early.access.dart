@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/external.url.dart';
@@ -24,21 +24,51 @@ class EarlyAccessSheet {
             builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Transform.translate(
-            offset: const Offset(0, -20),
+            offset: const Offset(0, -2),
             child: Column(children: [
-              SvgPicture.asset("assets/images/icon/send_success.svg",
-                  fit: BoxFit.fill, width: 240, height: 240),
-              const SizedBox(height: 20),
+              Assets.images.icon.earlyAccess.image(
+                fit: BoxFit.fill,
+                width: 240,
+                height: 167,
+              ),
               Text(
                 S.of(context).early_access_title,
                 style: FontManager.titleHeadline(ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              Text(
-                S.of(context).early_access_content(email),
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+              Text.rich(
                 textAlign: TextAlign.center,
+                TextSpan(children: [
+                  TextSpan(
+                    text: S.of(context).early_access_content_1,
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                  TextSpan(
+                    text: email,
+                    style: FontManager.body2Median(
+                      ProtonColors.textNorm,
+                    ),
+                  ),
+                  TextSpan(
+                    text: S.of(context).early_access_content_2,
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "wallet.proton.me",
+                    style: FontManager.body2Median(
+                      ProtonColors.protonBlue,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        ExternalUrl.shared.launchWalletHomepage();
+                      },
+                  ),
+                ]),
               ),
               const SizedBox(height: 30),
               Padding(
@@ -69,29 +99,6 @@ class EarlyAccessSheet {
                         backgroundColor: ProtonColors.protonShades20,
                         borderColor: ProtonColors.protonShades20,
                         height: 48),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
-                          text: S.of(context).welcome_to_confirm_content,
-                          style: FontManager.captionRegular(
-                            ProtonColors.textHint,
-                          ),
-                        ),
-                        TextSpan(
-                          text: S.of(context).welcome_to_term_and_condition,
-                          style: FontManager.captionMedian(
-                            ProtonColors.protonBlue,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              ExternalUrl.shared.lanuchTerms();
-                            },
-                        ),
-                      ]),
-                    ),
                   ])),
             ]))
       ]);

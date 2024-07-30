@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -10,7 +12,11 @@ import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class UpgradeIntroSheet {
-  static void show(BuildContext context, VoidCallback? onPressed) {
+  static void show(
+    BuildContext context,
+    VoidCallback? onPressed, {
+    bool isWalletAccountExceedLimit = false,
+  }) {
     HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -37,10 +43,36 @@ class UpgradeIntroSheet {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              Text(
-                S.of(context).upgrade_intro_content,
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+              Text.rich(
                 textAlign: TextAlign.center,
+                TextSpan(children: [
+                  TextSpan(
+                    text: S.of(context).upgrade_intro_content(
+                          isWalletAccountExceedLimit
+                              ? S.of(context).upgrade_intro_type_accounts
+                              : S.of(context).upgrade_intro_type_wallets,
+                        ),
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                  TextSpan(
+                    text: S.of(context).to_upgrade_content,
+                    style: FontManager.body2Regular(
+                      ProtonColors.textWeak,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "wallet.proton.me",
+                    style: FontManager.body2Median(
+                      ProtonColors.protonBlue,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        ExternalUrl.shared.launchWalletHomepage();
+                      },
+                  ),
+                ]),
               ),
               const SizedBox(height: 30),
               Padding(
@@ -50,9 +82,10 @@ class UpgradeIntroSheet {
                     ButtonV5(
                         onPressed: () async {
                           Navigator.of(context).pop();
-                          EasyLoading.show(maskType: EasyLoadingMaskType.black);
-                          onPressed?.call();
-                          EasyLoading.dismiss();
+                          // EasyLoading.show(maskType: EasyLoadingMaskType.black);
+                          // onPressed?.call();
+                          // EasyLoading.dismiss();
+                          ExternalUrl.shared.launchWalletHomepage();
                         },
                         text: S.of(context).upgrade_now,
                         width: MediaQuery.of(context).size.width,

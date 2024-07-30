@@ -19,6 +19,7 @@ class ExternalUrl {
   final String supportCenterUrl = "https://proton.me/support/wallet";
   final String terms = "https://proton.me/wallet/legal/terms";
   final String privacy = "https://proton.me/wallet/privacy-policy";
+  final String walletHomepage = "https://wallet.proton.me";
 
   final String seedPhraseLink =
       "https://proton.me/support/wallet-protection#seed-phrase";
@@ -111,6 +112,10 @@ class ExternalUrl {
 
   void launchBlogAccountIndex() {
     launchString(accountIndexLink);
+  }
+
+  void launchWalletHomepage(){
+    launchString(walletHomepage);
   }
 
   void launchProtonHelpCenter() {
