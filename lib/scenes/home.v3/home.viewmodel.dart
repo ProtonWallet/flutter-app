@@ -346,6 +346,7 @@ class HomeViewModelImpl extends HomeViewModel {
     sinkAddSafe();
   }
 
+  /// capture errors
   Future<void> initAppStateSubscription() async {
     // app state
     _appStateSubscription = appStateManager.stream.listen((state) {
@@ -488,13 +489,16 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
+    /// init app state listener
     await initAppStateSubscription();
-    // init network
+
+    /// init network
     await apiServiceManager.initalOldApiService();
-    // read app version
+
+    /// read app version
     appVersion = await UserAgent().display;
 
-    // user
+    /// read user data
     final userInfo = userManager.userInfo;
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
