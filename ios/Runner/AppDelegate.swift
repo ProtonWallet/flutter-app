@@ -158,7 +158,7 @@ import UIKit
             return
         }
         FeatureFlagsRepository.shared.setApiService(apiService)
-        FeatureFlagsRepository.shared.setFlagOverride(CoreFeatureFlagType.dynamicPlan, true)
+        FeatureFlagsRepository.shared.setFlagOverride(CoreFeatureFlagType.dynamicPlan, false)
 
         Task {
             do {
@@ -297,15 +297,40 @@ import UIKit
             return
         }
 
-        guard let authManager = self.authManager else {
-            PMLog.error("Cannot show subscription management screen before auth manager is set.")
+        guard let accessToken = authInfo["accessToken"] as? String else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
             return
         }
 
-        apiService.setSessionUID(uid: userId)
+        guard let refreshToken = authInfo["refreshToken"] as? String else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
+            return
+        }
+        guard let userName = authInfo["userName"] as? String else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
+            return
+        }   
+        guard let sessionId = authInfo["sessionId"] as? String else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
+            return
+        }
+        guard let scopes = authInfo["scopes"] as? [String] else {
+            PMLog.error("Cannot show subscription management screen.  Missing userId.")
+            return
+        }
+        apiService.setSessionUID(uid: sessionId)
+        let auth = Credential(UID: sessionId,
+                              accessToken: accessToken,
+                              refreshToken: refreshToken,
+                              userName: userName,
+                              userID: userId,
+                              scopes: scopes,
+                              mailboxPassword: "")
+        let authDelegate = AuthHelper(credential: auth)
+        apiService.authDelegate = authDelegate
         self.paymentsManager = PaymentsManager(storage: UserDefaults(),
                                                apiService: apiService,
-                                               authManager: authManager)
+                                               authManager: authDelegate)
 
         self.paymentsManager?.upgradeSubscription(completion: { [weak self] result in
             guard let self else { return }
