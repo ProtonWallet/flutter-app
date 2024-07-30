@@ -84,12 +84,13 @@ class UserAgent {
   Future<String> _computeAppVersion() async {
     final info = await packageInfo;
     final version = info.version;
+    final build = info.buildNumber;
     final String platformName = _getPlatformName();
     var suffix = "";
     if (kDebugMode) {
       suffix = "-dev";
     }
-    return "$platformName-wallet@$version$suffix";
+    return "$platformName-wallet@$version.$build$suffix";
   }
 
   String _getPlatformName() {
