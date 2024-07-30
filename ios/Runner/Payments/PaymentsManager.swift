@@ -1,8 +1,5 @@
 //
 //  PaymentsManager.swift
-//  Runner
-//
-//  Created by Erik Ackermann on 06.06.2024.
 //
 
 import Foundation

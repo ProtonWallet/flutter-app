@@ -1,8 +1,5 @@
 //
 //  InMemoryTokenStorage.swift
-//  Runner
-//
-//  Created by Erik Ackermann on 07.06.2024.
 //
 
 import Foundation
