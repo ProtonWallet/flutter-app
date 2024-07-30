@@ -1051,10 +1051,11 @@ class HomeViewModelImpl extends HomeViewModel {
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
+      datasourceStreamSinkAdd();
       return false;
     }
-    return true;
     datasourceStreamSinkAdd();
+    return true;
   }
 
   @override
