@@ -47,6 +47,10 @@ class BDKSyncUpdated extends DataUpdated<String> {
   BDKSyncUpdated(super.updatedData);
 }
 
+class BDKSyncCancelled extends DataUpdated<String> {
+  BDKSyncCancelled(super.updatedData);
+}
+
 class BDKSyncing extends DataUpdated<String> {
   BDKSyncing(super.updatedData);
 }
@@ -82,6 +86,7 @@ class BDKTransactionDataProvider extends DataProvider {
           walletModel,
           accountModel,
           forceSync: false,
+          heightChanged: false,
         );
         bdkTransactionDataList.add(await _getBDKTransactionData(
           walletModel,
@@ -140,6 +145,7 @@ class BDKTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel, {
     required bool forceSync,
+    required bool heightChanged,
   }) async {
     final bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
         ? isWalletSyncing[accountModel.accountID]!
@@ -161,12 +167,32 @@ class BDKTransactionDataProvider extends DataProvider {
           serverScriptType: accountModel.scriptType,
         );
         if (account != null) {
+          logger.i("Bdk wallet sync check start!");
+
           /// check can i run
           final errorTimer =
               await shared.read("proton_wallet_app_k_sync_error_timmer") ?? 0;
 
           final int currentTime = DateTime.now().secondsSinceEpoch();
           if (!forceSync && currentTime - errorTimer < 0) {
+            logger.i("Bdk wallet check error timmer cancelled");
+            isWalletSyncing[accountModel.accountID] = false;
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            final check = "${accountModel.accountID}_$timeEnd";
+            emitState(BDKSyncCancelled(check));
+            return;
+          }
+
+          /// check last sync time
+          final int lastSyncTime = lastSyncedTime[accountModel.accountID] ?? 0;
+          final int currentTimestamp = DateTime.now().secondsSinceEpoch();
+          final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+          if (!forceSync && !heightChanged && timeDiffSeconds < reSyncTime) {
+            logger.i("Bdk wallet check last sync time cancelled");
+            isWalletSyncing[accountModel.accountID] = false;
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            final check = "${accountModel.accountID}_$timeEnd";
+            emitState(BDKSyncCancelled(check));
             return;
           }
 
@@ -191,9 +217,10 @@ class BDKTransactionDataProvider extends DataProvider {
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet partial sync end time: $timeEnd");
             success = true;
-            lastSyncedTime[accountModel.accountID] =
-                DateTime.now().microsecondsSinceEpoch;
           }
+
+          lastSyncedTime[accountModel.accountID] =
+              DateTime.now().secondsSinceEpoch();
           await resetErrorCount();
         }
       } on BridgeError catch (e, stacktrace) {
@@ -236,7 +263,11 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    bdkTransactionDataList.clear();
+    isWalletSyncing.clear();
+    lastSyncedTime.clear();
+  }
 
   int _getNextBackoffDuration(
     int attempt, {

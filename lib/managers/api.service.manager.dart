@@ -76,6 +76,8 @@ class ProtonApiServiceManager implements Manager {
   }
 
   ProtonApiService getApiService() {
+    // _apiService.isDisposed();
+    // TODO(improve): when misuse api instance in rust layer. this could be disposed. need to add re-init the api service later.
     _apiService ??= ProtonApiService(
         env: env.toString(),
         appVersion: version,

@@ -224,8 +224,11 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               for (AccountMenuModel accountMenuModel
                   in walletMenuModel.accounts) {
                 bdkTransactionDataProvider.syncWallet(
-                    walletMenuModel.walletModel, accountMenuModel.accountModel,
-                    forceSync: false);
+                  walletMenuModel.walletModel,
+                  accountMenuModel.accountModel,
+                  forceSync: false,
+                  heightChanged: false,
+                );
               }
             }
           }
@@ -236,7 +239,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         }
       } on BridgeError catch (e, stacktrace) {
         logger.e("WalletListBloc error: $e, stacktrace: $stacktrace");
-        appStateManager.handleWalletListError(e);
+        appStateManager.updateStateFrom(e);
       } catch (e) {
         logger.e(e.toString());
       }
