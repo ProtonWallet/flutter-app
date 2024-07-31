@@ -26,6 +26,8 @@ abstract class FrbTxBuilder implements RustOpaqueInterface {
   ///
   FrbTxBuilder clearUtxosToSpend();
 
+  Future<FrbTxBuilder> constrainRecipientAmounts();
+
   Future<FrbPsbt> createDraftPsbt({required Network network, bool? allowDust});
 
   ///     * Final

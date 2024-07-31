@@ -20,6 +20,7 @@ import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
+import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/flying.animation.dart';
 import 'package:wallet/scenes/components/flying.background.animation.dart';
@@ -420,6 +421,132 @@ class SendView extends ViewBase<SendViewModel> {
                         ),
                       ]),
                     ),
+                        if (viewModel.hasEmailIntegrationRecipient)
+                          Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: defaultPadding),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 16),
+                                  Text(S.of(context).email_integration,
+                                      style: FontManager.body2Median(
+                                          ProtonColors.textWeak)),
+                                  DropdownButtonV2(
+                                    width: MediaQuery.of(context).size.width,
+                                    labelText: S.of(context).send_from_email,
+                                    title: S.of(context).choose_your_email,
+                                    items: viewModel.protonEmailAddresses,
+                                    itemsText: viewModel.protonEmailAddresses
+                                        .map((e) => e.email)
+                                        .toList(),
+                                    valueNotifier: viewModel.userAddressValueNotifier,
+                                    border:
+                                    Border.all(color: ProtonColors.protonShades20),
+                                    padding: const EdgeInsets.only(
+                                        left: defaultPadding,
+                                        right: 8,
+                                        top: 12,
+                                        bottom: 12),
+                                  ),
+                                ]),
+                          ),
+                        if (viewModel.hasEmailIntegrationRecipient)
+                          !viewModel.isEditingEmailBody
+                              ? Container(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 5.0,
+                                horizontal: 16,
+                              ),
+                              padding: const EdgeInsets.all(defaultPadding),
+                              decoration: BoxDecoration(
+                                  color: ProtonColors.transactionNoteBackground,
+                                  borderRadius: BorderRadius.circular(40.0)),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      "assets/images/icon/ic_message.svg",
+                                      fit: BoxFit.fill,
+                                      width: 32,
+                                      height: 32),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                      onTap: viewModel.editEmailBody,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          if (viewModel
+                                              .emailBodyController.text.isNotEmpty)
+                                            SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                    defaultPadding * 6 -
+                                                    10,
+                                                child: Flex(
+                                                    direction: Axis.horizontal,
+                                                    children: [
+                                                      Flexible(
+                                                          child: Text(
+                                                              viewModel
+                                                                  .emailBodyController
+                                                                  .text,
+                                                              style: FontManager
+                                                                  .body2Median(
+                                                                  ProtonColors
+                                                                      .textNorm)))
+                                                    ])),
+                                          Text(
+                                              S
+                                                  .of(context)
+                                                  .message_to_recipient_optional(
+                                                  viewModel
+                                                      .validRecipientCount()),
+                                              style: FontManager.body2Median(
+                                                  ProtonColors.textHint)),
+                                        ],
+                                      ))
+                                ],
+                              ))
+                              : Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 5.0,
+                              horizontal: 16,
+                            ),
+                            child: TextFieldTextV2(
+                              labelText: S
+                                  .of(context)
+                                  .message_to_recipient_optional(
+                                  viewModel.validRecipientCount()),
+                              textController: viewModel.emailBodyController,
+                              myFocusNode: viewModel.emailBodyFocusNode,
+                              paddingSize: 7,
+                              maxLines: null,
+                              maxLength: maxMemoTextCharSize,
+                              showCounterText: true,
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                  MediaQuery.of(context).viewInsets.bottom +
+                                      100),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(
+                                    maxMemoTextCharSize)
+                              ],
+                              validation: (String value) {
+                                return "";
+                              },
+                            ),
+                          ),
+                if (viewModel.hasEmailIntegrationRecipient)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                    child: Divider(
+                      thickness: 0.2,
+                      height: 1,
+                    ),
+                  ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -469,94 +596,6 @@ class SendView extends ViewBase<SendViewModel> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                if (viewModel.hasEmailIntegrationRecipient)
-                  !viewModel.isEditingEmailBody
-                      ? Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 5.0,
-                            horizontal: 16,
-                          ),
-                          padding: const EdgeInsets.all(defaultPadding),
-                          decoration: BoxDecoration(
-                              color: ProtonColors.transactionNoteBackground,
-                              borderRadius: BorderRadius.circular(40.0)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                  "assets/images/icon/ic_message.svg",
-                                  fit: BoxFit.fill,
-                                  width: 32,
-                                  height: 32),
-                              const SizedBox(width: 10),
-                              GestureDetector(
-                                  onTap: viewModel.editEmailBody,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (viewModel
-                                          .emailBodyController.text.isNotEmpty)
-                                        SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                defaultPadding * 6 -
-                                                10,
-                                            child: Flex(
-                                                direction: Axis.horizontal,
-                                                children: [
-                                                  Flexible(
-                                                      child: Text(
-                                                          viewModel
-                                                              .emailBodyController
-                                                              .text,
-                                                          style: FontManager
-                                                              .body2Median(
-                                                                  ProtonColors
-                                                                      .textNorm)))
-                                                ])),
-                                      Text(
-                                          S
-                                              .of(context)
-                                              .message_to_recipient_optional(
-                                                  viewModel
-                                                      .validRecipientCount()),
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)),
-                                    ],
-                                  ))
-                            ],
-                          ))
-                      : Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 5.0,
-                            horizontal: 16,
-                          ),
-                          child: TextFieldTextV2(
-                            labelText: S
-                                .of(context)
-                                .message_to_recipient_optional(
-                                    viewModel.validRecipientCount()),
-                            textController: viewModel.emailBodyController,
-                            myFocusNode: viewModel.emailBodyFocusNode,
-                            paddingSize: 7,
-                            maxLines: null,
-                            maxLength: maxMemoTextCharSize,
-                            showCounterText: true,
-                            scrollPadding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom +
-                                        100),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(
-                                  maxMemoTextCharSize)
-                            ],
-                            validation: (String value) {
-                              return "";
-                            },
-                          ),
-                        ),
                 !viewModel.isEditingMemo
                     ? Container(
                         margin: const EdgeInsets.symmetric(

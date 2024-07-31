@@ -32,7 +32,7 @@ impl FrbTxBuilder {
     }
 
     pub async fn set_account(&self, account: &FrbAccount) -> Result<FrbTxBuilder, BridgeError> {
-        let inner = self.inner.set_account(account.get_inner()).await?;
+        let inner = self.inner.set_account(account.get_inner());
 
         Ok(inner.into())
     }
@@ -61,10 +61,7 @@ impl FrbTxBuilder {
         address_str: Option<String>,
         amount: Option<u64>,
     ) -> Result<FrbTxBuilder, BridgeError> {
-        let inner = self
-            .inner
-            .update_recipient(index, (address_str, amount))
-            .await;
+        let inner = self.inner.update_recipient(index, (address_str, amount));
 
         Ok(inner.into())
     }
@@ -73,7 +70,13 @@ impl FrbTxBuilder {
         &self,
         index: usize,
     ) -> Result<FrbTxBuilder, BridgeError> {
-        let inner = self.inner.update_recipient_amount_to_max(index).await?;
+        let inner = self.inner.update_recipient_amount_to_max(index).await;
+
+        Ok(inner.into())
+    }
+
+    pub async fn constrain_recipient_amounts(&self) -> Result<FrbTxBuilder, BridgeError> {
+        let inner = self.inner.constrain_recipient_amounts().await;
 
         Ok(inner.into())
     }
@@ -184,7 +187,7 @@ impl FrbTxBuilder {
      */
 
     pub async fn set_fee_rate(&self, sat_per_vb: u64) -> Self {
-        let inner = self.inner.set_fee_rate(sat_per_vb).await;
+        let inner = self.inner.set_fee_rate(sat_per_vb);
         FrbTxBuilder { inner }
     }
 
