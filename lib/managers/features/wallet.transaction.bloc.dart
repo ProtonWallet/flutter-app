@@ -36,6 +36,7 @@ import 'package:wallet/rust/common/address_info.dart';
 import 'package:wallet/rust/common/transaction_time.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
 
 // Define the events
 abstract class WalletTransactionEvent extends Equatable {
@@ -743,6 +744,8 @@ class WalletTransactionBloc
       String toList = "";
       String sender = "";
       String body = "";
+      bool isInternalTransaction = false;
+
       if (transactionModel != null) {
         final String encryptedToList = transactionModel.tolist ?? "";
         final String encryptedSender = transactionModel.sender ?? "";
@@ -760,6 +763,10 @@ class WalletTransactionBloc
         if (body.isEmpty) {
           body = tryDecryptWithKeys(addressKeys, encryptedBody);
         }
+        isInternalTransaction = (transactionModel.type ==
+                TransactionType.protonToProtonSend.index ||
+            transactionModel.type ==
+                TransactionType.protonToProtonReceive.index);
       }
 
       int amountInSATS =
@@ -791,7 +798,11 @@ class WalletTransactionBloc
         createTimestamp: time,
         updateTimestamp: lastSeenTime,
         amountInSATS: amountInSATS,
-        sender: sender.isNotEmpty ? sender : "Unknown",
+        sender: sender.isNotEmpty
+            ? sender
+            : isInternalTransaction
+                ? "Anonymous sender"
+                : "Unknown",
         toList:
             toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
         feeInSATS: (transactionDetail.fees ?? BigInt.zero).toInt(),

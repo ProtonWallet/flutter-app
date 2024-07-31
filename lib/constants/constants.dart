@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 const kPrimaryColor = Color(0xFF6F35A5);
@@ -32,3 +33,13 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.mbtc,
   BitcoinUnit.sats,
 ];
+
+const anonymousAddress = ProtonAddress(
+  id: "Anonymous sender",
+  email: "Anonymous sender",
+  status: 1,
+  type: 1,
+  receive: 1,
+  send: 1,
+  displayName: "Anonymous sender",
+);

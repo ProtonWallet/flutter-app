@@ -70,8 +70,9 @@ impl FrbBlockchainClient {
         exchange_rate_id: Option<String>,
         transaction_time: Option<String>,
         address_id: Option<String>,
-        subject: Option<String>,
         body: Option<String>,
+        recipients: Option<HashMap<String, String>>,
+        is_anonymous: Option<u8>,
     ) -> Result<String, BridgeError> {
         let tx = psbt.extract_tx()?;
 
@@ -94,8 +95,9 @@ impl FrbBlockchainClient {
                 label,
                 exchange_rate_or_transaction_time,
                 address_id,
-                subject,
                 body,
+                recipients,
+                is_anonymous,
             )
             .await?;
 

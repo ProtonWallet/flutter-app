@@ -2980,9 +2980,7 @@ dependencies = [
 
 [[package]]
 name = "muon"
-version = "0.9.0"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "6e7af70840fb1eb1fe46e701dad6023df90d750e9bfabd48c12ca84825099e8c"
+version = "0.8.0"
 dependencies = [
  "muon-impl",
  "muon-proc",
@@ -2990,9 +2988,7 @@ dependencies = [
 
 [[package]]
 name = "muon-impl"
-version = "0.7.1"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "d0d2d2d964e0adcc3ee4c59eb35fefddf28e4cbdb037438b71256fd6d3c57a39"
+version = "0.6.2"
 dependencies = [
  "async-channel 2.3.1",
  "async-executor",
@@ -3019,7 +3015,6 @@ dependencies = [
  "muon-proc",
  "num",
  "num_cpus",
- "openssl",
  "pin-project",
  "proton-srp",
  "rand",
@@ -3040,9 +3035,7 @@ dependencies = [
 
 [[package]]
 name = "muon-proc"
-version = "0.5.0"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "f460da90475d8acb9f3e5071e49324b890b27ea80fc71288dc56dfe1ff6f396a"
+version = "0.4.0"
 dependencies = [
  "cfg-if",
  "proc-macro2",
