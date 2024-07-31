@@ -67,6 +67,9 @@ class AppStateManager extends DataProvider implements Manager {
   final eventloopErrorCountKey = "proton_wallet_app_k_event_loop_error_count";
   final syncErrorCountKey = "proton_wallet_app_k_sync_error_count";
 
+  /// user eligible
+  final userEligible = "proton_wallet_app_k_is_user_eligible";
+
   /// Secure storage key for the app state
   final SecureStorageManager secureStore;
 
@@ -173,6 +176,16 @@ class AppStateManager extends DataProvider implements Manager {
       count,
       maxSeconds: 120,
     );
+  }
+
+  ///
+  Future<int> getEligible() async {
+    final count = await secureStore.get(userEligible);
+    return count == "1" ? 1 : 0;
+  }
+
+  Future<void> setEligible() async {
+    await secureStore.set(userEligible, "1");
   }
 
   Future<void> resetSyncDuration() async {

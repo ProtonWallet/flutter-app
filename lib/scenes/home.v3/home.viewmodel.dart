@@ -37,6 +37,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -505,27 +506,36 @@ class HomeViewModelImpl extends HomeViewModel {
     protonWalletManager.login(userInfo.userId);
 
     try {
-      // check if user is eligible
-      final int eligible = await apiServiceManager
-          .getApiService()
-          .getSettingsClient()
-          .getUserWalletEligibility();
-      if (eligible == 0) {
-        EarlyAccessSheet.show(
-          Coordinator.rootNavigatorKey.currentContext!,
-          userEmail,
-          logout,
+      final cachedEligible = await appStateManager.getEligible();
+      if (cachedEligible != 1) {
+        // Check if user is eligible
+        final int eligible = await retry(
+          () => apiServiceManager
+              .getApiService()
+              .getSettingsClient()
+              .getUserWalletEligibility(),
         );
-        return;
+        if (eligible == 0) {
+          EarlyAccessSheet.show(
+            Coordinator.rootNavigatorKey.currentContext!,
+            userEmail,
+            logout,
+          );
+          return;
+        } else {
+          await appStateManager.setEligible();
+        }
       }
     } on BridgeError catch (e, stacktrace) {
       appStateManager.handleForceUpgrade(e);
       appStateManager.handleError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+      CommonHelper.showErrorDialog(parseSampleDisplayError(e));
       return;
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      CommonHelper.showErrorDialog(e.toString());
       return;
     }
 

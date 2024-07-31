@@ -43,10 +43,20 @@ class BDKTransactionData {
   });
 }
 
+class BDKSyncUpdated extends DataUpdated<String> {
+  BDKSyncUpdated(super.updatedData);
+}
+
+class BDKSyncing extends DataUpdated<String> {
+  BDKSyncing(super.updatedData);
+}
+
+class BDKSyncError extends DataUpdated<String> {
+  BDKSyncError(super.updatedData);
+}
+
 class BDKTransactionDataProvider extends DataProvider {
   final AccountDao accountDao;
-  StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>.broadcast();
   FrbBlockchainClient? blockchain;
   final ProtonApiService apiService;
 
@@ -192,6 +202,7 @@ class BDKTransactionDataProvider extends DataProvider {
         await updateErrorCount();
         final errorMessage = parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
+        emitState(BDKSyncError(errorMessage));
         CommonHelper.showErrorDialog(
           errorMessage,
         );
@@ -205,7 +216,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final count =
             await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
         await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
-
+        emitState(BDKSyncError(e.toString()));
         final String errorMessage =
             "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
         logger.e(errorMessage);
@@ -213,18 +224,19 @@ class BDKTransactionDataProvider extends DataProvider {
           errorMessage,
         );
       } finally {
+        logger.i("Bdk wallet sync end finally");
         isWalletSyncing[accountModel.accountID] = false;
         if (success) {
-          dataUpdateController.add(DataUpdated("bdk data updated"));
+          final timeEnd = DateTime.now().secondsSinceEpoch();
+          final check = "${accountModel.accountID}_$timeEnd";
+          emitState(BDKSyncUpdated(check));
         }
       }
     }
   }
 
   @override
-  Future<void> clear() async {
-    dataUpdateController.close();
-  }
+  Future<void> clear() async {}
 
   int _getNextBackoffDuration(
     int attempt, {
