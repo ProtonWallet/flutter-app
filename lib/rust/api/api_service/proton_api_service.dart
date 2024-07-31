@@ -8,6 +8,7 @@ import '../../frb_generated.dart';
 import '../../proton_api/auth_credential.dart';
 import '../../proton_api/wallet.dart';
 import '../../proton_api/wallet_settings.dart';
+import '../bdk_wallet/blockchain.dart';
 import 'address_client.dart';
 import 'bitcoin_address_client.dart';
 import 'block_client.dart';
@@ -33,6 +34,8 @@ import 'wallet_client.dart';
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>>
 abstract class ProtonApiService implements RustOpaqueInterface {
   AddressClient getAddressClient();
+
+  ArcProtonApiService getArc();
 
   BitcoinAddressClient getBitcoinAddrClient();
 

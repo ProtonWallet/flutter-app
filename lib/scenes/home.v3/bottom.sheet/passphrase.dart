@@ -112,6 +112,7 @@ class PassphraseSheet {
                         walletMenuModel.walletModel,
                         accountMenuModel.accountModel,
                         forceSync: true,
+                        heightChanged: false,
                       );
                     }
                     Navigator.of(context).pop();

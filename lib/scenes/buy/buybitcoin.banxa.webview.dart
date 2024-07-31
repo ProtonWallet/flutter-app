@@ -108,7 +108,7 @@ class _WebViewExampleState extends State<WebViewExample> {
 </head>
 <body>
   <div class="iframe-container">
-    <iframe allow="camera; microphone" src="${widget.checkoutUrl}"></iframe>
+    <iframe allow="camera *; microphone *" src="${widget.checkoutUrl}"></iframe>
   </div>
 </body>
 </html>

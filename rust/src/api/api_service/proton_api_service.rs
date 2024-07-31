@@ -61,6 +61,11 @@ impl ProtonAPIService {
         Ok(api)
     }
 
+    #[frb(sync)]
+    pub fn get_arc(&self) -> Arc<ProtonAPIService> {
+        return Arc::new(self.clone());
+    }
+
     pub async fn login(
         &self,
         username: String,
