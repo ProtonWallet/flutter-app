@@ -432,13 +432,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
     int? amountInSatoshi,
   }) {
     return Column(children: [
-      if (viewModel.exchangeRate != null && amountInSatoshi != null)
+      if (viewModel.exchangeRate != null)
         TransactionHistorySendItem(
           content: email ?? bitcoinAddress ?? "",
           bitcoinAddress: bitcoinAddress ?? "",
           bitcoinAmount: multiRecipient
               ? BitcoinAmount(
-                  amountInSatoshi: amountInSatoshi,
+                  amountInSatoshi: amountInSatoshi ?? 0,
                   bitcoinUnit: viewModel.userSettingsDataProvider.bitcoinUnit,
                   exchangeRate: viewModel.exchangeRate!)
               : null,
@@ -461,7 +461,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             content: viewModel.fromEmail.isNotEmpty
                 ? WalletManager.getEmailFromWalletTransaction(
                     viewModel.fromEmail)
-                : "Unknown",
+                : viewModel.isInternalTransaction
+                    ? "Anonymous sender"
+                    : "Unknown",
             backgroundColor: ProtonColors.white,
             isLoading: !viewModel.initialized,
           ),
