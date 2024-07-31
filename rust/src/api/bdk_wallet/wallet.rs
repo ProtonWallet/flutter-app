@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{ops::Deref, sync::Arc};
 
 // wallet.rs
 use flutter_rust_bridge::frb;
@@ -46,7 +46,7 @@ impl FrbWallet {
 
     pub async fn discover_account(
         &self,
-        api_service: ProtonAPIService,
+        api_service: Arc<ProtonAPIService>,
         storage_factory: OnchainStoreFactory,
         account_stop_gap: u32,
         address_stop_gap: usize,

@@ -224,6 +224,7 @@ class HomeCoordinator extends Coordinator {
       apiServiceManager.getProtonUsersApiClient(),
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
+      appStateManager,
     );
 
     final deleteWalletBloc = DeleteWalletBloc(

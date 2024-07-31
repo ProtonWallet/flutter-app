@@ -71,6 +71,13 @@ class SelectWallet extends WalletTransactionEvent {
   List<Object> get props => [walletMenuModel, skipSyncWallet];
 }
 
+class UpdateWalletSyncCancelled extends WalletTransactionEvent {
+  final String accountID;
+  UpdateWalletSyncCancelled(this.accountID);
+  @override
+  List<Object> get props => [accountID];
+}
+
 class UpdateWalletError extends WalletTransactionEvent {
   final String errorMessage;
   UpdateWalletError(
@@ -168,8 +175,6 @@ class WalletTransactionBloc
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? fiatCurrencySettingSubscription;
 
-  Map<String, int> accountID2lastSyncTime = {};
-
   WalletTransactionEvent? lastEvent;
 
   WalletTransactionBloc(
@@ -259,7 +264,10 @@ class WalletTransactionBloc
       } else if (state is BDKSyncError) {
         add(UpdateWalletError(state.updatedData));
         handleTransactionDataProviderUpdate();
-        logger.e("WalletListBloc BDKSyncError: ${state.updatedData}");
+      } else if (state is BDKSyncCancelled) {
+        if (this.state.isSyncing) {
+          handleTransactionDataProviderUpdate();
+        }
       }
     });
 
@@ -272,7 +280,7 @@ class WalletTransactionBloc
         Future.delayed(const Duration(seconds: 10), () {
           /// wait 10 second so transaction can update first
           /// since bdk account will be locked when it's syncing
-          syncWallet(forceSync: true);
+          syncWallet(forceSync: true, heightChanged: false);
         });
       }
 
@@ -292,21 +300,14 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      final int currentTimestamp =
-          DateTime.now().millisecondsSinceEpoch ~/ 1000;
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
-        final int lastSyncTime =
-            accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ??
-                0;
-        final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-        if (timeDiffSeconds > reSyncTime && !event.skipSyncWallet) {
-          accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
-              currentTimestamp;
+        if (!event.skipSyncWallet) {
           bdkTransactionDataProvider.syncWallet(
             event.walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: false,
+            heightChanged: false,
           );
         }
       }
@@ -398,20 +399,12 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
-      final int currentTimestamp =
-          DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      final int lastSyncTime = accountID2lastSyncTime[
-              event.accountMenuModel.accountModel.accountID] ??
-          0;
-      final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-
-      if (timeDiffSeconds > reSyncTime && !event.skipSyncWallet) {
-        accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] =
-            currentTimestamp;
+      if (!event.skipSyncWallet) {
         bdkTransactionDataProvider.syncWallet(
           event.walletMenuModel.walletModel,
           event.accountMenuModel.accountModel,
           forceSync: false,
+          heightChanged: false,
         );
       }
       if (currentWalletModel?.walletID !=
@@ -893,7 +886,7 @@ class WalletTransactionBloc
     ));
   }
 
-  void syncWallet({required bool forceSync}) {
+  void syncWallet({required bool forceSync, required bool heightChanged}) {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
         final WalletMenuModel walletMenuModel =
@@ -909,6 +902,7 @@ class WalletTransactionBloc
               walletMenuModel.walletModel,
               accountMenuModel.accountModel,
               forceSync: forceSync,
+              heightChanged: heightChanged,
             );
             hadTriggerSync = true;
           }
@@ -931,6 +925,7 @@ class WalletTransactionBloc
             walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: forceSync,
+            heightChanged: heightChanged,
           );
           hadTriggerSync = true;
         }
@@ -947,7 +942,6 @@ class WalletTransactionBloc
     bdkTransactionDataSubscription?.cancel();
     walletsDataSubscription?.cancel();
     fiatCurrencySettingSubscription?.cancel();
-    accountID2lastSyncTime.clear();
     return super.close();
   }
 }

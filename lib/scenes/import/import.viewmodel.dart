@@ -111,8 +111,6 @@ class ImportViewModelImpl extends ImportViewModel {
 
   @override
   Future<bool> importWallet() async {
-    WalletModel? walletModel;
-    AccountModel? accountModel;
     try {
       final String walletName = nameTextController.text;
       final String strMnemonic = mnemonicTextController.text;
@@ -138,7 +136,7 @@ class ImportViewModelImpl extends ImportViewModel {
       final dbPath = await WalletManager.getDatabaseFolderPath();
       final storage = OnchainStoreFactory(folderPath: dbPath);
       final foundAccounts = await frbWallet.discoverAccount(
-          apiService: apiService,
+          apiService: apiService.getArc(),
           storageFactory: storage,
           accountStopGap: 1,
           addressStopGap: BigInt.from(10));
@@ -157,6 +155,22 @@ class ImportViewModelImpl extends ImportViewModel {
           );
           count += 1;
           logger.d("new account: ${apiWalletAccount.label}");
+          final String walletID = apiWallet.wallet.id;
+          final String accountID = apiWalletAccount.id;
+          final walletModel = await DBHelper.walletDao!.findByServerID(
+            walletID,
+          );
+          final accountModel = await DBHelper.accountDao!.findByServerID(
+            accountID,
+          );
+          if (walletModel != null && accountModel != null) {
+            dataProviderManager.bdkTransactionDataProvider.syncWallet(
+              walletModel,
+              accountModel,
+              forceSync: true,
+              heightChanged: false,
+            );
+          }
         }
       } else {
         final apiWalletAccount = await createWalletBloc.createWalletAccount(
@@ -168,8 +182,12 @@ class ImportViewModelImpl extends ImportViewModel {
         );
         final String walletID = apiWallet.wallet.id;
         final String accountID = apiWalletAccount.id;
-        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+        final walletModel = await DBHelper.walletDao!.findByServerID(
+          walletID,
+        );
+        final accountModel = await DBHelper.accountDao!.findByServerID(
+          accountID,
+        );
         if (isFirstWallet) {
           /// Auto bind email address if it's first wallet
           if (walletModel != null && accountModel != null) {
@@ -183,6 +201,14 @@ class ImportViewModelImpl extends ImportViewModel {
               );
             }
           }
+        }
+        if (walletModel != null && accountModel != null) {
+          dataProviderManager.bdkTransactionDataProvider.syncWallet(
+            walletModel,
+            accountModel,
+            forceSync: true,
+            heightChanged: false,
+          );
         }
       }
     } on BridgeError catch (e, stacktrace) {
@@ -207,13 +233,7 @@ class ImportViewModelImpl extends ImportViewModel {
       Sentry.captureException(e, stackTrace: stacktrace);
       errorMessage = e.toString();
     }
-    if (walletModel != null && accountModel != null) {
-      dataProviderManager.bdkTransactionDataProvider.syncWallet(
-        walletModel,
-        accountModel,
-        forceSync: true,
-      );
-    }
+
     if (errorMessage.isNotEmpty) {
       return false;
     }
