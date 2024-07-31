@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
@@ -128,8 +129,12 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
 
     /// Listen to the data update
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
-      handleTransactionUpdate();
+        bdkTransactionDataProvider.stream.listen((state) {
+      if (state is BDKSyncUpdated) {
+        handleTransactionUpdate();
+      } else if (state is BDKSyncError) {
+        logger.e("WalletListBloc BDKSyncError: ${state.updatedData}");
+      }
     });
     serverTransactionDataSubscription = serverTransactionDataProvider
         .dataUpdateController.stream

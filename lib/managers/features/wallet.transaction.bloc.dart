@@ -70,6 +70,23 @@ class SelectWallet extends WalletTransactionEvent {
   List<Object> get props => [walletMenuModel, skipSyncWallet];
 }
 
+class UpdateWalletError extends WalletTransactionEvent {
+  final String errorMessage;
+  UpdateWalletError(
+    this.errorMessage,
+  );
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+
+class UpdateWalletDone extends WalletTransactionEvent {
+  UpdateWalletDone();
+
+  @override
+  List<Object> get props => [];
+}
+
 class SelectAccount extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
   final AccountMenuModel accountMenuModel;
@@ -94,11 +111,15 @@ class WalletTransactionState extends Equatable {
   final List<HistoryTransaction> historyTransaction;
   final List<BitcoinAddressDetail> bitcoinAddresses;
   final bool isSyncing;
+  final bool syncedWithError;
+  final String errorMessage;
 
   const WalletTransactionState({
     required this.historyTransaction,
     required this.bitcoinAddresses,
     required this.isSyncing,
+    required this.syncedWithError,
+    required this.errorMessage,
   });
 
   @override
@@ -106,19 +127,25 @@ class WalletTransactionState extends Equatable {
         isSyncing,
         historyTransaction,
         bitcoinAddresses,
+        syncedWithError,
+        errorMessage,
       ];
 }
 
 extension WalletTransactionStateCopyWith on WalletTransactionState {
   WalletTransactionState copyWith({
     bool isSyncing = false,
+    bool? syncedWithError,
     List<HistoryTransaction>? historyTransaction,
     List<BitcoinAddressDetail>? bitcoinAddresses,
+    String? errorMessage,
   }) {
     return WalletTransactionState(
       isSyncing: isSyncing,
       bitcoinAddresses: bitcoinAddresses ?? this.bitcoinAddresses,
       historyTransaction: historyTransaction ?? this.historyTransaction,
+      syncedWithError: syncedWithError ?? this.syncedWithError,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
@@ -157,6 +184,8 @@ class WalletTransactionBloc
           isSyncing: false,
           historyTransaction: [],
           bitcoinAddresses: [],
+          syncedWithError: false,
+          errorMessage: "",
         )) {
     /// currentWalletModel and currentAccountModel are used to identify if the process need to be continue or not
     /// for example, if user select Wallet A, then it will start generating transactions for wallet A
@@ -220,8 +249,17 @@ class WalletTransactionBloc
     });
 
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
-      handleTransactionDataProviderUpdate();
+        bdkTransactionDataProvider.stream.listen((state) {
+      if (state is BDKSyncUpdated) {
+        handleTransactionDataProviderUpdate();
+        if (this.state.errorMessage.isNotEmpty) {
+          add(UpdateWalletDone());
+        }
+      } else if (state is BDKSyncError) {
+        add(UpdateWalletError(state.updatedData));
+        handleTransactionDataProviderUpdate();
+        logger.e("WalletListBloc BDKSyncError: ${state.updatedData}");
+      }
     });
 
     serverTransactionDataSubscription = serverTransactionDataProvider
@@ -446,6 +484,20 @@ class WalletTransactionBloc
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
         bitcoinAddresses: localBitcoinAddressData.bitcoinAddresses,
+      ));
+    });
+
+    on<UpdateWalletError>((event, emit) async {
+      emit(state.copyWith(
+        syncedWithError: true,
+        errorMessage: event.errorMessage,
+      ));
+    });
+
+    on<UpdateWalletDone>((event, emit) async {
+      emit(state.copyWith(
+        syncedWithError: false,
+        errorMessage: "",
       ));
     });
   }
