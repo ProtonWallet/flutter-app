@@ -57,6 +57,7 @@ class ProtonFeedItem {
     return fromJsonList(decodedJsonList);
   }
 
+  // TODO(fix): this shouldnt be here.
   static Future<List<ProtonFeedItem>> loadFromApi(
       DiscoveryContentClient apiClient) async {
     final List<ProtonFeedItem> items = [];

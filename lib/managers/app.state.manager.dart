@@ -83,7 +83,12 @@ class AppStateManager extends DataProvider implements Manager {
   /// constructor
   AppStateManager(this.secureStore, this.shared);
 
-  Future<void> handleError(BridgeError exception) async {
+  Future<void> updateStateFrom(BridgeError exception) async {
+    await handleSessionError(exception);
+    await handleForceUpgrade(exception);
+  }
+
+  Future<void> handleSessionError(BridgeError exception) async {
     final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
@@ -99,6 +104,7 @@ class AppStateManager extends DataProvider implements Manager {
     }
   }
 
+  @Deprecated("is not used, remove later")
   Future<void> handleWalletListError(BridgeError exception) async {
     final error = parseResponseError(exception);
     if (error != null && error.code == 404 && appInBetaState) {

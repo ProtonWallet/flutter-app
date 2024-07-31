@@ -96,7 +96,10 @@ class TransactionList extends StatelessWidget {
                                 : GestureDetector(
                                     onTap: () {
                                       viewModel.walletTransactionBloc
-                                          .syncWallet(forceSync: true);
+                                          .syncWallet(
+                                        forceSync: true,
+                                        heightChanged: false,
+                                      );
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
