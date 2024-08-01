@@ -4,6 +4,7 @@ pub mod amount;
 pub mod balance;
 pub mod blockchain;
 pub mod derivation_path;
+pub mod discovered_account;
 pub mod local_output;
 pub mod mnemonic;
 pub mod payment_link;
