@@ -119,6 +119,7 @@ class RustBuilder {
     Rustup rustup,
   ) {
     final toolchain = _toolchain;
+    _log.info('Preparing toolchain $toolchain for $target');
     if (rustup.installedTargets(toolchain) == null) {
       rustup.installToolchain(toolchain);
     }
@@ -133,12 +134,16 @@ class RustBuilder {
   CargoBuildOptions? get _buildOptions =>
       environment.crateOptions.cargo[environment.configuration];
 
-  String get _toolchain => _buildOptions?.toolchain.name ?? 'nightly';
+  String get _toolchain =>
+      _buildOptions?.customVersion ??
+      _buildOptions?.toolchain.name ??
+      'nightly';
 
   /// Returns the path of directory containing build artifacts.
   Future<String> build() async {
     final extraArgs = _buildOptions?.flags ?? [];
     final manifestPath = path.join(environment.manifestDir, 'Cargo.toml');
+    _log.info('Building $target with $_toolchain');
     runCommand(
       'rustup',
       [
