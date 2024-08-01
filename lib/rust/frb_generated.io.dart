@@ -212,10 +212,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClientPtr;
 
   CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_OnchainStoreFactoryPtr => wire
-          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactoryPtr;
-
-  CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_PriceGraphClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClientPtr;
 
@@ -421,11 +417,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   OnRampGatewayClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
-          dynamic raw);
-
-  @protected
-  OnchainStoreFactory
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
           dynamic raw);
 
   @protected
@@ -895,11 +886,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  OnchainStoreFactory
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          dynamic raw);
-
-  @protected
   PriceGraphClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           dynamic raw);
@@ -1060,6 +1046,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HighSecuritySettings dco_decode_box_autoadd_high_security_settings(
       dynamic raw);
+
+  @protected
+  OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
 
   @protected
   Pagination dco_decode_box_autoadd_pagination(dynamic raw);
@@ -1366,6 +1355,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network dco_decode_network(dynamic raw);
+
+  @protected
+  OnchainStoreFactory dco_decode_onchain_store_factory(dynamic raw);
 
   @protected
   Map<String, String>? dco_decode_opt_Map_String_String(dynamic raw);
@@ -1821,11 +1813,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   OnRampGatewayClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient(
-          SseDeserializer deserializer);
-
-  @protected
-  OnchainStoreFactory
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
           SseDeserializer deserializer);
 
   @protected
@@ -2293,11 +2280,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  OnchainStoreFactory
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          SseDeserializer deserializer);
-
-  @protected
   PriceGraphClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           SseDeserializer deserializer);
@@ -2471,6 +2453,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   HighSecuritySettings sse_decode_box_autoadd_high_security_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
       SseDeserializer deserializer);
 
   @protected
@@ -2819,6 +2805,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
+
+  @protected
+  OnchainStoreFactory sse_decode_onchain_store_factory(
+      SseDeserializer deserializer);
 
   @protected
   Map<String, String>? sse_decode_opt_Map_String_String(
@@ -3313,11 +3303,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          OnchainStoreFactory self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           PriceGraphClient self, SseSerializer serializer);
 
@@ -3785,11 +3770,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          OnchainStoreFactory self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           PriceGraphClient self, SseSerializer serializer);
 
@@ -3970,6 +3950,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_high_security_settings(
       HighSecuritySettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_pagination(
@@ -4329,6 +4313,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_Map_String_String(
@@ -5726,38 +5714,6 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClientPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactoryPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory');
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory =
-      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactoryPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactoryPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory');
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory =
-      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactoryPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void
