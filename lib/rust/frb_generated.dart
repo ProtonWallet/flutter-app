@@ -127,7 +127,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -7802694;
+  int get rustContentHash => -2138629507;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -1535,15 +1535,6 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_OnRampGatewayClientPtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_OnchainStoreFactory;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_OnchainStoreFactory;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_OnchainStoreFactoryPtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_PriceGraphClient;
@@ -6065,7 +6056,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_script_type(scriptType, serializer);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDerivationPath(
             derivationPath, serializer);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
+        sse_encode_box_autoadd_onchain_store_factory(
             storageFactory, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 138)!;
       },
@@ -7519,8 +7510,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 189)!;
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory,
+        decodeSuccessData: sse_decode_onchain_store_factory,
         decodeErrorData: null,
       ),
       constMeta: kCrateApiBdkWalletStorageOnchainStoreFactoryNewConstMeta,
@@ -7531,7 +7521,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiBdkWalletStorageOnchainStoreFactoryNewConstMeta =>
       const TaskConstMeta(
-        debugName: "OnchainStoreFactory_new",
+        debugName: "onchain_store_factory_new",
         argNames: ["folderPath"],
       );
 
@@ -8699,7 +8689,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_script_type(scriptType, serializer);
         sse_encode_String(derivationPath, serializer);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
+        sse_encode_box_autoadd_onchain_store_factory(
             storageFactory, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 229)!;
       },
@@ -8735,7 +8725,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcProtonAPIService(
             apiService, serializer);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
+        sse_encode_box_autoadd_onchain_store_factory(
             storageFactory, serializer);
         sse_encode_u_32(accountStopGap, serializer);
         sse_encode_usize(addressStopGap, serializer);
@@ -10480,14 +10470,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnRampGatewayClient;
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_OnchainStoreFactory => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_OnchainStoreFactory => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory;
-
-  RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_PriceGraphClient => wire
           .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient;
 
@@ -10837,14 +10819,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return OnRampGatewayClientImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  OnchainStoreFactory
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return OnchainStoreFactoryImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -11616,14 +11590,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  OnchainStoreFactory
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return OnchainStoreFactoryImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   PriceGraphClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           dynamic raw) {
@@ -12068,6 +12034,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_high_security_settings(raw);
+  }
+
+  @protected
+  OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_onchain_store_factory(raw);
   }
 
   @protected
@@ -12880,6 +12853,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Network dco_decode_network(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Network.values[raw as int];
+  }
+
+  @protected
+  OnchainStoreFactory dco_decode_onchain_store_factory(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return OnchainStoreFactory.raw(
+      folderPath: dco_decode_String(arr[0]),
+    );
   }
 
   @protected
@@ -14083,15 +14067,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  OnchainStoreFactory
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return OnchainStoreFactoryImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   PriceGraphClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           SseDeserializer deserializer) {
@@ -14937,15 +14912,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  OnchainStoreFactory
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return OnchainStoreFactoryImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   PriceGraphClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           SseDeserializer deserializer) {
@@ -15430,6 +15396,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_high_security_settings(deserializer));
+  }
+
+  @protected
+  OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_onchain_store_factory(deserializer));
   }
 
   @protected
@@ -16492,6 +16465,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return Network.values[inner];
+  }
+
+  @protected
+  OnchainStoreFactory sse_decode_onchain_store_factory(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_folderPath = sse_decode_String(deserializer);
+    return OnchainStoreFactory.raw(folderPath: var_folderPath);
   }
 
   @protected
@@ -17939,16 +17920,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          OnchainStoreFactory self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as OnchainStoreFactoryImpl).frbInternalSseEncode(move: true),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           PriceGraphClient self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -18868,16 +18839,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-          OnchainStoreFactory self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as OnchainStoreFactoryImpl).frbInternalSseEncode(move: null),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPriceGraphClient(
           PriceGraphClient self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -19289,6 +19250,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       HighSecuritySettings self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_high_security_settings(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_onchain_store_factory(self, serializer);
   }
 
   @protected
@@ -20153,6 +20121,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_network(Network self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_onchain_store_factory(
+      OnchainStoreFactory self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.folderPath, serializer);
   }
 
   @protected
@@ -22465,28 +22440,6 @@ class OnRampGatewayClientImpl extends RustOpaque
               fiatCurrency: fiatCurrency,
               payMethod: payMethod,
               provider: provider);
-}
-
-@sealed
-class OnchainStoreFactoryImpl extends RustOpaque
-    implements OnchainStoreFactory {
-  // Not to be used by end users
-  OnchainStoreFactoryImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  OnchainStoreFactoryImpl.frbInternalSseDecode(
-      BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount: RustLib
-        .instance.api.rust_arc_increment_strong_count_OnchainStoreFactory,
-    rustArcDecrementStrongCount: RustLib
-        .instance.api.rust_arc_decrement_strong_count_OnchainStoreFactory,
-    rustArcDecrementStrongCountPtr: RustLib
-        .instance.api.rust_arc_decrement_strong_count_OnchainStoreFactoryPtr,
-  );
 }
 
 @sealed

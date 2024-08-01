@@ -57,7 +57,6 @@ use crate::api::bdk_wallet::payment_link::*;
 use crate::api::bdk_wallet::psbt::*;
 use crate::api::bdk_wallet::script_buf::*;
 use crate::api::bdk_wallet::sequence::*;
-use crate::api::bdk_wallet::storage::*;
 use crate::api::bdk_wallet::transaction_builder::*;
 use crate::api::bdk_wallet::transaction_details::*;
 use crate::api::bdk_wallet::transaction_details_txin::*;
@@ -76,7 +75,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -7802694;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2138629507;
 
 // Section: executor
 
@@ -4845,7 +4844,10 @@ fn wire__crate__api__bdk_wallet__account__FrbAccount_new_impl(
             let api_script_type =
                 <crate::common::script_type::ScriptType>::sse_decode(&mut deserializer);
             let api_derivation_path = <FrbDerivationPath>::sse_decode(&mut deserializer);
-            let api_storage_factory = <OnchainStoreFactory>::sse_decode(&mut deserializer);
+            let api_storage_factory =
+                <crate::api::bdk_wallet::storage::OnchainStoreFactory>::sse_decode(
+                    &mut deserializer,
+                );
             deserializer.end();
             transform_result_sse::<_, crate::common::errors::BridgeError>((move || {
                 let mut api_wallet_guard = None;
@@ -7151,14 +7153,14 @@ fn wire__crate__api__bdk_wallet__sequence__FrbSequence_is_time_locked_impl(
         },
     )
 }
-fn wire__crate__api__bdk_wallet__storage__OnchainStoreFactory_new_impl(
+fn wire__crate__api__bdk_wallet__storage__onchain_store_factory_new_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "OnchainStoreFactory_new",
+            debug_name: "onchain_store_factory_new",
             port: None,
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
@@ -8970,7 +8972,10 @@ fn wire__crate__api__bdk_wallet__wallet__FrbWallet_add_account_impl(
             let api_script_type =
                 <crate::common::script_type::ScriptType>::sse_decode(&mut deserializer);
             let api_derivation_path = <String>::sse_decode(&mut deserializer);
-            let api_storage_factory = <OnchainStoreFactory>::sse_decode(&mut deserializer);
+            let api_storage_factory =
+                <crate::api::bdk_wallet::storage::OnchainStoreFactory>::sse_decode(
+                    &mut deserializer,
+                );
             deserializer.end();
             transform_result_sse::<_, crate::common::errors::BridgeError>((move || {
                 let mut api_that_guard = None;
@@ -9024,7 +9029,10 @@ fn wire__crate__api__bdk_wallet__wallet__FrbWallet_discover_account_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>,
             >>::sse_decode(&mut deserializer);
             let api_api_service = <Arc<ProtonAPIService>>::sse_decode(&mut deserializer);
-            let api_storage_factory = <OnchainStoreFactory>::sse_decode(&mut deserializer);
+            let api_storage_factory =
+                <crate::api::bdk_wallet::storage::OnchainStoreFactory>::sse_decode(
+                    &mut deserializer,
+                );
             let api_account_stop_gap = <u32>::sse_decode(&mut deserializer);
             let api_address_stop_gap = <usize>::sse_decode(&mut deserializer);
             deserializer.end();
@@ -11579,9 +11587,6 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
-    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>
-);
-flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PriceGraphClient>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
@@ -11947,16 +11952,6 @@ impl SseDecode for OnRampGatewayClient {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
             flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>,
-        >>::sse_decode(deserializer);
-        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
-    }
-}
-
-impl SseDecode for OnchainStoreFactory {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>,
         >>::sse_decode(deserializer);
         return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
     }
@@ -12476,16 +12471,6 @@ impl SseDecode
 
 impl SseDecode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <usize>::sse_decode(deserializer);
-        return decode_rust_opaque_moi(inner);
-    }
-}
-
-impl SseDecode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -14081,6 +14066,16 @@ impl SseDecode for crate::common::network::Network {
             2 => crate::common::network::Network::Signet,
             3 => crate::common::network::Network::Regtest,
             _ => unreachable!("Invalid variant for Network: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::bdk_wallet::storage::OnchainStoreFactory {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_folderPath = <String>::sse_decode(deserializer);
+        return crate::api::bdk_wallet::storage::OnchainStoreFactory {
+            folder_path: var_folderPath,
         };
     }
 }
@@ -15686,7 +15681,7 @@ fn pde_ffi_dispatcher_sync_impl(
 186 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_rbf_impl(ptr, rust_vec_len, data_len),
 187 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_relative_lock_time_impl(ptr, rust_vec_len, data_len),
 188 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_time_locked_impl(ptr, rust_vec_len, data_len),
-189 => wire__crate__api__bdk_wallet__storage__OnchainStoreFactory_new_impl(ptr, rust_vec_len, data_len),
+189 => wire__crate__api__bdk_wallet__storage__onchain_store_factory_new_impl(ptr, rust_vec_len, data_len),
 190 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_add_recipient_impl(ptr, rust_vec_len, data_len),
 191 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_recipients_impl(ptr, rust_vec_len, data_len),
 192 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
@@ -16255,24 +16250,6 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
 
 impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<OnRampGatewayClient>> for OnRampGatewayClient {
     fn into_into_dart(self) -> FrbWrapper<OnRampGatewayClient> {
-        self.into()
-    }
-}
-
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<OnchainStoreFactory> {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
-            .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<OnchainStoreFactory>
-{
-}
-
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<OnchainStoreFactory>> for OnchainStoreFactory {
-    fn into_into_dart(self) -> FrbWrapper<OnchainStoreFactory> {
         self.into()
     }
 }
@@ -17668,6 +17645,23 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::common::network::Networ
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::bdk_wallet::storage::OnchainStoreFactory {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.folder_path.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::bdk_wallet::storage::OnchainStoreFactory
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::bdk_wallet::storage::OnchainStoreFactory>
+    for crate::api::bdk_wallet::storage::OnchainStoreFactory
+{
+    fn into_into_dart(self) -> crate::api::bdk_wallet::storage::OnchainStoreFactory {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::common::pagination::Pagination> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -18891,13 +18885,6 @@ impl SseEncode for OnRampGatewayClient {
     }
 }
 
-impl SseEncode for OnchainStoreFactory {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
-    }
-}
-
 impl SseEncode for PriceGraphClient {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -19422,17 +19409,6 @@ impl SseEncode
 
 impl SseEncode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        let (ptr, size) = self.sse_encode_raw();
-        <usize>::sse_encode(ptr, serializer);
-        <i32>::sse_encode(size, serializer);
-    }
-}
-
-impl SseEncode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -20730,6 +20706,13 @@ impl SseEncode for crate::common::network::Network {
     }
 }
 
+impl SseEncode for crate::api::bdk_wallet::storage::OnchainStoreFactory {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.folder_path, serializer);
+    }
+}
+
 impl SseEncode for Option<std::collections::HashMap<String, String>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -21826,7 +21809,6 @@ mod io {
     use crate::api::bdk_wallet::psbt::*;
     use crate::api::bdk_wallet::script_buf::*;
     use crate::api::bdk_wallet::sequence::*;
-    use crate::api::bdk_wallet::storage::*;
     use crate::api::bdk_wallet::transaction_builder::*;
     use crate::api::bdk_wallet::transaction_details::*;
     use crate::api::bdk_wallet::transaction_details_txin::*;
@@ -22303,20 +22285,6 @@ mod io {
         ptr: *const std::ffi::c_void,
     ) {
         MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>::decrement_strong_count(ptr as _);
-    }
-
-    #[no_mangle]
-    pub extern "C" fn frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>::increment_strong_count(ptr as _);
-    }
-
-    #[no_mangle]
-    pub extern "C" fn frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerOnchainStoreFactory(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnchainStoreFactory>>::decrement_strong_count(ptr as _);
     }
 
     #[no_mangle]
