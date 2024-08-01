@@ -10,16 +10,11 @@ use super::{
     account::FrbAccount,
     balance::FrbBalance,
     derivation_path::FrbDerivationPath,
+    discovered_account::DiscoveredAccount,
     storage::{OnchainStore, OnchainStoreFactory},
     transaction_details::FrbTransactionDetails,
 };
 use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
-
-pub struct DiscoveredAccount {
-    pub script_type: ScriptType,
-    pub index: u32,
-    pub derivation_path: FrbDerivationPath,
-}
 
 #[derive(Debug)]
 pub struct FrbWallet {
@@ -60,15 +55,15 @@ impl FrbWallet {
                 Some(address_stop_gap),
             )
             .await?;
+        let out_vec = found.into_iter().map(|x| x.into()).collect();
+        // .map(| DiscoveredAccount {
+        //     script_type,
+        //     index,
+        //     derivation_path: derivation_path.into(),
+        // })
+        // .collect();
 
-        let out_vec = found
-            .into_iter()
-            .map(|(script_type, index, derivation_path)| DiscoveredAccount {
-                script_type,
-                index,
-                derivation_path: derivation_path.into(),
-            })
-            .collect();
+        // Ok(response.into_iter().map(|x| x.into()).collect()),
 
         Ok(out_vec)
     }
