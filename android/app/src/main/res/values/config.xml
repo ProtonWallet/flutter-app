@@ -18,6 +18,7 @@
 
 <resources>
     <bool name="core_feature_auth_signup_show_congrats">false</bool>
+    <bool name="core_feature_observability_enabled">false</bool>
     <string name="core_feature_auth_signup_url_terms_and_conditions" translatable="false">https://proton.me/wallet/legal/terms</string>
     <string name="core_feature_auth_signup_url_privacy_policy" translatable="false">https://proton.me/wallet/privacy-policy</string>
 </resources>
