@@ -56,14 +56,6 @@ impl FrbWallet {
             )
             .await?;
         let out_vec = found.into_iter().map(|x| x.into()).collect();
-        // .map(| DiscoveredAccount {
-        //     script_type,
-        //     index,
-        //     derivation_path: derivation_path.into(),
-        // })
-        // .collect();
-
-        // Ok(response.into_iter().map(|x| x.into()).collect()),
 
         Ok(out_vec)
     }
@@ -159,7 +151,9 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory { folder_path: "." };
+        let storage_factory = OnchainStoreFactory {
+            folder_path: ".".to_string(),
+        };
         let network = Network::Testnet;
         let bip39_mnemonic =
                 // "deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough"
@@ -258,7 +252,9 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory { folder_path: "." };
+        let storage_factory = OnchainStoreFactory {
+            folder_path: ".".to_string(),
+        };
         let network = Network::Bitcoin;
         let bip39_mnemonic =
             "shoe foot noise erode merit good gesture wolf boring build trim zero".to_string();
