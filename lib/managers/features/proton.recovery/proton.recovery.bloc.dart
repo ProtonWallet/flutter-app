@@ -4,6 +4,7 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
@@ -24,12 +25,16 @@ class ProtonRecoveryBloc
   final ProtonSettingsClient protonSettingsApi;
   final UserDataProvider userDataProvider;
 
+  /// app state
+  final AppStateManager appStateManager;
+
   /// initialize the bloc with the initial state
   ProtonRecoveryBloc(
     this.userManager,
     this.protonUsersApi,
     this.userDataProvider,
     this.protonSettingsApi,
+    this.appStateManager,
   ) : super(const ProtonRecoveryState()) {
     on<LoadingRecovery>((event, emit) async {
       emit(state.copyWith(
@@ -213,6 +218,7 @@ class ProtonRecoveryBloc
                 mnemonic: mnemonicWords.join(" ")));
           } on BridgeError catch (e) {
             final errorMessage = parseSampleDisplayError(e);
+            appStateManager.updateStateFrom(e);
             emit(state.copyWith(
                 isLoading: false,
                 requireAuthModel: const RequireAuthModel(),
@@ -308,6 +314,7 @@ class ProtonRecoveryBloc
               requireAuthModel: const RequireAuthModel(),
               mnemonic: mnemonicWords.join(" ")));
         } on BridgeError catch (e) {
+          appStateManager.updateStateFrom(e);
           final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
               isLoading: false,
@@ -378,6 +385,7 @@ class ProtonRecoveryBloc
               isRecoveryEnabled: false,
               requireAuthModel: const RequireAuthModel()));
         } on BridgeError catch (e) {
+          appStateManager.updateStateFrom(e);
           final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
               isLoading: false,

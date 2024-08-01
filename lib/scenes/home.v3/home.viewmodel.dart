@@ -37,6 +37,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -346,6 +347,7 @@ class HomeViewModelImpl extends HomeViewModel {
     sinkAddSafe();
   }
 
+  /// capture errors
   Future<void> initAppStateSubscription() async {
     // app state
     _appStateSubscription = appStateManager.stream.listen((state) {
@@ -377,7 +379,7 @@ class HomeViewModelImpl extends HomeViewModel {
     _blockInfoDataSubscription = dataProviderManager
         .blockInfoDataProvider.dataUpdateController.stream
         .listen((onData) {
-      walletTransactionBloc.syncWallet(forceSync: false);
+      walletTransactionBloc.syncWallet(forceSync: false, heightChanged: true);
     });
 
     // user data
@@ -433,8 +435,9 @@ class HomeViewModelImpl extends HomeViewModel {
             inviterAddressId: emailAddressID,
           );
       dataProviderManager.exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (error) {
-      final errMsg = parseSampleDisplayError(error);
+    } on BridgeError catch (e) {
+      appStateManager.updateStateFrom(e);
+      final errMsg = parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);
@@ -488,40 +491,51 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
+    /// init app state listener
     await initAppStateSubscription();
-    // init network
+
+    /// init network
     await apiServiceManager.initalOldApiService();
-    // read app version
+
+    /// read app version
     appVersion = await UserAgent().display;
 
-    // user
+    /// read user data
     final userInfo = userManager.userInfo;
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
     protonWalletManager.login(userInfo.userId);
 
     try {
-      // check if user is eligible
-      final int eligible = await apiServiceManager
-          .getApiService()
-          .getSettingsClient()
-          .getUserWalletEligibility();
-      if (eligible == 0) {
-        EarlyAccessSheet.show(
-          Coordinator.rootNavigatorKey.currentContext!,
-          userEmail,
-          logout,
+      final cachedEligible = await appStateManager.getEligible();
+      if (cachedEligible != 1) {
+        // Check if user is eligible
+        final int eligible = await retry(
+          () => apiServiceManager
+              .getApiService()
+              .getSettingsClient()
+              .getUserWalletEligibility(),
         );
-        return;
+        if (eligible == 0) {
+          EarlyAccessSheet.show(
+            Coordinator.rootNavigatorKey.currentContext!,
+            userEmail,
+            logout,
+          );
+          return;
+        } else {
+          await appStateManager.setEligible();
+        }
       }
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.handleForceUpgrade(e);
-      appStateManager.handleError(e);
+      appStateManager.updateStateFrom(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+      CommonHelper.showErrorDialog(parseSampleDisplayError(e));
       return;
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      CommonHelper.showErrorDialog(e.toString());
       return;
     }
 
@@ -580,7 +594,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
       eventLoop.start();
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.handleForceUpgrade(e);
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -613,7 +627,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
   Future<void> loadDiscoverContents() async {
     protonFeedItems = await ProtonFeedItem.loadFromApi(
-        apiServiceManager.getApiService().getDiscoveryContentClient());
+      apiServiceManager.getApiService().getDiscoveryContentClient(),
+    );
   }
 
   @override
@@ -734,6 +749,7 @@ class HomeViewModelImpl extends HomeViewModel {
           walletId: walletModel.walletID, newName: encryptedName);
       walletListBloc.updateWalletName(walletModel, newName);
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
@@ -761,6 +777,7 @@ class HomeViewModelImpl extends HomeViewModel {
       await DBHelper.accountDao!.update(accountModel);
       walletListBloc.updateAccountName(walletModel, accountModel, newName);
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -784,6 +801,7 @@ class HomeViewModelImpl extends HomeViewModel {
         await dataProviderManager.walletDataProvider
             .deleteWalletAccount(accountModel: accountModel);
       } on BridgeError catch (e, stacktrace) {
+        appStateManager.updateStateFrom(e);
         errorMessage = parseSampleDisplayError(e);
         logger.e("importWallet error: $e, stacktrace: $stacktrace");
       } catch (e) {
@@ -849,6 +867,7 @@ class HomeViewModelImpl extends HomeViewModel {
             walletModel, accountModel, serverAddressID);
       }
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
@@ -882,6 +901,7 @@ class HomeViewModelImpl extends HomeViewModel {
         const Duration(seconds: 3),
       ); // TODO(fix): fix await for DBHelper.reset();
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -994,6 +1014,7 @@ class HomeViewModelImpl extends HomeViewModel {
         accountIndex,
       );
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
@@ -1043,6 +1064,7 @@ class HomeViewModelImpl extends HomeViewModel {
         serverAddressID,
       );
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
@@ -1168,7 +1190,7 @@ class HomeViewModelImpl extends HomeViewModel {
       );
 
       // default Primary Account (without BvE)
-      final _ = await createWalletBloc.createWalletAccount(
+      final apiWalletAccount = await createWalletBloc.createWalletAccount(
         apiWallet.wallet.id,
         appConfig.scriptTypeInfo,
         "Primary Account",
@@ -1201,8 +1223,22 @@ class HomeViewModelImpl extends HomeViewModel {
             );
           }
         }
+      } else {
+        final String walletID = apiWallet.wallet.id;
+        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
+        final String accountID = apiWalletAccount.id;
+        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
+        if (walletModel != null && accountModel != null) {
+          dataProviderManager.bdkTransactionDataProvider.syncWallet(
+            walletModel,
+            accountModel,
+            forceSync: true,
+            heightChanged: false,
+          );
+        }
       }
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       final msg = parseSampleDisplayError(e);
       if (msg.toLowerCase() ==
           "You have reached the creation limit for this type of wallet"
@@ -1225,8 +1261,8 @@ class HomeViewModelImpl extends HomeViewModel {
       Sentry.captureException(e, stackTrace: stacktrace);
       return false;
     }
+
     return true;
-    // no need to sync since it's brand new walllet
   }
 
   @override

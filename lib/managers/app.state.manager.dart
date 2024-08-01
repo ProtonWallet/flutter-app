@@ -67,6 +67,9 @@ class AppStateManager extends DataProvider implements Manager {
   final eventloopErrorCountKey = "proton_wallet_app_k_event_loop_error_count";
   final syncErrorCountKey = "proton_wallet_app_k_sync_error_count";
 
+  /// user eligible
+  final userEligible = "proton_wallet_app_k_is_user_eligible";
+
   /// Secure storage key for the app state
   final SecureStorageManager secureStore;
 
@@ -80,7 +83,12 @@ class AppStateManager extends DataProvider implements Manager {
   /// constructor
   AppStateManager(this.secureStore, this.shared);
 
-  Future<void> handleError(BridgeError exception) async {
+  Future<void> updateStateFrom(BridgeError exception) async {
+    await handleSessionError(exception);
+    await handleForceUpgrade(exception);
+  }
+
+  Future<void> handleSessionError(BridgeError exception) async {
     final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
@@ -96,6 +104,7 @@ class AppStateManager extends DataProvider implements Manager {
     }
   }
 
+  @Deprecated("is not used, remove later")
   Future<void> handleWalletListError(BridgeError exception) async {
     final error = parseResponseError(exception);
     if (error != null && error.code == 404 && appInBetaState) {
@@ -173,6 +182,16 @@ class AppStateManager extends DataProvider implements Manager {
       count,
       maxSeconds: 120,
     );
+  }
+
+  ///
+  Future<int> getEligible() async {
+    final count = await secureStore.get(userEligible);
+    return count == "1" ? 1 : 0;
+  }
+
+  Future<void> setEligible() async {
+    await secureStore.set(userEligible, "1");
   }
 
   Future<void> resetSyncDuration() async {
