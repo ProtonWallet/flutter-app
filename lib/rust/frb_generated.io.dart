@@ -29,6 +29,7 @@ import 'api/bdk_wallet/amount.dart';
 import 'api/bdk_wallet/balance.dart';
 import 'api/bdk_wallet/blockchain.dart';
 import 'api/bdk_wallet/derivation_path.dart';
+import 'api/bdk_wallet/discovered_account.dart';
 import 'api/bdk_wallet/local_output.dart';
 import 'api/bdk_wallet/mnemonic.dart';
 import 'api/bdk_wallet/payment_link.dart';
@@ -475,11 +476,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   BdkTransaction
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
-          dynamic raw);
-
-  @protected
-  DiscoveredAccount
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveredAccount(
           dynamic raw);
 
   @protected
@@ -1880,11 +1876,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   BdkTransaction
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
-          SseDeserializer deserializer);
-
-  @protected
-  DiscoveredAccount
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveredAccount(
           SseDeserializer deserializer);
 
   @protected
@@ -3374,11 +3365,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           BdkTransaction self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDiscoveredAccount(
-          DiscoveredAccount self, SseSerializer serializer);
 
   @protected
   void
