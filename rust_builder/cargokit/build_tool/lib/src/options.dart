@@ -51,23 +51,36 @@ enum Toolchain {
   stable,
   beta,
   nightly,
+  custom,
 }
 
 class CargoBuildOptions {
   final Toolchain toolchain;
+  final String? customVersion;
   final List<String> flags;
 
   CargoBuildOptions({
     required this.toolchain,
     required this.flags,
+    required this.customVersion,
   });
 
-  static Toolchain _toolchainFromNode(YamlNode node) {
+  static (Toolchain, String?) _toolchainFromNode(YamlNode node) {
     if (node case YamlScalar(value: String name)) {
-      final toolchain =
-          Toolchain.values.firstWhereOrNull((element) => element.name == name);
+      final splited = name.split("-");
+
+      if (splited.length < 1) {
+        throw SourceSpanException('Invalid toolchain format.', node.span);
+      }
+      final checkName = splited[0];
+      var customVersion = null;
+      if (splited.length > 1) {
+        customVersion = splited[1];
+      }
+      final toolchain = Toolchain.values
+          .firstWhereOrNull((element) => element.name == checkName);
       if (toolchain != null) {
-        return toolchain;
+        return (toolchain, customVersion);
       }
     }
     throw SourceSpanException(
@@ -80,10 +93,13 @@ class CargoBuildOptions {
       throw SourceSpanException('Cargo options must be a map', node.span);
     }
     Toolchain toolchain = Toolchain.stable;
+    String? customVersion = null;
     List<String> flags = [];
     for (final MapEntry(:key, :value) in node.nodes.entries) {
       if (key case YamlScalar(value: 'toolchain')) {
-        toolchain = _toolchainFromNode(value);
+        final result = _toolchainFromNode(value);
+        toolchain = result.$1;
+        customVersion = result.$2;
       } else if (key case YamlScalar(value: 'extra_flags')) {
         if (value case YamlList(nodes: List<YamlNode> list)) {
           if (list.every((element) {
@@ -104,7 +120,9 @@ class CargoBuildOptions {
             key.span);
       }
     }
-    return CargoBuildOptions(toolchain: toolchain, flags: flags);
+    _log.info('Parsed cargo options: $toolchain, $flags, $customVersion');
+    return CargoBuildOptions(
+        toolchain: toolchain, flags: flags, customVersion: customVersion);
   }
 }
 
