@@ -1,4 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -19,11 +20,14 @@ class RecoveryEmailCoordinator extends Coordinator {
     final userManager = serviceManager.get<UserManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
+
     final ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
       userManager,
       apiServiceManager.getProtonUsersApiClient(),
       dataProviderManager.userDataProvider,
       apiServiceManager.getSettingsApiClient(),
+      appStateManager,
     );
 
     final viewModel = RecoveryEmailViewModelImpl(

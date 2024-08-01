@@ -6,6 +6,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -42,10 +43,24 @@ class BDKTransactionData {
   });
 }
 
+class BDKSyncUpdated extends DataUpdated<String> {
+  BDKSyncUpdated(super.updatedData);
+}
+
+class BDKSyncCancelled extends DataUpdated<String> {
+  BDKSyncCancelled(super.updatedData);
+}
+
+class BDKSyncing extends DataUpdated<String> {
+  BDKSyncing(super.updatedData);
+}
+
+class BDKSyncError extends DataUpdated<String> {
+  BDKSyncError(super.updatedData);
+}
+
 class BDKTransactionDataProvider extends DataProvider {
   final AccountDao accountDao;
-  StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>.broadcast();
   FrbBlockchainClient? blockchain;
   final ProtonApiService apiService;
 
@@ -63,6 +78,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
   Future<void> init(List<WalletModel> wallets) async {
     bdkTransactionDataList.clear();
+    resetErrorCount();
     for (WalletModel walletModel in wallets) {
       final accounts = await accountDao.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accounts) {
@@ -70,6 +86,7 @@ class BDKTransactionDataProvider extends DataProvider {
           walletModel,
           accountModel,
           forceSync: false,
+          heightChanged: false,
         );
         bdkTransactionDataList.add(await _getBDKTransactionData(
           walletModel,
@@ -128,6 +145,7 @@ class BDKTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel, {
     required bool forceSync,
+    required bool heightChanged,
   }) async {
     final bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
         ? isWalletSyncing[accountModel.accountID]!
@@ -149,40 +167,69 @@ class BDKTransactionDataProvider extends DataProvider {
           serverScriptType: accountModel.scriptType,
         );
         if (account != null) {
+          logger.i("Bdk wallet sync check start!");
+
           /// check can i run
-          final lastOk =
+          final errorTimer =
               await shared.read("proton_wallet_app_k_sync_error_timmer") ?? 0;
-          if (!forceSync && DateTime.now().second - lastOk < 0) {
+
+          final int currentTime = DateTime.now().secondsSinceEpoch();
+          if (!forceSync && currentTime - errorTimer < 0) {
+            logger.i("Bdk wallet check error timmer cancelled");
+            isWalletSyncing[accountModel.accountID] = false;
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            final check = "${accountModel.accountID}_$timeEnd";
+            emitState(BDKSyncCancelled(check));
+            return;
+          }
+
+          /// check last sync time
+          final int lastSyncTime = lastSyncedTime[accountModel.accountID] ?? 0;
+          final int currentTimestamp = DateTime.now().secondsSinceEpoch();
+          final int timeDiffSeconds = currentTimestamp - lastSyncTime;
+          if (!forceSync && !heightChanged && timeDiffSeconds < reSyncTime) {
+            logger.i("Bdk wallet check last sync time cancelled");
+            isWalletSyncing[accountModel.accountID] = false;
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            final check = "${accountModel.accountID}_$timeEnd";
+            emitState(BDKSyncCancelled(check));
             return;
           }
 
           final bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
-            logger.i("Bdk wallet full sync Started");
+            final timeStart = DateTime.now().secondsSinceEpoch();
+            logger.i("Bdk wallet full sync start time: $timeStart");
             await blockchain?.fullSync(
               account: account,
               stopGap: BigInt.from(appConfig.stopGap),
             );
             await shared.write(syncCheckID, true);
-            logger.i("Bdk wallet full sync End");
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            logger.i("Bdk wallet full sync end time: $timeEnd");
             success = true;
           } else {
             logger.i("Bdk wallet partial sync check");
-            // TODO(fix): check if it's needed
-            // if (await blockchain!.shouldSync(account: account)) {
-            logger.i("Bdk wallet partial sync Started");
+            final timeStart = DateTime.now().secondsSinceEpoch();
+            logger.i("Bdk wallet partial sync start time: $timeStart");
             await blockchain!.partialSync(account: account);
-            logger.i("Bdk wallet partial sync End");
+
+            final timeEnd = DateTime.now().secondsSinceEpoch();
+            logger.i("Bdk wallet partial sync end time: $timeEnd");
             success = true;
-            lastSyncedTime[accountModel.accountID] =
-                DateTime.now().microsecondsSinceEpoch;
           }
+
+          lastSyncedTime[accountModel.accountID] =
+              DateTime.now().secondsSinceEpoch();
           await resetErrorCount();
         }
       } on BridgeError catch (e, stacktrace) {
+        final timeEnd = DateTime.now().secondsSinceEpoch();
+        logger.i("Bdk wallet partial sync end with error time: $timeEnd");
         await updateErrorCount();
         final errorMessage = parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
+        emitState(BDKSyncError(errorMessage));
         CommonHelper.showErrorDialog(
           errorMessage,
         );
@@ -196,7 +243,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final count =
             await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
         await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
-
+        emitState(BDKSyncError(e.toString()));
         final String errorMessage =
             "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
         logger.e(errorMessage);
@@ -204,9 +251,12 @@ class BDKTransactionDataProvider extends DataProvider {
           errorMessage,
         );
       } finally {
+        logger.i("Bdk wallet sync end finally");
         isWalletSyncing[accountModel.accountID] = false;
         if (success) {
-          dataUpdateController.add(DataUpdated("bdk data updated"));
+          final timeEnd = DateTime.now().secondsSinceEpoch();
+          final check = "${accountModel.accountID}_$timeEnd";
+          emitState(BDKSyncUpdated(check));
         }
       }
     }
@@ -214,7 +264,9 @@ class BDKTransactionDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
-    dataUpdateController.close();
+    bdkTransactionDataList.clear();
+    isWalletSyncing.clear();
+    lastSyncedTime.clear();
   }
 
   int _getNextBackoffDuration(
@@ -238,7 +290,7 @@ class BDKTransactionDataProvider extends DataProvider {
     final count =
         await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
     await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
-    final newTimeer = DateTime.now().second +
+    final newTimeer = DateTime.now().secondsSinceEpoch() +
         _getNextBackoffDuration(count, minSeconds: 120, maxSeconds: 300);
     await shared.write("proton_wallet_app_k_sync_error_timmer", newTimeer);
   }

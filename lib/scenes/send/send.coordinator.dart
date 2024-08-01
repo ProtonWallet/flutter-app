@@ -1,4 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -35,6 +36,7 @@ class SendCoordinator extends Coordinator {
     final walletManager = serviceManager.get<ProtonWalletManager>();
     final dataProvider = serviceManager.get<DataProviderManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
 
     final viewModel = SendViewModelImpl(
       this,
@@ -50,6 +52,7 @@ class SendCoordinator extends Coordinator {
       dataProvider.userSettingsDataProvider,
       dataProvider.walletDataProvider,
       apiServiceManager.getApiService().getInviteClient(),
+      appStateManager,
     );
     widget = SendView(
       viewModel,

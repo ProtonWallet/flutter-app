@@ -711,6 +711,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
+  Map<String, String> dco_decode_Map_String_String(dynamic raw);
+
+  @protected
   Map<String, double> dco_decode_Map_String_f_64(dynamic raw);
 
   @protected
@@ -1335,6 +1338,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<(String, double)> dco_decode_list_record_string_f_64(dynamic raw);
 
   @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
   List<WalletAccountEvent> dco_decode_list_wallet_account_event(dynamic raw);
 
   @protected
@@ -1364,6 +1370,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network dco_decode_network(dynamic raw);
+
+  @protected
+  Map<String, String>? dco_decode_opt_Map_String_String(dynamic raw);
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
@@ -1552,6 +1561,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, double) dco_decode_record_string_f_64(dynamic raw);
+
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
 
   @protected
   ReferralSettings dco_decode_referral_settings(dynamic raw);
@@ -2097,6 +2109,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
+
+  @protected
+  Map<String, String> sse_decode_Map_String_String(
+      SseDeserializer deserializer);
 
   @protected
   Map<String, double> sse_decode_Map_String_f_64(SseDeserializer deserializer);
@@ -2775,6 +2791,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<(String, String)> sse_decode_list_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
   List<WalletAccountEvent> sse_decode_list_wallet_account_event(
       SseDeserializer deserializer);
 
@@ -2808,6 +2828,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
+
+  @protected
+  Map<String, String>? sse_decode_opt_Map_String_String(
+      SseDeserializer deserializer);
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
@@ -3022,6 +3046,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, double) sse_decode_record_string_f_64(SseDeserializer deserializer);
+
+  @protected
+  (String, String) sse_decode_record_string_string(
+      SseDeserializer deserializer);
 
   @protected
   ReferralSettings sse_decode_referral_settings(SseDeserializer deserializer);
@@ -3578,6 +3606,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_DartOpaque(Object self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_String_String(
+      Map<String, String> self, SseSerializer serializer);
 
   @protected
   void sse_encode_Map_String_f_64(
@@ -4272,6 +4304,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(String, double)> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_record_string_string(
+      List<(String, String)> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_wallet_account_event(
       List<WalletAccountEvent> self, SseSerializer serializer);
 
@@ -4307,6 +4343,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_network(Network self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_Map_String_String(
+      Map<String, String>? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
@@ -4522,6 +4562,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_record_string_f_64(
       (String, double) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string(
+      (String, String) self, SseSerializer serializer);
 
   @protected
   void sse_encode_referral_settings(

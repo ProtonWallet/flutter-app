@@ -17,6 +17,7 @@ import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
@@ -96,6 +97,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   final int maxRecipientCount = 5;
   String fromAddress = "";
   String errorMessage = "";
+  bool isAnonymous = false;
+  late ValueNotifier userAddressValueNotifier;
   late TextEditingController recipientTextController;
   late TextEditingController memoTextController;
   late TextEditingController amountTextController;
@@ -220,6 +223,7 @@ class SendViewModelImpl extends SendViewModel {
     super.userSettingsDataProvider,
     super.walletDataProvider,
     super.inviteClient,
+    this.appStateManager,
   );
 
   // event loop
@@ -229,6 +233,9 @@ class SendViewModelImpl extends SendViewModel {
 
   // wallet manger
   final ProtonWalletManager walletManger;
+
+  /// app state manager
+  final AppStateManager appStateManager;
 
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
@@ -298,8 +305,10 @@ class SendViewModelImpl extends SendViewModel {
         }
       });
 
-      protonEmailAddresses =
+      protonEmailAddresses = [anonymousAddress] +
           await protonEmailAddressProvider.getProtonEmailAddresses();
+      userAddressValueNotifier =
+          ValueNotifier(protonEmailAddresses.firstOrNull);
 
       addressKeys = await WalletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
@@ -322,6 +331,7 @@ class SendViewModelImpl extends SendViewModel {
       sinkAddSafe();
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
+      await contactsDataProvider.fetchFromServer();
       contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
       // for account switcher
@@ -357,6 +367,7 @@ class SendViewModelImpl extends SendViewModel {
       await updateWallet();
       logger.d(DateTime.now().toString());
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       _processError(e, stacktrace);
     } catch (e) {
       errorMessage = "Init sending error $e";
@@ -546,6 +557,7 @@ class SendViewModelImpl extends SendViewModel {
           }
           // TODO(fix): handle banned bitcoin address alert here
         } on BridgeError catch (e, stacktrace) {
+          appStateManager.updateStateFrom(e);
           final err = parseResponseError(e);
           final msg = parseSampleDisplayError(e);
           if (err != null) {
@@ -685,6 +697,7 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       _processError(e, stacktrace);
     } catch (e) {
       errorMessage = "Add recipient error: $e";
@@ -746,7 +759,7 @@ class SendViewModelImpl extends SendViewModel {
       txBuilder = await _frbAccount!.buildTx();
       totalAmountInSAT = 0;
       for (ProtonRecipient protonRecipient in recipients) {
-        amountInSATS = balance ~/ recipients.length; // dust size
+        amountInSATS = balance ~/ recipients.length;
         final String email = protonRecipient.email;
         String bitcoinAddress = "";
         if (email.contains("@")) {
@@ -768,12 +781,14 @@ class SendViewModelImpl extends SendViewModel {
       final network = appConfig.coinType.network;
       txBuilder = await txBuilder.setFeeRate(
           satPerVb: BigInt.from(feeRateHighPriority.ceil()));
+      txBuilder = await txBuilder.constrainRecipientAmounts();
       frbDraftPsbt = await txBuilder.createDraftPsbt(
         network: network,
         allowDust: allowDust,
       );
       estimatedFeeInSAT = frbDraftPsbt.fee().toSat().toInt();
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       return _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
@@ -895,6 +910,7 @@ class SendViewModelImpl extends SendViewModel {
       txBuilder = await txBuilder.setFeeRate(
           satPerVb: BigInt.from(feeRateSatPerVByte.ceil()));
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       return _processError(e, stacktrace);
     } catch (e) {
       // TODO(fix): handle exception here
@@ -916,9 +932,10 @@ class SendViewModelImpl extends SendViewModel {
     logger.i("Start sendCoin()");
     addressPublicKeys.clear();
     try {
+      isAnonymous = userAddressValueNotifier.value.id == anonymousAddress.id;
       String? emailAddressID;
-      if (accountAddressIDs.isNotEmpty) {
-        emailAddressID = accountAddressIDs.first;
+      if (!isAnonymous) {
+        emailAddressID = userAddressValueNotifier.value.id;
       } else {
         // TODO(fix): check if we need default one
         emailAddressID = addressKeys.firstOrNull?.id;
@@ -930,12 +947,16 @@ class SendViewModelImpl extends SendViewModel {
           await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
 
       String? encryptedMessage;
+      final Map<String, String> apiRecipientsMap = {};
       for (ProtonRecipient protonRecipient in recipients) {
         final String email = protonRecipient.email;
         final String bitcoinAddress = bitcoinAddresses[email] ?? "";
         if (email2AddressKey.containsKey(email) &&
             !selfBitcoinAddresses.contains(bitcoinAddress)) {
           addressPublicKeys.add(email2AddressKey[email]!);
+          if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
+            apiRecipientsMap[bitcoinAddress] = email;
+          }
         }
       }
 
@@ -977,6 +998,8 @@ class SendViewModelImpl extends SendViewModel {
         addressId: emailAddressID,
         // subject is deprecated, set to default null
         body: encryptedMessage,
+        recipients: apiRecipientsMap.isNotEmpty ? apiRecipientsMap : null,
+        isAnonymous: isAnonymous ? 1 : 0,
       );
 
       logger
@@ -991,6 +1014,7 @@ class SendViewModelImpl extends SendViewModel {
         logger.e(e.toString());
       }
     } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
       return _processError(e, stacktrace);
     } catch (e) {
       errorMessage = e.toString();
@@ -1098,8 +1122,9 @@ class SendViewModelImpl extends SendViewModel {
       await inviteClient.sendEmailIntegrationInvite(
           inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
       exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (error) {
-      final errMsg = parseSampleDisplayError(error);
+    } on BridgeError catch (e) {
+      appStateManager.updateStateFrom(e);
+      final errMsg = parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);
@@ -1126,8 +1151,9 @@ class SendViewModelImpl extends SendViewModel {
       await inviteClient.sendNewcomerInvite(
           inviteeEmail: email, inviterAddressId: emailAddressID ?? "");
       exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (error) {
-      final errMsg = parseSampleDisplayError(error);
+    } on BridgeError catch (e) {
+      appStateManager.updateStateFrom(e);
+      final errMsg = parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);
@@ -1240,8 +1266,9 @@ class SendViewModelImpl extends SendViewModel {
         inviterAddressId: emailAddressID,
       );
       exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (error) {
-      final errMsg = parseSampleDisplayError(error);
+    } on BridgeError catch (e) {
+      appStateManager.updateStateFrom(e);
+      final errMsg = parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);

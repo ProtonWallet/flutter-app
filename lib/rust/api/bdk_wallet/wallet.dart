@@ -8,9 +8,9 @@ import '../../common/network.dart';
 import '../../common/pagination.dart';
 import '../../common/script_type.dart';
 import '../../frb_generated.dart';
-import '../api_service/proton_api_service.dart';
 import 'account.dart';
 import 'balance.dart';
+import 'blockchain.dart';
 import 'derivation_path.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'storage.dart';
@@ -42,7 +42,7 @@ abstract class FrbWallet implements RustOpaqueInterface {
       required OnchainStoreFactory storageFactory});
 
   Future<List<DiscoveredAccount>> discoverAccount(
-      {required ProtonApiService apiService,
+      {required ArcProtonApiService apiService,
       required OnchainStoreFactory storageFactory,
       required int accountStopGap,
       required BigInt addressStopGap});

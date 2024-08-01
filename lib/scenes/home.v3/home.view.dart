@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
@@ -515,17 +516,40 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
       );
     }
-    if (walletTransactionState.isSyncing || accountName.isEmpty) {
+    if (walletTransactionState.isSyncing ||
+        accountName.isEmpty ||
+        walletTransactionState.syncedWithError) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        accountName.isNotEmpty
-            ? Text(accountName,
-                style: FontManager.body1Regular(ProtonColors.textHint))
-            : const CardLoading(
-                width: 200,
-                height: 16,
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                margin: EdgeInsets.only(top: 4),
-              ),
+        Row(
+          children: [
+            accountName.isNotEmpty
+                ? Text(accountName,
+                    style: FontManager.body1Regular(ProtonColors.textHint))
+                : const CardLoading(
+                    width: 200,
+                    height: 16,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    margin: EdgeInsets.only(top: 4),
+                  ),
+            const SizedBox(
+              width: 30,
+            ),
+
+            // TODO(fix): need to have error for each account
+            if (walletTransactionState.syncedWithError &&
+                walletTransactionState.errorMessage.isNotEmpty)
+              GestureDetector(
+                  onTap: () {
+                    CommonHelper.showErrorDialog(
+                        walletTransactionState.errorMessage);
+                  },
+                  child: Icon(
+                    Icons.warning_amber_rounded,
+                    size: 24,
+                    color: ProtonColors.alertWaning,
+                  )),
+          ],
+        ),
         const SizedBox(
           height: 2,
         ),

@@ -36,6 +36,7 @@ import 'package:wallet/rust/common/address_info.dart';
 import 'package:wallet/rust/common/transaction_time.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet.dart';
 
 // Define the events
 abstract class WalletTransactionEvent extends Equatable {
@@ -59,31 +60,54 @@ class SyncWallet extends WalletTransactionEvent {
 
 class SelectWallet extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
-  final bool triggerByDataProviderUpdate;
+  final bool skipSyncWallet;
 
   SelectWallet(
     this.walletMenuModel, {
-    // TODO(fix): change to a shorter name
-    required this.triggerByDataProviderUpdate,
+    required this.skipSyncWallet,
   });
 
   @override
-  List<Object> get props => [walletMenuModel];
+  List<Object> get props => [walletMenuModel, skipSyncWallet];
+}
+
+class UpdateWalletSyncCancelled extends WalletTransactionEvent {
+  final String accountID;
+  UpdateWalletSyncCancelled(this.accountID);
+  @override
+  List<Object> get props => [accountID];
+}
+
+class UpdateWalletError extends WalletTransactionEvent {
+  final String errorMessage;
+  UpdateWalletError(
+    this.errorMessage,
+  );
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+
+class UpdateWalletDone extends WalletTransactionEvent {
+  UpdateWalletDone();
+
+  @override
+  List<Object> get props => [];
 }
 
 class SelectAccount extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
   final AccountMenuModel accountMenuModel;
-  final bool triggerByDataProviderUpdate;
+  final bool skipSyncWallet;
 
   SelectAccount(
     this.walletMenuModel,
     this.accountMenuModel, {
-    required this.triggerByDataProviderUpdate,
+    required this.skipSyncWallet,
   });
 
   @override
-  List<Object> get props => [walletMenuModel, accountMenuModel];
+  List<Object> get props => [walletMenuModel, accountMenuModel, skipSyncWallet];
 }
 
 // Define the state
@@ -95,11 +119,15 @@ class WalletTransactionState extends Equatable {
   final List<HistoryTransaction> historyTransaction;
   final List<BitcoinAddressDetail> bitcoinAddresses;
   final bool isSyncing;
+  final bool syncedWithError;
+  final String errorMessage;
 
   const WalletTransactionState({
     required this.historyTransaction,
     required this.bitcoinAddresses,
     required this.isSyncing,
+    required this.syncedWithError,
+    required this.errorMessage,
   });
 
   @override
@@ -107,19 +135,25 @@ class WalletTransactionState extends Equatable {
         isSyncing,
         historyTransaction,
         bitcoinAddresses,
+        syncedWithError,
+        errorMessage,
       ];
 }
 
 extension WalletTransactionStateCopyWith on WalletTransactionState {
   WalletTransactionState copyWith({
     bool isSyncing = false,
+    bool? syncedWithError,
     List<HistoryTransaction>? historyTransaction,
     List<BitcoinAddressDetail>? bitcoinAddresses,
+    String? errorMessage,
   }) {
     return WalletTransactionState(
       isSyncing: isSyncing,
       bitcoinAddresses: bitcoinAddresses ?? this.bitcoinAddresses,
       historyTransaction: historyTransaction ?? this.historyTransaction,
+      syncedWithError: syncedWithError ?? this.syncedWithError,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
@@ -141,10 +175,6 @@ class WalletTransactionBloc
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? fiatCurrencySettingSubscription;
 
-  Map<String, int> accountID2lastSyncTime = {};
-
-  // final BdkLibrary _lib = BdkLibrary(coinType: appConfig.coinType);
-
   WalletTransactionEvent? lastEvent;
 
   WalletTransactionBloc(
@@ -160,6 +190,8 @@ class WalletTransactionBloc
           isSyncing: false,
           historyTransaction: [],
           bitcoinAddresses: [],
+          syncedWithError: false,
+          errorMessage: "",
         )) {
     /// currentWalletModel and currentAccountModel are used to identify if the process need to be continue or not
     /// for example, if user select Wallet A, then it will start generating transactions for wallet A
@@ -187,7 +219,7 @@ class WalletTransactionBloc
                   walletsDataProvider.selectedServerWalletAccountID) {
             add(SelectWallet(
               walletMenuModel,
-              triggerByDataProviderUpdate: false, // need to sync wallet
+              skipSyncWallet: false, // need to sync wallet
             ));
           }
         } else {
@@ -203,7 +235,7 @@ class WalletTransactionBloc
                 add(SelectAccount(
                   walletMenuModel,
                   accountMenuModel,
-                  triggerByDataProviderUpdate: false, // need to sync wallet
+                  skipSyncWallet: false, // need to sync wallet
                 ));
                 break;
               }
@@ -223,8 +255,20 @@ class WalletTransactionBloc
     });
 
     bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.dataUpdateController.stream.listen((state) {
-      handleTransactionDataProviderUpdate();
+        bdkTransactionDataProvider.stream.listen((state) {
+      if (state is BDKSyncUpdated) {
+        handleTransactionDataProviderUpdate();
+        if (this.state.errorMessage.isNotEmpty) {
+          add(UpdateWalletDone());
+        }
+      } else if (state is BDKSyncError) {
+        add(UpdateWalletError(state.updatedData));
+        handleTransactionDataProviderUpdate();
+      } else if (state is BDKSyncCancelled) {
+        if (this.state.isSyncing) {
+          handleTransactionDataProviderUpdate();
+        }
+      }
     });
 
     serverTransactionDataSubscription = serverTransactionDataProvider
@@ -236,7 +280,7 @@ class WalletTransactionBloc
         Future.delayed(const Duration(seconds: 10), () {
           /// wait 10 second so transaction can update first
           /// since bdk account will be locked when it's syncing
-          syncWallet(forceSync: true);
+          syncWallet(forceSync: true, heightChanged: false);
         });
       }
 
@@ -256,21 +300,14 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      final int currentTimestamp =
-          DateTime.now().millisecondsSinceEpoch ~/ 1000;
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
-        final int lastSyncTime =
-            accountID2lastSyncTime[accountMenuModel.accountModel.accountID] ??
-                0;
-        final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-        if (timeDiffSeconds > reSyncTime) {
-          accountID2lastSyncTime[accountMenuModel.accountModel.accountID] =
-              currentTimestamp;
+        if (!event.skipSyncWallet) {
           bdkTransactionDataProvider.syncWallet(
             event.walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: false,
+            heightChanged: false,
           );
         }
       }
@@ -286,14 +323,12 @@ class WalletTransactionBloc
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = null;
       lastEvent = event;
-      if (!event.triggerByDataProviderUpdate) {
-        // syncWallet(forceSync: false);
-      }
 
       List<BitcoinAddressDetail> bitcoinAddresses = [];
       final WalletModel walletModel = event.walletMenuModel.walletModel;
-      final SecretKey? secretKey =
-          await getSecretKey(event.walletMenuModel.walletModel);
+      final SecretKey? secretKey = await getSecretKey(
+        event.walletMenuModel.walletModel,
+      );
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
@@ -364,20 +399,12 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
-      final int currentTimestamp =
-          DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      final int lastSyncTime = accountID2lastSyncTime[
-              event.accountMenuModel.accountModel.accountID] ??
-          0;
-      final int timeDiffSeconds = currentTimestamp - lastSyncTime;
-
-      if (timeDiffSeconds > reSyncTime) {
-        accountID2lastSyncTime[event.accountMenuModel.accountModel.accountID] =
-            currentTimestamp;
+      if (!event.skipSyncWallet) {
         bdkTransactionDataProvider.syncWallet(
           event.walletMenuModel.walletModel,
           event.accountMenuModel.accountModel,
           forceSync: false,
+          heightChanged: false,
         );
       }
       if (currentWalletModel?.walletID !=
@@ -393,9 +420,6 @@ class WalletTransactionBloc
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = event.accountMenuModel.accountModel;
       lastEvent = event;
-      if (!event.triggerByDataProviderUpdate) {
-        // syncWallet(forceSync: false);
-      }
 
       final WalletModel walletModel = event.walletMenuModel.walletModel;
       final SecretKey? secretKey =
@@ -456,6 +480,20 @@ class WalletTransactionBloc
         bitcoinAddresses: localBitcoinAddressData.bitcoinAddresses,
       ));
     });
+
+    on<UpdateWalletError>((event, emit) async {
+      emit(state.copyWith(
+        syncedWithError: true,
+        errorMessage: event.errorMessage,
+      ));
+    });
+
+    on<UpdateWalletDone>((event, emit) async {
+      emit(state.copyWith(
+        syncedWithError: false,
+        errorMessage: "",
+      ));
+    });
   }
 
   void handleTransactionDataProviderUpdate() {
@@ -464,14 +502,14 @@ class WalletTransactionBloc
         final SelectWallet selectWallet = (lastEvent! as SelectWallet);
         add(SelectWallet(
           selectWallet.walletMenuModel,
-          triggerByDataProviderUpdate: true,
+          skipSyncWallet: true,
         ));
       } else if (lastEvent is SelectAccount) {
         final SelectAccount selectAccount = (lastEvent! as SelectAccount);
         add(SelectAccount(
           selectAccount.walletMenuModel,
           selectAccount.accountMenuModel,
-          triggerByDataProviderUpdate: true,
+          skipSyncWallet: true,
         ));
       }
     }
@@ -699,6 +737,8 @@ class WalletTransactionBloc
       String toList = "";
       String sender = "";
       String body = "";
+      bool isInternalTransaction = false;
+
       if (transactionModel != null) {
         final String encryptedToList = transactionModel.tolist ?? "";
         final String encryptedSender = transactionModel.sender ?? "";
@@ -716,6 +756,10 @@ class WalletTransactionBloc
         if (body.isEmpty) {
           body = tryDecryptWithKeys(addressKeys, encryptedBody);
         }
+        isInternalTransaction = (transactionModel.type ==
+                TransactionType.protonToProtonSend.index ||
+            transactionModel.type ==
+                TransactionType.protonToProtonReceive.index);
       }
 
       int amountInSATS =
@@ -747,7 +791,11 @@ class WalletTransactionBloc
         createTimestamp: time,
         updateTimestamp: lastSeenTime,
         amountInSATS: amountInSATS,
-        sender: sender.isNotEmpty ? sender : "Unknown",
+        sender: sender.isNotEmpty
+            ? sender
+            : isInternalTransaction
+                ? "Anonymous sender"
+                : "Unknown",
         toList:
             toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
         feeInSATS: (transactionDetail.fees ?? BigInt.zero).toInt(),
@@ -802,37 +850,6 @@ class WalletTransactionBloc
     return exchangeRate;
   }
 
-  /// Don't need this since bdk can extract outputs to get recipients' bitcoinAddresses
-  // Future<void> updateBitcoinAddressUsed(
-  //     String txID, AccountModel accountModel) async {
-  //   TransactionDetailFromBlockChain? transactionDetailFromBlockChain;
-  //   for (int i = 0; i < 5; i++) {
-  //     transactionDetailFromBlockChain =
-  //         await WalletManager.getTransactionDetailsFromBlockStream(txID);
-  //     try {
-  //       if (transactionDetailFromBlockChain != null) {
-  //         break;
-  //       }
-  //     } catch (e) {
-  //       logger.e(e.toString());
-  //     }
-  //     await Future.delayed(const Duration(seconds: 1));
-  //   }
-  //   if (transactionDetailFromBlockChain != null) {
-  //     for (Recipient recipient in transactionDetailFromBlockChain.recipients) {
-  //       BitcoinAddressModel? bitcoinAddressModel =
-  //           await DBHelper.bitcoinAddressDao!.findBitcoinAddressInAccount(
-  //               recipient.bitcoinAddress, accountModel.serverAccountID);
-  //       if (bitcoinAddressModel != null) {
-  //         bitcoinAddressModel.used = 1;
-  //         await localBitcoinAddressDataProvider.insertOrUpdate(bitcoinAddressModel);
-  //         localBitcoinAddressDataProvider.updateBitcoinAddress2TransactionDataMap(bitcoinAddressModel.bitcoinAddress, txID);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
     /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
     final walletKey = await walletKeysProvider.getWalletKey(
@@ -853,7 +870,7 @@ class WalletTransactionBloc
   void selectWallet(WalletMenuModel walletMenuModel) {
     add(SelectWallet(
       walletMenuModel,
-      triggerByDataProviderUpdate: false,
+      skipSyncWallet: false,
     ));
   }
 
@@ -865,11 +882,11 @@ class WalletTransactionBloc
     add(SelectAccount(
       walletMenuModel,
       accountMenuModel,
-      triggerByDataProviderUpdate: false,
+      skipSyncWallet: false,
     ));
   }
 
-  void syncWallet({required bool forceSync}) {
+  void syncWallet({required bool forceSync, required bool heightChanged}) {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
         final WalletMenuModel walletMenuModel =
@@ -885,6 +902,7 @@ class WalletTransactionBloc
               walletMenuModel.walletModel,
               accountMenuModel.accountModel,
               forceSync: forceSync,
+              heightChanged: heightChanged,
             );
             hadTriggerSync = true;
           }
@@ -907,6 +925,7 @@ class WalletTransactionBloc
             walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: forceSync,
+            heightChanged: heightChanged,
           );
           hadTriggerSync = true;
         }
@@ -923,7 +942,6 @@ class WalletTransactionBloc
     bdkTransactionDataSubscription?.cancel();
     walletsDataSubscription?.cancel();
     fiatCurrencySettingSubscription?.cancel();
-    accountID2lastSyncTime.clear();
     return super.close();
   }
 }

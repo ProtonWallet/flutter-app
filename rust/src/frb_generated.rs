@@ -75,7 +75,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1749879621;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -384712777;
 
 // Section: executor
 
@@ -1476,6 +1476,56 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
         let api_that_guard = api_that_guard.unwrap();
  let output_ok = Result::<_,()>::Ok(crate::api::api_service::proton_api_service::ProtonAPIService::get_address_client(&*api_that_guard))?;   Ok(output_ok)
                 })()) })
+}
+fn wire__crate__api__api_service__proton_api_service__ProtonApiService_get_arc_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "ProtonApiService_get_arc",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok = Result::<_, ()>::Ok(
+                    crate::api::api_service::proton_api_service::ProtonAPIService::get_arc(
+                        &*api_that_guard,
+                    ),
+                )?;
+                Ok(output_ok)
+            })())
+        },
+    )
 }
 fn wire__crate__api__api_service__proton_api_service__ProtonApiService_get_bitcoin_addr_client_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -5274,8 +5324,9 @@ let api_label = <Option<String>>::sse_decode(&mut deserializer);
 let api_exchange_rate_id = <Option<String>>::sse_decode(&mut deserializer);
 let api_transaction_time = <Option<String>>::sse_decode(&mut deserializer);
 let api_address_id = <Option<String>>::sse_decode(&mut deserializer);
-let api_subject = <Option<String>>::sse_decode(&mut deserializer);
-let api_body = <Option<String>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+let api_body = <Option<String>>::sse_decode(&mut deserializer);
+let api_recipients = <Option<std::collections::HashMap<String, String>>>::sse_decode(&mut deserializer);
+let api_is_anonymous = <Option<u8>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
                     transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
                         let mut api_that_guard = None;
 let mut api_psbt_guard = None;
@@ -5289,7 +5340,7 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
         }
         let api_that_guard = api_that_guard.unwrap();
 let api_psbt_guard = api_psbt_guard.unwrap();
- let output_ok = crate::api::bdk_wallet::blockchain::FrbBlockchainClient::broadcast_psbt(&*api_that_guard, &*api_psbt_guard, api_wallet_id, api_wallet_account_id, api_label, api_exchange_rate_id, api_transaction_time, api_address_id, api_subject, api_body).await?;   Ok(output_ok)
+ let output_ok = crate::api::bdk_wallet::blockchain::FrbBlockchainClient::broadcast_psbt(&*api_that_guard, &*api_psbt_guard, api_wallet_id, api_wallet_account_id, api_label, api_exchange_rate_id, api_transaction_time, api_address_id, api_body, api_recipients, api_is_anonymous).await?;   Ok(output_ok)
                     })().await)
                 } })
 }
@@ -7095,6 +7146,30 @@ fn wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_utxos_t
             })())
         },
     )
+}
+fn wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_constrain_recipient_amounts_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "FrbTxBuilder_constrain_recipient_amounts", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbTxBuilder>>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
+                        let mut api_that_guard = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that_guard = api_that_guard.unwrap();
+ let output_ok = crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::constrain_recipient_amounts(&*api_that_guard).await?;   Ok(output_ok)
+                    })().await)
+                } })
 }
 fn wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_draft_psbt_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -9050,7 +9125,7 @@ fn wire__crate__api__bdk_wallet__wallet__FrbWallet_discover_account_impl(
             let api_that = <RustOpaqueMoi<
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>,
             >>::sse_decode(&mut deserializer);
-            let api_api_service = <ProtonAPIService>::sse_decode(&mut deserializer);
+            let api_api_service = <Arc<ProtonAPIService>>::sse_decode(&mut deserializer);
             let api_storage_factory = <OnchainStoreFactory>::sse_decode(&mut deserializer);
             let api_account_stop_gap = <u32>::sse_decode(&mut deserializer);
             let api_address_stop_gap = <usize>::sse_decode(&mut deserializer);
@@ -12097,6 +12172,14 @@ impl SseDecode for flutter_rust_bridge::DartOpaque {
     }
 }
 
+impl SseDecode for std::collections::HashMap<String, String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <Vec<(String, String)>>::sse_decode(deserializer);
+        return inner.into_iter().collect();
+    }
+}
+
 impl SseDecode for std::collections::HashMap<String, f64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -13952,6 +14035,18 @@ impl SseDecode for Vec<(String, f64)> {
     }
 }
 
+impl SseDecode for Vec<(String, String)> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<(String, String)>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::proton_api::event_routes::WalletAccountEvent> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -14089,6 +14184,19 @@ impl SseDecode for crate::common::network::Network {
             3 => crate::common::network::Network::Regtest,
             _ => unreachable!("Invalid variant for Network: {}", inner),
         };
+    }
+}
+
+impl SseDecode for Option<std::collections::HashMap<String, String>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<std::collections::HashMap<String, String>>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
     }
 }
 
@@ -15006,6 +15114,15 @@ impl SseDecode for (String, f64) {
     }
 }
 
+impl SseDecode for (String, String) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_field0 = <String>::sse_decode(deserializer);
+        let mut var_field1 = <String>::sse_decode(deserializer);
+        return (var_field0, var_field1);
+    }
+}
+
 impl SseDecode for crate::proton_api::proton_users::ReferralSettings {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -15453,143 +15570,144 @@ fn pde_ffi_dispatcher_primary_impl(
 37 => wire__crate__api__api_service__onramp_gateway_client__OnRampGatewayClient_new_impl(port, ptr, rust_vec_len, data_len),
 38 => wire__crate__api__api_service__price_graph_client__PriceGraphClient_get_graph_data_impl(port, ptr, rust_vec_len, data_len),
 39 => wire__crate__api__api_service__price_graph_client__PriceGraphClient_new_impl(port, ptr, rust_vec_len, data_len),
-57 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-58 => wire__crate__api__api_service__proton_api_service__ProtonApiService_login_impl(port, ptr, rust_vec_len, data_len),
-59 => wire__crate__api__api_service__proton_api_service__ProtonApiService_logout_impl(port, ptr, rust_vec_len, data_len),
-61 => wire__crate__api__api_service__proton_api_service__ProtonApiService_set_proton_api_impl(port, ptr, rust_vec_len, data_len),
-62 => wire__crate__api__api_service__proton_api_service__ProtonApiService_update_auth_impl(port, ptr, rust_vec_len, data_len),
-63 => wire__crate__api__api_service__proton_contacts_client__ContactsClient_get_contacts_impl(port, ptr, rust_vec_len, data_len),
-64 => wire__crate__api__api_service__proton_contacts_client__ContactsClient_new_impl(port, ptr, rust_vec_len, data_len),
-65 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
-66 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-67 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
-68 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_disable_2fa_totp_impl(port, ptr, rust_vec_len, data_len),
-69 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_disable_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
-70 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_enable_2fa_totp_impl(port, ptr, rust_vec_len, data_len),
-71 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_get_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
-72 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
-73 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_reactive_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
-74 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_set_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
-75 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_auth_info_impl(port, ptr, rust_vec_len, data_len),
-76 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_auth_module_impl(port, ptr, rust_vec_len, data_len),
-77 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_user_info_impl(port, ptr, rust_vec_len, data_len),
-78 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-79 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_lock_sensitive_settings_impl(port, ptr, rust_vec_len, data_len),
-80 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_new_impl(port, ptr, rust_vec_len, data_len),
-81 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_unlock_password_change_impl(port, ptr, rust_vec_len, data_len),
-82 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_unlock_sensitive_settings_impl(port, ptr, rust_vec_len, data_len),
-83 => wire__crate__api__api_service__settings_client__SettingsClient_accept_terms_and_conditions_impl(port, ptr, rust_vec_len, data_len),
-84 => wire__crate__api__api_service__settings_client__SettingsClient_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-85 => wire__crate__api__api_service__settings_client__SettingsClient_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-86 => wire__crate__api__api_service__settings_client__SettingsClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-87 => wire__crate__api__api_service__settings_client__SettingsClient_get_user_wallet_eligibility_impl(port, ptr, rust_vec_len, data_len),
-88 => wire__crate__api__api_service__settings_client__SettingsClient_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-89 => wire__crate__api__api_service__settings_client__SettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
-90 => wire__crate__api__api_service__settings_client__SettingsClient_receive_notification_email_impl(port, ptr, rust_vec_len, data_len),
-91 => wire__crate__api__api_service__settings_client__SettingsClient_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-92 => wire__crate__api__api_service__transaction_client__TransactionClient_get_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
-93 => wire__crate__api__api_service__transaction_client__TransactionClient_new_impl(port, ptr, rust_vec_len, data_len),
-94 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_clear_auth_dart_callback_impl(port, ptr, rust_vec_len, data_len),
-96 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_logout_impl(port, ptr, rust_vec_len, data_len),
-98 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_auth_dart_callback_impl(port, ptr, rust_vec_len, data_len),
-100 => wire__crate__api__api_service__wallet_client__WalletClient_add_email_address_impl(port, ptr, rust_vec_len, data_len),
-101 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_impl(port, ptr, rust_vec_len, data_len),
-102 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-103 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-104 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-105 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-106 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
-107 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
-108 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-109 => wire__crate__api__api_service__wallet_client__WalletClient_disable_show_wallet_recovery_impl(port, ptr, rust_vec_len, data_len),
-110 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-111 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-112 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
-113 => wire__crate__api__api_service__wallet_client__WalletClient_new_impl(port, ptr, rust_vec_len, data_len),
-114 => wire__crate__api__api_service__wallet_client__WalletClient_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-115 => wire__crate__api__api_service__wallet_client__WalletClient_set_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
-116 => wire__crate__api__api_service__wallet_client__WalletClient_set_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
-117 => wire__crate__api__api_service__wallet_client__WalletClient_update_external_wallet_transaction_sender_impl(port, ptr, rust_vec_len, data_len),
-118 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-119 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-120 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_last_used_index_impl(port, ptr, rust_vec_len, data_len),
-121 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_accounts_order_impl(port, ptr, rust_vec_len, data_len),
-122 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-123 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-124 => wire__crate__api__bdk_wallet__account__FrbAccount_build_tx_impl(port, ptr, rust_vec_len, data_len),
-125 => wire__crate__api__bdk_wallet__account__FrbAccount_get_address_impl(port, ptr, rust_vec_len, data_len),
-126 => wire__crate__api__bdk_wallet__account__FrbAccount_get_balance_impl(port, ptr, rust_vec_len, data_len),
-127 => wire__crate__api__bdk_wallet__account__FrbAccount_get_bitcoin_uri_impl(port, ptr, rust_vec_len, data_len),
-128 => wire__crate__api__bdk_wallet__account__FrbAccount_get_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-129 => wire__crate__api__bdk_wallet__account__FrbAccount_get_index_after_last_used_address_impl(port, ptr, rust_vec_len, data_len),
-130 => wire__crate__api__bdk_wallet__account__FrbAccount_get_last_unused_address_index_impl(port, ptr, rust_vec_len, data_len),
-131 => wire__crate__api__bdk_wallet__account__FrbAccount_get_transaction_impl(port, ptr, rust_vec_len, data_len),
-132 => wire__crate__api__bdk_wallet__account__FrbAccount_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-133 => wire__crate__api__bdk_wallet__account__FrbAccount_get_utxos_impl(port, ptr, rust_vec_len, data_len),
-134 => wire__crate__api__bdk_wallet__account__FrbAccount_has_sync_data_impl(port, ptr, rust_vec_len, data_len),
-135 => wire__crate__api__bdk_wallet__account__FrbAccount_insert_unconfirmed_tx_impl(port, ptr, rust_vec_len, data_len),
-136 => wire__crate__api__bdk_wallet__account__FrbAccount_is_mine_impl(port, ptr, rust_vec_len, data_len),
-138 => wire__crate__api__bdk_wallet__account__FrbAccount_sign_impl(port, ptr, rust_vec_len, data_len),
-145 => wire__crate__api__bdk_wallet__balance__FrbBalance_default_impl(port, ptr, rust_vec_len, data_len),
-148 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_broadcast_psbt_impl(port, ptr, rust_vec_len, data_len),
-149 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_full_sync_impl(port, ptr, rust_vec_len, data_len),
-150 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_get_fees_estimation_impl(port, ptr, rust_vec_len, data_len),
-152 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_partial_sync_impl(port, ptr, rust_vec_len, data_len),
-153 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_should_sync_impl(port, ptr, rust_vec_len, data_len),
-188 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_draft_psbt_impl(port, ptr, rust_vec_len, data_len),
-189 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_pbst_impl(port, ptr, rust_vec_len, data_len),
-200 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_account_impl(port, ptr, rust_vec_len, data_len),
-203 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_fee_rate_impl(port, ptr, rust_vec_len, data_len),
-204 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_update_recipient_impl(port, ptr, rust_vec_len, data_len),
-205 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_update_recipient_amount_to_max_impl(port, ptr, rust_vec_len, data_len),
-221 => wire__crate__api__bdk_wallet__transactions__FrbTransaction_compute_txid_impl(port, ptr, rust_vec_len, data_len),
-230 => wire__crate__api__bdk_wallet__wallet__FrbWallet_discover_account_impl(port, ptr, rust_vec_len, data_len),
-232 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_balance_impl(port, ptr, rust_vec_len, data_len),
-234 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_transaction_impl(port, ptr, rust_vec_len, data_len),
-235 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_transactions_impl(port, ptr, rust_vec_len, data_len),
-237 => wire__crate__api__flutter_logger__info_logger_impl(port, ptr, rust_vec_len, data_len),
-238 => wire__crate__api__flutter_logger__panic_impl(port, ptr, rust_vec_len, data_len),
-239 => wire__crate__api__flutter_logger__test_impl(port, ptr, rust_vec_len, data_len),
-240 => wire__crate__api__proton_api__add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
-241 => wire__crate__api__proton_api__add_email_address_impl(port, ptr, rust_vec_len, data_len),
-242 => wire__crate__api__proton_api__bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
-243 => wire__crate__api__proton_api__collect_events_impl(port, ptr, rust_vec_len, data_len),
-244 => wire__crate__api__proton_api__create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-245 => wire__crate__api__proton_api__delete_wallet_impl(port, ptr, rust_vec_len, data_len),
-246 => wire__crate__api__proton_api__delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-247 => wire__crate__api__proton_api__delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-248 => wire__crate__api__proton_api__fiat_currency_impl(port, ptr, rust_vec_len, data_len),
-249 => wire__crate__api__proton_api__fork_impl(port, ptr, rust_vec_len, data_len),
-250 => wire__crate__api__proton_api__get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
-251 => wire__crate__api__proton_api__get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
-252 => wire__crate__api__proton_api__get_contacts_impl(port, ptr, rust_vec_len, data_len),
-253 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-254 => wire__crate__api__proton_api__get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
-255 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-256 => wire__crate__api__proton_api__get_user_settings_impl(port, ptr, rust_vec_len, data_len),
-257 => wire__crate__api__proton_api__get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
-258 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-259 => wire__crate__api__proton_api__get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
-260 => wire__crate__api__proton_api__get_wallets_impl(port, ptr, rust_vec_len, data_len),
-261 => wire__crate__api__proton_api__hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
-262 => wire__crate__api__proton_api__is_valid_token_impl(port, ptr, rust_vec_len, data_len),
-263 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-264 => wire__crate__api__proton_api__remove_email_address_impl(port, ptr, rust_vec_len, data_len),
-265 => wire__crate__api__proton_api__two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
-266 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-267 => wire__crate__api__proton_api__update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
-268 => wire__crate__api__proton_api__update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
-269 => wire__crate__api__proton_api__update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-270 => wire__crate__api__rust_api__api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-271 => wire__crate__api__rust_api__api_create_address_impl(port, ptr, rust_vec_len, data_len),
-272 => wire__crate__api__rust_api__api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-273 => wire__crate__api__rust_api__api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-274 => wire__crate__api__rust_api__api_create_script_impl(port, ptr, rust_vec_len, data_len),
-275 => wire__crate__api__rust_api__api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-276 => wire__crate__api__rust_api__api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-277 => wire__crate__api__srp__srp_client__srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
-278 => wire__crate__api__srp__srp_client__srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
-279 => wire__crate__api__srp__srp_client__srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
+58 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+59 => wire__crate__api__api_service__proton_api_service__ProtonApiService_login_impl(port, ptr, rust_vec_len, data_len),
+60 => wire__crate__api__api_service__proton_api_service__ProtonApiService_logout_impl(port, ptr, rust_vec_len, data_len),
+62 => wire__crate__api__api_service__proton_api_service__ProtonApiService_set_proton_api_impl(port, ptr, rust_vec_len, data_len),
+63 => wire__crate__api__api_service__proton_api_service__ProtonApiService_update_auth_impl(port, ptr, rust_vec_len, data_len),
+64 => wire__crate__api__api_service__proton_contacts_client__ContactsClient_get_contacts_impl(port, ptr, rust_vec_len, data_len),
+65 => wire__crate__api__api_service__proton_contacts_client__ContactsClient_new_impl(port, ptr, rust_vec_len, data_len),
+66 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
+67 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+68 => wire__crate__api__api_service__proton_email_addr_client__ProtonEmailAddressClient_new_impl(port, ptr, rust_vec_len, data_len),
+69 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_disable_2fa_totp_impl(port, ptr, rust_vec_len, data_len),
+70 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_disable_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
+71 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_enable_2fa_totp_impl(port, ptr, rust_vec_len, data_len),
+72 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_get_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
+73 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
+74 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_reactive_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
+75 => wire__crate__api__api_service__proton_settings_client__ProtonSettingsClient_set_mnemonic_settings_impl(port, ptr, rust_vec_len, data_len),
+76 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_auth_info_impl(port, ptr, rust_vec_len, data_len),
+77 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_auth_module_impl(port, ptr, rust_vec_len, data_len),
+78 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_user_info_impl(port, ptr, rust_vec_len, data_len),
+79 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+80 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_lock_sensitive_settings_impl(port, ptr, rust_vec_len, data_len),
+81 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_new_impl(port, ptr, rust_vec_len, data_len),
+82 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_unlock_password_change_impl(port, ptr, rust_vec_len, data_len),
+83 => wire__crate__api__api_service__proton_users_client__ProtonUsersClient_unlock_sensitive_settings_impl(port, ptr, rust_vec_len, data_len),
+84 => wire__crate__api__api_service__settings_client__SettingsClient_accept_terms_and_conditions_impl(port, ptr, rust_vec_len, data_len),
+85 => wire__crate__api__api_service__settings_client__SettingsClient_bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+86 => wire__crate__api__api_service__settings_client__SettingsClient_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+87 => wire__crate__api__api_service__settings_client__SettingsClient_get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+88 => wire__crate__api__api_service__settings_client__SettingsClient_get_user_wallet_eligibility_impl(port, ptr, rust_vec_len, data_len),
+89 => wire__crate__api__api_service__settings_client__SettingsClient_hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+90 => wire__crate__api__api_service__settings_client__SettingsClient_new_impl(port, ptr, rust_vec_len, data_len),
+91 => wire__crate__api__api_service__settings_client__SettingsClient_receive_notification_email_impl(port, ptr, rust_vec_len, data_len),
+92 => wire__crate__api__api_service__settings_client__SettingsClient_two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+93 => wire__crate__api__api_service__transaction_client__TransactionClient_get_raw_transaction_impl(port, ptr, rust_vec_len, data_len),
+94 => wire__crate__api__api_service__transaction_client__TransactionClient_new_impl(port, ptr, rust_vec_len, data_len),
+95 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_clear_auth_dart_callback_impl(port, ptr, rust_vec_len, data_len),
+97 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_logout_impl(port, ptr, rust_vec_len, data_len),
+99 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_auth_dart_callback_impl(port, ptr, rust_vec_len, data_len),
+101 => wire__crate__api__api_service__wallet_client__WalletClient_add_email_address_impl(port, ptr, rust_vec_len, data_len),
+102 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_impl(port, ptr, rust_vec_len, data_len),
+103 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+104 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+105 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+106 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+107 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
+108 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
+109 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+110 => wire__crate__api__api_service__wallet_client__WalletClient_disable_show_wallet_recovery_impl(port, ptr, rust_vec_len, data_len),
+111 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+112 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+113 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallets_impl(port, ptr, rust_vec_len, data_len),
+114 => wire__crate__api__api_service__wallet_client__WalletClient_new_impl(port, ptr, rust_vec_len, data_len),
+115 => wire__crate__api__api_service__wallet_client__WalletClient_remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+116 => wire__crate__api__api_service__wallet_client__WalletClient_set_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
+117 => wire__crate__api__api_service__wallet_client__WalletClient_set_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
+118 => wire__crate__api__api_service__wallet_client__WalletClient_update_external_wallet_transaction_sender_impl(port, ptr, rust_vec_len, data_len),
+119 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+120 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+121 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_account_last_used_index_impl(port, ptr, rust_vec_len, data_len),
+122 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_accounts_order_impl(port, ptr, rust_vec_len, data_len),
+123 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+124 => wire__crate__api__api_service__wallet_client__WalletClient_update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
+125 => wire__crate__api__bdk_wallet__account__FrbAccount_build_tx_impl(port, ptr, rust_vec_len, data_len),
+126 => wire__crate__api__bdk_wallet__account__FrbAccount_get_address_impl(port, ptr, rust_vec_len, data_len),
+127 => wire__crate__api__bdk_wallet__account__FrbAccount_get_balance_impl(port, ptr, rust_vec_len, data_len),
+128 => wire__crate__api__bdk_wallet__account__FrbAccount_get_bitcoin_uri_impl(port, ptr, rust_vec_len, data_len),
+129 => wire__crate__api__bdk_wallet__account__FrbAccount_get_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+130 => wire__crate__api__bdk_wallet__account__FrbAccount_get_index_after_last_used_address_impl(port, ptr, rust_vec_len, data_len),
+131 => wire__crate__api__bdk_wallet__account__FrbAccount_get_last_unused_address_index_impl(port, ptr, rust_vec_len, data_len),
+132 => wire__crate__api__bdk_wallet__account__FrbAccount_get_transaction_impl(port, ptr, rust_vec_len, data_len),
+133 => wire__crate__api__bdk_wallet__account__FrbAccount_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+134 => wire__crate__api__bdk_wallet__account__FrbAccount_get_utxos_impl(port, ptr, rust_vec_len, data_len),
+135 => wire__crate__api__bdk_wallet__account__FrbAccount_has_sync_data_impl(port, ptr, rust_vec_len, data_len),
+136 => wire__crate__api__bdk_wallet__account__FrbAccount_insert_unconfirmed_tx_impl(port, ptr, rust_vec_len, data_len),
+137 => wire__crate__api__bdk_wallet__account__FrbAccount_is_mine_impl(port, ptr, rust_vec_len, data_len),
+139 => wire__crate__api__bdk_wallet__account__FrbAccount_sign_impl(port, ptr, rust_vec_len, data_len),
+146 => wire__crate__api__bdk_wallet__balance__FrbBalance_default_impl(port, ptr, rust_vec_len, data_len),
+149 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_broadcast_psbt_impl(port, ptr, rust_vec_len, data_len),
+150 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_full_sync_impl(port, ptr, rust_vec_len, data_len),
+151 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_get_fees_estimation_impl(port, ptr, rust_vec_len, data_len),
+153 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_partial_sync_impl(port, ptr, rust_vec_len, data_len),
+154 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_should_sync_impl(port, ptr, rust_vec_len, data_len),
+189 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_constrain_recipient_amounts_impl(port, ptr, rust_vec_len, data_len),
+190 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_draft_psbt_impl(port, ptr, rust_vec_len, data_len),
+191 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_pbst_impl(port, ptr, rust_vec_len, data_len),
+202 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_account_impl(port, ptr, rust_vec_len, data_len),
+205 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_fee_rate_impl(port, ptr, rust_vec_len, data_len),
+206 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_update_recipient_impl(port, ptr, rust_vec_len, data_len),
+207 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_update_recipient_amount_to_max_impl(port, ptr, rust_vec_len, data_len),
+223 => wire__crate__api__bdk_wallet__transactions__FrbTransaction_compute_txid_impl(port, ptr, rust_vec_len, data_len),
+232 => wire__crate__api__bdk_wallet__wallet__FrbWallet_discover_account_impl(port, ptr, rust_vec_len, data_len),
+234 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_balance_impl(port, ptr, rust_vec_len, data_len),
+236 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_transaction_impl(port, ptr, rust_vec_len, data_len),
+237 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_transactions_impl(port, ptr, rust_vec_len, data_len),
+239 => wire__crate__api__flutter_logger__info_logger_impl(port, ptr, rust_vec_len, data_len),
+240 => wire__crate__api__flutter_logger__panic_impl(port, ptr, rust_vec_len, data_len),
+241 => wire__crate__api__flutter_logger__test_impl(port, ptr, rust_vec_len, data_len),
+242 => wire__crate__api__proton_api__add_bitcoin_addresses_impl(port, ptr, rust_vec_len, data_len),
+243 => wire__crate__api__proton_api__add_email_address_impl(port, ptr, rust_vec_len, data_len),
+244 => wire__crate__api__proton_api__bitcoin_unit_impl(port, ptr, rust_vec_len, data_len),
+245 => wire__crate__api__proton_api__collect_events_impl(port, ptr, rust_vec_len, data_len),
+246 => wire__crate__api__proton_api__create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+247 => wire__crate__api__proton_api__delete_wallet_impl(port, ptr, rust_vec_len, data_len),
+248 => wire__crate__api__proton_api__delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
+249 => wire__crate__api__proton_api__delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+250 => wire__crate__api__proton_api__fiat_currency_impl(port, ptr, rust_vec_len, data_len),
+251 => wire__crate__api__proton_api__fork_impl(port, ptr, rust_vec_len, data_len),
+252 => wire__crate__api__proton_api__get_all_public_keys_impl(port, ptr, rust_vec_len, data_len),
+253 => wire__crate__api__proton_api__get_bitcoin_address_latest_index_impl(port, ptr, rust_vec_len, data_len),
+254 => wire__crate__api__proton_api__get_contacts_impl(port, ptr, rust_vec_len, data_len),
+255 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+256 => wire__crate__api__proton_api__get_latest_event_id_impl(port, ptr, rust_vec_len, data_len),
+257 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+258 => wire__crate__api__proton_api__get_user_settings_impl(port, ptr, rust_vec_len, data_len),
+259 => wire__crate__api__proton_api__get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
+260 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+261 => wire__crate__api__proton_api__get_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+262 => wire__crate__api__proton_api__get_wallets_impl(port, ptr, rust_vec_len, data_len),
+263 => wire__crate__api__proton_api__hide_empty_used_addresses_impl(port, ptr, rust_vec_len, data_len),
+264 => wire__crate__api__proton_api__is_valid_token_impl(port, ptr, rust_vec_len, data_len),
+265 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+266 => wire__crate__api__proton_api__remove_email_address_impl(port, ptr, rust_vec_len, data_len),
+267 => wire__crate__api__proton_api__two_fa_threshold_impl(port, ptr, rust_vec_len, data_len),
+268 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+269 => wire__crate__api__proton_api__update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
+270 => wire__crate__api__proton_api__update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
+271 => wire__crate__api__proton_api__update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
+272 => wire__crate__api__rust_api__api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+273 => wire__crate__api__rust_api__api_create_address_impl(port, ptr, rust_vec_len, data_len),
+274 => wire__crate__api__rust_api__api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+275 => wire__crate__api__rust_api__api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+276 => wire__crate__api__rust_api__api_create_script_impl(port, ptr, rust_vec_len, data_len),
+277 => wire__crate__api__rust_api__api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+278 => wire__crate__api__rust_api__api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+279 => wire__crate__api__srp__srp_client__srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
+280 => wire__crate__api__srp__srp_client__srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
+281 => wire__crate__api__srp__srp_client__srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -15605,109 +15723,110 @@ fn pde_ffi_dispatcher_sync_impl(
                         3 => wire__crate__api__api2__greet_impl(ptr, rust_vec_len, data_len),
 4 => wire__crate__api__api2__helloworld_impl(ptr, rust_vec_len, data_len),
 40 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_address_client_impl(ptr, rust_vec_len, data_len),
-41 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_bitcoin_addr_client_impl(ptr, rust_vec_len, data_len),
-42 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_block_client_impl(ptr, rust_vec_len, data_len),
-43 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_discovery_content_client_impl(ptr, rust_vec_len, data_len),
-44 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_email_integration_client_impl(ptr, rust_vec_len, data_len),
-45 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_event_client_impl(ptr, rust_vec_len, data_len),
-46 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_exchange_rate_client_impl(ptr, rust_vec_len, data_len),
-47 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_invite_client_impl(ptr, rust_vec_len, data_len),
-48 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_on_ramp_gateway_client_impl(ptr, rust_vec_len, data_len),
-49 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_price_graph_client_impl(ptr, rust_vec_len, data_len),
-50 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_contacts_client_impl(ptr, rust_vec_len, data_len),
-51 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_email_addr_client_impl(ptr, rust_vec_len, data_len),
-52 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_settings_client_impl(ptr, rust_vec_len, data_len),
-53 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_user_client_impl(ptr, rust_vec_len, data_len),
-54 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_settings_client_impl(ptr, rust_vec_len, data_len),
-55 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_transaction_client_impl(ptr, rust_vec_len, data_len),
-56 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_wallet_client_impl(ptr, rust_vec_len, data_len),
-60 => wire__crate__api__api_service__proton_api_service__ProtonApiService_new_impl(ptr, rust_vec_len, data_len),
-95 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_from_session_impl(ptr, rust_vec_len, data_len),
-97 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_new_impl(ptr, rust_vec_len, data_len),
-99 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
-137 => wire__crate__api__bdk_wallet__account__FrbAccount_new_impl(ptr, rust_vec_len, data_len),
-139 => wire__crate__api__bdk_wallet__address__FrbAddress_from_script_impl(ptr, rust_vec_len, data_len),
-140 => wire__crate__api__bdk_wallet__address__FrbAddress_into_script_impl(ptr, rust_vec_len, data_len),
-141 => wire__crate__api__bdk_wallet__address__FrbAddress_new_impl(ptr, rust_vec_len, data_len),
-142 => wire__crate__api__bdk_wallet__address__FrbAddress_to_string_impl(ptr, rust_vec_len, data_len),
-143 => wire__crate__api__bdk_wallet__amount__FrbAmount_to_btc_impl(ptr, rust_vec_len, data_len),
-144 => wire__crate__api__bdk_wallet__amount__FrbAmount_to_sat_impl(ptr, rust_vec_len, data_len),
-146 => wire__crate__api__bdk_wallet__balance__FrbBalance_total_impl(ptr, rust_vec_len, data_len),
-147 => wire__crate__api__bdk_wallet__balance__FrbBalance_trusted_spendable_impl(ptr, rust_vec_len, data_len),
-151 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_new_impl(ptr, rust_vec_len, data_len),
-154 => wire__crate__api__bdk_wallet__derivation_path__FrbDerivationPath_from_parts_impl(ptr, rust_vec_len, data_len),
-155 => wire__crate__api__bdk_wallet__derivation_path__FrbDerivationPath_new_impl(ptr, rust_vec_len, data_len),
-156 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_confirmation_time_impl(ptr, rust_vec_len, data_len),
-157 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_derivation_index_impl(ptr, rust_vec_len, data_len),
-158 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_is_spent_impl(ptr, rust_vec_len, data_len),
-159 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_keychain_impl(ptr, rust_vec_len, data_len),
-160 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_outpoint_impl(ptr, rust_vec_len, data_len),
-161 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_txout_impl(ptr, rust_vec_len, data_len),
-162 => wire__crate__api__bdk_wallet__local_output__FrbTxOut_script_pubkey_impl(ptr, rust_vec_len, data_len),
-163 => wire__crate__api__bdk_wallet__local_output__FrbTxOut_value_impl(ptr, rust_vec_len, data_len),
-164 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_as_string_impl(ptr, rust_vec_len, data_len),
-165 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_as_words_impl(ptr, rust_vec_len, data_len),
-166 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_from_string_impl(ptr, rust_vec_len, data_len),
-167 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_get_words_autocomplete_impl(ptr, rust_vec_len, data_len),
-168 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_new_impl(ptr, rust_vec_len, data_len),
-169 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_new_with_impl(ptr, rust_vec_len, data_len),
-170 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_to_string_impl(ptr, rust_vec_len, data_len),
-171 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_to_uri_impl(ptr, rust_vec_len, data_len),
-172 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_try_parse_impl(ptr, rust_vec_len, data_len),
-173 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_extract_tx_impl(ptr, rust_vec_len, data_len),
-174 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_fee_impl(ptr, rust_vec_len, data_len),
-175 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_recipients_impl(ptr, rust_vec_len, data_len),
-176 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_total_fees_impl(ptr, rust_vec_len, data_len),
-177 => wire__crate__api__bdk_wallet__script_buf__FrbScriptBuf_new_impl(ptr, rust_vec_len, data_len),
-178 => wire__crate__api__bdk_wallet__script_buf__FrbScriptBuf_to_bytes_impl(ptr, rust_vec_len, data_len),
-179 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_final_impl(ptr, rust_vec_len, data_len),
-180 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_height_locked_impl(ptr, rust_vec_len, data_len),
-181 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_rbf_impl(ptr, rust_vec_len, data_len),
-182 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_relative_lock_time_impl(ptr, rust_vec_len, data_len),
-183 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_time_locked_impl(ptr, rust_vec_len, data_len),
-184 => wire__crate__api__bdk_wallet__storage__OnchainStoreFactory_new_impl(ptr, rust_vec_len, data_len),
-185 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_add_recipient_impl(ptr, rust_vec_len, data_len),
-186 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_recipients_impl(ptr, rust_vec_len, data_len),
-187 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
-190 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_disable_rbf_impl(ptr, rust_vec_len, data_len),
-191 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_enable_rbf_impl(ptr, rust_vec_len, data_len),
-192 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_change_policy_impl(ptr, rust_vec_len, data_len),
-193 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_coin_selection_impl(ptr, rust_vec_len, data_len),
-194 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_fee_rate_impl(ptr, rust_vec_len, data_len),
-195 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_rbf_enabled_impl(ptr, rust_vec_len, data_len),
-196 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
-197 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_new_impl(ptr, rust_vec_len, data_len),
-198 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_remove_locktime_impl(ptr, rust_vec_len, data_len),
-199 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_remove_recipient_impl(ptr, rust_vec_len, data_len),
-201 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_change_policy_impl(ptr, rust_vec_len, data_len),
-202 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_coin_selection_impl(ptr, rust_vec_len, data_len),
-206 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_account_derivation_path_impl(ptr, rust_vec_len, data_len),
-207 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_fees_impl(ptr, rust_vec_len, data_len),
-208 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_inputs_impl(ptr, rust_vec_len, data_len),
-209 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_outputs_impl(ptr, rust_vec_len, data_len),
-210 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_received_impl(ptr, rust_vec_len, data_len),
-211 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_sent_impl(ptr, rust_vec_len, data_len),
-212 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_time_impl(ptr, rust_vec_len, data_len),
-213 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_txid_impl(ptr, rust_vec_len, data_len),
-214 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_previous_output_impl(ptr, rust_vec_len, data_len),
-215 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_script_sig_impl(ptr, rust_vec_len, data_len),
-216 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_sequence_impl(ptr, rust_vec_len, data_len),
-217 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_address_impl(ptr, rust_vec_len, data_len),
-218 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_is_mine_impl(ptr, rust_vec_len, data_len),
-219 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_script_pubkey_impl(ptr, rust_vec_len, data_len),
-220 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_value_impl(ptr, rust_vec_len, data_len),
-222 => wire__crate__api__bdk_wallet__transactions__FrbTransaction_new_impl(ptr, rust_vec_len, data_len),
-223 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_derivation_path_impl(ptr, rust_vec_len, data_len),
-224 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_index_impl(ptr, rust_vec_len, data_len),
-225 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_script_type_impl(ptr, rust_vec_len, data_len),
-226 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_derivation_path_impl(ptr, rust_vec_len, data_len),
-227 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_index_impl(ptr, rust_vec_len, data_len),
-228 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_script_type_impl(ptr, rust_vec_len, data_len),
-229 => wire__crate__api__bdk_wallet__wallet__FrbWallet_add_account_impl(ptr, rust_vec_len, data_len),
-231 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_account_impl(ptr, rust_vec_len, data_len),
-233 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_fingerprint_impl(ptr, rust_vec_len, data_len),
-236 => wire__crate__api__bdk_wallet__wallet__FrbWallet_new_impl(ptr, rust_vec_len, data_len),
-280 => wire__crate__api__srp__srp_client__srp_client_new_impl(ptr, rust_vec_len, data_len),
+41 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_arc_impl(ptr, rust_vec_len, data_len),
+42 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_bitcoin_addr_client_impl(ptr, rust_vec_len, data_len),
+43 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_block_client_impl(ptr, rust_vec_len, data_len),
+44 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_discovery_content_client_impl(ptr, rust_vec_len, data_len),
+45 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_email_integration_client_impl(ptr, rust_vec_len, data_len),
+46 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_event_client_impl(ptr, rust_vec_len, data_len),
+47 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_exchange_rate_client_impl(ptr, rust_vec_len, data_len),
+48 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_invite_client_impl(ptr, rust_vec_len, data_len),
+49 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_on_ramp_gateway_client_impl(ptr, rust_vec_len, data_len),
+50 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_price_graph_client_impl(ptr, rust_vec_len, data_len),
+51 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_contacts_client_impl(ptr, rust_vec_len, data_len),
+52 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_email_addr_client_impl(ptr, rust_vec_len, data_len),
+53 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_settings_client_impl(ptr, rust_vec_len, data_len),
+54 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_proton_user_client_impl(ptr, rust_vec_len, data_len),
+55 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_settings_client_impl(ptr, rust_vec_len, data_len),
+56 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_transaction_client_impl(ptr, rust_vec_len, data_len),
+57 => wire__crate__api__api_service__proton_api_service__ProtonApiService_get_wallet_client_impl(ptr, rust_vec_len, data_len),
+61 => wire__crate__api__api_service__proton_api_service__ProtonApiService_new_impl(ptr, rust_vec_len, data_len),
+96 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_from_session_impl(ptr, rust_vec_len, data_len),
+98 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_new_impl(ptr, rust_vec_len, data_len),
+100 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
+138 => wire__crate__api__bdk_wallet__account__FrbAccount_new_impl(ptr, rust_vec_len, data_len),
+140 => wire__crate__api__bdk_wallet__address__FrbAddress_from_script_impl(ptr, rust_vec_len, data_len),
+141 => wire__crate__api__bdk_wallet__address__FrbAddress_into_script_impl(ptr, rust_vec_len, data_len),
+142 => wire__crate__api__bdk_wallet__address__FrbAddress_new_impl(ptr, rust_vec_len, data_len),
+143 => wire__crate__api__bdk_wallet__address__FrbAddress_to_string_impl(ptr, rust_vec_len, data_len),
+144 => wire__crate__api__bdk_wallet__amount__FrbAmount_to_btc_impl(ptr, rust_vec_len, data_len),
+145 => wire__crate__api__bdk_wallet__amount__FrbAmount_to_sat_impl(ptr, rust_vec_len, data_len),
+147 => wire__crate__api__bdk_wallet__balance__FrbBalance_total_impl(ptr, rust_vec_len, data_len),
+148 => wire__crate__api__bdk_wallet__balance__FrbBalance_trusted_spendable_impl(ptr, rust_vec_len, data_len),
+152 => wire__crate__api__bdk_wallet__blockchain__FrbBlockchainClient_new_impl(ptr, rust_vec_len, data_len),
+155 => wire__crate__api__bdk_wallet__derivation_path__FrbDerivationPath_from_parts_impl(ptr, rust_vec_len, data_len),
+156 => wire__crate__api__bdk_wallet__derivation_path__FrbDerivationPath_new_impl(ptr, rust_vec_len, data_len),
+157 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_confirmation_time_impl(ptr, rust_vec_len, data_len),
+158 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_derivation_index_impl(ptr, rust_vec_len, data_len),
+159 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_is_spent_impl(ptr, rust_vec_len, data_len),
+160 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_keychain_impl(ptr, rust_vec_len, data_len),
+161 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_outpoint_impl(ptr, rust_vec_len, data_len),
+162 => wire__crate__api__bdk_wallet__local_output__FrbLocalOutput_txout_impl(ptr, rust_vec_len, data_len),
+163 => wire__crate__api__bdk_wallet__local_output__FrbTxOut_script_pubkey_impl(ptr, rust_vec_len, data_len),
+164 => wire__crate__api__bdk_wallet__local_output__FrbTxOut_value_impl(ptr, rust_vec_len, data_len),
+165 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_as_string_impl(ptr, rust_vec_len, data_len),
+166 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_as_words_impl(ptr, rust_vec_len, data_len),
+167 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_from_string_impl(ptr, rust_vec_len, data_len),
+168 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_get_words_autocomplete_impl(ptr, rust_vec_len, data_len),
+169 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_new_impl(ptr, rust_vec_len, data_len),
+170 => wire__crate__api__bdk_wallet__mnemonic__FrbMnemonic_new_with_impl(ptr, rust_vec_len, data_len),
+171 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_to_string_impl(ptr, rust_vec_len, data_len),
+172 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_to_uri_impl(ptr, rust_vec_len, data_len),
+173 => wire__crate__api__bdk_wallet__payment_link__FrbPaymentLink_try_parse_impl(ptr, rust_vec_len, data_len),
+174 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_extract_tx_impl(ptr, rust_vec_len, data_len),
+175 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_fee_impl(ptr, rust_vec_len, data_len),
+176 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_recipients_impl(ptr, rust_vec_len, data_len),
+177 => wire__crate__api__bdk_wallet__psbt__FrbPsbt_total_fees_impl(ptr, rust_vec_len, data_len),
+178 => wire__crate__api__bdk_wallet__script_buf__FrbScriptBuf_new_impl(ptr, rust_vec_len, data_len),
+179 => wire__crate__api__bdk_wallet__script_buf__FrbScriptBuf_to_bytes_impl(ptr, rust_vec_len, data_len),
+180 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_final_impl(ptr, rust_vec_len, data_len),
+181 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_height_locked_impl(ptr, rust_vec_len, data_len),
+182 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_rbf_impl(ptr, rust_vec_len, data_len),
+183 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_relative_lock_time_impl(ptr, rust_vec_len, data_len),
+184 => wire__crate__api__bdk_wallet__sequence__FrbSequence_is_time_locked_impl(ptr, rust_vec_len, data_len),
+185 => wire__crate__api__bdk_wallet__storage__OnchainStoreFactory_new_impl(ptr, rust_vec_len, data_len),
+186 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_add_recipient_impl(ptr, rust_vec_len, data_len),
+187 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_recipients_impl(ptr, rust_vec_len, data_len),
+188 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_clear_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
+192 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_disable_rbf_impl(ptr, rust_vec_len, data_len),
+193 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_enable_rbf_impl(ptr, rust_vec_len, data_len),
+194 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_change_policy_impl(ptr, rust_vec_len, data_len),
+195 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_coin_selection_impl(ptr, rust_vec_len, data_len),
+196 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_fee_rate_impl(ptr, rust_vec_len, data_len),
+197 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_rbf_enabled_impl(ptr, rust_vec_len, data_len),
+198 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_get_utxos_to_spend_impl(ptr, rust_vec_len, data_len),
+199 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_new_impl(ptr, rust_vec_len, data_len),
+200 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_remove_locktime_impl(ptr, rust_vec_len, data_len),
+201 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_remove_recipient_impl(ptr, rust_vec_len, data_len),
+203 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_change_policy_impl(ptr, rust_vec_len, data_len),
+204 => wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_set_coin_selection_impl(ptr, rust_vec_len, data_len),
+208 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_account_derivation_path_impl(ptr, rust_vec_len, data_len),
+209 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_fees_impl(ptr, rust_vec_len, data_len),
+210 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_inputs_impl(ptr, rust_vec_len, data_len),
+211 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_outputs_impl(ptr, rust_vec_len, data_len),
+212 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_received_impl(ptr, rust_vec_len, data_len),
+213 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_sent_impl(ptr, rust_vec_len, data_len),
+214 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_time_impl(ptr, rust_vec_len, data_len),
+215 => wire__crate__api__bdk_wallet__transaction_details__FrbTransactionDetails_txid_impl(ptr, rust_vec_len, data_len),
+216 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_previous_output_impl(ptr, rust_vec_len, data_len),
+217 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_script_sig_impl(ptr, rust_vec_len, data_len),
+218 => wire__crate__api__bdk_wallet__transaction_details_txin__FrbDetailledTxIn_sequence_impl(ptr, rust_vec_len, data_len),
+219 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_address_impl(ptr, rust_vec_len, data_len),
+220 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_is_mine_impl(ptr, rust_vec_len, data_len),
+221 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_script_pubkey_impl(ptr, rust_vec_len, data_len),
+222 => wire__crate__api__bdk_wallet__transaction_details_txop__FrbDetailledTxOutput_value_impl(ptr, rust_vec_len, data_len),
+224 => wire__crate__api__bdk_wallet__transactions__FrbTransaction_new_impl(ptr, rust_vec_len, data_len),
+225 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_derivation_path_impl(ptr, rust_vec_len, data_len),
+226 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_index_impl(ptr, rust_vec_len, data_len),
+227 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_get_script_type_impl(ptr, rust_vec_len, data_len),
+228 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_derivation_path_impl(ptr, rust_vec_len, data_len),
+229 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_index_impl(ptr, rust_vec_len, data_len),
+230 => wire__crate__api__bdk_wallet__wallet__DiscoveredAccount_auto_accessor_set_script_type_impl(ptr, rust_vec_len, data_len),
+231 => wire__crate__api__bdk_wallet__wallet__FrbWallet_add_account_impl(ptr, rust_vec_len, data_len),
+233 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_account_impl(ptr, rust_vec_len, data_len),
+235 => wire__crate__api__bdk_wallet__wallet__FrbWallet_get_fingerprint_impl(ptr, rust_vec_len, data_len),
+238 => wire__crate__api__bdk_wallet__wallet__FrbWallet_new_impl(ptr, rust_vec_len, data_len),
+282 => wire__crate__api__srp__srp_client__srp_client_new_impl(ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -18975,6 +19094,13 @@ impl SseEncode for flutter_rust_bridge::DartOpaque {
     }
 }
 
+impl SseEncode for std::collections::HashMap<String, String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<(String, String)>>::sse_encode(self.into_iter().collect(), serializer);
+    }
+}
+
 impl SseEncode for std::collections::HashMap<String, f64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -20592,6 +20718,16 @@ impl SseEncode for Vec<(String, f64)> {
     }
 }
 
+impl SseEncode for Vec<(String, String)> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <(String, String)>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::proton_api::event_routes::WalletAccountEvent> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -20695,6 +20831,16 @@ impl SseEncode for crate::common::network::Network {
             },
             serializer,
         );
+    }
+}
+
+impl SseEncode for Option<std::collections::HashMap<String, String>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <std::collections::HashMap<String, String>>::sse_encode(value, serializer);
+        }
     }
 }
 
@@ -21399,6 +21545,14 @@ impl SseEncode for (String, f64) {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.0, serializer);
         <f64>::sse_encode(self.1, serializer);
+    }
+}
+
+impl SseEncode for (String, String) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.0, serializer);
+        <String>::sse_encode(self.1, serializer);
     }
 }
 

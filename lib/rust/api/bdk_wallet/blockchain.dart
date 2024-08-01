@@ -24,8 +24,9 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
       String? exchangeRateId,
       String? transactionTime,
       String? addressId,
-      String? subject,
-      String? body});
+      String? body,
+      Map<String, String>? recipients,
+      int? isAnonymous});
 
   Future<void> fullSync({required FrbAccount account, BigInt? stopGap});
 

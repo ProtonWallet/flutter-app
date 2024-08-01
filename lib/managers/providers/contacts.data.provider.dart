@@ -44,6 +44,16 @@ class ContactsDataProvider extends DataProvider {
     return null;
   }
 
+  Future<void> fetchFromServer() async {
+    // try to fetch from server:
+    final List<ApiContactEmails> apiContacts = await contactClient.getContacts();
+    for (ApiContactEmails apiContactEmail in apiContacts) {
+      // update and insert contact
+      await insertUpdate(apiContactEmail);
+    }
+    contactsData = await _getFromDB();
+  }
+
   Future<List<ContactsModel>?> getContacts() async {
     if (contactsData != null) {
       return contactsData;
@@ -54,14 +64,7 @@ class ContactsDataProvider extends DataProvider {
       return contactsData;
     }
 
-    // try to fetch from server:
-    final List<ApiContactEmails> apiContacts = await contactClient.getContacts();
-    for (ApiContactEmails apiContactEmail in apiContacts) {
-      // update and insert contact
-      await insertUpdate(apiContactEmail);
-    }
-
-    contactsData = await _getFromDB();
+    await fetchFromServer();
     if (contactsData != null) {
       return contactsData;
     }
