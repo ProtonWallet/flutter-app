@@ -56,62 +56,63 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                 FontManager.body2Regular(ProtonColors.textWeak),
                             textAlign: TextAlign.center,
                           ),
-                          Column(children: [
-                            const SizedBox(height: 10),
-                            if (viewModel.initialized)
-                              viewModel.hasEmailIntegration
-                                  ? AlertCustom(
-                                      content: S
-                                          .of(context)
-                                          .receive_email_integration_alert_content(
-                                              viewModel.bitcoinViaEmailAddress),
-                                      learnMore: GestureDetector(
-                                          onTap: () {
-                                            ExternalUrl.shared
-                                                .launchBlogBvEActivated();
-                                          },
-                                          child: Text(S.of(context).learn_more,
-                                              style: FontManager.body2Regular(
-                                                  ProtonColors.protonBlue))),
-                                      leadingWidget: SvgPicture.asset(
-                                          "assets/images/icon/bve_enable.svg",
-                                          fit: BoxFit.fill,
-                                          width: 30,
-                                          height: 30),
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                        width: 0,
-                                      ),
-                                      backgroundColor: ProtonColors.white,
-                                      color: ProtonColors.textNorm,
-                                    )
-                                  : AlertCustom(
-                                      content: S
-                                          .of(context)
-                                          .bitcoin_via_email_not_active_desc,
-                                      learnMore: GestureDetector(
-                                          onTap: () {
-                                            ExternalUrl.shared
-                                                .launchBlogBvEInActivated();
-                                          },
-                                          child: Text(S.of(context).learn_more,
-                                              style: FontManager.body2Regular(
-                                                  ProtonColors.protonBlue))),
-                                      leadingWidget: SvgPicture.asset(
-                                          "assets/images/icon/bve_disable.svg",
-                                          fit: BoxFit.fill,
-                                          width: 30,
-                                          height: 30),
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                        width: 0,
-                                      ),
-                                      backgroundColor: ProtonColors.white,
-                                      color: ProtonColors.textNorm,
-                                    ),
-                            const SizedBox(height: 10),
-                          ]),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 20),
+                          // Column(children: [
+                          //   const SizedBox(height: 10),
+                          //   if (viewModel.initialized)
+                          //     viewModel.hasEmailIntegration
+                          //         ? AlertCustom(
+                          //             content: S
+                          //                 .of(context)
+                          //                 .receive_email_integration_alert_content(
+                          //                     viewModel.bitcoinViaEmailAddress),
+                          //             learnMore: GestureDetector(
+                          //                 onTap: () {
+                          //                   ExternalUrl.shared
+                          //                       .launchBlogBvEActivated();
+                          //                 },
+                          //                 child: Text(S.of(context).learn_more,
+                          //                     style: FontManager.body2Regular(
+                          //                         ProtonColors.protonBlue))),
+                          //             leadingWidget: SvgPicture.asset(
+                          //                 "assets/images/icon/bve_enable.svg",
+                          //                 fit: BoxFit.fill,
+                          //                 width: 30,
+                          //                 height: 30),
+                          //             border: Border.all(
+                          //               color: Colors.transparent,
+                          //               width: 0,
+                          //             ),
+                          //             backgroundColor: ProtonColors.white,
+                          //             color: ProtonColors.textNorm,
+                          //           )
+                          //         : AlertCustom(
+                          //             content: S
+                          //                 .of(context)
+                          //                 .bitcoin_via_email_not_active_desc,
+                          //             learnMore: GestureDetector(
+                          //                 onTap: () {
+                          //                   ExternalUrl.shared
+                          //                       .launchBlogBvEInActivated();
+                          //                 },
+                          //                 child: Text(S.of(context).learn_more,
+                          //                     style: FontManager.body2Regular(
+                          //                         ProtonColors.protonBlue))),
+                          //             leadingWidget: SvgPicture.asset(
+                          //                 "assets/images/icon/bve_disable.svg",
+                          //                 fit: BoxFit.fill,
+                          //                 width: 30,
+                          //                 height: 30),
+                          //             border: Border.all(
+                          //               color: Colors.transparent,
+                          //               width: 0,
+                          //             ),
+                          //             backgroundColor: ProtonColors.white,
+                          //             color: ProtonColors.textNorm,
+                          //           ),
+                          //   const SizedBox(height: 10),
+                          // ]),
+                          // const SizedBox(height: 14),
                           Container(
                               width: MediaQuery.of(context).size.width,
                               padding:
@@ -125,9 +126,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const SizedBox(height: 10),
-                                    if (viewModel.isWalletView &&
-                                        viewModel.initialized &&
-                                        viewModel.accountsCount > 1)
+                                    if (viewModel.initialized)
                                       Column(children: [
                                         WalletAccountDropdown(
                                             labelText: S.of(context).receive_to,

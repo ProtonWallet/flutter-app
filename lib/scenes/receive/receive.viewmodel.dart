@@ -40,7 +40,6 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   String address = "";
   String errorMessage = "";
   var selectedWallet = 1;
-  int accountsCount = 0;
   int localLastUsedIndex = -1;
   bool initialized = false;
   bool tooManyUnusedAddress = false;
@@ -104,7 +103,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           accountModel = accModel;
         }
       }
-      accountsCount = walletData?.accounts.length ?? 0;
       accountModel ??= walletData?.accounts.firstOrNull;
       if (walletModel == null || accountModel == null) {
         errorMessage = "[Error-404] Can not load wallet or walletAccount";

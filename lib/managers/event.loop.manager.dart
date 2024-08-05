@@ -136,19 +136,9 @@ class EventLoop implements Manager {
                 }
               }
               const int status = WalletModel.statusActive;
-              String decryptedWalletName = walletData.name;
-              try {
-                secretKey ??= await WalletManager.getWalletKey(walletID);
-                decryptedWalletName = await WalletKeyHelper.decrypt(
-                  secretKey,
-                  decryptedWalletName,
-                );
-              } catch (e) {
-                logger.e(e.toString());
-              }
               await dataProviderManager.walletDataProvider.insertOrUpdateWallet(
                 userID: userManager.userID,
-                name: decryptedWalletName,
+                name: walletData.name,
                 encryptedMnemonic: walletData.mnemonic!,
                 passphrase: walletData.hasPassphrase,
                 imported: walletData.isImported,
@@ -220,16 +210,22 @@ class EventLoop implements Manager {
         }
 
         if (event.contactEmailEvents != null) {
+          bool hasAction = false;
           for (ContactEmailEvent contactEvent in event.contactEmailEvents!) {
             if (contactEvent.action == 0) {
               final String contactID = contactEvent.id;
               await dataProviderManager.contactsDataProvider.delete(contactID);
+              hasAction = true;
               continue;
             }
             final mail = contactEvent.contactEmail;
             if (mail != null) {
               await dataProviderManager.contactsDataProvider.insertUpdate(mail);
+              hasAction = true;
             }
+          }
+          if (hasAction) {
+            await dataProviderManager.contactsDataProvider.reloadCache();
           }
         }
       }

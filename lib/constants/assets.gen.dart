@@ -194,6 +194,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get editUnknown =>
       const SvgGenImage('assets/images/icon/edit_unknown.svg');
 
+  /// File path: assets/images/icon/error_message.svg
+  SvgGenImage get errorMessage =>
+      const SvgGenImage('assets/images/icon/error_message.svg');
+
   /// File path: assets/images/icon/euro.svg
   SvgGenImage get euro => const SvgGenImage('assets/images/icon/euro.svg');
 
@@ -467,6 +471,7 @@ class $AssetsImagesIconGen {
         drawerMenu,
         earlyAccess,
         editUnknown,
+        errorMessage,
         euro,
         icArrowOutFromRectanglesignout,
         icArrowOutSquare,

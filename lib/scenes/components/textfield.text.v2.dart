@@ -158,9 +158,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    floatingLabelBehavior: widget.alwaysShowHint
-                        ? FloatingLabelBehavior.always
-                        : null,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                     suffixIcon: widget.isPassword
                         ? IconButton(
                             onPressed: () {
@@ -191,9 +189,9 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     labelText: widget.labelText,
                     labelStyle: isError
                         ? FontManager.textFieldLabelStyle(
-                            ProtonColors.signalError)
+                            ProtonColors.signalError).copyWith(fontSize: 15)
                         : FontManager.textFieldLabelStyle(
-                            ProtonColors.textWeak),
+                            ProtonColors.textWeak).copyWith(fontSize: 15),
                     prefixIcon: widget.prefixIcon,
                     contentPadding: EdgeInsets.only(
                         left: 10,

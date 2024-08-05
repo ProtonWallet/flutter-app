@@ -54,6 +54,10 @@ class ContactsDataProvider extends DataProvider {
     contactsData = await _getFromDB();
   }
 
+  Future<void> reloadCache() async {
+    contactsData = await _getFromDB();
+  }
+
   Future<List<ContactsModel>?> getContacts() async {
     if (contactsData != null) {
       return contactsData;
