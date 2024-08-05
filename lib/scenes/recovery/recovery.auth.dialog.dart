@@ -85,6 +85,7 @@ Future<void> showAuthBottomSheet(
                     style: const TextStyle(fontSize: 16),
                     decoration: BoxDecoration(
                       color: CupertinoColors.white,
+                      border: Border.all(color: ProtonColors.protonShades20),
                       borderRadius: BorderRadius.circular(14.0),
                     ),
                     padding: const EdgeInsets.symmetric(
