@@ -118,11 +118,13 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
               style: widget.textStyle ??
                   FontManager.body1Median(ProtonColors.textNorm),
               decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
+                hintStyle: FontManager.textFieldLabelStyle(ProtonColors.textHint),
                 labelStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                    FontManager.textFieldLabelStyle(ProtonColors.textWeak).copyWith(fontSize: 15),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
                 contentPadding: EdgeInsets.only(

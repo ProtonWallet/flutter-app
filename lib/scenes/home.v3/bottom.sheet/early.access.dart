@@ -41,8 +41,8 @@ class EarlyAccessSheet {
                 textAlign: TextAlign.center,
                 TextSpan(children: [
                   TextSpan(
-                    text: S.of(context).early_access_content_1(email),
-                    style: FontManager.body2Regular(
+                    text: S.of(context).early_access_content_1_fix,
+                    style: FontManager.body2Median(
                       ProtonColors.textWeak,
                     ),
                   ),
@@ -54,7 +54,7 @@ class EarlyAccessSheet {
                   ),
                   TextSpan(
                     text: S.of(context).early_access_content_2,
-                    style: FontManager.body2Regular(
+                    style: FontManager.body2Median(
                       ProtonColors.textWeak,
                     ),
                   ),

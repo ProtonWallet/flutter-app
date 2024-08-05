@@ -53,12 +53,13 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
 
   void _handleFlowState(BuildContext context) {
     if (viewModel.flowState == SetupBackupState.auth) {
-      showAuthDialog(
+      showAuthBottomSheet(
         context,
         viewModel.twofaStatus,
         viewModel.viewSeed,
         viewModel.reset,
       );
+      viewModel.flowState = SetupBackupState.authShown;
     } else if (viewModel.flowState == SetupBackupState.done) {
       viewModel.setIntroduce(introduce: false);
     }

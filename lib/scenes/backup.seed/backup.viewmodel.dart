@@ -22,6 +22,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 enum SetupBackupState {
   start,
   auth,
+  authShown,
   done,
 }
 
@@ -112,7 +113,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       });
 
       try {
-        walletName = strMnemonic = await WalletManager.getWalletName(walletID);
+        walletName = await WalletManager.getWalletName(walletID);
       } catch (e, stacktrace) {
         walletName = "Unknown";
         logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");
@@ -131,6 +132,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       error = parseSampleDisplayError(e);
       logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+      reset();
     } catch (e, stacktrace) {
       logger.e("viewSeed error: $e, stacktrace: $stacktrace");
       error = e.toString();

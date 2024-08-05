@@ -62,6 +62,18 @@ class ProtonColors {
   static Color green1Text = const Color(0xff5fc88f);
   static Color green1Background = const Color(0x485fc88f);
 
+
+  static Color avatarOrange1Text = const Color(0xfffd8445);
+  static Color avatarOrange1Background = const Color(0xffffede4);
+  static Color avatarPink1Text = const Color(0xffd050b4);
+  static Color avatarPink1Background = const Color(0xfffce6f8);
+  static Color avatarPurple1Text = const Color(0xff685dad);
+  static Color avatarPurple1Background = const Color(0xffebe7ff);
+  static Color avatarBlue1Text = const Color(0xff214a77);
+  static Color avatarBlue1Background = const Color(0xffe0f0ff);
+  static Color avatarGreen1Text = const Color(0xff286a50);
+  static Color avatarGreen1Background = const Color(0xffdff4e9);
+
   static Color launchBackground = const Color(0xff191927);
 
   static Color alertEnableBackground = const Color(0XFF88CD89);

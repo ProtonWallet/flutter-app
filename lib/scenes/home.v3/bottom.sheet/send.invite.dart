@@ -99,7 +99,7 @@ class SendInviteSheet {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       labelText: S.of(context).your_friend_email,
                       labelStyle: FontManager.textFieldLabelStyle(
-                          ProtonColors.textWeak),
+                          ProtonColors.textWeak).copyWith(fontSize: 15),
                       hintText: S.of(context).you_can_invite_any,
                       hintStyle: FontManager.textFieldLabelStyle(
                           ProtonColors.textHint),

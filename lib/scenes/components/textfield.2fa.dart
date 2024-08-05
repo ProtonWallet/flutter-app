@@ -9,10 +9,10 @@ class TextField2FA extends StatefulWidget {
   final FocusNode? focusNode;
   final String? hintText;
   final bool showEnabledBorder;
-  final bool digitOnly;
   final void Function(String)? onChanged;
   final Color color;
   final TextInputAction? textInputAction;
+  final int? maxLength;
 
   const TextField2FA({
     required this.width,
@@ -22,9 +22,9 @@ class TextField2FA extends StatefulWidget {
     this.hintText,
     this.color = Colors.transparent,
     this.showEnabledBorder = true,
-    this.digitOnly = false,
     this.textInputAction,
     this.onChanged,
+    this.maxLength = 1,
   });
 
   @override
@@ -44,13 +44,11 @@ class TextFieldTextState extends State<TextField2FA> {
             textInputAction: widget.textInputAction,
             onChanged: widget.onChanged,
             minLines: 1,
-            maxLength: 1,
+            maxLength: widget.maxLength,
             controller: widget.controller,
             focusNode: widget.focusNode,
             keyboardType: TextInputType.number,
-            inputFormatters: widget.digitOnly
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : [],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
                 hintText: widget.hintText,
                 enabledBorder: OutlineInputBorder(

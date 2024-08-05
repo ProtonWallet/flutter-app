@@ -307,8 +307,9 @@ class SendViewModelImpl extends SendViewModel {
 
       protonEmailAddresses = [anonymousAddress] +
           await protonEmailAddressProvider.getProtonEmailAddresses();
-      userAddressValueNotifier =
-          ValueNotifier(protonEmailAddresses.firstOrNull);
+      userAddressValueNotifier = ValueNotifier(protonEmailAddresses.length > 1
+          ? protonEmailAddresses[1]
+          : protonEmailAddresses.firstOrNull);
 
       addressKeys = await WalletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
@@ -331,7 +332,6 @@ class SendViewModelImpl extends SendViewModel {
       sinkAddSafe();
       blockClient = await Api.createEsploraBlockchainWithApi();
       await updateFeeRate();
-      await contactsDataProvider.fetchFromServer();
       contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
       // for account switcher
