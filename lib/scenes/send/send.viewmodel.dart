@@ -714,13 +714,23 @@ class SendViewModelImpl extends SendViewModel {
       final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
         SendFlowInviteSheet.show(
-            context, protonEmailAddresses, email, _sendInviteForNewComer);
+            context,
+            protonEmailAddresses
+                .where((e) => e.id != anonymousAddress.id)
+                .toList(),
+            email,
+            _sendInviteForNewComer);
       }
     } else if (showInviteBvE) {
       removeRecipientByEmail(email);
       final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
       if (context.mounted) {
-        SendFlowInviteSheet.show(context, protonEmailAddresses, email,
+        SendFlowInviteSheet.show(
+            context,
+            protonEmailAddresses
+                .where((e) => e.id != anonymousAddress.id)
+                .toList(),
+            email,
             _sendInviteForEmailIntegration);
       }
     }
