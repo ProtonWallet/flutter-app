@@ -281,9 +281,9 @@ class SendView extends ViewBase<SendViewModel> {
                                 : null,
                             showAvatar: false,
                             avatarColor:
-                                AvatarColorHelper.getBackgroundColor(index),
+                                AvatarColorHelper.getAvatarBackgroundColor(index),
                             avatarTextColor:
-                                AvatarColorHelper.getTextColor(index),
+                                AvatarColorHelper.getAvatarTextColor(index),
                           ),
                         const SizedBox(height: 20),
                         if (viewModel.errorMessage.isNotEmpty)
@@ -905,10 +905,10 @@ class SendView extends ViewBase<SendViewModel> {
                                     },
                                     canBeClosed: !viewModel.isLoadingBvE,
                                     avatarColor:
-                                        AvatarColorHelper.getBackgroundColor(
+                                        AvatarColorHelper.getAvatarBackgroundColor(
                                             index),
                                     avatarTextColor:
-                                        AvatarColorHelper.getTextColor(index),
+                                        AvatarColorHelper.getAvatarTextColor(index),
                                   ),
                               if (viewModel.isLoadingBvE)
                                 const CustomLoading(

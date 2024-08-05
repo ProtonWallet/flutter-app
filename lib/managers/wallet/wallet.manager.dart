@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
+import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
@@ -332,11 +333,21 @@ class WalletManager implements Manager {
     final userKey = await userManager.getUserKey(walletKey.userKeyId);
 
     final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
-    final String mnemonic = await WalletKeyHelper.decrypt(
-      secretKey,
-      walletModel.name,
-    );
-    return mnemonic;
+    try {
+      final String name = await WalletKeyHelper.decrypt(
+        secretKey,
+        walletModel.name,
+      );
+      return name;
+    } catch (e, stacktrace) {
+      // there is an edge case for new wallet creation will insert decryptedName instead of encryptedName
+      await Sentry.captureException(
+        e,
+        stackTrace: stacktrace,
+      );
+      logger.e(e.toString());
+    }
+    return walletModel.name;
   }
 
   static Future<ProtonExchangeRate> getExchangeRate(

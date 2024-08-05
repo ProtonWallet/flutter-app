@@ -168,53 +168,6 @@ class WalletSettingSheet {
                     const SizedBox(
                       height: defaultPadding,
                     ),
-                    hasEmailIntegration
-                        ? AlertCustom(
-                            content: S.of(context).bitcoin_via_email_desc,
-                            learnMore: GestureDetector(
-                                onTap: () {
-                                  ExternalUrl.shared.launchBlogBvEActivated();
-                                },
-                                child: Text(S.of(context).learn_more,
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.protonBlue))),
-                            leadingWidget: SvgPicture.asset(
-                                "assets/images/icon/bve_enable.svg",
-                                fit: BoxFit.fill,
-                                width: 30,
-                                height: 30),
-                            border: Border.all(
-                              color: Colors.transparent,
-                              width: 0,
-                            ),
-                            backgroundColor: ProtonColors.white,
-                            color: ProtonColors.textNorm,
-                          )
-                        : AlertCustom(
-                            content:
-                                S.of(context).bitcoin_via_email_not_active_desc,
-                            learnMore: GestureDetector(
-                                onTap: () {
-                                  ExternalUrl.shared.launchBlogBvEInActivated();
-                                },
-                                child: Text(S.of(context).learn_more,
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.protonBlue))),
-                            leadingWidget: SvgPicture.asset(
-                                "assets/images/icon/bve_disable.svg",
-                                fit: BoxFit.fill,
-                                width: 30,
-                                height: 30),
-                            border: Border.all(
-                              color: Colors.transparent,
-                              width: 0,
-                            ),
-                            backgroundColor: ProtonColors.white,
-                            color: ProtonColors.textNorm,
-                          ),
-                    const SizedBox(
-                      height: defaultPadding,
-                    ),
                     BlocBuilder<WalletListBloc, WalletListState>(
                         bloc: viewModel.walletListBloc,
                         builder: (context, state) {

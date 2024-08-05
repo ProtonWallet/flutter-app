@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -91,7 +93,6 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            elevation: 0.0,
             textStyle: FontManager.body1Median(ProtonColors.textNorm),
             height: 48,
           ),
@@ -126,13 +127,27 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
             SizedBoxes.box8,
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               for (int i = 0; i < 6; i++)
-                TextField2FA(
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: i == 2 ? 12 : 0,
+                    left: i == 3 ? 12 : 0,
+                  ),
+                  child: TextField2FA(
                     width: 48,
                     controller: viewModel.digitControllers[i],
+                    maxLength: i == 0 ? 6 : 1,
                     onChanged: (text) {
                       if (text.isNotEmpty) {
                         if (i < 5) {
-                          FocusScope.of(context).nextFocus();
+                          if (i == 0 && text.length >= 6) {
+                            /// handle user paste
+                            for (int j = 0; j < min(text.length, 6); j++) {
+                              viewModel.digitControllers[j].text = text[j];
+                            }
+                            FocusScope.of(context).unfocus();
+                          } else {
+                            FocusScope.of(context).nextFocus();
+                          }
                         }
                       } else {
                         if (i > 0) {
@@ -142,7 +157,8 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
                     },
                     textInputAction:
                         i == 5 ? TextInputAction.done : TextInputAction.next,
-                    digitOnly: true),
+                  ),
+                ),
             ]),
           ],
         ),
