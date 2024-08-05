@@ -71,15 +71,16 @@ class ButtonV6State extends State<ButtonV6>
         child: Stack(alignment: Alignment.center, children: [
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-            maximumSize: widget.maximumSize,
-            fixedSize: Size(widget.width, widget.height),
-            backgroundColor: widget.backgroundColor,
-            // foreground
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(widget.radius),
-              side: BorderSide(color: widget.borderColor),
-            ),
-            elevation: 0.4),
+          maximumSize: widget.maximumSize,
+          fixedSize: Size(widget.width, widget.height),
+          backgroundColor: widget.backgroundColor,
+          // foreground
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(widget.radius),
+            side: BorderSide(color: widget.borderColor),
+          ),
+          elevation: 0.0,
+        ),
         onPressed: widget.enable
             ? () async {
                 setState(() {

@@ -82,23 +82,28 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
           controller: _textEditingController,
           readOnly: true,
           onTap: () {
-            showOptionsInBottomSheet(context);
-            Future.delayed(const Duration(milliseconds: 100), () {
-              _scrollTo(_getIndexOfAccount(selected) * 60 -
-                  MediaQuery.of(context).size.height / 6 +
-                  60);
-            });
+            if (widget.accounts.length > 1) {
+              showOptionsInBottomSheet(context);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                _scrollTo(_getIndexOfAccount(selected) * 60 -
+                    MediaQuery.of(context).size.height / 6 +
+                    60);
+              });
+            }
           },
           style: FontManager.body1Median(ProtonColors.textNorm),
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
             labelText: widget.labelText,
-            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak)
+                .copyWith(fontSize: 15),
             suffixIconConstraints: const BoxConstraints(maxWidth: 24.0),
             contentPadding: const EdgeInsets.only(top: 4, bottom: 16),
-            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded,
-                color: ProtonColors.textWeak, size: 24),
+            suffixIcon: widget.accounts.length > 1
+                ? Icon(Icons.keyboard_arrow_down_rounded,
+                    color: ProtonColors.textWeak, size: 24)
+                : null,
           ),
         ));
   }

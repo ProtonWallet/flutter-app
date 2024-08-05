@@ -17,18 +17,10 @@ class AvatarColorHelper {
       ProtonColors.yellow1Text,
       ProtonColors.yellow1Background,
     ),
-    // AvatarColor(
-    //   ProtonColors.orange1Text,
-    //   ProtonColors.orange1Background,
-    // ),
     AvatarColor(
       ProtonColors.pink1Text,
       ProtonColors.pink1Background,
     ),
-    // AvatarColor(
-    //   ProtonColors.purple1Text,
-    //   ProtonColors.purple1Background,
-    // ),
     AvatarColor(
       ProtonColors.blue1Text,
       ProtonColors.blue1Background,
@@ -38,6 +30,37 @@ class AvatarColorHelper {
       ProtonColors.green1Background,
     ),
   ];
+
+  static List<AvatarColor> avatarColors = [
+    AvatarColor(
+      ProtonColors.avatarOrange1Text,
+      ProtonColors.avatarOrange1Background,
+    ),
+    AvatarColor(
+      ProtonColors.avatarPink1Text,
+      ProtonColors.avatarPink1Background,
+    ),
+    AvatarColor(
+      ProtonColors.avatarPurple1Text,
+      ProtonColors.avatarPurple1Background,
+    ),
+    AvatarColor(
+      ProtonColors.avatarBlue1Text,
+      ProtonColors.avatarBlue1Background,
+    ),
+    AvatarColor(
+      ProtonColors.avatarGreen1Text,
+      ProtonColors.avatarGreen1Background,
+    ),
+  ];
+
+  static Color getAvatarBackgroundColor(int index) {
+    return avatarColors[index % max(avatarColors.length, 1)].backgroundColor;
+  }
+
+  static Color getAvatarTextColor(int index) {
+    return avatarColors[index % max(avatarColors.length, 1)].textColor;
+  }
 
   static Color getBackgroundColor(int index) {
     return colors[index % max(colors.length, 1)].backgroundColor;

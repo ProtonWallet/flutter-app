@@ -167,7 +167,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
                         : null,
                     labelText: labelText,
                     labelStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                        FontManager.textFieldLabelStyle(ProtonColors.textWeak).copyWith(fontSize: 15),
                     hintText: hintText,
                     hintStyle:
                         FontManager.textFieldLabelStyle(ProtonColors.textHint),
@@ -193,7 +193,7 @@ Widget getEmailAvatar(String name) {
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: AvatarColorHelper.getBackgroundColor(
+        color: AvatarColorHelper.getAvatarBackgroundColor(
             AvatarColorHelper.getIndexFromString(name)),
         borderRadius: BorderRadius.circular(21),
       ),
@@ -201,7 +201,7 @@ Widget getEmailAvatar(String name) {
         child: Text(
           CommonHelper.getFirstNChar(name, 1).toUpperCase(),
           style: FontManager.body2Median(
-            AvatarColorHelper.getTextColor(
+            AvatarColorHelper.getAvatarTextColor(
                 AvatarColorHelper.getIndexFromString(name)),
           ),
         ),

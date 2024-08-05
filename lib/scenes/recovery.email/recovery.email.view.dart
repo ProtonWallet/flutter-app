@@ -27,7 +27,7 @@ class RecoveryEmailView extends ViewBase<RecoveryEmailViewModel> {
         child: BlocListener<ProtonRecoveryBloc, ProtonRecoveryState>(
           listener: (context, state) {
             if (state.requireAuthModel.requireAuth) {
-              showAuthDialog(context, state.requireAuthModel.twofaStatus, (
+              showAuthBottomSheet(context, state.requireAuthModel.twofaStatus, (
                 password,
                 twofa,
               ) async {

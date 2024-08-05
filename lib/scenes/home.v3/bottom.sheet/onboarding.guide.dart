@@ -211,7 +211,9 @@ class OnboardingGuideSheet {
                               ButtonV6(
                                   onPressed: () async {
                                     if (!isCreatingWallet) {
-                                      isCreatingWallet = true;
+                                      setState((){
+                                        isCreatingWallet = true;
+                                      });
                                       bool success = false;
                                       if (viewModel
                                               .passphraseTextController.text ==
@@ -238,7 +240,9 @@ class OnboardingGuideSheet {
                                                 .of(context)
                                                 .passphrase_are_not_match);
                                       }
-                                      isCreatingWallet = false;
+                                      setState((){
+                                        isCreatingWallet = false;
+                                      });
                                       // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
                                       // !viewModel.acceptTermsAndConditions
                                       if (context.mounted &&
@@ -268,6 +272,7 @@ class OnboardingGuideSheet {
                                   viewModel.move(NavID.importWallet);
                                   Navigator.of(context).pop();
                                 },
+                                enable: !isCreatingWallet,
                                 text: S.of(context).import_your_wallet,
                                 width: MediaQuery.of(context).size.width,
                                 textStyle: FontManager.body1Median(
