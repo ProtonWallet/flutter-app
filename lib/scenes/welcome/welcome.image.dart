@@ -18,11 +18,38 @@ class WelcomeImage extends StatelessWidget {
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,
-          child: Column(
+          child: Stack(
             children: [
-              const Expanded(child: SizedBox()),
-              Assets.images.welcome.walletWelcomeHeadPng.image(
-                fit: BoxFit.fill,
+              Column(
+                children: [
+                  const Expanded(child: SizedBox()),
+                  Center(
+                    child: Assets.images.welcome.walletWelcomeHeadPng.image(
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
+              ),
+
+              /// Gradient overlay
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 110,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFFFFFFFF).withOpacity(0.0),
+                        const Color(0xFFFFFFFF).withOpacity(1.0),
+                        const Color(0xFFFFFFFF).withOpacity(0.0),
+                      ],
+                      stops: const [0.0, 0.0, 1.0],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
