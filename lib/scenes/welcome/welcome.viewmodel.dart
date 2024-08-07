@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.state.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -20,6 +21,7 @@ abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
 class WelcomeViewModelImpl extends WelcomeViewModel {
   final NativeViewChannel nativeChannel;
   final UserManager userManager;
+  final AppStateManager appStateManger;
   final DataProviderManager dataProviderManager;
 
   WelcomeViewModelImpl(
@@ -27,6 +29,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     this.nativeChannel,
     this.userManager,
     this.dataProviderManager,
+    this.appStateManger,
   );
 
   bool hadLocallogin = false;
@@ -58,6 +61,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
       await userManager.nativeLogin(state.userInfo);
       await dataProviderManager.login(state.userInfo.userId);
       await userManager.login(state.userInfo.userId);
+      await appStateManger.login(state.userInfo.userId);
       coordinator.showHome(env);
     }
   }

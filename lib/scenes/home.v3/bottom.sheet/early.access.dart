@@ -12,11 +12,14 @@ import 'package:wallet/scenes/home.v3/bottom.sheet/proton.products.intro.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class EarlyAccessSheet {
+  static bool _isShowing = false;
   static void show(
     BuildContext context,
     String email,
     VoidCallback logoutCallback,
   ) {
+    if (_isShowing) return;
+    _isShowing = true;
     HomeModalBottomSheet.show(context,
         isDismissible: false,
         enableDrag: false,

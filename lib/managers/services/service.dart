@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:wallet/helper/extension/stream.controller.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/logger.dart';
 
-abstract class Service<T> {
-  final _dataController = StreamController<T>.broadcast();
-  Stream<T> get dataStream => _dataController.stream;
-
+abstract class Service {
   bool _isRunning = false;
   bool _isPaused = false;
+  bool onUpdateing = false;
+  bool checkRecovery = false;
   Duration duration;
 
   Service({required this.duration});
@@ -38,19 +37,17 @@ abstract class Service<T> {
   Future<void> _runTasks() async {
     while (_isRunning && !_isPaused) {
       try {
-        await onUpdate().then(_dataController.sinkAddSafe);
+        duration = await onUpdate() ?? duration;
+        onUpdateing = false;
       } catch (e, statcktrace) {
+        /// Log error and continue
         logger.e('Service $runtimeType runTask: $e statcktrac: $statcktrace');
+        Sentry.captureException(e, stackTrace: statcktrace);
+        onUpdateing = false;
       }
-
       await Future.delayed(duration);
     }
   }
 
-  void dispose() {
-    _dataController.close();
-    this.stop();
-  }
-
-  Future<T> onUpdate();
+  Future<Duration?> onUpdate();
 }

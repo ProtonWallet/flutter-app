@@ -27,7 +27,6 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
@@ -217,7 +216,6 @@ class SendViewModelImpl extends SendViewModel {
     super.walletID,
     super.accountID,
     this.eventLoop,
-    this.walletManger,
     this.userManager,
     this.contactsDataProvider,
     this.walletKeysProvider,
@@ -233,9 +231,6 @@ class SendViewModelImpl extends SendViewModel {
   final EventLoop eventLoop;
 
   final UserManager userManager;
-
-  // wallet manger
-  final ProtonWalletManager walletManger;
 
   /// app state manager
   final AppStateManager appStateManager;
@@ -1052,7 +1047,7 @@ class SendViewModelImpl extends SendViewModel {
     logger.i("End add local transaction record");
     try {
       logger.i("Start eventloop runOnce()");
-      await eventLoop.runOnce();
+      await eventLoop.fetchEvents();
       logger.i("End eventloop runOnce()");
     } catch (e) {
       e.toString();

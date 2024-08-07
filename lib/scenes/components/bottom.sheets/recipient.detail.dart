@@ -86,7 +86,6 @@ class RecipientDetailSheet {
                           }
                         });
                       },
-                      elevation: 0,
                       text: S.of(context).copy_address,
                       width: MediaQuery.of(context).size.width,
                       textStyle: FontManager.body1Median(ProtonColors.textNorm),
