@@ -67,13 +67,19 @@ Future<void> showAuthBottomSheet(
                 ),
                 const SizedBox(height: 16),
                 if (twoFaEnable == 1)
-                  const Center(
+                  Center(
                     child: Text(
-                      "Two-factor authentication code",
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: ColorName.weakLight),
+                      S.of(context).two_factor_code,
+                      style: FontManager.titleHeadline(ProtonColors.textNorm),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (twoFaEnable == 1) const SizedBox(height: 16),
+                if (twoFaEnable == 1)
+                  Center(
+                    child: Text(
+                      S.of(context).two_factor_code_desc,
+                      style: FontManager.body2Regular(ProtonColors.textWeak),
                       textAlign: TextAlign.center,
                     ),
                   ),

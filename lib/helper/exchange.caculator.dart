@@ -21,12 +21,12 @@ class ExchangeCalculator {
       final outValue = exchangeRate.exchangeRate *
           BigInt.from(amountInSatoshi) /
           BigInt.from(fiatCurrencyInfo.cents) /
-          100000000;
+          btc2satoshi;
       return outValue;
     }
     return exchangeRate.exchangeRate *
         BigInt.from(amountInSatoshi) /
-        BigInt.from(100000000);
+        BigInt.from(btc2satoshi);
   }
 
   static int getDisplayDigit(
@@ -47,7 +47,7 @@ class ExchangeCalculator {
     double amount = amountInSatoshi.toDouble();
     switch (bitcoinUnit) {
       case BitcoinUnit.btc:
-        amount = amountInSatoshi / 100000000;
+        amount = amountInSatoshi / btc2satoshi;
         return "${amount.toStringAsFixed(8)} ${bitcoinUnit.name.toUpperCase()}";
       case BitcoinUnit.mbtc:
         amount = amountInSatoshi / 100000;
@@ -64,7 +64,7 @@ class ExchangeCalculator {
     double amount = amountInSatoshi.toDouble();
     switch (bitcoinUnit) {
       case BitcoinUnit.btc:
-        amount = amountInSatoshi / 100000000;
+        amount = amountInSatoshi / btc2satoshi;
         return AnimatedFlipCounter(
           duration: const Duration(milliseconds: 500),
           value: amount,

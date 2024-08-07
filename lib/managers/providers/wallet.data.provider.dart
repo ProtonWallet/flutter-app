@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/strings.dart';
@@ -376,6 +377,40 @@ class WalletsDataProvider extends DataProvider {
       apiWalletAcct.lastUsedIndex,
       initialize: true,
     );
+  }
+
+  Future<void> syncEmailAddresses(
+    String serverWalletID,
+    String serverAccountID,
+  ) async {
+    try {
+      final List<ApiEmailAddress> addresses =
+          await walletClient.getWalletAccountAddresses(
+              walletId: serverWalletID, walletAccountId: serverAccountID);
+      for (ApiEmailAddress address in addresses) {
+        await addEmailAddressToWalletAccount(
+          serverWalletID,
+          serverAccountID,
+          address,
+        );
+      }
+      if (addresses.isEmpty) {
+        await removeEmailAddressOnWalletAccount(serverAccountID);
+      }
+    } catch (e, stacktrace) {
+      /// this should only happened before production api get deployed
+      await Sentry.captureException(
+        e,
+        stackTrace: stacktrace,
+      );
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> removeEmailAddressOnWalletAccount(
+    String serverAccountID,
+  ) async {
+    await addressDao.deleteByServerAccountID(serverAccountID);
   }
 
   /// add email address to wallet account

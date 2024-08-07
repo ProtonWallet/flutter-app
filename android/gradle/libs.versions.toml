@@ -52,7 +52,7 @@ kotlinx-datetime = "0.3.3"
 kotlinx-serialization-json = "1.6.3"
 
 # Ramp
-ramp = "4.0.0"
+# ramp = "4.0.1"
 
 # Sentry
 sentry = "6.18.1"
@@ -193,7 +193,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
-ramp-sdk-android = { module = "com.github.RampNetwork:ramp-sdk-android", version.ref = "ramp" }
+# ramp-sdk-android = { module = "com.github.RampNetwork:ramp-sdk-android", version.ref = "ramp" }
 
 sentry-android-core = { module = "io.sentry:sentry-android-core", version.ref = "sentry" }
 sentry-android-timber = { module = "io.sentry:sentry-android-timber", version.ref = "sentry" }
@@ -203,4 +203,13 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 
 [bundles]
 test-core = ["core-test-android-instrumented"]
-test-android = ["fusion", "junit", "kotlinx-coroutines-test", "androidx-test-core-ktx", "androidx-test-runner", "androidx-test-rules", "androidx-test-uiautomator", "dagger-hilt-android-testing"]
+test-android = [
+    "fusion",
+    "junit",
+    "kotlinx-coroutines-test",
+    "androidx-test-core-ktx",
+    "androidx-test-runner",
+    "androidx-test-rules",
+    "androidx-test-uiautomator",
+    "dagger-hilt-android-testing",
+]

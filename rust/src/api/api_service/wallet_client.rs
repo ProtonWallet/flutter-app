@@ -4,7 +4,7 @@ use andromeda_api::{
     core::ApiClient,
     settings::FiatCurrencySymbol as FiatCurrency,
     wallet::{
-        ApiWallet, ApiWalletAccount, ApiWalletData, ApiWalletSettings,
+        ApiEmailAddress, ApiWallet, ApiWalletAccount, ApiWalletData, ApiWalletSettings,
         CreateWalletTransactionRequestBody, WalletTransactionFlag,
     },
 };
@@ -77,6 +77,21 @@ impl WalletClient {
         wallet_id: String,
     ) -> Result<Vec<ApiWalletAccount>, BridgeError> {
         let result = self.inner.get_wallet_accounts(wallet_id).await;
+        match result {
+            Ok(response) => Ok(response),
+            Err(err) => Err(err.into()),
+        }
+    }
+
+    pub async fn get_wallet_account_addresses(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+    ) -> Result<Vec<ApiEmailAddress>, BridgeError> {
+        let result = self
+            .inner
+            .get_wallet_account_addresses(wallet_id, wallet_account_id)
+            .await;
         match result {
             Ok(response) => Ok(response),
             Err(err) => Err(err.into()),

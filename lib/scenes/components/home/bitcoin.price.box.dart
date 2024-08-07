@@ -146,7 +146,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                         thousandSeparator: ",",
                                         value: ExchangeCalculator
                                             .getNotionalInFiatCurrency(
-                                                widget.exchangeRate, 100000000),
+                                                widget.exchangeRate, btc2satoshi),
                                         // value: price,
                                         fractionDigits:
                                             ExchangeCalculator.getDisplayDigit(
