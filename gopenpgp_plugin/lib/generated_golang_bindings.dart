@@ -3758,6 +3758,34 @@ class NativeLibrary {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
+
+  void freeCString(
+    ffi.Pointer<ffi.Char> cstr,
+  ) {
+    return _freeCString(
+      cstr,
+    );
+  }
+
+  late final _freeCStringPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>>(
+          'freeCString');
+  late final _freeCString =
+      _freeCStringPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
+
+  void freeBinaryResult(
+    BinaryResult result,
+  ) {
+    return _freeBinaryResult(
+      result,
+    );
+  }
+
+  late final _freeBinaryResultPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(BinaryResult)>>(
+          'freeBinaryResult');
+  late final _freeBinaryResult =
+      _freeBinaryResultPtr.asFunction<void Function(BinaryResult)>();
 }
 
 /// mbstate_t is an opaque object to keep conversion state, during multibyte
