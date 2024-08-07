@@ -113,7 +113,6 @@ Future<void> showMnemonicDialog(
                 textStyle: FontManager.body1Median(ProtonColors.white),
                 width: 300,
                 height: 44,
-                elevation: 0.0,
               ),
             ],
           ),

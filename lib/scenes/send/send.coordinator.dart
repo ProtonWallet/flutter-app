@@ -4,7 +4,6 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -33,7 +32,6 @@ class SendCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final userManager = serviceManager.get<UserManager>();
     final eventLoop = serviceManager.get<EventLoop>();
-    final walletManager = serviceManager.get<ProtonWalletManager>();
     final dataProvider = serviceManager.get<DataProviderManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
@@ -43,7 +41,6 @@ class SendCoordinator extends Coordinator {
       walletID,
       accountID,
       eventLoop,
-      walletManager,
       userManager,
       dataProvider.contactsDataProvider,
       dataProvider.walletKeysProvider,

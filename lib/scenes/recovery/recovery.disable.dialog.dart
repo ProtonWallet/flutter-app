@@ -56,7 +56,6 @@ Future<void> showDisableDialog(
                 textStyle: FontManager.body1Median(ProtonColors.white),
                 width: 300,
                 height: 44,
-                elevation: 0.0,
               ),
               const SizedBox(
                 height: 8,
@@ -71,7 +70,6 @@ Future<void> showDisableDialog(
                 textStyle: FontManager.body1Median(ProtonColors.textNorm),
                 width: 300,
                 height: 44,
-                elevation: 0.0,
               ),
             ],
           ),

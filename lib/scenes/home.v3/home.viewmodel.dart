@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -39,7 +38,6 @@ import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
@@ -128,7 +126,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   TextEditingController walletPreferenceTextEditingController =
       TextEditingController(text: "");
 
-  bool initialed = false;
   String errorMessage = "";
   List<HistoryTransaction> historyTransactions = [];
 
@@ -298,7 +295,6 @@ class HomeViewModelImpl extends HomeViewModel {
     super.protonRecoveryBloc,
     this.userManager,
     this.eventLoop,
-    this.protonWalletManager,
     this.apiServiceManager,
     this.channel,
     this.appStateManager,
@@ -309,9 +305,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // event loop manger
   final EventLoop eventLoop;
-
-  // wallet mangaer
-  final ProtonWalletManager protonWalletManager;
 
   // networking
   final ProtonApiServiceManager apiServiceManager;
@@ -405,6 +398,19 @@ class HomeViewModelImpl extends HomeViewModel {
         loadInviteState();
       }
     });
+
+    eventLoop.setRecoveryCallback((tasks) async {
+      for (final item in tasks) {
+        switch (item) {
+          case LoadingTask.eligible:
+            if (!await eligibleCheck()) {
+              return;
+            }
+          case LoadingTask.homeRecheck:
+            preLoadHomeData();
+        }
+      }
+    });
   }
 
   Future<void> loadContacts() async {
@@ -489,10 +495,56 @@ class HomeViewModelImpl extends HomeViewModel {
     loadUserSettings();
   }
 
+  Future<bool> eligibleCheck() async {
+    try {
+      final cachedEligible = await appStateManager.getEligible();
+      if (cachedEligible != 1) {
+        // Check if user is eligible
+        final int eligible = await retry(
+          () => apiServiceManager
+              .getApiService()
+              .getSettingsClient()
+              .getUserWalletEligibility(),
+        );
+        appStateManager.loadingSuccess(LoadingTask.eligible);
+        if (eligible == 0) {
+          EarlyAccessSheet.show(
+            Coordinator.rootNavigatorKey.currentContext!,
+            userEmail,
+            logout,
+          );
+          eventLoop.stop();
+          return false;
+        } else {
+          await appStateManager.setEligible();
+        }
+      }
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      appStateManager.loadingFailed(LoadingTask.eligible);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+      CommonHelper.showErrorDialog(parseSampleDisplayError(e));
+      eventLoop.start();
+      return false;
+    } catch (e, stacktrace) {
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      appStateManager.loadingFailed(LoadingTask.eligible);
+      CommonHelper.showErrorDialog(e.toString());
+      eventLoop.start();
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   Future<void> loadData() async {
     /// init app state listener
     await initAppStateSubscription();
+
+    /// init subscriptions
+    await initSubscription();
 
     /// init network
     await apiServiceManager.initalOldApiService();
@@ -504,95 +556,70 @@ class HomeViewModelImpl extends HomeViewModel {
     final userInfo = userManager.userInfo;
     userEmail = userInfo.userMail;
     displayName = userInfo.userDisplayName;
-    protonWalletManager.login(userInfo.userId);
 
-    try {
-      final cachedEligible = await appStateManager.getEligible();
-      if (cachedEligible != 1) {
-        // Check if user is eligible
-        final int eligible = await retry(
-          () => apiServiceManager
-              .getApiService()
-              .getSettingsClient()
-              .getUserWalletEligibility(),
-        );
-        if (eligible == 0) {
-          EarlyAccessSheet.show(
-            Coordinator.rootNavigatorKey.currentContext!,
-            userEmail,
-            logout,
-          );
-          return;
-        } else {
-          await appStateManager.setEligible();
-        }
-      }
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      Sentry.captureException(e, stackTrace: stacktrace);
-      CommonHelper.showErrorDialog(parseSampleDisplayError(e));
-      return;
-    } catch (e, stacktrace) {
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      CommonHelper.showErrorDialog(e.toString());
+    /// check
+    final checked = await eligibleCheck();
+    if (!checked) {
       return;
     }
 
-    // ----------------
-    // settings
+    /// init controllers
+    initControllers();
 
-    // transactions
+    userSettingProvider = Provider.of<UserSettingProvider>(
+        Coordinator.rootNavigatorKey.currentContext!,
+        listen: false);
+
+    dataProviderManager
+        .userSettingsDataProvider.exchangeRateUpdateController.stream
+        .listen((onData) {
+      currentExchangeRate =
+          dataProviderManager.userSettingsDataProvider.exchangeRate;
+      datasourceStreamSinkAdd();
+    });
+
+    dataProviderManager
+        .userSettingsDataProvider.bitcoinUnitUpdateController.stream
+        .listen((onData) {
+      bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
+      datasourceStreamSinkAdd();
+    });
+
+    bitcoinUnitNotifier.addListener(() async {
+      updateBitcoinUnit(bitcoinUnitNotifier.value);
+    });
+
+    transactionSearchController.addListener(datasourceStreamSinkAdd);
+
+    addressSearchController.addListener(datasourceStreamSinkAdd);
+
+    priceGraphClient = apiServiceManager.getApiService().getPriceGraphClient();
+
+    /// preload data
+    preLoadHomeData();
+  }
+
+  Future<void> preLoadHomeData() async {
     try {
-      /// init subscriptions
-      initSubscription();
+      ///reset error message
+      errorMessage = "";
 
-      /// init controllers
-      initControllers();
-
-      userSettingProvider = Provider.of<UserSettingProvider>(
-          Coordinator.rootNavigatorKey.currentContext!,
-          listen: false);
+      /// load user settings
       preloadSettings();
+
+      /// change call back to steam listener
       walletListBloc.init(
         startLoadingCallback: selectDefaultWallet,
         onboardingCallback: setOnBoard,
       );
-      priceGraphClient =
-          apiServiceManager.getApiService().getPriceGraphClient();
       loadProtonRecoveryState();
       loadProton2FAState();
       dataProviderManager.exclusiveInviteDataProvider.preLoad();
 
-      // async
       loadContacts();
-      dataProviderManager
-          .userSettingsDataProvider.exchangeRateUpdateController.stream
-          .listen((onData) {
-        currentExchangeRate =
-            dataProviderManager.userSettingsDataProvider.exchangeRate;
-        datasourceStreamSinkAdd();
-      });
 
-      dataProviderManager
-          .userSettingsDataProvider.bitcoinUnitUpdateController.stream
-          .listen((onData) {
-        bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
-        datasourceStreamSinkAdd();
-      });
-      // checkNetwork();
       loadDiscoverContents();
       checkProtonAddresses();
-
-      bitcoinUnitNotifier.addListener(() async {
-        updateBitcoinUnit(bitcoinUnitNotifier.value);
-      });
-
-      transactionSearchController.addListener(datasourceStreamSinkAdd);
-
-      addressSearchController.addListener(datasourceStreamSinkAdd);
-
-      eventLoop.start();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
@@ -605,9 +632,10 @@ class HomeViewModelImpl extends HomeViewModel {
       CommonHelper.showErrorDialog("App init: $errorMessage");
       errorMessage = "";
     } else {
-      initialed = true;
+      appStateManager.isHomeInitialed = true;
     }
     datasourceStreamSinkAdd();
+    eventLoop.start();
   }
 
   void selectDefaultWallet() {
@@ -712,8 +740,6 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  Future<void> updateBtcPrice() async {}
-
   Future<void> loadUserSettings() async {
     final settings =
         await dataProviderManager.userSettingsDataProvider.getSettings();
@@ -729,7 +755,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
-    if (initialed) {
+    if (appStateManager.isHomeInitialed) {
       final userSettings = await proton_api.bitcoinUnit(symbol: symbol);
       await dataProviderManager.userSettingsDataProvider
           .insertUpdate(userSettings);
@@ -792,14 +818,18 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> deleteAccount(
-      WalletModel walletModel, AccountModel accountModel) async {
-    if (initialed) {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
+    if (appStateManager.isHomeInitialed) {
       try {
         await proton_api.deleteWalletAccount(
-            walletId: walletModel.walletID,
-            walletAccountId: accountModel.accountID);
-        await dataProviderManager.walletDataProvider
-            .deleteWalletAccount(accountModel: accountModel);
+          walletId: walletModel.walletID,
+          walletAccountId: accountModel.accountID,
+        );
+        await dataProviderManager.walletDataProvider.deleteWalletAccount(
+          accountModel: accountModel,
+        );
       } on BridgeError catch (e, stacktrace) {
         appStateManager.updateStateFrom(e);
         errorMessage = parseSampleDisplayError(e);
@@ -886,12 +916,10 @@ class HomeViewModelImpl extends HomeViewModel {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
       eventLoop.stop();
-      await protonWalletManager.logout();
       await userManager.logout();
       await WalletManager.cleanBDKCache();
       try {
         userSettingProvider.destroy();
-        protonWalletManager.destroy();
       } catch (e) {
         // no provider init for non eligible user
       }
@@ -905,8 +933,9 @@ class HomeViewModelImpl extends HomeViewModel {
       errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
-    } catch (e) {
+    } catch (e, stacktrace) {
       errorMessage = e.toString();
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
     EasyLoading.dismiss();
     if (errorMessage.isNotEmpty) {
@@ -1137,26 +1166,6 @@ class HomeViewModelImpl extends HomeViewModel {
     walletListBloc.updateAccountFiat(
         walletModel, accountModel, newFiatCurrency.name.toUpperCase());
     walletBalanceBloc.handleTransactionUpdate();
-  }
-
-  Future<void> checkNetwork() async {
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.none)) {
-      if (!isShowingNoInternet) {
-        isShowingNoInternet = true;
-        EasyLoading.show(maskType: EasyLoadingMaskType.black);
-      }
-    } else {
-      if (isShowingNoInternet) {
-        isShowingNoInternet = false;
-        EasyLoading.dismiss();
-      }
-    }
-    await Future.delayed(const Duration(seconds: 1));
-    if (!isLogout) {
-      checkNetwork();
-    }
   }
 
   @override

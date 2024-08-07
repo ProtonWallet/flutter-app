@@ -14,7 +14,6 @@ import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
@@ -174,7 +173,6 @@ class HomeCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final userManager = serviceManager.get<UserManager>();
     final event = serviceManager.get<EventLoop>();
-    final wallet = serviceManager.get<ProtonWalletManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final channelManager = serviceManager.get<PlatformChannelManager>();
@@ -246,7 +244,6 @@ class HomeCoordinator extends Coordinator {
       protonRecoveryBloc,
       userManager,
       event,
-      wallet,
       apiServiceManager,
 
       ///
