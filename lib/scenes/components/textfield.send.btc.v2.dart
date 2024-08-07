@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -146,7 +147,9 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                     hintText: widget.hintText,
                     prefixIcon: Text(
                       widget.bitcoinBase
-                          ? "₿"
+                          ? widget.bitcoinUnit == BitcoinUnit.sats
+                              ? "SATS"
+                              : "₿"
                           : CommonHelper.getFiatCurrencySign(
                               widget.exchangeRate.fiatCurrency),
                       style: FontManager.sendAmountSign(ProtonColors.textWeak),
@@ -198,7 +201,9 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
       } catch (e) {
         amount = 0.0;
       }
-      final amountInSatoshi = (amount * 100000000).ceil();
+      final amountInSatoshi = widget.bitcoinUnit == BitcoinUnit.sats
+          ? amount.toInt()
+          : (amount * btc2satoshi).ceil();
       final double fiatAmount = ExchangeCalculator.getNotionalInFiatCurrency(
           widget.exchangeRate, amountInSatoshi);
       setState(() {
@@ -213,7 +218,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
       final double btcAmount =
           ExchangeCalculator.getNotionalInBTC(widget.exchangeRate, amount);
       setState(() {
-        estimatedSATS = (btcAmount * 100000000).ceil();
+        estimatedSATS = (btcAmount * btc2satoshi).ceil();
       });
     }
   }

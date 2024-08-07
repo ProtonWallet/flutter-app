@@ -187,6 +187,9 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int maxBalanceToSend = 0;
   int accountsCount = 0;
 
+  /// if exchange rate changed, we tolerate maximum 20 satoshi for send all feature
+  final int tolerateBalanceOverflow = 20;
+
   // late TxBuilderResult txBuilderResult;
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
@@ -833,9 +836,20 @@ class SendViewModelImpl extends SendViewModel {
           final double btcAmount = bitcoinBase
               ? amount
               : ExchangeCalculator.getNotionalInBTC(exchangeRate, amount);
-          amountInSATS = bitcoinBase
-              ? (btcAmount * 100000000).round()
-              : (btcAmount * 100000000).ceil();
+          if (bitcoinBase) {
+            final BitcoinUnit bitcoinUnit =
+                fiatCurrencyNotifier.value.bitcoinCurrency?.bitcoinUnit ??
+                    BitcoinUnit.btc;
+            if (bitcoinUnit == BitcoinUnit.btc) {
+              amountInSATS = (btcAmount * btc2satoshi).round();
+            } else if (bitcoinUnit == BitcoinUnit.sats) {
+              amountInSATS = btcAmount.round();
+            } else {
+              throw Exception("This is not a supported bitcoin unit");
+            }
+          } else {
+            amountInSATS = (btcAmount * btc2satoshi).ceil();
+          }
           final String email = protonRecipient.email;
           String bitcoinAddress = "";
           if (email.contains("@")) {
@@ -872,7 +886,7 @@ class SendViewModelImpl extends SendViewModel {
       if (!hasValidRecipient) {
         return false;
       }
-      if (totalAmountInSAT > maxBalanceToSend) {
+      if (totalAmountInSAT > maxBalanceToSend + tolerateBalanceOverflow) {
         /// no sufficient money
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
@@ -919,6 +933,7 @@ class SendViewModelImpl extends SendViewModel {
       /// txBuilder will be use to build real psbt
       txBuilder = await txBuilder.setFeeRate(
           satPerVb: BigInt.from(feeRateSatPerVByte.ceil()));
+      txBuilder = await txBuilder.constrainRecipientAmounts();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       return _processError(e, stacktrace);
@@ -1111,7 +1126,12 @@ class SendViewModelImpl extends SendViewModel {
       final double amount = totalAmount / recipientCount;
       for (ProtonRecipient recipient in recipients) {
         if (bitcoinBase) {
-          recipient.amountController.text = amount.toStringAsFixed(8);
+          final BitcoinUnit bitcoinUnit =
+              fiatCurrencyNotifier.value.bitcoinCurrency?.bitcoinUnit ??
+                  BitcoinUnit.btc;
+          final int displayDigit = bitcoinUnit == BitcoinUnit.sats ? 0 : 8;
+          recipient.amountController.text =
+              amount.toStringAsFixed(displayDigit);
         } else {
           recipient.amountController.text = amount.toStringAsFixed(
               ExchangeCalculator.getDisplayDigit(exchangeRate));

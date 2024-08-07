@@ -606,8 +606,26 @@ class WalletManager implements Manager {
       WalletModel walletModel, AccountModel accountModel) async {
     /// check if local highest used bitcoin address index is higher than the one store in wallet account
     /// this will happen when some one send bitcoin via qr code
-    final int localUsedIndex = await localBitcoinAddressDataProvider
-        .getLastUsedIndex(walletModel, accountModel);
+    int localUsedIndex = await localBitcoinAddressDataProvider.getLastUsedIndex(
+        walletModel, accountModel);
+
+    /// check if pool index is higher than localUsedIndex
+    /// since web didn't implement this logic when updating pool
+    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
+        await proton_api.getWalletBitcoinAddress(
+            walletId: walletModel.walletID,
+            walletAccountId: accountModel.accountID,
+            onlyRequest: 0);
+    int highestIndexFromPool = 0;
+    for (ApiWalletBitcoinAddress apiWalletBitcoinAddress
+        in walletBitcoinAddresses) {
+      highestIndexFromPool = max(highestIndexFromPool,
+          apiWalletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? 0);
+    }
+    if (highestIndexFromPool > localUsedIndex) {
+      localUsedIndex = highestIndexFromPool;
+    }
+
     if (localUsedIndex > accountModel.lastUsedIndex) {
       accountModel.lastUsedIndex = localUsedIndex;
       await updateLastUsedIndex(accountModel);
@@ -680,8 +698,20 @@ class WalletManager implements Manager {
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 0);
+
+    /// resync the email address in case that user update it on web
+    /// and mobile didn't get event loop yet
+    await walletDataProvider.syncEmailAddresses(
+      serverWalletID,
+      serverAccountID,
+    );
     final List<String> addressIDs =
         await WalletManager.getAccountAddressIDs(serverAccountID);
+    if (addressIDs.isEmpty){
+      /// don't need to do health check if no email address link to account
+      /// probably due to web disable BvE
+      return;
+    }
     List<AddressKey> addressKeys = await getAddressKeys();
     addressKeys = addressKeys
         .where((addressKey) => addressIDs.contains(addressKey.id))

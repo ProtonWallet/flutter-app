@@ -46,7 +46,6 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 
   WalletData? walletData;
   WalletModel? walletModel;
-  bool hasEmailIntegration = false;
   AccountModel? accountModel;
   late ProtonWalletProvider protonWalletProvider;
   late ValueNotifier accountValueNotifier;
@@ -166,7 +165,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
             bitcoinViaEmailAddress = addressModel.email;
           }
         }
-        hasEmailIntegration = emailIntegrationAddresses.isNotEmpty;
       }
       final addressInfo = await _frbAccount.getAddress(index: addressIndex);
       address = addressInfo.address;

@@ -1,12 +1,21 @@
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
-class BitcoinCurrency {}
+class BitcoinCurrency {
+  BitcoinUnit bitcoinUnit;
+
+  BitcoinCurrency({
+    required this.bitcoinUnit,
+  });
+}
 
 class FiatCurrencyWrapper {
   FiatCurrency? fiatCurrency;
   BitcoinCurrency? bitcoinCurrency;
+  int cents;
 
   FiatCurrencyWrapper({
+    required this.cents,
     this.fiatCurrency,
     this.bitcoinCurrency,
   });
@@ -114,11 +123,23 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.zar,
 ];
 
-final FiatCurrencyWrapper bitcoinCurrencyWrapper =
-    FiatCurrencyWrapper(bitcoinCurrency: BitcoinCurrency());
+final FiatCurrencyWrapper bitcoinCurrencyWrapper = FiatCurrencyWrapper(
+  cents: btc2satoshi,
+  bitcoinCurrency: BitcoinCurrency(bitcoinUnit: BitcoinUnit.btc),
+);
+final FiatCurrencyWrapper satoshiCurrencyWrapper = FiatCurrencyWrapper(
+  cents: 1,
+  bitcoinCurrency: BitcoinCurrency(bitcoinUnit: BitcoinUnit.sats),
+);
 
-List<FiatCurrencyWrapper> fiatCurrenciesWithBitcoin = [bitcoinCurrencyWrapper] +
-    fiatCurrencies.map((v) => FiatCurrencyWrapper(fiatCurrency: v)).toList();
+List<FiatCurrencyWrapper> fiatCurrenciesWithBitcoin =
+    [bitcoinCurrencyWrapper, satoshiCurrencyWrapper] +
+        fiatCurrencies
+            .map((v) => FiatCurrencyWrapper(
+          cents: fiatCurrency2Info[v]?.cents ?? 1,
+                  fiatCurrency: v,
+                ))
+            .toList();
 
 const Map<FiatCurrency, String> fiatCurrencyToCountryCode = {
   FiatCurrency.usd: 'US',

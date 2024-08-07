@@ -296,7 +296,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
             listen: false,
           ).getFiatCurrencySign(fiatCurrency: widget.exchangeRate.fiatCurrency),
           value: ExchangeCalculator.getNotionalInFiatCurrency(
-              widget.exchangeRate, 100000000),
+              widget.exchangeRate, btc2satoshi),
           // value: price,
           fractionDigits: ExchangeCalculator.getDisplayDigit(widget.exchangeRate),
           textStyle: FontManager.titleHeadline(ProtonColors.textNorm)),
