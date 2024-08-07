@@ -118,7 +118,12 @@ extension PaymentMethodImageExtension on PaymentMethod {
 extension FiatCurrencyWrapperFullNameExtension on FiatCurrencyWrapper {
   String toFullName() {
     if (bitcoinCurrency != null) {
-      return "BTC (₿) - Bitcoin";
+      if (bitcoinCurrency!.bitcoinUnit == BitcoinUnit.btc) {
+        return "BTC (₿) - Bitcoin";
+      } else if (bitcoinCurrency!.bitcoinUnit == BitcoinUnit.sats) {
+        return "SATS (sat) - Satoshi";
+      }
+      return "Unknown";
     }
     return FiatCurrencyHelper.getFullName(fiatCurrency ?? defaultFiatCurrency);
   }
@@ -127,11 +132,17 @@ extension FiatCurrencyWrapperFullNameExtension on FiatCurrencyWrapper {
 extension FiatCurrencyWrapperShortNameExtension on FiatCurrencyWrapper {
   String toShortName() {
     if (bitcoinCurrency != null) {
-      return "BTC";
+      if (bitcoinCurrency!.bitcoinUnit == BitcoinUnit.btc) {
+        return "BTC";
+      } else if (bitcoinCurrency!.bitcoinUnit == BitcoinUnit.sats) {
+        return "SATS";
+      }
     }
-    return FiatCurrencyHelper.getDisplayName(fiatCurrency ?? defaultFiatCurrency);
+    return FiatCurrencyHelper.getDisplayName(
+        fiatCurrency ?? defaultFiatCurrency);
   }
 }
+
 extension FiatCurrencyWrapperImageExtension on FiatCurrencyWrapper {
   Widget getIcon() {
     if (bitcoinCurrency != null) {

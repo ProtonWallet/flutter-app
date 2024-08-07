@@ -25,10 +25,8 @@ import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/common/network.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
@@ -51,6 +49,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   bool isValidMnemonic = false;
   bool isFirstWallet = false;
   bool isImporting = false;
+  bool hitWalletAccountLimit = false;
   bool acceptTermsAndConditions = false;
   List<ProtonAddress> protonAddresses = [];
 
@@ -217,17 +216,11 @@ class ImportViewModelImpl extends ImportViewModel {
 
       final limitError = parseUserLimitationError(e);
       if (limitError != null) {
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          UpgradeIntroSheet.show(context, () async {
-            await move(NavID.nativeUpgrade);
-          });
-        }
+        hitWalletAccountLimit = true;
+        return true;
       } else {
         errorMessage = parseSampleDisplayError(e);
       }
-      return false;
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);

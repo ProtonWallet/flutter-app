@@ -9,9 +9,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
@@ -57,62 +55,6 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
-                          // Column(children: [
-                          //   const SizedBox(height: 10),
-                          //   if (viewModel.initialized)
-                          //     viewModel.hasEmailIntegration
-                          //         ? AlertCustom(
-                          //             content: S
-                          //                 .of(context)
-                          //                 .receive_email_integration_alert_content(
-                          //                     viewModel.bitcoinViaEmailAddress),
-                          //             learnMore: GestureDetector(
-                          //                 onTap: () {
-                          //                   ExternalUrl.shared
-                          //                       .launchBlogBvEActivated();
-                          //                 },
-                          //                 child: Text(S.of(context).learn_more,
-                          //                     style: FontManager.body2Regular(
-                          //                         ProtonColors.protonBlue))),
-                          //             leadingWidget: SvgPicture.asset(
-                          //                 "assets/images/icon/bve_enable.svg",
-                          //                 fit: BoxFit.fill,
-                          //                 width: 30,
-                          //                 height: 30),
-                          //             border: Border.all(
-                          //               color: Colors.transparent,
-                          //               width: 0,
-                          //             ),
-                          //             backgroundColor: ProtonColors.white,
-                          //             color: ProtonColors.textNorm,
-                          //           )
-                          //         : AlertCustom(
-                          //             content: S
-                          //                 .of(context)
-                          //                 .bitcoin_via_email_not_active_desc,
-                          //             learnMore: GestureDetector(
-                          //                 onTap: () {
-                          //                   ExternalUrl.shared
-                          //                       .launchBlogBvEInActivated();
-                          //                 },
-                          //                 child: Text(S.of(context).learn_more,
-                          //                     style: FontManager.body2Regular(
-                          //                         ProtonColors.protonBlue))),
-                          //             leadingWidget: SvgPicture.asset(
-                          //                 "assets/images/icon/bve_disable.svg",
-                          //                 fit: BoxFit.fill,
-                          //                 width: 30,
-                          //                 height: 30),
-                          //             border: Border.all(
-                          //               color: Colors.transparent,
-                          //               width: 0,
-                          //             ),
-                          //             backgroundColor: ProtonColors.white,
-                          //             color: ProtonColors.textNorm,
-                          //           ),
-                          //   const SizedBox(height: 10),
-                          // ]),
-                          // const SizedBox(height: 14),
                           Container(
                               width: MediaQuery.of(context).size.width,
                               padding:

@@ -256,7 +256,8 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.ramp.sdk.android)
+    // implementation(libs.ramp.sdk.android)
+    implementation 'com.github.RampNetwork:ramp-sdk-android:4.0.1'
 
     implementation(libs.sentry.android.core)
     implementation(libs.sentry.android.timber)

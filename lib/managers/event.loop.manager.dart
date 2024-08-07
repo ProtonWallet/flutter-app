@@ -279,6 +279,12 @@ class EventLoop implements Manager {
           serverScriptType: accountModel.scriptType,
         );
 
+        /// resync the email address in case that user update it on web
+        /// and mobile didn't get event loop yet
+        await dataProviderManager.walletDataProvider.syncEmailAddresses(
+          walletModel.walletID,
+          accountModel.accountID,
+        );
         final List<String> accountAddressIDs =
             await WalletManager.getAccountAddressIDs(accountModel.accountID);
         if (accountAddressIDs.isEmpty) {
