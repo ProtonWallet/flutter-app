@@ -60,7 +60,7 @@ class SendView extends ViewBase<SendViewModel> {
               button: getLeadingButton(context),
             ),
             Expanded(
-              child: buildMainView(context),
+              child: SafeArea(child: buildMainView(context)),
             ),
           ]),
         ),
@@ -950,24 +950,23 @@ class SendView extends ViewBase<SendViewModel> {
                                 ),
                             ]))))),
                 if (MediaQuery.of(context).viewInsets.bottom < 80)
+
+                  /// continue button
                   Container(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: defaultButtonPadding),
-                      child: SafeArea(
-                        child: ButtonV5(
-                            onPressed: () {
-                              viewModel
-                                  .updatePageStatus(SendFlowStatus.editAmount);
-                            },
-                            enable: viewModel.validRecipientCount() > 0,
-                            text: S.of(context).continue_buttion,
-                            width: MediaQuery.of(context).size.width,
-                            backgroundColor: ProtonColors.protonBlue,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.white),
-                            height: 48),
-                      )),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: defaultButtonPadding),
+                    child: ButtonV5(
+                        onPressed: () {
+                          viewModel.updatePageStatus(SendFlowStatus.editAmount);
+                        },
+                        enable: viewModel.validRecipientCount() > 0,
+                        text: S.of(context).continue_buttion,
+                        width: MediaQuery.of(context).size.width,
+                        backgroundColor: ProtonColors.protonBlue,
+                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        height: 48),
+                  ),
               ]));
   }
 

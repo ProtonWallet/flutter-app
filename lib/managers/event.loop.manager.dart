@@ -1,17 +1,17 @@
+import 'dart:async';
+
 import 'package:cryptography/cryptography.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
+import 'package:wallet/managers/services/service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart'
-    as proton_wallet_provider;
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -24,47 +24,132 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/rust/proton_api/wallet_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 
 // TODO(fix): handle user and settings event.
-class EventLoop implements Manager {
+class EventLoop extends Service implements Manager {
   final UserManager userManager;
-  final ProtonWalletManager protonWalletManager;
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
-  bool _isRunning = false;
+  final ConnectivityProvider connectivityProvider;
   String latestEventId = "";
-  late proton_wallet_provider.ProtonWalletProvider protonWalletProvider;
+  int internetCheckCounter = 0;
+  int recoveryCheckCounter = 0;
+  late Future<void> Function(List<LoadingTask> failedTask)? onRecovery;
+  StreamSubscription? connectivitySub;
 
   EventLoop(
-    this.protonWalletManager,
     this.userManager,
     this.dataProviderManager,
     this.appStateManager,
-  );
-
+    this.connectivityProvider, {
+    required super.duration,
+  });
+  @override
   Future<void> start() async {
-    if (!_isRunning) {
-      _isRunning = true;
-      protonWalletProvider =
-          Provider.of<proton_wallet_provider.ProtonWalletProvider>(
-              Coordinator.rootNavigatorKey.currentContext!,
-              listen: false);
+    connectivitySub ??= connectivityProvider.stream.listen((state) {
+      if (state is ConnectivityUpdated) {
+        if (onUpdateing) {
+          // because of the muon timout can't detect internet drop or not. we can improve this logic later
+          Future.delayed(const Duration(seconds: 5), onUpdate);
+        } else {
+          onUpdate();
+        }
+      }
+    });
+    super.start();
+  }
+
+  void setRecoveryCallback(
+      Future<void> Function(List<LoadingTask> failedTask) onRecovery) {
+    this.onRecovery = onRecovery;
+  }
+
+  @override
+  Future<Duration?> onUpdate() async {
+    // because of the muon timout can't detect internet drop or not.
+    // other wise we can check updating to drop multiple triggters.
+    onUpdateing = true;
+
+    /// check if app state is no connectivity
+    if (!appStateManager.isConnectivityOK) {
+      ///recheck connectivity
+      final result = await connectivityProvider.hasConnectivity();
+
+      /// if tried 6 times then try to hit server
+      if (result || internetCheckCounter > 6) {
+        /// try event loop
+        internetCheckCounter = 0;
+        checkRecovery = true;
+      } else {
+        /// fall back timmer. [6 times] * [10 seconds] = 1 minute
+        internetCheckCounter++;
+        return const Duration(seconds: 10);
+      }
+    }
+
+    if (!appStateManager.isHomeInitialed) {
+      // recover from internet or server error
+      if (appStateManager.failedTask.isNotEmpty) {
+        await stateRecovery(appStateManager.failedTask);
+      }
+
+      await stateRecovery([LoadingTask.homeRecheck]);
+      // check if internet is available
+    } else {
+      if (appStateManager.failedTask.isNotEmpty) {
+        await stateRecovery(appStateManager.failedTask);
+      }
+      if (checkRecovery) {
+        checkRecovery = false;
+        await stateRecovery([LoadingTask.homeRecheck]);
+      }
+
+      ///
+      if (latestEventId.isEmpty) {
+        await fetchEventID();
+      }
+
+      if (latestEventId.isNotEmpty) {
+        await fetchEvents();
+      }
+
+      await sidePollingTask();
+
+      onUpdateing = false;
+    }
+
+    final nextWaiting = await appStateManager.getEventloopDuration();
+    return Duration(seconds: nextWaiting);
+  }
+
+  Future<void> stateRecovery(List<LoadingTask> tasks) async {
+    try {
+      if (onRecovery != null) {
+        await onRecovery?.call(tasks);
+      }
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      recoveryCheckCounter++;
+    } catch (e, stacktrace) {
+      logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      recoveryCheckCounter++;
+    }
+  }
+
+  Future<void> fetchEventID() async {
+    try {
       final String? savedLatestEventId = await WalletManager.getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
-      await _run();
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      logger.e("Event Loop error: $e stacktrace: $stacktrace");
+    } catch (e, stacktrace) {
+      logger.e("Event Loop error: $e stacktrace: $stacktrace");
     }
   }
 
-  Future<void> _run() async {
-    while (_isRunning) {
-      await runOnce();
-      final nextWaiting = await appStateManager.getEventloopDuration();
-      await Future.delayed(Duration(seconds: nextWaiting));
-    }
-  }
-
-  Future<void> runOnce() async {
+  Future<void> fetchEvents() async {
     logger.i("event loop runOnce()");
     final Map<String, List<ApiWalletKey>> walletID2ProtonWalletKey = {};
     try {
@@ -93,7 +178,8 @@ class EventLoop implements Manager {
               final String serverWalletID = walletEvent.id;
               await dataProviderManager.walletDataProvider
                   .deleteWalletByServerID(
-                      serverWalletID); // Will also delete account
+                serverWalletID,
+              ); // Will also delete account
               continue;
             }
             final ApiWallet? walletData = walletEvent.wallet;
@@ -230,39 +316,34 @@ class EventLoop implements Manager {
         }
       }
       await appStateManager.resetEventloopDuration();
+      appStateManager.isConnectivityOK = true;
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
     } catch (e, stacktrace) {
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
     }
+  }
+
+  Future<void> sidePollingTask() async {
     try {
-      await polling();
+      /// handlie bitcoin address
+      await handleBitcoinAddress();
+
+      /// move this to service
+      await ExchangeRateService.runOnce(
+          dataProviderManager.userSettingsDataProvider.fiatCurrency);
+      final ProtonExchangeRate exchangeRate =
+          await ExchangeRateService.getExchangeRate(
+              dataProviderManager.userSettingsDataProvider.fiatCurrency);
+      dataProviderManager.userSettingsDataProvider
+          .updateExchangeRate(exchangeRate);
+
+      /// check block height
+      await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
     } catch (e, stacktrace) {
       logger.e("polling error: $e stacktrace: $stacktrace");
     }
-  }
-
-  Future<void> polling() async {
-    await handleBitcoinAddress();
-    await ExchangeRateService.runOnce(
-        dataProviderManager.userSettingsDataProvider.fiatCurrency);
-    final ProtonExchangeRate exchangeRate =
-        await ExchangeRateService.getExchangeRate(
-            dataProviderManager.userSettingsDataProvider.fiatCurrency);
-    dataProviderManager.userSettingsDataProvider
-        .updateExchangeRate(exchangeRate);
-    await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
-
-    // TODO(fix): add logic here
-    // fetch for account setting's exchange rate, used for sidebar balance
-    // for (AccountModel accountModel
-    //     in protonWalletProvider.protonWallet.accounts) {
-    //   FiatCurrency fiatCurrency =
-    //       WalletManager.getAccountFiatCurrency(accountModel);
-    //   await ExchangeRateService.runOnce(fiatCurrency);
-    //   // ProtonExchangeRate exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
-    // }
   }
 
   // TODO(fix): fix me handle the !
@@ -313,10 +394,6 @@ class EventLoop implements Manager {
     }
   }
 
-  void stop() {
-    _isRunning = false;
-  }
-
   @override
   Future<void> dispose() async {}
 
@@ -326,6 +403,12 @@ class EventLoop implements Manager {
   @override
   Future<void> logout() async {
     stop();
+  }
+
+  @override
+  void stop() {
+    connectivitySub?.cancel();
+    super.stop();
   }
 
   @override

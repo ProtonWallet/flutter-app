@@ -12,11 +12,11 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
+import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
@@ -114,20 +114,16 @@ class AppViewModelImpl extends AppViewModel {
     // dataProviderManager.init();
     serviceManager.register(dataProviderManager);
 
-    /// proton wallet manager
-    final protonWallet = ProtonWalletManager();
-    serviceManager.register(protonWallet);
-
     // TODO(fix): fix me
     WalletManager.userManager = userManager;
-    WalletManager.protonWallet = protonWallet;
 
     /// event loop
     serviceManager.register(EventLoop(
-      protonWallet,
       userManager,
       dataProviderManager,
       appStateManger,
+      ConnectivityProvider(),
+      duration: const Duration(seconds: 30),
     ));
 
     if (await userManager.sessionExists()) {
@@ -135,6 +131,7 @@ class AppViewModelImpl extends AppViewModel {
       final userInfo = userManager.userInfo;
       await dataProviderManager.login(userInfo.userId);
       await userManager.login(userInfo.userId);
+      await appStateManger.login(userInfo.userId);
       coordinator.showHome(apiEnv);
     } else {
       coordinator.showWelcome(apiEnv);
