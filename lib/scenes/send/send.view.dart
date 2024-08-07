@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +139,10 @@ class SendView extends ViewBase<SendViewModel> {
                               Text(
                                 viewModel.bitcoinBase
                                     ? ExchangeCalculator.getBitcoinUnitLabel(
-                                        BitcoinUnit.btc, viewModel.balance)
+                                        viewModel.fiatCurrencyNotifier.value
+                                                .bitcoinCurrency?.bitcoinUnit ??
+                                            BitcoinUnit.btc,
+                                        viewModel.balance)
                                     : "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
                                 style: FontManager.captionRegular(
                                     ProtonColors.textWeak),
@@ -146,11 +151,17 @@ class SendView extends ViewBase<SendViewModel> {
                               GestureDetector(
                                 onTap: () {
                                   if (viewModel.bitcoinBase) {
-                                    // TODO(fix): fix logic to use more specific amount
+                                    final int displayDigit = (log(viewModel
+                                                .fiatCurrencyNotifier
+                                                .value
+                                                .cents) /
+                                            log(10))
+                                        .round();
                                     viewModel.amountTextController.text =
                                         ((viewModel.maxBalanceToSend - 10) /
-                                                100000000)
-                                            .toStringAsFixed(8);
+                                                viewModel.fiatCurrencyNotifier
+                                                    .value.cents)
+                                            .toStringAsFixed(displayDigit);
                                     viewModel.splitAmountToRecipients();
                                   } else {
                                     // TODO(fix): fix logic to use more specific amount
@@ -189,8 +200,12 @@ class SendView extends ViewBase<SendViewModel> {
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'^\d*\.?\d*$'))
                               ],
-                              bitcoinUnit: viewModel
-                                  .userSettingsDataProvider.bitcoinUnit,
+                              bitcoinUnit: viewModel.bitcoinBase
+                                  ? viewModel.fiatCurrencyNotifier.value
+                                          .bitcoinCurrency?.bitcoinUnit ??
+                                      BitcoinUnit.btc
+                                  : viewModel
+                                      .userSettingsDataProvider.bitcoinUnit,
                               validation: (String value) {
                                 return "";
                               },
@@ -281,7 +296,8 @@ class SendView extends ViewBase<SendViewModel> {
                                 : null,
                             showAvatar: false,
                             avatarColor:
-                                AvatarColorHelper.getAvatarBackgroundColor(index),
+                                AvatarColorHelper.getAvatarBackgroundColor(
+                                    index),
                             avatarTextColor:
                                 AvatarColorHelper.getAvatarTextColor(index),
                           ),
@@ -410,8 +426,12 @@ class SendView extends ViewBase<SendViewModel> {
                               ? BitcoinAmount(
                                   amountInSatoshi:
                                       protonRecipient.amountInSATS ?? 0,
-                                  bitcoinUnit: viewModel
-                                      .userSettingsDataProvider.bitcoinUnit,
+                                  bitcoinUnit: viewModel.bitcoinBase
+                                      ? viewModel.fiatCurrencyNotifier.value
+                                              .bitcoinCurrency?.bitcoinUnit ??
+                                          BitcoinUnit.btc
+                                      : viewModel
+                                          .userSettingsDataProvider.bitcoinUnit,
                                   exchangeRate: viewModel.exchangeRate)
                               : null,
                         ),
@@ -421,124 +441,124 @@ class SendView extends ViewBase<SendViewModel> {
                         ),
                       ]),
                     ),
-                        if (viewModel.hasEmailIntegrationRecipient)
-                          Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: defaultPadding),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 16),
-                                  Text(S.of(context).email_integration,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textWeak)),
-                                  DropdownButtonV2(
-                                    width: MediaQuery.of(context).size.width,
-                                    labelText: S.of(context).send_from_email,
-                                    title: S.of(context).choose_your_email,
-                                    items: viewModel.protonEmailAddresses,
-                                    itemsText: viewModel.protonEmailAddresses
-                                        .map((e) => e.email)
-                                        .toList(),
-                                    valueNotifier: viewModel.userAddressValueNotifier,
-                                    border:
-                                    Border.all(color: ProtonColors.protonShades20),
-                                    padding: const EdgeInsets.only(
-                                        left: defaultPadding,
-                                        right: 8,
-                                        top: 12,
-                                        bottom: 12),
-                                  ),
-                                ]),
+                if (viewModel.hasEmailIntegrationRecipient)
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: defaultPadding),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          Text(S.of(context).email_integration,
+                              style: FontManager.body2Median(
+                                  ProtonColors.textWeak)),
+                          DropdownButtonV2(
+                            width: MediaQuery.of(context).size.width,
+                            labelText: S.of(context).send_from_email,
+                            title: S.of(context).choose_your_email,
+                            items: viewModel.protonEmailAddresses,
+                            itemsText: viewModel.protonEmailAddresses
+                                .map((e) => e.email)
+                                .toList(),
+                            valueNotifier: viewModel.userAddressValueNotifier,
+                            border:
+                                Border.all(color: ProtonColors.protonShades20),
+                            padding: const EdgeInsets.only(
+                                left: defaultPadding,
+                                right: 8,
+                                top: 12,
+                                bottom: 12),
                           ),
-                        if (viewModel.hasEmailIntegrationRecipient)
-                          !viewModel.isEditingEmailBody
-                              ? Container(
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 5.0,
-                                horizontal: 16,
-                              ),
-                              padding: const EdgeInsets.all(defaultPadding),
-                              decoration: BoxDecoration(
-                                  color: ProtonColors.transactionNoteBackground,
-                                  borderRadius: BorderRadius.circular(40.0)),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                      "assets/images/icon/ic_message.svg",
-                                      fit: BoxFit.fill,
-                                      width: 32,
-                                      height: 32),
-                                  const SizedBox(width: 10),
-                                  GestureDetector(
-                                      onTap: viewModel.editEmailBody,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment:
+                        ]),
+                  ),
+                if (viewModel.hasEmailIntegrationRecipient)
+                  !viewModel.isEditingEmailBody
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 5.0,
+                            horizontal: 16,
+                          ),
+                          padding: const EdgeInsets.all(defaultPadding),
+                          decoration: BoxDecoration(
+                              color: ProtonColors.transactionNoteBackground,
+                              borderRadius: BorderRadius.circular(40.0)),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                  "assets/images/icon/ic_message.svg",
+                                  fit: BoxFit.fill,
+                                  width: 32,
+                                  height: 32),
+                              const SizedBox(width: 10),
+                              GestureDetector(
+                                  onTap: viewModel.editEmailBody,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                        children: [
-                                          if (viewModel
-                                              .emailBodyController.text.isNotEmpty)
-                                            SizedBox(
-                                                width: MediaQuery.of(context)
+                                    children: [
+                                      if (viewModel
+                                          .emailBodyController.text.isNotEmpty)
+                                        SizedBox(
+                                            width: MediaQuery.of(context)
                                                     .size
                                                     .width -
-                                                    defaultPadding * 6 -
-                                                    10,
-                                                child: Flex(
-                                                    direction: Axis.horizontal,
-                                                    children: [
-                                                      Flexible(
-                                                          child: Text(
-                                                              viewModel
-                                                                  .emailBodyController
-                                                                  .text,
-                                                              style: FontManager
-                                                                  .body2Median(
+                                                defaultPadding * 6 -
+                                                10,
+                                            child: Flex(
+                                                direction: Axis.horizontal,
+                                                children: [
+                                                  Flexible(
+                                                      child: Text(
+                                                          viewModel
+                                                              .emailBodyController
+                                                              .text,
+                                                          style: FontManager
+                                                              .body2Median(
                                                                   ProtonColors
                                                                       .textNorm)))
-                                                    ])),
-                                          Text(
-                                              S
-                                                  .of(context)
-                                                  .message_to_recipient_optional(
+                                                ])),
+                                      Text(
+                                          S
+                                              .of(context)
+                                              .message_to_recipient_optional(
                                                   viewModel
                                                       .validRecipientCount()),
-                                              style: FontManager.body2Median(
-                                                  ProtonColors.textHint)),
-                                        ],
-                                      ))
-                                ],
-                              ))
-                              : Container(
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 5.0,
-                              horizontal: 16,
-                            ),
-                            child: TextFieldTextV2(
-                              labelText: S
-                                  .of(context)
-                                  .message_to_recipient_optional(
-                                  viewModel.validRecipientCount()),
-                              textController: viewModel.emailBodyController,
-                              myFocusNode: viewModel.emailBodyFocusNode,
-                              paddingSize: 7,
-                              maxLines: null,
-                              maxLength: maxMemoTextCharSize,
-                              showCounterText: true,
-                              scrollPadding: EdgeInsets.only(
-                                  bottom:
-                                  MediaQuery.of(context).viewInsets.bottom +
-                                      100),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(
-                                    maxMemoTextCharSize)
-                              ],
-                              validation: (String value) {
-                                return "";
-                              },
-                            ),
+                                          style: FontManager.body2Median(
+                                              ProtonColors.textHint)),
+                                    ],
+                                  ))
+                            ],
+                          ))
+                      : Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 5.0,
+                            horizontal: 16,
                           ),
+                          child: TextFieldTextV2(
+                            labelText: S
+                                .of(context)
+                                .message_to_recipient_optional(
+                                    viewModel.validRecipientCount()),
+                            textController: viewModel.emailBodyController,
+                            myFocusNode: viewModel.emailBodyFocusNode,
+                            paddingSize: 7,
+                            maxLines: null,
+                            maxLength: maxMemoTextCharSize,
+                            showCounterText: true,
+                            scrollPadding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom +
+                                        100),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(
+                                  maxMemoTextCharSize)
+                            ],
+                            validation: (String value) {
+                              return "";
+                            },
+                          ),
+                        ),
                 if (viewModel.hasEmailIntegrationRecipient)
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -569,7 +589,11 @@ class SendView extends ViewBase<SendViewModel> {
                       textStyle: FontManager.body2Median(ProtonColors.textNorm),
                     ),
                     memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
-                        viewModel.userSettingsDataProvider.bitcoinUnit,
+                        viewModel.bitcoinBase
+                            ? viewModel.fiatCurrencyNotifier.value
+                                    .bitcoinCurrency?.bitcoinUnit ??
+                                BitcoinUnit.btc
+                            : viewModel.userSettingsDataProvider.bitcoinUnit,
                         estimatedFee,
                         textStyle:
                             FontManager.body2Regular(ProtonColors.textHint)),
@@ -738,7 +762,12 @@ class SendView extends ViewBase<SendViewModel> {
       ]),
       const SizedBox(height: 4),
       ExchangeCalculator.getBitcoinUnitLabelWidget(
-          viewModel.userSettingsDataProvider.bitcoinUnit, amountInSATS,
+          viewModel.bitcoinBase
+              ? viewModel.fiatCurrencyNotifier.value.bitcoinCurrency
+                      ?.bitcoinUnit ??
+                  BitcoinUnit.btc
+              : viewModel.userSettingsDataProvider.bitcoinUnit,
+          amountInSATS,
           textStyle: FontManager.body2Regular(ProtonColors.textNorm)),
     ]);
   }
@@ -766,7 +795,11 @@ class SendView extends ViewBase<SendViewModel> {
         textStyle: FontManager.body2Median(ProtonColors.textNorm),
       ),
       memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
-          viewModel.userSettingsDataProvider.bitcoinUnit,
+          viewModel.bitcoinBase
+              ? viewModel.fiatCurrencyNotifier.value.bitcoinCurrency
+                      ?.bitcoinUnit ??
+                  BitcoinUnit.btc
+              : viewModel.userSettingsDataProvider.bitcoinUnit,
           (viewModel.totalAmountInSAT + estimatedFee),
           textStyle: FontManager.body2Regular(ProtonColors.textHint)),
     );
@@ -904,11 +937,11 @@ class SendView extends ViewBase<SendViewModel> {
                                       viewModel.removeRecipient(index);
                                     },
                                     canBeClosed: !viewModel.isLoadingBvE,
-                                    avatarColor:
-                                        AvatarColorHelper.getAvatarBackgroundColor(
-                                            index),
+                                    avatarColor: AvatarColorHelper
+                                        .getAvatarBackgroundColor(index),
                                     avatarTextColor:
-                                        AvatarColorHelper.getAvatarTextColor(index),
+                                        AvatarColorHelper.getAvatarTextColor(
+                                            index),
                                   ),
                               if (viewModel.isLoadingBvE)
                                 const CustomLoading(
@@ -1151,7 +1184,9 @@ class SendView extends ViewBase<SendViewModel> {
                     onPressed: () async {
                       SendInviteSheet.show(
                         context,
-                        viewModel.protonEmailAddresses,
+                        viewModel.protonEmailAddresses
+                            .where((e) => e.id != anonymousAddress.id)
+                            .toList(),
                         viewModel.contactsEmails,
                         viewModel.sendExclusiveInvite,
                       );
@@ -1311,7 +1346,11 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
   final String estimatedFeeInFiatCurrency =
       "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, estimatedFee).toStringAsFixed(displayDigit)}";
   final String estimatedFeeInSATS = ExchangeCalculator.getBitcoinUnitLabel(
-      viewModel.userSettingsDataProvider.bitcoinUnit, estimatedFee);
+      viewModel.bitcoinBase
+          ? viewModel.fiatCurrencyNotifier.value.bitcoinCurrency?.bitcoinUnit ??
+              BitcoinUnit.btc
+          : viewModel.userSettingsDataProvider.bitcoinUnit,
+      estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
     Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",

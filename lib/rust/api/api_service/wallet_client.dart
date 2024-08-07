@@ -58,6 +58,9 @@ abstract class WalletClient implements RustOpaqueInterface {
   Future<ApiWalletSettings> disableShowWalletRecovery(
       {required String walletId});
 
+  Future<List<ApiEmailAddress>> getWalletAccountAddresses(
+      {required String walletId, required String walletAccountId});
+
   Future<List<ApiWalletAccount>> getWalletAccounts({required String walletId});
 
   /// Wallet transaction related

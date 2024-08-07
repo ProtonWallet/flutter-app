@@ -8,7 +8,6 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
@@ -16,7 +15,6 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart
 import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
@@ -47,13 +45,6 @@ class WalletSettingSheet {
         accountMenuModel.accountModel.accountID:
             accountMenuModel.emailIds.isNotEmpty,
     };
-
-    /// Check if any account has email integration enabled
-    bool hasEmailIntegration = walletMenuModel.accounts.any(
-      (accountMenuModel) =>
-          emailIntegrationEnables[accountMenuModel.accountModel.accountID] ??
-          false,
-    );
 
     final TextEditingController walletNameController =
         TextEditingController(text: walletMenuModel.walletName);
@@ -337,8 +328,6 @@ class WalletSettingSheet {
                                                                 accountMenuModel
                                                                     .accountModel
                                                                     .accountID] = true;
-                                                            hasEmailIntegration =
-                                                                true;
                                                           });
                                                         });
                                                       } else if (!viewModel
@@ -361,21 +350,6 @@ class WalletSettingSheet {
                                                               accountMenuModel
                                                                   .accountModel
                                                                   .accountID] = false;
-                                                          hasEmailIntegration =
-                                                              false;
-                                                          for (final accountMenuModel
-                                                              in foundWalletMenuModel
-                                                                  .accounts) {
-                                                            if (emailIntegrationEnables[
-                                                                    accountMenuModel
-                                                                        .accountModel
-                                                                        .accountID] ??
-                                                                false) {
-                                                              hasEmailIntegration =
-                                                                  true;
-                                                              break;
-                                                            }
-                                                          }
                                                           viewModel
                                                                   .isRemovingBvE =
                                                               false;
@@ -523,21 +497,6 @@ class WalletSettingSheet {
                                                                 accountMenuModel
                                                                     .accountModel
                                                                     .accountID] = false;
-                                                            hasEmailIntegration =
-                                                                false;
-                                                            for (final accountMenuModel
-                                                                in foundWalletMenuModel
-                                                                    .accounts) {
-                                                              if (emailIntegrationEnables[
-                                                                      accountMenuModel
-                                                                          .accountModel
-                                                                          .accountID] ??
-                                                                  false) {
-                                                                hasEmailIntegration =
-                                                                    true;
-                                                                break;
-                                                              }
-                                                            }
                                                             viewModel
                                                                     .isRemovingBvE =
                                                                 false;

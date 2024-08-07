@@ -18,7 +18,9 @@ import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/import.success.dialog.dart';
+import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -158,15 +160,18 @@ class ImportView extends ViewBase<ImportViewModel> {
                                       context, S.of(context).wallet_imported);
                                 }
                                 if (viewModel.errorMessage.isEmpty) {
-                                  // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
-                                  // !viewModel.acceptTermsAndConditions
-                                  if (viewModel.isFirstWallet) {
+                                  if (viewModel.isFirstWallet &&
+                                      !viewModel.acceptTermsAndConditions) {
                                     ImportSuccessDialogSheet.show(
                                         context,
                                         viewModel
                                             .dataProviderManager
                                             .userSettingsDataProvider
                                             .acceptTermsAndConditions);
+                                  } else if (viewModel.hitWalletAccountLimit) {
+                                    UpgradeIntroSheet.show(context, () async {
+                                      await viewModel.move(NavID.nativeUpgrade);
+                                    });
                                   }
                                 } else {
                                   CommonHelper.showErrorDialog(
@@ -184,10 +189,9 @@ class ImportView extends ViewBase<ImportViewModel> {
                               FontManager.body1Median(ProtonColors.white),
                           backgroundColor: ProtonColors.protonBlue,
                           height: 48),
-                      const SizedBox(height: 20),
                       if (viewModel.isFirstWallet)
                         Column(children: [
-                          const SizedBox(height: 4),
+                          const SizedBox(height: defaultPadding),
                           Text.rich(
                             TextSpan(children: [
                               TextSpan(
@@ -210,6 +214,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                             ]),
                           ),
                         ]),
+                      const SizedBox(height: 20),
                     ]))),
               ),
             ],

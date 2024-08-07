@@ -118,19 +118,25 @@ class DeleteWalletSheet {
                             style: FontManager.body2Regular(
                                 ProtonColors.textWeak)),
                         const SizedBox(height: 40),
-                        ButtonV5(
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            onBackup?.call();
-                          },
-                          text: S.of(context).backup_wallet,
-                          width: MediaQuery.of(context).size.width,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.textNorm),
-                          backgroundColor: ProtonColors.textWeakPressed,
-                          borderColor: ProtonColors.textWeakPressed,
-                          height: 48,
-                        ),
+                        BlocSelector<DeleteWalletBloc, DeleteWalletState, bool>(
+                            selector: (state) {
+                          return state.isLoading;
+                        }, builder: (context, loading) {
+                          return ButtonV5(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              onBackup?.call();
+                            },
+                            enable: !loading,
+                            text: S.of(context).backup_wallet,
+                            width: MediaQuery.of(context).size.width,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.textNorm),
+                            backgroundColor: ProtonColors.textWeakPressed,
+                            borderColor: ProtonColors.textWeakPressed,
+                            height: 48,
+                          );
+                        }),
                         const SizedBox(height: 8),
                         BlocSelector<DeleteWalletBloc, DeleteWalletState, bool>(
                           selector: (state) {
