@@ -10,6 +10,24 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/common/errors.dart';
 
+enum LoadingTask {
+  eligible,
+  homeRecheck,
+  // subscription,
+  // controllers,
+  // userSettings,
+  // priceGraph,
+  // recoveryState,
+  // twoFAState,
+  // exclusiveInvite,
+  // contacts,
+  // exchangeRate,
+
+  // discoverContents,
+  // emailAddressProvider,
+  // eventLoop,
+}
+
 abstract class AppState extends DataState {}
 
 class AppSessionFailed extends AppState {
@@ -58,6 +76,11 @@ class AppForceUpgradeState extends AppState {
 
 class AppStateManager extends DataProvider implements Manager {
   final bool appInBetaState = true;
+  bool isHomeInitialed = false;
+  bool isHomeLoading = false;
+  bool isConnectivityOK = true;
+  bool exponentialBackoffForConcurrentlyMode = false;
+  List<LoadingTask> failedTask = [];
 
   /// const key
   final unlockKey = "proton_wallet_app_k_unlock_type";
@@ -81,14 +104,24 @@ class AppStateManager extends DataProvider implements Manager {
   /// session level configs
 
   /// constructor
-  AppStateManager(this.secureStore, this.shared);
+  AppStateManager(
+    this.secureStore,
+    this.shared,
+  );
 
-  Future<void> updateStateFrom(BridgeError exception) async {
-    await handleSessionError(exception);
-    await handleForceUpgrade(exception);
+  void updateStateFrom(BridgeError exception) {
+    handleSessionError(exception);
+    handleForceUpgrade(exception);
+    handleMuonClientError(exception);
   }
 
-  Future<void> handleSessionError(BridgeError exception) async {
+  void handleMuonClientError(BridgeError exception) {
+    if (ifMuonClientError(exception)) {
+      isConnectivityOK = false;
+    }
+  }
+
+  void handleSessionError(BridgeError exception) {
     final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
@@ -96,19 +129,10 @@ class AppStateManager extends DataProvider implements Manager {
     }
   }
 
-  Future<void> handleForceUpgrade(BridgeError exception) async {
+  void handleForceUpgrade(BridgeError exception) {
     final error = parseResponseError(exception);
     if (error != null && (error.code == 5003 || error.code == 5005)) {
       emitState(AppForceUpgradeState(message: error.error));
-      return;
-    }
-  }
-
-  @Deprecated("is not used, remove later")
-  Future<void> handleWalletListError(BridgeError exception) async {
-    final error = parseResponseError(exception);
-    if (error != null && error.code == 404 && appInBetaState) {
-      emitState(AppPermissionState(message: error.error));
       return;
     }
   }
@@ -162,7 +186,7 @@ class AppStateManager extends DataProvider implements Manager {
 
   ///
   Future<int> getEventloopDuration() async {
-    final count = await shared.read(eventloopErrorCountKey);
+    final count = await shared.read(eventloopErrorCountKey) ?? 0;
     await shared.write(eventloopErrorCountKey, count + 1);
     return _getNextBackoffDuration(
       count,
@@ -177,7 +201,6 @@ class AppStateManager extends DataProvider implements Manager {
   ///
   Future<int> getSyncDuration() async {
     final count = await shared.read(eventloopErrorCountKey);
-
     return _getNextBackoffDuration(
       count,
       maxSeconds: 120,
@@ -188,6 +211,14 @@ class AppStateManager extends DataProvider implements Manager {
   Future<int> getEligible() async {
     final count = await secureStore.get(userEligible);
     return count == "1" ? 1 : 0;
+  }
+
+  /// get backoff duration for concurrent situation when server from offline back to online
+  int getExponentialBackoffForConcurrently() {
+    if (exponentialBackoffForConcurrentlyMode) {
+      return _getNextBackoffDuration(0, minSeconds: 5, maxSeconds: 10);
+    }
+    return 0;
   }
 
   Future<void> setEligible() async {
@@ -215,23 +246,69 @@ class AppStateManager extends DataProvider implements Manager {
     return duration;
   }
 
+  void loadingFailed(LoadingTask task) {
+    if (!failedTask.any((element) => element == task)) {
+      failedTask.add(task);
+    }
+  }
+
+  void loadingSuccess(LoadingTask task) {
+    failedTask.remove(task);
+  }
+
   @override
   Future<void> clear() async {}
 
   @override
   Future<void> dispose() {
-    // TODO(fix): implement dispose
     throw UnimplementedError();
   }
 
   @override
-  Future<void> login(String userID) {
-    // TODO(fix): implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 
   @override
   Future<void> init() async {}
+
   @override
   Future<void> logout() async {}
+}
+
+//final backoff = ExponentialBackoff(base: 1000, randomInterval: 500);
+// Attempt 0: wait for 1100 ms
+// Attempt 1: wait for 2300 ms
+// Attempt 2: wait for 3950 ms
+// Attempt 3: wait for 6800 ms
+// Attempt 4: wait for 15800 ms
+// Attempt 5: wait for 30800 ms
+// Attempt 6: wait for 61900 ms
+// Attempt 7: wait for 124700 ms
+// Attempt 8: wait for 248200 ms
+// Attempt 9: wait for 496900 ms
+
+// this is new one but havne't used yet need more tests
+class ExponentialBackoff {
+  final int base;
+  final int randomInterval;
+  final Random _random = Random();
+
+  ExponentialBackoff({required this.base, required this.randomInterval});
+
+  Duration calculateWaitInterval(int n) {
+    // Calculate the exponential backoff time
+    final int exponentialBackoff = base * pow(2, n).toInt();
+
+    // Generate a random jitter within the range [-randomInterval, randomInterval]
+    final int jitter = _random.nextInt(2 * randomInterval + 1) - randomInterval;
+
+    // Calculate the final wait interval
+    int waitInterval = exponentialBackoff + jitter;
+
+    // Ensure the wait interval is not negative
+    if (waitInterval < 0) {
+      waitInterval = 0;
+    }
+
+    return Duration(milliseconds: waitInterval);
+  }
 }

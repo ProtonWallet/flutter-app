@@ -14,7 +14,8 @@ class BtcTitleActionsView extends StatelessWidget {
   final bool initialized;
 
   const BtcTitleActionsView({
-    required this.initialized, super.key,
+    required this.initialized,
+    super.key,
     this.onSend,
     this.onBuy,
     this.onReceive,
@@ -41,7 +42,6 @@ class BtcTitleActionsView extends StatelessWidget {
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
-        elevation: 0,
         enable: initialized,
       ),
       ButtonV5(
@@ -52,7 +52,6 @@ class BtcTitleActionsView extends StatelessWidget {
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
-        elevation: 0,
         enable: initialized,
       ),
       ButtonV5(
@@ -63,7 +62,6 @@ class BtcTitleActionsView extends StatelessWidget {
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
-        elevation: 0,
         enable: initialized,
       ),
     ];

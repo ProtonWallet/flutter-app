@@ -11,6 +11,7 @@ import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
+import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
@@ -143,6 +144,7 @@ class DataProviderManager extends Manager {
   late UnleashDataProvider unleashDataProvider;
   late ExclusiveInviteDataProvider exclusiveInviteDataProvider;
   late ProtonEmailAddressProvider protonEmailAddressProvider;
+  late ConnectivityProvider connectivityProvider;
 
   DataProviderManager(
     this.apiEnv,
@@ -238,6 +240,8 @@ class DataProviderManager extends Manager {
     );
 
     protonEmailAddressProvider = ProtonEmailAddressProvider();
+
+    connectivityProvider = ConnectivityProvider();
 
     final userAgent = UserAgent();
     final uid = userManager.userInfo.sessionId;

@@ -29,7 +29,6 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -52,7 +51,6 @@ class WalletManager implements Manager {
 
   // TODO(fix): fix me
   static late UserManager userManager;
-  static late ProtonWalletManager protonWallet;
 
   /// setup in data provider login function
   static late WalletKeysProvider walletKeysProvider;

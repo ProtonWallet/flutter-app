@@ -39,14 +39,25 @@ class ContactsDataProvider extends DataProvider {
     final contacts = (await contactsDao.findAll()).cast<ContactsModel>();
     // if found cache.
     if (contacts.isNotEmpty) {
-      return contacts;
+      // TODO(fix): temp fix. the contactID should be unique
+      final Map<String, ContactsModel> uniqueContacts = {};
+      for (var contact in contacts) {
+        if (uniqueContacts.containsKey(contact.serverContactID)) {
+          if (uniqueContacts[contact.serverContactID]!.id! < contact.id!) {
+            uniqueContacts[contact.serverContactID] = contact;
+          }
+        } else {
+          uniqueContacts[contact.serverContactID] = contact;
+        }
+      }
+      return uniqueContacts.values.toList();
     }
     return null;
   }
 
   Future<void> fetchFromServer() async {
     // try to fetch from server:
-    final List<ApiContactEmails> apiContacts = await contactClient.getContacts();
+    final apiContacts = await contactClient.getContacts();
     for (ApiContactEmails apiContactEmail in apiContacts) {
       // update and insert contact
       await insertUpdate(apiContactEmail);
@@ -78,9 +89,9 @@ class ContactsDataProvider extends DataProvider {
 
   Future<String?> getContactName(String email) async {
     final List<ContactsModel>? contactsDataList = await getContacts();
-    if (contactsDataList!= null) {
-      for (ContactsModel contactsModel in contactsDataList){
-        if (contactsModel.email == email){
+    if (contactsDataList != null) {
+      for (ContactsModel contactsModel in contactsDataList) {
+        if (contactsModel.email == email) {
           return contactsModel.name;
         }
       }

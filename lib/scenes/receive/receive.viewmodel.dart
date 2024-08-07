@@ -12,7 +12,6 @@ import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.model.dart';
@@ -47,7 +46,6 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   WalletData? walletData;
   WalletModel? walletModel;
   AccountModel? accountModel;
-  late ProtonWalletProvider protonWalletProvider;
   late ValueNotifier accountValueNotifier;
 
   List<String> emailIntegrationAddresses = [];
@@ -129,7 +127,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> generateNewAddress() async {
     if (accountModel != null) {
-      if (localLastUsedIndex + accountModel!.poolSize + 10 >= accountModel!.lastUsedIndex){
+      if (localLastUsedIndex + accountModel!.poolSize + 10 >=
+          accountModel!.lastUsedIndex) {
         // avoid user has too many unused address that will hit stop gap
         accountModel!.lastUsedIndex = accountModel!.lastUsedIndex + 1;
         // TODO(fix): wait until web use it

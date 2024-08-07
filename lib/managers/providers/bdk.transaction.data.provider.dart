@@ -198,6 +198,9 @@ class BDKTransactionDataProvider extends DataProvider {
 
           final bool isSynced = await shared.read(syncCheckID) ?? false;
           if (!isSynced || forceSync) {
+            // when force sync reset the timmer and status. incase task failed cant restart
+            await shared.write(syncCheckID, false);
+            lastSyncedTime[accountModel.accountID] = 0;
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync start time: $timeStart");
             await blockchain?.fullSync(

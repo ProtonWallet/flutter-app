@@ -23,7 +23,6 @@ import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/proton.wallet.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
@@ -106,7 +105,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.txID,
     super.userFiatCurrency,
     this.userManager,
-    this.protonWalletManager,
     this.serverTransactionDataProvider,
     this.walletClient,
     this.walletKeysProvider,
@@ -117,7 +115,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   late FrbAccount _frbAccount;
 
   final UserManager userManager;
-  final ProtonWalletManager protonWalletManager;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final WalletClient walletClient;
   final WalletKeysProvider walletKeysProvider;
