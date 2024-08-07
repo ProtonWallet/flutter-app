@@ -465,3 +465,15 @@ func splitPGPSignatures(multiSig string) []string {
 
 	return signatures
 }
+
+//export freeCString
+func freeCString(cstr *C.char) {
+	C.free(unsafe.Pointer(cstr))
+}
+
+//export freeBinaryResult
+func freeBinaryResult(result C.struct_BinaryResult) {
+	if result.data != nil {
+		C.free(unsafe.Pointer(result.data))
+	}
+}

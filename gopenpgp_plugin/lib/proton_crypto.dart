@@ -39,9 +39,11 @@ String getBinarySignatureWithContext(
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -62,6 +64,9 @@ VerifyCleartextMessagResult verifyCleartextMessageArmored(
     );
     res.message = goResult.r0.charToDartString();
     res.verified = goResult.r1 == 1;
+    if (goResult.r0 != nullptr) {
+      bindings.freeCString(goResult.r0);
+    }
   });
   return res;
 }
@@ -117,9 +122,11 @@ String getSignatureWithContext(
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -170,9 +177,11 @@ String getSignature(
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -208,9 +217,11 @@ String getArmoredPublicKey(String userPrivateKey) {
     var goResult = bindings.getArmoredPublicKey(privateKeyPtr, errPtr);
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -226,9 +237,11 @@ String encrypt(String userPrivateKey, String message) {
     var goResult = bindings.encrypt(privateKeyPtr, messagePtr, errPtr);
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -250,9 +263,11 @@ String encryptWithKeyRing(String userPublicKeysSepInComma, String message) {
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -278,9 +293,11 @@ String decrypt(
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -315,9 +332,11 @@ Uint8List encryptBinary(String userPrivateKey, Uint8List data) {
 
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.data.charToUint8List(goResult.length);
+      bindings.freeBinaryResult(goResult);
     }
   });
   return result;
@@ -341,9 +360,11 @@ String encryptBinaryArmor(String userPrivateKey, Uint8List data) {
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
@@ -373,9 +394,11 @@ Uint8List decryptBinary(
     );
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.data.charToUint8List(goResult.length);
+      bindings.freeBinaryResult(goResult);
     }
   });
   return result;
@@ -403,9 +426,11 @@ String changePrivateKeyPassword(
 
     if (errPtr.value != nullptr) {
       final errorMessage = errPtr.value.charToDartString();
+      bindings.freeCString(errPtr.value);
       throw CryptoException.from(errorMessage);
     } else {
       result = goResult.charToDartString();
+      bindings.freeCString(goResult);
     }
   });
   return result;
