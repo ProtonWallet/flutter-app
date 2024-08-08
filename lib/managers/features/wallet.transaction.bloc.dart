@@ -580,29 +580,28 @@ class WalletTransactionBloc
 
   String tryDecryptWithKeys(List<dynamic> keys, String encryptedString) {
     String result = "";
+    bool hasError = false;
     for (final key in keys) {
       try {
         if (encryptedString.isNotEmpty) {
           result = key.decrypt(encryptedString);
+          hasError = false;
+          break;
         }
       } catch (e) {
+        hasError = true;
         logger.e(e.toString());
       }
-      if (result.isNotEmpty) {
-        break;
-      }
     }
-    if (result.isEmpty) {
+    if (result.isEmpty && hasError) {
       for (final key in keys) {
         try {
           if (encryptedString.isNotEmpty) {
             result = key.decryptBinary(encryptedString);
+            break;
           }
         } catch (e) {
           logger.e(e.toString());
-        }
-        if (result.isNotEmpty) {
-          break;
         }
       }
     }
