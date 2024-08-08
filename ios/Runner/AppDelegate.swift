@@ -20,7 +20,7 @@ import ProtonCoreSettings
 import ProtonCoreUIFoundations
 import UIKit
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
 
     /// native code and this need to be refactored later
