@@ -13,6 +13,7 @@ import 'package:wallet/rust/common/errors.dart';
 enum LoadingTask {
   eligible,
   homeRecheck,
+  syncRecheck,
   // subscription,
   // controllers,
   // userSettings,

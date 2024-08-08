@@ -408,6 +408,11 @@ class HomeViewModelImpl extends HomeViewModel {
             }
           case LoadingTask.homeRecheck:
             preLoadHomeData();
+          case LoadingTask.syncRecheck:
+            walletTransactionBloc.syncWallet(
+              forceSync: false,
+              heightChanged: true,
+            );
         }
       }
     });

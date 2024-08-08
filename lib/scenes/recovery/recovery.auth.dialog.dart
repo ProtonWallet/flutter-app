@@ -66,7 +66,7 @@ Future<void> showAuthBottomSheet(
                   borderColor: ProtonColors.protonShades20,
                 ),
                 const SizedBox(height: 16),
-                if (twoFaEnable == 1)
+                if (twoFaEnable != 0)
                   Center(
                     child: Text(
                       S.of(context).two_factor_code,
@@ -74,8 +74,8 @@ Future<void> showAuthBottomSheet(
                       textAlign: TextAlign.center,
                     ),
                   ),
-                if (twoFaEnable == 1) const SizedBox(height: 16),
-                if (twoFaEnable == 1)
+                if (twoFaEnable != 0) const SizedBox(height: 16),
+                if (twoFaEnable != 0)
                   Center(
                     child: Text(
                       S.of(context).two_factor_code_desc,
@@ -83,8 +83,8 @@ Future<void> showAuthBottomSheet(
                       textAlign: TextAlign.center,
                     ),
                   ),
-                if (twoFaEnable == 1) const SizedBox(height: 8),
-                if (twoFaEnable == 1)
+                if (twoFaEnable != 0) const SizedBox(height: 8),
+                if (twoFaEnable != 0)
                   CupertinoTextField.borderless(
                     keyboardType: TextInputType.visiblePassword,
                     controller: twofaController,
