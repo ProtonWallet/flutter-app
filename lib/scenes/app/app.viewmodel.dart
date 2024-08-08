@@ -123,6 +123,7 @@ class AppViewModelImpl extends AppViewModel {
       dataProviderManager,
       appStateManger,
       ConnectivityProvider(),
+      shared,
       duration: const Duration(seconds: 30),
     ));
 

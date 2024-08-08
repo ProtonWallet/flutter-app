@@ -6,6 +6,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
@@ -31,6 +32,8 @@ class EventLoop extends Service implements Manager {
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
   final ConnectivityProvider connectivityProvider;
+  // workaround need to improve this
+  final PreferencesManager shared;
   String latestEventId = "";
   int internetCheckCounter = 0;
   int recoveryCheckCounter = 0;
@@ -41,7 +44,8 @@ class EventLoop extends Service implements Manager {
     this.userManager,
     this.dataProviderManager,
     this.appStateManager,
-    this.connectivityProvider, {
+    this.connectivityProvider,
+    this.shared, {
     required super.duration,
   });
   @override
@@ -102,6 +106,11 @@ class EventLoop extends Service implements Manager {
       if (checkRecovery) {
         checkRecovery = false;
         await stateRecovery([LoadingTask.homeRecheck]);
+      }
+      final count =
+          await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
+      if (count > 0) {
+        await stateRecovery([LoadingTask.syncRecheck]);
       }
 
       ///

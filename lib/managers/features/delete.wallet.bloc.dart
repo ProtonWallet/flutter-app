@@ -154,7 +154,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
               serverEphemeral: authInfo.serverEphemeral);
 
           /// password scop unlock password change  ---  add 2fa code if needed
-          final proofs = authInfo.twoFa.enabled == 1
+          final proofs = authInfo.twoFa.enabled != 0
               ? ProtonSrpClientProofs(
                   clientEphemeral: clientProofs.clientEphemeral,
                   clientProof: clientProofs.clientProof,
