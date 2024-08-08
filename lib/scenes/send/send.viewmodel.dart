@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
@@ -125,6 +126,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int amountInSATS = 0; // per recipient
   bool allowDust = false;
   bool isLoadingBvE = false;
+  int amountDisplayDigit = 0;
   int totalAmountInSAT = 0; // total value
   SendFlowStatus sendFlowStatus = SendFlowStatus.addRecipient;
   TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
@@ -160,6 +162,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Future<void> updateFeeRate();
 
   void addRecipient();
+
+  void sendAll();
 
   void removeRecipient(int index);
 
@@ -245,6 +249,7 @@ class SendViewModelImpl extends SendViewModel {
   FrbBlockchainClient? blockClient;
   Timer? _timer;
   bool isValid = false;
+  FiatCurrencyWrapper? previousCurrencyWrapper;
 
   SecretKey? secretKey;
 
@@ -312,18 +317,21 @@ class SendViewModelImpl extends SendViewModel {
       addressKeys = await WalletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
+      amountDisplayDigit = ExchangeCalculator.getDisplayDigit(exchangeRate);
       startExchangeRateUpdateService();
       fiatCurrencyNotifier.value = FiatCurrencyHelper.getFiatCurrencyWrapper(
           userSettingsDataProvider.fiatCurrency);
+      previousCurrencyWrapper = fiatCurrencyNotifier.value;
       fiatCurrencyNotifier.addListener(() async {
         if (fiatCurrencyNotifier.value.bitcoinCurrency != null) {
           bitcoinBase = true;
-          updateExchangeRate(userSettingsDataProvider.fiatCurrency);
+          await updateExchangeRate(userSettingsDataProvider.fiatCurrency);
         } else {
           bitcoinBase = false;
-          updateExchangeRate(fiatCurrencyNotifier.value.fiatCurrency ??
+          await updateExchangeRate(fiatCurrencyNotifier.value.fiatCurrency ??
               userSettingsDataProvider.fiatCurrency);
         }
+        previousCurrencyWrapper = fiatCurrencyNotifier.value;
       });
       amountFocusNode.addListener(splitAmountToRecipients);
 
@@ -379,6 +387,72 @@ class SendViewModelImpl extends SendViewModel {
     sinkAddSafe();
   }
 
+  Future<void> updateAmount() async {
+    if (previousCurrencyWrapper != null) {
+      double oldAmount = 0;
+      try {
+        oldAmount = double.parse(amountTextController.text);
+      } catch (e) {
+        // ignore parsing error
+      }
+      final BitcoinUnit? prevBitcoinUnit =
+          previousCurrencyWrapper!.bitcoinCurrency?.bitcoinUnit;
+      final BitcoinUnit? currentBitcoinUnit =
+          fiatCurrencyNotifier.value.bitcoinCurrency?.bitcoinUnit;
+      if (fiatCurrencyNotifier.value.bitcoinCurrency != null) {
+        /// now send with btc or sats
+        if (prevBitcoinUnit != null) {
+          if (prevBitcoinUnit == BitcoinUnit.btc) {
+            amountTextController.text =
+                (oldAmount * btc2satoshi).round().toString();
+            amountDisplayDigit = 0;
+          } else if (prevBitcoinUnit == BitcoinUnit.sats) {
+            amountTextController.text =
+                (oldAmount / btc2satoshi).toStringAsFixed(8);
+            amountDisplayDigit = 8;
+          }
+        } else {
+          final ProtonExchangeRate oldExchangeRate =
+              await ExchangeRateService.getExchangeRate(
+                  previousCurrencyWrapper!.fiatCurrency ?? FiatCurrency.usd);
+          final double btcAmount =
+              ExchangeCalculator.getNotionalInBTC(oldExchangeRate, oldAmount);
+          final int estimatedSATS = (btcAmount * btc2satoshi).ceil();
+          if (currentBitcoinUnit == BitcoinUnit.btc) {
+            amountDisplayDigit = 8;
+            amountTextController.text =
+                btcAmount.toStringAsFixed(amountDisplayDigit);
+          } else if (currentBitcoinUnit == BitcoinUnit.sats) {
+            amountDisplayDigit = 0;
+            amountTextController.text =
+                estimatedSATS.toStringAsFixed(amountDisplayDigit);
+          }
+        }
+      } else {
+        /// now send with fiat
+        final ProtonExchangeRate oldExchangeRate =
+            await ExchangeRateService.getExchangeRate(
+                previousCurrencyWrapper!.fiatCurrency ?? FiatCurrency.usd);
+        double btcAmount =
+            ExchangeCalculator.getNotionalInBTC(oldExchangeRate, oldAmount);
+        if (prevBitcoinUnit != null) {
+          if (prevBitcoinUnit == BitcoinUnit.btc) {
+            btcAmount = oldAmount;
+          } else if (prevBitcoinUnit == BitcoinUnit.sats) {
+            btcAmount = oldAmount / btc2satoshi;
+          }
+        }
+        final int estimatedSATS = (btcAmount * btc2satoshi).round();
+        amountDisplayDigit = ExchangeCalculator.getDisplayDigit(exchangeRate);
+        amountTextController.text =
+            ExchangeCalculator.getNotionalInFiatCurrency(
+          exchangeRate,
+          estimatedSATS,
+        ).toStringAsFixed(amountDisplayDigit);
+      }
+    }
+  }
+
   Future<void> updateExchangeRateJob() async {
     if (isValid) {
       final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
@@ -410,6 +484,24 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return count;
+  }
+
+  @override
+  void sendAll() {
+    final int displayDigit = bitcoinBase
+        ? (log(fiatCurrencyNotifier.value.cents) / log(10)).round()
+        : ExchangeCalculator.getDisplayDigit(exchangeRate);
+    if (bitcoinBase) {
+      amountTextController.text =
+          (maxBalanceToSend / fiatCurrencyNotifier.value.cents)
+              .toStringAsFixed(displayDigit);
+    } else {
+      amountTextController.text = ExchangeCalculator.getNotionalInFiatCurrency(
+        exchangeRate,
+        maxBalanceToSend,
+      ).toStringAsFixed(displayDigit);
+    }
+    splitAmountToRecipients();
   }
 
   Future<void> updateWallet() async {
@@ -477,12 +569,17 @@ class SendViewModelImpl extends SendViewModel {
         }
 
         /// build draft psbt first to get fee
-        maxBalanceToSend = balance - estimatedFeeInSAT;
+        maxBalanceToSend =
+            balance - estimatedFeeInSAT - tolerateBalanceOverflow;
+      }
+      if (sendFlowStatus == SendFlowStatus.addRecipient) {
+        /// only need to request focus when it trigger from addRecipient
+        /// ignore if its from transaction review, since it will update recipiant amount when amountFocusNode has focus
+        Future.delayed(const Duration(milliseconds: 100), () {
+          amountFocusNode.requestFocus();
+        });
       }
       sendFlowStatus = status;
-      Future.delayed(const Duration(milliseconds: 100), () {
-        amountFocusNode.requestFocus();
-      });
     }
     sinkAddSafe();
   }
@@ -493,7 +590,8 @@ class SendViewModelImpl extends SendViewModel {
     }
     if (sendFlowStatus == SendFlowStatus.editAmount) {
       exchangeRate = await ExchangeRateService.getExchangeRate(fiatCurrency);
-      buildTransactionScript();
+      await updateAmount();
+      splitAmountToRecipients();
     }
     sinkAddSafe();
   }
@@ -626,18 +724,7 @@ class SendViewModelImpl extends SendViewModel {
           TextEditingController();
       final FocusNode focusNode = FocusNode();
       focusNode.addListener(() {
-        double totalAmount = 0;
-        for (ProtonRecipient recipient in recipients) {
-          double amount = 0;
-          try {
-            amount = double.parse(recipient.amountController.text);
-          } catch (e) {
-            // ignore parsing error
-          }
-          totalAmount += amount;
-        }
-        amountTextController.text = totalAmount
-            .toStringAsFixed(ExchangeCalculator.getDisplayDigit(exchangeRate));
+        updateTotalAmount();
         sinkAddSafe();
       });
       recipients.add(ProtonRecipient(
@@ -746,6 +833,24 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     sinkAddSafe();
+  }
+
+  void updateTotalAmount() {
+    final int displayDigit = bitcoinBase
+        ? (log(fiatCurrencyNotifier.value.cents) / log(10)).round()
+        : ExchangeCalculator.getDisplayDigit(exchangeRate);
+    double totalAmount = 0;
+    for (ProtonRecipient recipient in recipients) {
+      double amount = 0;
+      try {
+        amount = double.parse(recipient.amountController.text);
+      } catch (e) {
+        // ignore parsing error
+      }
+      totalAmount += amount;
+    }
+    amountTextController.text = totalAmount
+        .toStringAsFixed(displayDigit);
   }
 
   @override
@@ -1110,6 +1215,9 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   void splitAmountToRecipients() {
+    final int displayDigit = bitcoinBase
+        ? (log(fiatCurrencyNotifier.value.cents) / log(10)).round()
+        : ExchangeCalculator.getDisplayDigit(exchangeRate);
     double totalAmount = 0;
     try {
       totalAmount = double.parse(amountTextController.text);
@@ -1118,7 +1226,13 @@ class SendViewModelImpl extends SendViewModel {
     }
     final int recipientCount = validRecipientCount();
     if (recipientCount > 0) {
-      final double amount = totalAmount / recipientCount;
+      double amount = totalAmount / recipientCount;
+
+      /// floor value, so it won't have issue when sum up > original value
+      /// this will help for send all feature
+      final int base = pow(10, displayDigit).toInt();
+      amount = (amount * base).floor() / base;
+
       for (ProtonRecipient recipient in recipients) {
         if (bitcoinBase) {
           final BitcoinUnit bitcoinUnit =
@@ -1133,6 +1247,10 @@ class SendViewModelImpl extends SendViewModel {
         }
       }
     }
+
+    /// need to updateTotal amount since we floor value for the recipiant
+    /// the total amount may get changed
+    updateTotalAmount();
     sinkAddSafe();
   }
 

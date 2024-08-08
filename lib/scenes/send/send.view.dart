@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
@@ -149,35 +147,7 @@ class SendView extends ViewBase<SendViewModel> {
                               ),
                               const SizedBox(width: 8),
                               GestureDetector(
-                                onTap: () {
-                                  if (viewModel.bitcoinBase) {
-                                    final int displayDigit = (log(viewModel
-                                                .fiatCurrencyNotifier
-                                                .value
-                                                .cents) /
-                                            log(10))
-                                        .round();
-                                    viewModel.amountTextController.text =
-                                        ((viewModel.maxBalanceToSend - 10) /
-                                                viewModel.fiatCurrencyNotifier
-                                                    .value.cents)
-                                            .toStringAsFixed(displayDigit);
-                                    viewModel.splitAmountToRecipients();
-                                  } else {
-                                    // TODO(fix): fix logic to use more specific amount
-                                    viewModel.amountTextController.text =
-                                        ExchangeCalculator
-                                            .getNotionalInFiatCurrency(
-                                      viewModel.exchangeRate,
-                                      viewModel.maxBalanceToSend - 10,
-
-                                      // TODO(fix): fix me, some low value issue
-                                    ).toStringAsFixed(
-                                            ExchangeCalculator.getDisplayDigit(
-                                                viewModel.exchangeRate));
-                                    viewModel.splitAmountToRecipients();
-                                  }
-                                },
+                                onTap: viewModel.sendAll,
                                 child: Text(S.of(context).send_all,
                                     style: FontManager.captionMedian(
                                         ProtonColors.protonBlue)),
@@ -189,7 +159,8 @@ class SendView extends ViewBase<SendViewModel> {
                               bitcoinBase: viewModel.bitcoinBase,
                               backgroundColor: ProtonColors.white,
                               labelText: S.of(context).amount,
-                              hintText: "0.00",
+                              hintText: 0.toStringAsFixed(
+                                  viewModel.amountDisplayDigit),
                               textController: viewModel.amountTextController,
                               myFocusNode: viewModel.amountFocusNode,
                               exchangeRate: viewModel.exchangeRate,
