@@ -212,6 +212,7 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet full sync end time: $timeEnd");
             success = true;
           } else {
+            lastSyncedTime[accountModel.accountID] = 0;
             logger.i("Bdk wallet partial sync check");
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet partial sync start time: $timeStart");

@@ -158,7 +158,7 @@ import UIKit
             return
         }
         FeatureFlagsRepository.shared.setApiService(apiService)
-        FeatureFlagsRepository.shared.setFlagOverride(CoreFeatureFlagType.dynamicPlan, false)
+        FeatureFlagsRepository.shared.setFlagOverride(CoreFeatureFlagType.dynamicPlan, true)
 
         Task {
             do {
