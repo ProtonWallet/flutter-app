@@ -52,10 +52,24 @@ final class PaymentsManager {
             break
         }
 
-        payments.storeKitManager.delegate = self
-        payments.storeKitManager.updateAvailableProductsList { [weak self] _ in
-            guard let self else { return }
-            payments.storeKitManager.subscribeToPaymentQueue()
+        let featureFlagsRepository = FeatureFlagsRepository.shared
+        if featureFlagsRepository.isEnabled(CoreFeatureFlagType.dynamicPlan) {
+            // In the dynamic plans, fetching available IAPs from StoreKit is done alongside fetching available plans
+            Task {
+                if case let .right(plansDataSource) = payments.planService {
+                    do {
+                        try await plansDataSource.fetchAvailablePlans()
+                    } catch {
+                        PMLog.error("FetchÏ available plans error: \(error)", sendToExternal: true)
+                    }
+                    payments.storeKitManager.subscribeToPaymentQueue()
+                }
+            }
+        } else {
+            // Before dynamic plans, to be ready to present the available plans, we must fetch the available IAPs from StoreKit
+            payments.storeKitManager.updateAvailableProductsList { [weak self] error in
+                self?.payments.storeKitManager.subscribeToPaymentQueue()
+            }
         }
     }
 
