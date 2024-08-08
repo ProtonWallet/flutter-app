@@ -72,6 +72,9 @@ class _$TransactionTimeCopyWithImpl<$Res, $Val extends TransactionTime>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -93,6 +96,8 @@ class __$$TransactionTime_ConfirmedImplCopyWithImpl<$Res>
       $Res Function(_$TransactionTime_ConfirmedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -133,7 +138,9 @@ class _$TransactionTime_ConfirmedImpl extends TransactionTime_Confirmed {
   @override
   int get hashCode => Object.hash(runtimeType, confirmationTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionTime_ConfirmedImplCopyWith<_$TransactionTime_ConfirmedImpl>
@@ -210,7 +217,10 @@ abstract class TransactionTime_Confirmed extends TransactionTime {
   const TransactionTime_Confirmed._() : super._();
 
   BigInt get confirmationTime;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionTime_ConfirmedImplCopyWith<_$TransactionTime_ConfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -235,6 +245,8 @@ class __$$TransactionTime_UnconfirmedImplCopyWithImpl<$Res>
       $Res Function(_$TransactionTime_UnconfirmedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -274,7 +286,9 @@ class _$TransactionTime_UnconfirmedImpl extends TransactionTime_Unconfirmed {
   @override
   int get hashCode => Object.hash(runtimeType, lastSeen);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionTime_UnconfirmedImplCopyWith<_$TransactionTime_UnconfirmedImpl>
@@ -350,7 +364,10 @@ abstract class TransactionTime_Unconfirmed extends TransactionTime {
   const TransactionTime_Unconfirmed._() : super._();
 
   BigInt get lastSeen;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TransactionTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionTime_UnconfirmedImplCopyWith<_$TransactionTime_UnconfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
