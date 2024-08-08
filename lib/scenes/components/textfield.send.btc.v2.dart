@@ -71,6 +71,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   @override
   void initState() {
     super.initState();
+    updateEstimateValue();
     widget.textController.addListener(updateEstimateValue);
   }
 
