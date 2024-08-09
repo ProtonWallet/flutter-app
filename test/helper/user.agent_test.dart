@@ -59,9 +59,9 @@ void main() {
       final ua = await userAgent.ua;
       expect(ua, 'ProtonWallet/1.0.0 (Ubuntu 20.04; Ubuntu 20.04 LTS)');
       final appVersion = await userAgent.appVersion;
-      expect(appVersion, "linux-wallet@1.0.0");
+      expect(appVersion, "linux-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
-      expect(display, "Proton Wallet 1.0.0 (33)");
+      expect(display, "ProtonWallet 1.0.0-dev (33)");
     });
 
     test('User agent string on macOS', () async {
@@ -81,9 +81,9 @@ void main() {
       final ua = await userAgent.ua;
       expect(ua, 'ProtonWallet/1.0.0 (macOS 10.15.7; MacBookPro16,1)');
       final appVersion = await userAgent.appVersion;
-      expect(appVersion, "macos-wallet@1.0.0");
+      expect(appVersion, "macos-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
-      expect(display, "Proton Wallet 1.0.0 (33)");
+      expect(display, "ProtonWallet 1.0.0-dev (33)");
     });
 
     test('User agent string on iOS', () async {
@@ -104,9 +104,9 @@ void main() {
 
       expect(ua, 'ProtonWallet/1.0.0 (iOS 14.0; iPhone8,1)');
       final appVersion = await userAgent.appVersion;
-      expect(appVersion, "ios-wallet@1.0.0");
+      expect(appVersion, "ios-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
-      expect(display, "Proton Wallet 1.0.0 (33)");
+      expect(display, "ProtonWallet 1.0.0-dev (33)");
     });
 
     test('User agent string on Android', () async {
@@ -127,9 +127,9 @@ void main() {
       final ua = await userAgent.ua;
       expect(ua, 'ProtonWallet/1.0.0 (Android 11; Pixel 4)');
       final appVersion = await userAgent.appVersion;
-      expect(appVersion, "android-wallet@1.0.0");
+      expect(appVersion, "android-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
-      expect(display, "Proton Wallet 1.0.0 (33)");
+      expect(display, "ProtonWallet 1.0.0-dev (33)");
     });
 
     test('User agent string on windows', () async {
@@ -154,9 +154,9 @@ void main() {
       final ua = await userAgent.ua;
       expect(ua, 'ProtonWallet/1.0.0 (Windows 5; 21H2)');
       final appVersion = await userAgent.appVersion;
-      expect(appVersion, "windows-wallet@1.0.0");
+      expect(appVersion, "windows-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
-      expect(display, "Proton Wallet 1.0.0 (33)");
+      expect(display, "ProtonWallet 1.0.0-dev (33)");
     });
   });
 }
