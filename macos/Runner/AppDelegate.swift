@@ -2,7 +2,7 @@ import Cocoa
 import FlutterMacOS
 import flutter_local_notifications
 
-@NSApplicationMain
+@main
 class AppDelegate: FlutterAppDelegate, NSUserNotificationCenterDelegate {
   
     override func applicationDidFinishLaunching(_ notification: Notification) {
