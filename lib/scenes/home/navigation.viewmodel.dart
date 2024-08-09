@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -19,9 +18,6 @@ abstract class HomeNavigationViewModel
 
   late PageController pageController =
       PageController(initialPage: selectedPage);
-  SideMenuController sideMenu = SideMenuController();
-
-  List<SideMenuItem> items = [];
 
   ApiEnv apiEnv;
 }
@@ -36,35 +32,7 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
   }
 
   @override
-  Future<void> loadData() async {
-    items = [
-      SideMenuItem(
-        title: 'Dashboard',
-        onTap: (index, _) {
-          sideMenu.changePage(index);
-        },
-        icon: const Icon(Icons.home),
-        badgeContent: const Text(
-          '3',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      SideMenuItem(
-        title: 'Settings',
-        onTap: (index, _) {
-          sideMenu.changePage(index);
-        },
-        icon: const Icon(Icons.settings),
-      ),
-      const SideMenuItem(
-        title: 'Exit',
-        icon: Icon(Icons.exit_to_app),
-      ),
-    ];
-    sideMenu.addListener((index) {
-      pageController.jumpToPage(index);
-    });
-  }
+  Future<void> loadData() async {}
 
   @override
   void updateSelected(int index) {

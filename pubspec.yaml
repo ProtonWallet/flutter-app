@@ -34,19 +34,20 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  ffi: ^2.1.0
+  # cupertino_icons: ^1.0.2
+  ffi: ^2.1.2
 
   ####rust
   rust_builder:
     path: rust_builder
+  # frb
   flutter_rust_bridge: 2.1.0
 
   #golang ffi plugin
   proton_crypto:
     path: gopenpgp_plugin
 
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^2.4.4
   logger: ^2.0.2+1
   shared_preferences: ^2.2.2
   flutter_localizations:
@@ -54,19 +55,18 @@ dependencies:
   intl: ^0.19.0
   provider: ^6.1.1
   flutter_svg: ^2.0.9
-  animated_size_and_fade: ^3.0.1
+  animated_size_and_fade: ^4.0.0
   flutter_tags_x: ^1.1.0
   flutter_screen_lock: ^9.0.1
-  sqflite: ^2.3.0
+  sqflite: ^2.3.3+1
   path: ^1.8.3
   flutter_spinkit: ^5.2.0
-  easy_sidemenu: ^0.5.0
+  # easy_sidemenu: ^0.5.0 # might use later
   qr_flutter: ^4.1.0
-  share_plus: ^7.2.1
-  syncfusion_flutter_charts: ^23.2.7
-  flutter_local_notifications: ^16.2.0
+  share_plus: ^10.0.0
+  flutter_local_notifications: ^17.2.2
   sqflite_common_ffi: ^2.3.1
-  web_socket_channel: ^2.4.0
+  web_socket_channel: ^3.0.1 # might use later
   introduction_screen: ^3.1.12
   confetti: ^0.7.0
   local_auth: ^2.1.7
@@ -101,7 +101,7 @@ dependencies:
   country_flags: ^3.0.0
 
   ### database
-  drift: ^2.18.0
+  drift: ^2.19.1
 
   # hive, shared_perferences is not stable
   hive: ^2.2.3
@@ -135,9 +135,9 @@ dependencies:
       url: https://github.com/dola99/qr_code_scanner
       ref: update
 
-dependency_overrides:
-  # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
-  intl: 0.19.0
+# dependency_overrides:
+#   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
+#   intl: 0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -149,14 +149,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
-  ffigen: ^12.0.0
-  build_runner: ^2.4.6
+  intl_translation: ^0.20.0
+  ffigen: ^13.0.0
+  build_runner: ^2.4.12
+  analyzer: ^6.7.0
   #auto gen assets to const
-  flutter_gen_runner: ^5.4.0
-  freezed: ^2.4.5
-  test: ^1.24.9
-  intl_translation: ^0.19.0
-  flutter_gen: ^5.4.0
+  flutter_gen_runner: ^5.6.0
+  freezed: ^2.5.7
+  test: ^1.25.7
+  flutter_gen: ^5.6.0
 
   # auto config app icons
   flutter_launcher_icons: ^0.13.1
@@ -164,9 +165,8 @@ dev_dependencies:
   json_serializable: ^6.8.0
 
   ## dev tools
-  analyzer: ^6.4.1
   # meta: ^1.14.0
-  drift_dev: ^2.18.0
+  drift_dev: ^2.19.1
   envied_generator: ^0.5.4+1
 
   mockito: ^5.4.4
