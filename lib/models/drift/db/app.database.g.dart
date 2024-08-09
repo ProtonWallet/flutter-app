@@ -482,6 +482,34 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
         email: email.present ? email.value : this.email,
         displayName: displayName.present ? displayName.value : this.displayName,
       );
+  DriftProtonUser copyWithCompanion(UsersTableCompanion data) {
+    return DriftProtonUser(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      name: data.name.present ? data.name.value : this.name,
+      usedSpace: data.usedSpace.present ? data.usedSpace.value : this.usedSpace,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      credit: data.credit.present ? data.credit.value : this.credit,
+      createTime:
+          data.createTime.present ? data.createTime.value : this.createTime,
+      maxSpace: data.maxSpace.present ? data.maxSpace.value : this.maxSpace,
+      maxUpload: data.maxUpload.present ? data.maxUpload.value : this.maxUpload,
+      role: data.role.present ? data.role.value : this.role,
+      private: data.private.present ? data.private.value : this.private,
+      subscribed:
+          data.subscribed.present ? data.subscribed.value : this.subscribed,
+      services: data.services.present ? data.services.value : this.services,
+      delinquent:
+          data.delinquent.present ? data.delinquent.value : this.delinquent,
+      organizationPrivateKey: data.organizationPrivateKey.present
+          ? data.organizationPrivateKey.value
+          : this.organizationPrivateKey,
+      email: data.email.present ? data.email.value : this.email,
+      displayName:
+          data.displayName.present ? data.displayName.value : this.displayName,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('DriftProtonUser(')
@@ -1073,6 +1101,26 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
             : this.recoverySecretSignature,
         primary: primary ?? this.primary,
       );
+  DriftUserKey copyWithCompanion(UserKeysTableCompanion data) {
+    return DriftUserKey(
+      keyId: data.keyId.present ? data.keyId.value : this.keyId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      version: data.version.present ? data.version.value : this.version,
+      privateKey:
+          data.privateKey.present ? data.privateKey.value : this.privateKey,
+      token: data.token.present ? data.token.value : this.token,
+      fingerprint:
+          data.fingerprint.present ? data.fingerprint.value : this.fingerprint,
+      recoverySecret: data.recoverySecret.present
+          ? data.recoverySecret.value
+          : this.recoverySecret,
+      recoverySecretSignature: data.recoverySecretSignature.present
+          ? data.recoverySecretSignature.value
+          : this.recoverySecretSignature,
+      primary: data.primary.present ? data.primary.value : this.primary,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('DriftUserKey(')
@@ -1623,6 +1671,39 @@ class WalletUserSettings extends DataClass
         acceptTermsAndConditions:
             acceptTermsAndConditions ?? this.acceptTermsAndConditions,
       );
+  WalletUserSettings copyWithCompanion(WalletUserSettingsTableCompanion data) {
+    return WalletUserSettings(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      bitcoinUnit:
+          data.bitcoinUnit.present ? data.bitcoinUnit.value : this.bitcoinUnit,
+      fiatCurrency: data.fiatCurrency.present
+          ? data.fiatCurrency.value
+          : this.fiatCurrency,
+      hideEmptyUsedAddresses: data.hideEmptyUsedAddresses.present
+          ? data.hideEmptyUsedAddresses.value
+          : this.hideEmptyUsedAddresses,
+      showWalletRecovery: data.showWalletRecovery.present
+          ? data.showWalletRecovery.value
+          : this.showWalletRecovery,
+      twoFactorAmountThreshold: data.twoFactorAmountThreshold.present
+          ? data.twoFactorAmountThreshold.value
+          : this.twoFactorAmountThreshold,
+      receiveInviterNotification: data.receiveInviterNotification.present
+          ? data.receiveInviterNotification.value
+          : this.receiveInviterNotification,
+      receiveEmailIntegrationNotification:
+          data.receiveEmailIntegrationNotification.present
+              ? data.receiveEmailIntegrationNotification.value
+              : this.receiveEmailIntegrationNotification,
+      walletCreated: data.walletCreated.present
+          ? data.walletCreated.value
+          : this.walletCreated,
+      acceptTermsAndConditions: data.acceptTermsAndConditions.present
+          ? data.acceptTermsAndConditions.value
+          : this.acceptTermsAndConditions,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('WalletUserSettings(')
@@ -1853,7 +1934,7 @@ class WalletUserSettingsTableCompanion
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UsersTableTable usersTable = $UsersTableTable(this);
   late final $UserKeysTableTable userKeysTable = $UserKeysTableTable(this);
   late final $WalletUserSettingsTableTable walletUserSettingsTable =
@@ -1868,7 +1949,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       [usersTable, userKeysTable, walletUserSettingsTable, userIdIndex];
 }
 
-typedef $$UsersTableTableInsertCompanionBuilder = UsersTableCompanion Function({
+typedef $$UsersTableTableCreateCompanionBuilder = UsersTableCompanion Function({
   Value<int> id,
   required String userId,
   required String name,
@@ -1913,8 +1994,7 @@ class $$UsersTableTableTableManager extends RootTableManager<
     DriftProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
-    $$UsersTableTableProcessedTableManager,
-    $$UsersTableTableInsertCompanionBuilder,
+    $$UsersTableTableCreateCompanionBuilder,
     $$UsersTableTableUpdateCompanionBuilder> {
   $$UsersTableTableTableManager(_$AppDatabase db, $UsersTableTable table)
       : super(TableManagerState(
@@ -1924,9 +2004,7 @@ class $$UsersTableTableTableManager extends RootTableManager<
               $$UsersTableTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$UsersTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$UsersTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> userId = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -1964,7 +2042,7 @@ class $$UsersTableTableTableManager extends RootTableManager<
             email: email,
             displayName: displayName,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String userId,
             required String name,
@@ -2003,18 +2081,6 @@ class $$UsersTableTableTableManager extends RootTableManager<
             displayName: displayName,
           ),
         ));
-}
-
-class $$UsersTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $UsersTableTable,
-    DriftProtonUser,
-    $$UsersTableTableFilterComposer,
-    $$UsersTableTableOrderingComposer,
-    $$UsersTableTableProcessedTableManager,
-    $$UsersTableTableInsertCompanionBuilder,
-    $$UsersTableTableUpdateCompanionBuilder> {
-  $$UsersTableTableProcessedTableManager(super.$state);
 }
 
 class $$UsersTableTableFilterComposer
@@ -2196,7 +2262,7 @@ class $$UsersTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$UserKeysTableTableInsertCompanionBuilder = UserKeysTableCompanion
+typedef $$UserKeysTableTableCreateCompanionBuilder = UserKeysTableCompanion
     Function({
   required String keyId,
   required String userId,
@@ -2229,8 +2295,7 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
     DriftUserKey,
     $$UserKeysTableTableFilterComposer,
     $$UserKeysTableTableOrderingComposer,
-    $$UserKeysTableTableProcessedTableManager,
-    $$UserKeysTableTableInsertCompanionBuilder,
+    $$UserKeysTableTableCreateCompanionBuilder,
     $$UserKeysTableTableUpdateCompanionBuilder> {
   $$UserKeysTableTableTableManager(_$AppDatabase db, $UserKeysTableTable table)
       : super(TableManagerState(
@@ -2240,9 +2305,7 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
               $$UserKeysTableTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$UserKeysTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$UserKeysTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> keyId = const Value.absent(),
             Value<String> userId = const Value.absent(),
             Value<int> version = const Value.absent(),
@@ -2266,7 +2329,7 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             primary: primary,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String keyId,
             required String userId,
             required int version,
@@ -2291,18 +2354,6 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$UserKeysTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $UserKeysTableTable,
-    DriftUserKey,
-    $$UserKeysTableTableFilterComposer,
-    $$UserKeysTableTableOrderingComposer,
-    $$UserKeysTableTableProcessedTableManager,
-    $$UserKeysTableTableInsertCompanionBuilder,
-    $$UserKeysTableTableUpdateCompanionBuilder> {
-  $$UserKeysTableTableProcessedTableManager(super.$state);
 }
 
 class $$UserKeysTableTableFilterComposer
@@ -2404,7 +2455,7 @@ class $$UserKeysTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$WalletUserSettingsTableTableInsertCompanionBuilder
+typedef $$WalletUserSettingsTableTableCreateCompanionBuilder
     = WalletUserSettingsTableCompanion Function({
   required String userId,
   required String bitcoinUnit,
@@ -2439,8 +2490,7 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
     WalletUserSettings,
     $$WalletUserSettingsTableTableFilterComposer,
     $$WalletUserSettingsTableTableOrderingComposer,
-    $$WalletUserSettingsTableTableProcessedTableManager,
-    $$WalletUserSettingsTableTableInsertCompanionBuilder,
+    $$WalletUserSettingsTableTableCreateCompanionBuilder,
     $$WalletUserSettingsTableTableUpdateCompanionBuilder> {
   $$WalletUserSettingsTableTableTableManager(
       _$AppDatabase db, $WalletUserSettingsTableTable table)
@@ -2451,9 +2501,7 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
               ComposerState(db, table)),
           orderingComposer: $$WalletUserSettingsTableTableOrderingComposer(
               ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$WalletUserSettingsTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> userId = const Value.absent(),
             Value<String> bitcoinUnit = const Value.absent(),
             Value<String> fiatCurrency = const Value.absent(),
@@ -2481,7 +2529,7 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             acceptTermsAndConditions: acceptTermsAndConditions,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String userId,
             required String bitcoinUnit,
             required String fiatCurrency,
@@ -2509,19 +2557,6 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$WalletUserSettingsTableTableProcessedTableManager
-    extends ProcessedTableManager<
-        _$AppDatabase,
-        $WalletUserSettingsTableTable,
-        WalletUserSettings,
-        $$WalletUserSettingsTableTableFilterComposer,
-        $$WalletUserSettingsTableTableOrderingComposer,
-        $$WalletUserSettingsTableTableProcessedTableManager,
-        $$WalletUserSettingsTableTableInsertCompanionBuilder,
-        $$WalletUserSettingsTableTableUpdateCompanionBuilder> {
-  $$WalletUserSettingsTableTableProcessedTableManager(super.$state);
 }
 
 class $$WalletUserSettingsTableTableFilterComposer
@@ -2639,9 +2674,9 @@ class $$WalletUserSettingsTableTableOrderingComposer
               ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class _$AppDatabaseManager {
+class $AppDatabaseManager {
   final _$AppDatabase _db;
-  _$AppDatabaseManager(this._db);
+  $AppDatabaseManager(this._db);
   $$UsersTableTableTableManager get usersTable =>
       $$UsersTableTableTableManager(_db, _db.usersTable);
   $$UserKeysTableTableTableManager get userKeysTable =>

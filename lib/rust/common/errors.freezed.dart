@@ -118,6 +118,9 @@ class _$BridgeErrorCopyWithImpl<$Res, $Val extends BridgeError>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -137,6 +140,8 @@ class __$$BridgeError_ApiLockImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_ApiLockImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -175,7 +180,9 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_ApiLockImplCopyWith<_$BridgeError_ApiLockImpl> get copyWith =>
@@ -297,7 +304,10 @@ abstract class BridgeError_ApiLock extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_ApiLockImplCopyWith<_$BridgeError_ApiLockImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -319,6 +329,8 @@ class __$$BridgeError_GenericImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_GenericImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -357,7 +369,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_GenericImplCopyWith<_$BridgeError_GenericImpl> get copyWith =>
@@ -479,7 +493,10 @@ abstract class BridgeError_Generic extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_GenericImplCopyWith<_$BridgeError_GenericImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -503,6 +520,8 @@ class __$$BridgeError_MuonAuthSessionImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_MuonAuthSessionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -541,7 +560,9 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_MuonAuthSessionImplCopyWith<_$BridgeError_MuonAuthSessionImpl>
@@ -663,7 +684,10 @@ abstract class BridgeError_MuonAuthSession extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_MuonAuthSessionImplCopyWith<_$BridgeError_MuonAuthSessionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -687,6 +711,8 @@ class __$$BridgeError_MuonAuthRefreshImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_MuonAuthRefreshImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -725,7 +751,9 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_MuonAuthRefreshImplCopyWith<_$BridgeError_MuonAuthRefreshImpl>
@@ -847,7 +875,10 @@ abstract class BridgeError_MuonAuthRefresh extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_MuonAuthRefreshImplCopyWith<_$BridgeError_MuonAuthRefreshImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -871,6 +902,8 @@ class __$$BridgeError_MuonClientImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_MuonClientImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -909,7 +942,9 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_MuonClientImplCopyWith<_$BridgeError_MuonClientImpl>
@@ -1031,7 +1066,10 @@ abstract class BridgeError_MuonClient extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_MuonClientImplCopyWith<_$BridgeError_MuonClientImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1055,6 +1093,8 @@ class __$$BridgeError_MuonSessionImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_MuonSessionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1093,7 +1133,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_MuonSessionImplCopyWith<_$BridgeError_MuonSessionImpl>
@@ -1215,7 +1257,10 @@ abstract class BridgeError_MuonSession extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_MuonSessionImplCopyWith<_$BridgeError_MuonSessionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1239,6 +1284,8 @@ class __$$BridgeError_AndromedaBitcoinImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_AndromedaBitcoinImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1277,7 +1324,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_AndromedaBitcoinImplCopyWith<
@@ -1400,7 +1449,10 @@ abstract class BridgeError_AndromedaBitcoin extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_AndromedaBitcoinImplCopyWith<
           _$BridgeError_AndromedaBitcoinImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1425,6 +1477,8 @@ class __$$BridgeError_ApiResponseImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_ApiResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1463,7 +1517,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_ApiResponseImplCopyWith<_$BridgeError_ApiResponseImpl>
@@ -1585,7 +1641,10 @@ abstract class BridgeError_ApiResponse extends BridgeError {
 
   @override
   ResponseError get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_ApiResponseImplCopyWith<_$BridgeError_ApiResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1607,6 +1666,8 @@ class __$$BridgeError_ApiSrpImplCopyWithImpl<$Res>
       $Res Function(_$BridgeError_ApiSrpImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1645,7 +1706,9 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BridgeError_ApiSrpImplCopyWith<_$BridgeError_ApiSrpImpl> get copyWith =>
@@ -1767,7 +1830,10 @@ abstract class BridgeError_ApiSrp extends BridgeError {
 
   @override
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_ApiSrpImplCopyWith<_$BridgeError_ApiSrpImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
