@@ -72,6 +72,9 @@ class _$ConfirmationTimeCopyWithImpl<$Res, $Val extends ConfirmationTime>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -94,6 +97,8 @@ class __$$ConfirmationTime_ConfirmedImplCopyWithImpl<$Res>
       $Res Function(_$ConfirmationTime_ConfirmedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,7 +150,9 @@ class _$ConfirmationTime_ConfirmedImpl extends ConfirmationTime_Confirmed {
   @override
   int get hashCode => Object.hash(runtimeType, height, time);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ConfirmationTime_ConfirmedImplCopyWith<_$ConfirmationTime_ConfirmedImpl>
@@ -226,7 +233,10 @@ abstract class ConfirmationTime_Confirmed extends ConfirmationTime {
 
   /// Confirmation time in unix seconds.
   BigInt get time;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ConfirmationTime_ConfirmedImplCopyWith<_$ConfirmationTime_ConfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -251,6 +261,8 @@ class __$$ConfirmationTime_UnconfirmedImplCopyWithImpl<$Res>
       $Res Function(_$ConfirmationTime_UnconfirmedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -292,7 +304,9 @@ class _$ConfirmationTime_UnconfirmedImpl extends ConfirmationTime_Unconfirmed {
   @override
   int get hashCode => Object.hash(runtimeType, lastSeen);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ConfirmationTime_UnconfirmedImplCopyWith<
@@ -370,7 +384,10 @@ abstract class ConfirmationTime_Unconfirmed extends ConfirmationTime {
 
   /// The last-seen timestamp in unix seconds.
   BigInt get lastSeen;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ConfirmationTime
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ConfirmationTime_UnconfirmedImplCopyWith<
           _$ConfirmationTime_UnconfirmedImpl>
       get copyWith => throw _privateConstructorUsedError;
