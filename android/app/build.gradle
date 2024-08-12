@@ -1,5 +1,4 @@
 import groovy.json.JsonSlurper
-
 // TODO: https://developer.android.com/build/migrate-to-kotlin-dsl
 plugins {
     id("com.android.application")
@@ -9,7 +8,6 @@ plugins {
     id("com.google.gms.google-services") // for FCM
     id("dagger.hilt.android.plugin")
     //id("io.sentry.android.gradle")
-
     id("org.jetbrains.kotlin.plugin.serialization")
     //alias(libs.plugins.proton.environmentConfig)
 }
@@ -64,14 +62,12 @@ String findRustlsPlatformVerifierProject() {
 
 android {
     namespace "me.proton.wallet.android"
-    compileSdkVersion flutter.compileSdkVersion
-
+    compileSdkVersion libs.versions.compileSdk.get().toInteger()
     defaultConfig {
         applicationId "me.proton.wallet.android"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        ndkVersion flutter.ndkVersion
+        ndkVersion libs.versions.ndkVersion.get()
         targetSdkVersion libs.versions.targetSdk.get()
         minSdkVersion libs.versions.minSdk.get()
 
@@ -130,7 +126,6 @@ android {
     productFlavors {
         dev {
             dimension "default"
-            versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
         }
         prod {
