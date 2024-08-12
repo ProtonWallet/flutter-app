@@ -455,11 +455,8 @@ class SendView extends ViewBase<SendViewModel> {
                               borderRadius: BorderRadius.circular(40.0)),
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                  "assets/images/icon/ic_message.svg",
-                                  fit: BoxFit.fill,
-                                  width: 32,
-                                  height: 32),
+                              Assets.images.icon.icMessage
+                                  .svg(fit: BoxFit.fill, width: 32, height: 32),
                               const SizedBox(width: 10),
                               GestureDetector(
                                   onTap: viewModel.editEmailBody,
@@ -603,8 +600,8 @@ class SendView extends ViewBase<SendViewModel> {
                             borderRadius: BorderRadius.circular(40.0)),
                         child: Row(
                           children: [
-                            SvgPicture.asset("assets/images/icon/ic_note.svg",
-                                fit: BoxFit.fill, width: 32, height: 32),
+                            Assets.images.icon.icNote
+                                .svg(fit: BoxFit.fill, width: 32, height: 32),
                             const SizedBox(width: 10),
                             GestureDetector(
                                 onTap: viewModel.editMemo,
@@ -1052,11 +1049,8 @@ class SendView extends ViewBase<SendViewModel> {
                               height: 80,
                             ),
                             FlyingAnimation(
-                              child: SvgPicture.asset(
-                                  "assets/images/icon/send_1.svg",
-                                  fit: BoxFit.fill,
-                                  width: 80,
-                                  height: 80),
+                              child: Assets.images.icon.send1
+                                  .svg(fit: BoxFit.fill, width: 80, height: 80),
                             ),
                             const SizedBox(
                               height: 80,
@@ -1114,7 +1108,7 @@ class SendView extends ViewBase<SendViewModel> {
                           horizontal: defaultPadding),
                       child: Center(
                           child: Column(children: [
-                        Assets.images.icon.bitcoinBigIconPng.image(
+                        Assets.images.icon.bitcoinBigIcon.image(
                           fit: BoxFit.fill,
                           width: 240,
                           height: 167,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
@@ -43,4 +44,25 @@ const anonymousAddress = ProtonAddress(
   receive: 1,
   send: 1,
   displayName: "Anonymous sender",
+);
+
+const defaultProtonAddress = ProtonAddress(
+  id: 'default',
+  domainId: '',
+  email: 'default',
+  status: 1,
+  type: 1,
+  receive: 1,
+  send: 1,
+  displayName: '',
+);
+
+/// bigint cannot be const
+final defaultExchangeRate = ProtonExchangeRate(
+  id: 'default',
+  bitcoinUnit: BitcoinUnit.btc,
+  fiatCurrency: defaultFiatCurrency,
+  exchangeRateTime: '',
+  exchangeRate: BigInt.one,
+  cents: BigInt.one,
 );

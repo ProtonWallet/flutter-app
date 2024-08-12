@@ -47,7 +47,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
         Transform.translate(
           offset: const Offset(0, -20),
           child: Column(children: [
-            Assets.images.icon.bitcoinBigIconPng.image(
+            Assets.images.icon.bitcoinBigIcon.image(
               width: 240,
               height: 200,
             ),

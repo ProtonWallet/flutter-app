@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -12,8 +12,8 @@ class CustomPlaceholder {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
-                fit: BoxFit.fill, width: 86, height: 87),
+            Assets.images.icon.noWalletFound
+                .svg(fit: BoxFit.fill, width: 86, height: 87),
             const SizedBox(height: 10),
             Text(S.of(context).placeholder,
                 style: FontManager.body1Median(ProtonColors.textNorm)),

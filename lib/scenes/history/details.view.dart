@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
@@ -475,8 +476,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     onTap: () {
                       EditSenderSheet.show(context, viewModel);
                     },
-                    child: SvgPicture.asset(
-                      "assets/images/icon/edit_unknown.svg",
+                    child: Assets.images.icon.editUnknown.svg(
                       fit: BoxFit.fill,
                       width: 40,
                       height: 40,

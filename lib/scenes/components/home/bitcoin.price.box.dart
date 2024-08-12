@@ -6,7 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/rust/api/api_service/price_graph_client.dart';
+import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
@@ -15,13 +15,13 @@ import 'package:wallet/theme/theme.font.dart';
 
 class BitcoinPriceBox extends StatefulWidget {
   final String title;
-  final PriceGraphClient priceClient;
+  final PriceGraphDataProvider priceGraphDataProvider;
   final ProtonExchangeRate exchangeRate;
 
   const BitcoinPriceBox({
     required this.title,
     required this.exchangeRate,
-    required this.priceClient,
+    required this.priceGraphDataProvider,
     super.key,
   });
 
@@ -57,8 +57,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
     PriceGraph? priceGraph;
 
     try {
-      priceGraph = await widget.priceClient.getGraphData(
-          fiatCurrency: widget.exchangeRate.fiatCurrency, timeframe: timeFrame);
+      priceGraph = await widget.priceGraphDataProvider.getPriceGraph(
+          fiatCurrency: widget.exchangeRate.fiatCurrency, timeFrame: timeFrame);
     } catch (e) {
       e.toString();
     }
@@ -106,8 +106,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                       BitcoinPriceDetailSheet.show(
                         context,
                         widget.exchangeRate,
-                        widget.priceClient,
-                        priceChange,
+                        widget.priceGraphDataProvider,
                       );
                     },
                     child: Row(children: [
@@ -146,7 +145,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                         thousandSeparator: ",",
                                         value: ExchangeCalculator
                                             .getNotionalInFiatCurrency(
-                                                widget.exchangeRate, btc2satoshi),
+                                                widget.exchangeRate,
+                                                btc2satoshi),
                                         // value: price,
                                         fractionDigits:
                                             ExchangeCalculator.getDisplayDigit(
@@ -183,7 +183,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                         Expanded(
                           child: BitcoinPriceHomepageChart(
                             exchangeRate: widget.exchangeRate,
-                            priceClient: widget.priceClient,
+                            priceGraphDataProvider:
+                                widget.priceGraphDataProvider,
                             priceChange: priceChange,
                           ),
                         ),
