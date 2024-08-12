@@ -2,7 +2,7 @@ module gopenpgp
 
 go 1.21
 
-toolchain go1.22.5
+// toolchain go1.22.5
 
 require github.com/ProtonMail/gopenpgp/v2 v2.7.5
 
