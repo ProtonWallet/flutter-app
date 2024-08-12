@@ -187,6 +187,10 @@ class RustBuilder {
       if (minSdkVersion == null) {
         throw BuildException('androidMinSdkVersion is not set');
       }
+      _log.info('Building for Android target $target');
+      _log.info('Android SDK path: $sdkPath');
+      _log.info('Android NDK version: $ndkVersion');
+      _log.info('Android min SDK version: $minSdkVersion');
       final env = AndroidEnvironment(
         sdkPath: sdkPath,
         ndkVersion: ndkVersion,
