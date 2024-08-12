@@ -10,25 +10,13 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 class WalletUserSetting {
   proton_user_setting.FiatCurrency fiatCurrency = defaultFiatCurrency;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
-  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
-      id: 'default',
-      bitcoinUnit: BitcoinUnit.btc,
-      fiatCurrency: defaultFiatCurrency,
-      exchangeRateTime: '',
-      exchangeRate: BigInt.one,
-      cents: BigInt.one);
+  ProtonExchangeRate exchangeRate = defaultExchangeRate;
 
   void destroy() {
     // clear data to default one
     fiatCurrency = defaultFiatCurrency;
     bitcoinUnit = BitcoinUnit.btc;
-    exchangeRate = ProtonExchangeRate(
-        id: 'default',
-        bitcoinUnit: BitcoinUnit.btc,
-        fiatCurrency: defaultFiatCurrency,
-        exchangeRateTime: '',
-        exchangeRate: BigInt.one,
-        cents: BigInt.one);
+    exchangeRate = defaultExchangeRate;
   }
 }
 

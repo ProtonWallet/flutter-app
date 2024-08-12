@@ -2,26 +2,23 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/rust/api/api_service/price_graph_client.dart';
+import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class BitcoinPriceChart extends StatefulWidget {
   final ProtonExchangeRate exchangeRate;
-  final double priceChange;
-  final PriceGraphClient priceClient;
+  final PriceGraphDataProvider priceGraphDataProvider;
 
   const BitcoinPriceChart({
     required this.exchangeRate,
-    required this.priceChange,
-    required this.priceClient,
+    required this.priceGraphDataProvider,
     super.key,
   });
 
@@ -77,8 +74,8 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     PriceGraph? priceGraph;
 
     try {
-       priceGraph = await widget.priceClient.getGraphData(
-          fiatCurrency: widget.exchangeRate.fiatCurrency, timeframe: timeFrame);
+      priceGraph = await widget.priceGraphDataProvider.getPriceGraph(
+          fiatCurrency: widget.exchangeRate.fiatCurrency, timeFrame: timeFrame);
     } catch (e) {
       e.toString();
     }
@@ -87,7 +84,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     int index = 0;
     if (priceGraph != null) {
       for (DataPoint dataPoint in priceGraph.graphData) {
-        final double price =  dataPoint.exchangeRate / widget.exchangeRate.cents;
+        final double price = dataPoint.exchangeRate / widget.exchangeRate.cents;
         prices.add(price);
         spots.add(FlSpot(
           index.toDouble(),
@@ -249,8 +246,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                   fetchData();
                 }
               }),
-              choiceItems:
-                  C2Choice.listFrom<Timeframe, String>(
+              choiceItems: C2Choice.listFrom<Timeframe, String>(
                 source: ["1D", "7D", "1M"],
                 value: (i, v) => dataRangeOptions[i],
                 label: (i, v) => v,
@@ -291,14 +287,13 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
       AnimatedFlipCounter(
           duration: const Duration(milliseconds: 500),
           thousandSeparator: ",",
-          prefix: Provider.of<UserSettingProvider>(
-            context,
-            listen: false,
-          ).getFiatCurrencySign(fiatCurrency: widget.exchangeRate.fiatCurrency),
+          prefix: CommonHelper.getFiatCurrencySign(
+              widget.exchangeRate.fiatCurrency),
           value: ExchangeCalculator.getNotionalInFiatCurrency(
               widget.exchangeRate, btc2satoshi),
           // value: price,
-          fractionDigits: ExchangeCalculator.getDisplayDigit(widget.exchangeRate),
+          fractionDigits:
+              ExchangeCalculator.getDisplayDigit(widget.exchangeRate),
           textStyle: FontManager.titleHeadline(ProtonColors.textNorm)),
       const SizedBox(
         height: 2,

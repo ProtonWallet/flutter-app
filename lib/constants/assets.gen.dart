@@ -15,35 +15,11 @@ import 'package:vector_graphics/vector_graphics.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/frame_9444342.svg
-  SvgGenImage get frame9444342 =>
-      const SvgGenImage('assets/images/frame_9444342.svg');
-
-  /// File path: assets/images/frame_background.svg
-  SvgGenImage get frameBackground =>
-      const SvgGenImage('assets/images/frame_background.svg');
-
-  /// File path: assets/images/frame_create.svg
-  SvgGenImage get frameCreate =>
-      const SvgGenImage('assets/images/frame_create.svg');
-
-  /// File path: assets/images/frame_create_finished.svg
-  SvgGenImage get frameCreateFinished =>
-      const SvgGenImage('assets/images/frame_create_finished.svg');
-
-  /// File path: assets/images/frame_word_logo.svg
-  SvgGenImage get frameWordLogo =>
-      const SvgGenImage('assets/images/frame_word_logo.svg');
-
   /// Directory path: assets/images/icon
   $AssetsImagesIconGen get icon => const $AssetsImagesIconGen();
 
   /// Directory path: assets/images/logos
   $AssetsImagesLogosGen get logos => const $AssetsImagesLogosGen();
-
-  /// File path: assets/images/mail_integration.svg
-  SvgGenImage get mailIntegration =>
-      const SvgGenImage('assets/images/mail_integration.svg');
 
   /// File path: assets/images/wallet.png
   AssetGenImage get wallet => const AssetGenImage('assets/images/wallet.png');
@@ -56,15 +32,7 @@ class $AssetsImagesGen {
   $AssetsImagesWelcomeGen get welcome => const $AssetsImagesWelcomeGen();
 
   /// List of all assets
-  List<dynamic> get values => [
-        frame9444342,
-        frameBackground,
-        frameCreate,
-        frameCreateFinished,
-        frameWordLogo,
-        mailIntegration,
-        wallet
-      ];
+  List<AssetGenImage> get values => [wallet];
 }
 
 class $AssetsJsonGen {
@@ -83,17 +51,9 @@ class $AssetsJsonGen {
 class $AssetsImagesIconGen {
   const $AssetsImagesIconGen();
 
-  /// File path: assets/images/icon/access-key.svg
-  SvgGenImage get accessKey =>
-      const SvgGenImage('assets/images/icon/access-key.svg');
-
   /// File path: assets/images/icon/add-account.svg
   SvgGenImage get addAccount =>
       const SvgGenImage('assets/images/icon/add-account.svg');
-
-  /// File path: assets/images/icon/alert_info.svg
-  SvgGenImage get alertInfo =>
-      const SvgGenImage('assets/images/icon/alert_info.svg');
 
   /// File path: assets/images/icon/alert_warning.svg
   SvgGenImage get alertWarning =>
@@ -103,10 +63,6 @@ class $AssetsImagesIconGen {
   SvgGenImage get applePay =>
       const SvgGenImage('assets/images/icon/apple_pay.svg');
 
-  /// File path: assets/images/icon/bank_transfer.svg
-  SvgGenImage get bankTransfer =>
-      const SvgGenImage('assets/images/icon/bank_transfer.svg');
-
   /// File path: assets/images/icon/banxa.svg
   SvgGenImage get banxa => const SvgGenImage('assets/images/icon/banxa.svg');
 
@@ -115,23 +71,8 @@ class $AssetsImagesIconGen {
       const SvgGenImage('assets/images/icon/bitcoin.svg');
 
   /// File path: assets/images/icon/bitcoin_big_icon.png
-  AssetGenImage get bitcoinBigIconPng =>
+  AssetGenImage get bitcoinBigIcon =>
       const AssetGenImage('assets/images/icon/bitcoin_big_icon.png');
-
-  /// File path: assets/images/icon/bitcoin_big_icon.svg
-  SvgGenImage get bitcoinBigIconSvg =>
-      const SvgGenImage('assets/images/icon/bitcoin_big_icon.svg');
-
-  /// File path: assets/images/icon/btc.svg
-  SvgGenImage get btc => const SvgGenImage('assets/images/icon/btc.svg');
-
-  /// File path: assets/images/icon/bve_disable.svg
-  SvgGenImage get bveDisable =>
-      const SvgGenImage('assets/images/icon/bve_disable.svg');
-
-  /// File path: assets/images/icon/bve_enable.svg
-  SvgGenImage get bveEnable =>
-      const SvgGenImage('assets/images/icon/bve_enable.svg');
 
   /// File path: assets/images/icon/credit_card.svg
   SvgGenImage get creditCard =>
@@ -152,26 +93,6 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/discover_how_to_protect.png
   AssetGenImage get discoverHowToProtect =>
       const AssetGenImage('assets/images/icon/discover_how_to_protect.png');
-
-  /// File path: assets/images/icon/discover_placeholder_0.svg
-  SvgGenImage get discoverPlaceholder0 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_0.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_1.svg
-  SvgGenImage get discoverPlaceholder1 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_1.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_2.svg
-  SvgGenImage get discoverPlaceholder2 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_2.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_3.svg
-  SvgGenImage get discoverPlaceholder3 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_3.svg');
-
-  /// File path: assets/images/icon/discover_placeholder_4.svg
-  SvgGenImage get discoverPlaceholder4 =>
-      const SvgGenImage('assets/images/icon/discover_placeholder_4.svg');
 
   /// File path: assets/images/icon/discover_proton_wallet_launch.png
   AssetGenImage get discoverProtonWalletLaunch => const AssetGenImage(
@@ -216,10 +137,6 @@ class $AssetsImagesIconGen {
   SvgGenImage get icArrowOutSquare =>
       const SvgGenImage('assets/images/icon/ic-arrow-out-square.svg');
 
-  /// File path: assets/images/icon/ic-arrow-right-arrow-left.svg
-  SvgGenImage get icArrowRightArrowLeft =>
-      const SvgGenImage('assets/images/icon/ic-arrow-right-arrow-left.svg');
-
   /// File path: assets/images/icon/ic-arrow-rotate-right.svg
   SvgGenImage get icArrowRotateRight =>
       const SvgGenImage('assets/images/icon/ic-arrow-rotate-right.svg');
@@ -256,18 +173,6 @@ class $AssetsImagesIconGen {
   SvgGenImage get icInfoCircle =>
       const SvgGenImage('assets/images/icon/ic-info-circle.svg');
 
-  /// File path: assets/images/icon/ic-list-bullets.svg
-  SvgGenImage get icListBullets =>
-      const SvgGenImage('assets/images/icon/ic-list-bullets.svg');
-
-  /// File path: assets/images/icon/ic-lock2fa.svg
-  SvgGenImage get icLock2fa =>
-      const SvgGenImage('assets/images/icon/ic-lock2fa.svg');
-
-  /// File path: assets/images/icon/ic-money-bills.svg
-  SvgGenImage get icMoneyBills =>
-      const SvgGenImage('assets/images/icon/ic-money-bills.svg');
-
   /// File path: assets/images/icon/ic-plus-circle.svg
   SvgGenImage get icPlusCircle =>
       const SvgGenImage('assets/images/icon/ic-plus-circle.svg');
@@ -284,20 +189,12 @@ class $AssetsImagesIconGen {
   SvgGenImage get icSquares =>
       const SvgGenImage('assets/images/icon/ic-squares.svg');
 
-  /// File path: assets/images/icon/ic-wallet.svg
-  SvgGenImage get icWallet =>
-      const SvgGenImage('assets/images/icon/ic-wallet.svg');
-
   /// File path: assets/images/icon/ic_message.svg
   SvgGenImage get icMessage =>
       const SvgGenImage('assets/images/icon/ic_message.svg');
 
   /// File path: assets/images/icon/ic_note.svg
   SvgGenImage get icNote => const SvgGenImage('assets/images/icon/ic_note.svg');
-
-  /// File path: assets/images/icon/invite_success.svg
-  SvgGenImage get inviteSuccess =>
-      const SvgGenImage('assets/images/icon/invite_success.svg');
 
   /// File path: assets/images/icon/key.png
   AssetGenImage get key => const AssetGenImage('assets/images/icon/key.png');
@@ -313,9 +210,6 @@ class $AssetsImagesIconGen {
   SvgGenImage get logoText =>
       const SvgGenImage('assets/images/icon/logo_text.svg');
 
-  /// File path: assets/images/icon/mobile.svg
-  SvgGenImage get mobile => const SvgGenImage('assets/images/icon/mobile.svg');
-
   /// File path: assets/images/icon/moonpay.svg
   SvgGenImage get moonpay =>
       const SvgGenImage('assets/images/icon/moonpay.svg');
@@ -327,14 +221,6 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/paper_plane.png
   AssetGenImage get paperPlane =>
       const AssetGenImage('assets/images/icon/paper_plane.png');
-
-  /// File path: assets/images/icon/passphrase_lock.svg
-  SvgGenImage get passphraseLock =>
-      const SvgGenImage('assets/images/icon/passphrase_lock.svg');
-
-  /// File path: assets/images/icon/protect.svg
-  SvgGenImage get protect =>
-      const SvgGenImage('assets/images/icon/protect.svg');
 
   /// File path: assets/images/icon/proton_calendar.svg
   SvgGenImage get protonCalendar =>
@@ -366,22 +252,11 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/icon/search.svg');
 
-  /// File path: assets/images/icon/send-invite.svg
-  SvgGenImage get sendInvite =>
-      const SvgGenImage('assets/images/icon/send-invite.svg');
-
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
 
   /// File path: assets/images/icon/send_1.svg
   SvgGenImage get send1 => const SvgGenImage('assets/images/icon/send_1.svg');
-
-  /// File path: assets/images/icon/send_2.svg
-  SvgGenImage get send2 => const SvgGenImage('assets/images/icon/send_2.svg');
-
-  /// File path: assets/images/icon/send_success.svg
-  SvgGenImage get sendSuccess =>
-      const SvgGenImage('assets/images/icon/send_success.svg');
 
   /// File path: assets/images/icon/setup-preference.svg
   SvgGenImage get setupPreference =>
@@ -392,17 +267,6 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/time.png
   AssetGenImage get time => const AssetGenImage('assets/images/icon/time.png');
-
-  /// File path: assets/images/icon/transfer.svg
-  SvgGenImage get transfer =>
-      const SvgGenImage('assets/images/icon/transfer.svg');
-
-  /// File path: assets/images/icon/two_fa.svg
-  SvgGenImage get twoFa => const SvgGenImage('assets/images/icon/two_fa.svg');
-
-  /// File path: assets/images/icon/upgrade_intro.svg
-  SvgGenImage get upgradeIntro =>
-      const SvgGenImage('assets/images/icon/upgrade_intro.svg');
 
   /// File path: assets/images/icon/user.png
   AssetGenImage get user => const AssetGenImage('assets/images/icon/user.png');
@@ -448,29 +312,17 @@ class $AssetsImagesIconGen {
 
   /// List of all assets
   List<dynamic> get values => [
-        accessKey,
         addAccount,
-        alertInfo,
         alertWarning,
         applePay,
-        bankTransfer,
         banxa,
         bitcoin,
-        bitcoinBigIconPng,
-        bitcoinBigIconSvg,
-        btc,
-        bveDisable,
-        bveEnable,
+        bitcoinBigIcon,
         creditCard,
         deleteWarning,
         discoverBitcoinGuide,
         discoverBve,
         discoverHowToProtect,
-        discoverPlaceholder0,
-        discoverPlaceholder1,
-        discoverPlaceholder2,
-        discoverPlaceholder3,
-        discoverPlaceholder4,
         discoverProtonWalletLaunch,
         discoverProtonWalletSecurity,
         discoverWhatIsBitcoin,
@@ -482,7 +334,6 @@ class $AssetsImagesIconGen {
         euro,
         icArrowOutFromRectanglesignout,
         icArrowOutSquare,
-        icArrowRightArrowLeft,
         icArrowRotateRight,
         icBugreport,
         icCheckmark,
@@ -492,27 +343,19 @@ class $AssetsImagesIconGen {
         icDiamondwalletPlus,
         icInfoCircleDark,
         icInfoCircle,
-        icListBullets,
-        icLock2fa,
-        icMoneyBills,
         icPlusCircle,
         icShield,
         icSquaresInSquarediscover,
         icSquares,
-        icWallet,
         icMessage,
         icNote,
-        inviteSuccess,
         key,
         launchIcon,
         lock,
         logoText,
-        mobile,
         moonpay,
         noWalletFound,
         paperPlane,
-        passphraseLock,
-        protect,
         protonCalendar,
         protonDrive,
         protonForBusiness,
@@ -521,17 +364,11 @@ class $AssetsImagesIconGen {
         ramp,
         receive,
         search,
-        sendInvite,
         send,
         send1,
-        send2,
-        sendSuccess,
         setupPreference,
         star,
         time,
-        transfer,
-        twoFa,
-        upgradeIntro,
         user,
         wallet0,
         wallet1,

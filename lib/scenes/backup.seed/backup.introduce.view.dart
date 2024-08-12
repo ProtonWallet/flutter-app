@@ -40,10 +40,20 @@ class BackupIntroduceView extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      S.of(context).backup_introduce_content,
-                      style: FontManager.body2Regular(ProtonColors.textWeak),
+                    Text.rich(
                       textAlign: TextAlign.center,
+                      TextSpan(children: [
+                        TextSpan(
+                          text: S.of(context).backup_introduce_content,
+                          style:
+                              FontManager.body2Regular(ProtonColors.textWeak),
+                        ),
+                        TextSpan(
+                          text: S.of(context).backup_introduce_content_1,
+                          style:
+                              FontManager.body2Median(ProtonColors.textNorm),
+                        ),
+                      ]),
                     ),
                     const SizedBox(height: 20),
                     Underline(

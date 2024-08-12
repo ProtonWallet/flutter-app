@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -44,11 +44,11 @@ class TransactionHistoryItemV2 extends StatelessWidget {
                                 FontManager.body2Median(ProtonColors.textWeak)),
                         const SizedBox(width: 2),
                         if (titleTooltip != null)
-                          SvgPicture.asset(
-                              "assets/images/icon/ic-info-circle.svg",
-                              fit: BoxFit.fill,
-                              width: 20,
-                              height: 20),
+                          Assets.images.icon.icInfoCircle.svg(
+                            fit: BoxFit.fill,
+                            width: 20,
+                            height: 20,
+                          ),
                       ],
                     ),
                   )

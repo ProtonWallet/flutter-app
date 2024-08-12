@@ -35,12 +35,14 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   final BuyBitcoinBloc bloc;
 
   bool get supportOffRamp;
+
   String receiveAddress = "";
 
   bool isloading = false;
   bool isBuying = true;
   bool hideSell = true;
   int index = 0;
+
   void toggleButtons();
 
   void sellbutton();
@@ -74,10 +76,13 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
   }
 
   Future<void> pay(SelectedInfoModel selected);
+
   void keyboardDone();
 
   FocusNode get focusNode;
+
   TextEditingController get controller;
+
   OverlayEntry? overlayEntry;
 
   OnRampTCSheetModel get rampTCModel => OnRampTCSheetModel(

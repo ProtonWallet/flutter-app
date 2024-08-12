@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
@@ -122,9 +123,11 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
-                hintStyle: FontManager.textFieldLabelStyle(ProtonColors.textHint),
+                hintStyle:
+                    FontManager.textFieldLabelStyle(ProtonColors.textHint),
                 labelStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textWeak).copyWith(fontSize: 15),
+                    FontManager.textFieldLabelStyle(ProtonColors.textWeak)
+                        .copyWith(fontSize: 15),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
                 contentPadding: EdgeInsets.only(
@@ -250,8 +253,9 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                           ? CustomTooltip(
                                               message: widget
                                                   .itemsMoreDetail![index],
-                                              child: SvgPicture.asset(
-                                                "assets/images/icon/ic-info-circle.svg",
+                                              child: Assets
+                                                  .images.icon.icInfoCircle
+                                                  .svg(
                                                 fit: BoxFit.fill,
                                                 width: 20,
                                                 height: 20,

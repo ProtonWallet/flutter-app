@@ -197,13 +197,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   late ValueNotifier accountValueNotifier;
   bool initialized = false;
   bool isSending = false;
-  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
-      id: 'default',
-      bitcoinUnit: BitcoinUnit.btc,
-      fiatCurrency: defaultFiatCurrency,
-      exchangeRateTime: '',
-      exchangeRate: BigInt.one,
-      cents: BigInt.one);
+  ProtonExchangeRate exchangeRate = defaultExchangeRate;
 
   // user-setting data provider
   final UserSettingsDataProvider userSettingsDataProvider;

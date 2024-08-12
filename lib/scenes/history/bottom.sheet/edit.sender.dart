@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -48,8 +48,8 @@ class EditSenderSheet {
                 Navigator.of(context).pop();
               })),
           Column(children: [
-            SvgPicture.asset("assets/images/icon/no_wallet_found.svg",
-                fit: BoxFit.fill, width: 86, height: 87),
+            Assets.images.icon.noWalletFound
+                .svg(fit: BoxFit.fill, width: 86, height: 87),
             const SizedBox(height: 10),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
