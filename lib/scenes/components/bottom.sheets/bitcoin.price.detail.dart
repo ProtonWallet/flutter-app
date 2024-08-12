@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/rust/api/api_service/price_graph_client.dart';
+import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -11,8 +11,7 @@ class BitcoinPriceDetailSheet {
   static void show(
     BuildContext context,
     ProtonExchangeRate exchangeRate,
-    PriceGraphClient priceClient,
-    double priceChange,
+    PriceGraphDataProvider priceGraphDataProvider,
   ) {
     HomeModalBottomSheet.show(context,
         backgroundColor: ProtonColors.white,
@@ -27,8 +26,7 @@ class BitcoinPriceDetailSheet {
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: BitcoinPriceChart(
                 exchangeRate: exchangeRate,
-                priceChange: priceChange,
-                  priceClient: priceClient,
+                priceGraphDataProvider: priceGraphDataProvider,
               ),
             ),
           ],

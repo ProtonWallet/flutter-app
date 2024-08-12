@@ -29,7 +29,7 @@ class WelcomeDialogSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.bitcoinBigIconPng.image(
+              Assets.images.icon.bitcoinBigIcon.image(
                 fit: BoxFit.fill,
                 width: 240,
                 height: 167,

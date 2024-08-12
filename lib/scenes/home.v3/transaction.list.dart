@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -121,11 +121,8 @@ class TransactionList extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 5),
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/setup-preference.svg",
-                                      fit: BoxFit.fill,
-                                      width: 16,
-                                      height: 16),
+                                  child: Assets.images.icon.setupPreference.svg(
+                                      fit: BoxFit.fill, width: 16, height: 16),
                                 ),
                               ),
                             const SizedBox(width: 4),
@@ -138,11 +135,8 @@ class TransactionList extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 5),
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/search.svg",
-                                      fit: BoxFit.fill,
-                                      width: 16,
-                                      height: 16),
+                                  child: Assets.images.icon.search.svg(
+                                      fit: BoxFit.fill, width: 16, height: 16),
                                 ),
                               ),
                             const SizedBox(width: 4),
@@ -189,11 +183,14 @@ class TransactionList extends StatelessWidget {
                                   textAlign: TextAlign.left,
                                 ),
                                 const SizedBox(width: 4),
-                                SvgPicture.asset(
-                                    "assets/images/icon/ic-info-circle-dark.svg",
-                                    fit: BoxFit.fill,
-                                    width: 16,
-                                    height: 16),
+                                Transform.translate(
+                                  offset: const Offset(0, 1),
+                                  child: Assets.images.icon.icInfoCircleDark
+                                      .svg(
+                                          fit: BoxFit.fill,
+                                          width: 20,
+                                          height: 20),
+                                ),
                               ]),
                         ),
                       ],
@@ -205,11 +202,8 @@ class TransactionList extends StatelessWidget {
                             height: 10,
                           ),
                           Center(
-                              child: SvgPicture.asset(
-                                  "assets/images/icon/do_transactions.svg",
-                                  fit: BoxFit.fill,
-                                  width: 26,
-                                  height: 26)),
+                              child: Assets.images.icon.doTransactions.svg(
+                                  fit: BoxFit.fill, width: 26, height: 26)),
                           const SizedBox(
                             height: 10,
                           ),

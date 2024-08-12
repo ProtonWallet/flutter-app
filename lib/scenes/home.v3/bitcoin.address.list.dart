@@ -1,7 +1,7 @@
 //bitcoin.address.list
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/dbhelper.dart';
@@ -139,11 +139,12 @@ class BitcoinAddressList extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 5),
-                                        child: SvgPicture.asset(
-                                            "assets/images/icon/setup-preference.svg",
-                                            fit: BoxFit.fill,
-                                            width: 16,
-                                            height: 16),
+                                        child: Assets
+                                            .images.icon.setupPreference
+                                            .svg(
+                                                fit: BoxFit.fill,
+                                                width: 16,
+                                                height: 16),
                                       ),
                                     ),
                                   const SizedBox(width: 4),
@@ -156,8 +157,7 @@ class BitcoinAddressList extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 8, vertical: 5),
-                                        child: SvgPicture.asset(
-                                            "assets/images/icon/search.svg",
+                                        child: Assets.images.icon.search.svg(
                                             fit: BoxFit.fill,
                                             width: 16,
                                             height: 16),
