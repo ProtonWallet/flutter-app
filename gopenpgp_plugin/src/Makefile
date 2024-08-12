@@ -1,6 +1,6 @@
 ANDROID_OUT=../android/src/main/jniLibs
 ANDROID_SDK=$(HOME)/Android/Sdk/
-NDK_BIN=$(ANDROID_SDK)/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin
+NDK_BIN=$(ANDROID_SDK)/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin
 LIB_NAME=libproton_crypto
 
 android-armv7a:

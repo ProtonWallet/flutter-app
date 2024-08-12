@@ -56,6 +56,7 @@ class AndroidEnvironment {
 
   bool ndkIsInstalled() {
     final ndkPath = path.join(sdkPath, 'ndk', ndkVersion);
+    log.info('Found NDK path $ndkPath');
     final ndkPackageXml = File(path.join(ndkPath, 'package.xml'));
     return ndkPackageXml.existsSync();
   }

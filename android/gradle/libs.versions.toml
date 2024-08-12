@@ -3,6 +3,7 @@
 minSdk = "24"
 compileSdk = "34"
 targetSdk = "34"
+ndkVersion = "25.1.8937393"
 
 # AndroidX
 androidx-activity = "1.6.1"
