@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -116,12 +116,11 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                 ProtonColors.textNorm),
                                           ),
                                           const SizedBox(width: 4),
-                                          SvgPicture.asset(
-                                            "assets/images/icon/ic-info-circle-dark.svg",
-                                            fit: BoxFit.fill,
-                                            width: 20,
-                                            height: 20,
-                                          ),
+                                          Assets.images.icon.icInfoCircleDark
+                                              .svg(
+                                                  fit: BoxFit.fill,
+                                                  width: 20,
+                                                  height: 20),
                                         ],
                                       ),
                                     ),

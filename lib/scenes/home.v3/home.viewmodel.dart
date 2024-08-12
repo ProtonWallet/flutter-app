@@ -42,7 +42,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/api/api_service/price_graph_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
@@ -106,8 +105,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
-  PriceGraphClient? priceGraphClient;
-
   Map<String, ValueNotifier> accountFiatCurrencyNotifiers = {};
 
   ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
@@ -271,13 +268,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final DeleteWalletBloc deleteWalletBloc;
   final ProtonRecoveryBloc protonRecoveryBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
-  ProtonExchangeRate currentExchangeRate = ProtonExchangeRate(
-      id: 'default',
-      bitcoinUnit: BitcoinUnit.btc,
-      fiatCurrency: defaultFiatCurrency,
-      exchangeRateTime: '',
-      exchangeRate: BigInt.one,
-      cents: BigInt.one);
+  ProtonExchangeRate currentExchangeRate = defaultExchangeRate;
 
   /// app version
   String appVersion = "Proton Wallet";
@@ -598,8 +589,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
     addressSearchController.addListener(datasourceStreamSinkAdd);
 
-    priceGraphClient = apiServiceManager.getApiService().getPriceGraphClient();
-
     /// preload data
     preLoadHomeData();
   }
@@ -866,15 +855,7 @@ class HomeViewModelImpl extends HomeViewModel {
         return protonAddress;
       }
     }
-    return const ProtonAddress(
-        id: 'default',
-        domainId: '',
-        email: 'default',
-        status: 1,
-        type: 1,
-        receive: 1,
-        send: 1,
-        displayName: '');
+    return defaultProtonAddress;
   }
 
   @override

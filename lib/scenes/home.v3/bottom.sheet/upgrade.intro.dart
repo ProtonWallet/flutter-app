@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -31,7 +32,7 @@ class UpgradeIntroSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.bitcoinBigIconPng.image(
+              Assets.images.icon.bitcoinBigIcon.image(
                 fit: BoxFit.fill,
                 width: 240,
                 height: 167,

@@ -58,13 +58,7 @@ class UserSettingsDataProvider extends DataProvider {
     this.settingsClient,
   );
 
-  ProtonExchangeRate exchangeRate = ProtonExchangeRate(
-      id: 'default',
-      bitcoinUnit: BitcoinUnit.btc,
-      fiatCurrency: defaultFiatCurrency,
-      exchangeRateTime: '',
-      exchangeRate: BigInt.one,
-      cents: BigInt.one);
+  ProtonExchangeRate exchangeRate = defaultExchangeRate;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   FiatCurrency fiatCurrency = FiatCurrency.usd;
 

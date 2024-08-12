@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -475,19 +476,19 @@ class HomeView extends ViewBase<HomeViewModel> {
                             ]),
                           ),
                         ),
-                        if (viewModel.priceGraphClient != null)
-                          Positioned(
-                            left: 0,
-                            bottom: 0,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: BitcoinPriceBox(
-                                title: S.of(context).btc_price,
-                                priceClient: viewModel.priceGraphClient!,
-                                exchangeRate: viewModel.currentExchangeRate,
-                              ),
+                        Positioned(
+                          left: 0,
+                          bottom: 0,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: BitcoinPriceBox(
+                              title: S.of(context).btc_price,
+                              priceGraphDataProvider: viewModel
+                                  .dataProviderManager.priceGraphDataProvider,
+                              exchangeRate: viewModel.currentExchangeRate,
                             ),
-                          )
+                          ),
+                        )
                       ]);
                     });
               });
@@ -747,8 +748,8 @@ class HomeView extends ViewBase<HomeViewModel> {
         builder: (BuildContext context) {
           if (viewModel.currentSize == ViewSize.mobile) {
             return IconButton(
-              icon: SvgPicture.asset("assets/images/icon/drawer_menu.svg",
-                  fit: BoxFit.fill, width: 40, height: 40),
+              icon: Assets.images.icon.drawerMenu
+                  .svg(fit: BoxFit.fill, width: 40, height: 40),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -796,8 +797,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SvgPicture.asset(
-                                          "assets/images/icon/logo_text.svg",
+                                      Assets.images.icon.logoText.svg(
                                           fit: BoxFit.fill,
                                           width: 146.41,
                                           height: 18),
@@ -841,11 +841,12 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                               OnboardingGuideSheet.show(
                                                   context, viewModel);
                                             },
-                                            child: SvgPicture.asset(
-                                                "assets/images/icon/ic-plus-circle.svg",
-                                                fit: BoxFit.fill,
-                                                width: 20,
-                                                height: 20)),
+                                            child: Assets
+                                                .images.icon.icPlusCircle
+                                                .svg(
+                                                    fit: BoxFit.fill,
+                                                    width: 20,
+                                                    height: 20)),
                                       ])),
                               const SizedBox(
                                 height: 10,
