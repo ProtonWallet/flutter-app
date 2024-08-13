@@ -51,6 +51,9 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
   }
 
   Future<void> fetchData() async {
+    if (widget.exchangeRate.id == defaultExchangeRate.id) {
+      return;
+    }
     setState(() {
       isLoading = true;
     });
@@ -103,11 +106,14 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      BitcoinPriceDetailSheet.show(
-                        context,
-                        widget.exchangeRate,
-                        widget.priceGraphDataProvider,
-                      );
+                      if (widget.exchangeRate.id != defaultExchangeRate.id ||
+                          isLoading) {
+                        BitcoinPriceDetailSheet.show(
+                          context,
+                          widget.exchangeRate,
+                          widget.priceGraphDataProvider,
+                        );
+                      }
                     },
                     child: Row(children: [
                       Column(
@@ -119,7 +125,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               )),
-                          (widget.exchangeRate.id == "default" || isLoading)
+                          (widget.exchangeRate.id == defaultExchangeRate.id ||
+                                  isLoading)
                               ? const SizedBox(
                                   width: 160,
                                   child: CardLoading(
@@ -179,7 +186,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                 )
                         ],
                       ),
-                      if (widget.exchangeRate.id != "default" || isLoading)
+                      if (widget.exchangeRate.id != defaultExchangeRate.id ||
+                          isLoading)
                         Expanded(
                           child: BitcoinPriceHomepageChart(
                             exchangeRate: widget.exchangeRate,
