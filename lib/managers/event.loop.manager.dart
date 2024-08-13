@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -32,6 +33,7 @@ class EventLoop extends Service implements Manager {
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
   final ConnectivityProvider connectivityProvider;
+
   // workaround need to improve this
   final PreferencesManager shared;
   String latestEventId = "";
@@ -48,6 +50,7 @@ class EventLoop extends Service implements Manager {
     this.shared, {
     required super.duration,
   });
+
   @override
   Future<void> start() async {
     connectivitySub ??= connectivityProvider.stream.listen((state) {
@@ -387,7 +390,11 @@ class EventLoop extends Service implements Manager {
             walletModel.walletID,
             accountModel.accountID,
           );
-        } catch (e) {
+        } catch (e, stacktrace) {
+          await Sentry.captureException(
+            e,
+            stackTrace: stacktrace,
+          );
           logger.e("handleBitcoinAddressRequests error: $e");
         }
         try {
@@ -396,7 +403,11 @@ class EventLoop extends Service implements Manager {
             walletModel.walletID,
             accountModel.accountID,
           );
-        } catch (e) {
+        } catch (e, stacktrace) {
+          await Sentry.captureException(
+            e,
+            stackTrace: stacktrace,
+          );
           logger.e("bitcoinAddressPoolHealthCheck error: $e");
         }
       }
