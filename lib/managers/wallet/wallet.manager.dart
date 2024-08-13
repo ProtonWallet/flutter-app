@@ -705,7 +705,7 @@ class WalletManager implements Manager {
     );
     final List<String> addressIDs =
         await WalletManager.getAccountAddressIDs(serverAccountID);
-    if (addressIDs.isEmpty){
+    if (addressIDs.isEmpty) {
       /// don't need to do health check if no email address link to account
       /// probably due to web disable BvE
       return;
@@ -788,6 +788,7 @@ class WalletManager implements Manager {
       "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
     );
     if (addingCount > 0) {
+      final List<BitcoinAddress> apiBitcoinAddresses = [];
       final WalletModel? walletModel =
           await DBHelper.walletDao!.findByServerID(serverWalletID);
       if (walletModel != null && accountModel != null) {
@@ -819,27 +820,31 @@ class WalletManager implements Manager {
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
             bitcoinAddressIndex: BigInt.from(addressInfo.index));
-        await proton_api.addBitcoinAddresses(
-            walletId: serverWalletID,
-            walletAccountId: serverAccountID,
-            bitcoinAddresses: [bitcoinAddress]);
+        apiBitcoinAddresses.add(bitcoinAddress);
+      }
+
+      /// BE will rollback and raise an error
+      /// if any of bitcoinAddress in apiBitcoinAddresses has issue
+      /// So we don't need a recovery process here
+      await proton_api.addBitcoinAddresses(
+          walletId: serverWalletID,
+          walletAccountId: serverAccountID,
+          bitcoinAddresses: apiBitcoinAddresses);
+      for (BitcoinAddress bitcoinAddress in apiBitcoinAddresses) {
         try {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
               serverWalletID: serverWalletID,
               serverAccountID: serverAccountID,
-              bitcoinAddress: address,
-              bitcoinAddressIndex: addressIndex,
+              bitcoinAddress: bitcoinAddress.bitcoinAddress,
+              bitcoinAddressIndex: bitcoinAddress.bitcoinAddressIndex.toInt(),
               inEmailIntegrationPool: 1,
               used: 0);
         } catch (e) {
           logger.e(e.toString());
         }
       }
-      if (addingCount > 0) {
-        accountModel.lastUsedIndex =
-            accountModel.lastUsedIndex + addingCount + 1;
-        await updateLastUsedIndex(accountModel);
-      }
+      accountModel.lastUsedIndex = accountModel.lastUsedIndex + addingCount + 1;
+      await updateLastUsedIndex(accountModel);
     }
   }
 
