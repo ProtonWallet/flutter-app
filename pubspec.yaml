@@ -174,7 +174,7 @@ dev_dependencies:
 #flutter launcher icons configs
 flutter_launcher_icons:
   image_path: "assets/images/icon/launch_icon.png"
-  android: true
+  android: false
   ios: true
   remove_alpha_ios: true
   min_sdk_android: 21
