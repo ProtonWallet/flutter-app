@@ -420,49 +420,13 @@ class WalletManager implements Manager {
     }
   }
 
-  // static Future<Uint8List> decryptBinaryWithUserKeys(
-  //   String encodedEncryptedBinary,
-  // ) async {
-  //   // get user key
-  //   final primaryUserKey = await userManager.getPrimaryKey();
-  //   final String userPrivateKey = primaryUserKey.privateKey;
-  //   final String userPassphrase = primaryUserKey.passphrase;
-
-  //   Uint8List result = Uint8List(0);
-  //   try {
-  //     result = proton_crypto.decryptBinary(
-  //       userPrivateKey,
-  //       userPassphrase,
-  //       base64Decode(encodedEncryptedBinary),
-  //     );
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //   }
-  //   return result;
-  // }
-
-  // static Future<String> decryptWithUserKeys(String encryptedMessage) async {
-  //   final firstUserKey = await userManager.getPrimaryKey();
-  //   final String userPrivateKey = firstUserKey.privateKey;
-  //   final String userPassphrase = firstUserKey.passphrase;
-  //   String result = "";
-  //   try {
-  //     result = proton_crypto.decrypt(
-  //       userPrivateKey,
-  //       userPassphrase,
-  //       encryptedMessage,
-  //     );
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //   }
-  //   return result;
-  // }
-
+  // TODO(fix): move this to event loop
   static Future<void> setLatestEventId(String latestEventId) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("latestEventId", latestEventId);
   }
 
+  // TODO(fix): move this to event loop
   static Future<String?> getLatestEventId() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString("latestEventId");
