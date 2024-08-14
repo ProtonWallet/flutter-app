@@ -61,8 +61,5 @@ class SecureStorageManager implements Manager {
   }
 
   @override
-  Future<void> login(String userID) async {
-    // TODO(fix): implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 }

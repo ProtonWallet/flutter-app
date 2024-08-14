@@ -1038,8 +1038,5 @@ class WalletManager implements Manager {
   Future<void> logout() async {}
 
   @override
-  Future<void> login(String userID) async {
-    // TODO(fix): implement login
-    throw UnimplementedError();
-  }
+  Future<void> login(String userID) async {}
 }

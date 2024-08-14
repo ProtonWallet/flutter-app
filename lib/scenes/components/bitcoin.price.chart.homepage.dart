@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
@@ -74,7 +75,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
       priceGraph = await widget.priceGraphDataProvider.getPriceGraph(
           fiatCurrency: widget.exchangeRate.fiatCurrency, timeFrame: timeFrame);
     } catch (e) {
-      e.toString();
+      logger.d(e.toString());
     }
     final List<double> prices = [];
     final List<FlSpot> spots = [];

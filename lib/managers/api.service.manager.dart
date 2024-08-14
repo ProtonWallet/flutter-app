@@ -18,6 +18,8 @@ class ProtonApiServiceManager implements Manager {
   String version = "macos-wallet@1.0.0";
   String agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
 
+  String? userID;
+
   ///
   ProtonApiService? _apiService;
   late ProtonWalletAuthStore authStore;
@@ -108,6 +110,8 @@ class ProtonApiServiceManager implements Manager {
 
   @override
   Future<void> logout() async {
+    userID = null;
+
     /// the apiSerice logout is global clean up in rust layer. remove the ProtonAPiSerive caches and also reset the AuthStore session.
     ///  after called this function, you need re-init the ProtonApiService again. dont foget to setup AuthDartCallback.
     await _apiService?.logout();
@@ -117,7 +121,10 @@ class ProtonApiServiceManager implements Manager {
   }
 
   @override
-  Future<void> login(String userID) async {}
+  Future<void> login(String userID) async {
+    this.userID = userID;
+    await initalOldApiService();
+  }
 
   /// # get clients
 

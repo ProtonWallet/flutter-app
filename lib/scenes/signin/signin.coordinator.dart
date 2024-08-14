@@ -35,6 +35,7 @@ class SigninCoordinator extends Coordinator {
       apiService,
       dataProviderManager,
       appStateManager,
+      serviceManager,
     );
     widget = SigninView(
       viewModel,
