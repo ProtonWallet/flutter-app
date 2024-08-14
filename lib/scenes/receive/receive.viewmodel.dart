@@ -143,11 +143,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      if (localLastUsedIndex == -1 && accountModel!.lastUsedIndex == 0) {
-        addressIndex = accountModel!.lastUsedIndex;
-      } else {
-        addressIndex = accountModel!.lastUsedIndex + 1;
-      }
+      addressIndex = accountModel!.lastUsedIndex + 1;
       if (init) {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,

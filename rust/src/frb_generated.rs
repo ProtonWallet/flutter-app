@@ -11179,7 +11179,7 @@ const _: fn() = || {
         let _: crate::proton_api::user_settings::FiatCurrency = ApiWalletAccount.FiatCurrency;
         let _: String = ApiWalletAccount.DerivationPath;
         let _: String = ApiWalletAccount.Label;
-        let _: u32 = ApiWalletAccount.LastUsedIndex;
+        let _: Option<u32> = ApiWalletAccount.LastUsedIndex;
         let _: u32 = ApiWalletAccount.PoolSize;
         let _: u32 = ApiWalletAccount.Priority;
         let _: u8 = ApiWalletAccount.ScriptType;
@@ -12760,7 +12760,7 @@ impl SseDecode for crate::proton_api::wallet_account::ApiWalletAccount {
             <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer);
         let mut var_derivationPath = <String>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
-        let mut var_lastUsedIndex = <u32>::sse_decode(deserializer);
+        let mut var_lastUsedIndex = <Option<u32>>::sse_decode(deserializer);
         let mut var_poolSize = <u32>::sse_decode(deserializer);
         let mut var_priority = <u32>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
@@ -19662,7 +19662,7 @@ impl SseEncode for crate::proton_api::wallet_account::ApiWalletAccount {
         <crate::proton_api::user_settings::FiatCurrency>::sse_encode(self.FiatCurrency, serializer);
         <String>::sse_encode(self.DerivationPath, serializer);
         <String>::sse_encode(self.Label, serializer);
-        <u32>::sse_encode(self.LastUsedIndex, serializer);
+        <Option<u32>>::sse_encode(self.LastUsedIndex, serializer);
         <u32>::sse_encode(self.PoolSize, serializer);
         <u32>::sse_encode(self.Priority, serializer);
         <u8>::sse_encode(self.ScriptType, serializer);

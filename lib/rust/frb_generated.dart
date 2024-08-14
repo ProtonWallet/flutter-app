@@ -11842,7 +11842,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       fiatCurrency: dco_decode_fiat_currency(arr[2]),
       derivationPath: dco_decode_String(arr[3]),
       label: dco_decode_String(arr[4]),
-      lastUsedIndex: dco_decode_u_32(arr[5]),
+      lastUsedIndex: dco_decode_opt_box_autoadd_u_32(arr[5]),
       poolSize: dco_decode_u_32(arr[6]),
       priority: dco_decode_u_32(arr[7]),
       scriptType: dco_decode_u_8(arr[8]),
@@ -15162,7 +15162,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_fiatCurrency = sse_decode_fiat_currency(deserializer);
     var var_derivationPath = sse_decode_String(deserializer);
     var var_label = sse_decode_String(deserializer);
-    var var_lastUsedIndex = sse_decode_u_32(deserializer);
+    var var_lastUsedIndex = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_poolSize = sse_decode_u_32(deserializer);
     var var_priority = sse_decode_u_32(deserializer);
     var var_scriptType = sse_decode_u_8(deserializer);
@@ -19079,7 +19079,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_fiat_currency(self.fiatCurrency, serializer);
     sse_encode_String(self.derivationPath, serializer);
     sse_encode_String(self.label, serializer);
-    sse_encode_u_32(self.lastUsedIndex, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.lastUsedIndex, serializer);
     sse_encode_u_32(self.poolSize, serializer);
     sse_encode_u_32(self.priority, serializer);
     sse_encode_u_8(self.scriptType, serializer);

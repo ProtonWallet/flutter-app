@@ -272,7 +272,10 @@ class EventLoop extends Service implements Manager {
                 account.fiatCurrency,
                 account.poolSize,
                 account.priority,
-                account.lastUsedIndex,
+
+                /// set lastUsedIndex to -1 when it's null
+                /// which means user didn't use any address yet
+                account.lastUsedIndex ?? -1,
               );
             }
           }
