@@ -42,7 +42,7 @@ pub struct _ApiWalletAccount {
     pub FiatCurrency: FiatCurrency,
     pub DerivationPath: String,
     pub Label: String,
-    pub LastUsedIndex: u32,
+    pub LastUsedIndex: Option<u32>,
     pub PoolSize: u32,
     pub Priority: u32,
     pub ScriptType: u8,
