@@ -15,17 +15,17 @@ import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/services/service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
-import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/rust/proton_api/wallet_settings.dart';
+
+typedef RecoveryCallback = Future<void> Function(List<LoadingTask> failedTask);
 
 // TODO(fix): handle user and settings event.
 class EventLoop extends Service implements Manager {
@@ -39,7 +39,9 @@ class EventLoop extends Service implements Manager {
   String latestEventId = "";
   int internetCheckCounter = 0;
   int recoveryCheckCounter = 0;
-  late Future<void> Function(List<LoadingTask> failedTask)? onRecovery;
+  late RecoveryCallback? onRecovery;
+
+  ///
   StreamSubscription? connectivitySub;
 
   EventLoop(
@@ -66,8 +68,7 @@ class EventLoop extends Service implements Manager {
     super.start();
   }
 
-  void setRecoveryCallback(
-      Future<void> Function(List<LoadingTask> failedTask) onRecovery) {
+  void setRecoveryCallback(RecoveryCallback onRecovery) {
     this.onRecovery = onRecovery;
   }
 
@@ -156,8 +157,10 @@ class EventLoop extends Service implements Manager {
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
   }
 
@@ -165,11 +168,9 @@ class EventLoop extends Service implements Manager {
     logger.i("event loop runOnce()");
     final Map<String, List<ApiWalletKey>> walletID2ProtonWalletKey = {};
     try {
-      final List<ProtonEvent> events =
+      final events =
           await proton_api.collectEvents(latestEventId: latestEventId);
       for (ProtonEvent event in events) {
-        latestEventId = event.eventId;
-        await WalletManager.setLatestEventId(latestEventId);
         if (event.walletKeyEvents != null) {
           for (WalletKeyEvent walletKeyEvent in event.walletKeyEvents!) {
             final ApiWalletKey? walletKey = walletKeyEvent.walletKey;
@@ -252,8 +253,7 @@ class EventLoop extends Service implements Manager {
           }
         }
         if (event.walletAccountEvents != null) {
-          for (WalletAccountEvent walletAccountEvent
-              in event.walletAccountEvents!) {
+          for (final walletAccountEvent in event.walletAccountEvents!) {
             if (walletAccountEvent.action == 0) {
               final String serverAccountID = walletAccountEvent.id;
               await dataProviderManager.walletDataProvider
@@ -278,8 +278,7 @@ class EventLoop extends Service implements Manager {
           }
         }
         if (event.walletSettingEvents != null) {
-          for (WalletSettingsEvent walletSettingEvent
-              in event.walletSettingEvents!) {
+          for (final walletSettingEvent in event.walletSettingEvents!) {
             final ApiWalletSettings? _ = walletSettingEvent.walletSettings;
           }
         }
@@ -289,8 +288,7 @@ class EventLoop extends Service implements Manager {
               .insertUpdate(settings);
         }
         if (event.walletTransactionEvents != null) {
-          for (WalletTransactionEvent walletTransactionEvent
-              in event.walletTransactionEvents!) {
+          for (final walletTransactionEvent in event.walletTransactionEvents!) {
             final WalletTransaction? walletTransaction =
                 walletTransactionEvent.walletTransaction;
             final WalletModel? walletModel = await DBHelper.walletDao!
@@ -309,7 +307,7 @@ class EventLoop extends Service implements Manager {
 
         if (event.contactEmailEvents != null) {
           bool hasAction = false;
-          for (ContactEmailEvent contactEvent in event.contactEmailEvents!) {
+          for (final contactEvent in event.contactEmailEvents!) {
             if (contactEvent.action == 0) {
               final String contactID = contactEvent.id;
               await dataProviderManager.contactsDataProvider.delete(contactID);
@@ -326,14 +324,20 @@ class EventLoop extends Service implements Manager {
             await dataProviderManager.contactsDataProvider.reloadCache();
           }
         }
+
+        /// update event id
+        latestEventId = event.eventId;
+        await WalletManager.setLatestEventId(latestEventId);
       }
       await appStateManager.resetEventloopDuration();
       appStateManager.isConnectivityOK = true;
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
     }
   }
 
@@ -344,12 +348,18 @@ class EventLoop extends Service implements Manager {
 
       /// move this to service
       await ExchangeRateService.runOnce(
-          dataProviderManager.userSettingsDataProvider.fiatCurrency);
-      final ProtonExchangeRate exchangeRate =
-          await ExchangeRateService.getExchangeRate(
-              dataProviderManager.userSettingsDataProvider.fiatCurrency);
-      dataProviderManager.userSettingsDataProvider
-          .updateExchangeRate(exchangeRate);
+        dataProviderManager.userSettingsDataProvider.fiatCurrency,
+      );
+
+      /// get exchange rate
+      final exchangeRate = await ExchangeRateService.getExchangeRate(
+        dataProviderManager.userSettingsDataProvider.fiatCurrency,
+      );
+
+      /// update exchange rate
+      dataProviderManager.userSettingsDataProvider.updateExchangeRate(
+        exchangeRate,
+      );
 
       /// check block height
       await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
@@ -365,7 +375,7 @@ class EventLoop extends Service implements Manager {
     for (WalletModel walletModel in walletModels) {
       final accountModels =
           await DBHelper.accountDao!.findAllByWalletID(walletModel.walletID);
-      for (AccountModel accountModel in accountModels) {
+      for (final accountModel in accountModels) {
         final FrbAccount? account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
