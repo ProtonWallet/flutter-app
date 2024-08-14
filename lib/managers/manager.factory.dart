@@ -45,6 +45,12 @@ class ManagerFactory {
     _managers.clear();
   }
 
+  Future<void> login(String userID) async {
+    for (var entry in _managers.entries) {
+      await entry.value.login(userID);
+    }
+  }
+
   Future<void> logout() async {
     for (var entry in _managers.entries) {
       await entry.value.logout();

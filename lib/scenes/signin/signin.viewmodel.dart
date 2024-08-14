@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/app.state.manager.dart';
+import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
@@ -19,6 +20,7 @@ abstract class SigninViewModel extends ViewModel<SigninCoordinator> {
 }
 
 class SigninViewModelImpl extends SigninViewModel {
+  final ManagerFactory serviceManager;
   final UserManager userManager;
   final AppStateManager appStateManger;
   final ProtonApiService apiService;
@@ -30,6 +32,7 @@ class SigninViewModelImpl extends SigninViewModel {
     this.apiService,
     this.dataProviderManager,
     this.appStateManger,
+    this.serviceManager,
   );
 
   bool hadLocallogin = false;
@@ -63,9 +66,7 @@ class SigninViewModelImpl extends SigninViewModel {
         password: password,
       );
       userManager.flutterLogin(authCredential);
-      await dataProviderManager.login(authCredential.userId);
-      await userManager.login(authCredential.userId);
-      await appStateManger.login(authCredential.userId);
+      await serviceManager.login(authCredential.userId);
       coordinator.showHome(env);
     } catch (e) {
       errorMessage = e.toString();

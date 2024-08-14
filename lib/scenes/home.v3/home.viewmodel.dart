@@ -542,9 +542,6 @@ class HomeViewModelImpl extends HomeViewModel {
     /// init subscriptions
     await initSubscription();
 
-    /// init network
-    await apiServiceManager.initalOldApiService();
-
     /// read app version
     appVersion = await UserAgent().display;
 

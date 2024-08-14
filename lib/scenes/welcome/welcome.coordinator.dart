@@ -50,6 +50,7 @@ class WelcomeCoordinator extends Coordinator {
       userManager,
       dataManager,
       appStateManager,
+      serviceManager,
     );
     widget = WelcomeView(
       viewModel,

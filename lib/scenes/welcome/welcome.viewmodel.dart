@@ -5,6 +5,7 @@ import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.state.dart';
+import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -19,6 +20,7 @@ abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
 }
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
+  final ManagerFactory serviceManager;
   final NativeViewChannel nativeChannel;
   final UserManager userManager;
   final AppStateManager appStateManger;
@@ -30,6 +32,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
     this.userManager,
     this.dataProviderManager,
     this.appStateManger,
+    this.serviceManager,
   );
 
   bool hadLocallogin = false;
@@ -59,9 +62,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   Future<void> handleStateChanges(NativeLoginState state) async {
     if (state is NativeLoginSucess) {
       await userManager.nativeLogin(state.userInfo);
-      await dataProviderManager.login(state.userInfo.userId);
-      await userManager.login(state.userInfo.userId);
-      await appStateManger.login(state.userInfo.userId);
+      await serviceManager.login(state.userInfo.userId);
       coordinator.showHome(env);
     }
   }

@@ -130,9 +130,7 @@ class AppViewModelImpl extends AppViewModel {
     if (await userManager.sessionExists()) {
       await userManager.tryRestoreUserInfo();
       final userInfo = userManager.userInfo;
-      await dataProviderManager.login(userInfo.userId);
-      await userManager.login(userInfo.userId);
-      await appStateManger.login(userInfo.userId);
+      await serviceManager.login(userInfo.userId);
       coordinator.showHome(apiEnv);
     } else {
       coordinator.showWelcome(apiEnv);

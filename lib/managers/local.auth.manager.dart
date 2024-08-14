@@ -11,6 +11,8 @@ class LocalAuthManager implements Manager {
   bool canCheckBiometrics = false;
   static final LocalAuthentication auth = LocalAuthentication();
 
+  String? userID;
+
   static bool isPlatformSupported() {
     if (Platform.isAndroid || Platform.isIOS || Platform.isWindows) {
       return true;
@@ -58,17 +60,15 @@ class LocalAuthManager implements Manager {
   }
 
   @override
-  Future<void> dispose() {
-    // TODO(fix): implement dispose
-    throw UnimplementedError();
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> login(String userID) async {
+    this.userID = userID;
   }
 
   @override
-  Future<void> login(String userID) {
-    // TODO(fix): implement login
-    throw UnimplementedError();
+  Future<void> logout() async {
+    userID = null;
   }
-
-  @override
-  Future<void> logout() async {}
 }
