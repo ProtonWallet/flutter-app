@@ -34,7 +34,7 @@ class ApiWalletAccount {
   final FiatCurrency fiatCurrency;
   final String derivationPath;
   final String label;
-  final int lastUsedIndex;
+  final int? lastUsedIndex;
   final int poolSize;
   final int priority;
   final int scriptType;
@@ -46,7 +46,7 @@ class ApiWalletAccount {
     required this.fiatCurrency,
     required this.derivationPath,
     required this.label,
-    required this.lastUsedIndex,
+    this.lastUsedIndex,
     required this.poolSize,
     required this.priority,
     required this.scriptType,

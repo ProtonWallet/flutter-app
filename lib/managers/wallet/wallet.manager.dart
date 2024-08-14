@@ -529,7 +529,8 @@ class WalletManager implements Manager {
           );
           continue;
         }
-        final int addressIndex = accountModel.lastUsedIndex + 1;
+        const int offset = 1;
+        final int addressIndex = accountModel.lastUsedIndex + offset + 1;
         final addressInfo = await account.getAddress(index: addressIndex);
         final String address = addressInfo.address;
         final String signature = await getSignature(
@@ -558,7 +559,7 @@ class WalletManager implements Manager {
         } catch (e) {
           logger.e(e.toString());
         }
-        accountModel.lastUsedIndex = accountModel.lastUsedIndex + 1;
+        accountModel.lastUsedIndex = accountModel.lastUsedIndex + offset + 1;
         await updateLastUsedIndex(accountModel);
       }
     }
@@ -767,7 +768,7 @@ class WalletManager implements Manager {
       if (accountModel == null) {
         return;
       }
-      for (int offset = 0; offset < addingCount; offset++) {
+      for (int offset = 1; offset <= addingCount; offset++) {
         final int addressIndex = accountModel.lastUsedIndex + offset + 1;
         logger.d(
           "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID",

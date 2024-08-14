@@ -259,12 +259,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         accountModel.lastUsedIndex = localLastUsedIndex;
         await WalletManager.updateLastUsedIndex(accountModel);
       }
-      int addressIndex = 0;
-      if (localLastUsedIndex == -1 && accountModel.lastUsedIndex == 0) {
-        addressIndex = accountModel.lastUsedIndex;
-      } else {
-        addressIndex = accountModel.lastUsedIndex + 1;
-      }
+      final int addressIndex = accountModel.lastUsedIndex + 1;
 
       final addressInfo = await account!.getAddress(index: addressIndex);
       receiveAddress = addressInfo.address;
