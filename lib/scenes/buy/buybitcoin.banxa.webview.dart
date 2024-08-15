@@ -75,44 +75,11 @@ class _WebViewExampleState extends State<WebViewExample> {
             EasyLoading.dismiss();
           },
           onNavigationRequest: (NavigationRequest request) {
-            // if (request.url.startsWith('proton.me')) {
-            // return NavigationDecision.prevent;
-            // }
             return NavigationDecision.navigate;
           },
         ),
       )
-      ..loadHtmlString("""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Permissions-Policy" content="camera=(); microphone=()">
-  <style>
-    .iframe-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      height: 800px;
-      overflow: hidden;
-    }
-    .iframe-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-  </style>
-</head>
-<body>
-  <div class="iframe-container">
-    <iframe allow="camera *; microphone *" src="${widget.checkoutUrl}"></iframe>
-  </div>
-</body>
-</html>
-""");
+      ..loadRequest(Uri.parse(widget.checkoutUrl));
   }
 
   @override

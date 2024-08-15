@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
@@ -176,6 +177,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
         }
 
         final Map<GatewayProvider, String> received = {};
+
         for (var entry in quotes.entries) {
           String maxReceived = "";
           for (var item in entry.value) {
@@ -199,15 +201,26 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           }
         }
 
-        var defaultQuote = quote.first;
+        final defaultQuotes = quotes[provider] ?? quote;
+        var defaultQuote = defaultQuotes.first;
         var selectedPayment = defaultQuote.paymentMethod;
         final List<PaymentMethod> supportedPayments = [];
-        for (var item in quote) {
+        for (var item in defaultQuotes) {
           if (item.paymentMethod == state.selectedModel.paymentMethod) {
             defaultQuote = item;
             selectedPayment = item.paymentMethod;
           }
-          supportedPayments.add(item.paymentMethod);
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            if (item.paymentMethod != PaymentMethod.applePay) {
+              supportedPayments.add(item.paymentMethod);
+            }
+          } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+            if (item.paymentMethod != PaymentMethod.googlePay) {
+              supportedPayments.add(item.paymentMethod);
+            }
+          } else {
+            supportedPayments.add(item.paymentMethod);
+          }
         }
         emit(state.copyWith(
           isQuoteLoaded: true,
@@ -216,7 +229,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           selectedModel: state.selectedModel.copyWith(
             paymentMethod: selectedPayment,
             quote: defaultQuote,
-            supportedPayments: supportedPayments,
+            supportedPayments: supportedPayments.toSet().toList(),
             provider: provider,
           ),
           received: received,
@@ -264,7 +277,17 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           defaultQuote = item;
           selectedPayment = item.paymentMethod;
         }
-        supportedPayments.add(item.paymentMethod);
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          if (item.paymentMethod != PaymentMethod.applePay) {
+            supportedPayments.add(item.paymentMethod);
+          }
+        } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+          if (item.paymentMethod != PaymentMethod.googlePay) {
+            supportedPayments.add(item.paymentMethod);
+          }
+        } else {
+          supportedPayments.add(item.paymentMethod);
+        }
       }
 
       emit(state.copyWith(
@@ -274,7 +297,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           quote: defaultQuote,
           provider: provider,
           paymentMethod: selectedPayment,
-          supportedPayments: supportedPayments,
+          supportedPayments: supportedPayments.toSet().toList(),
         ),
       ));
     });
