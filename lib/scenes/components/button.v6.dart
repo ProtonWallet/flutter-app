@@ -29,7 +29,7 @@ class ButtonV6 extends StatefulWidget {
     this.textStyle = const TextStyle(
       color: Colors.white,
       fontSize: 14,
-      fontFamily: 'Roboto',
+      fontFamily: 'Inter',
       fontWeight: FontWeight.w400,
     ),
     this.enable = true,
