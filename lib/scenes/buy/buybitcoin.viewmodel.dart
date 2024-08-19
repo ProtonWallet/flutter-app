@@ -18,6 +18,7 @@ import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
+import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -111,6 +112,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     this.walletID,
     this.accountID,
     this.localBitcoinAddressDataProvider,
+    this.receiveAddressDataProvider,
   );
 
   @override
@@ -122,6 +124,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   /// provider
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
+  final ReceiveAddressDataProvider receiveAddressDataProvider;
 
   /// ramp
   late final Configuration configuration;
@@ -255,20 +258,18 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       /// this will happen when some one send bitcoin via qr code
       final int localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      if (localLastUsedIndex > accountModel.lastUsedIndex) {
-        accountModel.lastUsedIndex = localLastUsedIndex;
-        await WalletManager.updateLastUsedIndex(accountModel);
-      }
-      final int addressIndex = accountModel.lastUsedIndex + 1;
+      await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
+          account!, accountModel, localLastUsedIndex);
 
-      final addressInfo = await account!.getAddress(index: addressIndex);
+      final addressInfo = await receiveAddressDataProvider.getReceiveAddress(
+          account, accountModel);
       receiveAddress = addressInfo.address;
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
           serverWalletID: walletModel.walletID,
           serverAccountID: accountModel.accountID,
           bitcoinAddress: receiveAddress,
-          bitcoinAddressIndex: addressIndex,
+          bitcoinAddressIndex: addressInfo.index,
           inEmailIntegrationPool: 0,
           used: 0,
         );

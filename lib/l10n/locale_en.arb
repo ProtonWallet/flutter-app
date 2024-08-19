@@ -451,6 +451,7 @@
   "add_amount": "Add amount",
   "receive_address": "Receive Address",
   "share_button": "Share",
+  "warn_you_create_too_many_unused_address": "Warning, you already have many unused addresses.",
   "you_can_not_create_too_many_unused_address": "Sorry, you already have too many unused addresses.",
   "share_address_button": "Share Address",
   "error_this_bitcoin_address_signature_is_invalid": "Sorry, this bitcoin address signature is invalid.",

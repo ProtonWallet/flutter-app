@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
@@ -9,14 +10,15 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
+import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/common/address_info.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -32,25 +34,21 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
 
   String serverWalletID;
   String serverAccountID;
-  int addressIndex = -1;
 
   bool isWalletView;
 
-  String address = "";
   String errorMessage = "";
   var selectedWallet = 1;
   int localLastUsedIndex = -1;
   bool initialized = false;
   bool tooManyUnusedAddress = false;
+  bool warnUnusedAddress = false;
 
   WalletData? walletData;
   WalletModel? walletModel;
   AccountModel? accountModel;
   late ValueNotifier accountValueNotifier;
-
-  List<String> emailIntegrationAddresses = [];
-
-  String bitcoinViaEmailAddress = "";
+  FrbAddressInfo? currentAddress;
 
   void getAddress();
 
@@ -68,7 +66,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     this.walletDataProvider,
     this.protonAddressProvider,
     this.walletKeysProvider,
-    this.localBitcoinAddressDataProvider, {
+    this.localBitcoinAddressDataProvider,
+    this.receiveAddressDataProvider, {
     required super.isWalletView,
   });
 
@@ -81,6 +80,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final ProtonAddressProvider protonAddressProvider;
   final WalletKeysProvider walletKeysProvider;
+  final ReceiveAddressDataProvider receiveAddressDataProvider;
 
   @override
   Future<void> loadData() async {
@@ -129,50 +129,56 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     if (accountModel != null) {
       if (localLastUsedIndex + accountModel!.poolSize + 10 >=
           accountModel!.lastUsedIndex) {
-        // avoid user has too many unused address that will hit stop gap
-        accountModel!.lastUsedIndex = accountModel!.lastUsedIndex + 1;
-        // TODO(fix): wait until web use it
-        // await WalletManager.updateLastUsedIndex(accountModel!);
+        if (localLastUsedIndex + accountModel!.poolSize + 5 <=
+            accountModel!.lastUsedIndex) {
+          warnUnusedAddress = true;
+        }
+        currentAddress = await receiveAddressDataProvider
+            .generateNewReceiveAddress(_frbAccount, accountModel!);
+        try {
+          await DBHelper.bitcoinAddressDao!.insertOrUpdate(
+            serverWalletID: walletModel!.walletID,
+            serverAccountID: accountModel!.accountID,
+            bitcoinAddress: currentAddress!.address,
+            bitcoinAddressIndex: currentAddress!.index,
+            inEmailIntegrationPool: 0,
+            used: 0,
+          );
+        } catch (e, stacktrace) {
+          Sentry.captureException(e, stackTrace: stacktrace);
+          logger.e(e.toString());
+        }
       } else {
+        warnUnusedAddress = false;
         tooManyUnusedAddress = true;
       }
-      getAddress();
+      sinkAddSafe();
     }
   }
 
   @override
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
-      addressIndex = accountModel!.lastUsedIndex + 1;
       if (init) {
         _frbAccount = (await WalletManager.loadWalletWithID(
           walletModel!.walletID,
           accountModel!.accountID,
           serverScriptType: accountModel!.scriptType,
         ))!;
-        emailIntegrationAddresses = await WalletManager.getAccountAddressIDs(
-          accountModel?.accountID ?? "",
-        );
-        if (emailIntegrationAddresses.isNotEmpty) {
-          final AddressModel? addressModel = await protonAddressProvider
-              .getAddressModel(emailIntegrationAddresses.first);
-          if (addressModel != null) {
-            bitcoinViaEmailAddress = addressModel.email;
-          }
-        }
       }
-      final addressInfo = await _frbAccount.getAddress(index: addressIndex);
-      address = addressInfo.address;
+      currentAddress = await receiveAddressDataProvider.getReceiveAddress(
+          _frbAccount, accountModel!);
       try {
         await DBHelper.bitcoinAddressDao!.insertOrUpdate(
           serverWalletID: walletModel!.walletID,
           serverAccountID: accountModel!.accountID,
-          bitcoinAddress: address,
-          bitcoinAddressIndex: addressIndex,
+          bitcoinAddress: currentAddress!.address,
+          bitcoinAddressIndex: currentAddress!.index,
           inEmailIntegrationPool: 0,
           used: 0,
         );
-      } catch (e) {
+      } catch (e, stacktrace) {
+        Sentry.captureException(e, stackTrace: stacktrace);
         logger.e(e.toString());
       }
       sinkAddSafe();
@@ -213,6 +219,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<void> changeAccount(AccountModel newAccountModel) async {
     try {
       tooManyUnusedAddress = false;
+      warnUnusedAddress = false;
       accountModel = newAccountModel;
       accountModel?.labelDecrypt =
           await decryptAccountName(base64Encode(accountModel!.label));
@@ -221,10 +228,15 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       /// this will happen when some one send bitcoin via qr code
       localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      if (localLastUsedIndex > accountModel!.lastUsedIndex) {
-        accountModel!.lastUsedIndex = localLastUsedIndex;
-        await WalletManager.updateLastUsedIndex(accountModel!);
-      }
+      _frbAccount = (await WalletManager.loadWalletWithID(
+        walletModel!.walletID,
+        accountModel!.accountID,
+        serverScriptType: accountModel!.scriptType,
+      ))!;
+
+      await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
+          _frbAccount, accountModel!, localLastUsedIndex);
+      currentAddress = null;
       await getAddress(init: true);
     } catch (e) {
       logger.e(e.toString());

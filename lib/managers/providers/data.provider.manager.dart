@@ -19,6 +19,7 @@ import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/proton.email.address.provider.dart';
+import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
@@ -147,6 +148,7 @@ class DataProviderManager extends Manager {
   late ProtonEmailAddressProvider protonEmailAddressProvider;
   late ConnectivityProvider connectivityProvider;
   late PriceGraphDataProvider priceGraphDataProvider;
+  late ReceiveAddressDataProvider receiveAddressDataProvider;
 
   DataProviderManager(
     this.apiEnv,
@@ -249,6 +251,10 @@ class DataProviderManager extends Manager {
       apiService.getPriceGraphClient(),
     );
 
+    receiveAddressDataProvider = ReceiveAddressDataProvider(
+      apiService.getBitcoinAddrClient(),
+    );
+
     final userAgent = UserAgent();
     final uid = userManager.userInfo.sessionId;
     final accessToken = userManager.userInfo.accessToken;
@@ -266,6 +272,7 @@ class DataProviderManager extends Manager {
     WalletManager.localBitcoinAddressDataProvider =
         localBitcoinAddressDataProvider;
     WalletManager.serverTransactionDataProvider = serverTransactionDataProvider;
+    WalletManager.receiveAddressDataProvider = receiveAddressDataProvider;
     WalletManager.userID = userID;
   }
 
