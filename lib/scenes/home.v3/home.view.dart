@@ -515,9 +515,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         ),
       );
     }
-    if (walletTransactionState.isSyncing ||
-        accountName.isEmpty ||
-        walletTransactionState.syncedWithError) {
+    if (accountName.isEmpty || walletTransactionState.syncedWithError) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
           children: [
@@ -580,26 +578,34 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
         ]),
         Row(children: [
-          viewModel.displayBalance
-              ? AnimatedFlipCounter(
-                  prefix: viewModel.dataProviderManager.userSettingsDataProvider
-                      .getFiatCurrencySign(
-                          fiatCurrency:
-                              viewModel.currentExchangeRate.fiatCurrency),
-                  thousandSeparator: ",",
-                  value: ExchangeCalculator.getNotionalInFiatCurrency(
-                    viewModel.currentExchangeRate,
-                    walletBalanceState.balanceInSatoshi,
-                  ),
+          viewModel.currentExchangeRate.id == defaultExchangeRate.id
+              ? const CardLoading(
+                  width: 200,
+                  height: 36,
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  margin: EdgeInsets.only(top: 4),
+                )
+              : viewModel.displayBalance
+                  ? AnimatedFlipCounter(
+                      prefix: viewModel
+                          .dataProviderManager.userSettingsDataProvider
+                          .getFiatCurrencySign(
+                              fiatCurrency:
+                                  viewModel.currentExchangeRate.fiatCurrency),
+                      thousandSeparator: ",",
+                      value: ExchangeCalculator.getNotionalInFiatCurrency(
+                        viewModel.currentExchangeRate,
+                        walletBalanceState.balanceInSatoshi,
+                      ),
 
-                  // TODO(fix): use actual balance
-                  fractionDigits: defaultDisplayDigits,
-                  textStyle:
-                      FontManager.balanceInFiatCurrency(ProtonColors.textNorm))
-              : Text(
-                  "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}****",
-                  style:
-                      FontManager.balanceInFiatCurrency(ProtonColors.textNorm)),
+                      // TODO(fix): use actual balance
+                      fractionDigits: defaultDisplayDigits,
+                      textStyle: FontManager.balanceInFiatCurrency(
+                          ProtonColors.textNorm))
+                  : Text(
+                      "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}****",
+                      style: FontManager.balanceInFiatCurrency(
+                          ProtonColors.textNorm)),
           const SizedBox(width: 10),
           viewModel.displayBalance
               ? GestureDetector(

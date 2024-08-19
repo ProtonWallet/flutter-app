@@ -82,17 +82,19 @@ class ServerTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    final List<ServerTransactionData> serverTransactionsData =
-        await getServerTransactionData();
-    for (ServerTransactionData serverTransactionData
-        in serverTransactionsData) {
-      if (serverTransactionData.accountModel.accountID ==
-          accountModel.accountID) {
-        return serverTransactionData;
-      }
-    }
-    // no server transaction found for this account, return empty transactions array
-    return ServerTransactionData(accountModel: accountModel, transactions: []);
+    /// fetch from server
+    await fetchTransactions(
+      walletModel.walletID,
+      accountModel.accountID,
+      isInitializeProcess: true,
+    );
+    final transactions = await transactionDao.findAllByServerAccountID(
+      accountModel.accountID,
+    );
+    return ServerTransactionData(
+      accountModel: accountModel,
+      transactions: transactions,
+    );
   }
 
   Future<List<TransactionModel>> getTransByAccountID(
