@@ -96,7 +96,9 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                       .size
                                                       .width,
                                                   200),
-                                              data: viewModel.address,
+                                              data: viewModel.currentAddress
+                                                      ?.address ??
+                                                  "",
                                             )
                                           : CircularProgressIndicator(
                                               color: ProtonColors.protonBlue,
@@ -141,7 +143,9 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                         50,
                                                     200),
                                                 child: Text(
-                                                  viewModel.address,
+                                                  viewModel.currentAddress
+                                                          ?.address ??
+                                                      "",
                                                   style:
                                                       FontManager.body2Regular(
                                                           ProtonColors
@@ -156,7 +160,9 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                   Clipboard.setData(
                                                       ClipboardData(
                                                           text: viewModel
-                                                              .address));
+                                                                  .currentAddress
+                                                                  ?.address ??
+                                                              ""));
                                                   CommonHelper.showSnackbar(
                                                       context,
                                                       S
@@ -170,6 +176,17 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                 ))
                                           ]),
                                     const SizedBox(height: 10),
+                                    if (viewModel.warnUnusedAddress)
+                                      Text(
+                                        S
+                                            .of(context)
+                                            .warn_you_create_too_many_unused_address,
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.signalError),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     if (viewModel.tooManyUnusedAddress)
                                       Text(
                                         S
@@ -183,7 +200,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                       ),
                                     // const SizedBox(height: 10),
                                     // Text(
-                                    //   "(Debug) AddressIndex: ${viewModel.addressIndex}",
+                                    //   "(Debug) AddressIndex: ${viewModel.currentAddress?.index ?? -1}",
                                     //   style: FontManager.body2Regular(
                                     //       ProtonColors.textWeak),
                                     //   maxLines: 2,
@@ -195,7 +212,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                           SizedBoxes.box24,
                           ButtonV5(
                               onPressed: () {
-                                Share.share(viewModel.address,
+                                Share.share(
+                                    viewModel.currentAddress?.address ?? "",
                                     subject: S.of(context).receive_address);
                               },
                               text: S.of(context).share_address_button,

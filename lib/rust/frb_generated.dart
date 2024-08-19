@@ -127,7 +127,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -1578899285;
+  int get rustContentHash => -1953278253;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -738,7 +738,6 @@ abstract class RustLibApi extends BaseApi {
 
   Future<FrbPaymentLink> crateApiBdkWalletAccountFrbAccountGetBitcoinUri(
       {required FrbAccount that,
-      int? index,
       BigInt? amount,
       String? label,
       String? message});
@@ -746,11 +745,9 @@ abstract class RustLibApi extends BaseApi {
   Future<String> crateApiBdkWalletAccountFrbAccountGetDerivationPath(
       {required FrbAccount that});
 
-  Future<int> crateApiBdkWalletAccountFrbAccountGetIndexAfterLastUsedAddress(
-      {required FrbAccount that});
-
-  Future<int?> crateApiBdkWalletAccountFrbAccountGetLastUnusedAddressIndex(
-      {required FrbAccount that});
+  Future<FrbAddressInfo>
+      crateApiBdkWalletAccountFrbAccountGetNextReceiveAddress(
+          {required FrbAccount that});
 
   Future<FrbTransactionDetails>
       crateApiBdkWalletAccountFrbAccountGetTransaction(
@@ -771,6 +768,9 @@ abstract class RustLibApi extends BaseApi {
 
   Future<bool> crateApiBdkWalletAccountFrbAccountIsMine(
       {required FrbAccount that, required FrbAddress address});
+
+  Future<void> crateApiBdkWalletAccountFrbAccountMarkReceiveAddressesUsedTo(
+      {required FrbAccount that, required int from, int? to});
 
   FrbAccount crateApiBdkWalletAccountFrbAccountNew(
       {required FrbWallet wallet,
@@ -5785,7 +5785,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<FrbPaymentLink> crateApiBdkWalletAccountFrbAccountGetBitcoinUri(
       {required FrbAccount that,
-      int? index,
       BigInt? amount,
       String? label,
       String? message}) {
@@ -5794,7 +5793,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
             that, serializer);
-        sse_encode_opt_box_autoadd_u_32(index, serializer);
         sse_encode_opt_box_autoadd_u_64(amount, serializer);
         sse_encode_opt_String(label, serializer);
         sse_encode_opt_String(message, serializer);
@@ -5807,7 +5805,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta: kCrateApiBdkWalletAccountFrbAccountGetBitcoinUriConstMeta,
-      argValues: [that, index, amount, label, message],
+      argValues: [that, amount, label, message],
       apiImpl: this,
     ));
   }
@@ -5815,7 +5813,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiBdkWalletAccountFrbAccountGetBitcoinUriConstMeta =>
       const TaskConstMeta(
         debugName: "FrbAccount_get_bitcoin_uri",
-        argNames: ["that", "index", "amount", "label", "message"],
+        argNames: ["that", "amount", "label", "message"],
       );
 
   @override
@@ -5847,8 +5845,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
-  Future<int> crateApiBdkWalletAccountFrbAccountGetIndexAfterLastUsedAddress(
-      {required FrbAccount that}) {
+  Future<FrbAddressInfo>
+      crateApiBdkWalletAccountFrbAccountGetNextReceiveAddress(
+          {required FrbAccount that}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -5858,49 +5857,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             funcId: 131, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_u_32,
-        decodeErrorData: null,
+        decodeSuccessData: sse_decode_frb_address_info,
+        decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta:
-          kCrateApiBdkWalletAccountFrbAccountGetIndexAfterLastUsedAddressConstMeta,
+          kCrateApiBdkWalletAccountFrbAccountGetNextReceiveAddressConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiBdkWalletAccountFrbAccountGetIndexAfterLastUsedAddressConstMeta =>
+      get kCrateApiBdkWalletAccountFrbAccountGetNextReceiveAddressConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbAccount_get_index_after_last_used_address",
-            argNames: ["that"],
-          );
-
-  @override
-  Future<int?> crateApiBdkWalletAccountFrbAccountGetLastUnusedAddressIndex(
-      {required FrbAccount that}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
-            that, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 132, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_box_autoadd_u_32,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiBdkWalletAccountFrbAccountGetLastUnusedAddressIndexConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiBdkWalletAccountFrbAccountGetLastUnusedAddressIndexConstMeta =>
-          const TaskConstMeta(
-            debugName: "FrbAccount_get_last_unused_address_index",
+            debugName: "FrbAccount_get_next_receive_address",
             argNames: ["that"],
           );
 
@@ -5915,7 +5885,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(txid, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 133, port: port_);
+            funcId: 132, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -5947,7 +5917,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_opt_box_autoadd_pagination(pagination, serializer);
         sse_encode_opt_box_autoadd_sort_order(sort, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 134, port: port_);
+            funcId: 133, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -5976,7 +5946,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 135, port: port_);
+            funcId: 134, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -6004,7 +5974,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 136, port: port_);
+            funcId: 135, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -6033,7 +6003,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbPsbt(
             psbt, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 137, port: port_);
+            funcId: 136, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -6064,7 +6034,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddress(
             address, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 138, port: port_);
+            funcId: 137, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -6081,6 +6051,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         debugName: "FrbAccount_is_mine",
         argNames: ["that", "address"],
       );
+
+  @override
+  Future<void> crateApiBdkWalletAccountFrbAccountMarkReceiveAddressesUsedTo(
+      {required FrbAccount that, required int from, int? to}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
+            that, serializer);
+        sse_encode_u_32(from, serializer);
+        sse_encode_opt_box_autoadd_u_32(to, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 138, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiBdkWalletAccountFrbAccountMarkReceiveAddressesUsedToConstMeta,
+      argValues: [that, from, to],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiBdkWalletAccountFrbAccountMarkReceiveAddressesUsedToConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbAccount_mark_receive_addresses_used_to",
+            argNames: ["that", "from", "to"],
+          );
 
   @override
   FrbAccount crateApiBdkWalletAccountFrbAccountNew(
@@ -21495,26 +21496,17 @@ class FrbAccountImpl extends RustOpaque implements FrbAccount {
       );
 
   Future<FrbPaymentLink> getBitcoinUri(
-          {int? index, BigInt? amount, String? label, String? message}) =>
+          {BigInt? amount, String? label, String? message}) =>
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountGetBitcoinUri(
-          that: this,
-          index: index,
-          amount: amount,
-          label: label,
-          message: message);
+          that: this, amount: amount, label: label, message: message);
 
   Future<String> getDerivationPath() =>
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountGetDerivationPath(
         that: this,
       );
 
-  Future<int> getIndexAfterLastUsedAddress() => RustLib.instance.api
-          .crateApiBdkWalletAccountFrbAccountGetIndexAfterLastUsedAddress(
-        that: this,
-      );
-
-  Future<int?> getLastUnusedAddressIndex() => RustLib.instance.api
-          .crateApiBdkWalletAccountFrbAccountGetLastUnusedAddressIndex(
+  Future<FrbAddressInfo> getNextReceiveAddress() => RustLib.instance.api
+          .crateApiBdkWalletAccountFrbAccountGetNextReceiveAddress(
         that: this,
       );
 
@@ -21544,6 +21536,11 @@ class FrbAccountImpl extends RustOpaque implements FrbAccount {
 
   Future<bool> isMine({required FrbAddress address}) => RustLib.instance.api
       .crateApiBdkWalletAccountFrbAccountIsMine(that: this, address: address);
+
+  Future<void> markReceiveAddressesUsedTo({required int from, int? to}) =>
+      RustLib.instance.api
+          .crateApiBdkWalletAccountFrbAccountMarkReceiveAddressesUsedTo(
+              that: this, from: from, to: to);
 
   Future<FrbPsbt> sign({required FrbPsbt psbt, required Network network}) =>
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountSign(
