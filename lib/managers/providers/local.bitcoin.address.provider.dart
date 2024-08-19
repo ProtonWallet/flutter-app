@@ -108,8 +108,10 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
           }
           final FrbAccount frbAccount = frbAccountOrNull;
           final List<BitcoinAddressDetail> finalBitcoinAddresses = [];
+
+          /// receive page shows address at accountModel.lastUsedIndex + 1
           for (int addressIndex = 0;
-              addressIndex <= accountModel.lastUsedIndex;
+              addressIndex <= accountModel.lastUsedIndex + 1;
               addressIndex++) {
             if (!addressIndex2bitcoinAddressModel.containsKey(addressIndex)) {
               final addressInfo =

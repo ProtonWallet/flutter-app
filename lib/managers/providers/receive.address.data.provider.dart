@@ -1,0 +1,120 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:sentry/sentry.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/api_service/bitcoin_address_client.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/common/address_info.dart';
+
+class ReceiveAddressDataProvider extends DataProvider {
+  final BitcoinAddressClient bitcoinAddressClient;
+  final Map<String, FrbAddressInfo> id2AddressInfo = {};
+
+  ReceiveAddressDataProvider(this.bitcoinAddressClient);
+
+  StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
+
+  Future<void> handleLastUsedIndexOnNetwork(
+    FrbAccount account,
+    AccountModel accountModel,
+    int lastUsedIndexOnNetwork,
+  ) async {
+    if (lastUsedIndexOnNetwork >= 0) {
+      account.markReceiveAddressesUsedTo(from: 0, to: lastUsedIndexOnNetwork);
+    }
+    final FrbAddressInfo oldAddress = await getReceiveAddress(
+      account,
+      accountModel,
+    );
+    if (lastUsedIndexOnNetwork >= oldAddress.index) {
+      /// need to generate new recieve address when the cached one had been used on blockchain
+      await generateNewReceiveAddress(
+        account,
+        accountModel,
+      );
+    }
+  }
+
+  Future<void> handlePoolIndex(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    final List<String> addressIDs =
+        await WalletManager.getAccountAddressIDs(accountModel.accountID);
+    if (addressIDs.isEmpty) {
+      /// don't need to check pool index since user didn't enable BvE
+      return;
+    }
+    try {
+      final BigInt highestPoolIndex =
+          await bitcoinAddressClient.getBitcoinAddressLatestIndex(
+              walletId: accountModel.walletID,
+              walletAccountId: accountModel.accountID);
+
+      final int poolIndex = max(0, highestPoolIndex.toInt());
+
+      await account.markReceiveAddressesUsedTo(from: 0, to: poolIndex);
+    } catch (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> handleLastUsedIndex(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    if (accountModel.lastUsedIndex >= 0) {
+      await account.markReceiveAddressesUsedTo(
+          from: 0, to: accountModel.lastUsedIndex);
+    }
+  }
+
+  Future<void> initReceiveAddressForAccount(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    await handleLastUsedIndex(account, accountModel);
+    await handlePoolIndex(account, accountModel);
+    if (!id2AddressInfo.containsKey(accountModel.accountID)) {
+      id2AddressInfo[accountModel.accountID] =
+          await account.getNextReceiveAddress();
+    }
+  }
+
+  Future<FrbAddressInfo> getReceiveAddress(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    if (!id2AddressInfo.containsKey(accountModel.accountID)) {
+      await initReceiveAddressForAccount(account, accountModel);
+    }
+    return id2AddressInfo[accountModel.accountID]!;
+  }
+
+  Future<FrbAddressInfo> generateNewReceiveAddress(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    final FrbAddressInfo oldAddress = await getReceiveAddress(
+      account,
+      accountModel,
+    );
+    id2AddressInfo[accountModel.accountID] =
+        await account.getNextReceiveAddress();
+    accountModel.lastUsedIndex = oldAddress.index;
+    await WalletManager.updateLastUsedIndex(accountModel);
+    return id2AddressInfo[accountModel.accountID]!;
+  }
+
+  @override
+  Future<void> clear() async {
+    id2AddressInfo.clear();
+    dataUpdateController.close();
+  }
+}
