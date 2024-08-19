@@ -30,6 +30,7 @@ import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/address.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart';
 import 'package:wallet/rust/common/address_info.dart';
@@ -73,13 +74,16 @@ class SelectWallet extends WalletTransactionEvent {
 
 class UpdateWalletSyncCancelled extends WalletTransactionEvent {
   final String accountID;
+
   UpdateWalletSyncCancelled(this.accountID);
+
   @override
   List<Object> get props => [accountID];
 }
 
 class UpdateWalletError extends WalletTransactionEvent {
   final String errorMessage;
+
   UpdateWalletError(
     this.errorMessage,
   );
@@ -300,17 +304,6 @@ class WalletTransactionBloc
     });
 
     on<SelectWallet>((event, emit) async {
-      for (AccountMenuModel accountMenuModel
-          in event.walletMenuModel.accounts) {
-        if (!event.skipSyncWallet) {
-          bdkTransactionDataProvider.syncWallet(
-            event.walletMenuModel.walletModel,
-            accountMenuModel.accountModel,
-            forceSync: false,
-            heightChanged: false,
-          );
-        }
-      }
       if (currentWalletModel?.walletID !=
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel != null) {
@@ -340,12 +333,6 @@ class WalletTransactionBloc
                 walletModel, accountMenuModel, secretKey);
 
         newHistoryTransactions += historyTransactionsInAccount;
-        isSyncing = isSyncing ||
-            bdkTransactionDataProvider.isSyncing(
-              walletModel,
-              accountMenuModel.accountModel,
-            );
-
         final LocalBitcoinAddressData localBitcoinAddressData =
             await localBitcoinAddressDataProvider.getDataByWalletAccount(
           walletModel,
@@ -391,6 +378,27 @@ class WalletTransactionBloc
         /// skip process if user change to other wallet or wallet account
         return;
       }
+
+      /// sync wallet after load transaction
+      /// so user can see cached history first
+      /// then if bdk data update, it will trigger handleTransactionDataProviderUpdate() to update
+      for (AccountMenuModel accountMenuModel
+          in event.walletMenuModel.accounts) {
+        if (!event.skipSyncWallet) {
+          bdkTransactionDataProvider.syncWallet(
+            event.walletMenuModel.walletModel,
+            accountMenuModel.accountModel,
+            forceSync: false,
+            heightChanged: false,
+          );
+          isSyncing = isSyncing ||
+              bdkTransactionDataProvider.isSyncing(
+                walletModel,
+                accountMenuModel.accountModel,
+              );
+        }
+      }
+
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
@@ -399,14 +407,6 @@ class WalletTransactionBloc
     });
 
     on<SelectAccount>((event, emit) async {
-      if (!event.skipSyncWallet) {
-        bdkTransactionDataProvider.syncWallet(
-          event.walletMenuModel.walletModel,
-          event.accountMenuModel.accountModel,
-          forceSync: false,
-          heightChanged: false,
-        );
-      }
       if (currentWalletModel?.walletID !=
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel?.accountID !=
@@ -433,8 +433,6 @@ class WalletTransactionBloc
       newHistoryTransactions += historyTransactionsInAccount;
 
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
-      final bool isSyncing = bdkTransactionDataProvider.isSyncing(
-          walletModel, event.accountMenuModel.accountModel);
 
       // TODO(fix): get filter and keyWord from home VM
       const String filter = "";
@@ -474,6 +472,22 @@ class WalletTransactionBloc
           return;
         }
       }
+
+      /// sync wallet after load transaction
+      /// so user can see cached history first
+      /// then if bdk data update, it will trigger handleTransactionDataProviderUpdate() to update
+      bool isSyncing = false;
+      if (!event.skipSyncWallet) {
+        bdkTransactionDataProvider.syncWallet(
+          event.walletMenuModel.walletModel,
+          event.accountMenuModel.accountModel,
+          forceSync: false,
+          heightChanged: false,
+        );
+        isSyncing = bdkTransactionDataProvider.isSyncing(
+            walletModel, event.accountMenuModel.accountModel);
+      }
+
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
@@ -615,6 +629,8 @@ class WalletTransactionBloc
       WalletModel walletModel,
       AccountMenuModel accountMenuModel,
       SecretKey? secretKey) async {
+    /// getAddressKeys take ~1 second to initialize at first call
+    /// since it need to fetch from server
     final List<AddressKey> addressKeys =
         await addressKeyProvider.getAddressKeys();
     final Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
@@ -694,7 +710,11 @@ class WalletTransactionBloc
         BitcoinAddressModel? bitcoinAddressModel =
             await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
                 bitcoinAddress, accountModel.accountID);
-
+        final bool isMineAddress = await account?.isMine(
+                address: FrbAddress(
+                    address: bitcoinAddress,
+                    network: appConfig.coinType.network)) ??
+            false;
         if (bitcoinAddressModel != null) {
           bitcoinAddressModel.used = 1;
           await localBitcoinAddressDataProvider
@@ -719,7 +739,7 @@ class WalletTransactionBloc
               .insertOrUpdate(bitcoinAddressModel);
           localBitcoinAddressDataProvider
               .updateBitcoinAddress2TransactionDataMap(bitcoinAddress, txID);
-        } else {
+        } else if (!isMineAddress) {
           recipientBitcoinAddresses.add(bitcoinAddress);
         }
       }
