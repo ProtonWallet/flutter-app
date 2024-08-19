@@ -39,7 +39,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   /// app state manager
   final AppStateManager appStateManager;
 
-  bool hasSynced = false;
+  bool hasCheckFullSynced = false;
 
   StreamSubscription? walletPassDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
@@ -217,18 +217,24 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           walletsModel.add(walletModel);
         }
         emit(state.copyWith(initialized: true, walletsModel: walletsModel));
-        if (!hasSynced) {
-          hasSynced = true;
+        if (!hasCheckFullSynced) {
+          hasCheckFullSynced = true;
           for (WalletMenuModel walletMenuModel in walletsModel) {
             if (walletMenuModel.hasValidPassword) {
               for (AccountMenuModel accountMenuModel
                   in walletMenuModel.accounts) {
-                bdkTransactionDataProvider.syncWallet(
-                  walletMenuModel.walletModel,
-                  accountMenuModel.accountModel,
-                  forceSync: false,
-                  heightChanged: false,
-                );
+                final bool hasFullSynced = await bdkTransactionDataProvider.hasFullSynced(walletMenuModel.walletModel, accountMenuModel.accountModel);
+                if (!hasFullSynced) {
+                  /// only do full-sync when app onStart()
+                  /// no-need to do partial sync since we will show cached transaction/balance
+                  /// and trigger partial sync when user switch account
+                  bdkTransactionDataProvider.syncWallet(
+                    walletMenuModel.walletModel,
+                    accountMenuModel.accountModel,
+                    forceSync: false,
+                    heightChanged: false,
+                  );
+                }
               }
             }
           }
