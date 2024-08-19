@@ -83,7 +83,7 @@ class ReceiveAddressDataProvider extends DataProvider {
     await handlePoolIndex(account, accountModel);
     if (!id2AddressInfo.containsKey(accountModel.accountID)) {
       id2AddressInfo[accountModel.accountID] =
-          await account.getNextReceiveAddress();
+          await account.getAddress(index: accountModel.lastUsedIndex);
     }
   }
 
@@ -101,14 +101,12 @@ class ReceiveAddressDataProvider extends DataProvider {
     FrbAccount account,
     AccountModel accountModel,
   ) async {
-    final FrbAddressInfo oldAddress = await getReceiveAddress(
-      account,
-      accountModel,
-    );
-    id2AddressInfo[accountModel.accountID] =
-        await account.getNextReceiveAddress();
-    accountModel.lastUsedIndex = oldAddress.index;
+    final FrbAddressInfo newAddress = await account.getNextReceiveAddress();
+    id2AddressInfo[accountModel.accountID] = newAddress;
+
+    accountModel.lastUsedIndex = newAddress.index;
     await WalletManager.updateLastUsedIndex(accountModel);
+
     return id2AddressInfo[accountModel.accountID]!;
   }
 
