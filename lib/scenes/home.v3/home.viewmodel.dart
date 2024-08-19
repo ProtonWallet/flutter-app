@@ -96,7 +96,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool acceptTermsAndConditions = false;
   int currentHistoryPage = 0;
   int currentAddressPage = 0;
-  bool isShowingNoInternet = false;
   List<ProtonAddress> protonAddresses = [];
   WalletModel? walletForPreference;
   List userAccountsForPreference = [];
@@ -359,13 +358,19 @@ class HomeViewModelImpl extends HomeViewModel {
       checkPreference();
     });
 
-    // block info
-    _blockInfoDataSubscription = dataProviderManager
-        .blockInfoDataProvider.dataUpdateController.stream
-        .listen((onData) {
-      walletTransactionBloc.syncWallet(forceSync: false, heightChanged: true);
+    /// block info
+    /// listen blockheight event after app is up 3 mins
+    /// since app will sync automatically when it's open
+    Future.delayed(const Duration(seconds: 180), () {
+      if (!isLogout) {
+        _blockInfoDataSubscription = dataProviderManager
+            .blockInfoDataProvider.dataUpdateController.stream
+            .listen((onData) {
+          walletTransactionBloc.syncWallet(
+              forceSync: false, heightChanged: true);
+        });
+      }
     });
-
     // user data
     _protonUserDataSubscription =
         dataProviderManager.userDataProvider.stream.listen((state) {
