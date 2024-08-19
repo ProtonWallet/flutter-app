@@ -222,14 +222,17 @@ flutter:
     - assets/json/
 
   fonts:
+    # we are using InterDisplay font
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter-Bold.ttf
-        - asset: assets/fonts/Inter-Italic.ttf
-        - asset: assets/fonts/Inter-Light.ttf
-        - asset: assets/fonts/Inter-Medium.ttf
-        - asset: assets/fonts/Inter-Regular.ttf
-        - asset: assets/fonts/Inter-SemiBold.ttf
+        - asset: assets/fonts/Inter-VariableFont.ttf
+
+        # - asset: assets/fonts/Inter-Bold.ttf
+        # - asset: assets/fonts/Inter-Italic.ttf
+        # - asset: assets/fonts/Inter-Light.ttf
+        # - asset: assets/fonts/Inter-Medium.ttf
+        # - asset: assets/fonts/Inter-Regular.ttf
+        # - asset: assets/fonts/Inter-SemiBold.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

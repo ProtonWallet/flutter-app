@@ -150,4 +150,4 @@ env.var.g.dart
 
 
 # ui tests
-test/golden/failures/
+test/snapshot/*/failures/

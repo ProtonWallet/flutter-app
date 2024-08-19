@@ -29,21 +29,21 @@ class SecureStorageHelper {
   }
 
   Future<void> set(String key, String value) async {
-    // TODO:: figure out why windows can not write to storage, this is current workaround
+    // TODO(fix): figure out why windows can not write to storage, this is current workaround
     for (int i = 0; i < 1000; i++) {
       await storage.write(key, value);
-      bool saved = await storage.containsKey(key);
-      if (saved == true) {
+      final saved = await storage.containsKey(key);
+      if (saved) {
         break;
       }
     }
-    if (keys.contains(key) == false) {
+    if (!keys.contains(key)) {
       keys.add(key);
     }
   }
 
   Future<String> get(String key) async {
-    return await storage.read(key);
+    return storage.read(key);
   }
 
   Future<void> deleteAll() async {
