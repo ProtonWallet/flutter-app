@@ -71,27 +71,37 @@ impl FrbAccount {
     pub async fn get_address(&self, index: Option<u32>) -> Result<FrbAddressInfo, BridgeError> {
         let account_inner = self.get_inner();
 
-        let address = account_inner.get_address(index).await?;
+        let address = if let Some(idx) = index {
+            account_inner.peek_receive_address(idx).await?
+        } else {
+            account_inner.get_next_receive_address().await?
+        };
 
         Ok(address.into())
     }
 
-    #[deprecated(
-        note = "this fn returns next unused spk after of last unused. please use `get_index_after_last_used_address` instead"
-    )]
-    pub async fn get_last_unused_address_index(&self) -> Option<u32> {
+    pub async fn mark_receive_addresses_used_to(
+        &self,
+        from: u32,
+        to: Option<u32>,
+    ) -> Result<(), BridgeError> {
         let account_inner = self.get_inner();
-        account_inner.get_last_unused_address_index().await
+        account_inner
+            .mark_receive_addresses_used_to(from, to)
+            .await?;
+
+        Ok(())
     }
 
-    pub async fn get_index_after_last_used_address(&self) -> u32 {
+    pub async fn get_next_receive_address(&self) -> Result<FrbAddressInfo, BridgeError> {
         let account_inner = self.get_inner();
-        account_inner.get_index_after_last_used_address().await
+        let address = account_inner.get_next_receive_address().await?;
+
+        Ok(address.into())
     }
 
     pub async fn get_bitcoin_uri(
         &mut self,
-        index: Option<u32>,
         amount: Option<u64>,
         label: Option<String>,
         message: Option<String>,
@@ -99,7 +109,7 @@ impl FrbAccount {
         let mut account_inner = self.get_inner();
 
         let payment_link = account_inner
-            .get_bitcoin_uri(index, amount, label, message)
+            .get_bitcoin_uri(amount, label, message)
             .await?;
         Ok(payment_link.into())
     }

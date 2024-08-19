@@ -34,13 +34,11 @@ abstract class FrbAccount implements RustOpaqueInterface {
   Future<FrbBalance> getBalance();
 
   Future<FrbPaymentLink> getBitcoinUri(
-      {int? index, BigInt? amount, String? label, String? message});
+      {BigInt? amount, String? label, String? message});
 
   Future<String> getDerivationPath();
 
-  Future<int> getIndexAfterLastUsedAddress();
-
-  Future<int?> getLastUnusedAddressIndex();
+  Future<FrbAddressInfo> getNextReceiveAddress();
 
   Future<FrbTransactionDetails> getTransaction({required String txid});
 
@@ -54,6 +52,8 @@ abstract class FrbAccount implements RustOpaqueInterface {
   Future<void> insertUnconfirmedTx({required FrbPsbt psbt});
 
   Future<bool> isMine({required FrbAddress address});
+
+  Future<void> markReceiveAddressesUsedTo({required int from, int? to});
 
   /// Usually creating account need to through wallet.
   ///  this shouldn't be used. just for sometimes we need it without wallet.

@@ -24,6 +24,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
+import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -58,6 +59,7 @@ class WalletManager implements Manager {
   static late WalletsDataProvider walletDataProvider;
   static late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   static late ServerTransactionDataProvider serverTransactionDataProvider;
+  static late ReceiveAddressDataProvider receiveAddressDataProvider;
   static late String userID;
 
   ///
@@ -495,9 +497,11 @@ class WalletManager implements Manager {
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
             onlyRequest: 1);
-    bool hasSyncedBitcoinAddressIndex = false;
-    AccountModel? accountModel =
+    final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(serverAccountID);
+    if (accountModel != null) {
+      await ensureReceivedAddressInitialized(account, accountModel);
+    }
     for (ApiWalletBitcoinAddress walletBitcoinAddress
         in walletBitcoinAddresses) {
       if (accountModel == null) {
@@ -509,29 +513,7 @@ class WalletManager implements Manager {
         await refillBitcoinAddress(account, walletBitcoinAddress);
       } else if (walletBitcoinAddress.bitcoinAddress == null &&
           walletBitcoinAddress.bitcoinAddressIndex == null) {
-        final WalletModel? walletModel =
-            await DBHelper.walletDao!.findByServerID(serverWalletID);
-        if (!hasSyncedBitcoinAddressIndex) {
-          hasSyncedBitcoinAddressIndex = true;
-          if (walletModel != null) {
-            await syncBitcoinAddressIndex(
-              walletModel,
-              accountModel,
-            );
-          }
-        }
-        accountModel = await DBHelper.accountDao!.findByServerID(
-          serverAccountID,
-        );
-        if (accountModel == null) {
-          logger.e(
-            "handleBitcoinAddressRequests: accountModel is null after syncBitcoinAddressIndex()",
-          );
-          continue;
-        }
-        const int offset = 1;
-        final int addressIndex = accountModel.lastUsedIndex + offset + 1;
-        final addressInfo = await account.getAddress(index: addressIndex);
+        final addressInfo = await account.getNextReceiveAddress();
         final String address = addressInfo.address;
         final String signature = await getSignature(
           serverAccountID,
@@ -542,7 +524,7 @@ class WalletManager implements Manager {
         final BitcoinAddress bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
-            bitcoinAddressIndex: BigInt.from(addressIndex));
+            bitcoinAddressIndex: BigInt.from(addressInfo.index));
         await proton_api.updateBitcoinAddress(
             walletId: serverWalletID,
             walletAccountId: serverAccountID,
@@ -553,45 +535,13 @@ class WalletManager implements Manager {
               serverWalletID: serverWalletID,
               serverAccountID: accountModel.accountID,
               bitcoinAddress: address,
-              bitcoinAddressIndex: addressIndex,
+              bitcoinAddressIndex: addressInfo.index,
               inEmailIntegrationPool: 1,
               used: 0);
         } catch (e) {
           logger.e(e.toString());
         }
-        accountModel.lastUsedIndex = accountModel.lastUsedIndex + offset + 1;
-        await updateLastUsedIndex(accountModel);
       }
-    }
-  }
-
-  static Future<void> syncBitcoinAddressIndex(
-      WalletModel walletModel, AccountModel accountModel) async {
-    /// check if local highest used bitcoin address index is higher than the one store in wallet account
-    /// this will happen when some one send bitcoin via qr code
-    int localUsedIndex = await localBitcoinAddressDataProvider.getLastUsedIndex(
-        walletModel, accountModel);
-
-    /// check if pool index is higher than localUsedIndex
-    /// since web didn't implement this logic when updating pool
-    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
-        await proton_api.getWalletBitcoinAddress(
-            walletId: walletModel.walletID,
-            walletAccountId: accountModel.accountID,
-            onlyRequest: 0);
-    int highestIndexFromPool = 0;
-    for (ApiWalletBitcoinAddress apiWalletBitcoinAddress
-        in walletBitcoinAddresses) {
-      highestIndexFromPool = max(highestIndexFromPool,
-          apiWalletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? 0);
-    }
-    if (highestIndexFromPool > localUsedIndex) {
-      localUsedIndex = highestIndexFromPool;
-    }
-
-    if (localUsedIndex > accountModel.lastUsedIndex) {
-      accountModel.lastUsedIndex = localUsedIndex;
-      await updateLastUsedIndex(accountModel);
     }
   }
 
@@ -650,6 +600,27 @@ class WalletManager implements Manager {
     return null;
   }
 
+  static Future<void> ensureReceivedAddressInitialized(
+    FrbAccount account,
+    AccountModel accountModel,
+  ) async {
+    /// need to initialize receiveAddressDataProvider
+    /// so that we can make sure we mark used of the receive address
+    /// and the address at [0, lastUsedIndex]
+    /// also it will handle the pool index
+    await receiveAddressDataProvider.initReceiveAddressForAccount(
+        account, accountModel);
+
+    /// also need to check localLastUsedIndex (lastUsedIndexOnNetwork)
+    final walletModel = await DBHelper.walletDao!.findByServerID(
+      accountModel.walletID,
+    );
+    final int localLastUsedIndex = await localBitcoinAddressDataProvider
+        .getLastUsedIndex(walletModel, accountModel);
+    await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
+        account, accountModel, localLastUsedIndex);
+  }
+
   static Future<void> bitcoinAddressPoolHealthCheck(
     FrbAccount account,
     String serverWalletID,
@@ -696,6 +667,9 @@ class WalletManager implements Manager {
 
         final int addressIndex =
             walletBitcoinAddress.bitcoinAddressIndex?.toInt() ?? -1;
+        await account.markReceiveAddressesUsedTo(
+          from: addressIndex,
+        ); // this will mark address at addressIndex as used
         if (addressIndex >= 0 && bitcoinAddress.isNotEmpty) {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
               serverWalletID: serverWalletID,
@@ -729,7 +703,7 @@ class WalletManager implements Manager {
       }
       logger.i("bitcoinAddressSignature valid is $isValidSignature");
     }
-    AccountModel? accountModel =
+    final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(serverAccountID);
     int poolSize = defaultBitcoinAddressCountForOneEmail;
     if (accountModel != null) {
@@ -738,43 +712,17 @@ class WalletManager implements Manager {
       }
     }
     final int addingCount = max(0, poolSize - unFetchedBitcoinAddressCount);
-    if (walletBitcoinAddresses.isEmpty) {
-      final int _ = await DBHelper.bitcoinAddressDao!.getUnusedPoolCount(
-        serverWalletID,
-        serverAccountID,
-      );
-      // addingCount = min(addingCount,
-      //     defaultBitcoinAddressCountForOneEmail - localUnusedPoolCount);
-      logger.i(
-        "update with local pool count\nwalletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
-      );
-    }
     logger.i(
       "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
     );
     if (addingCount > 0) {
       final List<BitcoinAddress> apiBitcoinAddresses = [];
-      final WalletModel? walletModel =
-          await DBHelper.walletDao!.findByServerID(serverWalletID);
-      if (walletModel != null && accountModel != null) {
-        await syncBitcoinAddressIndex(
-          walletModel,
-          accountModel,
-        );
-      }
-
-      /// get accountModel again since last used index may changed after syncBitcoinAddressIndex();
-      accountModel = await DBHelper.accountDao!.findByServerID(serverAccountID);
       if (accountModel == null) {
         return;
       }
+      await ensureReceivedAddressInitialized(account, accountModel);
       for (int offset = 1; offset <= addingCount; offset++) {
-        final int addressIndex = accountModel.lastUsedIndex + offset + 1;
-        logger.d(
-          "Adding bitcoin address index ($addressIndex), serverAccountID = $serverAccountID",
-        );
-
-        final addressInfo = await account.getAddress(index: addressIndex);
+        final addressInfo = await account.getNextReceiveAddress();
         final String address = addressInfo.address;
         final String signature = await getSignature(
           serverAccountID,
@@ -808,8 +756,6 @@ class WalletManager implements Manager {
           logger.e(e.toString());
         }
       }
-      accountModel.lastUsedIndex = accountModel.lastUsedIndex + addingCount + 1;
-      await updateLastUsedIndex(accountModel);
     }
   }
 

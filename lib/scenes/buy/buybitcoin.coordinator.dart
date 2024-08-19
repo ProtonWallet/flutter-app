@@ -23,9 +23,10 @@ class BuyBitcoinCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> start() {
     final info = serviceManager.get<UserManager>().userInfo;
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
 
     final BuyBitcoinBloc buyBloc = BuyBitcoinBloc(
-      serviceManager.get<DataProviderManager>().gatewayDataProvider,
+      dataProviderManager.gatewayDataProvider,
     );
 
     final viewModel = BuyBitcoinViewModelImpl(
@@ -35,7 +36,8 @@ class BuyBitcoinCoordinator extends Coordinator {
       info.userId,
       walletID,
       accountID,
-      serviceManager.get<DataProviderManager>().localBitcoinAddressDataProvider,
+      dataProviderManager.localBitcoinAddressDataProvider,
+      dataProviderManager.receiveAddressDataProvider,
     );
     widget = BuyBitcoinView(
       viewModel,
