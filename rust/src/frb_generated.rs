@@ -7412,15 +7412,15 @@ fn wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_constrain_rec
             let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbTxBuilder>>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
                     transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
                         let mut api_that_guard = None;
-let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, true)]);
         for i in decode_indices_ {
             match i {
-                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref_mut().await),
                 _ => unreachable!(),
             }
         }
-        let api_that_guard = api_that_guard.unwrap();
- let output_ok = crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::constrain_recipient_amounts(&*api_that_guard).await?;   Ok(output_ok)
+        let mut api_that_guard = api_that_guard.unwrap();
+ let output_ok = crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::constrain_recipient_amounts(&mut *api_that_guard).await?;   Ok(output_ok)
                     })().await)
                 } })
 }
@@ -7438,15 +7438,15 @@ let api_network = <crate::common::network::Network>::sse_decode(&mut deserialize
 let api_allow_dust = <Option<bool>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
                     transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
                         let mut api_that_guard = None;
-let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, true)]);
         for i in decode_indices_ {
             match i {
-                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref_mut().await),
                 _ => unreachable!(),
             }
         }
-        let api_that_guard = api_that_guard.unwrap();
- let output_ok = crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::create_draft_psbt(&*api_that_guard, api_network, api_allow_dust).await?;   Ok(output_ok)
+        let mut api_that_guard = api_that_guard.unwrap();
+ let output_ok = crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::create_draft_psbt(&mut *api_that_guard, api_network, api_allow_dust).await?;   Ok(output_ok)
                     })().await)
                 } })
 }
@@ -7484,22 +7484,22 @@ fn wire__crate__api__bdk_wallet__transaction_builder__FrbTxBuilder_create_pbst_i
                         let decode_indices_ =
                             flutter_rust_bridge::for_generated::lockable_compute_decode_order(
                                 vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, false,
+                                    &api_that, 0, true,
                                 )],
                             );
                         for i in decode_indices_ {
                             match i {
                                 0 => {
                                     api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref().await)
+                                        Some(api_that.lockable_decode_async_ref_mut().await)
                                 }
                                 _ => unreachable!(),
                             }
                         }
-                        let api_that_guard = api_that_guard.unwrap();
+                        let mut api_that_guard = api_that_guard.unwrap();
                         let output_ok =
                             crate::api::bdk_wallet::transaction_builder::FrbTxBuilder::create_pbst(
-                                &*api_that_guard,
+                                &mut *api_that_guard,
                                 api_network,
                             )
                             .await?;
@@ -11214,7 +11214,7 @@ const _: fn() = || {
         let _: crate::proton_api::user_settings::FiatCurrency = ApiWalletAccount.FiatCurrency;
         let _: String = ApiWalletAccount.DerivationPath;
         let _: String = ApiWalletAccount.Label;
-        let _: Option<u32> = ApiWalletAccount.LastUsedIndex;
+        let _: u32 = ApiWalletAccount.LastUsedIndex;
         let _: u32 = ApiWalletAccount.PoolSize;
         let _: u32 = ApiWalletAccount.Priority;
         let _: u8 = ApiWalletAccount.ScriptType;
@@ -12795,7 +12795,7 @@ impl SseDecode for crate::proton_api::wallet_account::ApiWalletAccount {
             <crate::proton_api::user_settings::FiatCurrency>::sse_decode(deserializer);
         let mut var_derivationPath = <String>::sse_decode(deserializer);
         let mut var_label = <String>::sse_decode(deserializer);
-        let mut var_lastUsedIndex = <Option<u32>>::sse_decode(deserializer);
+        let mut var_lastUsedIndex = <u32>::sse_decode(deserializer);
         let mut var_poolSize = <u32>::sse_decode(deserializer);
         let mut var_priority = <u32>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
@@ -19697,7 +19697,7 @@ impl SseEncode for crate::proton_api::wallet_account::ApiWalletAccount {
         <crate::proton_api::user_settings::FiatCurrency>::sse_encode(self.FiatCurrency, serializer);
         <String>::sse_encode(self.DerivationPath, serializer);
         <String>::sse_encode(self.Label, serializer);
-        <Option<u32>>::sse_encode(self.LastUsedIndex, serializer);
+        <u32>::sse_encode(self.LastUsedIndex, serializer);
         <u32>::sse_encode(self.PoolSize, serializer);
         <u32>::sse_encode(self.Priority, serializer);
         <u8>::sse_encode(self.ScriptType, serializer);
