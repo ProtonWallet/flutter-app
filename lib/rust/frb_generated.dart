@@ -7662,7 +7662,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 194, port: port_);
@@ -7695,7 +7695,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
             that, serializer);
         sse_encode_network(network, serializer);
         sse_encode_opt_box_autoadd_bool(allowDust, serializer);
@@ -7727,7 +7727,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
             that, serializer);
         sse_encode_network(network, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
@@ -10968,6 +10968,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbTxBuilder
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbTxBuilderImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   FrbWallet
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           dynamic raw) {
@@ -11843,7 +11851,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       fiatCurrency: dco_decode_fiat_currency(arr[2]),
       derivationPath: dco_decode_String(arr[3]),
       label: dco_decode_String(arr[4]),
-      lastUsedIndex: dco_decode_opt_box_autoadd_u_32(arr[5]),
+      lastUsedIndex: dco_decode_u_32(arr[5]),
       poolSize: dco_decode_u_32(arr[6]),
       priority: dco_decode_u_32(arr[7]),
       scriptType: dco_decode_u_8(arr[8]),
@@ -14225,6 +14233,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbTxBuilder
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbTxBuilderImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   FrbWallet
       sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           SseDeserializer deserializer) {
@@ -15163,7 +15180,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_fiatCurrency = sse_decode_fiat_currency(deserializer);
     var var_derivationPath = sse_decode_String(deserializer);
     var var_label = sse_decode_String(deserializer);
-    var var_lastUsedIndex = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_lastUsedIndex = sse_decode_u_32(deserializer);
     var var_poolSize = sse_decode_u_32(deserializer);
     var var_priority = sse_decode_u_32(deserializer);
     var var_scriptType = sse_decode_u_8(deserializer);
@@ -18089,6 +18106,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxBuilder(
+          FrbTxBuilder self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbTxBuilderImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
       sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet(
           FrbWallet self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -19080,7 +19107,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_fiat_currency(self.fiatCurrency, serializer);
     sse_encode_String(self.derivationPath, serializer);
     sse_encode_String(self.label, serializer);
-    sse_encode_opt_box_autoadd_u_32(self.lastUsedIndex, serializer);
+    sse_encode_u_32(self.lastUsedIndex, serializer);
     sse_encode_u_32(self.poolSize, serializer);
     sse_encode_u_32(self.priority, serializer);
     sse_encode_u_8(self.scriptType, serializer);
