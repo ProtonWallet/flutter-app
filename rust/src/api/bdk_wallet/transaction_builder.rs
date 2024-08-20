@@ -75,7 +75,7 @@ impl FrbTxBuilder {
         Ok(inner.into())
     }
 
-    pub async fn constrain_recipient_amounts(&self) -> Result<FrbTxBuilder, BridgeError> {
+    pub async fn constrain_recipient_amounts(&mut self) -> Result<FrbTxBuilder, BridgeError> {
         let inner = self.inner.constrain_recipient_amounts().await;
 
         Ok(inner.into())
@@ -223,14 +223,14 @@ impl FrbTxBuilder {
      * Final
      */
 
-    pub async fn create_pbst(&self, network: Network) -> Result<FrbPsbt, BridgeError> {
+    pub async fn create_pbst(&mut self, network: Network) -> Result<FrbPsbt, BridgeError> {
         let psbt = self.inner.create_psbt(false, false).await?;
 
         FrbPsbt::from_psbt(&psbt, network)
     }
 
     pub async fn create_draft_psbt(
-        &self,
+        &mut self,
         network: Network,
         allow_dust: Option<bool>,
     ) -> Result<FrbPsbt, BridgeError> {
