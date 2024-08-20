@@ -374,10 +374,7 @@ class WalletsDataProvider extends DataProvider {
       apiWalletAcct.fiatCurrency,
       apiWalletAcct.poolSize,
       apiWalletAcct.priority,
-
-      /// set lastUsedIndex to -1 when it's null
-      /// which means user didn't use any address yet
-      apiWalletAcct.lastUsedIndex ?? -1,
+      apiWalletAcct.lastUsedIndex,
       initialize: true,
     );
   }
