@@ -71,6 +71,7 @@ abstract class HistoryDetailViewModel
   bool isSend = false;
   bool initialized = false;
   bool isEditing = false;
+  bool displayBalance = true;
   late TextEditingController memoController;
   late FocusNode memoFocusNode;
   late TransactionModel? transactionModel;
@@ -85,6 +86,7 @@ abstract class HistoryDetailViewModel
   bool isRecipientsFromBlockChain = false;
   String? selfBitcoinAddress;
   final UserSettingsDataProvider userSettingsDataProvider;
+
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
   late ScrollController scrollController;
@@ -129,6 +131,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoFocusNode = FocusNode();
     memoFocusNode.addListener(userFinishMemo);
     scrollController = ScrollController();
+    displayBalance = await userSettingsDataProvider.getDisplayBalance();
 
     contactsEmails = await contactsDataProvider.getContacts() ?? [];
 

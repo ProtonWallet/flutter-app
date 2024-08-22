@@ -15,12 +15,14 @@ class TransactionListTitle extends StatelessWidget {
   final VoidCallback? onTap;
   final String note;
   final String? body;
+  final bool displayBalance;
 
   const TransactionListTitle({
     required this.width,
     required this.address,
     required this.isSend,
     required this.bitcoinAmount,
+    required this.displayBalance,
     super.key,
     this.timestamp,
     this.note = "",
@@ -154,10 +156,13 @@ class TransactionListTitle extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 isSend
-                    ? Text(bitcoinAmount.toFiatCurrencySignString(),
+                    ? Text(
+                        bitcoinAmount.toFiatCurrencySignString(
+                            displayBalance: displayBalance),
                         style: FontManager.captionRegular(
                             ProtonColors.signalError))
-                    : Text("+${bitcoinAmount.toFiatCurrencySignString()}",
+                    : Text(
+                        "+${bitcoinAmount.toFiatCurrencySignString(displayBalance: displayBalance)}",
                         style: FontManager.captionRegular(
                             ProtonColors.signalSuccess)),
               ],

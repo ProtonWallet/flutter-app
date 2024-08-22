@@ -27,6 +27,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
   final String filter;
   final String keyWord;
   final BitcoinUnit bitcoinUnit;
+  final bool displayBalance;
 
   const WalletHistoryTransactionList({
     required this.transactions,
@@ -37,6 +38,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
     required this.filter,
     required this.keyWord,
     required this.bitcoinUnit,
+    required this.displayBalance,
     super.key,
   });
 
@@ -98,6 +100,7 @@ class WalletHistoryTransactionListState
             },
             timestamp: transactionsFiltered[index].createTimestamp,
             isSend: transactionsFiltered[index].amountInSATS < 0,
+            displayBalance: widget.displayBalance,
           ),
         if (transactionsFiltered.length >
             defaultTransactionPerPage * widget.currentPage +

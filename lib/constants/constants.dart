@@ -24,6 +24,7 @@ const int btc2satoshi = 100000000;
 const double maxDeskTopSheetWidth = 600.0;
 
 const String latestAddressIndex = "bitcoinAddress.latest";
+const String hidedBalanceString = "****";
 
 const BitcoinUnit defaultBitcoinUnit = BitcoinUnit.btc;
 const FiatCurrency defaultFiatCurrency = FiatCurrency.usd;

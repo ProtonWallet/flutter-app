@@ -494,6 +494,10 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> preloadSettings() async {
     await dataProviderManager.userSettingsDataProvider.preLoad();
     loadUserSettings();
+
+    // load local cached displayBalance setting
+    displayBalance =
+        await dataProviderManager.userSettingsDataProvider.getDisplayBalance();
   }
 
   Future<bool> eligibleCheck() async {
@@ -1281,7 +1285,9 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void setDisplayBalance({required bool display}) {
+  Future<void> setDisplayBalance({required bool display}) async {
+    await dataProviderManager.userSettingsDataProvider
+        .setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
   }
